@@ -5,6 +5,8 @@ This is a SonarQube Extension for Visual Studio.
 
 All information on configuration and usage will be found in the wiki pages. [Home](https://github.com/jmecosta/VSSonarQubeExtension/wiki)
 
+![Image](wiki/intropage.png?raw=true)
+
 # License
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
