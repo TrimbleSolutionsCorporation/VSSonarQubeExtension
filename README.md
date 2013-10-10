@@ -3,7 +3,7 @@ VSSonarQubeExtension
 
 This is a SonarQube Extension for Visual Studio.
 
-All information on configuration and usage will be found in the wiki pages.
+All information on configuration and usage will be found in the wiki pages. [Home](https://github.com/jmecosta/VSSonarQubeExtension/wiki)
 
 # License
 
