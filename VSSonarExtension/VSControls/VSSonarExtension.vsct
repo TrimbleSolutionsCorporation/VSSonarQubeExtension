@@ -1,0 +1,258 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <!--  This is the file that defines the actual layout and type of the commands.
+        It is divided in different sections (e.g. command definition, command
+        placement, ...), with each defining a specific set of properties.
+        See the comment before each section for more details about how to
+        use it. -->
+
+  <!--  The VSCT compiler (the tool that translates this file into the binary 
+        format that VisualStudio will consume) has the ability to run a preprocessor 
+        on the vsct file; this preprocessor is (usually) the C++ preprocessor, so 
+        it is possible to define includes and macros with the same syntax used 
+        in C++ files. Using this ability of the compiler here, we include some files 
+        defining some of the constants that we will use inside the file. -->
+
+  <!--This is the file that defines the IDs for all the commands exposed by VisualStudio. -->
+  <Extern href="stdidcmd.h"/>
+
+  <!--This header contains the command ids for the menus provided by the shell. -->
+  <Extern href="vsshlids.h"/>
+
+  <!--The Commands section is where we the commands, menus and menu groups are defined.
+      This section uses a Guid to identify the package that provides the command defined inside it. -->
+  <Commands package="guidVSSonarExtensionPkg">
+    <!-- Inside this section we have different sub-sections: one for the menus, another  
+    for the menu groups, one for the buttons (the actual commands), one for the combos 
+    and the last one for the bitmaps used. Each element is identified by a command id that  
+    is a unique pair of guid and numeric identifier; the guid part of the identifier is usually  
+    called "command set" and is used to group different command inside a logically related  
+    group; your package should define its own command set in order to avoid collisions  
+    with command ids defined by other packages. -->
+
+    
+    <!-- In this section you can define new menu groups. A menu group is a container for 
+         other menus or buttons (commands); from a visual point of view you can see the 
+         group as the part of a menu contained between two lines. The parent of a group 
+         must be a menu. -->
+    <Menus>
+        <Menu guid="guidVSSonarExtensionCmdSet" id="TopLevelMenu" priority="0x700" type="Menu">
+        <Parent guid="guidSHLMainMenu" id="IDG_VS_MM_TOOLSADDINS" />
+        <Strings>
+          <ButtonText>Sonar</ButtonText>
+          <CommandName>Sonar</CommandName>
+        </Strings>
+      </Menu>
+
+      <Menu guid="guidShowInitialToolbarCmdSet" id="SonarToolbar" priority="0x100" type="Toolbar">
+        <Parent guid="guidShowInitialToolbarCmdSet" id="SonarToolbar" />
+        <CommandFlag>DefaultDocked</CommandFlag>
+        <Strings>
+          <ButtonText>Sonar Toolbar</ButtonText>
+        </Strings>
+      </Menu>
+      
+    </Menus>
+
+    <Groups>
+      <Group guid="guidVSSonarExtensionCmdSet" id="MyMenuGroup" priority="0x0600">
+        <Parent guid="guidVSSonarExtensionCmdSet" id="TopLevelMenu"/>
+      </Group>
+      <Group guid="guidShowInitialToolbarCmdSet" id="MyMenuGroup"
+        priority="0x0600">
+        <Parent guid="guidShowInitialToolbarCmdSet" id="SonarToolbar"/>
+      </Group>
+    </Groups>
+    
+    <!--Buttons section. -->
+    <!--This section defines the elements the user can interact with, like a menu command or a button 
+        or combo box in a toolbar. -->
+    <Buttons>
+        
+        <!--To define a menu group you have to specify its ID, the parent menu and its display priority. 
+          The command is visible and enabled by default. If you need to change the visibility, status, etc, you can use
+          the CommandFlag node.
+          You can add more than one CommandFlag node e.g.:
+              <CommandFlag>DefaultInvisible</CommandFlag>
+              <CommandFlag>DynamicVisibility</CommandFlag>
+          If you do not want an image next to your command, remove the Icon node or set it to <Icon guid="guidOfficeIcon" id="msotcidNoIcon" /> -->
+
+      <Button guid="guidVSSonarExtensionCmdSet" id="cmdidSonarServerViolationsCommand" priority="0x0100" type="Button">
+        <Parent guid="guidVSSonarExtensionCmdSet" id="MyMenuGroup" />
+        <Icon guid="bmpPicSonarViolations" id="bmpPicSonarViolationsName" />
+        <Strings>
+          <CommandName>cmdidSonarServerViolationsCommand</CommandName>
+          <ButtonText>Report Sonar Server Violations</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidVSSonarExtensionCmdSet" id="CmdidLocalViolationsFromChangesCommand" priority="0x0110" type="Button">
+        <Parent guid="guidVSSonarExtensionCmdSet" id="MyMenuGroup" />
+        <Icon guid="bmpPicViolationsLocalAdded" id="bmpPicViolationsLocalAddedName" />
+        <Strings>
+          <CommandName>CmdidLocalViolationsFromChangesCommand</CommandName>
+          <ButtonText>Report Violations Added on Source Changes</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidVSSonarExtensionCmdSet" id="CmdidCoverageCommand" priority="0x0120" type="Button">
+        <Parent guid="guidVSSonarExtensionCmdSet" id="MyMenuGroup" />
+        <Icon guid="bmpPicCoverage" id="bmpPicCoverageName" />
+        <Strings>
+          <CommandName>CmdidCoverageCommand</CommandName>
+          <ButtonText>Report Coverage on File</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidVSSonarExtensionCmdSet" id="CmdidSourceDiffCommand" priority="0x0130" type="Button">
+        <Parent guid="guidVSSonarExtensionCmdSet" id="MyMenuGroup" />
+        <Icon guid="bmpPicSource" id="bmpPicSourceName" />
+        <Strings>
+          <CommandName>CmdidSourceDiffCommand</CommandName>
+          <ButtonText>Report Source Differences to Sonar Server</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidVSSonarExtensionCmdSet" id="CmdidLocalAnalysisCommand" priority="0x0140" type="Button">
+        <Parent guid="guidVSSonarExtensionCmdSet" id="MyMenuGroup" />
+        <Icon guid="bmpPicViolationsLocalAll" id="bmpPicViolationsLocalAllName" />
+        <Strings>
+          <CommandName>CmdidLocalAnalysisCommand</CommandName>
+          <ButtonText>Runs Local Static Analysis Tools</ButtonText>
+        </Strings>
+      </Button>
+
+        <Button guid="guidVSSonarExtensionCmdSet" id="CmdidReviewsCommand" priority="0x0145" type="Button">
+            <Parent guid="guidVSSonarExtensionCmdSet" id="MyMenuGroup" />
+            <Icon guid="bmpPicReviews" id="bmpPicReviewsName" />
+            <Strings>
+                <CommandName>CmdidReviewsCommand</CommandName>
+                <ButtonText>Issues Output Window</ButtonText>
+            </Strings>
+        </Button>
+        
+      <!--The Toolbar Buttons. -->
+      <Button guid="guidShowInitialToolbarCmdSet" id="ToolBarReportSonarViolations" priority="0x0150" type="Button">
+        <Parent guid="guidShowInitialToolbarCmdSet" id="MyMenuGroup" />
+        <Icon guid="bmpPicSonarViolations" id="bmpPicSonarViolationsName" />
+        <Strings>
+          <CommandName>ToolBarReportSonarViolations</CommandName>
+          <ButtonText>Report Sonar Server Violations</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidShowInitialToolbarCmdSet" id="ToolBarReportLocalViolations" priority="0x0160" type="Button">
+        <Parent guid="guidShowInitialToolbarCmdSet" id="MyMenuGroup" />
+        <Icon guid="bmpPicViolationsLocalAll" id="bmpPicViolationsLocalAllName" />
+        <Strings>
+          <CommandName>ToolBarReportLocalViolations</CommandName>
+          <ButtonText>Runs Local Static Analysis Tools</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidShowInitialToolbarCmdSet" id="ToolBarReportLocalAddViolations" priority="0x0170" type="Button">
+        <Parent guid="guidShowInitialToolbarCmdSet" id="MyMenuGroup" />
+        <Icon guid="bmpPicViolationsLocalAdded" id="bmpPicViolationsLocalAddedName" />
+        <Strings>
+          <CommandName>ToolBarReportLocalAddViolations</CommandName>
+          <ButtonText>Runs Local Static Analysis Tools - Reports Only Added Violations</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidShowInitialToolbarCmdSet" id="ToolBarReportCoverage" priority="0x0180" type="Button">
+        <Parent guid="guidShowInitialToolbarCmdSet" id="MyMenuGroup" />
+        <Icon guid="bmpPicCoverage" id="bmpPicCoverageName" />
+        <Strings>
+          <CommandName>ToolBarReportCoverage</CommandName>
+          <ButtonText>Reports Coverage</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidShowInitialToolbarCmdSet" id="ToolBarReportSource" priority="0x0190" type="Button">
+        <Parent guid="guidShowInitialToolbarCmdSet" id="MyMenuGroup" />
+        <Icon guid="bmpPicSource" id="bmpPicSourceName" />
+        <Strings>
+          <CommandName>ToolBarReportSource</CommandName>
+          <ButtonText>Reports Source Differences</ButtonText>
+        </Strings>
+      </Button>
+    <Button guid="guidShowInitialToolbarCmdSet" id="ToolBarReportReviews" priority="0x0200" type="Button">
+        <Parent guid="guidShowInitialToolbarCmdSet" id="MyMenuGroup" />
+        <Icon guid="bmpPicReviews" id="bmpPicReviewsName" />
+        <Strings>
+            <CommandName>ToolBarReportReviews</CommandName>
+            <ButtonText>Issues Output Window</ButtonText>
+        </Strings>
+    </Button>
+    </Buttons>
+
+    <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
+    <Bitmaps>
+      <!--  The bitmap id is defined in a way that is a little bit different from the others: 
+            the declaration starts with a guid for the bitmap strip, then there is the resource id of the 
+            bitmap strip containing the bitmaps and then there are the numeric ids of the elements used 
+            inside a button definition. An important aspect of this declaration is that the element id 
+            must be the actual index (1-based) of the bitmap inside the bitmap strip. -->
+
+
+      <Bitmap guid="bmpPicSonarViolations" href="..\Resources\sonarviolations.bmp"/>
+      <Bitmap guid="bmpPicViolationsLocalAdded" href="..\Resources\sonariconviolationslocaladded.bmp"/>
+      <Bitmap guid="bmpPicViolationsLocalAll" href="..\Resources\sonariconviolationslocal.bmp"/>
+      <Bitmap guid="bmpPicSource" href="..\Resources\sonariconsource.bmp"/>
+      <Bitmap guid="bmpPicCoverage" href="..\Resources\sonariconcoverage.bmp"/>
+      <Bitmap guid="bmpPicReviews" href="..\Resources\sonarreviews.bmp"/>
+    </Bitmaps>
+ 
+  </Commands>
+
+  <Symbols>
+    <!-- This is the package guid. -->
+    <GuidSymbol name="guidVSSonarExtensionPkg" value="{84feee6a-374a-4c3d-a2e6-15e14fd5000e}" />
+
+    <GuidSymbol name="guidShowInitialToolbarCmdSet" value="{91489787-3361-4715-bb3a-76dbd86353dc}">
+      <IDSymbol name="MyMenuGroup" value="0x1020" />
+      <IDSymbol name="SonarToolbar" value="0x1021" />
+      <IDSymbol name="ToolBarReportSonarViolations" value="0x0150" />
+      <IDSymbol name="ToolBarReportLocalViolations" value="0x0160" />
+      <IDSymbol name="ToolBarReportLocalAddViolations" value="0x0170" />
+      <IDSymbol name="ToolBarReportCoverage" value="0x0180" />
+      <IDSymbol name="ToolBarReportSource" value="0x0190" />
+      <IDSymbol name="ToolBarReportReviews" value="0x0200" />
+    </GuidSymbol>
+    
+    <!-- This is the guid used to group the menu commands together -->
+    <GuidSymbol name="guidVSSonarExtensionCmdSet" value="{05ca2046-1eb1-4813-a91f-a69df9b27698}">
+      <IDSymbol name="TopLevelMenu" value="0x1021"/>
+      <IDSymbol name="MyMenuGroup" value="0x1020" />
+      <IDSymbol name="cmdidSonarServerViolationsCommand" value="0x0100" />
+      <IDSymbol name="CmdidLocalViolationsFromChangesCommand" value="0x0110" />
+      <IDSymbol name="CmdidCoverageCommand" value="0x0120" />
+      <IDSymbol name="CmdidSourceDiffCommand" value="0x0130" />
+      <IDSymbol name="CmdidLocalAnalysisCommand" value="0x0140" />
+      <IDSymbol name="CmdidReviewsCommand" value="0x0145" />
+    </GuidSymbol>
+
+    <GuidSymbol name="bmpPicSonarViolations" value="{fac5fb1e-1010-4665-bf1f-c56305358eaf}" >
+      <IDSymbol name="bmpPicSonarViolationsName" value="1" />
+    </GuidSymbol>
+
+    <GuidSymbol name="bmpPicViolationsLocalAdded" value="{fac5fb1e-1010-4665-bf1f-c56305358ebf}" >
+      <IDSymbol name="bmpPicViolationsLocalAddedName" value="1" />
+    </GuidSymbol>
+
+    <GuidSymbol name="bmpPicViolationsLocalAll" value="{fac5fb1e-1010-4665-bf1f-c56305358ecf}" >
+      <IDSymbol name="bmpPicViolationsLocalAllName" value="1" />
+    </GuidSymbol>
+
+    <GuidSymbol name="bmpPicSource" value="{fac5fb1e-1010-4665-bf1f-c56305358edf}" >
+      <IDSymbol name="bmpPicSourceName" value="1" />
+    </GuidSymbol>
+
+    <GuidSymbol name="bmpPicCoverage" value="{fac5fb1e-1010-4665-bf1f-c56305358eef}" >
+      <IDSymbol name="bmpPicCoverageName" value="1" />
+    </GuidSymbol>
+
+    <GuidSymbol name="bmpPicReviews" value="{fac5fb1e-1010-4665-bf1f-c56305358ef1}" >
+        <IDSymbol name="bmpPicReviewsName" value="1" />
+    </GuidSymbol>
+
+  </Symbols>
+
+</CommandTable>

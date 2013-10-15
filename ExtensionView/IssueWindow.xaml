@@ -1,0 +1,315 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModel="clr-namespace:ExtensionViewModel.ViewModel;assembly=ExtensionViewModel"
+    mc:Ignorable="d"    
+    x:Class="ExtensionView.IssueWindow"    
+    x:Name="IssuesManager"
+    Width="Auto" Height="Auto" Foreground="{x:Null}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <viewModel:BindingProxy x:Key="Proxy" Data="{Binding}" />
+    		<viewModel:ExtensionDataModel x:Key="IssuesDataModelDataSource" d:IsDataSource="True"/>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="StylesAndTemplates.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <UserControl.DataContext>
+        <Binding Source="{StaticResource IssuesDataModelDataSource}"/>
+    </UserControl.DataContext>
+    <Grid x:Name="IssuesWindowGrid" Margin="-1,0,1,0" Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="394*"/>
+            <RowDefinition Height="25"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200*" MinWidth="200"/>
+            <ColumnDefinition Width="Auto" MinWidth="400"/>
+        </Grid.ColumnDefinitions>
+        <Menu x:Name="MainMenuIssues" Grid.ColumnSpan="3" Background="Transparent">
+            <MenuItem x:Name="ToolsMenu" Header="Menu" Width="auto" Background="Transparent" Template="{DynamicResource MenuTemplate}">
+                <MenuItem x:Name="OptionsMenu" Header="Configuration Options" Template="{DynamicResource MenuTemplate}">
+                	<MenuItem x:Name="ConfIssuesWindow" Header="Show Properties" Command="{Binding}" CommandParameter="{Binding Header, ElementName=ConfIssuesWindow}"/>
+                	<MenuItem x:Name="ConfPluginsOptions" Header="Plugins Properties" Command="{Binding}" CommandParameter="{Binding Header, ElementName=ConfPluginsOptions}"/>
+                </MenuItem>
+            </MenuItem>
+            <CheckBox Content="Control Panel" Height="18" Width="90" ToolTip="Show issues filtering options" IsChecked="{Binding ShowIssueFiltering}"/>
+            <CheckBox Content="Lock View" Height="18" Width="90" ToolTip="When Locked the Update of the Issues In the Editor will not change the list in the table bellow" IsChecked="{Binding IssuesInViewLocked}"/>
+            <CheckBox Content="Disable Tags" Height="18" Width="90" ToolTip="Disable Tags in Editor, Only Issues Window will be Populated" IsChecked="{Binding DisableEditorTags}"/>
+        </Menu>
+        <Grid x:Name="UserInputGrid" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="2" Margin="0"/>
+        <Grid x:Name="StatusGrid" Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="0" Background="Transparent" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="8*"/>
+                <ColumnDefinition Width="443*"/>
+            </Grid.ColumnDefinitions>
+            <Label x:Name="ErrorLabel" Content="{Binding ErrorMessage}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" >
+                <Label.ToolTip>
+                    <TextBlock Text="{Binding DiagnosticMessage}" />
+                </Label.ToolTip>
+            </Label>
+            <Label x:Name="DisplayStatsLabel" Content="{Binding StatsLabel}" Grid.Column="1" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}"/>
+            <Label x:Name="SonarInfoLabel" Content="{Binding SonarInfo}" Grid.Column="2" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}"/>
+            <Label x:Name="AssociationLabel" Grid.Column="4" Content="{Binding AssociatedProjectKey}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}"/>
+        </Grid>
+        <ComboBox Width="Auto" x:Name="CachedElements" Grid.Row="0" Grid.Column="1" SelectedItem="{Binding SelectedCachedElement, Mode=TwoWay}" ItemsSource="{Binding CachedIssuesListObs}" Background="Transparent" BorderBrush="Transparent" Margin="0,-2,0,2" FocusVisualStyle="{DynamicResource DropBoxFocusVisualStyle}"/>
+        <Grid x:Name="CentralGrid" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0"
+              d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}">
+            <Grid.ColumnDefinitions>
+				<ColumnDefinition Width="{Binding IssuesFilterWidth}"/>
+                <ColumnDefinition Width="400*"/>
+                <ColumnDefinition Width="{Binding CommentsWidth}"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>				
+                <RowDefinition Height="94*"/>
+            <RowDefinition Height="{Binding UserTextControlsHeight}" />
+            <RowDefinition Height="{Binding UserControlsHeight}" />
+            </Grid.RowDefinitions>
+            <DataGrid x:Name="IssuesDataGrid" Grid.Column="1" SelectionChanged="IssuesDataGridSelectionChanged" AutoGenerateColumns="False" SelectedItem="{Binding SelectedIssue}" ItemsSource="{Binding Issues}" VerticalScrollBarVisibility="Visible" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" GridLinesVisibility="None" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" RowBackground="Transparent" RowHeaderStyle="{DynamicResource DataGridRowHeaderStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" ColumnHeaderHeight="20" HeadersVisibility="Column" RowHeaderWidth="0" >
+                <DataGrid.InputBindings>
+                    <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding OpenInVsCommand}" CommandParameter="{Binding SelectedItems, ElementName=IssuesDataGrid}" />
+                </DataGrid.InputBindings>			
+                <DataGrid.Columns>
+                    <DataGridTextColumn DisplayIndex="{Binding Data.ComponentIndex, Source={StaticResource Proxy}, FallbackValue=0, Mode=TwoWay}" x:Name="Component" Binding="{Binding Component}" Header="Component" IsReadOnly="True" MinWidth="70" Visibility="{Binding Data.ComponentVisible, Converter={StaticResource BooleanToVisibilityConverter}, Source={StaticResource Proxy}}" />
+                    <DataGridTextColumn DisplayIndex="{Binding Data.LineIndex, Source={StaticResource Proxy}, FallbackValue=1, Mode=TwoWay}" x:Name="Line" Binding="{Binding Line}" Header="Line" IsReadOnly="True" MinWidth="40" Visibility="{Binding Data.LineVisible, Converter={StaticResource BooleanToVisibilityConverter}, Source={StaticResource Proxy}}"/>
+                    <DataGridTextColumn DisplayIndex="{Binding Data.AssigneeIndex, Source={StaticResource Proxy}, FallbackValue=2, Mode=TwoWay}" x:Name="Assignee" Binding="{Binding Assignee}" Header="Assignee" IsReadOnly="True" MinWidth="50" Visibility="{Binding Data.AssigneeVisible, Converter={StaticResource BooleanToVisibilityConverter}, Source={StaticResource Proxy}}"/>
+                    <DataGridTextColumn DisplayIndex="{Binding Data.MessageIndex, Source={StaticResource Proxy}, FallbackValue=3, Mode=TwoWay}" x:Name="Message" Binding="{Binding Message}" Header="Message" IsReadOnly="True" MinWidth="70" Visibility="{Binding Data.MessageVisible, Converter={StaticResource BooleanToVisibilityConverter}, Source={StaticResource Proxy}}"/>
+                    <DataGridTextColumn DisplayIndex="{Binding Data.StatusIndex, Source={StaticResource Proxy}, FallbackValue=4, Mode=TwoWay}" x:Name="Status" Binding="{Binding Status}" Header="Status" IsReadOnly="True" MinWidth="50" Visibility="{Binding Data.StatusVisible, Converter={StaticResource BooleanToVisibilityConverter}, Source={StaticResource Proxy}}" />
+                    <DataGridTextColumn DisplayIndex="{Binding Data.SeverityIndex, Source={StaticResource Proxy}, FallbackValue=5, Mode=TwoWay}" x:Name="Severity" Binding="{Binding Severity}" Header="Severity" IsReadOnly="True" MinWidth="70" Visibility="{Binding Data.SeverityVisible, Converter={StaticResource BooleanToVisibilityConverter}, Source={StaticResource Proxy}}"/>
+                    <DataGridTextColumn DisplayIndex="{Binding Data.RuleIndex, Source={StaticResource Proxy}, FallbackValue=6, Mode=TwoWay}" x:Name="Rule" Binding="{Binding Rule}" Header="Rule" IsReadOnly="True" MinWidth="50" Visibility="{Binding Data.RuleVisible, Converter={StaticResource BooleanToVisibilityConverter}, Source={StaticResource Proxy}}" />
+                    <DataGridTextColumn DisplayIndex="{Binding Data.CreationDateIndex, Source={StaticResource Proxy}, FallbackValue=7, Mode=TwoWay}" x:Name="CreationDate" Binding="{Binding CreationDate}" Header="CreationDate" IsReadOnly="True" MinWidth="70" Visibility="{Binding Data.CreationDateVisible, Converter={StaticResource BooleanToVisibilityConverter}, Source={StaticResource Proxy}}"/>
+                    <DataGridTextColumn DisplayIndex="{Binding Data.ProjectIndex, Source={StaticResource Proxy}, FallbackValue=8, Mode=TwoWay}" x:Name="Project" Binding="{Binding Project}" Header="Project" IsReadOnly="True" MinWidth="60" Visibility="{Binding Data.ProjectVisible, Converter={StaticResource BooleanToVisibilityConverter}, Source={StaticResource Proxy}}"/>
+                    <DataGridTextColumn DisplayIndex="{Binding Data.ResolutionIndex, Source={StaticResource Proxy}, FallbackValue=9, Mode=TwoWay}" x:Name="Resolution" Binding="{Binding Resolution}" Header="Resolution" IsReadOnly="True" MinWidth="70" Visibility="{Binding Data.ResolutionVisible, Converter={StaticResource BooleanToVisibilityConverter}, Source={StaticResource Proxy}}"/>
+                    <DataGridTextColumn DisplayIndex="{Binding Data.EffortToFixIndex, Source={StaticResource Proxy}, FallbackValue=10, Mode=TwoWay}" x:Name="EffortToFix" Binding="{Binding EffortToFix}" Header="EffortToFix" IsReadOnly="True" MinWidth="70" Visibility="{Binding Data.EffortToFixVisible, Converter={StaticResource BooleanToVisibilityConverter}, Source={StaticResource Proxy}}"/>
+                    <DataGridTextColumn DisplayIndex="{Binding Data.UpdateDateIndex, Source={StaticResource Proxy}, FallbackValue=11, Mode=TwoWay}" x:Name="UpdateDate" Binding="{Binding UpdateDate}" Header="UpdateDate" IsReadOnly="True" MinWidth="70" Visibility="{Binding Data.UpdateDateVisible, Converter={StaticResource BooleanToVisibilityConverter}, Source={StaticResource Proxy}}"/>
+                    <DataGridTextColumn DisplayIndex="{Binding Data.CloseDateIndex, Source={StaticResource Proxy}, FallbackValue=12, Mode=TwoWay}" x:Name="CloseDate" Binding="{Binding CloseDate}" Header="CloseDate" IsReadOnly="True" MinWidth="70" Visibility="{Binding Data.CloseDateVisible, Converter={StaticResource BooleanToVisibilityConverter}, Source={StaticResource Proxy}}"/>
+                    <DataGridTextColumn DisplayIndex="{Binding Data.KeyIndex, Source={StaticResource Proxy}, FallbackValue=13, Mode=TwoWay}" x:Name="Key" Binding="{Binding Key}" Header="Key" IsReadOnly="True" MinWidth="30" Visibility="{Binding Data.KeyVisible, Converter={StaticResource BooleanToVisibilityConverter}, Source={StaticResource Proxy}}" />
+                    <DataGridTextColumn DisplayIndex="{Binding Data.IdIndex, Source={StaticResource Proxy}, FallbackValue=14, Mode=TwoWay}" x:Name="Id" Binding="{Binding Id}" Header="Id" IsReadOnly="True" MinWidth="30" Visibility="{Binding Data.IdVisible, Converter={StaticResource BooleanToVisibilityConverter}, Source={StaticResource Proxy}}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+			<Grid x:Name="CommentsGrid" Grid.Row="0" Grid.Column="2">
+			<Border BorderBrush="Black" BorderThickness="1 1 1 1">
+            <DataGrid x:Name="CommentsDataGrid"  AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" CanUserDeleteRows="False" VerticalScrollBarVisibility="Visible" ItemsSource="{Binding Comments}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black" GridLinesVisibility="None" RowBackground="Transparent" HeadersVisibility="Column" ColumnHeaderHeight="20" RowHeaderStyle="{DynamicResource DataGridRowHeaderStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Login}" Header="Login" MinWidth="50"/>				
+                    <DataGridTextColumn Binding="{Binding CreatedAt}" Header="CreatedAt" MinWidth="70"/>
+                    <DataGridTextColumn Binding="{Binding HtmlText}" Header="HtmlText" MinWidth="50"/>
+                </DataGrid.Columns>
+            </DataGrid>
+			</Border>
+			</Grid>
+            <TextBox TextWrapping="Wrap" x:Name="UserInputTextBox" Text="{Binding CommentData}" Visibility="{Binding UserInputTextBoxVisibility}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Grid.Row="1" Grid.ColumnSpan="2"
+                     Grid.Column="0" />
+            <Grid x:Name="CommandGridControl" Grid.ColumnSpan="3" Grid.Column="0" Grid.Row="2" Background="Transparent">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Button x:Name="ButtonComment" Content="Comment" Margin="0" Command="{Binding CommentOnIssueCommand}" CommandParameter="{Binding SelectedItems, ElementName=IssuesDataGrid}" Visibility="{Binding IsCommentingVisible}" Background="{x:Null}" BorderBrush="{x:Null}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Template="{DynamicResource SquareButtonTemplate}" Width="80"/>
+                <Button x:Name="ButtonFalsePositive" Content="False Positive" Grid.Column="2" Command="{Binding FalsePositiveOnIssueCommand}" CommandParameter="{Binding SelectedItems, ElementName=IssuesDataGrid}" Visibility="{Binding IsFalsePositiveVisible}" Background="{x:Null}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Template="{DynamicResource SquareButtonTemplate}" Width="80"/>
+                <Button x:Name="ButtonResolve" Content="Resolve" Grid.Column="3" Command="{Binding ResolveIssueCommand}" CommandParameter="{Binding SelectedItems, ElementName=IssuesDataGrid}" Visibility="{Binding IsResolveVisible}" Background="Transparent" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Template="{DynamicResource SquareButtonTemplate}" Width="80"/>
+                <Button x:Name="ButtonReopen" Content="Reopen" Grid.Column="4" Command="{Binding ReOpenIssueCommand}" CommandParameter="{Binding SelectedItems, ElementName=IssuesDataGrid}" Visibility="{Binding IsReopenVisible}" Background="{x:Null}" BorderBrush="#FFC1B6DE" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Template="{DynamicResource SquareButtonTemplate}" Width="80"/>
+                <Button x:Name="ButtonConfirm" Content="Confirm" Grid.Column="5" Command="{Binding ConfirmIssueCommand}" CommandParameter="{Binding SelectedItems, ElementName=IssuesDataGrid}" Visibility="{Binding IsConfirmVisible}" Background="{x:Null}" BorderBrush="#FFB7E8A1" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Template="{DynamicResource SquareButtonTemplate}" Width="80"/>
+                <Button x:Name="ButtonUnConfirm" Content="UnConfirm" Grid.Column="6" Command="{Binding UnConfirmIssueCommand}" CommandParameter="{Binding SelectedItems, ElementName=IssuesDataGrid}" Visibility="{Binding IsUnconfirmVisible}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Template="{DynamicResource SquareButtonTemplate}" Width="80"/>
+                <Button x:Name="ButtonOpenInSonar" Content="Open in Sonar" Grid.Column="7" Command="{Binding OpenInSonarCommand}" CommandParameter="{Binding SelectedItems, ElementName=IssuesDataGrid}" Visibility="{Binding IsOpenExternallyVisible}" Background="{x:Null}" BorderBrush="#FF6F3A93" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Template="{DynamicResource SquareButtonTemplate}" Width="80"/>
+                <Button x:Name="ButtonOpenInVs" Content="Open in VS" Grid.Column="8" Command="{Binding OpenInVsCommand}" CommandParameter="{Binding SelectedItems, ElementName=IssuesDataGrid}" Visibility="{Binding IsOpenExternallyVisible}" Background="{x:Null}" BorderBrush="#FF3C1515" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Template="{DynamicResource SquareButtonTemplate}" Width="80"/>
+                <ComboBox x:Name="UsersSelectBox" Grid.Column="9" ItemTemplate="{DynamicResource DropBoxTemplate}" SelectedItem="{Binding SelectedUser, Mode=TwoWay}" ItemsSource="{Binding UsersList}" MaxDropDownHeight="101" Visibility="{Binding IsAssignVisible}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Width="80" Background="Transparent" FocusVisualStyle="{DynamicResource DropBoxFocusVisualStyle}" />
+                <Button x:Name="ButtonAssign" Content="Assign" Grid.Column="10" HorizontalAlignment="Left" Width="79" Margin="0,0,-6.5,0" Command="{Binding AssignOnIssueCommand}" CommandParameter="{Binding SelectedItems, ElementName=IssuesDataGrid}" Visibility="{Binding IsAssignVisible}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Template="{DynamicResource SquareButtonTemplate}"/>			
+            </Grid>
+
+				<Grid x:Name="ControlPanelGrid" Grid.Row="0" Grid.Column="0">
+					<Grid.RowDefinitions>
+							<RowDefinition Height="*"/>
+            				<RowDefinition Height="25"/>
+            		</Grid.RowDefinitions>
+					<Border BorderBrush="Black" BorderThickness="1 1 1 1">
+					<ScrollViewer>
+						
+						<Grid>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="10*"/>
+								<RowDefinition Height="10*"/>
+								<RowDefinition Height="10*"/>
+								<RowDefinition Height="10*"/>
+								<RowDefinition Height="10*"/>
+								<RowDefinition Height="10*"/>
+								<RowDefinition Height="10*"/>
+								<RowDefinition Height="100"/>
+							</Grid.RowDefinitions>
+							<Expander Header="Quick Links" Grid.Row="6" >
+								<Grid Background="Transparent" Height="80">
+									<Grid.RowDefinitions>
+										<RowDefinition Height="20"/>
+            							<RowDefinition Height="20"/>
+										<RowDefinition Height="20"/>
+										<RowDefinition Height="20"/>
+            						</Grid.RowDefinitions>
+            						<Grid.ColumnDefinitions>
+            							<ColumnDefinition Width="20*"/>
+									</Grid.ColumnDefinitions>
+										<Button Grid.Row="0" Grid.Column="0" Template="{DynamicResource SquareButtonTemplate}" x:Name="AllIssues" Content="All Issues" Command="{Binding GetIssuesCommand}" CommandParameter="{Binding Content, ElementName=AllIssues}"/>
+										<Button Grid.Row="1" Grid.Column="0" Template="{DynamicResource SquareButtonTemplate}" x:Name="IssuesSinceLastAnalysis" Content="All Issues Since Last Analysis" Command="{Binding GetIssuesCommand}" CommandParameter="{Binding Content, ElementName=IssuesSinceLastAnalysis}"/>
+										<Button Grid.Row="2" Grid.Column="0" Template="{DynamicResource SquareButtonTemplate}" x:Name="MyIssuesInProject" Content="My Issues In Project" Command="{Binding GetIssuesCommand}" CommandParameter="{Binding Content, ElementName=MyIssuesInProject}"/>
+										<Button Grid.Row="3" Grid.Column="0" Template="{DynamicResource SquareButtonTemplate}" x:Name="AllMyIssues" Content="All My Issues" Command="{Binding GetIssuesCommand}" CommandParameter="{Binding Content, ElementName=AllMyIssues}"/>																	
+								</Grid>								
+							</Expander>
+							<Expander Header="Project" Grid.Row="0" >
+								<Grid Background="Transparent" Height="60">
+									<Grid.RowDefinitions>
+										<RowDefinition Height="20"/>
+            							<RowDefinition Height="20"/>
+										<RowDefinition Height="20"/>
+            						</Grid.RowDefinitions>
+            						<Grid.ColumnDefinitions>
+            							<ColumnDefinition Width="60"/>
+										<ColumnDefinition Width="20*"/>
+									</Grid.ColumnDefinitions>									
+									<Label Content="Project" Style="{DynamicResource StyleOfLabels}"/>
+									<ComboBox Grid.Row="0" Grid.Column="1" SelectedItem="{Binding SelectedProjectInFilter, Mode=TwoWay}" ItemsSource="{Binding ProjectResources}" MaxDropDownHeight="101" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Background="Transparent" ItemTemplate="{DynamicResource ProjectDropBoxTemplate}" />
+									<Button Content="Associate" Grid.Row="1" Grid.Column="1" Template="{DynamicResource SquareButtonTemplate}" Command="{Binding AssignProjectCommand}" />
+									<Button Content="Clear Cache" Grid.Row="2" Grid.Column="1" Template="{DynamicResource SquareButtonTemplate}" Command="{Binding ClearCacheCommand}" />
+								</Grid>								
+							</Expander>
+							<Expander Header="Users" Grid.Row="1" HorizontalAlignment="Left" Width="181" >
+								<Grid Background="Transparent" Height="40">
+									<Grid.RowDefinitions>
+										<RowDefinition Height="20"/>
+            							<RowDefinition Height="20"/>
+            						</Grid.RowDefinitions>
+            						<Grid.ColumnDefinitions>
+            							<ColumnDefinition Width="60"/>
+										<ColumnDefinition Width="20*"/>
+										<ColumnDefinition Width="15"/>
+									</Grid.ColumnDefinitions>									
+									<Label Content="Reporter" Style="{DynamicResource StyleOfLabels}"/>
+									<Label Grid.Row="1" Grid.Column="0" Content="Assignee" Style="{DynamicResource StyleOfLabels}"/>									
+									<ComboBox Grid.Row="0" Grid.Column="1" ItemTemplate="{DynamicResource DropBoxTemplate}" SelectedItem="{Binding ReporterInFilter, Mode=TwoWay}" ItemsSource="{Binding UsersList}" MaxDropDownHeight="101" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Background="Transparent" FocusVisualStyle="{DynamicResource DropBoxFocusVisualStyle}" />									
+									<ComboBox Grid.Row="1" Grid.Column="1" ItemTemplate="{DynamicResource DropBoxTemplate}" SelectedItem="{Binding AssigneeInFilter, Mode=TwoWay}" ItemsSource="{Binding UsersList}" MaxDropDownHeight="101" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Background="Transparent" FocusVisualStyle="{DynamicResource DropBoxFocusVisualStyle}" />									
+									<CheckBox Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsReporterChecked}"/>
+									<CheckBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsAssigneeChecked}"/>
+								</Grid>								
+							</Expander>
+							<Expander Header="Status" Grid.Row="2" >
+								<Grid Background="Transparent" Height="100">
+									<Grid.RowDefinitions>
+										<RowDefinition Height="20"/>
+            							<RowDefinition Height="20"/>
+            							<RowDefinition Height="20"/>
+										<RowDefinition Height="20"/>
+										<RowDefinition Height="20"/>
+            						</Grid.RowDefinitions>
+            						<Grid.ColumnDefinitions>
+            							<ColumnDefinition Width="80"/>
+										<ColumnDefinition Width="20*"/>
+										<ColumnDefinition Width="15"/>
+									</Grid.ColumnDefinitions>    
+									<Label Content="Open" Style="{DynamicResource StyleOfLabels}"/>  									
+									<Label Grid.Row="1" Grid.Column="0" Content="Closed" Style="{DynamicResource StyleOfLabels}"/>
+									<Label Grid.Row="2" Grid.Column="0" Content="Resolved" Style="{DynamicResource StyleOfLabels}"/>																	
+									<Label Grid.Row="3" Grid.Column="0" Content="Confirmed" Style="{DynamicResource StyleOfLabels}"/>																	
+									<Label Grid.Row="4" Grid.Column="0" Content="Reopened" Style="{DynamicResource StyleOfLabels}"/>																										 									
+            						<CheckBox Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsStatusOpenChecked}"/>									
+            						<CheckBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsStatusClosedChecked}"/>									
+									<CheckBox Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsStatusResolvedChecked}"/>									
+									<CheckBox Grid.Row="3" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsStatusConfirmedChecked}"/>									
+									<CheckBox  Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsStatusReopenedChecked}"/>		
+								</Grid>														   				
+							</Expander>
+							<Expander Header="Severity" Grid.Row="3" >
+								<Grid Background="Transparent" Height="100">
+									<Grid.RowDefinitions>
+										<RowDefinition Height="20"/>
+            							<RowDefinition Height="20"/>
+            							<RowDefinition Height="20"/>
+										<RowDefinition Height="20"/>
+										<RowDefinition Height="20"/>
+            						</Grid.RowDefinitions>
+            						<Grid.ColumnDefinitions>
+            							<ColumnDefinition Width="80"/>
+										<ColumnDefinition Width="20*"/>
+										<ColumnDefinition Width="15"/>
+									</Grid.ColumnDefinitions>
+									<Label Content="Blocker" Style="{DynamicResource StyleOfLabels}"/>  									
+									<Label Grid.Row="1" Grid.Column="0" Content="Critical" Style="{DynamicResource StyleOfLabels}"/>
+									<Label Grid.Row="2" Grid.Column="0" Content="Major" Style="{DynamicResource StyleOfLabels}"/>																	
+									<Label Grid.Row="3" Grid.Column="0" Content="Minor" Style="{DynamicResource StyleOfLabels}"/>																	
+									<Label Grid.Row="4" Grid.Column="0" Content="Info" Style="{DynamicResource StyleOfLabels}"/>																	
+            						<CheckBox Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsBlockerChecked}"/>									
+            						<CheckBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsCriticalChecked}"/>									
+									<CheckBox Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsMajaorChecked}"/>									
+									<CheckBox Grid.Row="3" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsMinorChecked}"/>									
+									<CheckBox  Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsInfoChecked}"/>		
+								</Grid>														   				
+							</Expander>
+							<Expander Header="Resolution" Grid.Row="4" >
+								<Grid Background="Transparent" Height="60">
+									<Grid.RowDefinitions>
+										<RowDefinition Height="20"/>
+            							<RowDefinition Height="20"/>
+            							<RowDefinition Height="20"/>
+            						</Grid.RowDefinitions>
+            						<Grid.ColumnDefinitions>
+            							<ColumnDefinition Width="80"/>
+										<ColumnDefinition Width="20*"/>
+										<ColumnDefinition Width="15"/>
+									</Grid.ColumnDefinitions>
+									<Label Content="False Positive" Style="{DynamicResource StyleOfLabels}"/>
+                                    <Label Grid.Row="1" Grid.Column="0" Content="Removed" Style="{DynamicResource StyleOfLabels}"/>
+                                    <Label Grid.Row="2" Grid.Column="0" Content="Fixed" Style="{DynamicResource StyleOfLabels}"/>
+                                    <CheckBox Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsFalsePositiveChecked}"/>									
+            						<CheckBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsRemovedChecked}"/>									
+									<CheckBox Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsFixedChecked}"/>									
+								</Grid>														   				
+							</Expander>
+							<Expander Header="Creation Date" Grid.Row="5" >
+								<Grid Background="Transparent" Height="40">
+									<Grid.RowDefinitions>
+										<RowDefinition Height="20"/>
+            							<RowDefinition Height="20"/>
+            						</Grid.RowDefinitions>
+            						<Grid.ColumnDefinitions>
+            							<ColumnDefinition Width="50"/>
+										<ColumnDefinition Width="40*"/>
+										<ColumnDefinition Width="15"/>
+									</Grid.ColumnDefinitions>									
+									<Label Content="Since" Style="{DynamicResource StyleOfLabels}"/>
+									<Label Grid.Row="1" Grid.Column="0" Content="Before" Style="{DynamicResource StyleOfLabels}"/>
+									<DatePicker SelectedDate="{Binding CreatedSinceDate}"  Grid.Row="0" Grid.Column="1" />
+									<DatePicker SelectedDate="{Binding CreatedBeforeDate}"  Grid.Row="1" Grid.Column="1"/>
+            						<CheckBox Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsDateSinceChecked}"/>									
+            						<CheckBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsDateBeforeChecked}"/>																										
+								</Grid>								
+							</Expander>
+						</Grid>						
+					</ScrollViewer>		
+					</Border>
+					<Grid Grid.Row="1">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="85*"/>
+							<ColumnDefinition Width="85*"/>
+						</Grid.ColumnDefinitions>
+						<Button x:Name="GetFromServer" Content="Update Issues" Grid.Column="1" Template="{DynamicResource SquareButtonTemplate}" Command="{Binding GetIssuesCommand}" CommandParameter="{Binding Content, ElementName=GetFromServer}"/>
+						<Button x:Name="ApplyFilter" Content="Apply Filter" Grid.Column="0" Template="{DynamicResource SquareButtonTemplate}" Command="{Binding GetIssuesCommand}" CommandParameter="{Binding Content, ElementName=ApplyFilter}"/>
+					</Grid>
+				</Grid>
+        </Grid>        
+    </Grid>
+</UserControl>

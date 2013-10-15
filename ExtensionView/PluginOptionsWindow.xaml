@@ -1,0 +1,40 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ViewModel="clr-namespace:ExtensionViewModel.ViewModel;assembly=ExtensionViewModel" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="ExtensionView.PluginOptionsWindow"
+        Title="PluginOptionsWindow" Height="300" Width="auto" Background="#FFD6D7D6" BorderThickness="1" Visibility="Visible" Opacity="0.95">
+	<Window.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="StylesAndTemplates.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
+			<ViewModel:PluginsOptionsModel x:Key="PluginsOptionsModelDataSource" d:IsDataSource="True"/>
+		</ResourceDictionary>
+	</Window.Resources>
+	<Window.DataContext>
+		<Binding Source="{StaticResource PluginsOptionsModelDataSource}"/>
+	</Window.DataContext>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="34*"/>
+			<RowDefinition Height="30"/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="auto"/>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+		<ListBox ItemsSource="{Binding AvailablePluginsCollection}" d:DataContext="{d:DesignData /SampleData/PluginsOptionsModelSampleData.xaml, IsDesignTimeCreatable=False}" SelectedItem="{Binding SelectedPluginItem}" BorderBrush="{x:Null}" Background="Transparent"/>
+		<GroupBox Grid.Column="1" Header="{Binding SelectedPluginItem}" Content="{Binding OptionsInView}" BorderBrush="Black"/>
+		<Grid Grid.Column="1" Grid.Row="1">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="100"/>
+				<ColumnDefinition Width="100"/>
+				<ColumnDefinition Width="263*"/>
+				<ColumnDefinition Width="100"/>
+			</Grid.ColumnDefinitions>
+			<Button x:Name="OkButton" Content="Save and Exit" Command="{Binding ControlCommand}" CommandParameter="{Binding Content, ElementName=OkButton}" Template="{DynamicResource SquareButtonTemplate}"/>
+			<Button x:Name="ApplyButton" Content="Apply" Grid.Column="1" Command="{Binding ControlCommand}" CommandParameter="{Binding Content, ElementName=ApplyButton}" Template="{DynamicResource SquareButtonTemplate}"/>
+			<Button x:Name="CancelButton" Content="Cancel and Exit" Grid.Column="3" Command="{Binding ControlCommand}" CommandParameter="{Binding Content, ElementName=CancelButton}" Template="{DynamicResource SquareButtonTemplate}"/>
+		</Grid>        
+	</Grid>
+</Window>

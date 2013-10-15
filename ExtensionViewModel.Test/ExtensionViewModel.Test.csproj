@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{9CDCB1D8-0D3B-4071-9F9D-B1A2A2B9DA46}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ExtensionViewModel.Test</RootNamespace>
+    <AssemblyName>ExtensionViewModel.Test</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="Rhino.Mocks">
+      <HintPath>..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CoverageTests.cs" />
+    <Compile Include="DataInEditorTests.cs" />
+    <Compile Include="UpdateCachesTests.cs" />
+    <Compile Include="ModelPropertiesTest.cs" />
+    <Compile Include="NewWorkFlowTests.cs" />
+    <Compile Include="OldWorkFlowTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ExtensionHelpers\ExtensionHelpers.csproj">
+      <Project>{82914bc7-eee5-49e7-ac2b-a7451a7a797d}</Project>
+      <Name>ExtensionHelpers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ExtensionTypes\ExtensionTypes.csproj">
+      <Project>{75A39A9B-06B2-4249-9D3C-C2319951BC53}</Project>
+      <Name>ExtensionTypes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ExtensionViewModel\ExtensionViewModel.csproj">
+      <Project>{be15869a-b7f6-459e-93f9-e4c9130db42b}</Project>
+      <Name>ExtensionViewModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SonarRestService\SonarRestService.fsproj">
+      <Project>{64728a55-1166-4ec6-b066-22c4e01fc1c7}</Project>
+      <Name>SonarRestService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VSSonarPlugins\VSSonarPlugins.csproj">
+      <Project>{3311c918-b662-436d-8bc8-f38b447b1414}</Project>
+      <Name>VSSonarPlugins</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

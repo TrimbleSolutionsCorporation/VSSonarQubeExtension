@@ -1,0 +1,81 @@
+﻿<Window
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:ViewModel="clr-namespace:ExtensionViewModel.ViewModel;assembly=ExtensionViewModel" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:ExtensionTypes="clr-namespace:ExtensionTypes;assembly=ExtensionTypes" mc:Ignorable="d"
+	x:Class="ExtensionView.ProjectAssociationWindow"
+	x:Name="Window"
+	Title="ProjectAssociationWindow"
+	MinHeight="298" MinWidth="600" Height="313">
+
+	<Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.Close"
+                        Executed="CloseCommandHandler"/>
+    </Window.CommandBindings>
+
+	<Window.Resources>
+		<ViewModel:ProjectAssociationDataModel x:Key="ProjectAssociationDataModelDataSource" d:IsDataSource="True"/>
+		<DataTemplate x:Key="ProjectDropboxTemplate">
+			<StackPanel Orientation="Horizontal" Background="White">
+				<TextBlock Text="{Binding Key}"/>
+				<TextBlock Text="{Binding Name}"/>
+			</StackPanel>
+		</DataTemplate>
+		<DataTemplate x:Key="SelectedProjectTemplate">
+			<StackPanel>
+				<TextBlock x:Name="sdasd" Text="{Binding Date}" />
+				<TextBlock Text="{Binding Id}"/>
+				<TextBlock Text="{Binding Key}"/>
+				<TextBlock Text="{Binding Lang}"/>
+				<TextBlock Text="{Binding Lname}"/>
+				<TextBlock Text="{Binding Name}"/>
+				<TextBlock Text="{Binding Qualifier}"/>
+				<TextBlock Text="{Binding Scope}"/>
+				<TextBlock Text="{Binding Version}"/>
+			</StackPanel>
+		</DataTemplate>
+	</Window.Resources>
+	<Window.DataContext>
+		<Binding Source="{StaticResource ProjectAssociationDataModelDataSource}"/>
+	</Window.DataContext>
+	<Grid d:DataContext="{d:DesignData /SampleData/ProjectAssociationDataModelSampleData.xaml}">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="30"/>
+			<RowDefinition Height="30"/>
+		</Grid.RowDefinitions>
+		<DataGrid x:Name="ProjectList" AutoGenerateColumns="False" SelectionMode="Single" ItemsSource="{Binding ProjectResources}" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" SelectedItem="{Binding SelectedProject}">
+			<DataGrid.Columns>
+				<DataGridTextColumn Binding="{Binding Name}" Header="Name"/>				
+				<DataGridTextColumn Binding="{Binding Key}" Header="Key"/>
+				<DataGridTextColumn Binding="{Binding Lang}" Header="Lang"/>
+				<DataGridTextColumn Binding="{Binding Version}" Header="Version"/>
+				<DataGridTextColumn Binding="{Binding Date}" Header="Date"/>
+				<DataGridTextColumn Binding="{Binding Id}" Header="Id"/>
+				<DataGridTextColumn Binding="{Binding Lname}" Header="Lname"/>
+				<DataGridTextColumn Binding="{Binding Qualifier}" Header="Qualifier"/>
+				<DataGridTextColumn Binding="{Binding Scope}" Header="Scope"/>
+
+			</DataGrid.Columns>
+		</DataGrid>
+		<Grid Grid.Row="2" Margin="3,0">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="150"/>
+				<ColumnDefinition Width="150"/>
+				<ColumnDefinition Width="150"/>
+				<ColumnDefinition Width="150"/>
+			</Grid.ColumnDefinitions>
+			<Button Content="Refresh List" Command="{Binding RetriveProjectsFromServerCommand}"/>
+			<Button Content="Selected Project" Grid.Column="1" Command="{Binding AssociateCommand}" CommandParameter="{Binding SelectedItem, ElementName=ProjectList}"/>
+			<Button Content="Unselect Project" Grid.Column="2" Command="{Binding AssociateCommand}"/>
+			<Button Content="Close" Grid.Column="3" Command="ApplicationCommands.Close"/>
+		</Grid>
+		<Grid Grid.Row="1">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="100"/>
+				<ColumnDefinition Width="493*"/>
+			</Grid.ColumnDefinitions>
+			<Label Content="Selected Project:"/>
+			<Label Content="{Binding AssociatedProject.Key}" Grid.Column="1"/>
+		</Grid>
+	</Grid>
+</Window>

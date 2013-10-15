@@ -1,0 +1,55 @@
+﻿<Window
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+	x:Class="ExtensionView.IssuesGridSettingsDialog"
+	x:Name="Window"
+	Title="Issues Grid Visibity"
+	d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Width="290" Height="187" Background="#FFEFEFEF" Opacity="0.95" BorderThickness="1">
+	<Window.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="StylesAndTemplates.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</Window.Resources>
+<Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.Close"
+                        Executed="CloseCommandHandler"/>
+    </Window.CommandBindings>
+	<Grid x:Name="LayoutRoot">
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition></ColumnDefinition>
+				<ColumnDefinition></ColumnDefinition>				
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="16"/>
+				<RowDefinition Height="16"/>
+				<RowDefinition Height="16"/>
+				<RowDefinition Height="16"/>
+				<RowDefinition Height="16"/>
+				<RowDefinition Height="16"/>
+				<RowDefinition Height="16"/>
+				<RowDefinition Height="16"/>
+				<RowDefinition Height="26"/>
+			</Grid.RowDefinitions>
+			<CheckBox x:Name="ComponentVisible" Content="Component" IsChecked="{Binding ComponentVisible}"/>
+			<CheckBox x:Name="LineVisible" Content="Line" IsChecked="{Binding LineVisible}" Grid.Row="1"/>
+			<CheckBox x:Name="AssigneeVisible" Content="Assignee" IsChecked="{Binding AssigneeVisible}"  Grid.Row="2" />
+			<CheckBox x:Name="MessageVisible" Content="Message" IsChecked="{Binding MessageVisible}"  Grid.Row="3" />
+			<CheckBox x:Name="StatusVisible" Content="Status" IsChecked="{Binding StatusVisible}"  Grid.Row="4"/>
+			<CheckBox x:Name="RuleVisible" Content="Rule" IsChecked="{Binding RuleVisible}"  Grid.Row="5"/>
+			<CheckBox x:Name="CreationDateVisible" Content="CreationDate" IsChecked="{Binding CreationDateVisible}"  Grid.Row="6" />
+			<CheckBox x:Name="SeverityVisible" Content="Severity" IsChecked="{Binding SeverityVisible}"  Grid.Row="7" />
+			<CheckBox x:Name="ProjectVisible" Content="Project" IsChecked="{Binding ProjectVisible}"  Grid.Row="6" Grid.Column="1"/>
+			<CheckBox x:Name="ResolutionVisible" Content="Resolution" IsChecked="{Binding ResolutionVisible}"  Grid.Row="5" Grid.Column="1"/>
+			<CheckBox x:Name="EffortToFixVisible" Content="Effort" IsChecked="{Binding EffortToFixVisible}"  Grid.Row="4" Grid.Column="1"/>
+			<CheckBox x:Name="UpdateDateVisible" Content="UpdateDate" IsChecked="{Binding UpdateDateVisible}"  Grid.Row="3" Grid.Column="1"/>
+			<CheckBox x:Name="CloseDateVisible" Content="CloseDate" IsChecked="{Binding CloseDateVisible}"  Grid.Row="2" Grid.Column="1" />
+			<CheckBox x:Name="KeyVisible" Content="Key" IsChecked="{Binding KeyVisible}"  Grid.Row="1" Grid.Column="1" />
+			<CheckBox x:Name="IdVisible" Content="Id" IsChecked="{Binding IdVisible}" Grid.Column="1" />
+			<Button x:Name="CancelButton" Content="Close" Grid.Row="8" Grid.Column="1" Command="ApplicationCommands.Close" Template="{DynamicResource SquareButtonTemplate}"/>
+		</Grid>
+	</Grid>
+</Window>
