@@ -1,0 +1,14 @@
+﻿<ViewModel:PluginsOptionsModel xmlns:ViewModel="clr-namespace:ExtensionViewModel.ViewModel;assembly=ExtensionViewModel" xmlns:System="clr-namespace:System;assembly=mscorlib" SelectedPluginItem="Convallis nec">
+	<ViewModel:PluginsOptionsModel.AvailablePluginsCollection>
+		<System:String>Maecenas aenean cras curabitur</System:String>
+		<System:String>Aliquam mauris nam</System:String>
+		<System:String>Sed integer</System:String>
+		<System:String>Nullam dis aptent praesent vestibulum</System:String>
+		<System:String>Est quisque duis accumsan</System:String>
+		<System:String>Hac class curae</System:String>
+		<System:String>Vivamus bibendum</System:String>
+		<System:String>Dictumst eleifend</System:String>
+		<System:String>Leo phasellus mus nunc</System:String>
+		<System:String>Adipiscing aliquam consequat</System:String>
+	</ViewModel:PluginsOptionsModel.AvailablePluginsCollection>
+</ViewModel:PluginsOptionsModel>

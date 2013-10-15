@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BE15869A-B7F6-459E-93F9-E4C9130DB42B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ExtensionViewModel</RootNamespace>
+    <AssemblyName>ExtensionViewModel</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.Shell.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Commands\ClearCacheCommand.cs" />
+    <Compile Include="Commands\AssociateCommand.cs" />
+    <Compile Include="Commands\ConfirmIssueCommand.cs" />
+    <Compile Include="Commands\GetIssuesCommand.cs" />
+    <Compile Include="Commands\UnConfirmIssueCommand.cs" />
+    <Compile Include="Commands\ReOpenIssueCommand.cs" />
+    <Compile Include="Commands\RetriveProjectsFromServerCommand.cs" />
+    <Compile Include="Commands\CommentOnIssueCommand.cs" />
+    <Compile Include="Commands\AssignOnIssueCommand.cs" />
+    <Compile Include="Commands\OpenInVSCommand.cs" />
+    <Compile Include="Commands\OpenInSonarCommand.cs" />
+    <Compile Include="Commands\FalsePositiveOnIssueCommand.cs" />
+    <Compile Include="Commands\ResolveIssueCommand.cs" />
+    <Compile Include="ViewModel\BindingProxy.cs" />
+    <Compile Include="ViewModel\DataGridControlViewModel.cs" />
+    <Compile Include="ViewModel\ModelData.cs" />
+    <Compile Include="ViewModel\IssuesFilterViewModel.cs" />
+    <Compile Include="ViewModel\PluginsOptionsModel.cs" />
+    <Compile Include="ViewModel\ExtensionDataModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\ProjectAssociationDataModel.cs" />
+    <Compile Include="ViewModel\ViewDesignElements.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DiffCalc\DiffCalc.csproj">
+      <Project>{CA9B6FA7-9A52-49E9-9387-22C82B0F8962}</Project>
+      <Name>DiffCalc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DifferenceEngine\DifferenceEngine.csproj">
+      <Project>{8ae4897a-ea74-49b1-ba55-d892c27af9c9}</Project>
+      <Name>DifferenceEngine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ExtensionHelpers\ExtensionHelpers.csproj">
+      <Project>{82914bc7-eee5-49e7-ac2b-a7451a7a797d}</Project>
+      <Name>ExtensionHelpers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ExtensionTypes\ExtensionTypes.csproj">
+      <Project>{75a39a9b-06b2-4249-9d3c-c2319951bc53}</Project>
+      <Name>ExtensionTypes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VSSonarPlugins\VSSonarPlugins.csproj">
+      <Project>{3311C918-B662-436D-8BC8-F38B447B1414}</Project>
+      <Name>VSSonarPlugins</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SonarRestService\SonarRestService.fsproj">
+      <Project>{64728a55-1166-4ec6-b066-22c4e01fc1c7}</Project>
+      <Name>SonarRestService</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
