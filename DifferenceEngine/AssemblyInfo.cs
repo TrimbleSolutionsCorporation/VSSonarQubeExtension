@@ -1,7 +1,8 @@
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="AssemblyInfo.cs" company="Copyright © 2013 Tekla Corporation. Tekla is a Trimble Company">
-//     Copyright (C) 2013 [Jorge Costa, Jorge.Costa@tekla.com]
+//     Copyright (C) 2013 [Jorge Costa, Jorge.Costa@Tekla.com]
 // </copyright>
+// All credit goes to http://www.codeproject.com/Articles/6943/A-Generic-Reusable-Diff-Algorithm-in-C-II#_comments
 // --------------------------------------------------------------------------------------------------------------------
 // This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
 // as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
@@ -20,9 +21,9 @@ using System.Reflection;
 [assembly: AssemblyTitle("")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("")]
+[assembly: AssemblyCompany("Tekla is a Trimble Company")]
+[assembly: AssemblyProduct("DifferenceEngine")]
+[assembly: AssemblyCopyright("Copyright © 2013 Tekla Corporation. Tekla is a Trimble Company")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

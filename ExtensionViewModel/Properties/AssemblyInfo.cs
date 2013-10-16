@@ -21,9 +21,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("ExtensionViewModel")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Tekla Corporation. Tekla is a Trimble Company")]
 [assembly: AssemblyProduct("ExtensionViewModel")]
-[assembly: AssemblyCopyright("Copyright ©  2013")]
+[assembly: AssemblyCopyright("Copyright © 2013 Tekla Corporation. Tekla is a Trimble Company")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

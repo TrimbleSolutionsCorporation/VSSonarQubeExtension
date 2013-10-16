@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="UpdateCachesTests.cs" company="Copyright © 2013 Tekla Corporation. Tekla is a Trimble Company">
+// <copyright file="AssemblyInfo.cs" company="Copyright © 2013 Tekla Corporation. Tekla is a Trimble Company">
 //     Copyright (C) 2013 [Jorge Costa, Jorge.Costa@tekla.com]
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -24,9 +24,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("VSSonarExtension")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Copyright © 2013 Tekla Corporation. Tekla is a Trimble Company")]
+[assembly: AssemblyCompany("Tekla Corporation. Tekla is a Trimble Company")]
 [assembly: AssemblyProduct("VSSonarExtension")]
-[assembly: AssemblyCopyright("")]
+[assembly: AssemblyCopyright("Copyright © 2013 Tekla Corporation. Tekla is a Trimble Company")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]   
 [assembly: ComVisible(false)]     
