@@ -60,6 +60,10 @@
     <Compile Include="XmlTypeProviders.fs" />
     <Compile Include="XmlHelpers.fs" />
     <None Include="packages.config" />
+    <Compile Include="AssemblyInfo.fs">
+      <SubType>
+      </SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
