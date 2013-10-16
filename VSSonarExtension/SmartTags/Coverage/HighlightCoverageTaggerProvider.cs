@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="HighlightCoverageTaggerProvider.cs" company="Copyright © 2013 Tekla Corporation. Tekla is a Trimble Company">
-//     Copyright (C) 2013 [Jorge Costa, Jorge.Costa@tekla.com]
+// <copyright file="HighlightCoverageTaggerProvider.cs" company="Trimble Navigation Limited">
+//     Copyright (C) 2013 [Jorge Costa, Jorge.Costa@trimble.com]
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 // This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
@@ -65,11 +65,9 @@ namespace VSSonarExtension.SmartTags.Coverage
                 return new HighlightCoverageTagger(buffer, document.FilePath, false) as ITagger<T>;
             }
 
-            using (var taginstance = new HighlightCoverageTagger(buffer, document.FilePath, true))
-            {
-                AllCoverageTags.Add(document.FilePath, taginstance);
-                return taginstance as ITagger<T>;
-            }
+            var taginstance = new HighlightCoverageTagger(buffer, document.FilePath, true);
+            AllCoverageTags.Add(document.FilePath, taginstance);
+            return taginstance as ITagger<T>;
         }
     }
 }

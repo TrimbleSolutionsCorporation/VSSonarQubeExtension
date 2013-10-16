@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="BufferProvider.cs" company="Copyright © 2013 Tekla Corporation. Tekla is a Trimble Company">
-//     Copyright (C) 2013 [Jorge Costa, Jorge.Costa@tekla.com]
+// <copyright file="BufferProvider.cs" company="Trimble Navigation Limited">
+//     Copyright (C) 2013 [Jorge Costa, Jorge.Costa@trimble.com]
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 // This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
@@ -66,16 +66,19 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
 
                 filePath = document.FilePath;
 
-                if (AllBufferTaggger.ContainsKey(filePath))
+                BufferTagger taginstance;
+
+                if (!AllBufferTaggger.ContainsKey(filePath))
                 {
-                    return new BufferTagger(buffer, filePath, false) as ITagger<T>;
+                    taginstance = new BufferTagger(buffer, filePath, true);
+                    AllBufferTaggger.Add(document.FilePath, taginstance);
+                }
+                else
+                {
+                    taginstance = new BufferTagger(buffer, filePath, false);
                 }
 
-                using (var taginstance = new BufferTagger(buffer, filePath, true))
-                {
-                    AllBufferTaggger.Add(document.FilePath, taginstance);
-                    return taginstance as ITagger<T>;
-                }
+                return taginstance as ITagger<T>;
             }
             catch (Exception ex)
             {
@@ -84,10 +87,8 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
                     MessageBox.Show("Ups Something Went Wrong: " + ex.Message + "\r\n" + "StackTrace: " + ex.StackTrace + "\r\n At FilePath: " + filePath);
                 }
 
-                using (var emptyTag = new BufferTagger())
-                {
-                    return emptyTag as ITagger<T>;
-                }                
+                var emptyTag = new BufferTagger();
+                return emptyTag as ITagger<T>;
             }
         }
     }
