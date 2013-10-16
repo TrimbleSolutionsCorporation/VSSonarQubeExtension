@@ -14,3 +14,23 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. 
 You should have received a copy of the GNU Lesser General Public License along with this program; if not, write to the Free
 Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+
+### Changelog
+#### Version 1.0
+     Control Panel 
+     Better visual integration with Visual Studio 
+     Local analysis provided by plugins 
+     Filter on issues 
+
+#### Version 0.4
+     Issues window 
+     Suport SonarQube 3.6 
+     Project association window 
+     vb.net 
+
+#### Version 0.3
+     Support for c++, c# 
+     c++ local analysis 
+     Coverage display in editor 
+     Violations in editor 
