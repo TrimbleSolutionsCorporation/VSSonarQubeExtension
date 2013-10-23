@@ -1,7 +1,7 @@
 VSSonarQubeExtension
 ====================
 
-This is a SonarQube Extension for Visual Studio.
+This is a Extension for Visual Studio to interact wiht SonarQube (TM).
 
 All information on configuration and usage will be found in the wiki pages. [Home](https://github.com/jmecosta/VSSonarQubeExtension/wiki)
 
