@@ -183,7 +183,7 @@
 										<ColumnDefinition Width="20*"/>
 									</Grid.ColumnDefinitions>									
 									<Label Content="Project" Style="{DynamicResource StyleOfLabels}"/>
-									<ComboBox Grid.Row="0" Grid.Column="1" SelectedItem="{Binding SelectedProjectInFilter, Mode=TwoWay}" ItemsSource="{Binding ProjectResources}" MaxDropDownHeight="101" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Background="Transparent" ItemTemplate="{DynamicResource ProjectDropBoxTemplate}" />
+									<ComboBox Grid.Row="0" Grid.Column="1" SelectedItem="{Binding SelectedProjectInFilterList, Mode=TwoWay}" ItemsSource="{Binding ProjectResourcesList}" MaxDropDownHeight="101" IsTextSearchEnabled="True" Background="Transparent" />
 									<Button Content="Associate" Grid.Row="1" Grid.Column="1" Template="{DynamicResource SquareButtonTemplate}" Command="{Binding AssignProjectCommand}" />
 									<Button Content="Clear Cache" Grid.Row="2" Grid.Column="1" Template="{DynamicResource SquareButtonTemplate}" Command="{Binding ClearCacheCommand}" />
 								</Grid>								

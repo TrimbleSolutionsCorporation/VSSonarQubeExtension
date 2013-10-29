@@ -17,6 +17,7 @@ namespace ExtensionViewModel.ViewModel
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.Linq;
 
     using ExtensionTypes;
 
@@ -62,10 +63,14 @@ namespace ExtensionViewModel.ViewModel
         /// </summary>
         private Resource selectedProjectInFilter;
 
+        private string selectedProjectInFilterList;
+
         /// <summary>
         ///     The selected user in filter.
         /// </summary>
         private User selectedUserInFilter;
+
+        private List<string> projectResourcesList;
 
         #endregion
 
@@ -208,6 +213,23 @@ namespace ExtensionViewModel.ViewModel
         public bool IsDateSinceChecked { get; set; }
 
         /// <summary>
+        /// Gets or sets project resource list
+        /// </summary>
+        public List<String> ProjectResourcesList
+        {
+            get
+            {
+                return this.projectResourcesList;
+            }
+
+            set
+            {
+                this.projectResourcesList = value;
+                this.OnPropertyChanged("ProjectResourcesList");
+            }
+        }
+
+        /// <summary>
         ///     Gets or sets the users list.
         /// </summary>
         public List<Resource> ProjectResources
@@ -220,24 +242,31 @@ namespace ExtensionViewModel.ViewModel
             set
             {
                 this.projectResources = value;
+                this.ProjectResourcesList = this.projectResources.Select(projectResource => projectResource.Lname + "   -    " + projectResource.Lang).ToList();
                 this.OnPropertyChanged("ProjectResources");
             }
         }
 
         /// <summary>
-        /// Gets or sets the reporter in filter.
+        /// Gets or sets the selected project list
         /// </summary>
-        public User ReporterInFilter
+        public string SelectedProjectInFilterList
         {
             get
             {
-                return this.reporterInFilter;
+                return this.selectedProjectInFilterList;
             }
 
             set
             {
-                this.reporterInFilter = value;
-                this.OnPropertyChanged("ReporterInFilter");
+                this.selectedProjectInFilterList = value;
+
+                foreach (var variable in this.projectResources.Where(variable => (variable.Lname + "   -    " + variable.Lang).Equals(value)))
+                {
+                    this.selectedProjectInFilter = variable;
+                }
+
+                this.OnPropertyChanged("SelectedProjectInFilterList");
             }
         }
 
@@ -255,6 +284,23 @@ namespace ExtensionViewModel.ViewModel
             {
                 this.selectedProjectInFilter = value;
                 this.OnPropertyChanged("SelectedProjectInFilter");
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the reporter in filter.
+        /// </summary>
+        public User ReporterInFilter
+        {
+            get
+            {
+                return this.reporterInFilter;
+            }
+
+            set
+            {
+                this.reporterInFilter = value;
+                this.OnPropertyChanged("ReporterInFilter");
             }
         }
 
