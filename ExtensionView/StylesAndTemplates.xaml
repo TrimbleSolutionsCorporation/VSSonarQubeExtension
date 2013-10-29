@@ -224,10 +224,10 @@
         </Setter>
     </Style>
     <DataTemplate x:Key="ProjectDropBoxTemplate">
-        <Grid Width="233">
+        <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="129*"/>
-                <ColumnDefinition Width="104*"/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <TextBlock Text="{Binding Name}" Opacity="0.8" Background="Transparent" Grid.ColumnSpan="1" Margin="0,0,5,0"/>
             <TextBlock Text="{Binding Lang}" Background="Transparent" Opacity="0.8" Grid.Column="1" Margin="5,0,0,0" />
