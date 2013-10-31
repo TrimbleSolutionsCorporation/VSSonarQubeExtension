@@ -63,35 +63,39 @@ namespace ExtensionViewModel.ViewModel
         /// </summary>
         private Resource selectedProjectInFilter;
 
+        /// <summary>
+        /// The selected project in filter list.
+        /// </summary>
         private string selectedProjectInFilterList;
 
         /// <summary>
-        ///     The selected user in filter.
+        /// The project resources list.
         /// </summary>
-        private User selectedUserInFilter;
-
         private List<string> projectResourcesList;
+
+        /// <summary>
+        /// The display users list.
+        /// </summary>
+        private List<string> displayUsersList;
+
+        /// <summary>
+        /// The display reporter in filter.
+        /// </summary>
+        private string displayReporterInFilter;
+
+        /// <summary>
+        /// The display assignee in filter.
+        /// </summary>
+        private string displayAssigneeInFilter;
+
+        /// <summary>
+        /// The display selected user.
+        /// </summary>
+        private string displaySelectedUser;
 
         #endregion
 
         #region Public Properties
-
-        /// <summary>
-        /// Gets or sets the assignee in filter.
-        /// </summary>
-        public User AssigneeInFilter
-        {
-            get
-            {
-                return this.assigneeInFilter;
-            }
-
-            set
-            {
-                this.assigneeInFilter = value;
-                this.OnPropertyChanged("AssigneeInFilter");
-            }
-        }
 
         /// <summary>
         ///     Gets or sets the created before date.
@@ -215,7 +219,7 @@ namespace ExtensionViewModel.ViewModel
         /// <summary>
         /// Gets or sets project resource list
         /// </summary>
-        public List<String> ProjectResourcesList
+        public List<string> ProjectResourcesList
         {
             get
             {
@@ -288,6 +292,65 @@ namespace ExtensionViewModel.ViewModel
         }
 
         /// <summary>
+        ///     Gets or sets the users list.
+        /// </summary>
+        public List<User> UsersList
+        {
+            get
+            {
+                return this.usersList;
+            }
+
+            set
+            {
+                this.usersList = value;
+                var list = value.Select(variable => variable.Login + "   -   " + variable.Name).ToList();
+
+                this.DisplayUsersList = list;
+                this.OnPropertyChanged("UsersList");
+            }
+        }
+
+        /// <summary>
+        ///     Gets or sets the display users list.
+        /// </summary>
+        public List<string> DisplayUsersList
+        {
+            get
+            {
+                return this.displayUsersList;
+            }
+
+            set
+            {
+                this.displayUsersList = value;
+                this.OnPropertyChanged("DisplayUsersList");
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the reporter in filter.
+        /// </summary>
+        public string DisplayReporterInFilter
+        {
+            get
+            {
+                return this.displayReporterInFilter;
+            }
+
+            set
+            {
+                this.displayReporterInFilter = value;
+                foreach (var variable in this.UsersList.Where(variable => (variable.Login + "   -   " + variable.Name).Equals(value)))
+                {
+                    this.ReporterInFilter = variable;
+                }
+
+                this.OnPropertyChanged("DisplayReporterInFilter");
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the reporter in filter.
         /// </summary>
         public User ReporterInFilter
@@ -305,21 +368,83 @@ namespace ExtensionViewModel.ViewModel
         }
 
         /// <summary>
-        ///     Gets or sets the selected user in filter.
+        /// Gets or sets the assignee in filter.
         /// </summary>
-        public User SelectedUserInFilter
+        public string DisplayAssigneeInFilter
         {
             get
             {
-                return this.selectedUserInFilter;
+                return this.displayAssigneeInFilter;
             }
 
             set
             {
-                this.selectedUserInFilter = value;
-                this.OnPropertyChanged("SelectedUserInFilter");
+                this.displayAssigneeInFilter = value;
+
+                foreach (var variable in this.UsersList.Where(variable => (variable.Login + "   -   " + variable.Name).Equals(value)))
+                {
+                    this.AssigneeInFilter = variable;
+                }
+
+                this.OnPropertyChanged("DisplayAssigneeInFilter");
             }
-        }        
+        }
+
+        /// <summary>
+        /// Gets or sets the assignee in filter.
+        /// </summary>
+        public User AssigneeInFilter
+        {
+            get
+            {
+                return this.assigneeInFilter;
+            }
+
+            set
+            {
+                this.assigneeInFilter = value;
+                this.OnPropertyChanged("AssigneeInFilter");
+            }
+        }
+
+        /// <summary>
+        ///     Gets or sets the selected user.
+        /// </summary>
+        public User SelectedUser
+        {
+            get
+            {
+                return this.selectedUser;
+            }
+
+            set
+            {
+                this.selectedUser = value;
+                this.OnPropertyChanged("SelectedUser");
+            }
+        }
+
+                /// <summary>
+        ///     Gets or sets the selected user.
+        /// </summary>
+        public string DisplaySelectedUser
+        {
+            get
+            {
+                return this.displaySelectedUser;
+            }
+
+            set
+            {
+                this.displaySelectedUser = value;
+                foreach (var variable in this.UsersList.Where(variable => (variable.Login + "   -   " + variable.Name).Equals(value)))
+                {
+                    this.SelectedUser = variable;
+                }
+
+                this.OnPropertyChanged("DisplaySelectedUser");
+            }
+        }
 
         #endregion
 
