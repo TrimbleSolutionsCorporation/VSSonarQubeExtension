@@ -914,23 +914,6 @@ namespace ExtensionViewModel.ViewModel
         }
 
         /// <summary>
-        ///     Gets or sets the selected user.
-        /// </summary>
-        public User SelectedUser
-        {
-            get
-            {
-                return this.selectedUser;
-            }
-
-            set
-            {
-                this.selectedUser = value;
-                this.OnPropertyChanged("SelectedUser");
-            }
-        }
-
-        /// <summary>
         ///     Gets or sets the server analysis.
         /// </summary>
         public AnalysesType ServerAnalysis
@@ -1148,23 +1131,6 @@ namespace ExtensionViewModel.ViewModel
             {
                 this.commentsWidth = value;
                 this.OnPropertyChanged("CommentsWidth");
-            }
-        }
-
-        /// <summary>
-        ///     Gets or sets the users list.
-        /// </summary>
-        public List<User> UsersList
-        {
-            get
-            {
-                return this.usersList;
-            }
-
-            set
-            {
-                this.usersList = value;
-                this.OnPropertyChanged("UsersList");
             }
         }
 
