@@ -17,6 +17,10 @@ Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 ### Changelog
+#### Version 1.0.1
+     Associaton broken when pom.xml or sonar runner properties is not found. 
+     Add key filter to combo box
+
 #### Version 1.0
      Control Panel 
      Better visual integration with Visual Studio 
