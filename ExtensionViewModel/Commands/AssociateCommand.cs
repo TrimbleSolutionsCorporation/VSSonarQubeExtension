@@ -15,12 +15,12 @@
 namespace ExtensionViewModel.Commands
 {
     using System;
+    using System.Windows.Forms;
     using System.Windows.Input;
 
-    using ExtensionTypes;
-    using ExtensionViewModel.ViewModel;
+    using ExtensionHelpers;
 
-    using SonarRestService;
+    using ExtensionViewModel.ViewModel;
 
     /// <summary>
     /// The view options command.
@@ -33,9 +33,9 @@ namespace ExtensionViewModel.Commands
         private readonly ExtensionDataModel model;
 
         /// <summary>
-        /// The modelproject.
+        ///     The vsenvironmenthelper.
         /// </summary>
-        private ProjectAssociationDataModel modelproject;
+        private readonly IVsEnvironmentHelper vsenvironmenthelper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AssociateCommand"/> class.
@@ -55,20 +55,13 @@ namespace ExtensionViewModel.Commands
         /// <param name="model">
         /// The model.
         /// </param>
-        public AssociateCommand(ExtensionDataModel model)
+        /// <param name="vsenvironmenthelper">
+        /// The vsenvironmenthelper.
+        /// </param>
+        public AssociateCommand(ExtensionDataModel model, IVsEnvironmentHelper vsenvironmenthelper)
         {
             this.model = model;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AssociateCommand"/> class.
-        /// </summary>
-        /// <param name="model">
-        /// The model.
-        /// </param>
-        public AssociateCommand(ProjectAssociationDataModel model)
-        {
-            this.modelproject = model;
+            this.vsenvironmenthelper = vsenvironmenthelper;
         }
 
         /// <summary>
@@ -98,14 +91,25 @@ namespace ExtensionViewModel.Commands
         /// </param>
         public void Execute(object parameter)
         {
-            if (this.model != null)
+            var solutionName = this.vsenvironmenthelper.ActiveSolutionName();
+            var selectedProjectInFilter = this.model.SelectedProjectInFilter;
+            this.model.AssociatedProject = this.model.SelectedProjectInFilter;
+            if (selectedProjectInFilter == null || string.IsNullOrEmpty(solutionName))
             {
-                this.model.AssociatedProject = this.model.SelectedProjectInFilter;
+                return;
+            }
+
+            if (this.model.AssociatedProjectKey == null)
+            {                  
+                this.vsenvironmenthelper.WriteOptionInApplicationData(solutionName, "PROJECTKEY", selectedProjectInFilter.Key);
             }
             else
             {
-                var resource = parameter as Resource;
-                this.modelproject.AssociatedProject = resource ?? null;
+                var dialogResult = MessageBox.Show("Do you want to save this option to environment, so it will reuse this association when Visual Studio Restart?", "Save Association to Disk", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    this.vsenvironmenthelper.WriteOptionInApplicationData(solutionName, "PROJECTKEY", selectedProjectInFilter.Key);
+                }
             }
         }
     }

@@ -21,6 +21,10 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
 
     using EnvDTE;
 
+    using ExtensionHelpers;
+
+    using ExtensionTypes;
+
     using ExtensionViewModel.ViewModel;
 
     using Microsoft.VisualStudio.Text;
@@ -86,11 +90,6 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
         /// The reference source.
         /// </summary>
         private string referenceSource;
-
-        /// <summary>
-        /// The last focus window.
-        /// </summary>
-        private Window lastFocusWindow;
 
         #endregion
 
@@ -212,6 +211,32 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
         #region Public Methods and Operators
 
         /// <summary>
+        /// The validate project key.
+        /// </summary>
+        /// <returns>
+        /// The System.String.
+        /// </returns>
+        public static Resource AssociateSolutionWithSonarProject()
+        {
+            var vsinter = VsSonarExtensionPackage.ExtensionModelData.Vsenvironmenthelper;
+            var restService = VsSonarExtensionPackage.ExtensionModelData.RestService;
+            var conf = ConnectionConfigurationHelpers.GetConnectionConfiguration(vsinter, restService);
+            var solutionName = vsinter.ActiveSolutionName();
+            var key = vsinter.ReadOptionFromApplicationData(solutionName, "PROJECTKEY");
+
+            if (!string.IsNullOrEmpty(key))
+            {
+                return restService.GetResourcesData(conf, key)[0];
+            }
+
+            var solutionPath = vsinter.ActiveSolutionPath();
+            key = VsSonarUtils.GetProjectKey(solutionPath);
+            vsinter.WriteOptionInApplicationData(solutionName, "PROJECTKEY", key);
+
+            return string.IsNullOrEmpty(key) ? null : restService.GetResourcesData(conf, key)[0];
+        }
+
+        /// <summary>
         /// The get property from buffer.
         /// </summary>
         /// <param name="buffer">
@@ -248,7 +273,6 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
         public void Dispose()
         {
             this.Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
         #endregion
@@ -354,8 +378,7 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
                 }
 
                 VsSonarExtensionPackage.ExtensionModelData.ResetProfile();
-                var solutionPath = VsSonarExtensionPackage.ExtensionModelData.Vsenvironmenthelper.ActiveSolutionPath();
-                var newAssociation = VsSonarExtensionPackage.AssociateSolutionWithSonarProject(solutionPath);
+                var newAssociation = AssociateSolutionWithSonarProject();
                 if (newAssociation == null)
                 {
                     VsSonarExtensionPackage.ExtensionModelData.ErrorMessage =
@@ -363,7 +386,7 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
                     return;
                 }
 
-                VsSonarExtensionPackage.ExtensionModelData.AssociateProjectToSolution(newAssociation.AssociatedProject);
+                VsSonarExtensionPackage.ExtensionModelData.AssociateProjectToSolution(newAssociation);
                 var currentBuffer = this.SourceBuffer.CurrentSnapshot.GetText();
                 var fillePath = GetPropertyFromBuffer<ITextDocument>(this.SourceBuffer).FilePath.Replace('\\', '/');
                 VsSonarExtensionPackage.ExtensionModelData.UpdateDataInEditor(fillePath, currentBuffer);
@@ -391,8 +414,6 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
             {
                 return;
             }
-
-            this.lastFocusWindow = lostFocus;
 
             try
             {

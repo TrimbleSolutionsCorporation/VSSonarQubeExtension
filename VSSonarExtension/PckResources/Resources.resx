@@ -117,12 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="VSSONARPROJECTFILE" xml:space="preserve">
-    <value>.vssonar</value>
-  </data>
-  <data name="VSSONARPROJECTKEY" xml:space="preserve">
-    <value>projectKey</value>
-  </data>
   <data name="INCORRECTSONARSETTINGSMSG" xml:space="preserve">
     <value>Sonar Settings are incorrect: Change at Tool &gt; Options &gt; Sonar Options</value>
   </data>
@@ -162,22 +156,22 @@
   <data name="EXCEPTIONWHILEAUTH" xml:space="preserve">
     <value>Something Went Wrong: Cannot use extension: </value>
   </data>
-    <data name="ChooseCustomToolMsg" xml:space="preserve">
+  <data name="ChooseCustomToolMsg" xml:space="preserve">
     <value>Choose Custom Tool Executable</value>
   </data>
-    <data name="ChooseCppCheckMsg" xml:space="preserve">
+  <data name="ChooseCppCheckMsg" xml:space="preserve">
     <value>Choose CppCheck Executable</value>
   </data>
-    <data name="ChooseVeraMsg" xml:space="preserve">
+  <data name="ChooseVeraMsg" xml:space="preserve">
     <value>Choose Vera Executable</value>
   </data>
-    <data name="ChooseRatsMsg" xml:space="preserve">
+  <data name="ChooseRatsMsg" xml:space="preserve">
     <value>Choose Rats Executable</value>
   </data>
-    <data name="ResourceMsgWarning" xml:space="preserve">
+  <data name="ResourceMsgWarning" xml:space="preserve">
     <value>The Query used this Resource : </value>
   </data>
-    <data name="ErrorMessageAutoAnalysis" xml:space="preserve">
+  <data name="ErrorMessageAutoAnalysis" xml:space="preserve">
     <value>Ups something went was wrong, please report this exception: </value>
   </data>
 </root>

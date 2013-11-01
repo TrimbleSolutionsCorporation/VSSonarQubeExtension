@@ -88,53 +88,6 @@ namespace VSSonarExtension.PackageImplementation
 
         #endregion
 
-        #region Public Methods and Operators
-
-        /// <summary>
-        /// The validate project key.
-        /// </summary>
-        /// <param name="solutionPath">
-        /// The solution path.
-        /// </param>
-        /// <returns>
-        /// The System.String.
-        /// </returns>
-        public static ProjectAssociationDataModel AssociateSolutionWithSonarProject(string solutionPath)
-        {
-            var vsinter = ExtensionModelData.Vsenvironmenthelper;
-            var restService = ExtensionModelData.RestService;
-            var conf = ConnectionConfigurationHelpers.GetConnectionConfiguration(vsinter, restService);
-            var model = new ProjectAssociationDataModel(restService, conf);
-
-            // guess project key from files in dsk
-            var key = VsSonarUtils.ReadPropertyFromFile(
-                Resources.VSSONARPROJECTKEY, solutionPath + "\\" + Resources.VSSONARPROJECTFILE);
-
-            if (!string.IsNullOrEmpty(key))
-            {
-                model.AssociatedProject = restService.GetResourcesData(conf, key)[0];
-                List<Resource> profile = restService.GetQualityProfile(conf, key);
-                List<Profile> enabledrules = restService.GetEnabledRulesInProfile(
-                    conf, profile[0].Lang, profile[0].Metrics[0].Data);
-                model.Profile = enabledrules[0];
-                return model;
-            }
-
-            key = VsSonarUtils.GetProjectKey(solutionPath);
-
-            if (!string.IsNullOrEmpty(key))
-            {
-                model.AssociatedProject = restService.GetResourcesData(conf, key)[0];
-                var profile = restService.GetQualityProfile(conf, key);
-                var enabledrules = restService.GetEnabledRulesInProfile(conf, profile[0].Lang, profile[0].Metrics[0].Data);
-                model.Profile = enabledrules[0];
-            }
-
-            return model;
-        }
-
-        #endregion
-
         #region Methods
 
         /// <summary>

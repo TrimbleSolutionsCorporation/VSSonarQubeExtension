@@ -151,6 +151,14 @@ namespace ExtensionHelpers
         string ActiveSolutionPath();
 
         /// <summary>
+        /// The solution name.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
+        string ActiveSolutionName();
+
+        /// <summary>
         /// The get saved option.
         /// </summary>
         /// <param name="category">
@@ -480,6 +488,27 @@ namespace ExtensionHelpers
             }
 
             return Path.GetDirectoryName(GetWindowsPhysicalPath(this.environment.Solution.FullName));
+        }
+
+        /// <summary>
+        /// The get solution path.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
+        public string ActiveSolutionName()
+        {
+            if (this.environment == null)
+            {
+                return string.Empty;
+            }
+
+            if (string.IsNullOrEmpty(this.environment.Solution.FullName))
+            {
+                return string.Empty;
+            }
+
+            return (this.environment.Solution != null) ? Path.GetFileNameWithoutExtension(this.environment.Solution.FullName) : string.Empty;
         }
 
         /// <summary>

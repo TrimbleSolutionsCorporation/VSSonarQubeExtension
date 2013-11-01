@@ -17,7 +17,6 @@ namespace ExtensionViewModel.Commands
     using System;
     using System.Windows.Input;
 
-    using ExtensionTypes;
     using ExtensionViewModel.ViewModel;
 
     /// <summary>
@@ -29,11 +28,6 @@ namespace ExtensionViewModel.Commands
         /// The issues data model.
         /// </summary>
         private readonly ExtensionDataModel model;
-
-        /// <summary>
-        /// The modelproject.
-        /// </summary>
-        private ProjectAssociationDataModel modelproject;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ClearCacheCommand"/> class.
@@ -56,17 +50,6 @@ namespace ExtensionViewModel.Commands
         public ClearCacheCommand(ExtensionDataModel model)
         {
             this.model = model;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ClearCacheCommand"/> class.
-        /// </summary>
-        /// <param name="model">
-        /// The model.
-        /// </param>
-        public ClearCacheCommand(ProjectAssociationDataModel model)
-        {
-            this.modelproject = model;
         }
 
         /// <summary>

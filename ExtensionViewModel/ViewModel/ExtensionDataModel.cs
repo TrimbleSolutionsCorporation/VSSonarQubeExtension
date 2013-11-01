@@ -21,6 +21,7 @@ namespace ExtensionViewModel.ViewModel
     using System.Linq;
     using System.Threading;
     using System.Windows;
+    using System.Windows.Forms;
     using System.Windows.Threading;
 
     using ExtensionHelpers;
@@ -32,6 +33,9 @@ namespace ExtensionViewModel.ViewModel
     using SonarRestService;
 
     using VSSonarPlugins;
+
+    using Application = System.Windows.Application;
+    using MessageBox = System.Windows.MessageBox;
 
     /// <summary>
     ///     The issues list.
@@ -2225,7 +2229,7 @@ namespace ExtensionViewModel.ViewModel
             this.ReOpenIssueCommand = new ReOpenIssueCommand(this, this.restService);
             this.UnConfirmIssueCommand = new UnConfirmIssueCommand(this, this.restService);
             this.GetIssuesCommand = new GetIssuesCommand(this, this.restService);
-            this.AssignProjectCommand = new AssociateCommand(this);
+            this.AssignProjectCommand = new AssociateCommand(this, this.vsenvironmenthelper);
             this.ClearCacheCommand = new ClearCacheCommand(this);
 
             // init some saved options
@@ -2237,7 +2241,7 @@ namespace ExtensionViewModel.ViewModel
         }
 
         /// <summary>
-        /// The performa analysis.
+        /// The perform analysis.
         /// </summary>
         private void PerformaAnalysis()
         {

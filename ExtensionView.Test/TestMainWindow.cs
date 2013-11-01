@@ -47,11 +47,6 @@ namespace ExtensionView.Test
         private ExtensionDataModel model;
 
         /// <summary>
-        /// The project model.
-        /// </summary>
-        private ProjectAssociationDataModel projectModel;
-
-        /// <summary>
         /// The should not throw any exceptions when creating issues window.
         /// </summary>
         [Test]
