@@ -165,3 +165,11 @@ type AdministrationTests() =
 
         let service = SonarRestService(mockHttpReq)
         (service :> ISonarRestService).GetServerInfo(conf) |> should equal 3.6
+
+    [<Test>]
+    member test.``Get Properties`` () =
+        let conf = ConnectionConfiguration("http://sonar", "jocs1", "jocs1")
+
+
+        let service = SonarRestService(new JsonSonarConnector())
+        (service :> ISonarRestService).GetProperties(conf) |> should equal 10

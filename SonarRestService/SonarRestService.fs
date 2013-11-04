@@ -510,6 +510,20 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             with
              | ex -> new System.Collections.Generic.List<User>()
 
+        member this.GetProperties(newConf : ConnectionConfiguration) =
+            let url = "/api/properties"           
+
+            let responsecontent = httpconnector.HttpSonarGetRequest(newConf, url)
+            let data = JSonProperties.Parse(responsecontent)
+            let dic = new System.Collections.Generic.Dictionary<string, string>()
+            for i in data do
+                try
+                    dic.Add(i.Key, i.Value.JsonValue.InnerText)
+                with
+                | ex -> ()
+
+            dic                                
+
         member this.AuthenticateUser(newConf : ConnectionConfiguration) =
             let url = "/api/authentication/validate"
 

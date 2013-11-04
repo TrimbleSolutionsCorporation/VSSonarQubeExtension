@@ -44,5 +44,7 @@ type ISonarRestService =
   abstract member GetServerInfo : ConnectionConfiguration ->  float
   abstract member GetCoverageInResource : ConnectionConfiguration * string ->  SourceCoverage
   abstract member GetSourceForFileResource : ConnectionConfiguration * string ->  Source
+
+  abstract member GetProperties : ConnectionConfiguration -> System.Collections.Generic.Dictionary<string, string>
         
 
