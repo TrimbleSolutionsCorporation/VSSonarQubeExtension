@@ -15,19 +15,19 @@
 namespace ExtensionViewModel.ViewModel
 {
     using System;
-    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.IO;
     using System.Windows.Controls;
     using System.Windows.Input;
     using ExtensionHelpers;
+
     using VSSonarPlugins;
 
     /// <summary>
     ///     The plugins options model.
     /// </summary>
-    public class PluginsOptionsModel : INotifyPropertyChanged
+    public partial class PluginsOptionsModel : INotifyPropertyChanged
     {
         /// <summary>
         ///     The options in view.
@@ -43,11 +43,6 @@ namespace ExtensionViewModel.ViewModel
         ///     The selected plugin item.
         /// </summary>
         private string selectedPluginItem;
-
-        /// <summary>
-        ///     The user control width.
-        /// </summary>
-        private double userControlWidth;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PluginsOptionsModel"/> class.
@@ -98,23 +93,6 @@ namespace ExtensionViewModel.ViewModel
         }
 
         /// <summary>
-        ///     Gets or sets the user control width.
-        /// </summary>
-        public double UserControlWidth
-        {
-            get
-            {
-                return this.userControlWidth;
-            }
-
-            set
-            {
-                this.userControlWidth = value;
-                this.OnPropertyChanged("UserControlWidth");
-            }
-        }
-
-        /// <summary>
         ///     Gets or sets the options in view.
         /// </summary>
         public UserControl OptionsInView
@@ -127,6 +105,8 @@ namespace ExtensionViewModel.ViewModel
             set
             {
                 this.optionsInView = value;
+                this.isLicenseEnable = false;
+                this.OnPropertyChanged("IsLicenseEnable");
                 this.OnPropertyChanged("OptionsInView");
             }
         }
@@ -179,7 +159,7 @@ namespace ExtensionViewModel.ViewModel
 
                         this.PluginInView = plugin;
                         plugin.GetUsePluginControlOptions().SetOptions(this.Vsenvironmenthelper.ReadAllOptionsForPluginOptionInApplicationData(plugin.GetKey()));
-                        this.OptionsInView = plugin.GetUsePluginControlOptions().GetUserControlOptions();                        
+                        this.OptionsInView = plugin.GetUsePluginControlOptions().GetUserControlOptions();
                     }
                 }
                 else
@@ -350,6 +330,22 @@ namespace ExtensionViewModel.ViewModel
                     {
                         pluginInView.GetUsePluginControlOptions().SetOptions(this.model.Vsenvironmenthelper.ReadAllOptionsForPluginOptionInApplicationData(pluginInView.GetKey()));
                     }
+                }
+
+                if (header.Equals("Generate Token"))
+                {
+                    if (this.model.SelectedLicense != null)
+                    {
+                        foreach (var plugin in this.model.Plugins)
+                        {
+                            if (plugin.GetKey().Equals(this.model.SelectedLicense.ProductId))
+                            {
+                                this.model.GeneratedToken = plugin.GenerateTokenId();
+                            }
+                        }
+                    }
+
+                    return;
                 }
                 
                 this.model.OnRequestClose(this, "Exit");

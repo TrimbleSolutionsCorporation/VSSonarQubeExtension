@@ -68,5 +68,38 @@ namespace ExtensionHelpers
 
             return userConf;
         }
+
+        /// <summary>
+        /// The get connection configuration.
+        /// </summary>
+        /// <param name="properties">
+        /// The properties.
+        /// </param>
+        /// <returns>
+        /// The <see cref="ConnectionConfiguration"/>.
+        /// </returns>
+        public static ConnectionConfiguration GetConnectionConfiguration(IVsEnvironmentHelper properties)
+        {
+            ErrorMessage = string.Empty;
+
+            var userName = "admin";
+            var userPassword = "admin";
+            var hostname = "http://localhost:9000";
+            if (properties != null)
+            {
+                userName = properties.ReadSavedOption("Sonar Options", "General", "SonarUserName");
+                userPassword = properties.ReadSavedOption("Sonar Options", "General", "SonarUserPassword");
+                hostname = properties.ReadSavedOption("Sonar Options", "General", "SonarHost");
+            }
+
+            if (string.IsNullOrEmpty(hostname))
+            {
+                ErrorMessage = "User Configuration is Invalid, Check Tools > Options > Sonar Options";
+                return null;
+            }
+
+            var userConf = new ConnectionConfiguration(hostname, userName, userPassword);
+            return userConf;
+        }
     }
 }

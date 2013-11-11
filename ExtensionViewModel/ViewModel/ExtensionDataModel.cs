@@ -21,7 +21,6 @@ namespace ExtensionViewModel.ViewModel
     using System.Linq;
     using System.Threading;
     using System.Windows;
-    using System.Windows.Forms;
     using System.Windows.Threading;
 
     using ExtensionHelpers;

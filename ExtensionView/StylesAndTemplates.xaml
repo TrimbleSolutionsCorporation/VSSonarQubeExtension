@@ -80,6 +80,60 @@
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
+    <ControlTemplate x:Key="SquareToggleButtonTemplate" TargetType="{x:Type ToggleButton}">
+        <ControlTemplate.Resources>
+            <Storyboard x:Key="Timeline1">
+                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="glow" Storyboard.TargetProperty="(UIElement.Opacity)">
+                    <SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="1"/>
+                </DoubleAnimationUsingKeyFrames>
+            </Storyboard>
+            <Storyboard x:Key="Timeline2">
+                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="glow" Storyboard.TargetProperty="(UIElement.Opacity)">
+                    <SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0"/>
+                </DoubleAnimationUsingKeyFrames>
+            </Storyboard>
+        </ControlTemplate.Resources>
+        <Border BorderBrush="Transparent" BorderThickness="1,1,1,1" CornerRadius="0,0,0,0">
+            <Border x:Name="border" Background="Transparent" BorderBrush="Transparent" BorderThickness="1,1,1,1" CornerRadius="0,0,0,0">
+                <Grid>
+                    <Border Opacity="0.2" HorizontalAlignment="Stretch" x:Name="glow" Width="Auto" Grid.RowSpan="2" CornerRadius="0,0,0,0">
+                        <Border.Background>
+                            <RadialGradientBrush>
+                                <RadialGradientBrush.RelativeTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform ScaleX="1.702" ScaleY="2.243"/>
+                                        <SkewTransform AngleX="0" AngleY="0"/>
+                                        <RotateTransform Angle="0"/>
+                                        <TranslateTransform X="-0.368" Y="-0.152"/>
+                                    </TransformGroup>
+                                </RadialGradientBrush.RelativeTransform>
+                                <GradientStop Color="#B28DBDFF" Offset="0.478"/>
+                                <GradientStop Color="#00182538" Offset="1"/>
+                            </RadialGradientBrush>
+                        </Border.Background>
+                    </Border>
+                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Grid.RowSpan="2"/>
+                    <Border HorizontalAlignment="Stretch" Margin="0,0,0,0" x:Name="shine" Width="Auto" CornerRadius="0,0,0,0"/>
+                </Grid>
+            </Border>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Opacity" TargetName="shine" Value="0.4"/>
+                <Setter Property="Background" TargetName="border" Value="Transparent"/>
+                <Setter Property="Visibility" TargetName="glow" Value="Hidden"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Trigger.EnterActions>
+                    <BeginStoryboard Storyboard="{StaticResource Timeline1}"/>
+                </Trigger.EnterActions>
+                <Trigger.ExitActions>
+                    <BeginStoryboard x:Name="Timeline2_BeginStoryboard" Storyboard="{StaticResource Timeline2}"/>
+                </Trigger.ExitActions>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
     <Style x:Key="FocusMenuItem" TargetType="{x:Type Control}"/>
     <ControlTemplate x:Key="MenuTemplate" TargetType="{x:Type MenuItem}">
         <Border x:Name="Border" FocusVisualStyle="{DynamicResource FocusMenuItem}" >

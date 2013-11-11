@@ -14,8 +14,11 @@
 
 namespace VSSonarPlugins
 {
+    using System.Collections.Generic;
     using System.Windows.Controls;
     using System.Windows.Documents;
+
+    using ExtensionTypes;
 
     /// <summary>
     /// The Plugin interface.
@@ -64,5 +67,24 @@ namespace VSSonarPlugins
         /// The <see cref="List"/>.
         /// </returns>
         IServerAnalyserExtension GetServerAnalyserExtension();
+
+        /// <summary>
+        /// The get licenses.
+        /// </summary>
+        /// <param name="configuration">
+        /// The configuration.
+        /// </param>
+        /// <returns>
+        /// The <see cref="List"/>.
+        /// </returns>
+        Dictionary<string, VsLicense> GetLicenses(ConnectionConfiguration configuration);
+
+        /// <summary>
+        /// The generate token id.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
+        string GenerateTokenId();
     }
 }

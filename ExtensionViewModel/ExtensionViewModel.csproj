@@ -34,6 +34,10 @@
     <Reference Include="Microsoft.VisualStudio.Shell.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="Rhino.Licensing, Version=1.3.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\VSSonarExtension\bin\Debug\Rhino.Licensing.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -60,6 +64,7 @@
     <Compile Include="Commands\FalsePositiveOnIssueCommand.cs" />
     <Compile Include="Commands\ResolveIssueCommand.cs" />
     <Compile Include="ViewModel\BindingProxy.cs" />
+    <Compile Include="ViewModel\LicenseOptionsModel.cs" />
     <Compile Include="ViewModel\DataGridControlViewModel.cs" />
     <Compile Include="ViewModel\ModelData.cs" />
     <Compile Include="ViewModel\IssuesFilterViewModel.cs" />

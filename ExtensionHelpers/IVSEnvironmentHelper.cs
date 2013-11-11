@@ -338,16 +338,16 @@ namespace ExtensionHelpers
         {
             IEnumerable<string> content = new List<string>();
             var contentWrite = string.Empty;
-            if (!File.Exists(this.ApplicationDataUserSettingsFile))
+            if (File.Exists(this.ApplicationDataUserSettingsFile))
             {
-                Directory.CreateDirectory(Directory.GetParent(this.ApplicationDataUserSettingsFile).ToString());
-                using (File.Create(this.ApplicationDataUserSettingsFile))
-                {                    
-                }
+                content = File.ReadLines(this.ApplicationDataUserSettingsFile);
             }
             else
             {
-                content = File.ReadLines(this.ApplicationDataUserSettingsFile);
+                Directory.CreateDirectory(Directory.GetParent(this.ApplicationDataUserSettingsFile).ToString());
+                using (File.Create(this.ApplicationDataUserSettingsFile))
+                {
+                }
             }
 
             contentWrite += pluginKey + "=" + key + "," + value + "\r\n";

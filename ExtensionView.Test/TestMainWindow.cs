@@ -106,6 +106,26 @@ namespace ExtensionView.Test
                 throw new NotImplementedException();
             }
 
+            public Dictionary<string, VsLicense> GetLicenses(ConnectionConfiguration configuration)
+            {
+                throw new NotImplementedException();
+            }
+
+            public string GenerateTokenId()
+            {
+                throw new NotImplementedException();
+            }
+
+            public void SetUserConfiguration(ConnectionConfiguration configuration)
+            {
+                throw new NotImplementedException();
+            }
+
+            public List<VsLicense> GetLicenses()
+            {
+                throw new NotImplementedException();
+            }
+
             public IPluginsOptions GetUsePluginControlOptions()
             {
                 return this.pluginOptions;
