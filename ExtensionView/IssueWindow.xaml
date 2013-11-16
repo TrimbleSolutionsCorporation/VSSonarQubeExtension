@@ -4,10 +4,11 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModel="clr-namespace:ExtensionViewModel.ViewModel;assembly=ExtensionViewModel"
+    xmlns:vsfx="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.10.0"
     mc:Ignorable="d"    
     x:Class="ExtensionView.IssueWindow"    
     x:Name="IssuesManager"
-    Width="Auto" Height="Auto" Foreground="{x:Null}">
+    Width="Auto" Height="Auto" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" >
     <UserControl.Resources>
         <ResourceDictionary>
             <viewModel:BindingProxy x:Key="Proxy" Data="{Binding}" />
@@ -21,7 +22,7 @@
     <UserControl.DataContext>
         <Binding Source="{StaticResource IssuesDataModelDataSource}"/>
     </UserControl.DataContext>
-    <Grid x:Name="IssuesWindowGrid" Margin="-1,0,1,0" Background="Transparent">
+    <Grid x:Name="IssuesWindowGrid" Margin="-1,0,1,0" Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}">
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
             <RowDefinition Height="394*"/>
@@ -31,19 +32,19 @@
             <ColumnDefinition Width="200*" MinWidth="200"/>
             <ColumnDefinition Width="Auto" MinWidth="400"/>
         </Grid.ColumnDefinitions>
-        <Menu x:Name="MainMenuIssues" Grid.ColumnSpan="3" Background="Transparent">
-            <MenuItem x:Name="ToolsMenu" Header="Menu" Width="auto" Background="Transparent" Template="{DynamicResource MenuTemplate}">
+        <Menu x:Name="MainMenuIssues" Grid.ColumnSpan="3" Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}">
+            <MenuItem Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" x:Name="ToolsMenu" Header="Menu" Width="auto" Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Template="{DynamicResource MenuTemplate}">
                 <MenuItem x:Name="OptionsMenu" Header="Configuration Options" Template="{DynamicResource MenuTemplate}">
                 	<MenuItem x:Name="ConfIssuesWindow" Header="Show Properties" Command="{Binding}" CommandParameter="{Binding Header, ElementName=ConfIssuesWindow}"/>
                 	<MenuItem x:Name="ConfPluginsOptions" Header="Plugins Properties" Command="{Binding}" CommandParameter="{Binding Header, ElementName=ConfPluginsOptions}"/>
                 </MenuItem>
             </MenuItem>
-            <CheckBox Content="Control Panel" Height="18" Width="90" ToolTip="Show issues filtering options" IsChecked="{Binding ShowIssueFiltering}"/>
-            <CheckBox Content="Lock View" Height="18" Width="90" ToolTip="When Locked the Update of the Issues In the Editor will not change the list in the table bellow" IsChecked="{Binding IssuesInViewLocked}"/>
-            <CheckBox Content="Disable Tags" Height="18" Width="90" ToolTip="Disable Tags in Editor, Only Issues Window will be Populated" IsChecked="{Binding DisableEditorTags}"/>
+            <CheckBox Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="Control Panel" Height="18" Width="90" ToolTip="Show issues filtering options" IsChecked="{Binding ShowIssueFiltering}"/>
+            <CheckBox Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="Lock View" Height="18" Width="90" ToolTip="When Locked the Update of the Issues In the Editor will not change the list in the table bellow" IsChecked="{Binding IssuesInViewLocked}"/>
+            <CheckBox Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="Disable Tags" Height="18" Width="90" ToolTip="Disable Tags in Editor, Only Issues Window will be Populated" IsChecked="{Binding DisableEditorTags}"/>
         </Menu>
         <Grid x:Name="UserInputGrid" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="2" Margin="0"/>
-        <Grid x:Name="StatusGrid" Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="0" Background="Transparent" >
+        <Grid x:Name="StatusGrid" Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="0" Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
@@ -60,7 +61,7 @@
             <Label x:Name="SonarInfoLabel" Content="{Binding SonarInfo}" Grid.Column="2" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}"/>
             <Label x:Name="AssociationLabel" Grid.Column="4" Content="{Binding AssociatedProjectKey}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}"/>
         </Grid>
-        <ComboBox Width="Auto" x:Name="CachedElements" Grid.Row="0" Grid.Column="1" SelectedItem="{Binding SelectedCachedElement, Mode=TwoWay}" ItemsSource="{Binding CachedIssuesListObs}" Background="Transparent" BorderBrush="Transparent" Margin="0,-2,0,2" FocusVisualStyle="{DynamicResource DropBoxFocusVisualStyle}"/>
+        <ComboBox Width="Auto" x:Name="CachedElements" Grid.Row="0" Grid.Column="1" SelectedItem="{Binding SelectedCachedElement, Mode=TwoWay}" ItemsSource="{Binding CachedIssuesListObs}" Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" BorderBrush="Transparent" Margin="0,-2,0,2" FocusVisualStyle="{DynamicResource DropBoxFocusVisualStyle}"/>
         <Grid x:Name="CentralGrid" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0"
               d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}">
             <Grid.ColumnDefinitions>
@@ -73,7 +74,7 @@
             <RowDefinition Height="{Binding UserTextControlsHeight}" />
             <RowDefinition Height="{Binding UserControlsHeight}" />
             </Grid.RowDefinitions>
-            <DataGrid x:Name="IssuesDataGrid" Grid.Column="1" SelectionChanged="IssuesDataGridSelectionChanged" AutoGenerateColumns="False" SelectedItem="{Binding SelectedIssue}" ItemsSource="{Binding Issues}" VerticalScrollBarVisibility="Visible" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" GridLinesVisibility="None" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" RowBackground="Transparent" RowHeaderStyle="{DynamicResource DataGridRowHeaderStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" ColumnHeaderHeight="20" HeadersVisibility="Column" RowHeaderWidth="0" >
+            <DataGrid Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" x:Name="IssuesDataGrid" Grid.Column="1" SelectionChanged="IssuesDataGridSelectionChanged" AutoGenerateColumns="False" SelectedItem="{Binding SelectedIssue}" ItemsSource="{Binding Issues}" VerticalScrollBarVisibility="Visible" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" GridLinesVisibility="None" Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" BorderBrush="Transparent" BorderThickness="1" RowBackground="Transparent" RowHeaderStyle="{DynamicResource DataGridRowHeaderStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" ColumnHeaderHeight="20" HeadersVisibility="Column" RowHeaderWidth="0" >
                 <DataGrid.InputBindings>
                     <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding OpenInVsCommand}" CommandParameter="{Binding SelectedItems, ElementName=IssuesDataGrid}" />
                 </DataGrid.InputBindings>			
@@ -97,7 +98,7 @@
             </DataGrid>
 			<Grid x:Name="CommentsGrid" Grid.Row="0" Grid.Column="2">
 			<Border BorderBrush="Black" BorderThickness="1 1 1 1">
-            <DataGrid x:Name="CommentsDataGrid"  AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" CanUserDeleteRows="False" VerticalScrollBarVisibility="Visible" ItemsSource="{Binding Comments}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black" GridLinesVisibility="None" RowBackground="Transparent" HeadersVisibility="Column" ColumnHeaderHeight="20" RowHeaderStyle="{DynamicResource DataGridRowHeaderStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                    <DataGrid x:Name="CommentsDataGrid"  AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" CanUserDeleteRows="False" VerticalScrollBarVisibility="Visible" ItemsSource="{Binding Comments}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" GridLinesVisibility="None" RowBackground="Transparent" HeadersVisibility="Column" ColumnHeaderHeight="20" RowHeaderStyle="{DynamicResource DataGridRowHeaderStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Login}" Header="Login" MinWidth="50"/>				
                     <DataGridTextColumn Binding="{Binding CreatedAt}" Header="CreatedAt" MinWidth="70"/>
@@ -108,7 +109,7 @@
 			</Grid>
             <TextBox TextWrapping="Wrap" x:Name="UserInputTextBox" Text="{Binding CommentData}" Visibility="{Binding UserInputTextBoxVisibility}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Grid.Row="1" Grid.ColumnSpan="2"
                      Grid.Column="0" />
-            <Grid x:Name="CommandGridControl" Grid.ColumnSpan="3" Grid.Column="0" Grid.Row="2" Background="Transparent">
+            <Grid x:Name="CommandGridControl" Grid.ColumnSpan="3" Grid.Column="0" Grid.Row="2" Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
@@ -123,16 +124,16 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <Button x:Name="ButtonComment" Content="Comment" Margin="0" Command="{Binding CommentOnIssueCommand}" CommandParameter="{Binding SelectedItems, ElementName=IssuesDataGrid}" Visibility="{Binding IsCommentingVisible}" Background="{x:Null}" BorderBrush="{x:Null}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Template="{DynamicResource SquareButtonTemplate}" Width="80"/>
-                <Button x:Name="ButtonFalsePositive" Content="False Positive" Grid.Column="2" Command="{Binding FalsePositiveOnIssueCommand}" CommandParameter="{Binding SelectedItems, ElementName=IssuesDataGrid}" Visibility="{Binding IsFalsePositiveVisible}" Background="{x:Null}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Template="{DynamicResource SquareButtonTemplate}" Width="80"/>
-                <Button x:Name="ButtonResolve" Content="Resolve" Grid.Column="3" Command="{Binding ResolveIssueCommand}" CommandParameter="{Binding SelectedItems, ElementName=IssuesDataGrid}" Visibility="{Binding IsResolveVisible}" Background="Transparent" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Template="{DynamicResource SquareButtonTemplate}" Width="80"/>
-                <Button x:Name="ButtonReopen" Content="Reopen" Grid.Column="4" Command="{Binding ReOpenIssueCommand}" CommandParameter="{Binding SelectedItems, ElementName=IssuesDataGrid}" Visibility="{Binding IsReopenVisible}" Background="{x:Null}" BorderBrush="#FFC1B6DE" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Template="{DynamicResource SquareButtonTemplate}" Width="80"/>
-                <Button x:Name="ButtonConfirm" Content="Confirm" Grid.Column="5" Command="{Binding ConfirmIssueCommand}" CommandParameter="{Binding SelectedItems, ElementName=IssuesDataGrid}" Visibility="{Binding IsConfirmVisible}" Background="{x:Null}" BorderBrush="#FFB7E8A1" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Template="{DynamicResource SquareButtonTemplate}" Width="80"/>
-                <Button x:Name="ButtonUnConfirm" Content="UnConfirm" Grid.Column="6" Command="{Binding UnConfirmIssueCommand}" CommandParameter="{Binding SelectedItems, ElementName=IssuesDataGrid}" Visibility="{Binding IsUnconfirmVisible}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Template="{DynamicResource SquareButtonTemplate}" Width="80"/>
-                <Button x:Name="ButtonOpenInSonar" Content="Open in Sonar" Grid.Column="7" Command="{Binding OpenInSonarCommand}" CommandParameter="{Binding SelectedItems, ElementName=IssuesDataGrid}" Visibility="{Binding IsOpenExternallyVisible}" Background="{x:Null}" BorderBrush="#FF6F3A93" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Template="{DynamicResource SquareButtonTemplate}" Width="80"/>
-                <Button x:Name="ButtonOpenInVs" Content="Open in VS" Grid.Column="8" Command="{Binding OpenInVsCommand}" CommandParameter="{Binding SelectedItems, ElementName=IssuesDataGrid}" Visibility="{Binding IsOpenExternallyVisible}" Background="{x:Null}" BorderBrush="#FF3C1515" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Template="{DynamicResource SquareButtonTemplate}" Width="80"/>
-                <ComboBox x:Name="UsersSelectBox" Grid.Column="9" IsTextSearchEnabled="True" SelectedItem="{Binding DisplaySelectedUser, Mode=TwoWay}" ItemsSource="{Binding DisplayUsersList}" MaxDropDownHeight="101" Visibility="{Binding IsAssignVisible}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Width="80" Background="Transparent" FocusVisualStyle="{DynamicResource DropBoxFocusVisualStyle}" />
-                <Button x:Name="ButtonAssign" Content="Assign" Grid.Column="10" HorizontalAlignment="Left" Width="79" Margin="0,0,-6.5,0" Command="{Binding AssignOnIssueCommand}" CommandParameter="{Binding SelectedItems, ElementName=IssuesDataGrid}" Visibility="{Binding IsAssignVisible}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Template="{DynamicResource SquareButtonTemplate}"/>			
+                <Button Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" x:Name="ButtonComment" Content="Comment" Margin="0" Command="{Binding CommentOnIssueCommand}" CommandParameter="{Binding SelectedItems, ElementName=IssuesDataGrid}" Visibility="{Binding IsCommentingVisible}" Background="{x:Null}" BorderBrush="{x:Null}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Template="{DynamicResource SquareButtonTemplate}" Width="80"/>
+                <Button Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" x:Name="ButtonFalsePositive" Content="False Positive" Grid.Column="2" Command="{Binding FalsePositiveOnIssueCommand}" CommandParameter="{Binding SelectedItems, ElementName=IssuesDataGrid}" Visibility="{Binding IsFalsePositiveVisible}" Background="{x:Null}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Template="{DynamicResource SquareButtonTemplate}" Width="80"/>
+                <Button Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" x:Name="ButtonResolve" Content="Resolve" Grid.Column="3" Command="{Binding ResolveIssueCommand}" CommandParameter="{Binding SelectedItems, ElementName=IssuesDataGrid}" Visibility="{Binding IsResolveVisible}" Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Template="{DynamicResource SquareButtonTemplate}" Width="80"/>
+                <Button Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" x:Name="ButtonReopen" Content="Reopen" Grid.Column="4" Command="{Binding ReOpenIssueCommand}" CommandParameter="{Binding SelectedItems, ElementName=IssuesDataGrid}" Visibility="{Binding IsReopenVisible}" Background="{x:Null}" BorderBrush="#FFC1B6DE" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Template="{DynamicResource SquareButtonTemplate}" Width="80"/>
+                <Button Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" x:Name="ButtonConfirm" Content="Confirm" Grid.Column="5" Command="{Binding ConfirmIssueCommand}" CommandParameter="{Binding SelectedItems, ElementName=IssuesDataGrid}" Visibility="{Binding IsConfirmVisible}" Background="{x:Null}" BorderBrush="#FFB7E8A1" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Template="{DynamicResource SquareButtonTemplate}" Width="80"/>
+                <Button Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" x:Name="ButtonUnConfirm" Content="UnConfirm" Grid.Column="6" Command="{Binding UnConfirmIssueCommand}" CommandParameter="{Binding SelectedItems, ElementName=IssuesDataGrid}" Visibility="{Binding IsUnconfirmVisible}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Template="{DynamicResource SquareButtonTemplate}" Width="80"/>
+                <Button Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" x:Name="ButtonOpenInSonar" Content="Open in Sonar" Grid.Column="7" Command="{Binding OpenInSonarCommand}" CommandParameter="{Binding SelectedItems, ElementName=IssuesDataGrid}" Visibility="{Binding IsOpenExternallyVisible}" Background="{x:Null}" BorderBrush="#FF6F3A93" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Template="{DynamicResource SquareButtonTemplate}" Width="80"/>
+                <Button Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" x:Name="ButtonOpenInVs" Content="Open in VS" Grid.Column="8" Command="{Binding OpenInVsCommand}" CommandParameter="{Binding SelectedItems, ElementName=IssuesDataGrid}" Visibility="{Binding IsOpenExternallyVisible}" Background="{x:Null}" BorderBrush="#FF3C1515" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Template="{DynamicResource SquareButtonTemplate}" Width="80"/>
+                <ComboBox x:Name="UsersSelectBox" Grid.Column="9" IsTextSearchEnabled="True" SelectedItem="{Binding DisplaySelectedUser, Mode=TwoWay}" ItemsSource="{Binding DisplayUsersList}" MaxDropDownHeight="101" Visibility="{Binding IsAssignVisible}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Width="80" Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" FocusVisualStyle="{DynamicResource DropBoxFocusVisualStyle}" />
+                <Button  Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" x:Name="ButtonAssign" Content="Assign" Grid.Column="10" HorizontalAlignment="Left" Width="79" Margin="0,0,-6.5,0" Command="{Binding AssignOnIssueCommand}" CommandParameter="{Binding SelectedItems, ElementName=IssuesDataGrid}" Visibility="{Binding IsAssignVisible}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Template="{DynamicResource SquareButtonTemplate}"/>			
             </Grid>
 
 				<Grid x:Name="ControlPanelGrid" Grid.Row="0" Grid.Column="0">
@@ -154,8 +155,8 @@
 								<RowDefinition Height="10*"/>
 								<RowDefinition Height="100"/>
 							</Grid.RowDefinitions>
-							<Expander Header="Quick Links" Grid.Row="6" >
-								<Grid Background="Transparent" Height="80">
+                            <Expander Header="Quick Links" Grid.Row="6" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" >
+								<Grid Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Height="80">
 									<Grid.RowDefinitions>
 										<RowDefinition Height="20"/>
             							<RowDefinition Height="20"/>
@@ -171,8 +172,8 @@
 										<Button Grid.Row="3" Grid.Column="0" Template="{DynamicResource SquareButtonTemplate}" x:Name="AllMyIssues" Content="All My Issues" Command="{Binding GetIssuesCommand}" CommandParameter="{Binding Content, ElementName=AllMyIssues}"/>																	
 								</Grid>								
 							</Expander>
-							<Expander Header="Project" Grid.Row="0" >
-								<Grid Background="Transparent" Height="60">
+                            <Expander Header="Project" Grid.Row="0" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}">
+								<Grid Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Height="60">
 									<Grid.RowDefinitions>
 										<RowDefinition Height="20"/>
             							<RowDefinition Height="20"/>
@@ -183,13 +184,13 @@
 										<ColumnDefinition Width="20*"/>
 									</Grid.ColumnDefinitions>									
 									<Label Content="Project" Style="{DynamicResource StyleOfLabels}"/>
-									<ComboBox Grid.Row="0" Grid.Column="1" SelectedItem="{Binding SelectedProjectInFilterList, Mode=TwoWay}" ItemsSource="{Binding ProjectResourcesList}" MaxDropDownHeight="101" IsTextSearchEnabled="True" Background="Transparent" />
+									<ComboBox Grid.Row="0" Grid.Column="1" SelectedItem="{Binding SelectedProjectInFilterList, Mode=TwoWay}" ItemsSource="{Binding ProjectResourcesList}" MaxDropDownHeight="101" IsTextSearchEnabled="True" Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" />
 									<Button Content="Associate" Grid.Row="1" Grid.Column="1" Template="{DynamicResource SquareButtonTemplate}" Command="{Binding AssignProjectCommand}" />
 									<Button Content="Clear Cache" Grid.Row="2" Grid.Column="1" Template="{DynamicResource SquareButtonTemplate}" Command="{Binding ClearCacheCommand}" />
 								</Grid>								
 							</Expander>
-							<Expander Header="Users" Grid.Row="1" HorizontalAlignment="Left" Width="181" >
-								<Grid Background="Transparent" Height="40">
+							<Expander Header="Users" Grid.Row="1" HorizontalAlignment="Left" Width="181" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}">
+								<Grid Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Height="40">
 									<Grid.RowDefinitions>
 										<RowDefinition Height="20"/>
             							<RowDefinition Height="20"/>
@@ -201,14 +202,14 @@
 									</Grid.ColumnDefinitions>									
 									<Label Content="Reporter" Style="{DynamicResource StyleOfLabels}"/>
 									<Label Grid.Row="1" Grid.Column="0" Content="Assignee" Style="{DynamicResource StyleOfLabels}"/>									
-									<ComboBox Grid.Row="0" Grid.Column="1" IsTextSearchEnabled="True" SelectedItem="{Binding DisplayReporterInFilter, Mode=TwoWay}" ItemsSource="{Binding DisplayUsersList}" MaxDropDownHeight="101" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Background="Transparent" FocusVisualStyle="{DynamicResource DropBoxFocusVisualStyle}" />									
-									<ComboBox Grid.Row="1" Grid.Column="1" IsTextSearchEnabled="True" SelectedItem="{Binding DisplayAssigneeInFilter, Mode=TwoWay}" ItemsSource="{Binding DisplayUsersList}" MaxDropDownHeight="101" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Background="Transparent" FocusVisualStyle="{DynamicResource DropBoxFocusVisualStyle}" />									
+									<ComboBox Grid.Row="0" Grid.Column="1" IsTextSearchEnabled="True" SelectedItem="{Binding DisplayReporterInFilter, Mode=TwoWay}" ItemsSource="{Binding DisplayUsersList}" MaxDropDownHeight="101" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" FocusVisualStyle="{DynamicResource DropBoxFocusVisualStyle}" />									
+									<ComboBox Grid.Row="1" Grid.Column="1" IsTextSearchEnabled="True" SelectedItem="{Binding DisplayAssigneeInFilter, Mode=TwoWay}" ItemsSource="{Binding DisplayUsersList}" MaxDropDownHeight="101" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" FocusVisualStyle="{DynamicResource DropBoxFocusVisualStyle}" />									
 									<CheckBox Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsReporterChecked}"/>
 									<CheckBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsAssigneeChecked}"/>
 								</Grid>								
 							</Expander>
-							<Expander Header="Status" Grid.Row="2" >
-								<Grid Background="Transparent" Height="100">
+                            <Expander Header="Status" Grid.Row="2" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}">
+								<Grid Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Height="100">
 									<Grid.RowDefinitions>
 										<RowDefinition Height="20"/>
             							<RowDefinition Height="20"/>
@@ -233,8 +234,8 @@
 									<CheckBox  Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsStatusReopenedChecked}"/>		
 								</Grid>														   				
 							</Expander>
-							<Expander Header="Severity" Grid.Row="3" >
-								<Grid Background="Transparent" Height="100">
+                            <Expander Header="Severity" Grid.Row="3" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}">
+								<Grid Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Height="100">
 									<Grid.RowDefinitions>
 										<RowDefinition Height="20"/>
             							<RowDefinition Height="20"/>
@@ -259,8 +260,8 @@
 									<CheckBox  Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsInfoChecked}"/>		
 								</Grid>														   				
 							</Expander>
-							<Expander Header="Resolution" Grid.Row="4" >
-								<Grid Background="Transparent" Height="60">
+                            <Expander Header="Resolution" Grid.Row="4" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}">
+								<Grid Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Height="60">
 									<Grid.RowDefinitions>
 										<RowDefinition Height="20"/>
             							<RowDefinition Height="20"/>
@@ -279,8 +280,8 @@
 									<CheckBox Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsFixedChecked}"/>									
 								</Grid>														   				
 							</Expander>
-							<Expander Header="Creation Date" Grid.Row="5" >
-								<Grid Background="Transparent" Height="40">
+                            <Expander Header="Creation Date" Grid.Row="5" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}">
+								<Grid Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Height="40">
 									<Grid.RowDefinitions>
 										<RowDefinition Height="20"/>
             							<RowDefinition Height="20"/>
@@ -306,8 +307,8 @@
 							<ColumnDefinition Width="85*"/>
 							<ColumnDefinition Width="85*"/>
 						</Grid.ColumnDefinitions>
-						<Button x:Name="GetFromServer" Content="Update Issues" Grid.Column="1" Template="{DynamicResource SquareButtonTemplate}" Command="{Binding GetIssuesCommand}" CommandParameter="{Binding Content, ElementName=GetFromServer}"/>
-						<Button x:Name="ApplyFilter" Content="Apply Filter" Grid.Column="0" Template="{DynamicResource SquareButtonTemplate}" Command="{Binding GetIssuesCommand}" CommandParameter="{Binding Content, ElementName=ApplyFilter}"/>
+						<Button Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" x:Name="GetFromServer" Content="Update Issues" Grid.Column="1" Template="{DynamicResource SquareButtonTemplate}" Command="{Binding GetIssuesCommand}" CommandParameter="{Binding Content, ElementName=GetFromServer}"/>
+						<Button Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" x:Name="ApplyFilter" Content="Apply Filter" Grid.Column="0" Template="{DynamicResource SquareButtonTemplate}" Command="{Binding GetIssuesCommand}" CommandParameter="{Binding Content, ElementName=ApplyFilter}"/>
 					</Grid>
 				</Grid>
         </Grid>        
