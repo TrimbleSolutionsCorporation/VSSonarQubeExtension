@@ -45,6 +45,11 @@ namespace VSSonarExtension.VSControls.DialogOptions
         {
             get
             {
+                if (this.textBoxSonarHost.Text.EndsWith("/"))
+                {
+                    this.textBoxSonarHost.Text = this.textBoxSonarHost.Text.Substring(0, this.textBoxSonarHost.Text.Length - 1);
+                }
+
                 return this.textBoxSonarHost.Text;
             }
 
