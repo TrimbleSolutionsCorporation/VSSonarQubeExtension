@@ -4,7 +4,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModel="clr-namespace:ExtensionViewModel.ViewModel;assembly=ExtensionViewModel"
-    xmlns:vsfx="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.10.0"
+    xmlns:vsfx="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.12.0"
     mc:Ignorable="d"    
     x:Class="ExtensionView.IssueWindow"    
     x:Name="IssuesManager"
@@ -33,10 +33,10 @@
             <ColumnDefinition Width="Auto" MinWidth="400"/>
         </Grid.ColumnDefinitions>
         <Menu x:Name="MainMenuIssues" Grid.ColumnSpan="3" Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}">
-            <MenuItem Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" x:Name="ToolsMenu" Header="Menu" Width="auto" Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Template="{DynamicResource MenuTemplate}">
-                <MenuItem x:Name="OptionsMenu" Header="Configuration Options" Template="{DynamicResource MenuTemplate}">
-                	<MenuItem x:Name="ConfIssuesWindow" Header="Show Properties" Command="{Binding}" CommandParameter="{Binding Header, ElementName=ConfIssuesWindow}"/>
-                	<MenuItem x:Name="ConfPluginsOptions" Header="Plugins Properties" Command="{Binding}" CommandParameter="{Binding Header, ElementName=ConfPluginsOptions}"/>
+            <MenuItem x:Name="ToolsMenu" Header="Menu" Width="auto" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Template="{DynamicResource MenuTemplate}">
+                <MenuItem Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" x:Name="OptionsMenu" Header="Configuration Options" Template="{DynamicResource MenuTemplate}">
+                	<MenuItem Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" x:Name="ConfIssuesWindow" Header="Show Properties" Command="{Binding}" CommandParameter="{Binding Header, ElementName=ConfIssuesWindow}"/>
+                	<MenuItem Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" x:Name="ConfPluginsOptions" Header="Plugins Properties" Command="{Binding}" CommandParameter="{Binding Header, ElementName=ConfPluginsOptions}"/>
                 </MenuItem>
             </MenuItem>
             <CheckBox Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="Control Panel" Height="18" Width="90" ToolTip="Show issues filtering options" IsChecked="{Binding ShowIssueFiltering}"/>
@@ -52,14 +52,14 @@
                 <ColumnDefinition Width="8*"/>
                 <ColumnDefinition Width="443*"/>
             </Grid.ColumnDefinitions>
-            <Label x:Name="ErrorLabel" Content="{Binding ErrorMessage}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" >
+            <Label Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" x:Name="ErrorLabel" Content="{Binding ErrorMessage}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" >
                 <Label.ToolTip>
                     <TextBlock Text="{Binding DiagnosticMessage}" />
                 </Label.ToolTip>
             </Label>
-            <Label x:Name="DisplayStatsLabel" Content="{Binding StatsLabel}" Grid.Column="1" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}"/>
-            <Label x:Name="SonarInfoLabel" Content="{Binding SonarInfo}" Grid.Column="2" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}"/>
-            <Label x:Name="AssociationLabel" Grid.Column="4" Content="{Binding AssociatedProjectKey}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}"/>
+            <Label Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" x:Name="DisplayStatsLabel" Content="{Binding StatsLabel}" Grid.Column="1" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}"/>
+            <Label Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" x:Name="SonarInfoLabel" Content="{Binding SonarInfo}" Grid.Column="2" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}"/>
+            <Label Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" x:Name="AssociationLabel" Grid.Column="4" Content="{Binding AssociatedProjectKey}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}"/>
         </Grid>
         <ComboBox Width="Auto" x:Name="CachedElements" Grid.Row="0" Grid.Column="1" SelectedItem="{Binding SelectedCachedElement, Mode=TwoWay}" ItemsSource="{Binding CachedIssuesListObs}" Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" BorderBrush="Transparent" Margin="0,-2,0,2" FocusVisualStyle="{DynamicResource DropBoxFocusVisualStyle}"/>
         <Grid x:Name="CentralGrid" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0"
