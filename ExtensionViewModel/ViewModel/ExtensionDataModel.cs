@@ -11,7 +11,6 @@
 // You should have received a copy of the GNU Lesser General Public License along with this program; if not, write to the Free
 // Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 // --------------------------------------------------------------------------------------------------------------------
-
 namespace ExtensionViewModel.ViewModel
 {
     using System;
@@ -33,9 +32,6 @@ namespace ExtensionViewModel.ViewModel
 
     using VSSonarPlugins;
 
-    using Application = System.Windows.Application;
-    using MessageBox = System.Windows.MessageBox;
-
     /// <summary>
     ///     The issues list.
     /// </summary>
@@ -44,9 +40,14 @@ namespace ExtensionViewModel.ViewModel
         #region Static Fields
 
         /// <summary>
-        /// The plugins options data.
+        ///     The plugins options data.
         /// </summary>
         public static readonly PluginsOptionsModel PluginsOptionsData = new PluginsOptionsModel();
+
+        /// <summary>
+        ///     The comments width.
+        /// </summary>
+        private static readonly GridLength CommentsWidthDefault = new GridLength(250);
 
         /// <summary>
         ///     The user controls height default.
@@ -57,11 +58,6 @@ namespace ExtensionViewModel.ViewModel
         ///     The user texts height default.
         /// </summary>
         private static readonly GridLength UserTextsHeightDefault = new GridLength(50);
-
-        /// <summary>
-        /// The comments width.
-        /// </summary>
-        private static readonly GridLength CommentsWidthDefault = new GridLength(250);
 
         #endregion
 
@@ -78,6 +74,61 @@ namespace ExtensionViewModel.ViewModel
         private readonly object lockThisTo = new object();
 
         /// <summary>
+        /// The analysis change lines.
+        /// </summary>
+        private bool analysisChangeLines;
+
+        /// <summary>
+        /// The analysis change lines text.
+        /// </summary>
+        private string analysisChangeLinesText = "Yes";
+
+        /// <summary>
+        /// The analysis frequency.
+        /// </summary>
+        private bool analysisFrequency;
+
+        /// <summary>
+        /// The analysis frequency text.
+        /// </summary>
+        private AnalysisFrequencies analysisFrequencyText;
+
+        /// <summary>
+        ///     The analysis mode.
+        /// </summary>
+        private bool analysisMode = true;
+
+        /// <summary>
+        ///     The analysis mode text.
+        /// </summary>
+        private AnalysisModes analysisModeText = AnalysisModes.Server;
+
+        /// <summary>
+        /// The analysis trigger.
+        /// </summary>
+        private bool analysisTrigger;
+
+        /// <summary>
+        /// The analysis trigger text.
+        /// </summary>
+        private string analysisTriggerText = "Execute";
+
+        /// <summary>
+        /// The analysis type.
+        /// </summary>
+        private bool analysisType;
+
+        /// <summary>
+        ///     The analysis type text.
+        /// </summary>
+        private AnalysisTypes analysisTypeText = AnalysisTypes.File;
+
+        /// <summary>
+        ///     The project association data model.
+        /// </summary>
+        private Resource associatedProject;
+
+        /// <summary>
         ///     The association project.
         /// </summary>
         private string associationProject = string.Empty;
@@ -88,7 +139,7 @@ namespace ExtensionViewModel.ViewModel
         private string commentData = string.Empty;
 
         /// <summary>
-        /// The coverage in editor.
+        ///     The coverage in editor.
         /// </summary>
         private SourceCoverage coverageInEditor;
 
@@ -103,7 +154,12 @@ namespace ExtensionViewModel.ViewModel
         private string diagnosticMessage;
 
         /// <summary>
-        /// The enable coverage in editor.
+        ///     The disable editor tags.
+        /// </summary>
+        private bool disableEditorTags;
+
+        /// <summary>
+        ///     The enable coverage in editor.
         /// </summary>
         private bool enableCoverageInEditor;
 
@@ -118,9 +174,9 @@ namespace ExtensionViewModel.ViewModel
         private bool issuesInViewLocked;
 
         /// <summary>
-        /// The disable editor tags.
+        ///     The local analyser thread.
         /// </summary>
-        private bool disableEditorTags;
+        private Thread localAnalyserThread;
 
         /// <summary>
         ///     The localsource.
@@ -128,9 +184,9 @@ namespace ExtensionViewModel.ViewModel
         private string localsource = string.Empty;
 
         /// <summary>
-        ///     The project association data model.
+        ///     The profile.
         /// </summary>
-        private Resource associatedProject;
+        private Profile profile;
 
         /// <summary>
         ///     The resource in editor.
@@ -176,16 +232,6 @@ namespace ExtensionViewModel.ViewModel
         ///     The vsenvironmenthelper.
         /// </summary>
         private IVsEnvironmentHelper vsenvironmenthelper;
-
-        /// <summary>
-        /// The local analyser thread.
-        /// </summary>
-        private Thread localAnalyserThread;
-
-        /// <summary>
-        /// The profile.
-        /// </summary>
-        private Profile profile;
 
         #endregion
 
@@ -246,13 +292,13 @@ namespace ExtensionViewModel.ViewModel
             this.allResourceData = new Dictionary<string, Resource>();
 
             // start some data
-            var usortedList = restService.GetUserList(this.UserConfiguration);
+            List<User> usortedList = restService.GetUserList(this.UserConfiguration);
             if (usortedList != null && usortedList.Count > 0)
             {
                 this.UsersList = new List<User>(usortedList.OrderBy(i => i.Login));
             }
 
-            var projects = restService.GetProjectsList(this.UserConfiguration);
+            List<Resource> projects = restService.GetProjectsList(this.UserConfiguration);
             if (projects != null && projects.Count > 0)
             {
                 this.ProjectResources = new List<Resource>(projects.OrderBy(i => i.Name));
@@ -308,14 +354,279 @@ namespace ExtensionViewModel.ViewModel
             Localuser
         }
 
+        /// <summary>
+        /// The analysis frequencies.
+        /// </summary>
+        private enum AnalysisFrequencies
+        {
+            /// <summary>
+            /// The on demand.
+            /// </summary>
+            OnDemand, 
+
+            /// <summary>
+            /// The always on.
+            /// </summary>
+            AlwaysOn, 
+        }
+
+        /// <summary>
+        /// The analysis modes.
+        /// </summary>
+        private enum AnalysisModes
+        {
+            /// <summary>
+            /// The local.
+            /// </summary>
+            Local, 
+
+            /// <summary>
+            /// The server.
+            /// </summary>
+            Server, 
+        }
+
+        /// <summary>
+        /// The analysis types.
+        /// </summary>
+        private enum AnalysisTypes
+        {
+            /// <summary>
+            /// The preview.
+            /// </summary>
+            Preview, 
+
+            /// <summary>
+            /// The incremental.
+            /// </summary>
+            Incremental, 
+
+            /// <summary>
+            /// The file.
+            /// </summary>
+            File, 
+
+            /// <summary>
+            /// The analysis.
+            /// </summary>
+            Analysis
+        }
+
         #endregion
 
         #region Public Properties
 
         /// <summary>
-        /// Gets or sets the clear cache command.
+        ///     Gets or sets a value indicating whether analysis change lines.
         /// </summary>
-        public ClearCacheCommand ClearCacheCommand { get; set; }
+        public bool AnalysisChangeLines
+        {
+            get
+            {
+                return this.analysisChangeLines;
+            }
+
+            set
+            {
+                this.analysisChangeLines = value;
+                this.analysisChangeLinesText = value ? "No" : "Yes";
+                this.OnPropertyChanged("AnalysisChangeLines");
+                this.OnPropertyChanged("AnalysisChangeLinesText");
+            }
+        }
+
+        /// <summary>
+        ///     Gets the analysis mode.
+        /// </summary>
+        public string AnalysisChangeLinesText
+        {
+            get
+            {
+                return this.analysisChangeLinesText;
+            }
+        }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether analysis mode.
+        /// </summary>
+        public bool AnalysisFrequency
+        {
+            get
+            {
+                return this.analysisFrequency;
+            }
+
+            set
+            {
+                this.analysisFrequency = value;
+
+                if (this.analysisFrequencyText.Equals(AnalysisFrequencies.AlwaysOn))
+                {
+                    this.analysisFrequencyText = AnalysisFrequencies.OnDemand;
+                    this.analysisTriggerText = "Execute";
+                    this.OnPropertyChanged("AnalysisTriggerText");
+                }
+                else
+                {
+                    this.analysisFrequencyText = AnalysisFrequencies.AlwaysOn;
+                    this.analysisTriggerText = "Turn On";
+                    this.OnPropertyChanged("AnalysisTriggerText");
+                }
+
+                if (!this.analysisTypeText.Equals(AnalysisTypes.File))
+                {
+                    this.analysisFrequencyText = AnalysisFrequencies.OnDemand;
+                    this.analysisTriggerText = "Execute";
+                    this.OnPropertyChanged("AnalysisTriggerText");
+                }
+
+                this.OnPropertyChanged("AnalysisFrequencyText");
+                this.OnPropertyChanged("AnalysisFrequency");
+            }
+        }
+
+        /// <summary>
+        ///     Gets the analysis mode.
+        /// </summary>
+        public string AnalysisFrequencyText
+        {
+            get
+            {
+                return this.analysisFrequencyText.ToString();
+            }
+        }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether analysis mode.
+        /// </summary>
+        public bool AnalysisMode
+        {
+            get
+            {
+                return this.analysisMode;
+            }
+
+            set
+            {
+                this.analysisMode = value;
+                this.analysisModeText = value ? AnalysisModes.Server : AnalysisModes.Local;
+                if (this.analysisModeText.Equals(AnalysisModes.Server))
+                {
+                    this.analysisTypeText = AnalysisTypes.File;
+                    this.OnPropertyChanged("AnalysisTypeText");
+                }
+
+                this.OnPropertyChanged("AnalysisModeText");
+                this.OnPropertyChanged("AnalysisMode");
+            }
+        }
+
+        /// <summary>
+        ///     Gets the analysis mode text.
+        /// </summary>
+        public string AnalysisModeText
+        {
+            get
+            {
+                return this.analysisModeText.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether analysis trigger.
+        /// </summary>
+        public bool AnalysisTrigger
+        {
+            get
+            {
+                return this.analysisTrigger;
+            }
+
+            set
+            {
+                this.analysisTrigger = value;
+                if (this.analysisFrequencyText.Equals(AnalysisFrequencies.AlwaysOn))
+                {
+                    if (this.analysisTrigger)
+                    {
+                        this.analysisTriggerText = "Turn Off";
+                    }
+                    else
+                    {
+                        this.analysisTriggerText = "Turn On";
+                    }
+                }
+                else
+                {
+                    this.analysisTriggerText = "Execute";
+                }
+
+                this.OnPropertyChanged("AnalysisTriggerText");
+                this.OnPropertyChanged("AnalysisTrigger");
+            }
+        }
+
+        /// <summary>
+        ///     Gets the analysis mode.
+        /// </summary>
+        public string AnalysisTriggerText
+        {
+            get
+            {
+                return this.analysisTriggerText;
+            }
+        }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether analysis mode.
+        /// </summary>
+        public bool AnalysisType
+        {
+            get
+            {
+                return this.analysisType;
+            }
+
+            set
+            {
+                this.analysisType = value;
+                if (this.analysisTypeText.Equals(AnalysisTypes.Analysis))
+                {
+                    this.analysisTypeText = AnalysisTypes.Preview;
+                }
+                else
+                {
+                    this.analysisTypeText += 1;
+                }
+
+                if (this.analysisModeText.Equals(AnalysisModes.Server))
+                {
+                    this.analysisTypeText = AnalysisTypes.File;
+                }
+
+                if (!this.analysisTypeText.Equals(AnalysisTypes.File))
+                {
+                    this.analysisFrequencyText = AnalysisFrequencies.OnDemand;
+                    this.OnPropertyChanged("AnalysisFrequencyText");
+                    this.analysisTriggerText = "Execute";
+                    this.OnPropertyChanged("AnalysisTriggerText");
+                }
+
+                this.OnPropertyChanged("AnalysisTypeText");
+                this.OnPropertyChanged("AnalysisType");
+            }
+        }
+
+        /// <summary>
+        ///     Gets the analysis mode.
+        /// </summary>
+        public string AnalysisTypeText
+        {
+            get
+            {
+                return this.analysisTypeText.ToString();
+            }
+        }
 
         /// <summary>
         ///     Gets or sets the assign on issue command.
@@ -323,9 +634,31 @@ namespace ExtensionViewModel.ViewModel
         public AssignOnIssueCommand AssignOnIssueCommand { get; set; }
 
         /// <summary>
-        /// Gets or sets the assign project command.
+        ///     Gets or sets the assign project command.
         /// </summary>
         public AssociateCommand AssignProjectCommand { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the project association data model.
+        /// </summary>
+        public Resource AssociatedProject
+        {
+            get
+            {
+                return this.associatedProject;
+            }
+
+            set
+            {
+                if (value != null)
+                {
+                    this.AssociatedProjectKey = value.Key;
+                }
+
+                this.associatedProject = value;
+                this.OnPropertyChanged("AssociatedProject");
+            }
+        }
 
         /// <summary>
         ///     Gets or sets the association project.
@@ -354,6 +687,11 @@ namespace ExtensionViewModel.ViewModel
                 return new List<string>(this.cachedIssuesListObs);
             }
         }
+
+        /// <summary>
+        ///     Gets or sets the clear cache command.
+        /// </summary>
+        public ClearCacheCommand ClearCacheCommand { get; set; }
 
         /// <summary>
         ///     Gets or sets the user entry data.
@@ -404,12 +742,29 @@ namespace ExtensionViewModel.ViewModel
         }
 
         /// <summary>
+        ///     Gets or sets the comments width.
+        /// </summary>
+        public GridLength CommentsWidth
+        {
+            get
+            {
+                return this.commentsWidth;
+            }
+
+            set
+            {
+                this.commentsWidth = value;
+                this.OnPropertyChanged("CommentsWidth");
+            }
+        }
+
+        /// <summary>
         ///     Gets or sets the confirm issue command.
         /// </summary>
         public ConfirmIssueCommand ConfirmIssueCommand { get; set; }
 
         /// <summary>
-        /// Gets or sets the coverage in editor.
+        ///     Gets or sets the coverage in editor.
         /// </summary>
         public SourceCoverage CoverageInEditor
         {
@@ -443,7 +798,30 @@ namespace ExtensionViewModel.ViewModel
         }
 
         /// <summary>
-        /// Gets or sets the document in view.
+        ///     Gets or sets a value indicating whether issues in view locked.
+        /// </summary>
+        public bool DisableEditorTags
+        {
+            get
+            {
+                return this.disableEditorTags;
+            }
+
+            set
+            {
+                this.disableEditorTags = value;
+                this.Vsenvironmenthelper.WriteOption(
+                    "Sonar Options", 
+                    "General", 
+                    "DisableEditorTags", 
+                    value ? "TRUE" : "FALSE");
+                this.OnPropertyChanged("IssuesInEditor");
+                this.OnPropertyChanged("DisableEditorTags");
+            }
+        }
+
+        /// <summary>
+        ///     Gets or sets the document in view.
         /// </summary>
         public string DocumentInView { get; set; }
 
@@ -488,6 +866,11 @@ namespace ExtensionViewModel.ViewModel
                 this.OnPropertyChanged("ErrorMessage");
             }
         }
+
+        /// <summary>
+        ///     Gets or sets the extension running local analysis.
+        /// </summary>
+        public ILocalAnalyserExtension ExtensionRunningLocalAnalysis { get; set; }
 
         /// <summary>
         ///     Gets or sets the false positive on issue command.
@@ -652,7 +1035,8 @@ namespace ExtensionViewModel.ViewModel
                     if (Application.Current != null)
                     {
                         Application.Current.Dispatcher.Invoke(
-                            DispatcherPriority.Normal, (Action)(() => this.Comments = value[0].Comments));
+                            DispatcherPriority.Normal, 
+                            (Action)(() => this.Comments = value[0].Comments));
                     }
                     else
                     {
@@ -663,7 +1047,8 @@ namespace ExtensionViewModel.ViewModel
                 if (Application.Current != null)
                 {
                     Application.Current.Dispatcher.Invoke(
-                        DispatcherPriority.Normal, (Action)(() => this.issues = value));
+                        DispatcherPriority.Normal, 
+                        (Action)(() => this.issues = value));
                 }
                 else
                 {
@@ -680,6 +1065,23 @@ namespace ExtensionViewModel.ViewModel
         }
 
         /// <summary>
+        ///     Gets or sets the comments width.
+        /// </summary>
+        public GridLength IssuesFilterWidth
+        {
+            get
+            {
+                return this.issuesFilterWidth;
+            }
+
+            set
+            {
+                this.issuesFilterWidth = value;
+                this.OnPropertyChanged("IssuesFilterWidth");
+            }
+        }
+
+        /// <summary>
         ///     Gets or sets the issues in editor.
         /// </summary>
         public List<Issue> IssuesInEditor
@@ -692,7 +1094,8 @@ namespace ExtensionViewModel.ViewModel
                     if (Application.Current != null)
                     {
                         Application.Current.Dispatcher.Invoke(
-                            DispatcherPriority.Normal, (Action)(() => newData = new List<Issue>(this.issuesInEditor)));
+                            DispatcherPriority.Normal, 
+                            (Action)(() => newData = new List<Issue>(this.issuesInEditor)));
                     }
                     else
                     {
@@ -715,7 +1118,8 @@ namespace ExtensionViewModel.ViewModel
                     if (Application.Current != null)
                     {
                         Application.Current.Dispatcher.Invoke(
-                            DispatcherPriority.Normal, (Action)(() => this.issuesInEditor = value));
+                            DispatcherPriority.Normal, 
+                            (Action)(() => this.issuesInEditor = value));
                     }
                     else
                     {
@@ -745,44 +1149,6 @@ namespace ExtensionViewModel.ViewModel
         }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether issues in view locked.
-        /// </summary>
-        public bool ShowIssueFiltering
-        {
-            get
-            {
-                return this.showIssueFiltering;
-            }
-
-            set
-            {
-                this.showIssueFiltering = value;
-                this.IssuesFilterWidth = this.showIssueFiltering ? new GridLength(200) : new GridLength(0);
-
-                this.OnPropertyChanged("ShowIssueFiltering");
-            }
-        }
-
-        /// <summary>
-        ///     Gets or sets a value indicating whether issues in view locked.
-        /// </summary>
-        public bool DisableEditorTags
-        {
-            get
-            {
-                return this.disableEditorTags;
-            }
-
-            set
-            {
-                this.disableEditorTags = value;
-                this.Vsenvironmenthelper.WriteOption("Sonar Options", "General", "DisableEditorTags", value ? "TRUE" : "FALSE");
-                this.OnPropertyChanged("IssuesInEditor");
-                this.OnPropertyChanged("DisableEditorTags");
-            }
-        }
-
-        /// <summary>
         ///     Gets or sets the last reference source.
         /// </summary>
         public string LastReferenceSource
@@ -800,7 +1166,7 @@ namespace ExtensionViewModel.ViewModel
         }
 
         /// <summary>
-        /// Gets or sets the last reference source in server.
+        ///     Gets or sets the last reference source in server.
         /// </summary>
         public string LastReferenceSourceInServer { get; set; }
 
@@ -815,24 +1181,48 @@ namespace ExtensionViewModel.ViewModel
         public OpenInVsCommand OpenInVsCommand { get; set; }
 
         /// <summary>
-        ///     Gets or sets the project association data model.
+        ///     Gets or sets the plugins.
         /// </summary>
-        public Resource AssociatedProject
+        public IPluginController PluginController { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the plugin running local analysis.
+        /// </summary>
+        public IPlugin PluginRunningAnalysis { get; set; }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether prevent update of issues list.
+        /// </summary>
+        public bool PreventUpdateOfIssuesList { get; set; }
+
+        /// <summary>
+        ///     Gets the profile.
+        /// </summary>
+        public Profile Profile
         {
             get
             {
-                return this.associatedProject;
-            }
-
-            set
-            {
-                if (value != null)
+                if (this.profile == null)
                 {
-                    this.AssociatedProjectKey = value.Key;
+                    try
+                    {
+                        List<Resource> profileResource = this.restService.GetQualityProfile(
+                            this.UserConfiguration, 
+                            this.AssociatedProject.Key);
+                        List<Profile> enabledrules = this.restService.GetEnabledRulesInProfile(
+                            this.UserConfiguration, 
+                            profileResource[0].Lang, 
+                            profileResource[0].Metrics[0].Data);
+                        this.profile = enabledrules[0];
+                    }
+                    catch (Exception ex)
+                    {
+                        this.ErrorMessage = "Cannot retrieve Profile From Server";
+                        this.DiagnosticMessage = ex.Message + " " + ex.StackTrace;
+                    }
                 }
-                
-                this.associatedProject = value;           
-                this.OnPropertyChanged("AssociatedProject");
+
+                return this.profile;
             }
         }
 
@@ -895,7 +1285,7 @@ namespace ExtensionViewModel.ViewModel
                 if (value != null)
                 {
                     this.Issues = this.cachedIssuesList[value];
-                }                
+                }
             }
         }
 
@@ -934,6 +1324,25 @@ namespace ExtensionViewModel.ViewModel
         }
 
         /// <summary>
+        ///     Gets or sets a value indicating whether issues in view locked.
+        /// </summary>
+        public bool ShowIssueFiltering
+        {
+            get
+            {
+                return this.showIssueFiltering;
+            }
+
+            set
+            {
+                this.showIssueFiltering = value;
+                this.IssuesFilterWidth = this.showIssueFiltering ? new GridLength(200) : new GridLength(0);
+
+                this.OnPropertyChanged("ShowIssueFiltering");
+            }
+        }
+
+        /// <summary>
         ///     Gets or sets the sonar info.
         /// </summary>
         public string SonarInfo
@@ -947,6 +1356,22 @@ namespace ExtensionViewModel.ViewModel
             {
                 this.sonarInfo = value;
                 this.OnPropertyChanged("SonarInfo");
+            }
+        }
+
+        /// <summary>
+        ///     Gets or sets the sonar version.
+        /// </summary>
+        public double SonarVersion
+        {
+            get
+            {
+                return this.sonarVersion;
+            }
+
+            set
+            {
+                this.sonarVersion = value;
             }
         }
 
@@ -1019,9 +1444,10 @@ namespace ExtensionViewModel.ViewModel
         {
             get
             {
-                var conf =
+                ConnectionConfiguration conf =
                     ConnectionConfigurationHelpers.GetConnectionConfiguration(
-                        this.vsenvironmenthelper, this.restService);
+                        this.vsenvironmenthelper, 
+                        this.restService);
                 if (conf == null)
                 {
                     this.SonarInfo = "Not Logged";
@@ -1039,7 +1465,7 @@ namespace ExtensionViewModel.ViewModel
                     this.ErrorMessage = ex.Message + "\r\n" + ex.StackTrace;
                     return null;
                 }
-                
+
                 this.SonarInfo = "Logged to Sonar: " + Convert.ToString(this.SonarVersion) + " " + conf.Hostname
                                  + " User: " + conf.Username;
                 this.ErrorMessage = string.Empty;
@@ -1102,40 +1528,6 @@ namespace ExtensionViewModel.ViewModel
                 this.OnPropertyChanged("UserTextControlsHeight");
             }
         }
-        
-        /// <summary>
-        /// Gets or sets the comments width.
-        /// </summary>
-        public GridLength IssuesFilterWidth
-        {
-            get
-            {
-                return this.issuesFilterWidth;
-            }
-
-            set
-            {
-                this.issuesFilterWidth = value;
-                this.OnPropertyChanged("IssuesFilterWidth");
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the comments width.
-        /// </summary>
-        public GridLength CommentsWidth
-        {
-            get
-            {
-                return this.commentsWidth;
-            }
-
-            set
-            {
-                this.commentsWidth = value;
-                this.OnPropertyChanged("CommentsWidth");
-            }
-        }
 
         /// <summary>
         ///     Gets or sets the vsenvironmenthelper.
@@ -1153,82 +1545,31 @@ namespace ExtensionViewModel.ViewModel
             }
         }
 
-        /// <summary>
-        /// Gets or sets the plugins.
-        /// </summary>
-        public IPluginController PluginController { get; set; }
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets or sets the plugin running local analysis.
-        /// </summary>
-        public IPlugin PluginRunningAnalysis { get; set; }
-
-        /// <summary>
-        /// Gets or sets the extension running local analysis.
-        /// </summary>
-        public ILocalAnalyserExtension ExtensionRunningLocalAnalysis { get; set; }
-
-        /// <summary>
-        /// Gets the profile.
-        /// </summary>
-        public Profile Profile
-        {
-            get
-            {
-                if (this.profile == null)
-                {
-                    try
-                    {
-                        var profileResource = this.restService.GetQualityProfile(this.UserConfiguration, this.AssociatedProject.Key);
-                        var enabledrules = this.restService.GetEnabledRulesInProfile(this.UserConfiguration, profileResource[0].Lang, profileResource[0].Metrics[0].Data);
-                        this.profile = enabledrules[0];
-                    }
-                    catch (Exception ex)
-                    {
-                        this.ErrorMessage = "Cannot retrieve Profile From Server";
-                        this.DiagnosticMessage = ex.Message + " " + ex.StackTrace;
-                    }
-                }
-
-                return this.profile;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the sonar version.
-        /// </summary>
-        public double SonarVersion
-        {
-            get
-            {
-                return this.sonarVersion;
-            }
-
-            set
-            {
-                this.sonarVersion = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether prevent update of issues list.
-        /// </summary>
-        public bool PreventUpdateOfIssuesList { get; set; }
-
         #endregion
 
         #region Public Methods and Operators
 
         /// <summary>
-        /// The reset profile.
+        /// The apply filter to issues.
         /// </summary>
-        public void ResetProfile()
+        /// <param name="issuesToFilter">
+        /// The issues to filter.
+        /// </param>
+        /// <returns>
+        /// The
+        ///     <see>
+        ///         <cref>List</cref>
+        ///     </see>
+        ///     .
+        /// </returns>
+        public List<Issue> ApplyFilterToIssues(List<Issue> issuesToFilter)
         {
-            this.profile = null;
+            if (issuesToFilter == null)
+            {
+                return new List<Issue>();
+            }
+
+            return issuesToFilter.Where(issue => !this.ApplyFilter(issue)).ToList();
         }
 
         /// <summary>
@@ -1247,7 +1588,7 @@ namespace ExtensionViewModel.ViewModel
         }
 
         /// <summary>
-        /// The clear coverage in editor.
+        ///     The clear coverage in editor.
         /// </summary>
         public void ClearCoverageInEditor()
         {
@@ -1278,7 +1619,9 @@ namespace ExtensionViewModel.ViewModel
             if (this.ResourceInEditor != null)
             {
                 VsSonarUtils.GetDifferenceReport(
-                    this.DocumentInView, this.UpdateSourceDataForResource(this.ResourceInEditor.Key, true), true);
+                    this.DocumentInView, 
+                    this.UpdateSourceDataForResource(this.ResourceInEditor.Key, true), 
+                    true);
             }
         }
 
@@ -1294,7 +1637,10 @@ namespace ExtensionViewModel.ViewModel
         /// <param name="associatedProj">
         /// The associated proj.
         /// </param>
-        public void ExtensionDataModelUpdate(ISonarRestService restServiceIn, IVsEnvironmentHelper vsenvironmenthelperIn, Resource associatedProj)
+        public void ExtensionDataModelUpdate(
+            ISonarRestService restServiceIn, 
+            IVsEnvironmentHelper vsenvironmenthelperIn, 
+            Resource associatedProj)
         {
             this.RestService = restServiceIn;
             this.Vsenvironmenthelper = vsenvironmenthelperIn;
@@ -1302,14 +1648,14 @@ namespace ExtensionViewModel.ViewModel
             this.InitCommanding();
 
             // start some data
-            var usortedList = restServiceIn.GetUserList(this.UserConfiguration);
+            List<User> usortedList = restServiceIn.GetUserList(this.UserConfiguration);
             if (usortedList != null)
             {
                 this.UsersList = new List<User>(usortedList.OrderBy(i => i.Login));
                 this.UsersList.Add(new User());
             }
 
-            var projects = restServiceIn.GetProjectsList(this.UserConfiguration);
+            List<Resource> projects = restServiceIn.GetProjectsList(this.UserConfiguration);
             if (projects != null)
             {
                 this.ProjectResources = new List<Resource>(projects.OrderBy(i => i.Name));
@@ -1326,15 +1672,96 @@ namespace ExtensionViewModel.ViewModel
         }
 
         /// <summary>
+        ///     The refresh issues.
+        /// </summary>
+        public void RefreshIssues()
+        {
+            this.SaveFilterToDisk();
+            this.OnPropertyChanged("Issues");
+        }
+
+        /// <summary>
         ///     Gets or sets the issues.
         /// </summary>
         public void RefreshView()
         {
-            var newCollection = this.Issues;
+            List<Issue> newCollection = this.Issues;
             this.Issues = null;
             this.OnPropertyChanged("Issues");
             this.Issues = newCollection;
             this.OnPropertyChanged("Issues");
+        }
+
+        /// <summary>
+        ///     The reset profile.
+        /// </summary>
+        public void ResetProfile()
+        {
+            this.profile = null;
+        }
+
+        /// <summary>
+        ///     The retrieve issues using current filter.
+        /// </summary>
+        public void RetrieveIssuesUsingCurrentFilter()
+        {
+            this.SaveFilterToDisk();
+
+            if (this.sonarVersion < 3.6)
+            {
+                if (this.DocumentInView != null)
+                {
+                    this.UpdateDataInEditor(this.DocumentInView, this.currentBuffer);
+                }
+                else
+                {
+                    this.Issues = this.RestService.GetIssuesForProjects(
+                        this.UserConfiguration, 
+                        this.AssociatedProject.Key, 
+                        false);
+                }
+
+                return;
+            }
+
+            if (this.DocumentInView != null)
+            {
+                this.UpdateDataInEditor(this.DocumentInView, this.currentBuffer);
+            }
+            else
+            {
+                string request = "?componentRoots=" + this.AssociatedProject.Key;
+
+                if (this.IsAssigneeChecked)
+                {
+                    request += "&assignees=" + this.AssigneeInFilter.Login;
+                }
+
+                if (this.IsReporterChecked)
+                {
+                    request += "&reporters=" + this.ReporterInFilter.Login;
+                }
+
+                if (this.IsDateBeforeChecked)
+                {
+                    request += "&createdBefore=" + Convert.ToString(this.CreatedBeforeDate.Year) + "-"
+                               + Convert.ToString(this.CreatedBeforeDate.Month) + "-"
+                               + Convert.ToString(this.CreatedBeforeDate.Day);
+                }
+
+                if (this.IsDateSinceChecked)
+                {
+                    request += "&createdAfter=" + Convert.ToString(this.CreatedSinceDate.Year) + "-"
+                               + Convert.ToString(this.CreatedSinceDate.Month) + "-"
+                               + Convert.ToString(this.CreatedSinceDate.Day);
+                }
+
+                request += this.FilterSeverities();
+                request += this.FilterStatus();
+                request += this.FilterResolutions();
+
+                this.Issues = this.RestService.GetIssues(this.UserConfiguration, request, this.AssociatedProject.Key);
+            }
         }
 
         /// <summary>
@@ -1345,7 +1772,7 @@ namespace ExtensionViewModel.ViewModel
         /// </param>
         public void SelectAIssueFromList(int idIn)
         {
-            foreach (var issue in this.Issues.Where(issue => issue.Id == idIn))
+            foreach (Issue issue in this.Issues.Where(issue => issue.Id == idIn))
             {
                 this.SelectedIssue = issue;
                 return;
@@ -1360,7 +1787,7 @@ namespace ExtensionViewModel.ViewModel
         /// </param>
         public void SelectAIssueFromList(Guid keyIn)
         {
-            foreach (var issue in this.Issues.Where(issue => issue.Key == keyIn))
+            foreach (Issue issue in this.Issues.Where(issue => issue.Key == keyIn))
             {
                 this.SelectedIssue = issue;
                 return;
@@ -1381,7 +1808,7 @@ namespace ExtensionViewModel.ViewModel
         /// </returns>
         public SourceCoverage UpdateCoverageDataForResource(string resource, bool forceRetrival)
         {
-            var resourceInServer = this.restService.GetResourcesData(this.UserConfiguration, resource)[0];
+            Resource resourceInServer = this.restService.GetResourcesData(this.UserConfiguration, resource)[0];
 
             if (!this.allResourceData.ContainsKey(resource) || !this.allSourceCoverageData.ContainsKey(resource))
             {
@@ -1391,7 +1818,8 @@ namespace ExtensionViewModel.ViewModel
                 }
 
                 this.allSourceCoverageData.Add(
-                    resource, this.restService.GetCoverageInResource(this.UserConfiguration, resource));
+                    resource, 
+                    this.restService.GetCoverageInResource(this.UserConfiguration, resource));
             }
             else
             {
@@ -1399,7 +1827,8 @@ namespace ExtensionViewModel.ViewModel
                 {
                     this.allResourceData[resource] = resourceInServer;
                     this.allSourceCoverageData[resource] = this.restService.GetCoverageInResource(
-                        this.UserConfiguration, resource);
+                        this.UserConfiguration, 
+                        resource);
                 }
             }
 
@@ -1417,7 +1846,7 @@ namespace ExtensionViewModel.ViewModel
         /// </returns>
         public Resource UpdateDataForResource(string resource)
         {
-            var resourceInServer = this.restService.GetResourcesData(this.UserConfiguration, resource)[0];
+            Resource resourceInServer = this.restService.GetResourcesData(this.UserConfiguration, resource)[0];
 
             if (!this.allResourceData.ContainsKey(resource))
             {
@@ -1435,48 +1864,7 @@ namespace ExtensionViewModel.ViewModel
         }
 
         /// <summary>
-        /// The update issue data for resource.
-        /// </summary>
-        /// <param name="resource">
-        /// The resource.
-        /// </param>
-        /// <returns>
-        /// The
-        ///     <see>
-        ///         <cref>List</cref>
-        ///     </see>
-        ///     .
-        /// </returns>
-        public List<Issue> UpdateIssueDataForResource(string resource)
-        {
-            var resourceInServer = this.restService.GetResourcesData(this.UserConfiguration, resource)[0];
-
-            if (!this.allResourceData.ContainsKey(resource) || !this.cachedIssuesList.ContainsKey(resource))
-            {
-                if (!this.allResourceData.ContainsKey(resource))
-                {
-                    this.allResourceData.Add(resource, resourceInServer);
-                }
-
-                this.cachedIssuesList.Add(
-                    resource, this.restService.GetIssuesInResource(this.UserConfiguration, resource, false));
-                this.UpdateCacheListData(resource);
-            }
-            else
-            {
-                if (resourceInServer.Date > this.allResourceData[resource].Date)
-                {
-                    this.allResourceData[resource] = resourceInServer;
-                    this.cachedIssuesList[resource] = this.restService.GetIssuesInResource(
-                        this.UserConfiguration, resource, false);
-                }
-            }
-
-            return new List<Issue>(this.cachedIssuesList[resource]);
-        }
-
-        /// <summary>
-        /// The update data in editor.
+        ///     The update data in editor.
         /// </summary>
         public void UpdateDataInEditor()
         {
@@ -1565,6 +1953,50 @@ namespace ExtensionViewModel.ViewModel
         }
 
         /// <summary>
+        /// The update issue data for resource.
+        /// </summary>
+        /// <param name="resource">
+        /// The resource.
+        /// </param>
+        /// <returns>
+        /// The
+        ///     <see>
+        ///         <cref>List</cref>
+        ///     </see>
+        ///     .
+        /// </returns>
+        public List<Issue> UpdateIssueDataForResource(string resource)
+        {
+            Resource resourceInServer = this.restService.GetResourcesData(this.UserConfiguration, resource)[0];
+
+            if (!this.allResourceData.ContainsKey(resource) || !this.cachedIssuesList.ContainsKey(resource))
+            {
+                if (!this.allResourceData.ContainsKey(resource))
+                {
+                    this.allResourceData.Add(resource, resourceInServer);
+                }
+
+                this.cachedIssuesList.Add(
+                    resource, 
+                    this.restService.GetIssuesInResource(this.UserConfiguration, resource, false));
+                this.UpdateCacheListData(resource);
+            }
+            else
+            {
+                if (resourceInServer.Date > this.allResourceData[resource].Date)
+                {
+                    this.allResourceData[resource] = resourceInServer;
+                    this.cachedIssuesList[resource] = this.restService.GetIssuesInResource(
+                        this.UserConfiguration, 
+                        resource, 
+                        false);
+                }
+            }
+
+            return new List<Issue>(this.cachedIssuesList[resource]);
+        }
+
+        /// <summary>
         /// The update issues in editor.
         /// </summary>
         /// <param name="buffer">
@@ -1584,7 +2016,10 @@ namespace ExtensionViewModel.ViewModel
                 try
                 {
                     this.IssuesInEditor = VsSonarUtils.ConvertIssuesToLocal(
-                        this.Issues, this.ResourceInEditor, this.currentBuffer, this.LastReferenceSource);
+                        this.Issues, 
+                        this.ResourceInEditor, 
+                        this.currentBuffer, 
+                        this.LastReferenceSource);
                 }
                 catch (Exception ex)
                 {
@@ -1602,10 +2037,13 @@ namespace ExtensionViewModel.ViewModel
         /// </param>
         public void UpdateLinesOfCoverageInEditor(bool forceRetrival)
         {
-            var coverageNew = this.UpdateCoverageDataForResource(this.resourceInEditor.Key, forceRetrival);
-            var sourceNew = VsSonarUtils.GetLinesFromSource(this.UpdateSourceDataForResource(this.resourceInEditor.Key, forceRetrival), "\r\n");
+            SourceCoverage coverageNew = this.UpdateCoverageDataForResource(this.resourceInEditor.Key, forceRetrival);
+            string sourceNew =
+                VsSonarUtils.GetLinesFromSource(
+                    this.UpdateSourceDataForResource(this.resourceInEditor.Key, forceRetrival), 
+                    "\r\n");
             this.LastReferenceSourceInServer = sourceNew;
-            this.CoverageInEditor = coverageNew;          
+            this.CoverageInEditor = coverageNew;
         }
 
         /// <summary>
@@ -1615,15 +2053,19 @@ namespace ExtensionViewModel.ViewModel
         {
             try
             {
-                var serverExtension = this.PluginRunningAnalysis.GetServerAnalyserExtension();
+                IServerAnalyserExtension serverExtension = this.PluginRunningAnalysis.GetServerAnalyserExtension();
                 if (serverExtension != null)
                 {
-                    var filePath = this.vsenvironmenthelper.ActiveFileFullPath();
-                    var solutionPath = this.vsenvironmenthelper.ActiveSolutionPath();
-                    var driveLetter = solutionPath.Substring(0, 1);
-                    var projectItem = this.vsenvironmenthelper.VsProjectItem(filePath, driveLetter);
-                    var projectKey = this.AssociatedProject.Key;
-                    var resourceKey = serverExtension.GetResourceKey(driveLetter + filePath.Substring(1), projectItem, solutionPath, projectKey);
+                    string filePath = this.vsenvironmenthelper.ActiveFileFullPath();
+                    string solutionPath = this.vsenvironmenthelper.ActiveSolutionPath();
+                    string driveLetter = solutionPath.Substring(0, 1);
+                    VsProjectItem projectItem = this.vsenvironmenthelper.VsProjectItem(filePath, driveLetter);
+                    string projectKey = this.AssociatedProject.Key;
+                    string resourceKey = serverExtension.GetResourceKey(
+                        driveLetter + filePath.Substring(1), 
+                        projectItem, 
+                        solutionPath, 
+                        projectKey);
 
                     this.ResourceInEditor = this.UpdateDataForResource(resourceKey);
                 }
@@ -1633,8 +2075,10 @@ namespace ExtensionViewModel.ViewModel
                 this.ResourceInEditor = null;
                 this.IssuesInEditor = new List<Issue>();
                 this.Issues = new List<Issue>();
-                this.ErrorMessage = this.PluginRunningAnalysis == null ? "No plugin installed that supports this file" : "File Not Found On Server";
-                
+                this.ErrorMessage = this.PluginRunningAnalysis == null
+                                        ? "No plugin installed that supports this file"
+                                        : "File Not Found On Server";
+
                 this.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
             }
         }
@@ -1653,7 +2097,7 @@ namespace ExtensionViewModel.ViewModel
         /// </returns>
         public Source UpdateSourceDataForResource(string resource, bool forceRetrival)
         {
-            var resourceInServer = this.restService.GetResourcesData(this.UserConfiguration, resource)[0];
+            Resource resourceInServer = this.restService.GetResourcesData(this.UserConfiguration, resource)[0];
 
             if (!this.allResourceData.ContainsKey(resource) || !this.allSourceData.ContainsKey(resource))
             {
@@ -1663,7 +2107,8 @@ namespace ExtensionViewModel.ViewModel
                 }
 
                 this.allSourceData.Add(
-                    resource, this.restService.GetSourceForFileResource(this.UserConfiguration, resource));
+                    resource, 
+                    this.restService.GetSourceForFileResource(this.UserConfiguration, resource));
             }
             else
             {
@@ -1671,99 +2116,12 @@ namespace ExtensionViewModel.ViewModel
                 {
                     this.allResourceData[resource] = resourceInServer;
                     this.allSourceData[resource] = this.restService.GetSourceForFileResource(
-                        this.UserConfiguration, resource);
+                        this.UserConfiguration, 
+                        resource);
                 }
             }
 
             return this.allSourceData[resource];
-        }
-
-        /// <summary>
-        /// The retrieve issues using current filter.
-        /// </summary>
-        public void RetrieveIssuesUsingCurrentFilter()
-        {
-            this.SaveFilterToDisk();
-
-            if (this.sonarVersion < 3.6)
-            {
-                if (this.DocumentInView != null)
-                {
-                    this.UpdateDataInEditor(this.DocumentInView, this.currentBuffer);
-                }
-                else
-                {
-                    this.Issues = this.RestService.GetIssuesForProjects(this.UserConfiguration, this.AssociatedProject.Key, false);
-                }
-                
-                return;
-            }
-
-            if (this.DocumentInView != null)
-            {
-                this.UpdateDataInEditor(this.DocumentInView, this.currentBuffer);
-            }
-            else
-            {
-                var request = "?componentRoots=" + this.AssociatedProject.Key;
-
-                if (this.IsAssigneeChecked)
-                {
-                    request += "&assignees=" + this.AssigneeInFilter.Login;
-                }
-
-                if (this.IsReporterChecked)
-                {
-                    request += "&reporters=" + this.ReporterInFilter.Login;
-                }
-
-                if (this.IsDateBeforeChecked)
-                {
-                    request += "&createdBefore=" + Convert.ToString(this.CreatedBeforeDate.Year) + "-" + Convert.ToString(this.CreatedBeforeDate.Month) + "-" + Convert.ToString(this.CreatedBeforeDate.Day);
-                }
-
-                if (this.IsDateSinceChecked)
-                {
-                    request += "&createdAfter=" + Convert.ToString(this.CreatedSinceDate.Year) + "-" + Convert.ToString(this.CreatedSinceDate.Month) + "-" + Convert.ToString(this.CreatedSinceDate.Day);
-                }
-
-                request += this.FilterSeverities();
-                request += this.FilterStatus();
-                request += this.FilterResolutions();
-
-                this.Issues = this.RestService.GetIssues(this.UserConfiguration, request, this.AssociatedProject.Key);
-            }            
-        }
-
-        /// <summary>
-        /// The apply filter to issues.
-        /// </summary>
-        /// <param name="issuesToFilter">
-        /// The issues to filter.
-        /// </param>
-        /// <returns>
-        /// The <see>
-        ///     <cref>List</cref>
-        /// </see>
-        ///     .
-        /// </returns>
-        public List<Issue> ApplyFilterToIssues(List<Issue> issuesToFilter)
-        {
-            if (issuesToFilter == null)
-            {
-                return new List<Issue>();
-            }
-
-            return issuesToFilter.Where(issue => !this.ApplyFilter(issue)).ToList();
-        }
-
-        /// <summary>
-        /// The refresh issues.
-        /// </summary>
-        public void RefreshIssues()
-        {
-            this.SaveFilterToDisk();
-            this.OnPropertyChanged("Issues");
         }
 
         #endregion
@@ -1778,32 +2136,11 @@ namespace ExtensionViewModel.ViewModel
         /// </param>
         protected void OnPropertyChanged(string name)
         {
-            var handler = this.PropertyChanged;
+            PropertyChangedEventHandler handler = this.PropertyChanged;
             if (handler != null)
             {
                 handler(this, new PropertyChangedEventArgs(name));
             }
-        }
-
-        /// <summary>
-        ///     The reset visibilities.
-        /// </summary>
-        private void ResetVisibilities()
-        {
-            this.UserInputTextBoxVisibility = Visibility.Hidden;
-            this.IsAssignVisible = Visibility.Hidden;
-            this.IsConfirmVisible = Visibility.Hidden;
-            this.IsUnconfirmVisible = Visibility.Hidden;
-
-            this.IsCommentingVisible = Visibility.Hidden;
-            this.IsFalsePositiveVisible = Visibility.Hidden;
-            this.IsResolveVisible = Visibility.Hidden;
-            this.IsReopenVisible = Visibility.Hidden;
-            this.IsOpenExternallyVisible = Visibility.Hidden;
-
-            this.UserTextControlsHeight = new GridLength(0);
-            this.UserControlsHeight = new GridLength(0);
-            this.CommentsWidth = new GridLength(0);
         }
 
         /// <summary>
@@ -1831,12 +2168,12 @@ namespace ExtensionViewModel.ViewModel
             {
                 return true;
             }
-            
+
             if (this.FilterBySeverity(issue))
             {
                 return true;
             }
-            
+
             return false;
         }
 
@@ -1867,65 +2204,6 @@ namespace ExtensionViewModel.ViewModel
             if (issue.Resolution.Equals("REMOVED"))
             {
                 if (this.IsRemovedChecked)
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// The filter by status.
-        /// </summary>
-        /// <param name="issue">
-        /// The issue.
-        /// </param>
-        /// <returns>
-        /// The <see cref="bool"/>.
-        /// </returns>
-        private bool FilterByStatus(Issue issue)
-        {
-            if (string.IsNullOrEmpty(issue.Status))
-            {
-                return false;
-            }
-
-            if (issue.Status.Equals("CLOSED"))
-            {
-                if (this.IsStatusClosedChecked)
-                {
-                    return false;
-                }
-            }
-
-            if (issue.Status.Equals("OPEN"))
-            {
-                if (this.IsStatusOpenChecked)
-                {
-                    return false;
-                }
-            }
-
-            if (issue.Status.Equals("CONFIRMED"))
-            {
-                if (this.IsStatusConfirmedChecked)
-                {
-                    return false;
-                }
-            }
-
-            if (issue.Status.Equals("REOPENED"))
-            {
-                if (this.IsStatusReopenedChecked)
-                {
-                    return false;
-                }
-            }
-
-            if (issue.Status.Equals("RESOLVED"))
-            {
-                if (this.IsStatusResolvedChecked)
                 {
                     return false;
                 }
@@ -1994,7 +2272,262 @@ namespace ExtensionViewModel.ViewModel
         }
 
         /// <summary>
-        /// The run local analysis new.
+        /// The filter by status.
+        /// </summary>
+        /// <param name="issue">
+        /// The issue.
+        /// </param>
+        /// <returns>
+        /// The <see cref="bool"/>.
+        /// </returns>
+        private bool FilterByStatus(Issue issue)
+        {
+            if (string.IsNullOrEmpty(issue.Status))
+            {
+                return false;
+            }
+
+            if (issue.Status.Equals("CLOSED"))
+            {
+                if (this.IsStatusClosedChecked)
+                {
+                    return false;
+                }
+            }
+
+            if (issue.Status.Equals("OPEN"))
+            {
+                if (this.IsStatusOpenChecked)
+                {
+                    return false;
+                }
+            }
+
+            if (issue.Status.Equals("CONFIRMED"))
+            {
+                if (this.IsStatusConfirmedChecked)
+                {
+                    return false;
+                }
+            }
+
+            if (issue.Status.Equals("REOPENED"))
+            {
+                if (this.IsStatusReopenedChecked)
+                {
+                    return false;
+                }
+            }
+
+            if (issue.Status.Equals("RESOLVED"))
+            {
+                if (this.IsStatusResolvedChecked)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        ///     The get filter resolutions.
+        /// </summary>
+        /// <returns>
+        ///     The <see cref="string" />.
+        /// </returns>
+        private string FilterResolutions()
+        {
+            string str = string.Empty;
+
+            if (this.IsFalsePositiveChecked)
+            {
+                str += "FALSE-POSITIVE,";
+            }
+
+            if (this.IsRemovedChecked)
+            {
+                str += "REMOVED,";
+            }
+
+            if (this.IsFixedChecked)
+            {
+                str += "FIXED,";
+            }
+
+            if (string.IsNullOrEmpty(str))
+            {
+                return string.Empty;
+            }
+
+            return "&resolutions=" + str.Substring(0, str.Length - 1);
+        }
+
+        /// <summary>
+        ///     The get filter severities.
+        /// </summary>
+        /// <returns>
+        ///     The <see cref="string" />.
+        /// </returns>
+        private string FilterSeverities()
+        {
+            string str = string.Empty;
+
+            if (this.IsBlockerChecked)
+            {
+                str += "BLOCKER,";
+            }
+
+            if (this.IsCriticalChecked)
+            {
+                str += "CRITICAL,";
+            }
+
+            if (this.IsMajaorChecked)
+            {
+                str += "MAJOR,";
+            }
+
+            if (this.IsMinorChecked)
+            {
+                str += "MINOR,";
+            }
+
+            if (this.IsInfoChecked)
+            {
+                str += "INFO,";
+            }
+
+            if (string.IsNullOrEmpty(str))
+            {
+                return string.Empty;
+            }
+
+            return "&severities=" + str.Substring(0, str.Length - 1);
+        }
+
+        /// <summary>
+        ///     The get filter status.
+        /// </summary>
+        /// <returns>
+        ///     The <see cref="string" />.
+        /// </returns>
+        private string FilterStatus()
+        {
+            string str = string.Empty;
+
+            if (this.IsStatusClosedChecked)
+            {
+                str += "CLOSED,";
+            }
+
+            if (this.IsStatusConfirmedChecked)
+            {
+                str += "CONFIRMED,";
+            }
+
+            if (this.IsStatusOpenChecked)
+            {
+                str += "OPEN,";
+            }
+
+            if (this.IsStatusReopenedChecked)
+            {
+                str += "REOPENED,";
+            }
+
+            if (this.IsStatusResolvedChecked)
+            {
+                str += "RESOLVED,";
+            }
+
+            if (string.IsNullOrEmpty(str))
+            {
+                return string.Empty;
+            }
+
+            return "&statuses=" + str.Substring(0, str.Length - 1);
+        }
+
+        /// <summary>
+        ///     The init commanding.
+        /// </summary>
+        private void InitCommanding()
+        {
+            // commands
+            this.CommentOnIssueCommand = new CommentOnIssueCommand(this, this.restService);
+            this.FalsePositiveOnIssueCommand = new FalsePositiveOnIssueCommand(this, this.restService);
+            this.ResolveIssueCommand = new ResolveIssueCommand(this, this.restService);
+            this.AssignOnIssueCommand = new AssignOnIssueCommand(this, this.restService);
+            this.OpenInSonarCommand = new OpenInSonarCommand(this, this.restService, this.vsenvironmenthelper);
+            this.OpenInVsCommand = new OpenInVsCommand(this, this.restService, this.vsenvironmenthelper);
+            this.ConfirmIssueCommand = new ConfirmIssueCommand(this, this.restService);
+            this.ReOpenIssueCommand = new ReOpenIssueCommand(this, this.restService);
+            this.UnConfirmIssueCommand = new UnConfirmIssueCommand(this, this.restService);
+            this.GetIssuesCommand = new GetIssuesCommand(this, this.restService);
+            this.AssignProjectCommand = new AssociateCommand(this, this.vsenvironmenthelper);
+            this.ClearCacheCommand = new ClearCacheCommand(this);
+
+            // init some saved options
+            string optionval = this.Vsenvironmenthelper.ReadSavedOption("Sonar Options", "General", "DisableEditorTags");
+            if (!string.IsNullOrEmpty(optionval))
+            {
+                this.DisableEditorTags = optionval.Equals("TRUE");
+            }
+        }
+
+        /// <summary>
+        ///     The perform analysis.
+        /// </summary>
+        private void PerformaAnalysis()
+        {
+            try
+            {
+                if (this.ServerAnalysis == AnalysesType.Server)
+                {
+                    this.RunServerAnalysis();
+                }
+
+                if (this.ServerAnalysis == AnalysesType.Local || this.ServerAnalysis == AnalysesType.Localuser)
+                {
+                    this.RunLocalAnalysis();
+                }
+
+                if (this.EnableCoverageInEditor)
+                {
+                    this.DisplayCoverageInEditor(false);
+                }
+            }
+            catch (Exception ex)
+            {
+                this.ErrorMessage = "Error Analysing Current File";
+                this.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
+            }
+        }
+
+        /// <summary>
+        ///     The reset visibilities.
+        /// </summary>
+        private void ResetVisibilities()
+        {
+            this.UserInputTextBoxVisibility = Visibility.Hidden;
+            this.IsAssignVisible = Visibility.Hidden;
+            this.IsConfirmVisible = Visibility.Hidden;
+            this.IsUnconfirmVisible = Visibility.Hidden;
+
+            this.IsCommentingVisible = Visibility.Hidden;
+            this.IsFalsePositiveVisible = Visibility.Hidden;
+            this.IsResolveVisible = Visibility.Hidden;
+            this.IsReopenVisible = Visibility.Hidden;
+            this.IsOpenExternallyVisible = Visibility.Hidden;
+
+            this.UserTextControlsHeight = new GridLength(0);
+            this.UserControlsHeight = new GridLength(0);
+            this.CommentsWidth = new GridLength(0);
+        }
+
+        /// <summary>
+        ///     The run local analysis new.
         /// </summary>
         private void RunLocalAnalysis()
         {
@@ -2013,74 +2546,6 @@ namespace ExtensionViewModel.ViewModel
         }
 
         /// <summary>
-        /// The update local issues in view.
-        /// </summary>
-        /// <param name="sender">
-        /// The sender.
-        /// </param>
-        /// <param name="e">
-        /// The e.
-        /// </param>
-        private void UpdateLocalIssuesInView(object sender, EventArgs e)
-        {
-            try
-            {
-                var issuesInExtension = this.ExtensionRunningLocalAnalysis.GetIssues();
-                if (issuesInExtension.Count == 0)
-                {
-                    return;
-                }
-
-                var firstNonNullELems = issuesInExtension.First();
-
-                foreach (var issue in issuesInExtension.ToList().Where(issue => issue.Component != null))
-                {
-                    firstNonNullELems = issue;
-                    break;
-                }
-
-                if (firstNonNullELems.Component == null || !firstNonNullELems.Component.Replace('\\', '/').Equals(this.DocumentInView, StringComparison.OrdinalIgnoreCase))
-                {
-                    return;
-                }
-
-                foreach (var issue in issuesInExtension.ToList())
-                {
-                    var ruleInProfile = Profile.IsRuleEnabled(this.Profile, issue.Rule);
-                    if (ruleInProfile == null)
-                    {
-                        issuesInExtension.Remove(issue);
-                    }
-                    else
-                    {
-                        issue.Severity = ruleInProfile.Severity;
-                    }
-                }
-
-                if (this.ServerAnalysis == AnalysesType.Localuser && this.ResourceInEditor != null)
-                {
-                    var diffReport = VsSonarUtils.GetDifferenceReport(this.DocumentInView, this.UpdateSourceDataForResource(this.ResourceInEditor.Key, false), false);
-                    var issuesInModifiedLines = VsSonarUtils.GetIssuesInModifiedLinesOnly(issuesInExtension, diffReport);
-                    this.IssuesInEditor = issuesInModifiedLines;
-                }
-                else
-                {
-                    this.IssuesInEditor = issuesInExtension;
-                }
-
-                if (!this.IssuesInViewLocked)
-                {
-                    this.Issues = this.IssuesInEditor;
-                }
-            }
-            catch (Exception ex)
-            {
-                this.ErrorMessage = "Local Analysis Failed";
-                this.DiagnosticMessage = ex.StackTrace;
-            }
-        }
-
-        /// <summary>
         ///     The run server analysis.
         /// </summary>
         private void RunServerAnalysis()
@@ -2090,7 +2555,7 @@ namespace ExtensionViewModel.ViewModel
                 return;
             }
 
-            var issuesForResource = this.UpdateIssueDataForResource(this.ResourceInEditor.Key);
+            List<Issue> issuesForResource = this.UpdateIssueDataForResource(this.ResourceInEditor.Key);
             this.UpdateSourceDataForResource(this.ResourceInEditor.Key, false);
 
             if (!this.IssuesInViewLocked)
@@ -2099,9 +2564,13 @@ namespace ExtensionViewModel.ViewModel
             }
 
             this.LastReferenceSource = VsSonarUtils.GetLinesFromSource(
-                this.allSourceData[this.ResourceInEditor.Key], "\r\n");
+                this.allSourceData[this.ResourceInEditor.Key], 
+                "\r\n");
             this.IssuesInEditor = VsSonarUtils.ConvertIssuesToLocal(
-                issuesForResource, this.ResourceInEditor, this.currentBuffer, this.LastReferenceSource);
+                issuesForResource, 
+                this.ResourceInEditor, 
+                this.currentBuffer, 
+                this.LastReferenceSource);
         }
 
         /// <summary>
@@ -2140,6 +2609,81 @@ namespace ExtensionViewModel.ViewModel
         }
 
         /// <summary>
+        /// The update local issues in view.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void UpdateLocalIssuesInView(object sender, EventArgs e)
+        {
+            try
+            {
+                List<Issue> issuesInExtension = this.ExtensionRunningLocalAnalysis.GetIssues();
+                if (issuesInExtension.Count == 0)
+                {
+                    return;
+                }
+
+                Issue firstNonNullELems = issuesInExtension.First();
+
+                foreach (Issue issue in issuesInExtension.ToList().Where(issue => issue.Component != null))
+                {
+                    firstNonNullELems = issue;
+                    break;
+                }
+
+                if (firstNonNullELems.Component == null
+                    || !firstNonNullELems.Component.Replace('\\', '/')
+                            .Equals(this.DocumentInView, StringComparison.OrdinalIgnoreCase))
+                {
+                    return;
+                }
+
+                foreach (Issue issue in issuesInExtension.ToList())
+                {
+                    Rule ruleInProfile = Profile.IsRuleEnabled(this.Profile, issue.Rule);
+                    if (ruleInProfile == null)
+                    {
+                        issuesInExtension.Remove(issue);
+                    }
+                    else
+                    {
+                        issue.Severity = ruleInProfile.Severity;
+                    }
+                }
+
+                if (this.ServerAnalysis == AnalysesType.Localuser && this.ResourceInEditor != null)
+                {
+                    ArrayList diffReport = VsSonarUtils.GetDifferenceReport(
+                        this.DocumentInView, 
+                        this.UpdateSourceDataForResource(this.ResourceInEditor.Key, false), 
+                        false);
+                    List<Issue> issuesInModifiedLines = VsSonarUtils.GetIssuesInModifiedLinesOnly(
+                        issuesInExtension, 
+                        diffReport);
+                    this.IssuesInEditor = issuesInModifiedLines;
+                }
+                else
+                {
+                    this.IssuesInEditor = issuesInExtension;
+                }
+
+                if (!this.IssuesInViewLocked)
+                {
+                    this.Issues = this.IssuesInEditor;
+                }
+            }
+            catch (Exception ex)
+            {
+                this.ErrorMessage = "Local Analysis Failed";
+                this.DiagnosticMessage = ex.StackTrace;
+            }
+        }
+
+        /// <summary>
         ///     The verify pre 36 work flow.
         /// </summary>
         private void VerifyPre36WorkFlow()
@@ -2153,7 +2697,7 @@ namespace ExtensionViewModel.ViewModel
             this.UserControlsHeight = UserControlsHeightDefault;
             this.CommentsWidth = CommentsWidthDefault;
 
-            foreach (var issue in this.updateSelectedIssuesInView)
+            foreach (object issue in this.updateSelectedIssuesInView)
             {
                 var issueIn = issue as Issue;
                 if (issueIn == null || string.IsNullOrEmpty(issueIn.Status))
@@ -2212,181 +2756,6 @@ namespace ExtensionViewModel.ViewModel
             }
         }
 
-        /// <summary>
-        /// The init commanding.
-        /// </summary>
-        private void InitCommanding()
-        {
-            // commands
-            this.CommentOnIssueCommand = new CommentOnIssueCommand(this, this.restService);
-            this.FalsePositiveOnIssueCommand = new FalsePositiveOnIssueCommand(this, this.restService);
-            this.ResolveIssueCommand = new ResolveIssueCommand(this, this.restService);
-            this.AssignOnIssueCommand = new AssignOnIssueCommand(this, this.restService);
-            this.OpenInSonarCommand = new OpenInSonarCommand(this, this.restService, this.vsenvironmenthelper);
-            this.OpenInVsCommand = new OpenInVsCommand(this, this.restService, this.vsenvironmenthelper);
-            this.ConfirmIssueCommand = new ConfirmIssueCommand(this, this.restService);
-            this.ReOpenIssueCommand = new ReOpenIssueCommand(this, this.restService);
-            this.UnConfirmIssueCommand = new UnConfirmIssueCommand(this, this.restService);
-            this.GetIssuesCommand = new GetIssuesCommand(this, this.restService);
-            this.AssignProjectCommand = new AssociateCommand(this, this.vsenvironmenthelper);
-            this.ClearCacheCommand = new ClearCacheCommand(this);
-
-            // init some saved options
-            var optionval = this.Vsenvironmenthelper.ReadSavedOption("Sonar Options", "General", "DisableEditorTags");
-            if (!string.IsNullOrEmpty(optionval))
-            {                
-                this.DisableEditorTags = optionval.Equals("TRUE");
-            }               
-        }
-
-        /// <summary>
-        /// The perform analysis.
-        /// </summary>
-        private void PerformaAnalysis()
-        {
-            try
-            {
-                if (this.ServerAnalysis == AnalysesType.Server)
-                {
-                    this.RunServerAnalysis();
-                }
-
-                if (this.ServerAnalysis == AnalysesType.Local || this.ServerAnalysis == AnalysesType.Localuser)
-                {
-                    this.RunLocalAnalysis();
-                }
-
-                if (this.EnableCoverageInEditor)
-                {
-                    this.DisplayCoverageInEditor(false);
-                }
-            }
-            catch (Exception ex)
-            {
-                this.ErrorMessage = "Error Analysing Current File";
-                this.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
-            }
-        }
-
         #endregion
-
-        /// <summary>
-        /// The get filter resolutions.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
-        private string FilterResolutions()
-        {
-            var str = string.Empty;
-
-            if (this.IsFalsePositiveChecked)
-            {
-                str += "FALSE-POSITIVE,";
-            }
-
-            if (this.IsRemovedChecked)
-            {
-                str += "REMOVED,";
-            }
-
-            if (this.IsFixedChecked)
-            {
-                str += "FIXED,";
-            }
-
-            if (string.IsNullOrEmpty(str))
-            {
-                return string.Empty;
-            }
-
-            return "&resolutions=" + str.Substring(0, str.Length - 1);
-        }
-
-        /// <summary>
-        /// The get filter status.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
-        private string FilterStatus()
-        {
-            var str = string.Empty;
-
-            if (this.IsStatusClosedChecked)
-            {
-                str += "CLOSED,";
-            }
-
-            if (this.IsStatusConfirmedChecked)
-            {
-                str += "CONFIRMED,";
-            }
-
-            if (this.IsStatusOpenChecked)
-            {
-                str += "OPEN,";
-            }
-
-            if (this.IsStatusReopenedChecked)
-            {
-                str += "REOPENED,";
-            }
-
-            if (this.IsStatusResolvedChecked)
-            {
-                str += "RESOLVED,";
-            }
-
-            if (string.IsNullOrEmpty(str))
-            {
-                return string.Empty;
-            }
-
-            return "&statuses=" + str.Substring(0, str.Length - 1);
-        }
-
-        /// <summary>
-        /// The get filter severities.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
-        private string FilterSeverities()
-        {
-            var str = string.Empty;
-
-            if (this.IsBlockerChecked)
-            {
-                str += "BLOCKER,";
-            }
-
-            if (this.IsCriticalChecked)
-            {
-                str += "CRITICAL,";
-            }
-
-            if (this.IsMajaorChecked)
-            {
-                str += "MAJOR,";
-            }
-
-            if (this.IsMinorChecked)
-            {
-                str += "MINOR,";
-            }
-
-            if (this.IsInfoChecked)
-            {
-                str += "INFO,";
-            }
-
-            if (string.IsNullOrEmpty(str))
-            {
-                return string.Empty;
-            }
-
-            return "&severities=" + str.Substring(0, str.Length - 1);
-        }
     }
 }

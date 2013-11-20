@@ -515,6 +515,27 @@
 	<ViewModel:ExtensionDataModel.UserTextControlsHeight>
         <Windows:GridLength>50</Windows:GridLength>
     </ViewModel:ExtensionDataModel.UserTextControlsHeight>
+
+    <ViewModel:ExtensionDataModel.AnalysisModeText>
+        <System:String>Server</System:String>
+    </ViewModel:ExtensionDataModel.AnalysisModeText>
+
+    <ViewModel:ExtensionDataModel.AnalysisTypeText>
+        <System:String>Incremental</System:String>
+    </ViewModel:ExtensionDataModel.AnalysisTypeText>
+
+    <ViewModel:ExtensionDataModel.AnalysisFrequencyText>
+        <System:String>AlwaysOn</System:String>
+    </ViewModel:ExtensionDataModel.AnalysisFrequencyText>
+
+    <ViewModel:ExtensionDataModel.AnalysisTriggerText>
+        <System:String>Execute</System:String>
+    </ViewModel:ExtensionDataModel.AnalysisTriggerText>
+
+    <ViewModel:ExtensionDataModel.AnalysisChangeLinesText>
+        <System:String>Yes</System:String>
+    </ViewModel:ExtensionDataModel.AnalysisChangeLinesText>
+    
     <ViewModel:ExtensionDataModel.CommentsWidth>
         <Windows:GridLength>250</Windows:GridLength>
     </ViewModel:ExtensionDataModel.CommentsWidth>

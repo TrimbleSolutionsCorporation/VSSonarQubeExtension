@@ -90,13 +90,13 @@
       <Project>{75a39a9b-06b2-4249-9d3c-c2319951bc53}</Project>
       <Name>ExtensionTypes</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VSSonarPlugins\VSSonarPlugins.csproj">
-      <Project>{3311C918-B662-436D-8BC8-F38B447B1414}</Project>
-      <Name>VSSonarPlugins</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SonarRestService\SonarRestService.fsproj">
       <Project>{64728a55-1166-4ec6-b066-22c4e01fc1c7}</Project>
       <Name>SonarRestService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VSSonarPlugins\VSSonarPlugins.csproj">
+      <Project>{3311C918-B662-436D-8BC8-F38B447B1414}</Project>
+      <Name>VSSonarPlugins</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
