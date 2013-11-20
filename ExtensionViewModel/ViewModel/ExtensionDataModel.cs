@@ -2536,12 +2536,20 @@ namespace ExtensionViewModel.ViewModel
             {
                 this.IssuesInEditor = new List<Issue>();
                 this.Issues = new List<Issue>();
-                MessageBox.Show("Current Analysis Plugin does not support local analysis");
+                MessageBox.Show("Current Plugin does not support Local analysis");
                 return;
             }
 
             this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted += this.UpdateLocalIssuesInView;
-            this.localAnalyserThread = this.ExtensionRunningLocalAnalysis.GetAnalyserThread(this.DocumentInView);
+            this.localAnalyserThread = this.ExtensionRunningLocalAnalysis.GetFileAnalyserThread(this.DocumentInView);
+            if (this.localAnalyserThread == null)
+            {
+                this.IssuesInEditor = new List<Issue>();
+                this.Issues = new List<Issue>();
+                MessageBox.Show("Current Plugin does not support Local File analysis");
+                return;
+            }
+
             this.localAnalyserThread.Start();
         }
 

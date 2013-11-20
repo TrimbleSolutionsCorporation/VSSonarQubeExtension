@@ -45,7 +45,31 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="bool"/>.
         /// </returns>
-        Thread GetAnalyserThread(string filePath);
+        Thread GetFileAnalyserThread(string filePath);
+
+        /// <summary>
+        /// The get incremental analyser thread.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="Thread"/>.
+        /// </returns>
+        Thread GetIncrementalAnalyserThread();
+
+        /// <summary>
+        /// The get preview analyser thread.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="Thread"/>.
+        /// </returns>
+        Thread GetPreviewAnalyserThread();
+
+        /// <summary>
+        /// The get analyser thread.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="Thread"/>.
+        /// </returns>
+        Thread GetAnalyserThread();
 
         /// <summary>
         /// The get issues.
