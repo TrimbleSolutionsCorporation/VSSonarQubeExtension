@@ -127,7 +127,7 @@
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
+      <HintPath>..\references\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="policy.4.3.FSharp.Core">
