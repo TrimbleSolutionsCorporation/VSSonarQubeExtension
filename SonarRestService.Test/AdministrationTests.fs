@@ -169,7 +169,10 @@ type AdministrationTests() =
     [<Test>]
     member test.``Get Properties`` () =
         let conf = ConnectionConfiguration("http://sonar", "jocs1", "jocs1")
+        let mockHttpReq =
+            Mock<IHttpSonarConnector>()
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), "/api/properties") @>).Returns(File.ReadAllText("testdata/PropertiesResponse.txt"))
+                .Create()
 
-
-        let service = SonarRestService(new JsonSonarConnector())
-        (service :> ISonarRestService).GetProperties(conf) |> should equal 10
+        let service = SonarRestService(mockHttpReq)
+        (service :> ISonarRestService).GetProperties(conf).Count |> should equal 66

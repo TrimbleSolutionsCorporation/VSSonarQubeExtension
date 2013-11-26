@@ -115,11 +115,11 @@ namespace ExtensionViewModel.Test
             public void ShouldReturnWhenContstrainsAreNotMet()
             {
                 var data = new ExtensionDataModel(this.service, this.vshelper, null);
-                data.ServerAnalysis = ExtensionDataModel.AnalysesType.Off;
+                data.ServerDeprecatedAnalysis = ExtensionDataModel.DeprecatedAnalysesType.Off;
                 data.UpdateIssuesLocationWithModifiedBuffer("data");                
                 Assert.AreEqual(string.Empty, data.ErrorMessage);
                 Assert.AreEqual(0, data.IssuesInEditor.Count);
-                data.ServerAnalysis = ExtensionDataModel.AnalysesType.Server;
+                data.ServerDeprecatedAnalysis = ExtensionDataModel.DeprecatedAnalysesType.Server;
                 data.UpdateIssuesLocationWithModifiedBuffer("data");
                 Assert.AreEqual(0, data.IssuesInEditor.Count);
                 Assert.IsNull(data.ResourceInEditor);
@@ -134,7 +134,7 @@ namespace ExtensionViewModel.Test
                 var data = new ExtensionDataModel(this.service, this.vshelper, null)
                                {
                                    AssociatedProject = new Resource(),
-                                   ServerAnalysis = ExtensionDataModel.AnalysesType.Server,
+                                   ServerDeprecatedAnalysis = ExtensionDataModel.DeprecatedAnalysesType.Server,
                                    Issues = new List<Issue> { new Issue(), new Issue() }                                   
                                };
 
@@ -181,7 +181,7 @@ namespace ExtensionViewModel.Test
 
 
                 var data = new ExtensionDataModel(this.service, this.vshelper, null);
-                data.ServerAnalysis = ExtensionDataModel.AnalysesType.Server;
+                data.ServerDeprecatedAnalysis = ExtensionDataModel.DeprecatedAnalysesType.Server;
                 data.AssociatedProject = new Resource { Key = "KEY"};
                 data.UpdateDataInEditor("c:\\src\\file.cpp", "#include xpto;\r\n#include ypto;");
                 Assert.AreEqual("No plugin installed that supports this file", data.ErrorMessage);
@@ -237,7 +237,7 @@ namespace ExtensionViewModel.Test
                 var data = new ExtensionDataModel(this.service, this.vshelper, null);
                 data.PluginController = this.pluginController;
                 data.PluginRunningAnalysis = this.plugin;
-                data.ServerAnalysis = ExtensionDataModel.AnalysesType.Server;
+                data.ServerDeprecatedAnalysis = ExtensionDataModel.DeprecatedAnalysesType.Server;
                 data.AssociatedProject = new Resource { Key = "KEY", Lname = "file.cpp"};
                 data.UpdateDataInEditor("c:\\src\\file.cpp", "#include xpto;\r\n#include ypto;");
                 Assert.AreEqual(string.Empty, data.ErrorMessage);

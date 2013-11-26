@@ -121,9 +121,9 @@ namespace VSSonarExtension.PackageImplementation
                     ExtensionModelData.PluginController = PluginControl;
                     this.UpdateModelInToolWindow(ExtensionModelData);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    MessageBox.Show("SonarQubeExtension is not usable condition, check credential and host from tools > options > Sonar, and restart visual studio after settings are set");
+                    MessageBox.Show("SonarQubeExtension is not usable condition, check credential and host from tools > options > Sonar, and restart visual studio after settings are set : ", ex.StackTrace);
                 }
             }
             catch (Exception ex)
@@ -375,7 +375,7 @@ namespace VSSonarExtension.PackageImplementation
                 this.sonarLocalAnalysisCommandBar.Checked = false;
                 this.sonarLocalAnalysisAddedMenuCommand.Checked = false;
                 this.sonarLocalAnalysisAddedCommandBar.Checked = false;
-                ExtensionModelData.ServerAnalysis = ExtensionDataModel.AnalysesType.Off;
+                ExtensionModelData.ServerDeprecatedAnalysis = ExtensionDataModel.DeprecatedAnalysesType.Off;
                 ExtensionModelData.IssuesInEditor = new List<Issue>();
                 if (!ExtensionModelData.IssuesInViewLocked)
                 {
@@ -389,7 +389,7 @@ namespace VSSonarExtension.PackageImplementation
                 this.sonarViolationMenuCommand.Checked = false;
                 this.sonarViolationCommandBar.Checked = false;
 
-                ExtensionModelData.ServerAnalysis = ExtensionDataModel.AnalysesType.Local;
+                ExtensionModelData.ServerDeprecatedAnalysis = ExtensionDataModel.DeprecatedAnalysesType.Local;
                 string filePath = this.visualStudioInterface.ActiveFileFullPath();
                 string refsource = string.Join<string>("\r\n", File.ReadAllLines(filePath));
                 ExtensionModelData.LastReferenceSource = refsource;
@@ -414,7 +414,7 @@ namespace VSSonarExtension.PackageImplementation
             {
                 this.sonarLocalAnalysisAddedMenuCommand.Checked = false;
                 this.sonarLocalAnalysisAddedCommandBar.Checked = false;
-                ExtensionModelData.ServerAnalysis = ExtensionDataModel.AnalysesType.Local;
+                ExtensionModelData.ServerDeprecatedAnalysis = ExtensionDataModel.DeprecatedAnalysesType.Local;
                 string filePath = this.visualStudioInterface.ActiveFileFullPath();
                 string refsource = string.Join<string>("\r\n", File.ReadAllLines(filePath));
                 ExtensionModelData.LastReferenceSource = refsource;
@@ -429,7 +429,7 @@ namespace VSSonarExtension.PackageImplementation
                 this.sonarViolationMenuCommand.Checked = false;
                 this.sonarViolationCommandBar.Checked = false;
 
-                ExtensionModelData.ServerAnalysis = ExtensionDataModel.AnalysesType.Localuser;
+                ExtensionModelData.ServerDeprecatedAnalysis = ExtensionDataModel.DeprecatedAnalysesType.Localuser;
                 string filePath = this.visualStudioInterface.ActiveFileFullPath();
                 string refsource = string.Join<string>("\r\n", File.ReadAllLines(filePath));
                 ExtensionModelData.LastReferenceSource = refsource;
@@ -475,7 +475,7 @@ namespace VSSonarExtension.PackageImplementation
             {
                 this.sonarViolationMenuCommand.Checked = false;
                 this.sonarViolationCommandBar.Checked = false;
-                ExtensionModelData.ServerAnalysis = ExtensionDataModel.AnalysesType.Off;
+                ExtensionModelData.ServerDeprecatedAnalysis = ExtensionDataModel.DeprecatedAnalysesType.Off;
                 ExtensionModelData.IssuesInEditor = new List<Issue>();
                 if (!ExtensionModelData.IssuesInViewLocked)
                 {
@@ -493,7 +493,7 @@ namespace VSSonarExtension.PackageImplementation
                 (new Thread(
                     () =>
                         {
-                            ExtensionModelData.ServerAnalysis = ExtensionDataModel.AnalysesType.Server;
+                            ExtensionModelData.ServerDeprecatedAnalysis = ExtensionDataModel.DeprecatedAnalysesType.Server;
                             ExtensionModelData.UpdateDataInEditor();
                         })).Start();
             }

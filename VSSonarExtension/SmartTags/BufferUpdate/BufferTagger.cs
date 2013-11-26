@@ -336,9 +336,9 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
                     return;
                 }
 
-                if (VsSonarExtensionPackage.ExtensionModelData.ServerAnalysis != ExtensionDataModel.AnalysesType.Local
-                    && VsSonarExtensionPackage.ExtensionModelData.ServerAnalysis
-                    != ExtensionDataModel.AnalysesType.Localuser)
+                if (VsSonarExtensionPackage.ExtensionModelData.ServerDeprecatedAnalysis != ExtensionDataModel.DeprecatedAnalysesType.Local
+                    && VsSonarExtensionPackage.ExtensionModelData.ServerDeprecatedAnalysis
+                    != ExtensionDataModel.DeprecatedAnalysesType.Localuser)
                 {
                     return;
                 }

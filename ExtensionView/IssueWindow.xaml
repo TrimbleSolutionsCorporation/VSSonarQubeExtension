@@ -42,6 +42,7 @@
 			<CheckBox Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="Control Panel" Height="18" Width="90" ToolTip="Show issues filtering options" IsChecked="{Binding ShowIssueFiltering}"/>
 			<CheckBox Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="Lock View" Height="18" Width="90" ToolTip="When Locked the Update of the Issues In the Editor will not change the list in the table bellow" IsChecked="{Binding IssuesInViewLocked}"/>
 			<CheckBox Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="Disable Tags" Height="18" Width="90" ToolTip="Disable Tags in Editor, Only Issues Window will be Populated" IsChecked="{Binding DisableEditorTags}"/>
+			<ToggleButton IsEnabled="{Binding TriggerIsEnabled}" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="{Binding AnalysisTriggerText}" IsChecked="{Binding AnalysisTrigger}" Template="{DynamicResource SquareToggleButtonTemplate}" Height="20" Width="85" />
 		</Menu>
 		<Grid x:Name="UserInputGrid" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="2" Margin="0"/>
 		<Grid x:Name="StatusGrid" Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="0" Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" >
@@ -174,7 +175,7 @@
 							<ToggleButton Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="{Binding AnalysisTypeText}" IsChecked="{Binding AnalysisType}" Grid.Row="1" Grid.Column="1" Template="{DynamicResource SquareToggleButtonTemplate}" />
 							<ToggleButton ToolTip="Always on will runs analysis when a save is issued, or a new file is open. OnDemand the user will need to press analyse button" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="{Binding AnalysisFrequencyText}" IsChecked="{Binding AnalysisFrequency}" Grid.Row="2" Grid.Column="1" Template="{DynamicResource SquareToggleButtonTemplate}" />
 							<ToggleButton ToolTip="If yes, issues will be reported in modified lines only" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="{Binding AnalysisChangeLinesText}" IsChecked="{Binding AnalysisChangeLines}" Grid.Row="2" Grid.Column="1" Template="{DynamicResource SquareToggleButtonTemplate}" Margin="0,19.107,0,0.893" Grid.RowSpan="2" />
-							<ToggleButton Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="{Binding AnalysisTriggerText}" IsChecked="{Binding AnalysisTrigger}" Grid.Row="4" Grid.Column="1" Template="{DynamicResource SquareToggleButtonTemplate}" />
+							<ToggleButton IsEnabled="{Binding TriggerIsEnabled}" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="{Binding AnalysisTriggerText}" IsChecked="{Binding AnalysisTrigger}" Grid.Row="4" Grid.Column="1" Template="{DynamicResource SquareToggleButtonTemplate}" />
 						</Grid>								
 					</Expander>					
 										

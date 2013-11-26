@@ -146,7 +146,7 @@ namespace VSSonarExtension.SmartTags.Squiggle
                 yield break;
             }
 
-            if (VsSonarExtensionPackage.ExtensionModelData.ServerAnalysis == ExtensionDataModel.AnalysesType.Off)
+            if (VsSonarExtensionPackage.ExtensionModelData.ServerDeprecatedAnalysis == ExtensionDataModel.DeprecatedAnalysesType.Off)
             {
                 yield break;
             }

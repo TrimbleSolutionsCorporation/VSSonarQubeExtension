@@ -211,7 +211,7 @@ namespace ExtensionViewModel.ViewModel
         /// <summary>
         ///     The server analysis.
         /// </summary>
-        private AnalysesType serverAnalysis;
+        private DeprecatedAnalysesType serverDeprecatedAnalysis;
 
         /// <summary>
         ///     The sonar info.
@@ -232,6 +232,11 @@ namespace ExtensionViewModel.ViewModel
         ///     The vsenvironmenthelper.
         /// </summary>
         private IVsEnvironmentHelper vsenvironmenthelper;
+
+        /// <summary>
+        /// The trigger is enabled.
+        /// </summary>
+        private bool triggerIsEnabled = true;
 
         #endregion
 
@@ -255,7 +260,7 @@ namespace ExtensionViewModel.ViewModel
             this.UserControlsHeight = new GridLength(0);
             this.IssuesFilterWidth = new GridLength(0);
 
-            this.ServerAnalysis = AnalysesType.Off;
+            this.ServerDeprecatedAnalysis = DeprecatedAnalysesType.Off;
 
             this.RestoreUserSettingsInIssuesDataGrid();
             this.RestoreUserFilteringOptions();
@@ -309,7 +314,7 @@ namespace ExtensionViewModel.ViewModel
             this.UserTextControlsHeight = new GridLength(0);
             this.UserControlsHeight = new GridLength(0);
             this.IssuesFilterWidth = new GridLength(0);
-            this.ServerAnalysis = AnalysesType.Off;
+            this.ServerDeprecatedAnalysis = DeprecatedAnalysesType.Off;
 
             this.RestoreUserSettingsInIssuesDataGrid();
             this.RestoreUserFilteringOptions();
@@ -331,7 +336,7 @@ namespace ExtensionViewModel.ViewModel
         /// <summary>
         ///     The analyses type.
         /// </summary>
-        public enum AnalysesType
+        public enum DeprecatedAnalysesType
         {
             /// <summary>
             ///     The off.
@@ -430,6 +435,12 @@ namespace ExtensionViewModel.ViewModel
             {
                 this.analysisChangeLines = value;
                 this.analysisChangeLinesText = value ? "No" : "Yes";
+
+                if (this.analysisModeText.Equals(AnalysisModes.Server))
+                {
+                    this.analysisChangeLinesText = "No";
+                }
+
                 this.OnPropertyChanged("AnalysisChangeLines");
                 this.OnPropertyChanged("AnalysisChangeLinesText");
             }
@@ -522,6 +533,23 @@ namespace ExtensionViewModel.ViewModel
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether trigger is enabled.
+        /// </summary>
+        public bool TriggerIsEnabled
+        {
+            get
+            {
+                return this.triggerIsEnabled;
+            }
+
+            set
+            {
+                this.triggerIsEnabled = value;
+                this.OnPropertyChanged("TriggerIsEnabled");
+            }
+        }
+
+        /// <summary>
         ///     Gets the analysis mode text.
         /// </summary>
         public string AnalysisModeText
@@ -559,7 +587,23 @@ namespace ExtensionViewModel.ViewModel
                 else
                 {
                     this.analysisTriggerText = "Execute";
+
+                    if (this.analysisModeText.Equals(AnalysisModes.Server))
+                    {
+                        this.TriggerIsEnabled = false;
+                        this.UpdateDataInEditor();
+                        this.RunServerAnalysis();
+                        this.TriggerIsEnabled = true;
+                    }
+                    else
+                    {
+                        if (this.analysisTypeText.Equals(AnalysisTypes.File))
+                        {
+                            this.RunLocalFileAnalysis();
+                        }                        
+                    }
                 }
+
 
                 this.OnPropertyChanged("AnalysisTriggerText");
                 this.OnPropertyChanged("AnalysisTrigger");
@@ -1309,17 +1353,17 @@ namespace ExtensionViewModel.ViewModel
         /// <summary>
         ///     Gets or sets the server analysis.
         /// </summary>
-        public AnalysesType ServerAnalysis
+        public DeprecatedAnalysesType ServerDeprecatedAnalysis
         {
             get
             {
-                return this.serverAnalysis;
+                return this.serverDeprecatedAnalysis;
             }
 
             set
             {
-                this.serverAnalysis = value;
-                this.OnPropertyChanged("ServerAnalysis");
+                this.serverDeprecatedAnalysis = value;
+                this.OnPropertyChanged("serverDeprecatedAnalysis");
             }
         }
 
@@ -2008,7 +2052,7 @@ namespace ExtensionViewModel.ViewModel
             {
                 this.currentBuffer = buffer;
 
-                if (this.ServerAnalysis == AnalysesType.Off || this.AssociatedProject == null)
+                if (this.ServerDeprecatedAnalysis == DeprecatedAnalysesType.Off || this.AssociatedProject == null)
                 {
                     return;
                 }
@@ -2483,14 +2527,14 @@ namespace ExtensionViewModel.ViewModel
         {
             try
             {
-                if (this.ServerAnalysis == AnalysesType.Server)
+                if (this.ServerDeprecatedAnalysis == DeprecatedAnalysesType.Server)
                 {
                     this.RunServerAnalysis();
                 }
 
-                if (this.ServerAnalysis == AnalysesType.Local || this.ServerAnalysis == AnalysesType.Localuser)
+                if (this.ServerDeprecatedAnalysis == DeprecatedAnalysesType.Local || this.ServerDeprecatedAnalysis == DeprecatedAnalysesType.Localuser)
                 {
-                    this.RunLocalAnalysis();
+                    this.RunLocalFileAnalysis();
                 }
 
                 if (this.EnableCoverageInEditor)
@@ -2529,7 +2573,7 @@ namespace ExtensionViewModel.ViewModel
         /// <summary>
         ///     The run local analysis new.
         /// </summary>
-        private void RunLocalAnalysis()
+        private void RunLocalFileAnalysis()
         {
             this.ExtensionRunningLocalAnalysis = this.PluginRunningAnalysis.GetLocalAnalysisExtension();
             if (this.ExtensionRunningLocalAnalysis == null)
@@ -2663,7 +2707,7 @@ namespace ExtensionViewModel.ViewModel
                     }
                 }
 
-                if (this.ServerAnalysis == AnalysesType.Localuser && this.ResourceInEditor != null)
+                if (this.ServerDeprecatedAnalysis == DeprecatedAnalysesType.Localuser && this.ResourceInEditor != null)
                 {
                     ArrayList diffReport = VsSonarUtils.GetDifferenceReport(
                         this.DocumentInView, 

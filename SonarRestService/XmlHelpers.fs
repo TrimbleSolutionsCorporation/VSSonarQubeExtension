@@ -29,7 +29,10 @@ type XmlHelpersService() =
             let helper = UserSettingsXml.Parse(File.ReadAllText(filepath))
             let mutable value = ""
             for data in helper.GetPropertyGroups() do
-                let condition = data.Condition
-                if condition.Value.Contains("'Work'") || condition.Value = "''"  || condition.Value = "" then
-                    value <- data.UserSrcdIr
+                try
+                    let condition = data.Condition
+                    if condition.Value.Contains("'Work'") || condition.Value = "''"  || condition.Value = "" then
+                        value <- data.UserSrcdIr
+                with
+                | ex -> value <- data.UserSrcdIr
             value
