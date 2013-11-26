@@ -50,7 +50,6 @@
     </Otherwise>
   </Choose>
   <Import Project="$(FSharpTargetsPath)" Condition="Exists('$(FSharpTargetsPath)')" />
-  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <ItemGroup>
     <Compile Include="IssuesTests.fs" />
     <Compile Include="AdministrationTests.fs" />
