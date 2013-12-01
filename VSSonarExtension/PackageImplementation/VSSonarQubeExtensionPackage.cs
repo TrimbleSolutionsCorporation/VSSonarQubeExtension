@@ -15,11 +15,9 @@
 namespace VSSonarExtension.PackageImplementation
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.Design;
     using System.Diagnostics;
     using System.Globalization;
-    using System.IO;
     using System.Runtime.InteropServices;
 
     using EnvDTE;
@@ -27,8 +25,6 @@ namespace VSSonarExtension.PackageImplementation
     using EnvDTE80;
 
     using ExtensionHelpers;
-
-    using ExtensionTypes;
 
     using ExtensionViewModel.ViewModel;
 
@@ -134,44 +130,6 @@ namespace VSSonarExtension.PackageImplementation
         }
 
         /// <summary>
-        /// The analysis controller.
-        /// </summary>
-        /// <param name="sender">
-        /// The sender.
-        /// </param>
-        /// <param name="e">
-        /// The e.
-        /// </param>
-        private void AnalysisController(object sender, EventArgs e)
-        {
-            if (sender == null)
-            {
-                return;
-            }
-
-            var command = sender as OleMenuCommand;
-
-            if (!this.sem.WaitOne(0))
-            {
-                return;
-            }
-
-            try
-            {
-                this.UpdateServerButton(command);
-                this.UpdateLocalButton(command);
-                this.UpdateLocalUser(command);
-            }
-            catch (Exception ex)
-            {
-                ExtensionModelData.ErrorMessage = "Error";
-                ExtensionModelData.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
-            }
-
-            this.sem.Release();
-        }
-
-        /// <summary>
         /// The get coverage menu item callback.
         /// </summary>
         /// <param name="sender">
@@ -228,7 +186,6 @@ namespace VSSonarExtension.PackageImplementation
         {
             this.visualStudioInterface.WriteDefaultOption(
                 "Sonar Options", "General", "SonarHost", "http://localhost:9000");
-            this.visualStudioInterface.WriteDefaultOption("Sonar Options", "General", "DisableEditorTags", "FALSE");
         }
 
         /// <summary>
@@ -269,23 +226,7 @@ namespace VSSonarExtension.PackageImplementation
                 return;
             }
 
-            // menu commands 
-            var menuCommandId = new CommandID(
-                GuidList.GuidVSSonarExtensionCmdSet, (int)PkgCmdIdList.CmdidSonarServerViolationsCommand);
-            this.sonarViolationMenuCommand = new OleMenuCommand(this.AnalysisController, menuCommandId);
-            mcs.AddCommand(this.sonarViolationMenuCommand);
-
-            menuCommandId = new CommandID(
-                GuidList.GuidVSSonarExtensionCmdSet, (int)PkgCmdIdList.CmdidLocalAnalysisCommand);
-            this.sonarLocalAnalysisMenuCommand = new OleMenuCommand(this.AnalysisController, menuCommandId);
-            mcs.AddCommand(this.sonarLocalAnalysisMenuCommand);
-
-            menuCommandId = new CommandID(
-                GuidList.GuidVSSonarExtensionCmdSet, (int)PkgCmdIdList.CmdidLocalViolationsFromChangesCommand);
-            this.sonarLocalAnalysisAddedMenuCommand = new OleMenuCommand(this.AnalysisController, menuCommandId);
-            mcs.AddCommand(this.sonarLocalAnalysisAddedMenuCommand);
-
-            menuCommandId = new CommandID(GuidList.GuidVSSonarExtensionCmdSet, (int)PkgCmdIdList.CmdidCoverageCommand);
+            var menuCommandId = new CommandID(GuidList.GuidVSSonarExtensionCmdSet, (int)PkgCmdIdList.CmdidCoverageCommand);
             this.sonarCoverageMenuCommand = new OleMenuCommand(this.CallbackGetCoverageMenuItem, menuCommandId);
             mcs.AddCommand(this.sonarCoverageMenuCommand);
 
@@ -296,22 +237,6 @@ namespace VSSonarExtension.PackageImplementation
             menuCommandId = new CommandID(GuidList.GuidVSSonarExtensionCmdSet, (int)PkgCmdIdList.CmdidReviewsCommand);
             this.sonarReviewsCommand = new OleMenuCommand(this.ShowIssuesToolWindow, menuCommandId);
             mcs.AddCommand(this.sonarReviewsCommand);
-
-            // toolbar menus commands
-            menuCommandId = new CommandID(
-                GuidList.GuidShowInitialToolbarCmdSet, (int)PkgCmdIdList.ToolBarReportSonarViolations);
-            this.sonarViolationCommandBar = new OleMenuCommand(this.AnalysisController, menuCommandId);
-            mcs.AddCommand(this.sonarViolationCommandBar);
-
-            menuCommandId = new CommandID(
-                GuidList.GuidShowInitialToolbarCmdSet, (int)PkgCmdIdList.ToolBarReportLocalViolations);
-            this.sonarLocalAnalysisCommandBar = new OleMenuCommand(this.AnalysisController, menuCommandId);
-            mcs.AddCommand(this.sonarLocalAnalysisCommandBar);
-
-            menuCommandId = new CommandID(
-                GuidList.GuidShowInitialToolbarCmdSet, (int)PkgCmdIdList.ToolBarReportLocalAddViolations);
-            this.sonarLocalAnalysisAddedCommandBar = new OleMenuCommand(this.AnalysisController, menuCommandId);
-            mcs.AddCommand(this.sonarLocalAnalysisAddedCommandBar);
 
             menuCommandId = new CommandID(
                 GuidList.GuidShowInitialToolbarCmdSet, (int)PkgCmdIdList.ToolBarReportCoverage);
@@ -357,87 +282,6 @@ namespace VSSonarExtension.PackageImplementation
         }
 
         /// <summary>
-        /// The update local button.
-        /// </summary>
-        /// <param name="command">
-        /// The command.
-        /// </param>
-        private void UpdateLocalButton(MenuCommand command)
-        {
-            if (command != this.sonarLocalAnalysisMenuCommand && command != this.sonarLocalAnalysisCommandBar)
-            {
-                return;
-            }
-
-            if (command.Checked)
-            {
-                this.sonarLocalAnalysisMenuCommand.Checked = false;
-                this.sonarLocalAnalysisCommandBar.Checked = false;
-                this.sonarLocalAnalysisAddedMenuCommand.Checked = false;
-                this.sonarLocalAnalysisAddedCommandBar.Checked = false;
-                ExtensionModelData.ServerDeprecatedAnalysis = ExtensionDataModel.DeprecatedAnalysesType.Off;
-                ExtensionModelData.IssuesInEditor = new List<Issue>();
-                if (!ExtensionModelData.IssuesInViewLocked)
-                {
-                    ExtensionModelData.Issues = new List<Issue>();
-                }
-            }
-            else
-            {
-                this.sonarLocalAnalysisMenuCommand.Checked = true;
-                this.sonarLocalAnalysisCommandBar.Checked = true;
-                this.sonarViolationMenuCommand.Checked = false;
-                this.sonarViolationCommandBar.Checked = false;
-
-                ExtensionModelData.ServerDeprecatedAnalysis = ExtensionDataModel.DeprecatedAnalysesType.Local;
-                string filePath = this.visualStudioInterface.ActiveFileFullPath();
-                string refsource = string.Join<string>("\r\n", File.ReadAllLines(filePath));
-                ExtensionModelData.LastReferenceSource = refsource;
-                ExtensionModelData.UpdateDataInEditor();
-            }
-        }
-
-        /// <summary>
-        /// The update local user.
-        /// </summary>
-        /// <param name="command">
-        /// The command.
-        /// </param>
-        private void UpdateLocalUser(MenuCommand command)
-        {
-            if (command != this.sonarLocalAnalysisAddedMenuCommand && command != this.sonarLocalAnalysisAddedCommandBar)
-            {
-                return;
-            }
-
-            if (command.Checked)
-            {
-                this.sonarLocalAnalysisAddedMenuCommand.Checked = false;
-                this.sonarLocalAnalysisAddedCommandBar.Checked = false;
-                ExtensionModelData.ServerDeprecatedAnalysis = ExtensionDataModel.DeprecatedAnalysesType.Local;
-                string filePath = this.visualStudioInterface.ActiveFileFullPath();
-                string refsource = string.Join<string>("\r\n", File.ReadAllLines(filePath));
-                ExtensionModelData.LastReferenceSource = refsource;
-                ExtensionModelData.UpdateDataInEditor();
-            }
-            else
-            {
-                this.sonarLocalAnalysisMenuCommand.Checked = true;
-                this.sonarLocalAnalysisCommandBar.Checked = true;
-                this.sonarLocalAnalysisAddedMenuCommand.Checked = true;
-                this.sonarLocalAnalysisAddedCommandBar.Checked = true;
-                this.sonarViolationMenuCommand.Checked = false;
-                this.sonarViolationCommandBar.Checked = false;
-
-                ExtensionModelData.ServerDeprecatedAnalysis = ExtensionDataModel.DeprecatedAnalysesType.Localuser;
-                string filePath = this.visualStudioInterface.ActiveFileFullPath();
-                string refsource = string.Join<string>("\r\n", File.ReadAllLines(filePath));
-                ExtensionModelData.LastReferenceSource = refsource;
-                ExtensionModelData.UpdateDataInEditor();
-            }
-        }
-
-        /// <summary>
         /// The update model in tool window.
         /// </summary>
         /// <param name="modelToUse">
@@ -456,47 +300,6 @@ namespace VSSonarExtension.PackageImplementation
             var win = window as IssuesToolWindow;
             modelToUse.ExtensionDataModelUpdate(new SonarRestService(new JsonSonarConnector()), new VsPropertiesHelper(this.dte2), null);
             win.UpdateModel(modelToUse);
-        }
-
-        /// <summary>
-        /// The update server button.
-        /// </summary>
-        /// <param name="command">
-        /// The command.
-        /// </param>
-        private void UpdateServerButton(MenuCommand command)
-        {
-            if (command != this.sonarViolationMenuCommand && command != this.sonarViolationCommandBar)
-            {
-                return;
-            }
-
-            if (command.Checked)
-            {
-                this.sonarViolationMenuCommand.Checked = false;
-                this.sonarViolationCommandBar.Checked = false;
-                ExtensionModelData.ServerDeprecatedAnalysis = ExtensionDataModel.DeprecatedAnalysesType.Off;
-                ExtensionModelData.IssuesInEditor = new List<Issue>();
-                if (!ExtensionModelData.IssuesInViewLocked)
-                {
-                    ExtensionModelData.Issues = new List<Issue>();
-                }
-            }
-            else
-            {
-                this.sonarViolationMenuCommand.Checked = true;
-                this.sonarViolationCommandBar.Checked = true;
-                this.sonarLocalAnalysisAddedCommandBar.Checked = false;
-                this.sonarLocalAnalysisAddedMenuCommand.Checked = false;
-                this.sonarLocalAnalysisCommandBar.Checked = false;
-                this.sonarLocalAnalysisMenuCommand.Checked = false;
-                (new Thread(
-                    () =>
-                        {
-                            ExtensionModelData.ServerDeprecatedAnalysis = ExtensionDataModel.DeprecatedAnalysesType.Server;
-                            ExtensionModelData.UpdateDataInEditor();
-                        })).Start();
-            }
         }
 
         #endregion

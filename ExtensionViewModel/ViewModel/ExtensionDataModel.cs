@@ -74,56 +74,6 @@ namespace ExtensionViewModel.ViewModel
         private readonly object lockThisTo = new object();
 
         /// <summary>
-        /// The analysis change lines.
-        /// </summary>
-        private bool analysisChangeLines;
-
-        /// <summary>
-        /// The analysis change lines text.
-        /// </summary>
-        private string analysisChangeLinesText = "Yes";
-
-        /// <summary>
-        /// The analysis frequency.
-        /// </summary>
-        private bool analysisFrequency;
-
-        /// <summary>
-        /// The analysis frequency text.
-        /// </summary>
-        private AnalysisFrequencies analysisFrequencyText;
-
-        /// <summary>
-        ///     The analysis mode.
-        /// </summary>
-        private bool analysisMode = true;
-
-        /// <summary>
-        ///     The analysis mode text.
-        /// </summary>
-        private AnalysisModes analysisModeText = AnalysisModes.Server;
-
-        /// <summary>
-        /// The analysis trigger.
-        /// </summary>
-        private bool analysisTrigger;
-
-        /// <summary>
-        /// The analysis trigger text.
-        /// </summary>
-        private string analysisTriggerText = "Execute";
-
-        /// <summary>
-        /// The analysis type.
-        /// </summary>
-        private bool analysisType;
-
-        /// <summary>
-        ///     The analysis type text.
-        /// </summary>
-        private AnalysisTypes analysisTypeText = AnalysisTypes.File;
-
-        /// <summary>
         ///     The project association data model.
         /// </summary>
         private Resource associatedProject;
@@ -209,11 +159,6 @@ namespace ExtensionViewModel.ViewModel
         private User selectedUser = new User();
 
         /// <summary>
-        ///     The server analysis.
-        /// </summary>
-        private DeprecatedAnalysesType serverDeprecatedAnalysis;
-
-        /// <summary>
         ///     The sonar info.
         /// </summary>
         private string sonarInfo = string.Empty;
@@ -232,11 +177,6 @@ namespace ExtensionViewModel.ViewModel
         ///     The vsenvironmenthelper.
         /// </summary>
         private IVsEnvironmentHelper vsenvironmenthelper;
-
-        /// <summary>
-        /// The trigger is enabled.
-        /// </summary>
-        private bool triggerIsEnabled = true;
 
         #endregion
 
@@ -259,8 +199,6 @@ namespace ExtensionViewModel.ViewModel
             this.UserTextControlsHeight = new GridLength(0);
             this.UserControlsHeight = new GridLength(0);
             this.IssuesFilterWidth = new GridLength(0);
-
-            this.ServerDeprecatedAnalysis = DeprecatedAnalysesType.Off;
 
             this.RestoreUserSettingsInIssuesDataGrid();
             this.RestoreUserFilteringOptions();
@@ -314,7 +252,6 @@ namespace ExtensionViewModel.ViewModel
             this.UserTextControlsHeight = new GridLength(0);
             this.UserControlsHeight = new GridLength(0);
             this.IssuesFilterWidth = new GridLength(0);
-            this.ServerDeprecatedAnalysis = DeprecatedAnalysesType.Off;
 
             this.RestoreUserSettingsInIssuesDataGrid();
             this.RestoreUserFilteringOptions();
@@ -331,346 +268,7 @@ namespace ExtensionViewModel.ViewModel
 
         #endregion
 
-        #region Enums
-
-        /// <summary>
-        ///     The analyses type.
-        /// </summary>
-        public enum DeprecatedAnalysesType
-        {
-            /// <summary>
-            ///     The off.
-            /// </summary>
-            Off, 
-
-            /// <summary>
-            ///     The server.
-            /// </summary>
-            Server, 
-
-            /// <summary>
-            ///     The local.
-            /// </summary>
-            Local, 
-
-            /// <summary>
-            ///     The localuser.
-            /// </summary>
-            Localuser
-        }
-
-        /// <summary>
-        /// The analysis frequencies.
-        /// </summary>
-        private enum AnalysisFrequencies
-        {
-            /// <summary>
-            /// The on demand.
-            /// </summary>
-            OnDemand, 
-
-            /// <summary>
-            /// The always on.
-            /// </summary>
-            AlwaysOn, 
-        }
-
-        /// <summary>
-        /// The analysis modes.
-        /// </summary>
-        private enum AnalysisModes
-        {
-            /// <summary>
-            /// The local.
-            /// </summary>
-            Local, 
-
-            /// <summary>
-            /// The server.
-            /// </summary>
-            Server, 
-        }
-
-        /// <summary>
-        /// The analysis types.
-        /// </summary>
-        private enum AnalysisTypes
-        {
-            /// <summary>
-            /// The preview.
-            /// </summary>
-            Preview, 
-
-            /// <summary>
-            /// The incremental.
-            /// </summary>
-            Incremental, 
-
-            /// <summary>
-            /// The file.
-            /// </summary>
-            File, 
-
-            /// <summary>
-            /// The analysis.
-            /// </summary>
-            Analysis
-        }
-
-        #endregion
-
         #region Public Properties
-
-        /// <summary>
-        ///     Gets or sets a value indicating whether analysis change lines.
-        /// </summary>
-        public bool AnalysisChangeLines
-        {
-            get
-            {
-                return this.analysisChangeLines;
-            }
-
-            set
-            {
-                this.analysisChangeLines = value;
-                this.analysisChangeLinesText = value ? "No" : "Yes";
-
-                if (this.analysisModeText.Equals(AnalysisModes.Server))
-                {
-                    this.analysisChangeLinesText = "No";
-                }
-
-                this.OnPropertyChanged("AnalysisChangeLines");
-                this.OnPropertyChanged("AnalysisChangeLinesText");
-            }
-        }
-
-        /// <summary>
-        ///     Gets the analysis mode.
-        /// </summary>
-        public string AnalysisChangeLinesText
-        {
-            get
-            {
-                return this.analysisChangeLinesText;
-            }
-        }
-
-        /// <summary>
-        ///     Gets or sets a value indicating whether analysis mode.
-        /// </summary>
-        public bool AnalysisFrequency
-        {
-            get
-            {
-                return this.analysisFrequency;
-            }
-
-            set
-            {
-                this.analysisFrequency = value;
-
-                if (this.analysisFrequencyText.Equals(AnalysisFrequencies.AlwaysOn))
-                {
-                    this.analysisFrequencyText = AnalysisFrequencies.OnDemand;
-                    this.analysisTriggerText = "Execute";
-                    this.OnPropertyChanged("AnalysisTriggerText");
-                }
-                else
-                {
-                    this.analysisFrequencyText = AnalysisFrequencies.AlwaysOn;
-                    this.analysisTriggerText = "Turn On";
-                    this.OnPropertyChanged("AnalysisTriggerText");
-                }
-
-                if (!this.analysisTypeText.Equals(AnalysisTypes.File))
-                {
-                    this.analysisFrequencyText = AnalysisFrequencies.OnDemand;
-                    this.analysisTriggerText = "Execute";
-                    this.OnPropertyChanged("AnalysisTriggerText");
-                }
-
-                this.OnPropertyChanged("AnalysisFrequencyText");
-                this.OnPropertyChanged("AnalysisFrequency");
-            }
-        }
-
-        /// <summary>
-        ///     Gets the analysis mode.
-        /// </summary>
-        public string AnalysisFrequencyText
-        {
-            get
-            {
-                return this.analysisFrequencyText.ToString();
-            }
-        }
-
-        /// <summary>
-        ///     Gets or sets a value indicating whether analysis mode.
-        /// </summary>
-        public bool AnalysisMode
-        {
-            get
-            {
-                return this.analysisMode;
-            }
-
-            set
-            {
-                this.analysisMode = value;
-                this.analysisModeText = value ? AnalysisModes.Server : AnalysisModes.Local;
-                if (this.analysisModeText.Equals(AnalysisModes.Server))
-                {
-                    this.analysisTypeText = AnalysisTypes.File;
-                    this.OnPropertyChanged("AnalysisTypeText");
-                }
-
-                this.OnPropertyChanged("AnalysisModeText");
-                this.OnPropertyChanged("AnalysisMode");
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether trigger is enabled.
-        /// </summary>
-        public bool TriggerIsEnabled
-        {
-            get
-            {
-                return this.triggerIsEnabled;
-            }
-
-            set
-            {
-                this.triggerIsEnabled = value;
-                this.OnPropertyChanged("TriggerIsEnabled");
-            }
-        }
-
-        /// <summary>
-        ///     Gets the analysis mode text.
-        /// </summary>
-        public string AnalysisModeText
-        {
-            get
-            {
-                return this.analysisModeText.ToString();
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether analysis trigger.
-        /// </summary>
-        public bool AnalysisTrigger
-        {
-            get
-            {
-                return this.analysisTrigger;
-            }
-
-            set
-            {
-                this.analysisTrigger = value;
-                if (this.analysisFrequencyText.Equals(AnalysisFrequencies.AlwaysOn))
-                {
-                    if (this.analysisTrigger)
-                    {
-                        this.analysisTriggerText = "Turn Off";
-                    }
-                    else
-                    {
-                        this.analysisTriggerText = "Turn On";
-                    }
-                }
-                else
-                {
-                    this.analysisTriggerText = "Execute";
-
-                    if (this.analysisModeText.Equals(AnalysisModes.Server))
-                    {
-                        this.TriggerIsEnabled = false;
-                        this.UpdateDataInEditor();
-                        this.RunServerAnalysis();
-                        this.TriggerIsEnabled = true;
-                    }
-                    else
-                    {
-                        if (this.analysisTypeText.Equals(AnalysisTypes.File))
-                        {
-                            this.RunLocalFileAnalysis();
-                        }                        
-                    }
-                }
-
-
-                this.OnPropertyChanged("AnalysisTriggerText");
-                this.OnPropertyChanged("AnalysisTrigger");
-            }
-        }
-
-        /// <summary>
-        ///     Gets the analysis mode.
-        /// </summary>
-        public string AnalysisTriggerText
-        {
-            get
-            {
-                return this.analysisTriggerText;
-            }
-        }
-
-        /// <summary>
-        ///     Gets or sets a value indicating whether analysis mode.
-        /// </summary>
-        public bool AnalysisType
-        {
-            get
-            {
-                return this.analysisType;
-            }
-
-            set
-            {
-                this.analysisType = value;
-                if (this.analysisTypeText.Equals(AnalysisTypes.Analysis))
-                {
-                    this.analysisTypeText = AnalysisTypes.Preview;
-                }
-                else
-                {
-                    this.analysisTypeText += 1;
-                }
-
-                if (this.analysisModeText.Equals(AnalysisModes.Server))
-                {
-                    this.analysisTypeText = AnalysisTypes.File;
-                }
-
-                if (!this.analysisTypeText.Equals(AnalysisTypes.File))
-                {
-                    this.analysisFrequencyText = AnalysisFrequencies.OnDemand;
-                    this.OnPropertyChanged("AnalysisFrequencyText");
-                    this.analysisTriggerText = "Execute";
-                    this.OnPropertyChanged("AnalysisTriggerText");
-                }
-
-                this.OnPropertyChanged("AnalysisTypeText");
-                this.OnPropertyChanged("AnalysisType");
-            }
-        }
-
-        /// <summary>
-        ///     Gets the analysis mode.
-        /// </summary>
-        public string AnalysisTypeText
-        {
-            get
-            {
-                return this.analysisTypeText.ToString();
-            }
-        }
 
         /// <summary>
         ///     Gets or sets the assign on issue command.
@@ -1137,9 +735,7 @@ namespace ExtensionViewModel.ViewModel
                 {
                     if (Application.Current != null)
                     {
-                        Application.Current.Dispatcher.Invoke(
-                            DispatcherPriority.Normal, 
-                            (Action)(() => newData = new List<Issue>(this.issuesInEditor)));
+                        Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, (Action)(() => newData = new List<Issue>(this.issuesInEditor)));
                     }
                     else
                     {
@@ -1347,23 +943,6 @@ namespace ExtensionViewModel.ViewModel
             {
                 this.selectedIssue = value;
                 this.OnPropertyChanged("SelectedIssue");
-            }
-        }
-
-        /// <summary>
-        ///     Gets or sets the server analysis.
-        /// </summary>
-        public DeprecatedAnalysesType ServerDeprecatedAnalysis
-        {
-            get
-            {
-                return this.serverDeprecatedAnalysis;
-            }
-
-            set
-            {
-                this.serverDeprecatedAnalysis = value;
-                this.OnPropertyChanged("serverDeprecatedAnalysis");
             }
         }
 
@@ -1692,14 +1271,13 @@ namespace ExtensionViewModel.ViewModel
             this.InitCommanding();
 
             // start some data
-            List<User> usortedList = restServiceIn.GetUserList(this.UserConfiguration);
+            var usortedList = restServiceIn.GetUserList(this.UserConfiguration);
             if (usortedList != null)
             {
-                this.UsersList = new List<User>(usortedList.OrderBy(i => i.Login));
-                this.UsersList.Add(new User());
+                this.UsersList = new List<User>(usortedList.OrderBy(i => i.Login)) { new User() };
             }
 
-            List<Resource> projects = restServiceIn.GetProjectsList(this.UserConfiguration);
+            var projects = restServiceIn.GetProjectsList(this.UserConfiguration);
             if (projects != null)
             {
                 this.ProjectResources = new List<Resource>(projects.OrderBy(i => i.Name));
@@ -1908,41 +1486,6 @@ namespace ExtensionViewModel.ViewModel
         }
 
         /// <summary>
-        ///     The update data in editor.
-        /// </summary>
-        public void UpdateDataInEditor()
-        {
-            lock (this.lockThis)
-            {
-                if (string.IsNullOrEmpty(this.DocumentInView) || this.AssociatedProject == null)
-                {
-                    return;
-                }
-
-                this.PluginRunningAnalysis = this.PluginController.GetPluginToRunResource(this.DocumentInView);
-                if (this.PluginRunningAnalysis == null)
-                {
-                    this.IssuesInEditor = new List<Issue>();
-                    this.Issues = new List<Issue>();
-                    this.ErrorMessage = "No plugin installed that supports this file";
-                    return;
-                }
-
-                if (this.ResourceInEditor == null)
-                {
-                    this.UpdateResourceInEditor();
-                }
-
-                if (this.ResourceInEditor == null)
-                {
-                    return;
-                }
-
-                this.PerformaAnalysis();
-            }
-        }
-
-        /// <summary>
         /// The update issues in editor.
         /// </summary>
         /// <param name="document">
@@ -1955,44 +1498,16 @@ namespace ExtensionViewModel.ViewModel
         {
             lock (this.lockThis)
             {
-                if (string.IsNullOrEmpty(document) || string.IsNullOrEmpty(buffer) || this.AssociatedProject == null)
+                if (this.PluginController == null || string.IsNullOrEmpty(document) || string.IsNullOrEmpty(buffer) || this.AssociatedProject == null)
                 {
+                    this.ErrorMessage = "No plugin installed that supports this file";
                     return;
                 }
 
                 this.currentBuffer = buffer;
                 this.DocumentInView = document;
-                if (this.PluginController == null)
-                {
-                    this.IssuesInEditor = new List<Issue>();
-                    this.Issues = new List<Issue>();
-                    this.ErrorMessage = "No plugin installed that supports this file";
-                    return;
-                }
-
-                this.PluginRunningAnalysis = this.PluginController.GetPluginToRunResource(document);
-                if (this.PluginRunningAnalysis == null)
-                {
-                    this.IssuesInEditor = new List<Issue>();
-                    this.Issues = new List<Issue>();
-                    this.ErrorMessage = "No plugin installed that supports this file";
-                    return;
-                }
-
+                
                 this.UpdateResourceInEditor();
-
-                if (this.ResourceInEditor == null)
-                {
-                    return;
-                }
-
-                if (this.PreventUpdateOfIssuesList)
-                {
-                    this.PreventUpdateOfIssuesList = false;
-                    return;
-                }
-
-                this.PerformaAnalysis();
             }
         }
 
@@ -2046,13 +1561,13 @@ namespace ExtensionViewModel.ViewModel
         /// <param name="buffer">
         /// The buffer.
         /// </param>
-        public void UpdateIssuesLocationWithModifiedBuffer(string buffer)
+        public void UpdateIssuesInEditorLocationWithModifiedBuffer(string buffer)
         {
             lock (this.lockThis)
             {
                 this.currentBuffer = buffer;
 
-                if (this.ServerDeprecatedAnalysis == DeprecatedAnalysesType.Off || this.AssociatedProject == null)
+                if (this.Issues == null)
                 {
                     return;
                 }
@@ -2095,34 +1610,49 @@ namespace ExtensionViewModel.ViewModel
         /// </summary>
         public void UpdateResourceInEditor()
         {
+            if (this.PluginController == null)
+            {
+                this.ErrorMessage = "No Plugins installed";
+                return;
+            }
+
+            this.PluginRunningAnalysis = this.PluginController.GetPluginToRunResource(this.DocumentInView);
+
+            if (this.PluginRunningAnalysis == null)
+            {
+                this.ErrorMessage = "No plugin installed that supports this file";
+                return;
+            }
+
+            var serverExtension = this.PluginRunningAnalysis.GetServerAnalyserExtension();
+            if (serverExtension == null)
+            {
+                this.ErrorMessage = "No plugin installed that supports this file";
+                return;
+            }
+
             try
             {
-                IServerAnalyserExtension serverExtension = this.PluginRunningAnalysis.GetServerAnalyserExtension();
-                if (serverExtension != null)
-                {
-                    string filePath = this.vsenvironmenthelper.ActiveFileFullPath();
-                    string solutionPath = this.vsenvironmenthelper.ActiveSolutionPath();
-                    string driveLetter = solutionPath.Substring(0, 1);
-                    VsProjectItem projectItem = this.vsenvironmenthelper.VsProjectItem(filePath, driveLetter);
-                    string projectKey = this.AssociatedProject.Key;
-                    string resourceKey = serverExtension.GetResourceKey(
-                        driveLetter + filePath.Substring(1), 
-                        projectItem, 
-                        solutionPath, 
-                        projectKey);
+                var filePath = this.vsenvironmenthelper.ActiveFileFullPath();
+                var solutionPath = this.vsenvironmenthelper.ActiveSolutionPath();
+                var driveLetter = solutionPath.Substring(0, 1);
+                var projectItem = this.vsenvironmenthelper.VsProjectItem(filePath, driveLetter);
+                var projectKey = this.AssociatedProject.Key;
+                var resourceKey = serverExtension.GetResourceKey(
+                    driveLetter + filePath.Substring(1), 
+                    projectItem, 
+                    solutionPath, 
+                    projectKey);
 
-                    this.ResourceInEditor = this.UpdateDataForResource(resourceKey);
-                }
+                this.ResourceInEditor = this.UpdateDataForResource(resourceKey);
+                this.PerformfAnalysis(this.AnalysisTrigger);
             }
             catch (Exception ex)
             {
                 this.ResourceInEditor = null;
                 this.IssuesInEditor = new List<Issue>();
                 this.Issues = new List<Issue>();
-                this.ErrorMessage = this.PluginRunningAnalysis == null
-                                        ? "No plugin installed that supports this file"
-                                        : "File Not Found On Server";
-
+                this.ErrorMessage = "Cannot Update data for File in Editor";
                 this.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
             }
         }
@@ -2180,7 +1710,7 @@ namespace ExtensionViewModel.ViewModel
         /// </param>
         protected void OnPropertyChanged(string name)
         {
-            PropertyChangedEventHandler handler = this.PropertyChanged;
+            var handler = this.PropertyChanged;
             if (handler != null)
             {
                 handler(this, new PropertyChangedEventArgs(name));
@@ -2511,42 +2041,6 @@ namespace ExtensionViewModel.ViewModel
             this.GetIssuesCommand = new GetIssuesCommand(this, this.restService);
             this.AssignProjectCommand = new AssociateCommand(this, this.vsenvironmenthelper);
             this.ClearCacheCommand = new ClearCacheCommand(this);
-
-            // init some saved options
-            string optionval = this.Vsenvironmenthelper.ReadSavedOption("Sonar Options", "General", "DisableEditorTags");
-            if (!string.IsNullOrEmpty(optionval))
-            {
-                this.DisableEditorTags = optionval.Equals("TRUE");
-            }
-        }
-
-        /// <summary>
-        ///     The perform analysis.
-        /// </summary>
-        private void PerformaAnalysis()
-        {
-            try
-            {
-                if (this.ServerDeprecatedAnalysis == DeprecatedAnalysesType.Server)
-                {
-                    this.RunServerAnalysis();
-                }
-
-                if (this.ServerDeprecatedAnalysis == DeprecatedAnalysesType.Local || this.ServerDeprecatedAnalysis == DeprecatedAnalysesType.Localuser)
-                {
-                    this.RunLocalFileAnalysis();
-                }
-
-                if (this.EnableCoverageInEditor)
-                {
-                    this.DisplayCoverageInEditor(false);
-                }
-            }
-            catch (Exception ex)
-            {
-                this.ErrorMessage = "Error Analysing Current File";
-                this.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
-            }
         }
 
         /// <summary>
@@ -2568,61 +2062,6 @@ namespace ExtensionViewModel.ViewModel
             this.UserTextControlsHeight = new GridLength(0);
             this.UserControlsHeight = new GridLength(0);
             this.CommentsWidth = new GridLength(0);
-        }
-
-        /// <summary>
-        ///     The run local analysis new.
-        /// </summary>
-        private void RunLocalFileAnalysis()
-        {
-            this.ExtensionRunningLocalAnalysis = this.PluginRunningAnalysis.GetLocalAnalysisExtension();
-            if (this.ExtensionRunningLocalAnalysis == null)
-            {
-                this.IssuesInEditor = new List<Issue>();
-                this.Issues = new List<Issue>();
-                MessageBox.Show("Current Plugin does not support Local analysis");
-                return;
-            }
-
-            this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted += this.UpdateLocalIssuesInView;
-            this.localAnalyserThread = this.ExtensionRunningLocalAnalysis.GetFileAnalyserThread(this.DocumentInView);
-            if (this.localAnalyserThread == null)
-            {
-                this.IssuesInEditor = new List<Issue>();
-                this.Issues = new List<Issue>();
-                MessageBox.Show("Current Plugin does not support Local File analysis");
-                return;
-            }
-
-            this.localAnalyserThread.Start();
-        }
-
-        /// <summary>
-        ///     The run server analysis.
-        /// </summary>
-        private void RunServerAnalysis()
-        {
-            if (this.ResourceInEditor == null)
-            {
-                return;
-            }
-
-            List<Issue> issuesForResource = this.UpdateIssueDataForResource(this.ResourceInEditor.Key);
-            this.UpdateSourceDataForResource(this.ResourceInEditor.Key, false);
-
-            if (!this.IssuesInViewLocked)
-            {
-                this.Issues = issuesForResource;
-            }
-
-            this.LastReferenceSource = VsSonarUtils.GetLinesFromSource(
-                this.allSourceData[this.ResourceInEditor.Key], 
-                "\r\n");
-            this.IssuesInEditor = VsSonarUtils.ConvertIssuesToLocal(
-                issuesForResource, 
-                this.ResourceInEditor, 
-                this.currentBuffer, 
-                this.LastReferenceSource);
         }
 
         /// <summary>
@@ -2658,81 +2097,6 @@ namespace ExtensionViewModel.ViewModel
             this.OnPropertyChanged("CachedIssuesListObs");
             this.selectedCachedElement = resource;
             this.OnPropertyChanged("SelectedCachedElement");
-        }
-
-        /// <summary>
-        /// The update local issues in view.
-        /// </summary>
-        /// <param name="sender">
-        /// The sender.
-        /// </param>
-        /// <param name="e">
-        /// The e.
-        /// </param>
-        private void UpdateLocalIssuesInView(object sender, EventArgs e)
-        {
-            try
-            {
-                List<Issue> issuesInExtension = this.ExtensionRunningLocalAnalysis.GetIssues();
-                if (issuesInExtension.Count == 0)
-                {
-                    return;
-                }
-
-                Issue firstNonNullELems = issuesInExtension.First();
-
-                foreach (Issue issue in issuesInExtension.ToList().Where(issue => issue.Component != null))
-                {
-                    firstNonNullELems = issue;
-                    break;
-                }
-
-                if (firstNonNullELems.Component == null
-                    || !firstNonNullELems.Component.Replace('\\', '/')
-                            .Equals(this.DocumentInView, StringComparison.OrdinalIgnoreCase))
-                {
-                    return;
-                }
-
-                foreach (Issue issue in issuesInExtension.ToList())
-                {
-                    Rule ruleInProfile = Profile.IsRuleEnabled(this.Profile, issue.Rule);
-                    if (ruleInProfile == null)
-                    {
-                        issuesInExtension.Remove(issue);
-                    }
-                    else
-                    {
-                        issue.Severity = ruleInProfile.Severity;
-                    }
-                }
-
-                if (this.ServerDeprecatedAnalysis == DeprecatedAnalysesType.Localuser && this.ResourceInEditor != null)
-                {
-                    ArrayList diffReport = VsSonarUtils.GetDifferenceReport(
-                        this.DocumentInView, 
-                        this.UpdateSourceDataForResource(this.ResourceInEditor.Key, false), 
-                        false);
-                    List<Issue> issuesInModifiedLines = VsSonarUtils.GetIssuesInModifiedLinesOnly(
-                        issuesInExtension, 
-                        diffReport);
-                    this.IssuesInEditor = issuesInModifiedLines;
-                }
-                else
-                {
-                    this.IssuesInEditor = issuesInExtension;
-                }
-
-                if (!this.IssuesInViewLocked)
-                {
-                    this.Issues = this.IssuesInEditor;
-                }
-            }
-            catch (Exception ex)
-            {
-                this.ErrorMessage = "Local Analysis Failed";
-                this.DiagnosticMessage = ex.StackTrace;
-            }
         }
 
         /// <summary>

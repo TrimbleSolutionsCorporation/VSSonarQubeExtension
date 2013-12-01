@@ -63,6 +63,7 @@
     <Compile Include="Commands\OpenInSonarCommand.cs" />
     <Compile Include="Commands\FalsePositiveOnIssueCommand.cs" />
     <Compile Include="Commands\ResolveIssueCommand.cs" />
+    <Compile Include="ViewModel\AnalysisViewModel.cs" />
     <Compile Include="ViewModel\BindingProxy.cs" />
     <Compile Include="ViewModel\LicenseOptionsModel.cs" />
     <Compile Include="ViewModel\DataGridControlViewModel.cs" />

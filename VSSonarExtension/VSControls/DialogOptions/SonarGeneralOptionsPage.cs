@@ -45,27 +45,6 @@ namespace VSSonarExtension.VSControls.DialogOptions
         /// The sonar user password.
         /// </summary>
         private string sonarUserPassword = string.Empty;
-       
-        /// <summary>
-        /// The disable editor tags.
-        /// </summary>
-        private string disableEditorTags = string.Empty;
-
-        /// <summary>
-        /// Gets or sets the cpp check executable.
-        /// </summary>
-        public string DisableEditorTags
-        {
-            get
-            {
-                return this.disableEditorTags;
-            }
-
-            set
-            {
-                this.disableEditorTags = value;
-            }
-        }
 
         /// <summary>
         /// Gets or sets the SonarHost.

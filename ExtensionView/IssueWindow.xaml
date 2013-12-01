@@ -42,7 +42,6 @@
 			<CheckBox Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="Control Panel" Height="18" Width="90" ToolTip="Show issues filtering options" IsChecked="{Binding ShowIssueFiltering}"/>
 			<CheckBox Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="Lock View" Height="18" Width="90" ToolTip="When Locked the Update of the Issues In the Editor will not change the list in the table bellow" IsChecked="{Binding IssuesInViewLocked}"/>
 			<CheckBox Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="Disable Tags" Height="18" Width="90" ToolTip="Disable Tags in Editor, Only Issues Window will be Populated" IsChecked="{Binding DisableEditorTags}"/>
-			<ToggleButton IsEnabled="{Binding TriggerIsEnabled}" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="{Binding AnalysisTriggerText}" IsChecked="{Binding AnalysisTrigger}" Template="{DynamicResource SquareToggleButtonTemplate}" Height="20" Width="85" />
 		</Menu>
 		<Grid x:Name="UserInputGrid" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="2" Margin="0"/>
 		<Grid x:Name="StatusGrid" Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="0" Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" >
@@ -138,7 +137,7 @@
 			<ScrollViewer>
 				<StackPanel Grid.Row="0" Grid.Column="0">
 					<Expander Header="Project" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}">
-						<Grid Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Height="60">
+						<Grid Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Height="60" Margin="20,0,0,0">
 							<Grid.RowDefinitions>
 								<RowDefinition Height="20"/>
 								<RowDefinition Height="20"/>
@@ -155,9 +154,8 @@
 						</Grid>								
 					</Expander>
 					<Expander Header="Analysis" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}">
-						<Grid Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Height="100">
+						<Grid Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Height="80" Margin="20,0,0,0">
 							<Grid.RowDefinitions>
-								<RowDefinition Height="20"/>
 								<RowDefinition Height="20"/>
 								<RowDefinition Height="20"/>
 								<RowDefinition Height="20"/>
@@ -169,13 +167,11 @@
 							</Grid.ColumnDefinitions>									
 							<Label Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="Mode" Style="{DynamicResource StyleOfLabels}"/>
 							<Label Grid.Row="1" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="Type" Style="{DynamicResource StyleOfLabels}"/>
-							<Label Grid.Row="2" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="Frequency" Style="{DynamicResource StyleOfLabels}"/>							
-							<Label Grid.Row="3" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="Modified Lines" Style="{DynamicResource StyleOfLabels}"/>							
+							<Label Grid.Row="2" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="Modified Lines" Style="{DynamicResource StyleOfLabels}"/>							
 							<ToggleButton Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="{Binding AnalysisModeText}" IsChecked="{Binding AnalysisMode}" Grid.Row="0" Grid.Column="1" Template="{DynamicResource SquareToggleButtonTemplate}" />
 							<ToggleButton Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="{Binding AnalysisTypeText}" IsChecked="{Binding AnalysisType}" Grid.Row="1" Grid.Column="1" Template="{DynamicResource SquareToggleButtonTemplate}" />
-							<ToggleButton ToolTip="Always on will runs analysis when a save is issued, or a new file is open. OnDemand the user will need to press analyse button" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="{Binding AnalysisFrequencyText}" IsChecked="{Binding AnalysisFrequency}" Grid.Row="2" Grid.Column="1" Template="{DynamicResource SquareToggleButtonTemplate}" />
-							<ToggleButton ToolTip="If yes, issues will be reported in modified lines only" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="{Binding AnalysisChangeLinesText}" IsChecked="{Binding AnalysisChangeLines}" Grid.Row="2" Grid.Column="1" Template="{DynamicResource SquareToggleButtonTemplate}" Margin="0,19.107,0,0.893" Grid.RowSpan="2" />
-							<ToggleButton IsEnabled="{Binding TriggerIsEnabled}" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="{Binding AnalysisTriggerText}" IsChecked="{Binding AnalysisTrigger}" Grid.Row="4" Grid.Column="1" Template="{DynamicResource SquareToggleButtonTemplate}" />
+							<ToggleButton ToolTip="If yes, issues will be reported in modified lines only" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="{Binding AnalysisChangeLinesText}" IsChecked="{Binding AnalysisChangeLines}" Grid.Row="1" Grid.Column="1" Template="{DynamicResource SquareToggleButtonTemplate}" Margin="0,19.107,0,0.893" Grid.RowSpan="2" />
+							<ToggleButton Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="{Binding AnalysisTriggerText}" IsChecked="{Binding AnalysisTrigger}" Grid.Row="3" Grid.Column="1" Template="{DynamicResource SquareToggleButtonTemplate}" />
 						</Grid>								
 					</Expander>					
 										
@@ -198,7 +194,7 @@
 								<ColumnDefinition Width="20*"/>
 							</Grid.ColumnDefinitions>
 							<Expander Header="Users" Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Left" Width="181" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Style="{DynamicResource ExpanderStyle1}">
-								<Grid Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Height="40">
+								<Grid Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Height="40" Margin="20,0,0,0">
 									<Grid.RowDefinitions>
 										<RowDefinition Height="20"/>
 										<RowDefinition Height="20"/>
@@ -218,7 +214,7 @@
 							</Expander>
 
 							<Expander Header="Status" Grid.Row="4"  Grid.ColumnSpan="2" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Style="{DynamicResource ExpanderStyle1}">
-								<Grid Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Height="100">
+								<Grid Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Height="100" Margin="20,0,0,0">
 									<Grid.RowDefinitions>
 										<RowDefinition Height="20"/>
 										<RowDefinition Height="20"/>
@@ -245,7 +241,7 @@
 							</Expander>
 
 							<Expander Header="Quick Links" Grid.Row="9" Grid.ColumnSpan="2" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Style="{DynamicResource ExpanderStyle1}" >
-								<Grid Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Height="80">
+								<Grid Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Height="80" Margin="20,0,0,0">
 									<Grid.RowDefinitions>
 										<RowDefinition Height="20"/>
 										<RowDefinition Height="20"/>
@@ -264,7 +260,7 @@
 							</Expander>							
 
 							<Expander Header="Severity" Grid.Row="2" Grid.ColumnSpan="2" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Style="{DynamicResource ExpanderStyle1}">
-								<Grid Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Height="100">
+								<Grid Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Height="100" Margin="20,0,0,0">
 									<Grid.RowDefinitions>
 										<RowDefinition Height="20"/>
 										<RowDefinition Height="20"/>
@@ -291,7 +287,7 @@
 							</Expander>
 
 							<Expander Header="Resolution" Grid.Row="1" Grid.ColumnSpan="2" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Style="{DynamicResource ExpanderStyle1}">
-								<Grid Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Height="60">
+								<Grid Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Height="60" Margin="20,0,0,0">
 									<Grid.RowDefinitions>
 										<RowDefinition Height="20"/>
 										<RowDefinition Height="20"/>
@@ -311,7 +307,7 @@
 								</Grid>														   				
 							</Expander>
 							<Expander Header="Creation Date" Grid.Row="0" Grid.ColumnSpan="2" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Style="{DynamicResource ExpanderStyle1}">
-								<Grid Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Height="40">
+								<Grid Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Height="40" Margin="20,0,0,0">
 									<Grid.RowDefinitions>
 										<RowDefinition Height="20"/>
 										<RowDefinition Height="20"/>

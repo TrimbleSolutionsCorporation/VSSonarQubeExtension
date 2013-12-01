@@ -79,7 +79,6 @@ namespace VSSonarExtension.Test
             Assert.AreEqual("host", this.SonarHost);
             Assert.AreEqual("name", this.SonarUserName);
             Assert.AreEqual("passord", this.SonarUserPassword);
-            Assert.AreEqual("FALSE", this.DisableEditorTags);
         }
 
         /// <summary>
@@ -94,7 +93,6 @@ namespace VSSonarExtension.Test
             this.SonarHost = "host";
             this.SonarUserName = "name";
             this.SonarUserPassword = "passord";
-            this.DisableEditorTags = "FALSE";
 
             this.OnActivate(null);
             Assert.AreEqual("host", page.SonarHost);

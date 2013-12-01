@@ -121,42 +121,12 @@ namespace ExtensionViewModel.Test
                                };
                 Assert.AreEqual(data.AnalysisModeText, "Local");
                 Assert.AreEqual(data.AnalysisTypeText, "Analysis");
-                Assert.AreEqual(data.AnalysisFrequencyText, "OnDemand");
-                Assert.AreEqual(data.AnalysisTriggerText, "Execute");
                 data.AnalysisType = false;
                 Assert.AreEqual(data.AnalysisTypeText, "Preview");
-                Assert.AreEqual(data.AnalysisFrequencyText, "OnDemand");
-                Assert.AreEqual(data.AnalysisTriggerText, "Execute");
                 data.AnalysisType = false;
                 Assert.AreEqual(data.AnalysisTypeText, "Incremental");
-                Assert.AreEqual(data.AnalysisFrequencyText, "OnDemand");
-                Assert.AreEqual(data.AnalysisTriggerText, "Execute");
                 data.AnalysisType = false;
                 Assert.AreEqual(data.AnalysisTypeText, "File");
-                Assert.AreEqual(data.AnalysisFrequencyText, "OnDemand");
-                Assert.AreEqual(data.AnalysisTriggerText, "Execute");
-            }
-
-            /// <summary>
-            /// The trigger should toggle on and off demand execute when type is file.
-            /// </summary>
-            [Test]
-            public void TriggerShouldToggleOnAndOffDemandExecuteWhenTypeIsFile()
-            {
-                var data = new ExtensionDataModel(this.service, this.vshelper, null) { AnalysisMode = false };
-                Assert.AreEqual(data.AnalysisTypeText, "File");
-                Assert.AreEqual(data.AnalysisModeText, "Local");
-                Assert.AreEqual(data.AnalysisFrequencyText, "OnDemand");
-                Assert.AreEqual(data.AnalysisTriggerText, "Execute");
-                data.AnalysisFrequency = false;
-                Assert.AreEqual(data.AnalysisFrequencyText, "AlwaysOn");
-                Assert.AreEqual(data.AnalysisTriggerText, "Turn On");
-                data.AnalysisTrigger = false;
-                Assert.AreEqual(data.AnalysisFrequencyText, "AlwaysOn");
-                Assert.AreEqual(data.AnalysisTriggerText, "Turn On");
-                data.AnalysisTrigger = true;
-                Assert.AreEqual(data.AnalysisFrequencyText, "AlwaysOn");
-                Assert.AreEqual(data.AnalysisTriggerText, "Turn Off");
             }
 
             /// <summary>

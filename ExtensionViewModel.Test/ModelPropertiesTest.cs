@@ -247,7 +247,6 @@ namespace ExtensionViewModel.Test
                 DisableEditorTags = false,
                 LastReferenceSource = "source",
                 RestService = connector,
-                ServerDeprecatedAnalysis = ExtensionDataModel.DeprecatedAnalysesType.Off,
                 AssociatedProject = projectAsso,
             };
 
@@ -261,7 +260,6 @@ namespace ExtensionViewModel.Test
             Assert.IsFalse(model.DisableEditorTags);
             Assert.AreEqual("source", model.LastReferenceSource);
             Assert.AreEqual(connector, model.RestService);
-            Assert.AreEqual(ExtensionDataModel.DeprecatedAnalysesType.Off, model.ServerDeprecatedAnalysis);
             Assert.AreEqual(projectAsso, model.AssociatedProject);
         }
     }

@@ -312,7 +312,7 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
             try
             {
                 var currentBuffer = this.SourceBuffer.CurrentSnapshot.GetText();
-                VsSonarExtensionPackage.ExtensionModelData.UpdateIssuesLocationWithModifiedBuffer(currentBuffer);
+                VsSonarExtensionPackage.ExtensionModelData.UpdateIssuesInEditorLocationWithModifiedBuffer(currentBuffer);
             }
             catch (Exception ex)
             {
@@ -332,13 +332,6 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
             try
             {
                 if (document == null || !document.FullName.Replace('\\', '/').Equals(this.filePath, StringComparison.OrdinalIgnoreCase))
-                {
-                    return;
-                }
-
-                if (VsSonarExtensionPackage.ExtensionModelData.ServerDeprecatedAnalysis != ExtensionDataModel.DeprecatedAnalysesType.Local
-                    && VsSonarExtensionPackage.ExtensionModelData.ServerDeprecatedAnalysis
-                    != ExtensionDataModel.DeprecatedAnalysesType.Localuser)
                 {
                     return;
                 }

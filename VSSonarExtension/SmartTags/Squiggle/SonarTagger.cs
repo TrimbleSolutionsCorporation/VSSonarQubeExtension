@@ -146,23 +146,18 @@ namespace VSSonarExtension.SmartTags.Squiggle
                 yield break;
             }
 
-            if (VsSonarExtensionPackage.ExtensionModelData.ServerDeprecatedAnalysis == ExtensionDataModel.DeprecatedAnalysesType.Off)
-            {
-                yield break;
-            }
-
             var issuesPerLine = new List<Issue>();
 
-            int currline = issuesInEditor[0].Line;
-            int prevline = currline;
+            var currline = issuesInEditor[0].Line;
+            var prevline = currline;
 
-            foreach (Issue issue in issuesInEditor)
+            foreach (var issue in issuesInEditor)
             {
                 currline = issue.Line;
 
                 if (currline != prevline)
                 {
-                    int lineToUseinVs = prevline - 1;
+                    var lineToUseinVs = prevline - 1;
                     if (lineToUseinVs < 0)
                     {
                         lineToUseinVs = 0;
@@ -179,19 +174,17 @@ namespace VSSonarExtension.SmartTags.Squiggle
                         yield break;
                     }
 
-                    var span = new SnapshotSpan(
-                        this.SourceBuffer.CurrentSnapshot, textsnapshot.Start, textsnapshot.Length);
-                    List<Issue> issuesToSpan = issuesPerLine;
+                    var span = new SnapshotSpan(this.SourceBuffer.CurrentSnapshot, textsnapshot.Start, textsnapshot.Length);
+                    var issuesToSpan = issuesPerLine;
                     issuesPerLine = new List<Issue>();
-                    yield return
-                        new TagSpan<SonarTag>(new SnapshotSpan(span.Start, span.Length), new SonarTag(issuesToSpan));
+                    yield return new TagSpan<SonarTag>(new SnapshotSpan(span.Start, span.Length), new SonarTag(issuesToSpan));
                 }
 
                 issuesPerLine.Add(issue);
                 prevline = currline;
             }
 
-            int lastlineToUseinVs = prevline - 1;
+            var lastlineToUseinVs = prevline - 1;
             if (lastlineToUseinVs < 0)
             {
                 lastlineToUseinVs = 0;

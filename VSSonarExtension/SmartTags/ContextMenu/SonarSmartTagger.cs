@@ -160,11 +160,6 @@ namespace VSSonarExtension.SmartTags.ContextMenu
                 yield break;
             }
 
-            if (VsSonarExtensionPackage.ExtensionModelData.ServerDeprecatedAnalysis == ExtensionDataModel.DeprecatedAnalysesType.Off)
-            {
-                yield break;
-            }
-
             var issuesPerLine = issuesInEditor.Where(issue => this.currLine == issue.Line).ToList();
 
             if (issuesPerLine.Count > 0)

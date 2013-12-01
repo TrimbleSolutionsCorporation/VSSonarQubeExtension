@@ -100,11 +100,11 @@ namespace ExtensionViewModel.Test
             /// The test loading of window.
             /// </summary>
             [Test]
-            public void ExceptionWhenProjectAssociationIsNull()
+            public void ErrorWhenOnPluginsAreInstalled()
             {
                 var data = new ExtensionDataModel(this.service, this.vshelper, null);
                 data.UpdateResourceInEditor();
-                Assert.AreEqual("No plugin installed that supports this file", data.ErrorMessage);
+                Assert.AreEqual("No Plugins installed", data.ErrorMessage);
                 Assert.IsNull(data.ResourceInEditor);
             }
 
@@ -115,12 +115,10 @@ namespace ExtensionViewModel.Test
             public void ShouldReturnWhenContstrainsAreNotMet()
             {
                 var data = new ExtensionDataModel(this.service, this.vshelper, null);
-                data.ServerDeprecatedAnalysis = ExtensionDataModel.DeprecatedAnalysesType.Off;
-                data.UpdateIssuesLocationWithModifiedBuffer("data");                
+                data.UpdateIssuesInEditorLocationWithModifiedBuffer("data");                
                 Assert.AreEqual(string.Empty, data.ErrorMessage);
                 Assert.AreEqual(0, data.IssuesInEditor.Count);
-                data.ServerDeprecatedAnalysis = ExtensionDataModel.DeprecatedAnalysesType.Server;
-                data.UpdateIssuesLocationWithModifiedBuffer("data");
+                data.UpdateIssuesInEditorLocationWithModifiedBuffer("data");
                 Assert.AreEqual(0, data.IssuesInEditor.Count);
                 Assert.IsNull(data.ResourceInEditor);
             }
@@ -134,11 +132,10 @@ namespace ExtensionViewModel.Test
                 var data = new ExtensionDataModel(this.service, this.vshelper, null)
                                {
                                    AssociatedProject = new Resource(),
-                                   ServerDeprecatedAnalysis = ExtensionDataModel.DeprecatedAnalysesType.Server,
                                    Issues = new List<Issue> { new Issue(), new Issue() }                                   
                                };
 
-                data.UpdateIssuesLocationWithModifiedBuffer("data");
+                data.UpdateIssuesInEditorLocationWithModifiedBuffer("data");
                 Assert.AreEqual("Error Updating Locations Off Issues", data.ErrorMessage);
                 Assert.AreEqual(0, data.IssuesInEditor.Count);
             }
@@ -181,7 +178,6 @@ namespace ExtensionViewModel.Test
 
 
                 var data = new ExtensionDataModel(this.service, this.vshelper, null);
-                data.ServerDeprecatedAnalysis = ExtensionDataModel.DeprecatedAnalysesType.Server;
                 data.AssociatedProject = new Resource { Key = "KEY"};
                 data.UpdateDataInEditor("c:\\src\\file.cpp", "#include xpto;\r\n#include ypto;");
                 Assert.AreEqual("No plugin installed that supports this file", data.ErrorMessage);
@@ -237,12 +233,12 @@ namespace ExtensionViewModel.Test
                 var data = new ExtensionDataModel(this.service, this.vshelper, null);
                 data.PluginController = this.pluginController;
                 data.PluginRunningAnalysis = this.plugin;
-                data.ServerDeprecatedAnalysis = ExtensionDataModel.DeprecatedAnalysesType.Server;
+                data.AnalysisTrigger = true;
                 data.AssociatedProject = new Resource { Key = "KEY", Lname = "file.cpp"};
                 data.UpdateDataInEditor("c:\\src\\file.cpp", "#include xpto;\r\n#include ypto;");
                 Assert.AreEqual(string.Empty, data.ErrorMessage);
                 Assert.AreEqual(2, data.IssuesInEditor.Count);
-                data.UpdateIssuesLocationWithModifiedBuffer("#include xpto;\r\n#include ypto;");
+                data.UpdateIssuesInEditorLocationWithModifiedBuffer("#include xpto;\r\n#include ypto;");
                 Assert.AreEqual(string.Empty, data.ErrorMessage);
                 Assert.AreEqual(2, data.IssuesInEditor.Count);
             }
