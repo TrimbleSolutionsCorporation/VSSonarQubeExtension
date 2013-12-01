@@ -12,6 +12,7 @@ All information on configuration and usage will be found in the wiki pages. [Hom
 # Installation
 
 Use the Visual Studio Extension Manager
+![Image](../master/wiki/installation.png?raw=true)
 
 
 # License
