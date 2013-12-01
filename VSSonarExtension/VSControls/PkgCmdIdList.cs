@@ -20,16 +20,6 @@ namespace VSSonarExtension.VSControls
     public static class PkgCmdIdList
     {
         /// <summary>
-        /// The cmdid sonar server violations command.
-        /// </summary>
-        public const uint CmdidSonarServerViolationsCommand = 0x100;
-
-        /// <summary>
-        /// The cmdid local violations from changes command.
-        /// </summary>
-        public const uint CmdidLocalViolationsFromChangesCommand = 0x110;
-
-        /// <summary>
         /// The cmdid coverage command.
         /// </summary>
         public const uint CmdidCoverageCommand = 0x120;
@@ -40,29 +30,9 @@ namespace VSSonarExtension.VSControls
         public const uint CmdidSourceDiffCommand = 0x130;
 
         /// <summary>
-        /// The cmdid local analysis command.
-        /// </summary>
-        public const uint CmdidLocalAnalysisCommand = 0x140;
-
-        /// <summary>
         /// The cmdid reviews command.
         /// </summary>
         public const uint CmdidReviewsCommand = 0x145;
-
-        /// <summary>
-        /// The cmdid my command.
-        /// </summary>
-        public const uint ToolBarReportSonarViolations = 0x150;
-
-        /// <summary>
-        /// The cmdid my command.
-        /// </summary>
-        public const uint ToolBarReportLocalViolations = 0x160;
-
-        /// <summary>
-        /// The cmdid my command.
-        /// </summary>
-        public const uint ToolBarReportLocalAddViolations = 0x170;
 
         /// <summary>
         /// The cmdid my command.

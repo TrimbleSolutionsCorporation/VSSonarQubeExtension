@@ -78,24 +78,6 @@
               <CommandFlag>DynamicVisibility</CommandFlag>
           If you do not want an image next to your command, remove the Icon node or set it to <Icon guid="guidOfficeIcon" id="msotcidNoIcon" /> -->
 
-      <Button guid="guidVSSonarExtensionCmdSet" id="cmdidSonarServerViolationsCommand" priority="0x0100" type="Button">
-        <Parent guid="guidVSSonarExtensionCmdSet" id="MyMenuGroup" />
-        <Icon guid="bmpPicSonarViolations" id="bmpPicSonarViolationsName" />
-        <Strings>
-          <CommandName>cmdidSonarServerViolationsCommand</CommandName>
-          <ButtonText>Report Sonar Server Violations</ButtonText>
-        </Strings>
-      </Button>
-
-      <Button guid="guidVSSonarExtensionCmdSet" id="CmdidLocalViolationsFromChangesCommand" priority="0x0110" type="Button">
-        <Parent guid="guidVSSonarExtensionCmdSet" id="MyMenuGroup" />
-        <Icon guid="bmpPicViolationsLocalAdded" id="bmpPicViolationsLocalAddedName" />
-        <Strings>
-          <CommandName>CmdidLocalViolationsFromChangesCommand</CommandName>
-          <ButtonText>Report Violations Added on Source Changes</ButtonText>
-        </Strings>
-      </Button>
-
       <Button guid="guidVSSonarExtensionCmdSet" id="CmdidCoverageCommand" priority="0x0120" type="Button">
         <Parent guid="guidVSSonarExtensionCmdSet" id="MyMenuGroup" />
         <Icon guid="bmpPicCoverage" id="bmpPicCoverageName" />
@@ -114,15 +96,6 @@
         </Strings>
       </Button>
 
-      <Button guid="guidVSSonarExtensionCmdSet" id="CmdidLocalAnalysisCommand" priority="0x0140" type="Button">
-        <Parent guid="guidVSSonarExtensionCmdSet" id="MyMenuGroup" />
-        <Icon guid="bmpPicViolationsLocalAll" id="bmpPicViolationsLocalAllName" />
-        <Strings>
-          <CommandName>CmdidLocalAnalysisCommand</CommandName>
-          <ButtonText>Runs Local Static Analysis Tools</ButtonText>
-        </Strings>
-      </Button>
-
         <Button guid="guidVSSonarExtensionCmdSet" id="CmdidReviewsCommand" priority="0x0145" type="Button">
             <Parent guid="guidVSSonarExtensionCmdSet" id="MyMenuGroup" />
             <Icon guid="bmpPicReviews" id="bmpPicReviewsName" />
@@ -133,30 +106,6 @@
         </Button>
         
       <!--The Toolbar Buttons. -->
-      <Button guid="guidShowInitialToolbarCmdSet" id="ToolBarReportSonarViolations" priority="0x0150" type="Button">
-        <Parent guid="guidShowInitialToolbarCmdSet" id="MyMenuGroup" />
-        <Icon guid="bmpPicSonarViolations" id="bmpPicSonarViolationsName" />
-        <Strings>
-          <CommandName>ToolBarReportSonarViolations</CommandName>
-          <ButtonText>Report Sonar Server Violations</ButtonText>
-        </Strings>
-      </Button>
-      <Button guid="guidShowInitialToolbarCmdSet" id="ToolBarReportLocalViolations" priority="0x0160" type="Button">
-        <Parent guid="guidShowInitialToolbarCmdSet" id="MyMenuGroup" />
-        <Icon guid="bmpPicViolationsLocalAll" id="bmpPicViolationsLocalAllName" />
-        <Strings>
-          <CommandName>ToolBarReportLocalViolations</CommandName>
-          <ButtonText>Runs Local Static Analysis Tools</ButtonText>
-        </Strings>
-      </Button>
-      <Button guid="guidShowInitialToolbarCmdSet" id="ToolBarReportLocalAddViolations" priority="0x0170" type="Button">
-        <Parent guid="guidShowInitialToolbarCmdSet" id="MyMenuGroup" />
-        <Icon guid="bmpPicViolationsLocalAdded" id="bmpPicViolationsLocalAddedName" />
-        <Strings>
-          <CommandName>ToolBarReportLocalAddViolations</CommandName>
-          <ButtonText>Runs Local Static Analysis Tools - Reports Only Added Violations</ButtonText>
-        </Strings>
-      </Button>
       <Button guid="guidShowInitialToolbarCmdSet" id="ToolBarReportCoverage" priority="0x0180" type="Button">
         <Parent guid="guidShowInitialToolbarCmdSet" id="MyMenuGroup" />
         <Icon guid="bmpPicCoverage" id="bmpPicCoverageName" />
@@ -192,9 +141,6 @@
             must be the actual index (1-based) of the bitmap inside the bitmap strip. -->
 
 
-      <Bitmap guid="bmpPicSonarViolations" href="..\Resources\sonarviolations.bmp"/>
-      <Bitmap guid="bmpPicViolationsLocalAdded" href="..\Resources\sonariconviolationslocaladded.bmp"/>
-      <Bitmap guid="bmpPicViolationsLocalAll" href="..\Resources\sonariconviolationslocal.bmp"/>
       <Bitmap guid="bmpPicSource" href="..\Resources\sonariconsource.bmp"/>
       <Bitmap guid="bmpPicCoverage" href="..\Resources\sonariconcoverage.bmp"/>
       <Bitmap guid="bmpPicReviews" href="..\Resources\sonarreviews.bmp"/>
@@ -221,24 +167,9 @@
     <GuidSymbol name="guidVSSonarExtensionCmdSet" value="{05ca2046-1eb1-4813-a91f-a69df9b27698}">
       <IDSymbol name="TopLevelMenu" value="0x1021"/>
       <IDSymbol name="MyMenuGroup" value="0x1020" />
-      <IDSymbol name="cmdidSonarServerViolationsCommand" value="0x0100" />
-      <IDSymbol name="CmdidLocalViolationsFromChangesCommand" value="0x0110" />
       <IDSymbol name="CmdidCoverageCommand" value="0x0120" />
       <IDSymbol name="CmdidSourceDiffCommand" value="0x0130" />
-      <IDSymbol name="CmdidLocalAnalysisCommand" value="0x0140" />
       <IDSymbol name="CmdidReviewsCommand" value="0x0145" />
-    </GuidSymbol>
-
-    <GuidSymbol name="bmpPicSonarViolations" value="{fac5fb1e-1010-4665-bf1f-c56305358eaf}" >
-      <IDSymbol name="bmpPicSonarViolationsName" value="1" />
-    </GuidSymbol>
-
-    <GuidSymbol name="bmpPicViolationsLocalAdded" value="{fac5fb1e-1010-4665-bf1f-c56305358ebf}" >
-      <IDSymbol name="bmpPicViolationsLocalAddedName" value="1" />
-    </GuidSymbol>
-
-    <GuidSymbol name="bmpPicViolationsLocalAll" value="{fac5fb1e-1010-4665-bf1f-c56305358ecf}" >
-      <IDSymbol name="bmpPicViolationsLocalAllName" value="1" />
     </GuidSymbol>
 
     <GuidSymbol name="bmpPicSource" value="{fac5fb1e-1010-4665-bf1f-c56305358edf}" >
