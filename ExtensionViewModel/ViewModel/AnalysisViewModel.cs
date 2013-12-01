@@ -163,6 +163,7 @@ namespace ExtensionViewModel.ViewModel
             set
             {
                 this.analysisMode = value;
+                this.AnalysisTrigger = false;
                 this.analysisModeText = value ? AnalysisModes.Server : AnalysisModes.Local;
                 if (this.analysisModeText.Equals(AnalysisModes.Server))
                 {
@@ -211,6 +212,7 @@ namespace ExtensionViewModel.ViewModel
             set
             {
                 this.analysisType = value;
+                this.AnalysisTrigger = false;
                 if (this.analysisTypeText.Equals(AnalysisTypes.Analysis))
                 {
                     this.analysisTypeText = AnalysisTypes.Preview;
@@ -327,32 +329,42 @@ namespace ExtensionViewModel.ViewModel
                 return;
             }
 
-            this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted += this.UpdateLocalIssuesInView;
-            switch (analysis)
+            try
             {
-                case AnalysisTypes.File:
-                    this.localAnalyserThread = this.ExtensionRunningLocalAnalysis.GetFileAnalyserThread(this.DocumentInView);
-                    break;
-                case AnalysisTypes.Analysis:
-                    this.localAnalyserThread = this.ExtensionRunningLocalAnalysis.GetAnalyserThread();
-                    break;
-                case AnalysisTypes.Incremental:
-                    this.localAnalyserThread = this.ExtensionRunningLocalAnalysis.GetIncrementalAnalyserThread();
-                    break;
-                case AnalysisTypes.Preview:
-                    this.localAnalyserThread = this.ExtensionRunningLocalAnalysis.GetPreviewAnalyserThread();
-                    break;
-            }
-            
-            if (this.localAnalyserThread == null)
-            {
-                this.IssuesInEditor = new List<Issue>();
-                this.Issues = new List<Issue>();
-                MessageBox.Show("Current Plugin does not support Local File analysis");
-                return;
-            }
+                this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted += this.UpdateLocalIssuesInView;
+                switch (analysis)
+                {
+                    case AnalysisTypes.File:
+                        this.localAnalyserThread = this.ExtensionRunningLocalAnalysis.GetFileAnalyserThread(this.DocumentInView);
+                        break;
+                    case AnalysisTypes.Analysis:
+                        this.localAnalyserThread = this.ExtensionRunningLocalAnalysis.GetAnalyserThread();
+                        break;
+                    case AnalysisTypes.Incremental:
+                        this.localAnalyserThread = this.ExtensionRunningLocalAnalysis.GetIncrementalAnalyserThread();
+                        break;
+                    case AnalysisTypes.Preview:
+                        this.localAnalyserThread = this.ExtensionRunningLocalAnalysis.GetPreviewAnalyserThread();
+                        break;
+                }
 
-            this.localAnalyserThread.Start();
+                if (this.localAnalyserThread == null)
+                {
+                    this.IssuesInEditor = new List<Issue>();
+                    this.Issues = new List<Issue>();
+                    MessageBox.Show("Analysis Type Not Supported By Plugin");
+                    return;
+                }
+
+                this.localAnalyserThread.Start();
+            }
+            catch (Exception ex)
+            {
+                this.ErrorMessage = "Analysis Type Not Supported By Plugin";
+                this.AnalysisTrigger = false;
+                this.DiagnosticMessage = ex.StackTrace;
+                this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted -= this.UpdateLocalIssuesInView;
+            }           
         }
 
         /// <summary>
@@ -366,6 +378,12 @@ namespace ExtensionViewModel.ViewModel
         /// </param>
         private void UpdateLocalIssuesInView(object sender, EventArgs e)
         {
+
+            if (!this.analysisTypeText.Equals(AnalysisTypes.File))
+            {
+                this.AnalysisTrigger = false;
+            }
+
             if (this.ResourceInEditor == null)
             {
                 return;
@@ -373,6 +391,7 @@ namespace ExtensionViewModel.ViewModel
 
             try
             {
+                this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted -= this.UpdateLocalIssuesInView;
                 var issuesInExtension = this.ExtensionRunningLocalAnalysis.GetIssues();
                 if (issuesInExtension.Count == 0)
                 {
