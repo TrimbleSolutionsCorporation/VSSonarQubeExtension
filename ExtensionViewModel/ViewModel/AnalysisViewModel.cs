@@ -338,13 +338,13 @@ namespace ExtensionViewModel.ViewModel
                         this.localAnalyserThread = this.ExtensionRunningLocalAnalysis.GetFileAnalyserThread(this.DocumentInView);
                         break;
                     case AnalysisTypes.Analysis:
-                        this.localAnalyserThread = this.ExtensionRunningLocalAnalysis.GetAnalyserThread();
+                        this.localAnalyserThread = this.ExtensionRunningLocalAnalysis.GetAnalyserThread(this.vsenvironmenthelper.ActiveSolutionPath());
                         break;
                     case AnalysisTypes.Incremental:
-                        this.localAnalyserThread = this.ExtensionRunningLocalAnalysis.GetIncrementalAnalyserThread();
+                        this.localAnalyserThread = this.ExtensionRunningLocalAnalysis.GetIncrementalAnalyserThread(this.vsenvironmenthelper.ActiveSolutionPath());
                         break;
                     case AnalysisTypes.Preview:
-                        this.localAnalyserThread = this.ExtensionRunningLocalAnalysis.GetPreviewAnalyserThread();
+                        this.localAnalyserThread = this.ExtensionRunningLocalAnalysis.GetPreviewAnalyserThread(this.vsenvironmenthelper.ActiveSolutionPath());
                         break;
                 }
 

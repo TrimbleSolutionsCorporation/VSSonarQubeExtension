@@ -50,26 +50,35 @@ namespace VSSonarPlugins
         /// <summary>
         /// The get incremental analyser thread.
         /// </summary>
+        /// <param name="solutionPath">
+        /// The solution Path.
+        /// </param>
         /// <returns>
         /// The <see cref="Thread"/>.
         /// </returns>
-        Thread GetIncrementalAnalyserThread();
+        Thread GetIncrementalAnalyserThread(string solutionPath);
 
         /// <summary>
         /// The get preview analyser thread.
         /// </summary>
+        /// <param name="solutionPath">
+        /// The solution Path.
+        /// </param>
         /// <returns>
         /// The <see cref="Thread"/>.
         /// </returns>
-        Thread GetPreviewAnalyserThread();
+        Thread GetPreviewAnalyserThread(string solutionPath);
 
         /// <summary>
         /// The get analyser thread.
         /// </summary>
+        /// <param name="solutionPath">
+        /// The solution Path.
+        /// </param>
         /// <returns>
         /// The <see cref="Thread"/>.
         /// </returns>
-        Thread GetAnalyserThread();
+        Thread GetAnalyserThread(string solutionPath);
 
         /// <summary>
         /// The get issues.
