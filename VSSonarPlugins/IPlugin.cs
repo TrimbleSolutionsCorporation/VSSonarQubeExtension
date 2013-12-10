@@ -28,45 +28,97 @@ namespace VSSonarPlugins
         /// <summary>
         /// The get key.
         /// </summary>
+        /// <param name="configuration">
+        /// The configuration.
+        /// </param>
         /// <returns>
         /// The <see cref="string"/>.
         /// </returns>
-        string GetKey();
+        string GetKey(ConnectionConfiguration configuration);
 
         /// <summary>
         /// The get use plugin control options.
         /// </summary>
+        /// <param name="configuration">
+        /// The configuration.
+        /// </param>
+        /// <param name="project">
+        /// The project.
+        /// </param>
         /// <returns>
         /// The <see cref="UserControl"/>.
         /// </returns>
-        IPluginsOptions GetUsePluginControlOptions();
+        IPluginsOptions GetUsePluginControlOptions(ConnectionConfiguration configuration, Resource project);
+
+        /// <summary>
+        /// The get use plugin control options.
+        /// </summary>
+        /// <param name="configuration">
+        /// The configuration.
+        /// </param>
+        /// <param name="file">
+        /// The file.
+        /// </param>
+        /// <returns>
+        /// The <see cref="IPluginsOptions"/>.
+        /// </returns>
+        IPluginsOptions GetUsePluginControlOptions(ConnectionConfiguration configuration, string file);
 
         /// <summary>
         /// The is supported.
         /// </summary>
+        /// <param name="configuration">
+        /// The configuration.
+        /// </param>
         /// <param name="resource">
         /// The language.
         /// </param>
         /// <returns>
         /// The <see cref="bool"/>.
         /// </returns>
-        bool IsSupported(string resource);
+        bool IsSupported(ConnectionConfiguration configuration, string resource);
+
+        /// <summary>
+        /// The is supported.
+        /// </summary>
+        /// <param name="configuration">
+        /// The configuration.
+        /// </param>
+        /// <param name="resource">
+        /// The resource.
+        /// </param>
+        /// <returns>
+        /// The <see cref="bool"/>.
+        /// </returns>
+        bool IsSupported(ConnectionConfiguration configuration, Resource resource);
 
         /// <summary>
         /// The get local analysis extensions.
         /// </summary>
+        /// <param name="configuration">
+        /// The configuration.
+        /// </param>
+        /// <param name="project">
+        /// The project.
+        /// </param>
         /// <returns>
         /// The <see cref="List"/>.
         /// </returns>
-        ILocalAnalyserExtension GetLocalAnalysisExtension();
+        ILocalAnalyserExtension GetLocalAnalysisExtension(ConnectionConfiguration configuration, Resource project);
 
         /// <summary>
         /// The get server analyser extensions.
         /// </summary>
+        /// <param name="configuration">
+        /// The configuration.
+        /// </param>
+        /// <param name="project">
+        /// The project.
+        /// </param>
         /// <returns>
         /// The <see cref="List"/>.
         /// </returns>
-        IServerAnalyserExtension GetServerAnalyserExtension();
+        IServerAnalyserExtension GetServerAnalyserExtension(ConnectionConfiguration configuration, Resource project);
 
         /// <summary>
         /// The get licenses.
@@ -82,9 +134,12 @@ namespace VSSonarPlugins
         /// <summary>
         /// The generate token id.
         /// </summary>
+        /// <param name="configuration">
+        /// The configuration.
+        /// </param>
         /// <returns>
         /// The <see cref="string"/>.
         /// </returns>
-        string GenerateTokenId();
+        string GenerateTokenId(ConnectionConfiguration configuration);
     }
 }

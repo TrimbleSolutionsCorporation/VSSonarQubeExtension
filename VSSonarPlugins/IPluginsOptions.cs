@@ -17,6 +17,8 @@ namespace VSSonarPlugins
     using System.Collections.Generic;
     using System.Windows.Controls;
 
+    using ExtensionTypes;
+
     /// <summary>
     /// The PluginsOptions interface.
     /// </summary>
@@ -28,7 +30,7 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="UserControl"/>.
         /// </returns>
-        UserControl GetUserControlOptions();
+        UserControl GetUserControlOptions(Resource project);
 
         /// <summary>
         /// The get options.

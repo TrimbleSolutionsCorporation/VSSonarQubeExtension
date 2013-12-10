@@ -524,10 +524,6 @@
         <System:String>Incremental</System:String>
     </ViewModel:ExtensionDataModel.AnalysisTypeText>
 
-    <ViewModel:ExtensionDataModel.AnalysisFrequencyText>
-        <System:String>AlwaysOn</System:String>
-    </ViewModel:ExtensionDataModel.AnalysisFrequencyText>
-
     <ViewModel:ExtensionDataModel.AnalysisTriggerText>
         <System:String>Execute</System:String>
     </ViewModel:ExtensionDataModel.AnalysisTriggerText>

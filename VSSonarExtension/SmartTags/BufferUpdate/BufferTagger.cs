@@ -19,20 +19,14 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
     using System.Linq;
     using System.Windows;
 
-    using EnvDTE;
-
     using ExtensionHelpers;
 
     using ExtensionTypes;
-
-    using ExtensionViewModel.ViewModel;
 
     using Microsoft.VisualStudio.Text;
     using Microsoft.VisualStudio.Text.Tagging;
 
     using PackageImplementation;
-
-    using Window = EnvDTE.Window;
 
     /// <summary>
     /// The sonar glyph tagger.
@@ -52,44 +46,14 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
         private readonly bool registerevents;
 
         /// <summary>
-        /// The documents events.
-        /// </summary>
-        private readonly DocumentEvents documentsEvents;
-
-        /// <summary>
-        /// The events.
-        /// </summary>
-        private readonly Events events;
-
-        /// <summary>
         /// The source buffer registered.
         /// </summary>
         private readonly bool sourceBufferRegistered;
 
         /// <summary>
-        /// The document saved registered.
-        /// </summary>
-        private readonly bool documentSavedRegistered;
-
-        /// <summary>
-        /// The window activated registered.
-        /// </summary>
-        private readonly bool windowActivatedRegistered;
-
-        /// <summary>
-        /// The solution opened registered.
-        /// </summary>
-        private readonly bool solutionOpenedRegistered;
-
-        /// <summary>
         /// The m_disposed.
         /// </summary>
         private bool isDisposed;
-
-        /// <summary>
-        /// The reference source.
-        /// </summary>
-        private string referenceSource;
 
         #endregion
 
@@ -100,9 +64,6 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
         /// </summary>
         internal BufferTagger()
         {
-            this.solutionOpenedRegistered = false;
-            this.windowActivatedRegistered = false;
-            this.documentSavedRegistered = false;
             this.sourceBufferRegistered = false;
             this.registerevents = false;
         }
@@ -127,7 +88,10 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
             }
 
             this.filePath = filePath.Replace('\\', '/');
-            if (VsSonarExtensionPackage.PluginControl.GetPluginToRunResource(this.filePath) == null)
+            var vsinter = VsSonarExtensionPackage.ExtensionModelData.Vsenvironmenthelper;
+            var restService = VsSonarExtensionPackage.ExtensionModelData.RestService;
+            var conf = ConnectionConfigurationHelpers.GetConnectionConfiguration(vsinter, restService);
+            if (VsSonarExtensionPackage.PluginControl.GetPluginToRunResource(conf, this.filePath) == null)
             {
                 return;
             }
@@ -139,14 +103,6 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
                 return;
             }
             
-            var model = VsSonarExtensionPackage.ExtensionModelData;
-            var environment = model.Vsenvironmenthelper.Environment();
-            this.events = environment.Events;
-            this.documentsEvents = this.events.DocumentEvents;
-
-            // save reference point
-            this.referenceSource = this.SourceBuffer.CurrentSnapshot.GetText();
-            this.AssociateResource(false);
             try
             {
                 this.SourceBuffer.Changed += this.BufferModified;
@@ -155,36 +111,6 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
             catch (Exception)
             {
                 this.sourceBufferRegistered = false;
-            }
-
-            try
-            {
-                this.documentsEvents.DocumentSaved += this.DoumentSaved;
-                this.documentSavedRegistered = true;
-            }
-            catch (Exception)
-            {
-                this.documentSavedRegistered = false;
-            }
-
-            try
-            {
-                environment.Events.WindowEvents.WindowActivated += this.WindowActivated;
-                this.windowActivatedRegistered = true;
-            }
-            catch (Exception)
-            {
-                this.windowActivatedRegistered = false;
-            }
-
-            try
-            {
-                environment.Events.SolutionEvents.Opened += this.SolutionOpened;
-                this.solutionOpenedRegistered = true;
-            }
-            catch (Exception)
-            {
-                this.solutionOpenedRegistered = false;
             }
         }
 
@@ -321,105 +247,6 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
             }
         }
 
-        /// <summary>
-        /// The doument saved.
-        /// </summary>
-        /// <param name="document">
-        /// The document.
-        /// </param>
-        private void DoumentSaved(Document document)
-        {
-            try
-            {
-                if (document == null || !document.FullName.Replace('\\', '/').Equals(this.filePath, StringComparison.OrdinalIgnoreCase))
-                {
-                    return;
-                }
-
-                this.referenceSource = this.SourceBuffer.CurrentSnapshot.GetText();
-                VsSonarExtensionPackage.ExtensionModelData.LastReferenceSource = this.referenceSource;
-                VsSonarExtensionPackage.ExtensionModelData.UpdateDataInEditor(this.filePath, this.referenceSource);
-            }
-            catch (Exception ex)
-            {
-                VsSonarExtensionPackage.ExtensionModelData.ErrorMessage = "Something Terrible Happen";
-                VsSonarExtensionPackage.ExtensionModelData.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
-            }
-        }
-
-        /// <summary>
-        /// The solution opened.
-        /// </summary>
-        private void SolutionOpened()
-        {
-            this.AssociateResource(true);            
-        }
-
-        /// <summary>
-        /// The solution opened.
-        /// </summary>
-        /// <param name="forceAssociation">
-        /// The force Association.
-        /// </param>
-        private void AssociateResource(bool forceAssociation)
-        {
-            try
-            {
-                if (!forceAssociation && VsSonarExtensionPackage.ExtensionModelData.AssociatedProject != null)
-                {
-                    return;
-                }
-
-                VsSonarExtensionPackage.ExtensionModelData.ResetProfile();
-                var newAssociation = AssociateSolutionWithSonarProject();
-                if (newAssociation == null)
-                {
-                    VsSonarExtensionPackage.ExtensionModelData.ErrorMessage =
-                        "Cannot Associate Current File in View with Any Project, Check Sonar Settings";
-                    return;
-                }
-
-                VsSonarExtensionPackage.ExtensionModelData.AssociateProjectToSolution(newAssociation);
-                var currentBuffer = this.SourceBuffer.CurrentSnapshot.GetText();
-                var fillePath = GetPropertyFromBuffer<ITextDocument>(this.SourceBuffer).FilePath.Replace('\\', '/');
-                VsSonarExtensionPackage.ExtensionModelData.UpdateDataInEditor(fillePath, currentBuffer);
-            }
-            catch (Exception e)
-            {
-                VsSonarExtensionPackage.ExtensionModelData.ErrorMessage =
-                    "Cannot Associate Solution with Any Project, Check Settings";
-                VsSonarExtensionPackage.ExtensionModelData.DiagnosticMessage = e.Message + "\r\n" + e.StackTrace;
-            }
-        }
-
-        /// <summary>
-        /// The window activated.
-        /// </summary>
-        /// <param name="gotFocus">
-        /// The got focus.
-        /// </param>
-        /// <param name="lostFocus">
-        /// The lost focus.
-        /// </param>
-        private void WindowActivated(Window gotFocus, Window lostFocus)
-        {
-            if (gotFocus.Kind != "Document" || !this.filePath.Equals(gotFocus.Document.FullName.Replace('\\', '/'), StringComparison.OrdinalIgnoreCase))
-            {
-                return;
-            }
-
-            try
-            {
-                var currentBuffer = this.SourceBuffer.CurrentSnapshot.GetText();
-                VsSonarExtensionPackage.ExtensionModelData.UpdateDataInEditor(this.filePath.Replace('\\', '/'), currentBuffer);
-            }
-            catch (Exception ex)
-            {
-                VsSonarExtensionPackage.ExtensionModelData.ErrorMessage = "Something Terrible Happen";
-                VsSonarExtensionPackage.ExtensionModelData.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
-            }
-        }
-
         #endregion
 
         /// <summary>
@@ -436,24 +263,6 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
                 {
                     if (this.registerevents)
                     {
-                        var model = VsSonarExtensionPackage.ExtensionModelData;
-                        var environment = model.Vsenvironmenthelper.Environment();
-
-                        if (this.windowActivatedRegistered)
-                        {
-                            environment.Events.WindowEvents.WindowActivated -= this.WindowActivated;
-                        }
-
-                        if (this.documentSavedRegistered)
-                        {
-                            this.documentsEvents.DocumentSaved -= this.DoumentSaved;
-                        }
-
-                        if (this.solutionOpenedRegistered)
-                        {
-                            environment.Events.SolutionEvents.Opened -= this.SolutionOpened;
-                        }
-
                         if (this.sourceBufferRegistered)
                         {
                             this.SourceBuffer.Changed -= this.BufferModified;

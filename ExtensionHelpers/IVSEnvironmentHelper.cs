@@ -19,9 +19,15 @@ namespace ExtensionHelpers
     using System.Linq;
     using System.Runtime.InteropServices;
     using System.Text;
+    using System.Windows.Forms.VisualStyles;
 
     using EnvDTE;
     using EnvDTE80;
+
+    using Microsoft.VisualStudio.Editor;
+    using Microsoft.VisualStudio.Shell;
+    using Microsoft.VisualStudio.Text.Editor;
+    using Microsoft.VisualStudio.TextManager.Interop;
 
     using VSSonarPlugins;
 
@@ -223,13 +229,10 @@ namespace ExtensionHelpers
         /// <param name="filename">
         /// The filename.
         /// </param>
-        /// <param name="driveLetter">
-        /// The drive letter.
-        /// </param>
         /// <returns>
         /// The <see cref="VSSonarPlugins.VsProjectItem"/>.
         /// </returns>
-        VsProjectItem VsProjectItem(string filename, string driveLetter);
+        VsProjectItem VsProjectItem(string filename);
 
         /// <summary>
         /// The get environment.
@@ -238,6 +241,12 @@ namespace ExtensionHelpers
         /// The <see cref="DTE2"/>.
         /// </returns>
         DTE2 Environment();
+
+        string GetFileRealPathForSolution(string fileInView);
+
+        IWpfTextView GetCurrentView();
+
+        string GetCurrentTextInView();
     }
 
     /// <summary>
@@ -282,7 +291,7 @@ namespace ExtensionHelpers
         /// <returns>
         /// The <see cref="string"/>.
         /// </returns>
-        public static string GetWindowsPhysicalPath(string path)
+        public static string GetWindowsPhysicalPathOld(string path)
         {
             var builder = new StringBuilder(255);
 
@@ -312,6 +321,43 @@ namespace ExtensionHelpers
         }
 
         /// <summary>
+        /// The get current view.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="IWpfTextView"/>.
+        /// </returns>
+        public IWpfTextView GetCurrentView()
+        {
+            var textManager = (IVsTextManager)Package.GetGlobalService(typeof(SVsTextManager));
+            IVsTextView textView;
+            textManager.GetActiveView(1, null, out textView);
+
+            var userData = (IVsUserData)textView;
+            if (userData == null)
+            {
+                return null;
+            }
+
+            var guidWpfViewHost = DefGuidList.guidIWpfTextViewHost;
+            object host;
+            userData.GetData(ref guidWpfViewHost, out host);
+            return ((IWpfTextViewHost)host).TextView;
+        }
+
+        /// <summary>
+        /// The get current text in view.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
+        public string GetCurrentTextInView()
+        {
+            var view = this.GetCurrentView();
+
+            return view == null ? string.Empty : view.TextBuffer.CurrentSnapshot.GetText();
+        }
+
+        /// <summary>
         /// The get environment.
         /// </summary>
         /// <returns>
@@ -320,6 +366,13 @@ namespace ExtensionHelpers
         public DTE2 Environment()
         {
             return this.environment;
+        }
+
+        public string GetFileRealPathForSolution(string fileInView)
+        {
+            var solutionPath = this.ActiveSolutionPath();
+            var driveLetter = solutionPath.Substring(0, 1);
+            return driveLetter + fileInView.Substring(1);
         }
 
         /// <summary>
@@ -423,7 +476,7 @@ namespace ExtensionHelpers
             }
 
             var projects = (Array)this.environment.ActiveSolutionProjects;
-            return GetWindowsPhysicalPath(((Project)projects.GetValue(0)).FullName);
+            return GetProperFilePathCapitalization(((Project)projects.GetValue(0)).FullName);
         }
 
         /// <summary>
@@ -437,7 +490,7 @@ namespace ExtensionHelpers
             try
             {
                 var doc = this.environment.ActiveDocument;
-                return doc != null ? GetWindowsPhysicalPath(doc.FullName) : string.Empty;
+                return doc != null ? GetProperFilePathCapitalization(doc.FullName) : string.Empty;
             }
             catch (Exception)
             {
@@ -487,7 +540,7 @@ namespace ExtensionHelpers
                 return string.Empty;
             }
 
-            return Path.GetDirectoryName(GetWindowsPhysicalPath(this.environment.Solution.FullName));
+            return Path.GetDirectoryName(GetProperFilePathCapitalization(this.environment.Solution.FullName));
         }
 
         /// <summary>
@@ -742,26 +795,43 @@ namespace ExtensionHelpers
             }
         }
 
+        static string GetProperDirectoryCapitalization(DirectoryInfo dirInfo)
+        {
+            DirectoryInfo parentDirInfo = dirInfo.Parent;
+            if (null == parentDirInfo)
+                return dirInfo.Name;
+            return Path.Combine(GetProperDirectoryCapitalization(parentDirInfo),
+                                parentDirInfo.GetDirectories(dirInfo.Name)[0].Name);
+        }
+
+        static string GetProperFilePathCapitalization(string filename)
+        {
+            FileInfo fileInfo = new FileInfo(filename);
+            DirectoryInfo dirInfo = fileInfo.Directory;
+            return Path.Combine(GetProperDirectoryCapitalization(dirInfo),
+                                dirInfo.GetFiles(fileInfo.Name)[0].Name);
+        }
+
         /// <summary>
         /// The get vs project item.
         /// </summary>
         /// <param name="filename">
         /// The filename.
         /// </param>
-        /// <param name="driveLetter">
-        /// The drive letter.
-        /// </param>
         /// <returns>
         /// The <see cref="VSSonarPlugins.VsProjectItem"/>.
         /// </returns>
-        public VsProjectItem VsProjectItem(string filename, string driveLetter)
+        public VsProjectItem VsProjectItem(string filename)
         {
+            var driveLetter = filename.Substring(0, 1);
             var item = this.environment.Solution.FindProjectItem(filename);
             var documentName = item.Document.Name;
-            var documentPath = driveLetter + GetWindowsPhysicalPath(item.Document.FullName).Substring(1);
+            var documentPath = driveLetter + GetProperFilePathCapitalization(item.Document.FullName).Substring(1);
             var projectName = item.ContainingProject.Name;
-            var projectPath = driveLetter + GetWindowsPhysicalPath(item.ContainingProject.FullName).Substring(1);
-            return new VsProjectItem(documentName, documentPath, projectName, projectPath);
+            var projectPath = driveLetter + GetProperFilePathCapitalization(item.ContainingProject.FullName).Substring(1);
+            var solutionName = this.ActiveSolutionName();
+            var solutionPath = driveLetter + this.ActiveSolutionPath().Substring(1);
+            return new VsProjectItem(documentName, documentPath, projectName, projectPath, solutionName, solutionPath);
         }
 
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]

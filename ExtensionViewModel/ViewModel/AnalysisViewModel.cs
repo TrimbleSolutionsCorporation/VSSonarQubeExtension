@@ -14,12 +14,15 @@ namespace ExtensionViewModel.ViewModel
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Linq;
     using System.Windows;
 
     using ExtensionHelpers;
 
     using ExtensionTypes;
+
+    using VSSonarPlugins;
 
     /// <summary>
     ///     The extension data model.
@@ -163,7 +166,9 @@ namespace ExtensionViewModel.ViewModel
             set
             {
                 this.analysisMode = value;
-                this.AnalysisTrigger = false;
+                this.analysisTrigger = false;
+                this.OnPropertyChanged("AnalysisTriggerText");
+                this.OnPropertyChanged("AnalysisTrigger");                
                 this.analysisModeText = value ? AnalysisModes.Server : AnalysisModes.Local;
                 if (this.analysisModeText.Equals(AnalysisModes.Server))
                 {
@@ -212,7 +217,9 @@ namespace ExtensionViewModel.ViewModel
             set
             {
                 this.analysisType = value;
-                this.AnalysisTrigger = false;
+                this.analysisTrigger = false;
+                this.OnPropertyChanged("AnalysisTriggerText");
+                this.OnPropertyChanged("AnalysisTrigger");
                 if (this.analysisTypeText.Equals(AnalysisTypes.Analysis))
                 {
                     this.analysisTypeText = AnalysisTypes.Preview;
@@ -320,7 +327,8 @@ namespace ExtensionViewModel.ViewModel
                 return;
             }
 
-            this.ExtensionRunningLocalAnalysis = this.PluginRunningAnalysis.GetLocalAnalysisExtension();
+            this.AnalysisLog = string.Empty;
+            this.ExtensionRunningLocalAnalysis = this.PluginRunningAnalysis.GetLocalAnalysisExtension(this.UserConfiguration, this.AssociatedProject);
             if (this.ExtensionRunningLocalAnalysis == null)
             {
                 this.IssuesInEditor = new List<Issue>();
@@ -332,6 +340,8 @@ namespace ExtensionViewModel.ViewModel
             try
             {
                 this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted += this.UpdateLocalIssuesInView;
+                this.ExtensionRunningLocalAnalysis.StdErrEvent += this.UpdateOutputMessagesFromPlugin;
+                this.ExtensionRunningLocalAnalysis.StdOutEvent += this.UpdateOutputMessagesFromPlugin;
                 switch (analysis)
                 {
                     case AnalysisTypes.File:
@@ -361,9 +371,13 @@ namespace ExtensionViewModel.ViewModel
             catch (Exception ex)
             {
                 this.ErrorMessage = "Analysis Type Not Supported By Plugin";
-                this.AnalysisTrigger = false;
+                this.analysisTrigger = false;
+                this.OnPropertyChanged("AnalysisTriggerText");
+                this.OnPropertyChanged("AnalysisTrigger");
                 this.DiagnosticMessage = ex.StackTrace;
                 this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted -= this.UpdateLocalIssuesInView;
+                this.ExtensionRunningLocalAnalysis.StdErrEvent -= this.UpdateOutputMessagesFromPlugin;
+                this.ExtensionRunningLocalAnalysis.StdOutEvent -= this.UpdateOutputMessagesFromPlugin;
             }           
         }
 
@@ -378,10 +392,33 @@ namespace ExtensionViewModel.ViewModel
         /// </param>
         private void UpdateLocalIssuesInView(object sender, EventArgs e)
         {
+            try
+            {
+                var exceptionMsg = (LocalAnalysisCompletedEventArgs)e;
+                if (exceptionMsg.Ex != null)
+                {
+                    MessageBox.Show(
+                        "Cannot Execute Analysis: " + exceptionMsg.ErrorMessage + " StackTrace:"
+                        + exceptionMsg.Ex.StackTrace);
+                    this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted -= this.UpdateLocalIssuesInView;
+                    this.ExtensionRunningLocalAnalysis.StdErrEvent -= this.UpdateOutputMessagesFromPlugin;
+                    this.ExtensionRunningLocalAnalysis.StdOutEvent -= this.UpdateOutputMessagesFromPlugin;
+                    this.analysisTrigger = false;
+                    this.OnPropertyChanged("AnalysisTriggerText");
+                    this.OnPropertyChanged("AnalysisTrigger");
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
 
             if (!this.analysisTypeText.Equals(AnalysisTypes.File))
             {
-                this.AnalysisTrigger = false;
+                this.analysisTrigger = false;
+                this.OnPropertyChanged("AnalysisTriggerText");
+                this.OnPropertyChanged("AnalysisTrigger");
             }
 
             if (this.ResourceInEditor == null)
@@ -392,6 +429,8 @@ namespace ExtensionViewModel.ViewModel
             try
             {
                 this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted -= this.UpdateLocalIssuesInView;
+                this.ExtensionRunningLocalAnalysis.StdErrEvent -= this.UpdateOutputMessagesFromPlugin;
+                this.ExtensionRunningLocalAnalysis.StdOutEvent -= this.UpdateOutputMessagesFromPlugin;
                 var issuesInExtension = this.ExtensionRunningLocalAnalysis.GetIssues();
                 if (issuesInExtension.Count == 0)
                 {
@@ -452,6 +491,15 @@ namespace ExtensionViewModel.ViewModel
                 this.ErrorMessage = "Local Analysis Failed";
                 this.DiagnosticMessage = ex.StackTrace;
             }
+        }
+
+        public String AnalysisLog { get; set; }
+
+        private void UpdateOutputMessagesFromPlugin(object sender, EventArgs e)
+        {
+            var exceptionMsg = (LocalAnalysisCompletedEventArgs)e;
+            this.AnalysisLog += exceptionMsg.ErrorMessage + "\r\n";
+            this.OnPropertyChanged("AnalysisLog");
         }
 
         /// <summary>

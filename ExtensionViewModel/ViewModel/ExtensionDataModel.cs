@@ -297,6 +297,7 @@ namespace ExtensionViewModel.ViewModel
                     this.AssociatedProjectKey = value.Key;
                 }
 
+                PluginsOptionsData.OpenSolution = value;
                 this.associatedProject = value;
                 this.OnPropertyChanged("AssociatedProject");
             }
@@ -1203,12 +1204,23 @@ namespace ExtensionViewModel.ViewModel
         /// </param>
         public void AssociateProjectToSolution(Resource associatedProjectIn)
         {
-            if (associatedProjectIn != null)
+            if (associatedProjectIn == null)
             {
-                this.AssociatedProject = associatedProjectIn;
-                this.AssociatedProjectKey = associatedProjectIn.Key;
+                return;
             }
+
+            this.AssociatedProject = associatedProjectIn;
         }
+
+        /// <summary>
+        /// The clear project association.
+        /// </summary>
+        public void ClearProjectAssociation()
+        {
+            this.AssociatedProject = null;
+            this.ClearCaches();
+        }
+
 
         /// <summary>
         ///     The clear coverage in editor.
@@ -1500,14 +1512,14 @@ namespace ExtensionViewModel.ViewModel
             {
                 if (this.PluginController == null || string.IsNullOrEmpty(document) || string.IsNullOrEmpty(buffer) || this.AssociatedProject == null)
                 {
-                    this.ErrorMessage = "No plugin installed that supports this file";
+                    this.ErrorMessage = "Extension Not Ready";
                     return;
                 }
 
                 this.currentBuffer = buffer;
                 this.DocumentInView = document;
-                
-                this.UpdateResourceInEditor();
+
+                this.UpdateResourceInEditor(document);
             }
         }
 
@@ -1606,17 +1618,21 @@ namespace ExtensionViewModel.ViewModel
         }
 
         /// <summary>
-        ///     The update resource in editor.
+        /// The update resource in editor.
         /// </summary>
-        public void UpdateResourceInEditor()
+        /// <param name="fileInView">
+        /// The file In View.
+        /// </param>
+        public void UpdateResourceInEditor(string fileInView)
         {
+            
             if (this.PluginController == null)
             {
                 this.ErrorMessage = "No Plugins installed";
                 return;
             }
 
-            this.PluginRunningAnalysis = this.PluginController.GetPluginToRunResource(this.DocumentInView);
+            this.PluginRunningAnalysis = this.PluginController.GetPluginToRunResource(this.UserConfiguration, this.DocumentInView);
 
             if (this.PluginRunningAnalysis == null)
             {
@@ -1624,7 +1640,7 @@ namespace ExtensionViewModel.ViewModel
                 return;
             }
 
-            var serverExtension = this.PluginRunningAnalysis.GetServerAnalyserExtension();
+            var serverExtension = this.PluginRunningAnalysis.GetServerAnalyserExtension(this.UserConfiguration, this.AssociatedProject);
             if (serverExtension == null)
             {
                 this.ErrorMessage = "No plugin installed that supports this file";
@@ -1633,19 +1649,12 @@ namespace ExtensionViewModel.ViewModel
 
             try
             {
-                var filePath = this.vsenvironmenthelper.ActiveFileFullPath();
-                var solutionPath = this.vsenvironmenthelper.ActiveSolutionPath();
-                var driveLetter = solutionPath.Substring(0, 1);
-                var projectItem = this.vsenvironmenthelper.VsProjectItem(filePath, driveLetter);
-                var projectKey = this.AssociatedProject.Key;
-                var resourceKey = serverExtension.GetResourceKey(
-                    driveLetter + filePath.Substring(1), 
-                    projectItem, 
-                    solutionPath, 
-                    projectKey);
-
+                var resourceKey = serverExtension.GetResourceKey(this.vsenvironmenthelper.VsProjectItem(fileInView), this.AssociatedProject.Key);
                 this.ResourceInEditor = this.UpdateDataForResource(resourceKey);
-                this.PerformfAnalysis(this.AnalysisTrigger);
+                if (this.AnalysisTrigger)
+                {
+                    this.PerformfAnalysis(this.AnalysisTrigger);
+                }                
             }
             catch (Exception ex)
             {

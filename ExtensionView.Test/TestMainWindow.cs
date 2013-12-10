@@ -106,7 +106,62 @@ namespace ExtensionView.Test
                 throw new NotImplementedException();
             }
 
+            public string GetKey(ConnectionConfiguration configuration)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IPluginsOptions GetUsePluginControlOptions(ConnectionConfiguration configuration, Resource project)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IPluginsOptions GetUsePluginControlOptions(ConnectionConfiguration configuration, string file)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IPluginsOptions GetUsePluginControlOptions(ConnectionConfiguration configuration)
+            {
+                throw new NotImplementedException();
+            }
+
+            public bool IsSupported(ConnectionConfiguration configuration, string resource)
+            {
+                throw new NotImplementedException();
+            }
+
+            public bool IsSupported(ConnectionConfiguration configuration, Resource resource)
+            {
+                throw new NotImplementedException();
+            }
+
+            public ILocalAnalyserExtension GetLocalAnalysisExtension(ConnectionConfiguration configuration, Resource project)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IServerAnalyserExtension GetServerAnalyserExtension(ConnectionConfiguration configuration, Resource project)
+            {
+                throw new NotImplementedException();
+            }
+
+            public ILocalAnalyserExtension GetLocalAnalysisExtension(ConnectionConfiguration configuration)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IServerAnalyserExtension GetServerAnalyserExtension(ConnectionConfiguration configuration)
+            {
+                throw new NotImplementedException();
+            }
+
             public Dictionary<string, VsLicense> GetLicenses(ConnectionConfiguration configuration)
+            {
+                throw new NotImplementedException();
+            }
+
+            public string GenerateTokenId(ConnectionConfiguration configuration)
             {
                 throw new NotImplementedException();
             }

@@ -36,6 +36,16 @@ namespace VSSonarPlugins
         event EventHandler LocalAnalysisCompleted;
 
         /// <summary>
+        /// The std out event.
+        /// </summary>
+        event EventHandler StdOutEvent;
+
+        /// <summary>
+        /// The std err event.
+        /// </summary>
+        event EventHandler StdErrEvent;
+
+        /// <summary>
         /// The model will spawned this method into a own thread, and read the results when
         /// LocalAnalysisCompleted event is triggered.
         /// </summary>

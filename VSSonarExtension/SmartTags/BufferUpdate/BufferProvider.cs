@@ -19,6 +19,9 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
     using System.ComponentModel.Composition;
     using System.Windows;
 
+    using Microsoft.VisualStudio;
+    using Microsoft.VisualStudio.Shell;
+    using Microsoft.VisualStudio.Shell.Interop;
     using Microsoft.VisualStudio.Text;
     using Microsoft.VisualStudio.Text.Tagging;
     using Microsoft.VisualStudio.Utilities;

@@ -35,6 +35,7 @@ namespace VSSonarExtension.PackageImplementation
     using SonarRestService;
 
     using VSSonarExtension.PckResources;
+    using VSSonarExtension.SmartTags.BufferUpdate;
     using VSSonarExtension.VSControls;
     using VSSonarExtension.VSControls.DialogOptions;
 
@@ -106,6 +107,7 @@ namespace VSSonarExtension.PackageImplementation
 
                 this.visualStudioInterface = new VsPropertiesHelper(this.dte2);
                 this.restService = new SonarRestService(new JsonSonarConnector());
+                this.vsEvents = new VsEvents(ExtensionModelData, this.visualStudioInterface);
 
                 // int configuration options
                 this.InitOptions();
@@ -205,12 +207,12 @@ namespace VSSonarExtension.PackageImplementation
 
             foreach (var plugin in ExtensionDataModel.PluginsOptionsData.Plugins)
             {
-                if (plugin.GetUsePluginControlOptions() == null)
+                if (plugin.GetUsePluginControlOptions(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.visualStudioInterface), string.Empty) == null)
                 {
                     continue;
                 }
 
-                plugin.GetUsePluginControlOptions().SetOptions(this.visualStudioInterface.ReadAllOptionsForPluginOptionInApplicationData(plugin.GetKey()));
+                plugin.GetUsePluginControlOptions(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.visualStudioInterface), string.Empty).SetOptions(this.visualStudioInterface.ReadAllOptionsForPluginOptionInApplicationData(plugin.GetKey(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.visualStudioInterface))));
             }
         }
 
@@ -304,4 +306,6 @@ namespace VSSonarExtension.PackageImplementation
 
         #endregion
     }
+
+
 }

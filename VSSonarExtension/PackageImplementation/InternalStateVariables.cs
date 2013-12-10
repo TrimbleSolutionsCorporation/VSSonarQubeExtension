@@ -14,8 +14,6 @@
 
 namespace VSSonarExtension.PackageImplementation
 {
-    using System.Threading;
-
     using EnvDTE80;
 
     using ExtensionHelpers;
@@ -24,50 +22,17 @@ namespace VSSonarExtension.PackageImplementation
 
     using SonarRestService;
 
+    using VSSonarExtension.SmartTags.BufferUpdate;
+
     /// <summary>
     /// The vs sonar extension package.
     /// </summary>
     public sealed partial class VsSonarExtensionPackage
     {
         /// <summary>
-        /// The sem.
-        /// </summary>
-        private readonly Semaphore sem = new Semaphore(1, 1);
-
-        /// <summary>
         /// The application object.
         /// </summary>
         private DTE2 dte2;
-
-        /// <summary>
-        /// These are the commands controls
-        /// </summary>
-        private OleMenuCommand sonarViolationMenuCommand;
-
-        /// <summary>
-        /// The sonar violation command bar.
-        /// </summary>
-        private OleMenuCommand sonarViolationCommandBar;
-
-        /// <summary>
-        /// The sonar local analysis menu command.
-        /// </summary>
-        private OleMenuCommand sonarLocalAnalysisMenuCommand;
-
-        /// <summary>
-        /// The sonar local analysis command bar.
-        /// </summary>
-        private OleMenuCommand sonarLocalAnalysisCommandBar;
-
-        /// <summary>
-        /// The sonar local analysis added menu command.
-        /// </summary>
-        private OleMenuCommand sonarLocalAnalysisAddedMenuCommand;
-
-        /// <summary>
-        /// The sonar local analysis added command bar.
-        /// </summary>
-        private OleMenuCommand sonarLocalAnalysisAddedCommandBar;
 
         /// <summary>
         /// The sonar coverage menu command.
@@ -108,5 +73,10 @@ namespace VSSonarExtension.PackageImplementation
         /// The visual studio interface.
         /// </summary>
         private IVsEnvironmentHelper visualStudioInterface;
+
+        /// <summary>
+        /// The vs events.
+        /// </summary>
+        private VsEvents vsEvents;
     }
 }

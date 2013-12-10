@@ -103,7 +103,7 @@ namespace ExtensionViewModel.Test
             public void ErrorWhenOnPluginsAreInstalled()
             {
                 var data = new ExtensionDataModel(this.service, this.vshelper, null);
-                data.UpdateResourceInEditor();
+                data.UpdateResourceInEditor(@"e:\test\src.cs");
                 Assert.AreEqual("No Plugins installed", data.ErrorMessage);
                 Assert.IsNull(data.ResourceInEditor);
             }
@@ -166,21 +166,19 @@ namespace ExtensionViewModel.Test
                     .Return(new List<Resource> { element })
                     .Repeat.Twice();
 
-                this.plugin.Expect(mp => mp.IsSupported(Arg<string>.Is.Anything)).Return(true).Repeat.Once();
-                this.plugin.Expect(mp => mp.GetServerAnalyserExtension()).Return(this.extension).Repeat.Once();
+                this.plugin.Expect(mp => mp.IsSupported(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything)).Return(true).Repeat.Once();
+                this.plugin.Expect(mp => mp.GetServerAnalyserExtension(Arg<ConnectionConfiguration>.Is.Anything, Arg<Resource>.Is.Anything)).Return(this.extension).Repeat.Once();
                 this.extension.Expect(
                     mp =>
                     mp.GetResourceKey(
-                        Arg<string>.Is.Anything,
                         Arg<VsProjectItem>.Is.Anything,
-                        Arg<string>.Is.Anything,
                         Arg<string>.Is.Anything)).Return("key").Repeat.Once();
 
 
                 var data = new ExtensionDataModel(this.service, this.vshelper, null);
                 data.AssociatedProject = new Resource { Key = "KEY"};
                 data.UpdateDataInEditor("c:\\src\\file.cpp", "#include xpto;\r\n#include ypto;");
-                Assert.AreEqual("No plugin installed that supports this file", data.ErrorMessage);
+                Assert.AreEqual("Extension Not Ready", data.ErrorMessage);
                 Assert.AreEqual(0, data.IssuesInEditor.Count);
             }
 
@@ -214,19 +212,17 @@ namespace ExtensionViewModel.Test
                     .Return(new List<Issue> { new Issue { Component = "file.cpp", Line = 1, Status = "OPEN" }, new Issue { Component = "file.cpp", Line = 1, Status = "OPEN" } })
                     .Repeat.Once();
                 this.pluginController.Expect(
-                    mp => mp.GetPluginToRunResource(Arg<string>.Is.Anything))
+                    mp => mp.GetPluginToRunResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything))
                     .Return(this.plugin)
                     .Repeat.Once();
 
 
-                this.plugin.Expect(mp => mp.IsSupported(Arg<string>.Is.Anything)).Return(true).Repeat.Once();
-                this.plugin.Expect(mp => mp.GetServerAnalyserExtension()).Return(this.extension).Repeat.Once();
+                this.plugin.Expect(mp => mp.IsSupported(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything)).Return(true).Repeat.Once();
+                this.plugin.Expect(mp => mp.GetServerAnalyserExtension(Arg<ConnectionConfiguration>.Is.Anything, Arg<Resource>.Is.Anything)).Return(this.extension).Repeat.Once();
                 this.extension.Expect(
                     mp =>
                     mp.GetResourceKey(
-                        Arg<string>.Is.Anything,
                         Arg<VsProjectItem>.Is.Anything,
-                        Arg<string>.Is.Anything,
                         Arg<string>.Is.Anything)).Return("key").Repeat.Once();
 
 

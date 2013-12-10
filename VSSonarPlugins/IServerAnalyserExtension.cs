@@ -22,21 +22,15 @@ namespace VSSonarPlugins
         /// <summary>
         /// The get resource key.
         /// </summary>
-        /// <param name="filePath">
-        /// The file path.
-        /// </param>
         /// <param name="projectItem">
         /// The project Item.
         /// </param>
-        /// <param name="solutionPath">
-        /// The solution path.
-        /// </param>
-        /// <param name="repoKey">
-        /// The repo key.
+        /// <param name="projectKey">
+        /// The project Key.
         /// </param>
         /// <returns>
         /// The <see cref="string"/>.
         /// </returns>
-        string GetResourceKey(string filePath, VsProjectItem projectItem, string solutionPath, string repoKey);
+        string GetResourceKey(VsProjectItem projectItem, string projectKey);
     }
 }

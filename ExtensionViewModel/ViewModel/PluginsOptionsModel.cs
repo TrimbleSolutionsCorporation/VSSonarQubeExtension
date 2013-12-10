@@ -22,6 +22,8 @@ namespace ExtensionViewModel.ViewModel
     using System.Windows.Input;
     using ExtensionHelpers;
 
+    using ExtensionTypes;
+
     using VSSonarPlugins;
 
     /// <summary>
@@ -43,6 +45,8 @@ namespace ExtensionViewModel.ViewModel
         ///     The selected plugin item.
         /// </summary>
         private string selectedPluginItem;
+
+        private Resource openSolution;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PluginsOptionsModel"/> class.
@@ -93,6 +97,28 @@ namespace ExtensionViewModel.ViewModel
         }
 
         /// <summary>
+        /// Gets or sets the open solution.
+        /// </summary>
+        public Resource OpenSolution 
+        {
+            get 
+            {
+                if (string.IsNullOrEmpty(this.Vsenvironmenthelper.ActiveSolutionName()))
+                {
+                    this.openSolution = null;
+                }
+
+                return this.openSolution;
+            }
+
+            set 
+            {
+                this.openSolution = value;
+                this.OnPropertyChanged("OpenSolution");
+            }
+        }
+
+    /// <summary>
         ///     Gets or sets the options in view.
         /// </summary>
         public UserControl OptionsInView
@@ -126,7 +152,7 @@ namespace ExtensionViewModel.ViewModel
 
                 foreach (var plugin in this.Plugins)
                 {
-                    options.Add(plugin.GetKey());
+                    options.Add(plugin.GetKey(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper)));
                 }
 
                 return options;
@@ -152,14 +178,15 @@ namespace ExtensionViewModel.ViewModel
                     this.OptionsInView = null;
                     foreach (var plugin in this.plugins)
                     {
-                        if (!plugin.GetKey().Equals(value) || plugin.GetUsePluginControlOptions() == null)
+                        if (!plugin.GetKey(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper)).Equals(value) 
+                            || plugin.GetUsePluginControlOptions(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper), this.OpenSolution) == null)
                         {
                             continue;
                         }
 
                         this.PluginInView = plugin;
-                        plugin.GetUsePluginControlOptions().SetOptions(this.Vsenvironmenthelper.ReadAllOptionsForPluginOptionInApplicationData(plugin.GetKey()));
-                        this.OptionsInView = plugin.GetUsePluginControlOptions().GetUserControlOptions();
+                        plugin.GetUsePluginControlOptions(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper), this.OpenSolution).SetOptions(this.Vsenvironmenthelper.ReadAllOptionsForPluginOptionInApplicationData(plugin.GetKey(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper))));
+                        this.OptionsInView = plugin.GetUsePluginControlOptions(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper), this.OpenSolution).GetUserControlOptions(this.OpenSolution);
                     }
                 }
                 else
@@ -200,15 +227,16 @@ namespace ExtensionViewModel.ViewModel
 
             foreach (var plugin in this.Plugins)
             {
-                if (plugin.GetUsePluginControlOptions() == null)
+                if (plugin.GetUsePluginControlOptions(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper), this.OpenSolution) == null)
                 {
                     continue;
                 }
 
-                if (!fileIsMissing || this.Vsenvironmenthelper.ReadAllOptionsForPluginOptionInApplicationData(plugin.GetKey()).Count == 0)
+                if (!fileIsMissing 
+                    || this.Vsenvironmenthelper.ReadAllOptionsForPluginOptionInApplicationData(plugin.GetKey(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper))).Count == 0)
                 {
-                    plugin.GetUsePluginControlOptions().ResetDefaults();
-                    this.Vsenvironmenthelper.WriteAllOptionsForPluginOptionInApplicationData(plugin.GetKey(), plugin.GetUsePluginControlOptions().GetOptions());                    
+                    plugin.GetUsePluginControlOptions(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper), this.OpenSolution).ResetDefaults();
+                    this.Vsenvironmenthelper.WriteAllOptionsForPluginOptionInApplicationData(plugin.GetKey(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper)), plugin.GetUsePluginControlOptions(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper), this.OpenSolution).GetOptions());                    
                 }
             }
         }
@@ -328,7 +356,7 @@ namespace ExtensionViewModel.ViewModel
                     var pluginInView = this.model.PluginInView;
                     if (pluginInView != null)
                     {
-                        pluginInView.GetUsePluginControlOptions().SetOptions(this.model.Vsenvironmenthelper.ReadAllOptionsForPluginOptionInApplicationData(pluginInView.GetKey()));
+                        pluginInView.GetUsePluginControlOptions(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.model.Vsenvironmenthelper), this.model.OpenSolution).SetOptions(this.model.Vsenvironmenthelper.ReadAllOptionsForPluginOptionInApplicationData(pluginInView.GetKey(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.model.Vsenvironmenthelper))));
                     }
                 }
 
@@ -338,9 +366,9 @@ namespace ExtensionViewModel.ViewModel
                     {
                         foreach (var plugin in this.model.Plugins)
                         {
-                            if (plugin.GetKey().Equals(this.model.SelectedLicense.ProductId))
+                            if (plugin.GetKey(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.model.Vsenvironmenthelper)).Equals(this.model.SelectedLicense.ProductId))
                             {
-                                this.model.GeneratedToken = plugin.GenerateTokenId();
+                                this.model.GeneratedToken = plugin.GenerateTokenId(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.model.Vsenvironmenthelper));
                             }
                         }
                     }
@@ -358,10 +386,10 @@ namespace ExtensionViewModel.ViewModel
             {
                 if (this.model.PluginInView != null)
                 {
-                    var options = this.model.PluginInView.GetUsePluginControlOptions().GetOptions();
+                    var options = this.model.PluginInView.GetUsePluginControlOptions(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.model.Vsenvironmenthelper), this.model.OpenSolution).GetOptions();
                     foreach (var option in options)
                     {
-                        var key = this.model.PluginInView.GetKey();
+                        var key = this.model.PluginInView.GetKey(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.model.Vsenvironmenthelper));
                         this.model.Vsenvironmenthelper.WriteOptionInApplicationData(key, option.Key, option.Value);
                     }
                 }

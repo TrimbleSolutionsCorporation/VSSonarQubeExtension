@@ -17,6 +17,8 @@ namespace VSSonarPlugins
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
 
+    using ExtensionTypes;
+
     /// <summary>
     /// The PluginController interface.
     /// </summary>
@@ -36,13 +38,30 @@ namespace VSSonarPlugins
         /// <summary>
         /// The get plugin to run resource.
         /// </summary>
+        /// <param name="configuration">
+        /// The configuration.
+        /// </param>
         /// <param name="resource">
         /// The resource.
         /// </param>
         /// <returns>
         /// The <see cref="IPlugin"/>.
         /// </returns>
-        IPlugin GetPluginToRunResource(string resource);
+        IPlugin GetPluginToRunResource(ConnectionConfiguration configuration, string resource);
+
+        /// <summary>
+        /// The get plugin to run resource.
+        /// </summary>
+        /// <param name="configuration">
+        /// The configuration.
+        /// </param>
+        /// <param name="project">
+        /// The project.
+        /// </param>
+        /// <returns>
+        /// The <see cref="IPlugin"/>.
+        /// </returns>
+        IPlugin GetPluginToRunResource(ConnectionConfiguration configuration, Resource project);
 
         /// <summary>
         /// The pick plugin from multiple supported plugins.

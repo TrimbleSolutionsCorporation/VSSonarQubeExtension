@@ -19,6 +19,9 @@ namespace ExtensionView.Test
     using System;
     using System.Collections.Generic;
     using System.Windows.Controls;
+
+    using ExtensionTypes;
+
     using VSSonarPlugins;
 
     /// <summary>
@@ -69,6 +72,11 @@ namespace ExtensionView.Test
                 this.textBox = value;
                 this.OnPropertyChanged("TextBox");
             }
+        }
+
+        public UserControl GetUserControlOptions(Resource project)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

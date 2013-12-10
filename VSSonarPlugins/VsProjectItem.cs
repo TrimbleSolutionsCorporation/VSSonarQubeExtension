@@ -40,6 +40,16 @@ namespace VSSonarPlugins
         private readonly string projectFilePath;
 
         /// <summary>
+        /// The solution path.
+        /// </summary>
+        private readonly string solutionPath;
+
+        /// <summary>
+        /// The solution name.
+        /// </summary>
+        private readonly string solutionName;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="VsProjectItem"/> class.
         /// </summary>
         /// <param name="fileName">
@@ -54,12 +64,20 @@ namespace VSSonarPlugins
         /// <param name="projectFilePath">
         /// The project file path.
         /// </param>
-        public VsProjectItem(string fileName, string filePath, string projectName, string projectFilePath)
+        /// <param name="solutionName">
+        /// The solution Name.
+        /// </param>
+        /// <param name="solutionPath">
+        /// The solution Path.
+        /// </param>
+        public VsProjectItem(string fileName, string filePath, string projectName, string projectFilePath, string solutionName, string solutionPath)
         {
             this.fileName = fileName;
             this.filePath = filePath;
             this.projectName = projectName;
             this.projectFilePath = projectFilePath;
+            this.solutionPath = solutionPath;
+            this.solutionName = solutionName;
         }
 
         /// <summary>
@@ -103,6 +121,28 @@ namespace VSSonarPlugins
             get
             {
                 return this.projectFilePath;
+            }
+        }
+
+        /// <summary>
+        /// Gets the project file path.
+        /// </summary>
+        public string SolutionPath
+        {
+            get
+            {
+                return this.solutionPath;
+            }
+        }
+
+        /// <summary>
+        /// Gets the solution name.
+        /// </summary>
+        public string SolutionName
+        {
+            get
+            {
+                return this.solutionName;
             }
         }
     }

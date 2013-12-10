@@ -23,6 +23,8 @@ namespace VSSonarPlugins
     using System.IO;
     using System.Linq;
 
+    using ExtensionTypes;
+
     /// <summary>
     /// The local analyser.
     /// </summary>
@@ -89,13 +91,19 @@ namespace VSSonarPlugins
         /// <summary>
         /// The get plugin to run resource.
         /// </summary>
+        /// <param name="configuration">
+        /// The configuration.
+        /// </param>
         /// <param name="resource">
         /// The resource.
+        /// </param>
+        /// <param name="project">
+        /// The project.
         /// </param>
         /// <returns>
         /// The <see cref="IPlugin"/>.
         /// </returns>
-        public IPlugin GetPluginToRunResource(string resource)
+        public IPlugin GetPluginToRunResource(ConnectionConfiguration configuration, string file)
         {
             if (this.loadedPlugins == null)
             {
@@ -106,15 +114,44 @@ namespace VSSonarPlugins
 
             foreach (var plugin in this.loadedPlugins)
             {
-                if (plugin.IsSupported(resource))
+                if (plugin.IsSupported(configuration, file))
                 {
-                    if (plugin.GetUsePluginControlOptions() == null)
+                    if (plugin.GetUsePluginControlOptions(configuration, file) == null)
                     {
                         pluginsToUse.Add(plugin);
                         continue;
                     }
 
-                    if (plugin.GetUsePluginControlOptions().IsEnabled())
+                    if (plugin.GetUsePluginControlOptions(configuration, file).IsEnabled())
+                    {
+                        pluginsToUse.Add(plugin);
+                    }
+                }
+            }
+
+            return this.PickPluginFromMultipleSupportedPlugins(pluginsToUse);
+        }
+
+        public IPlugin GetPluginToRunResource(ConnectionConfiguration configuration, Resource project)
+        {
+            if (this.loadedPlugins == null)
+            {
+                return null;
+            }
+
+            var pluginsToUse = new List<IPlugin>();
+
+            foreach (var plugin in this.loadedPlugins)
+            {
+                if (plugin.IsSupported(configuration, project))
+                {
+                    if (plugin.GetUsePluginControlOptions(configuration, project) == null)
+                    {
+                        pluginsToUse.Add(plugin);
+                        continue;
+                    }
+
+                    if (plugin.GetUsePluginControlOptions(configuration, project).IsEnabled())
                     {
                         pluginsToUse.Add(plugin);
                     }
