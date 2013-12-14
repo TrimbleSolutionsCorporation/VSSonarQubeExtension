@@ -91,19 +91,14 @@ namespace ExtensionView.Test
         {
             private IPluginsOptions pluginOptions = new DummyOptionsController();
 
-            public bool IsSupported(string language)
+            public IPluginsOptions GetUsePluginControlOptions()
             {
-                throw new NotImplementedException();
+                return this.pluginOptions;
             }
 
-            public ILocalAnalyserExtension GetLocalAnalysisExtension()
+            public string GetKey()
             {
-                throw new NotImplementedException();
-            }
-
-            public IServerAnalyserExtension GetServerAnalyserExtension()
-            {
-                throw new NotImplementedException();
+                return "dummy plugin";
             }
 
             public string GetKey(ConnectionConfiguration configuration)
@@ -111,17 +106,12 @@ namespace ExtensionView.Test
                 throw new NotImplementedException();
             }
 
-            public IPluginsOptions GetUsePluginControlOptions(ConnectionConfiguration configuration, Resource project)
+            public IPluginsOptions GetPluginControlOptions(ConnectionConfiguration configuration, Resource project)
             {
                 throw new NotImplementedException();
             }
 
-            public IPluginsOptions GetUsePluginControlOptions(ConnectionConfiguration configuration, string file)
-            {
-                throw new NotImplementedException();
-            }
-
-            public IPluginsOptions GetUsePluginControlOptions(ConnectionConfiguration configuration)
+            public IPluginsOptions GetPluginControlOptions(ConnectionConfiguration configuration)
             {
                 throw new NotImplementedException();
             }
@@ -136,22 +126,17 @@ namespace ExtensionView.Test
                 throw new NotImplementedException();
             }
 
+            public string GetResourceKey(VsProjectItem projectItem, string projectKey)
+            {
+                throw new NotImplementedException();
+            }
+
             public ILocalAnalyserExtension GetLocalAnalysisExtension(ConnectionConfiguration configuration, Resource project)
             {
                 throw new NotImplementedException();
             }
 
             public IServerAnalyserExtension GetServerAnalyserExtension(ConnectionConfiguration configuration, Resource project)
-            {
-                throw new NotImplementedException();
-            }
-
-            public ILocalAnalyserExtension GetLocalAnalysisExtension(ConnectionConfiguration configuration)
-            {
-                throw new NotImplementedException();
-            }
-
-            public IServerAnalyserExtension GetServerAnalyserExtension(ConnectionConfiguration configuration)
             {
                 throw new NotImplementedException();
             }
@@ -164,31 +149,6 @@ namespace ExtensionView.Test
             public string GenerateTokenId(ConnectionConfiguration configuration)
             {
                 throw new NotImplementedException();
-            }
-
-            public string GenerateTokenId()
-            {
-                throw new NotImplementedException();
-            }
-
-            public void SetUserConfiguration(ConnectionConfiguration configuration)
-            {
-                throw new NotImplementedException();
-            }
-
-            public List<VsLicense> GetLicenses()
-            {
-                throw new NotImplementedException();
-            }
-
-            public IPluginsOptions GetUsePluginControlOptions()
-            {
-                return this.pluginOptions;
-            }
-
-            public string GetKey()
-            {
-                return "dummy plugin";
             }
         }
 

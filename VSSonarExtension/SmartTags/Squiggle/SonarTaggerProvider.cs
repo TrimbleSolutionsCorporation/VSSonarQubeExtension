@@ -15,7 +15,6 @@
 namespace VSSonarExtension.SmartTags.Squiggle
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.Composition;
 
     using Microsoft.VisualStudio.Shell;
@@ -43,7 +42,7 @@ namespace VSSonarExtension.SmartTags.Squiggle
             /// <summary>
             /// The all spelling tags.
             /// </summary>
-            public static readonly Dictionary<string, SonarTagger> AllSpellingTags = new Dictionary<string, SonarTagger>();
+            //public static readonly Dictionary<string, SonarTagger> AllSpellingTags = new Dictionary<string, SonarTagger>();
 
             /// <summary>
             /// Gets or sets the service provider.
@@ -62,6 +61,9 @@ namespace VSSonarExtension.SmartTags.Squiggle
             /// </summary>
             [Import]
             internal ITextStructureNavigatorSelectorService TextStructureNavigatorSelector { get; set; }
+
+            //[Import]
+            //IBufferTagAggregatorFactoryService AggregatorFactory = null;
 
             /// <summary>
             /// The create tagger.
@@ -100,6 +102,9 @@ namespace VSSonarExtension.SmartTags.Squiggle
 
                 var document = BufferTagger.GetPropertyFromBuffer<ITextDocument>(buffer);
 
+
+                return buffer.Properties.GetOrCreateSingletonProperty(() => new SonarTagger(buffer)) as ITagger<T>;
+                /*
                 if (!AllSpellingTags.ContainsKey(document.FilePath))
                 {
                     sonartaginstance = new SonarTagger(buffer, true, document.FilePath);
@@ -111,6 +116,7 @@ namespace VSSonarExtension.SmartTags.Squiggle
                 }
 
                 return (ITagger<T>)buffer.Properties.GetOrCreateSingletonProperty(() => sonartaginstance);
+                 * */
             }
         }
     }

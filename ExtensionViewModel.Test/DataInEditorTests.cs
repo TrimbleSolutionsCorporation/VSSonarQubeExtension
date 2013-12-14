@@ -168,7 +168,7 @@ namespace ExtensionViewModel.Test
 
                 this.plugin.Expect(mp => mp.IsSupported(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything)).Return(true).Repeat.Once();
                 this.plugin.Expect(mp => mp.GetServerAnalyserExtension(Arg<ConnectionConfiguration>.Is.Anything, Arg<Resource>.Is.Anything)).Return(this.extension).Repeat.Once();
-                this.extension.Expect(
+                this.plugin.Expect(
                     mp =>
                     mp.GetResourceKey(
                         Arg<VsProjectItem>.Is.Anything,
@@ -211,15 +211,15 @@ namespace ExtensionViewModel.Test
                     mp => mp.GetIssuesInResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything, Arg<bool>.Is.Anything))
                     .Return(new List<Issue> { new Issue { Component = "file.cpp", Line = 1, Status = "OPEN" }, new Issue { Component = "file.cpp", Line = 1, Status = "OPEN" } })
                     .Repeat.Once();
-                this.pluginController.Expect(
-                    mp => mp.GetPluginToRunResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything))
-                    .Return(this.plugin)
-                    .Repeat.Once();
+                //this.pluginController.Expect(
+                //    mp => mp.GetPluginToRunResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything))
+                //    .Return(this.plugin)
+                //    .Repeat.Once();
 
 
                 this.plugin.Expect(mp => mp.IsSupported(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything)).Return(true).Repeat.Once();
                 this.plugin.Expect(mp => mp.GetServerAnalyserExtension(Arg<ConnectionConfiguration>.Is.Anything, Arg<Resource>.Is.Anything)).Return(this.extension).Repeat.Once();
-                this.extension.Expect(
+                this.plugin.Expect(
                     mp =>
                     mp.GetResourceKey(
                         Arg<VsProjectItem>.Is.Anything,

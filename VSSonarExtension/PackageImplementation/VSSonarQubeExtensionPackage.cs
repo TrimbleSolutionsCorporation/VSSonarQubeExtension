@@ -207,12 +207,16 @@ namespace VSSonarExtension.PackageImplementation
 
             foreach (var plugin in ExtensionDataModel.PluginsOptionsData.Plugins)
             {
-                if (plugin.GetUsePluginControlOptions(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.visualStudioInterface), string.Empty) == null)
+                var configuration = ConnectionConfigurationHelpers.GetConnectionConfiguration(this.visualStudioInterface);
+                var controloption = plugin.GetPluginControlOptions(configuration);
+                if (controloption == null)
                 {
                     continue;
                 }
 
-                plugin.GetUsePluginControlOptions(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.visualStudioInterface), string.Empty).SetOptions(this.visualStudioInterface.ReadAllOptionsForPluginOptionInApplicationData(plugin.GetKey(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.visualStudioInterface))));
+                var pluginKey = plugin.GetKey(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.visualStudioInterface));
+                var options = this.visualStudioInterface.ReadAllOptionsForPluginOptionInApplicationData(pluginKey);
+                controloption.SetOptions(options);
             }
         }
 

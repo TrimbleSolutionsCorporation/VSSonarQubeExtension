@@ -19,18 +19,5 @@ namespace VSSonarPlugins
     /// </summary>
     public interface IServerAnalyserExtension
     {
-        /// <summary>
-        /// The get resource key.
-        /// </summary>
-        /// <param name="projectItem">
-        /// The project Item.
-        /// </param>
-        /// <param name="projectKey">
-        /// The project Key.
-        /// </param>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
-        string GetResourceKey(VsProjectItem projectItem, string projectKey);
     }
 }

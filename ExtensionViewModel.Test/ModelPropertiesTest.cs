@@ -120,7 +120,7 @@ namespace ExtensionViewModel.Test
         {
             var model = new ExtensionDataModel(this.service, this.vshelper, null)
             {
-                IssuesInEditor = new System.Collections.Generic.List<Issue>
+                Issues = new System.Collections.Generic.List<Issue>
                                         {
                                            new Issue { Status = "OPEN" },
                                            new Issue { Status = "REOPENED" }
@@ -243,9 +243,7 @@ namespace ExtensionViewModel.Test
                 SonarInfo = "ver",
                 SelectedUser = new User { Login = "login" },
                 DiagnosticMessage = "MessageData",
-                IssuesInViewLocked = false,
                 DisableEditorTags = false,
-                LastReferenceSource = "source",
                 RestService = connector,
                 AssociatedProject = projectAsso,
             };
@@ -256,7 +254,6 @@ namespace ExtensionViewModel.Test
             Assert.AreEqual("login", model.SelectedUser.Login);
             Assert.AreEqual("ver", model.SonarInfo);
             Assert.AreEqual("MessageData", model.DiagnosticMessage);
-            Assert.IsFalse(model.IssuesInViewLocked);
             Assert.IsFalse(model.DisableEditorTags);
             Assert.AreEqual("source", model.LastReferenceSource);
             Assert.AreEqual(connector, model.RestService);

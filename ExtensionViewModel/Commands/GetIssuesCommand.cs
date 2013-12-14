@@ -103,7 +103,6 @@ namespace ExtensionViewModel.Commands
 
             if (header.Equals("All Issues"))
             {
-                this.model.IssuesInViewLocked = true;
                 this.model.Issues = this.service.GetIssuesForProjects(
                     this.model.UserConfiguration, this.model.AssociatedProject.Key, false);
                 return;
@@ -111,7 +110,6 @@ namespace ExtensionViewModel.Commands
 
             if (header.Equals("All Issues Since Last Analysis"))
             {
-                this.model.IssuesInViewLocked = true;
                 this.model.Issues = this.service.GetIssuesForProjectsCreatedAfterDate(
                     this.model.UserConfiguration, this.model.AssociatedProject.Key, this.model.AssociatedProject.Date, false);
                 return;
@@ -119,7 +117,6 @@ namespace ExtensionViewModel.Commands
 
             if (header.Equals("My Issues In Project"))
             {
-                this.model.IssuesInViewLocked = true;
                 this.model.Issues = this.service.GetIssuesByAssigneeInProject(
                     this.model.UserConfiguration, this.model.AssociatedProject.Key, this.model.UserConfiguration.Username, false);
                 return;
@@ -127,7 +124,6 @@ namespace ExtensionViewModel.Commands
 
             if (header.Equals("All My Issues"))
             {
-                this.model.IssuesInViewLocked = true;
                 this.model.Issues = this.service.GetAllIssuesByAssignee(this.model.UserConfiguration, this.model.UserConfiguration.Username, false);
                 return;
             }
@@ -140,7 +136,6 @@ namespace ExtensionViewModel.Commands
 
             if (header.Equals("Apply Filter"))
             {
-                this.model.IssuesInViewLocked = false;
                 this.model.RefreshIssues();                
             }
         }

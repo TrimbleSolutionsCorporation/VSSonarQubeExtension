@@ -142,6 +142,8 @@ namespace ExtensionViewModel.ViewModel
         {
             get
             {
+                this.selectedPluginItem = "non existent";
+                this.OnPropertyChanged("SelectedPluginItem");
                 return this.isLicenseEnable;
             }
 

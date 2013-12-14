@@ -88,10 +88,7 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
             }
 
             this.filePath = filePath.Replace('\\', '/');
-            var vsinter = VsSonarExtensionPackage.ExtensionModelData.Vsenvironmenthelper;
-            var restService = VsSonarExtensionPackage.ExtensionModelData.RestService;
-            var conf = ConnectionConfigurationHelpers.GetConnectionConfiguration(vsinter, restService);
-            if (VsSonarExtensionPackage.PluginControl.GetPluginToRunResource(conf, this.filePath) == null)
+            if (VsSonarExtensionPackage.ExtensionModelData.PluginRunningAnalysis == null)
             {
                 return;
             }
@@ -105,7 +102,7 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
             
             try
             {
-                this.SourceBuffer.Changed += this.BufferModified;
+                //this.SourceBuffer.Changed += this.BufferModified;
                 this.sourceBufferRegistered = true;
             }
             catch (Exception)
@@ -265,7 +262,7 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
                     {
                         if (this.sourceBufferRegistered)
                         {
-                            this.SourceBuffer.Changed -= this.BufferModified;
+                            //this.SourceBuffer.Changed -= this.BufferModified;
                         }
 
                         BufferUpdateProvider.AllBufferTaggger.Remove(this.filePath);

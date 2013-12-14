@@ -93,7 +93,6 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
 
             try
             {
-                VsSonarExtensionPackage.ExtensionModelData.LastReferenceSource = text;
                 VsSonarExtensionPackage.ExtensionModelData.UpdateDataInEditor(document.FullName, text);
             }
             catch (Exception ex)
@@ -121,6 +120,14 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
         }
 
         /// <summary>
+        /// The solution closed.
+        /// </summary>
+        private void SolutionClosed()
+        {
+            this.model.ClearProjectAssociation();
+        }
+
+        /// <summary>
         /// The window activated.
         /// </summary>
         /// <param name="gotFocus">
@@ -142,8 +149,14 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
                 return;
             }
 
+            if (this.LastDocumentWindowWithFocus == gotFocus)
+            {
+                return;
+            }
+
             try
             {
+                this.LastDocumentWindowWithFocus = gotFocus;
                 this.model.UpdateDataInEditor(gotFocus.Document.FullName, text);
             }
             catch (Exception ex)
@@ -154,11 +167,8 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
         }
 
         /// <summary>
-        /// The solution closed.
+        /// Gets or sets the last document window with focus.
         /// </summary>
-        private void SolutionClosed()
-        {
-            this.model.ClearProjectAssociation();
-        }
+        public Window LastDocumentWindowWithFocus { get; set; }
     }
 }

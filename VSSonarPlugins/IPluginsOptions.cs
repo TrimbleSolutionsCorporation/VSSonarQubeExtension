@@ -27,6 +27,9 @@ namespace VSSonarPlugins
         /// <summary>
         /// The get user control options.
         /// </summary>
+        /// <param name="project">
+        /// The project.
+        /// </param>
         /// <returns>
         /// The <see cref="UserControl"/>.
         /// </returns>

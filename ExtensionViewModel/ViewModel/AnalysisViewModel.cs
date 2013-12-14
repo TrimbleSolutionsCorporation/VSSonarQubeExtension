@@ -191,6 +191,11 @@ namespace ExtensionViewModel.ViewModel
                 return this.AnalysisTrigger ? "Stop" : "Start";
             }
         }
+
+        /// <summary>
+        /// Gets or sets the analysis log.
+        /// </summary>
+        public string AnalysisLog { get; set; }
         
         /// <summary>
         ///     Gets the analysis mode text.
@@ -327,11 +332,9 @@ namespace ExtensionViewModel.ViewModel
                 return;
             }
 
-            this.AnalysisLog = string.Empty;
-            this.ExtensionRunningLocalAnalysis = this.PluginRunningAnalysis.GetLocalAnalysisExtension(this.UserConfiguration, this.AssociatedProject);
+            this.AnalysisLog = string.Empty;            
             if (this.ExtensionRunningLocalAnalysis == null)
             {
-                this.IssuesInEditor = new List<Issue>();
                 this.Issues = new List<Issue>();
                 MessageBox.Show("Current Plugin does not support Local analysis");
                 return;
@@ -339,7 +342,15 @@ namespace ExtensionViewModel.ViewModel
 
             try
             {
-                this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted += this.UpdateLocalIssuesInView;
+                if (!this.analysisTypeText.Equals(AnalysisTypes.File))
+                {
+                    this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted += this.UpdateLocalIssues;
+                }
+                else
+                {
+                    this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted += this.UpdateLocalIssuesForFileAnalysis;
+                }
+                                
                 this.ExtensionRunningLocalAnalysis.StdErrEvent += this.UpdateOutputMessagesFromPlugin;
                 this.ExtensionRunningLocalAnalysis.StdOutEvent += this.UpdateOutputMessagesFromPlugin;
                 switch (analysis)
@@ -360,7 +371,6 @@ namespace ExtensionViewModel.ViewModel
 
                 if (this.localAnalyserThread == null)
                 {
-                    this.IssuesInEditor = new List<Issue>();
                     this.Issues = new List<Issue>();
                     MessageBox.Show("Analysis Type Not Supported By Plugin");
                     return;
@@ -375,7 +385,7 @@ namespace ExtensionViewModel.ViewModel
                 this.OnPropertyChanged("AnalysisTriggerText");
                 this.OnPropertyChanged("AnalysisTrigger");
                 this.DiagnosticMessage = ex.StackTrace;
-                this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted -= this.UpdateLocalIssuesInView;
+                this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted -= this.UpdateLocalIssuesForFileAnalysis;
                 this.ExtensionRunningLocalAnalysis.StdErrEvent -= this.UpdateOutputMessagesFromPlugin;
                 this.ExtensionRunningLocalAnalysis.StdOutEvent -= this.UpdateOutputMessagesFromPlugin;
             }           
@@ -390,7 +400,7 @@ namespace ExtensionViewModel.ViewModel
         /// <param name="e">
         /// The e.
         /// </param>
-        private void UpdateLocalIssuesInView(object sender, EventArgs e)
+        private void UpdateLocalIssues(object sender, EventArgs e)
         {
             try
             {
@@ -400,7 +410,7 @@ namespace ExtensionViewModel.ViewModel
                     MessageBox.Show(
                         "Cannot Execute Analysis: " + exceptionMsg.ErrorMessage + " StackTrace:"
                         + exceptionMsg.Ex.StackTrace);
-                    this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted -= this.UpdateLocalIssuesInView;
+                    this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted -= this.UpdateLocalIssues;
                     this.ExtensionRunningLocalAnalysis.StdErrEvent -= this.UpdateOutputMessagesFromPlugin;
                     this.ExtensionRunningLocalAnalysis.StdOutEvent -= this.UpdateOutputMessagesFromPlugin;
                     this.analysisTrigger = false;
@@ -428,7 +438,66 @@ namespace ExtensionViewModel.ViewModel
 
             try
             {
-                this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted -= this.UpdateLocalIssuesInView;
+                this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted -= this.UpdateLocalIssues;
+                this.ExtensionRunningLocalAnalysis.StdErrEvent -= this.UpdateOutputMessagesFromPlugin;
+                this.ExtensionRunningLocalAnalysis.StdOutEvent -= this.UpdateOutputMessagesFromPlugin;
+                this.Issues = this.ExtensionRunningLocalAnalysis.GetIssues();
+            }
+            catch (Exception ex)
+            {
+                this.ErrorMessage = "Failed to retrive issues from Plugin";
+                this.DiagnosticMessage = ex.StackTrace;
+            }
+        }
+
+        /// <summary>
+        /// The update local issues in view.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void UpdateLocalIssuesForFileAnalysis(object sender, EventArgs e)
+        {
+            try
+            {
+                var exceptionMsg = (LocalAnalysisCompletedEventArgs)e;
+                if (exceptionMsg.Ex != null)
+                {
+                    MessageBox.Show(
+                        "Cannot Execute Analysis: " + exceptionMsg.ErrorMessage + " StackTrace:"
+                        + exceptionMsg.Ex.StackTrace);
+                    this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted -= this.UpdateLocalIssuesForFileAnalysis;
+                    this.ExtensionRunningLocalAnalysis.StdErrEvent -= this.UpdateOutputMessagesFromPlugin;
+                    this.ExtensionRunningLocalAnalysis.StdOutEvent -= this.UpdateOutputMessagesFromPlugin;
+                    this.analysisTrigger = false;
+                    this.OnPropertyChanged("AnalysisTriggerText");
+                    this.OnPropertyChanged("AnalysisTrigger");
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            if (!this.analysisTypeText.Equals(AnalysisTypes.File))
+            {
+                this.analysisTrigger = false;
+                this.OnPropertyChanged("AnalysisTriggerText");
+                this.OnPropertyChanged("AnalysisTrigger");
+            }
+
+            if (this.ResourceInEditor == null)
+            {
+                return;
+            }
+
+            try
+            {
+                this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted -= this.UpdateLocalIssuesForFileAnalysis;
                 this.ExtensionRunningLocalAnalysis.StdErrEvent -= this.UpdateOutputMessagesFromPlugin;
                 this.ExtensionRunningLocalAnalysis.StdOutEvent -= this.UpdateOutputMessagesFromPlugin;
                 var issuesInExtension = this.ExtensionRunningLocalAnalysis.GetIssues();
@@ -465,26 +534,7 @@ namespace ExtensionViewModel.ViewModel
                     }
                 }
 
-                if (!this.AnalysisChangeLines)
-                {
-                    var diffReport = VsSonarUtils.GetDifferenceReport(
-                        this.DocumentInView,
-                        this.UpdateSourceDataForResource(this.ResourceInEditor.Key, false),
-                        false);
-                    var issuesInModifiedLines = VsSonarUtils.GetIssuesInModifiedLinesOnly(
-                        issuesInExtension,
-                        diffReport);
-                    this.IssuesInEditor = issuesInModifiedLines;
-                }
-                else
-                {
-                    this.IssuesInEditor = issuesInExtension;
-                }
-
-                if (!this.IssuesInViewLocked)
-                {
-                    this.Issues = this.IssuesInEditor;
-                }
+                this.Issues = issuesInExtension;
             }
             catch (Exception ex)
             {
@@ -493,8 +543,15 @@ namespace ExtensionViewModel.ViewModel
             }
         }
 
-        public String AnalysisLog { get; set; }
-
+        /// <summary>
+        /// The update output messages from plugin.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
         private void UpdateOutputMessagesFromPlugin(object sender, EventArgs e)
         {
             var exceptionMsg = (LocalAnalysisCompletedEventArgs)e;
@@ -513,27 +570,13 @@ namespace ExtensionViewModel.ViewModel
             if (this.ResourceInEditor == null || !startStop)
             {
                 this.Issues = new List<Issue>();
-                this.IssuesInEditor = new List<Issue>();
                 return;
             }
 
             var issuesForResource = this.UpdateIssueDataForResource(this.ResourceInEditor.Key);
             this.UpdateSourceDataForResource(this.ResourceInEditor.Key, false);
 
-            if (!this.IssuesInViewLocked)
-            {
-                this.Issues = issuesForResource;
-            }
-
-            this.LastReferenceSource = VsSonarUtils.GetLinesFromSource(
-                this.allSourceData[this.ResourceInEditor.Key],
-                "\r\n");
-
-            this.IssuesInEditor = VsSonarUtils.ConvertIssuesToLocal(
-                issuesForResource,
-                this.ResourceInEditor,
-                this.currentBuffer,
-                this.LastReferenceSource);
+            this.Issues = issuesForResource;
         }
 
         #endregion

@@ -40,7 +40,6 @@
                 </MenuItem>
             </MenuItem>
             <CheckBox Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="Control Panel" Height="18" Width="90" ToolTip="Show issues filtering options" IsChecked="{Binding ShowIssueFiltering}"/>
-            <CheckBox Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="Lock View" Height="18" Width="90" ToolTip="When Locked the Update of the Issues In the Editor will not change the list in the table bellow" IsChecked="{Binding IssuesInViewLocked}"/>
             <CheckBox Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="Disable Tags" Height="18" Width="90" ToolTip="Disable Tags in Editor, Only Issues Window will be Populated" IsChecked="{Binding DisableEditorTags}"/>
         </Menu>
         <Grid x:Name="UserInputGrid" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="2" Margin="0"/>
@@ -167,7 +166,7 @@
                             </Grid.ColumnDefinitions>
                             <Label Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="Mode" Style="{DynamicResource StyleOfLabels}"/>
                             <Label Grid.Row="1" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="Type" Style="{DynamicResource StyleOfLabels}"/>
-                            <Label Grid.Row="2" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="Modified Lines" Style="{DynamicResource StyleOfLabels}"/>
+                            <Label Grid.Row="2" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="New Issues" Style="{DynamicResource StyleOfLabels}"/>
                             <ToggleButton Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="{Binding AnalysisModeText}" IsChecked="{Binding AnalysisMode}" Grid.Row="0" Grid.Column="1" Template="{DynamicResource SquareToggleButtonTemplate}" />
                             <ToggleButton Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="{Binding AnalysisTypeText}" IsChecked="{Binding AnalysisType}" Grid.Row="1" Grid.Column="1" Template="{DynamicResource SquareToggleButtonTemplate}" />
                             <ToggleButton ToolTip="If yes, issues will be reported in modified lines only" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="{Binding AnalysisChangeLinesText}" IsChecked="{Binding AnalysisChangeLines}" Grid.Row="1" Grid.Column="1" Template="{DynamicResource SquareToggleButtonTemplate}" Margin="0,19.107,0,0.893" Grid.RowSpan="2" />

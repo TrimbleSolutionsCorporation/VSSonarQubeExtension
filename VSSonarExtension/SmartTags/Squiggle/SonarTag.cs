@@ -43,18 +43,27 @@ namespace VSSonarExtension.SmartTags.Squiggle
         /// <param name="issues">
         /// The issues.
         /// </param>
+        /// <param name="span">
+        /// The span.
+        /// </param>
         /// <exception cref="ArgumentNullException">
         /// serviceProvider, trackingSpan and violation
         /// </exception>
-        public SonarTag(List<Issue> issues)
+        public SonarTag(List<Issue> issues, SnapshotSpan span)
         {
             if (issues == null)
             {
                 throw new ArgumentNullException("issues");
             }
 
+            this.Span = span.Snapshot.CreateTrackingSpan(span, SpanTrackingMode.EdgeExclusive);
             this.TagIssue = issues;
         }
+
+        /// <summary>
+        /// Gets the span.
+        /// </summary>
+        public ITrackingSpan Span { get; private set; }
 
         /// <summary>
         /// Gets the misspelled word.
@@ -94,6 +103,23 @@ namespace VSSonarExtension.SmartTags.Squiggle
 
                 return string.Format("{0}", violationstxt);
             }
+        }
+
+        /// <summary>
+        /// The to tag span.
+        /// </summary>
+        /// <param name="snapshot">
+        /// The snapshot.
+        /// </param>
+        /// <returns>
+        /// The <see>
+        ///     <cref>ITagSpan</cref>
+        /// </see>
+        ///     .
+        /// </returns>
+        public ITagSpan<SonarTag> ToTagSpan(ITextSnapshot snapshot)
+        {
+            return new TagSpan<SonarTag>(this.Span.GetSpan(snapshot), this);
         }
 
         /// <summary>

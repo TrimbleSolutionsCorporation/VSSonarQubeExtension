@@ -1,15 +1,10 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ExtensionDataModel.cs" company="Copyright © 2013 Tekla Corporation. Tekla is a Trimble Company">
-//     Copyright (C) 2013 [Jorge Costa, Jorge.Costa@tekla.com]
+// <copyright file="ExtensionDataModel.cs" company="">
+//   
 // </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-// This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
-// as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
-// of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. 
-// You should have received a copy of the GNU Lesser General Public License along with this program; if not, write to the Free
-// Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+// <summary>
+//   The issues list.
+// </summary>
 // --------------------------------------------------------------------------------------------------------------------
 namespace ExtensionViewModel.ViewModel
 {
@@ -17,6 +12,7 @@ namespace ExtensionViewModel.ViewModel
     using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Globalization;
     using System.Linq;
     using System.Threading;
     using System.Windows;
@@ -64,14 +60,14 @@ namespace ExtensionViewModel.ViewModel
         #region Fields
 
         /// <summary>
+        ///     The lock this to.
+        /// </summary>
+        private readonly object lockIssuesInEditor = new object();
+
+        /// <summary>
         ///     The lock this.
         /// </summary>
         private readonly object lockThis = new object();
-
-        /// <summary>
-        ///     The lock this to.
-        /// </summary>
-        private readonly object lockThisTo = new object();
 
         /// <summary>
         ///     The project association data model.
@@ -119,19 +115,9 @@ namespace ExtensionViewModel.ViewModel
         private string errorMessage = string.Empty;
 
         /// <summary>
-        ///     The issues in view locked.
-        /// </summary>
-        private bool issuesInViewLocked;
-
-        /// <summary>
         ///     The local analyser thread.
         /// </summary>
         private Thread localAnalyserThread;
-
-        /// <summary>
-        ///     The localsource.
-        /// </summary>
-        private string localsource = string.Empty;
 
         /// <summary>
         ///     The profile.
@@ -191,7 +177,7 @@ namespace ExtensionViewModel.ViewModel
             // cache data
             this.cachedIssuesList = new Dictionary<string, List<Issue>>();
             this.cachedIssuesListObs = new List<string>();
-            this.allSourceData = new Dictionary<string, Source>();
+            this.cachedServerSources = new Dictionary<string, Source>();
             this.allSourceCoverageData = new Dictionary<string, SourceCoverage>();
             this.allResourceData = new Dictionary<string, Resource>();
 
@@ -216,10 +202,7 @@ namespace ExtensionViewModel.ViewModel
         /// <param name="associatedProj">
         /// The associated Proj.
         /// </param>
-        public ExtensionDataModel(
-            ISonarRestService restService, 
-            IVsEnvironmentHelper vsenvironmenthelper, 
-            Resource associatedProj)
+        public ExtensionDataModel(ISonarRestService restService, IVsEnvironmentHelper vsenvironmenthelper, Resource associatedProj)
         {
             this.RestService = restService;
             this.Vsenvironmenthelper = vsenvironmenthelper;
@@ -230,7 +213,7 @@ namespace ExtensionViewModel.ViewModel
             // cache data
             this.cachedIssuesList = new Dictionary<string, List<Issue>>();
             this.cachedIssuesListObs = new List<string>();
-            this.allSourceData = new Dictionary<string, Source>();
+            this.cachedServerSources = new Dictionary<string, Source>();
             this.allSourceCoverageData = new Dictionary<string, SourceCoverage>();
             this.allResourceData = new Dictionary<string, Resource>();
 
@@ -453,11 +436,7 @@ namespace ExtensionViewModel.ViewModel
             set
             {
                 this.disableEditorTags = value;
-                this.Vsenvironmenthelper.WriteOption(
-                    "Sonar Options", 
-                    "General", 
-                    "DisableEditorTags", 
-                    value ? "TRUE" : "FALSE");
+                this.Vsenvironmenthelper.WriteOption("Sonar Options", "General", "DisableEditorTags", value ? "TRUE" : "FALSE");
                 this.OnPropertyChanged("IssuesInEditor");
                 this.OnPropertyChanged("DisableEditorTags");
             }
@@ -677,9 +656,7 @@ namespace ExtensionViewModel.ViewModel
                 {
                     if (Application.Current != null)
                     {
-                        Application.Current.Dispatcher.Invoke(
-                            DispatcherPriority.Normal, 
-                            (Action)(() => this.Comments = value[0].Comments));
+                        Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, (Action)(() => this.Comments = value[0].Comments));
                     }
                     else
                     {
@@ -689,9 +666,7 @@ namespace ExtensionViewModel.ViewModel
 
                 if (Application.Current != null)
                 {
-                    Application.Current.Dispatcher.Invoke(
-                        DispatcherPriority.Normal, 
-                        (Action)(() => this.issues = value));
+                    Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, (Action)(() => this.issues = value));
                 }
                 else
                 {
@@ -704,6 +679,7 @@ namespace ExtensionViewModel.ViewModel
                 }
 
                 this.OnPropertyChanged("Issues");
+                this.OnPropertyChanged("IssuesInEditor");                
             }
         }
 
@@ -725,84 +701,55 @@ namespace ExtensionViewModel.ViewModel
         }
 
         /// <summary>
-        ///     Gets or sets the issues in editor.
+        ///     Gets the issues in editor.
         /// </summary>
         public List<Issue> IssuesInEditor
         {
             get
             {
-                var newData = new List<Issue>();
-                try
+                if (this.DocumentInView == null || this.ResourceInEditor == null)
                 {
-                    if (Application.Current != null)
-                    {
-                        Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, (Action)(() => newData = new List<Issue>(this.issuesInEditor)));
-                    }
-                    else
-                    {
-                        newData = new List<Issue>(this.issuesInEditor);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    this.ErrorMessage = "Cannot Show Tags in Editor";
-                    this.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
+                    return new List<Issue>();
                 }
 
-                return newData;
-            }
-
-            set
-            {
-                lock (this.lockThisTo)
+                lock (this.lockIssuesInEditor)
                 {
-                    if (Application.Current != null)
+                    return GetIssuesForResourceFromList(this.ResourceInEditor, this.Issues);
+                    /*
+                    if (this.AnalysisChangeLines)
                     {
-                        Application.Current.Dispatcher.Invoke(
-                            DispatcherPriority.Normal, 
-                            (Action)(() => this.issuesInEditor = value));
+                        var diffReport = VsSonarUtils.GetDifferenceReport(
+                            this.DocumentInView,
+                            this.UpdateSourceDataForResource(this.ResourceInEditor.Key, false),
+                            false);
+                        return VsSonarUtils.GetIssuesInModifiedLinesOnly(
+                            filteredIssuesInEditor,
+                            diffReport);
                     }
-                    else
-                    {
-                        this.issuesInEditor = value;
-                    }
-                }
 
-                this.OnPropertyChanged("IssuesInEditor");
+                    try
+                    {
+                        return VsSonarUtils.ConvertIssuesToLocal(filteredIssuesInEditor, this.ResourceInEditor, this.currentBuffer, this.LastReferenceSource);
+                    }
+                    catch (Exception ex)
+                    {
+                        this.ErrorMessage = "Error Updating Locations Off Issues";
+                        this.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
+                        return new List<Issue>();
+                    }
+                    */
+                }
             }
         }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether issues in view locked.
-        /// </summary>
-        public bool IssuesInViewLocked
-        {
-            get
-            {
-                return this.issuesInViewLocked;
-            }
-
-            set
-            {
-                this.issuesInViewLocked = value;
-                this.OnPropertyChanged("IssuesInViewLocked");
-            }
-        }
-
-        /// <summary>
-        ///     Gets or sets the last reference source.
+        ///     Gets the last reference source.
         /// </summary>
         public string LastReferenceSource
         {
             get
             {
-                return this.localsource;
-            }
-
-            set
-            {
-                this.localsource = value;
-                this.OnPropertyChanged("LocalSource");
+                return VsSonarUtils.GetLinesFromSource(this.cachedServerSources[this.ResourceInEditor.Key], "\r\n"); 
             }
         }
 
@@ -847,13 +794,8 @@ namespace ExtensionViewModel.ViewModel
                 {
                     try
                     {
-                        List<Resource> profileResource = this.restService.GetQualityProfile(
-                            this.UserConfiguration, 
-                            this.AssociatedProject.Key);
-                        List<Profile> enabledrules = this.restService.GetEnabledRulesInProfile(
-                            this.UserConfiguration, 
-                            profileResource[0].Lang, 
-                            profileResource[0].Metrics[0].Data);
+                        List<Resource> profileResource = this.restService.GetQualityProfile(this.UserConfiguration, this.AssociatedProject.Key);
+                        List<Profile> enabledrules = this.restService.GetEnabledRulesInProfile(this.UserConfiguration, profileResource[0].Lang, profileResource[0].Metrics[0].Data);
                         this.profile = enabledrules[0];
                     }
                     catch (Exception ex)
@@ -1068,10 +1010,7 @@ namespace ExtensionViewModel.ViewModel
         {
             get
             {
-                ConnectionConfiguration conf =
-                    ConnectionConfigurationHelpers.GetConnectionConfiguration(
-                        this.vsenvironmenthelper, 
-                        this.restService);
+                ConnectionConfiguration conf = ConnectionConfigurationHelpers.GetConnectionConfiguration(this.vsenvironmenthelper, this.restService);
                 if (conf == null)
                 {
                     this.SonarInfo = "Not Logged";
@@ -1090,8 +1029,7 @@ namespace ExtensionViewModel.ViewModel
                     return null;
                 }
 
-                this.SonarInfo = "Logged to Sonar: " + Convert.ToString(this.SonarVersion) + " " + conf.Hostname
-                                 + " User: " + conf.Username;
+                this.SonarInfo = "Logged to Sonar: " + Convert.ToString(this.SonarVersion) + " " + conf.Hostname + " User: " + conf.Username;
                 this.ErrorMessage = string.Empty;
                 if (this.AssociatedProject != null)
                 {
@@ -1174,6 +1112,27 @@ namespace ExtensionViewModel.ViewModel
         #region Public Methods and Operators
 
         /// <summary>
+        /// The get issues for resource from list.
+        /// </summary>
+        /// <param name="resource">
+        /// The resource.
+        /// </param>
+        /// <param name="list">
+        /// The list.
+        /// </param>
+        /// <returns>
+        /// The
+        ///     <see>
+        ///         <cref>List</cref>
+        ///     </see>
+        ///     .
+        /// </returns>
+        public static List<Issue> GetIssuesForResourceFromList(Resource resource, IEnumerable<Issue> list)
+        {
+            return list.Where(issue => issue.Component.Equals(resource.Key)).ToList();
+        }
+
+        /// <summary>
         /// The apply filter to issues.
         /// </summary>
         /// <param name="issuesToFilter">
@@ -1199,28 +1158,23 @@ namespace ExtensionViewModel.ViewModel
         /// <summary>
         /// The associate project to solution.
         /// </summary>
-        /// <param name="associatedProjectIn">
+        /// <param name="newProject">
         /// The associated project.
         /// </param>
-        public void AssociateProjectToSolution(Resource associatedProjectIn)
+        public void AssociateProjectToSolution(Resource newProject)
         {
-            if (associatedProjectIn == null)
+            if (newProject == null)
             {
                 return;
             }
 
-            this.AssociatedProject = associatedProjectIn;
+            this.AssociatedProject = newProject;
+            this.PluginRunningAnalysis = this.PluginController.GetPluginToRunResource(this.UserConfiguration, newProject);
+            if (this.PluginRunningAnalysis != null)
+            {
+                this.ExtensionRunningLocalAnalysis = this.PluginRunningAnalysis.GetLocalAnalysisExtension(this.UserConfiguration, newProject);
+            }
         }
-
-        /// <summary>
-        /// The clear project association.
-        /// </summary>
-        public void ClearProjectAssociation()
-        {
-            this.AssociatedProject = null;
-            this.ClearCaches();
-        }
-
 
         /// <summary>
         ///     The clear coverage in editor.
@@ -1228,6 +1182,17 @@ namespace ExtensionViewModel.ViewModel
         public void ClearCoverageInEditor()
         {
             this.CoverageInEditor = new SourceCoverage();
+        }
+
+        /// <summary>
+        ///     The clear project association.
+        /// </summary>
+        public void ClearProjectAssociation()
+        {
+            this.PluginRunningAnalysis = null;
+            this.ExtensionRunningLocalAnalysis = null;
+            this.AssociatedProject = null;
+            this.ClearCaches();
         }
 
         /// <summary>
@@ -1253,10 +1218,7 @@ namespace ExtensionViewModel.ViewModel
         {
             if (this.ResourceInEditor != null)
             {
-                VsSonarUtils.GetDifferenceReport(
-                    this.DocumentInView, 
-                    this.UpdateSourceDataForResource(this.ResourceInEditor.Key, true), 
-                    true);
+                VsSonarUtils.GetDifferenceReport(this.DocumentInView, this.UpdateSourceDataForResource(this.ResourceInEditor.Key, true), true);
             }
         }
 
@@ -1272,10 +1234,7 @@ namespace ExtensionViewModel.ViewModel
         /// <param name="associatedProj">
         /// The associated proj.
         /// </param>
-        public void ExtensionDataModelUpdate(
-            ISonarRestService restServiceIn, 
-            IVsEnvironmentHelper vsenvironmenthelperIn, 
-            Resource associatedProj)
+        public void ExtensionDataModelUpdate(ISonarRestService restServiceIn, IVsEnvironmentHelper vsenvironmenthelperIn, Resource associatedProj)
         {
             this.RestService = restServiceIn;
             this.Vsenvironmenthelper = vsenvironmenthelperIn;
@@ -1283,13 +1242,13 @@ namespace ExtensionViewModel.ViewModel
             this.InitCommanding();
 
             // start some data
-            var usortedList = restServiceIn.GetUserList(this.UserConfiguration);
+            List<User> usortedList = restServiceIn.GetUserList(this.UserConfiguration);
             if (usortedList != null)
             {
                 this.UsersList = new List<User>(usortedList.OrderBy(i => i.Login)) { new User() };
             }
 
-            var projects = restServiceIn.GetProjectsList(this.UserConfiguration);
+            List<Resource> projects = restServiceIn.GetProjectsList(this.UserConfiguration);
             if (projects != null)
             {
                 this.ProjectResources = new List<Resource>(projects.OrderBy(i => i.Name));
@@ -1349,10 +1308,7 @@ namespace ExtensionViewModel.ViewModel
                 }
                 else
                 {
-                    this.Issues = this.RestService.GetIssuesForProjects(
-                        this.UserConfiguration, 
-                        this.AssociatedProject.Key, 
-                        false);
+                    this.Issues = this.RestService.GetIssuesForProjects(this.UserConfiguration, this.AssociatedProject.Key, false);
                 }
 
                 return;
@@ -1378,16 +1334,13 @@ namespace ExtensionViewModel.ViewModel
 
                 if (this.IsDateBeforeChecked)
                 {
-                    request += "&createdBefore=" + Convert.ToString(this.CreatedBeforeDate.Year) + "-"
-                               + Convert.ToString(this.CreatedBeforeDate.Month) + "-"
+                    request += "&createdBefore=" + Convert.ToString(this.CreatedBeforeDate.Year) + "-" + Convert.ToString(this.CreatedBeforeDate.Month) + "-"
                                + Convert.ToString(this.CreatedBeforeDate.Day);
                 }
 
                 if (this.IsDateSinceChecked)
                 {
-                    request += "&createdAfter=" + Convert.ToString(this.CreatedSinceDate.Year) + "-"
-                               + Convert.ToString(this.CreatedSinceDate.Month) + "-"
-                               + Convert.ToString(this.CreatedSinceDate.Day);
+                    request += "&createdAfter=" + Convert.ToString(this.CreatedSinceDate.Year) + "-" + Convert.ToString(this.CreatedSinceDate.Month) + "-" + Convert.ToString(this.CreatedSinceDate.Day);
                 }
 
                 request += this.FilterSeverities();
@@ -1451,18 +1404,14 @@ namespace ExtensionViewModel.ViewModel
                     this.allResourceData.Add(resource, resourceInServer);
                 }
 
-                this.allSourceCoverageData.Add(
-                    resource, 
-                    this.restService.GetCoverageInResource(this.UserConfiguration, resource));
+                this.allSourceCoverageData.Add(resource, this.restService.GetCoverageInResource(this.UserConfiguration, resource));
             }
             else
             {
                 if (resourceInServer.Date > this.allResourceData[resource].Date || forceRetrival)
                 {
                     this.allResourceData[resource] = resourceInServer;
-                    this.allSourceCoverageData[resource] = this.restService.GetCoverageInResource(
-                        this.UserConfiguration, 
-                        resource);
+                    this.allSourceCoverageData[resource] = this.restService.GetCoverageInResource(this.UserConfiguration, resource);
                 }
             }
 
@@ -1547,9 +1496,7 @@ namespace ExtensionViewModel.ViewModel
                     this.allResourceData.Add(resource, resourceInServer);
                 }
 
-                this.cachedIssuesList.Add(
-                    resource, 
-                    this.restService.GetIssuesInResource(this.UserConfiguration, resource, false));
+                this.cachedIssuesList.Add(resource, this.restService.GetIssuesInResource(this.UserConfiguration, resource, false));
                 this.UpdateCacheListData(resource);
             }
             else
@@ -1557,10 +1504,7 @@ namespace ExtensionViewModel.ViewModel
                 if (resourceInServer.Date > this.allResourceData[resource].Date)
                 {
                     this.allResourceData[resource] = resourceInServer;
-                    this.cachedIssuesList[resource] = this.restService.GetIssuesInResource(
-                        this.UserConfiguration, 
-                        resource, 
-                        false);
+                    this.cachedIssuesList[resource] = this.restService.GetIssuesInResource(this.UserConfiguration, resource, false);
                 }
             }
 
@@ -1581,21 +1525,6 @@ namespace ExtensionViewModel.ViewModel
 
                 if (this.Issues == null)
                 {
-                    return;
-                }
-
-                try
-                {
-                    this.IssuesInEditor = VsSonarUtils.ConvertIssuesToLocal(
-                        this.Issues, 
-                        this.ResourceInEditor, 
-                        this.currentBuffer, 
-                        this.LastReferenceSource);
-                }
-                catch (Exception ex)
-                {
-                    this.ErrorMessage = "Error Updating Locations Off Issues";
-                    this.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
                 }
             }
         }
@@ -1609,10 +1538,7 @@ namespace ExtensionViewModel.ViewModel
         public void UpdateLinesOfCoverageInEditor(bool forceRetrival)
         {
             SourceCoverage coverageNew = this.UpdateCoverageDataForResource(this.resourceInEditor.Key, forceRetrival);
-            string sourceNew =
-                VsSonarUtils.GetLinesFromSource(
-                    this.UpdateSourceDataForResource(this.resourceInEditor.Key, forceRetrival), 
-                    "\r\n");
+            string sourceNew = VsSonarUtils.GetLinesFromSource(this.UpdateSourceDataForResource(this.resourceInEditor.Key, forceRetrival), "\r\n");
             this.LastReferenceSourceInServer = sourceNew;
             this.CoverageInEditor = coverageNew;
         }
@@ -1625,14 +1551,11 @@ namespace ExtensionViewModel.ViewModel
         /// </param>
         public void UpdateResourceInEditor(string fileInView)
         {
-            
             if (this.PluginController == null)
             {
                 this.ErrorMessage = "No Plugins installed";
                 return;
             }
-
-            this.PluginRunningAnalysis = this.PluginController.GetPluginToRunResource(this.UserConfiguration, this.DocumentInView);
 
             if (this.PluginRunningAnalysis == null)
             {
@@ -1640,26 +1563,18 @@ namespace ExtensionViewModel.ViewModel
                 return;
             }
 
-            var serverExtension = this.PluginRunningAnalysis.GetServerAnalyserExtension(this.UserConfiguration, this.AssociatedProject);
-            if (serverExtension == null)
-            {
-                this.ErrorMessage = "No plugin installed that supports this file";
-                return;
-            }
-
             try
             {
-                var resourceKey = serverExtension.GetResourceKey(this.vsenvironmenthelper.VsProjectItem(fileInView), this.AssociatedProject.Key);
+                string resourceKey = this.PluginRunningAnalysis.GetResourceKey(this.vsenvironmenthelper.VsProjectItem(fileInView), this.AssociatedProject.Key);
                 this.ResourceInEditor = this.UpdateDataForResource(resourceKey);
                 if (this.AnalysisTrigger)
                 {
                     this.PerformfAnalysis(this.AnalysisTrigger);
-                }                
+                }
             }
             catch (Exception ex)
             {
                 this.ResourceInEditor = null;
-                this.IssuesInEditor = new List<Issue>();
                 this.Issues = new List<Issue>();
                 this.ErrorMessage = "Cannot Update data for File in Editor";
                 this.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
@@ -1682,29 +1597,25 @@ namespace ExtensionViewModel.ViewModel
         {
             Resource resourceInServer = this.restService.GetResourcesData(this.UserConfiguration, resource)[0];
 
-            if (!this.allResourceData.ContainsKey(resource) || !this.allSourceData.ContainsKey(resource))
+            if (!this.allResourceData.ContainsKey(resource) || !this.cachedServerSources.ContainsKey(resource))
             {
                 if (!this.allResourceData.ContainsKey(resource))
                 {
                     this.allResourceData.Add(resource, resourceInServer);
                 }
 
-                this.allSourceData.Add(
-                    resource, 
-                    this.restService.GetSourceForFileResource(this.UserConfiguration, resource));
+                this.cachedServerSources.Add(resource, this.restService.GetSourceForFileResource(this.UserConfiguration, resource));
             }
             else
             {
                 if (resourceInServer.Date > this.allResourceData[resource].Date || forceRetrival)
                 {
                     this.allResourceData[resource] = resourceInServer;
-                    this.allSourceData[resource] = this.restService.GetSourceForFileResource(
-                        this.UserConfiguration, 
-                        resource);
+                    this.cachedServerSources[resource] = this.restService.GetSourceForFileResource(this.UserConfiguration, resource);
                 }
             }
 
-            return this.allSourceData[resource];
+            return this.cachedServerSources[resource];
         }
 
         #endregion
@@ -1719,7 +1630,7 @@ namespace ExtensionViewModel.ViewModel
         /// </param>
         protected void OnPropertyChanged(string name)
         {
-            var handler = this.PropertyChanged;
+            PropertyChangedEventHandler handler = this.PropertyChanged;
             if (handler != null)
             {
                 handler(this, new PropertyChangedEventArgs(name));
@@ -1811,7 +1722,7 @@ namespace ExtensionViewModel.ViewModel
                 return false;
             }
 
-            if (issue.Severity.Equals("1 : INFO"))
+            if (issue.Severity.EndsWith("INFO", true, CultureInfo.InvariantCulture))
             {
                 if (this.IsInfoChecked)
                 {
@@ -1819,7 +1730,7 @@ namespace ExtensionViewModel.ViewModel
                 }
             }
 
-            if (issue.Severity.Equals("2 : MINOR"))
+            if (issue.Severity.EndsWith("MINOR", true, CultureInfo.InvariantCulture))
             {
                 if (this.IsMinorChecked)
                 {
@@ -1827,7 +1738,7 @@ namespace ExtensionViewModel.ViewModel
                 }
             }
 
-            if (issue.Severity.Equals("3 : MAJOR"))
+            if (issue.Severity.EndsWith("MAJOR", true, CultureInfo.InvariantCulture))
             {
                 if (this.IsMajaorChecked)
                 {
@@ -1835,7 +1746,7 @@ namespace ExtensionViewModel.ViewModel
                 }
             }
 
-            if (issue.Severity.Equals("4 : CRITICAL"))
+            if (issue.Severity.EndsWith("CRITICAL", true, CultureInfo.InvariantCulture))
             {
                 if (this.IsCriticalChecked)
                 {
@@ -1843,7 +1754,7 @@ namespace ExtensionViewModel.ViewModel
                 }
             }
 
-            if (issue.Severity.Equals("5 : BLOCKER"))
+            if (issue.Severity.EndsWith("BLOCKER", true, CultureInfo.InvariantCulture))
             {
                 if (this.IsBlockerChecked)
                 {

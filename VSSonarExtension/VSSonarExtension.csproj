@@ -132,8 +132,6 @@
     <Compile Include="SmartTags\Squiggle\SonarTagFormatDefinition.cs" />
     <Compile Include="SmartTags\Squiggle\SonarTagger.cs" />
     <Compile Include="SmartTags\Squiggle\SonarTaggerProvider.cs" />
-    <Compile Include="SmartTags\Squiggle\SquiggleTagger.cs" />
-    <Compile Include="SmartTags\Squiggle\SquiggleTaggerProvider.cs" />
     <Compile Include="VSControls\GuidList.cs" />
     <Compile Include="PckResources\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

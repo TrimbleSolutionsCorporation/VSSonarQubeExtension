@@ -11,16 +11,17 @@
 // You should have received a copy of the GNU Lesser General Public License along with this program; if not, write to the Free
 // Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 // --------------------------------------------------------------------------------------------------------------------
-
 namespace VSSonarExtension.SmartTags.Squiggle
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Threading;
+    using System.Windows.Threading;
 
     using ExtensionTypes;
-
-    using ExtensionViewModel.ViewModel;
 
     using Microsoft.VisualStudio.Text;
     using Microsoft.VisualStudio.Text.Tagging;
@@ -36,24 +37,36 @@ namespace VSSonarExtension.SmartTags.Squiggle
         #region Fields
 
         /// <summary>
-        ///     The file path.
+        /// The dispatcher.
         /// </summary>
-        private readonly string filePath;
+        private readonly Dispatcher dispatcher;
 
         /// <summary>
-        ///     The register events.
+        /// The dirty spans var.
         /// </summary>
-        private readonly bool registerEvents;
+        private List<SnapshotSpan> dirtySpansVar;
+
+        // ITagAggregator<IErrorTag> _naturalTextTagger;
 
         /// <summary>
-        ///     The update lock.
-        /// </summary>
-        private readonly object updateLock = new object();
-
-        /// <summary>
-        /// The m disposed.
+        ///     The m disposed.
         /// </summary>
         private bool isDisposed;
+
+        /// <summary>
+        ///     The sonar tags.
+        /// </summary>
+        private volatile List<SonarTag> sonarTags = new List<SonarTag>();
+
+        /// <summary>
+        /// The timer.
+        /// </summary>
+        private DispatcherTimer timer;
+
+        /// <summary>
+        /// The update thread.
+        /// </summary>
+        private Thread updateThread;
 
         #endregion
 
@@ -65,28 +78,29 @@ namespace VSSonarExtension.SmartTags.Squiggle
         /// <param name="sourceBuffer">
         /// The source buffer.
         /// </param>
-        /// <param name="registerEvents">
-        /// The register Events.
-        /// </param>
-        /// <param name="filePath">
-        /// The file Path.
-        /// </param>
         /// <exception cref="ArgumentNullException">
         /// source buffer
         /// </exception>
-        public SonarTagger(ITextBuffer sourceBuffer, bool registerEvents, string filePath)
+        public SonarTagger(ITextBuffer sourceBuffer)
         {
             if (sourceBuffer == null)
             {
                 throw new ArgumentNullException("sourceBuffer");
             }
 
-            this.filePath = filePath;
             this.SourceBuffer = sourceBuffer;
-            this.registerEvents = registerEvents;
-            if (registerEvents)
+            VsSonarExtensionPackage.ExtensionModelData.PropertyChanged += this.IssuesListChanged;
+
+            this.dispatcher = Dispatcher.CurrentDispatcher;
+            this.dirtySpansVar = new List<SnapshotSpan>();
+
+            try
             {
-                VsSonarExtensionPackage.ExtensionModelData.PropertyChanged += this.IssuesListChanged;
+                this.ScheduleUpdate();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Problems schedulling update: " + ex.Message + "::" + ex.StackTrace);
             }
         }
 
@@ -121,22 +135,7 @@ namespace VSSonarExtension.SmartTags.Squiggle
             GC.SuppressFinalize(this);
         }
 
-        #endregion
-
-        #region Explicit Interface Methods
-
-        /// <summary>
-        /// The get tags.
-        /// </summary>
-        /// <param name="spans">
-        /// The spans.
-        /// </param>
-        /// <returns>
-        /// The System.Collections.Generic.IEnumerable`1[T -&gt; Microsoft.VisualStudio.Text.Tagging.ITagSpan`1[T -&gt; SmartTags.SonarTag]].
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// spans are null
-        /// </exception>
+        /*
         IEnumerable<ITagSpan<SonarTag>> ITagger<SonarTag>.GetTags(NormalizedSnapshotSpanCollection spans)
         {
             var issuesInEditor = VsSonarExtensionPackage.ExtensionModelData.IssuesInEditor;
@@ -174,10 +173,13 @@ namespace VSSonarExtension.SmartTags.Squiggle
                         yield break;
                     }
 
-                    var span = new SnapshotSpan(this.SourceBuffer.CurrentSnapshot, textsnapshot.Start, textsnapshot.Length);
+                    //var span = new SnapshotSpan(this.SourceBuffer.CurrentSnapshot, textsnapshot.Start, textsnapshot.Length);
                     var issuesToSpan = issuesPerLine;
                     issuesPerLine = new List<Issue>();
-                    yield return new TagSpan<SonarTag>(new SnapshotSpan(span.Start, span.Length), new SonarTag(issuesToSpan));
+
+                    var mappedSpan = new SnapshotSpan(this.SourceBuffer.CurrentSnapshot, textsnapshot.Start, textsnapshot.Length);
+
+                    yield return new TagSpan<SonarTag>(mappedSpan, new SonarTag(issuesToSpan, mappedSpan));
                 }
 
                 issuesPerLine.Add(issue);
@@ -204,7 +206,59 @@ namespace VSSonarExtension.SmartTags.Squiggle
             var lastspan = new SnapshotSpan(
                 this.SourceBuffer.CurrentSnapshot, lasttextsnapshot.Start, lasttextsnapshot.Length);
             yield return
-                new TagSpan<SonarTag>(new SnapshotSpan(lastspan.Start, lastspan.Length), new SonarTag(issuesPerLine));
+                new TagSpan<SonarTag>(new SnapshotSpan(lastspan.Start, lastspan.Length), new SonarTag(issuesPerLine, lastspan));
+        }
+        */
+
+        /// <summary>
+        /// The get tags.
+        /// </summary>
+        /// <param name="spans">
+        /// The spans.
+        /// </param>
+        /// <returns>
+        /// The
+        ///     <see>
+        ///         <cref>IEnumerable</cref>
+        ///     </see>
+        ///     .
+        /// </returns>
+        public IEnumerable<ITagSpan<SonarTag>> GetTags(NormalizedSnapshotSpanCollection spans)
+        {
+            List<Issue> issuesInEditor = VsSonarExtensionPackage.ExtensionModelData.IssuesInEditor;
+
+            if (spans.Count == 0 || issuesInEditor.Count == 0 || VsSonarExtensionPackage.ExtensionModelData.DisableEditorTags)
+            {
+                yield break;
+            }
+
+            if (spans.Count == 0)
+            {
+                yield break;
+            }
+
+            List<SonarTag> tags = this.sonarTags;
+
+            if (tags.Count == 0)
+            {
+                yield break;
+            }
+
+            ITextSnapshot snapshot = spans[0].Snapshot;
+
+            foreach (SonarTag tag in tags)
+            {
+                ITagSpan<SonarTag> tagSpan = tag.ToTagSpan(snapshot);
+                if (tagSpan.Span.Length == 0)
+                {
+                    continue;
+                }
+
+                if (spans.IntersectsWith(new NormalizedSnapshotSpanCollection(tagSpan.Span)))
+                {
+                    yield return tagSpan;
+                }
+            }
         }
 
         #endregion
@@ -223,12 +277,7 @@ namespace VSSonarExtension.SmartTags.Squiggle
             {
                 if (disposing)
                 {
-                    if (this.registerEvents)
-                    {
-                        VsSonarExtensionPackage.ExtensionModelData.PropertyChanged -= this.IssuesListChanged;
-                        SonarTaggerProvider.AllSpellingTags.Remove(this.filePath);
-                    }
-
+                    VsSonarExtensionPackage.ExtensionModelData.PropertyChanged -= this.IssuesListChanged;
                     this.SourceBuffer = null;
                 }
 
@@ -237,36 +286,48 @@ namespace VSSonarExtension.SmartTags.Squiggle
         }
 
         /// <summary>
-        ///     The execute violation checker.
+        /// The get sonar tags in span for line.
         /// </summary>
-        private void ExecuteViolationChecker()
+        /// <param name="issuesInEditor">
+        /// The issues in editor.
+        /// </param>
+        /// <param name="line">
+        /// The line.
+        /// </param>
+        /// <returns>
+        /// The <see>
+        ///     <cref>IEnumerable</cref>
+        /// </see>
+        ///     .
+        /// </returns>
+        private IEnumerable<SonarTag> GetSonarTagsInSpanForLine(List<Issue> issuesInEditor, int line)
         {
-            if (VsSonarExtensionPackage.ExtensionModelData == null
-                || VsSonarExtensionPackage.ExtensionModelData.ResourceInEditor == null)
+            if (issuesInEditor.Count == 0 || VsSonarExtensionPackage.ExtensionModelData.DisableEditorTags)
             {
-                return;
+                yield break;
             }
 
-            var document = BufferTagger.GetPropertyFromBuffer<ITextDocument>(this.SourceBuffer);
-            var resource = VsSonarExtensionPackage.ExtensionModelData.ResourceInEditor;
+            var currentIssuesPerLine = issuesInEditor.Where(issue => issue.Line == line).ToList();
 
-            if (!document.FilePath.Replace('\\', '/').EndsWith(resource.Lname, StringComparison.OrdinalIgnoreCase))
+            var lineToUseinVs = line - 1;
+            if (lineToUseinVs < 0)
             {
-                return;
+                lineToUseinVs = 0;
             }
 
-            lock (this.updateLock)
+            ITextSnapshotLine textsnapshot;
+
+            try
             {
-                EventHandler<SnapshotSpanEventArgs> tempEvent = this.TagsChanged;
-                if (tempEvent != null)
-                {
-                    tempEvent(
-                        this, 
-                        new SnapshotSpanEventArgs(
-                            new SnapshotSpan(
-                                this.SourceBuffer.CurrentSnapshot, 0, this.SourceBuffer.CurrentSnapshot.Length)));
-                }
+                textsnapshot = this.SourceBuffer.CurrentSnapshot.GetLineFromLineNumber(lineToUseinVs);
             }
+            catch (Exception)
+            {
+                yield break;
+            }
+
+            var mappedSpan = new SnapshotSpan(this.SourceBuffer.CurrentSnapshot, textsnapshot.Start, textsnapshot.Length);
+            yield return new SonarTag(currentIssuesPerLine, mappedSpan);
         }
 
         /// <summary>
@@ -280,10 +341,139 @@ namespace VSSonarExtension.SmartTags.Squiggle
         /// </param>
         private void IssuesListChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName.Equals("IssuesInEditor"))
+            try
             {
-                this.ExecuteViolationChecker();
+                if (e.PropertyName == null)
+                {
+                    return;
+                }
+
+                if (!e.PropertyName.Equals("IssuesInEditor"))
+                {
+                    return;
+                }
+
+                var document = BufferTagger.GetPropertyFromBuffer<ITextDocument>(this.SourceBuffer);
+                Resource resource = VsSonarExtensionPackage.ExtensionModelData.ResourceInEditor;
+
+                if (!document.FilePath.Replace('\\', '/').EndsWith(resource.Lname, StringComparison.OrdinalIgnoreCase))
+                {
+                    return;
+                }
+
+                List<Issue> issuesInEditor = VsSonarExtensionPackage.ExtensionModelData.IssuesInEditor;
+
+                if (issuesInEditor.Count == 0)
+                {
+                    var span = new SnapshotSpan(this.SourceBuffer.CurrentSnapshot, 0, this.SourceBuffer.CurrentSnapshot.Length);
+
+                    this.dispatcher.Invoke(
+                        () =>
+                            {
+                                EventHandler<SnapshotSpanEventArgs> temp = this.TagsChanged;
+                                if (temp != null)
+                                {
+                                    temp(this, new SnapshotSpanEventArgs(span));
+                                }
+                            });
+
+                    return;
+                }
+
+                IList<SnapshotSpan> dirtySpans = this.dirtySpansVar;
+                this.dirtySpansVar = new List<SnapshotSpan>();
+                this.sonarTags.Clear();
+
+                foreach (Issue issue in issuesInEditor)
+                {
+                    dirtySpans.Clear();
+                    ITextSnapshotLine textsnapshot = this.SourceBuffer.CurrentSnapshot.GetLineFromLineNumber(issue.Line);
+                    var newDirtySpan = new SnapshotSpan(this.SourceBuffer.CurrentSnapshot, textsnapshot.Start, textsnapshot.Length);
+                    dirtySpans.Add(newDirtySpan);
+
+                    ITextSnapshot snapshot = this.SourceBuffer.CurrentSnapshot;
+                    var dirty = new NormalizedSnapshotSpanCollection(dirtySpans.Select(span => span.TranslateTo(snapshot, SpanTrackingMode.EdgeInclusive)));
+
+                    if (dirty.Count == 0)
+                    {
+                        Debug.WriteLine("The list of dirty spans is empty when normalized, which shouldn't be possible.");
+                        return;
+                    }
+
+                    var currentSonarTag = new List<SonarTag>();
+                    var newSonarTag = new List<SonarTag>();
+
+                    var removed = currentSonarTag.RemoveAll(tag => tag.ToTagSpan(snapshot).Span.OverlapsWith(dirty[0]));
+                    newSonarTag.AddRange(this.GetSonarTagsInSpanForLine(issuesInEditor, issue.Line));
+
+                    removed += currentSonarTag.RemoveAll(tag => tag.ToTagSpan(snapshot).Span.IsEmpty);
+
+                    if (newSonarTag.Count != 0 || removed != 0)
+                    {
+                        currentSonarTag.AddRange(newSonarTag);
+
+                        this.dispatcher.Invoke(
+                            () =>
+                                {
+                                    this.sonarTags.AddRange(currentSonarTag);
+
+                                    var temp = this.TagsChanged;
+                                    if (temp != null)
+                                    {
+                                        temp(this, new SnapshotSpanEventArgs(dirty[0]));
+                                    }
+                                });
+                    }
+                }
             }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Failed To Update Issues: " + ex.Message + " : " + ex.StackTrace);
+            }
+        }
+
+        /// <summary>
+        /// The schedule update.
+        /// </summary>
+        private void ScheduleUpdate()
+        {
+            if (this.timer == null)
+            {
+                this.timer = new DispatcherTimer(DispatcherPriority.ApplicationIdle, this.dispatcher) { Interval = TimeSpan.FromMilliseconds(500) };
+
+                this.timer.Tick += (sender, args) =>
+                    {
+                        if (this.updateThread != null && this.updateThread.IsAlive)
+                        {
+                            return;
+                        }
+
+                        this.timer.Stop();
+
+                        this.updateThread = new Thread(this.UpdateDataAfterConstructor) { Name = "Spell Check", Priority = ThreadPriority.Normal };
+
+                        if (!this.updateThread.TrySetApartmentState(ApartmentState.STA))
+                        {
+                            Debug.Fail("Unable to set thread apartment state to STA, things *will* break.");
+                        }
+
+                        this.updateThread.Start();
+                    };
+            }
+
+            this.timer.Stop();
+            this.timer.Start();
+        }
+
+        /// <summary>
+        /// The update data after constructor.
+        /// </summary>
+        /// <param name="obj">
+        /// The obj.
+        /// </param>
+        private void UpdateDataAfterConstructor(object obj)
+        {
+            this.IssuesListChanged(obj, new PropertyChangedEventArgs("IssuesInEditor"));
         }
 
         #endregion

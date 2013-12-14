@@ -41,20 +41,6 @@ namespace VSSonarPlugins
         /// <param name="configuration">
         /// The configuration.
         /// </param>
-        /// <param name="resource">
-        /// The resource.
-        /// </param>
-        /// <returns>
-        /// The <see cref="IPlugin"/>.
-        /// </returns>
-        IPlugin GetPluginToRunResource(ConnectionConfiguration configuration, string resource);
-
-        /// <summary>
-        /// The get plugin to run resource.
-        /// </summary>
-        /// <param name="configuration">
-        /// The configuration.
-        /// </param>
         /// <param name="project">
         /// The project.
         /// </param>

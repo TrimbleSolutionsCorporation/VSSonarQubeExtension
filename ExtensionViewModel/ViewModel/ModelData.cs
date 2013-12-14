@@ -37,7 +37,7 @@ namespace ExtensionViewModel.ViewModel
         /// <summary>
         ///     The all source data.
         /// </summary>
-        private readonly Dictionary<string, Source> allSourceData;
+        private readonly Dictionary<string, Source> cachedServerSources;
 
         /// <summary>
         ///     The allissues date.
@@ -58,11 +58,6 @@ namespace ExtensionViewModel.ViewModel
         ///     The issues.
         /// </summary>
         private List<Issue> issues = new List<Issue>();
-
-        /// <summary>
-        ///     The issues in editor.
-        /// </summary>
-        private List<Issue> issuesInEditor = new List<Issue>();
 
         /// <summary>
         ///     The selected issue.
@@ -86,7 +81,7 @@ namespace ExtensionViewModel.ViewModel
         {
             this.allResourceData.Clear();
             this.allSourceCoverageData.Clear();
-            this.allSourceData.Clear();
+            this.cachedServerSources.Clear();
             this.cachedIssuesList.Clear();
             this.cachedIssuesListObs.Clear();
             this.OnPropertyChanged("CachedIssuesListObs");
