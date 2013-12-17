@@ -76,7 +76,7 @@ namespace ExtensionView
         private void IssuesDataGridSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var elems = this.IssuesDataGrid.SelectedItems;
-            this.dataModel.UpdateSelectedIssuesInView = elems;
+            this.dataModel.SelectedIssuesInView = elems;
         }
 
         /// <summary>

@@ -100,11 +100,6 @@ namespace ExtensionViewModel.Test
         {
             var model = new ExtensionDataModel(this.service, this.vshelper, null)
             {
-                Issues = new System.Collections.Generic.List<Issue>
-                                        {
-                                           new Issue { Status = "OPEN" },
-                                           new Issue { Status = "REOPENED" }
-                                        }
             };
 
             Assert.AreEqual(2, model.Issues.Count);
@@ -120,14 +115,9 @@ namespace ExtensionViewModel.Test
         {
             var model = new ExtensionDataModel(this.service, this.vshelper, null)
             {
-                Issues = new System.Collections.Generic.List<Issue>
-                                        {
-                                           new Issue { Status = "OPEN" },
-                                           new Issue { Status = "REOPENED" }
-                                        }
             };
 
-            Assert.AreEqual(2, model.IssuesInEditor.Count);
+            Assert.AreEqual(2, model.GetIssuesInEditor("file").Count);
             Assert.AreEqual(string.Empty, model.ErrorMessage);
         }
 
@@ -141,13 +131,8 @@ namespace ExtensionViewModel.Test
             issueWithComment.Comments.Add(new Comment());
             var model = new ExtensionDataModel(this.service, this.vshelper, null)
             {
-                Issues = new System.Collections.Generic.List<Issue>
-                                        {
-                                           issueWithComment,
-                                           new Issue { Status = "REOPENED" }
-                                        }
             };
-            model.RefreshView();
+            model.RefreshIssuesInViews();
             Assert.AreEqual(2, model.Issues.Count);
             Assert.AreEqual(1, model.Comments.Count);
             Assert.AreEqual("Number Of Issues: 2", model.StatsLabel);
@@ -163,11 +148,6 @@ namespace ExtensionViewModel.Test
 
             var model = new ExtensionDataModel(this.service, this.vshelper, null)
             {
-                Issues = new System.Collections.Generic.List<Issue>
-                                        {
-                                           issueWithId,
-                                           new Issue { Status = "REOPENED" }
-                                        }
             };
 
             model.SelectAIssueFromList(20);
@@ -184,11 +164,6 @@ namespace ExtensionViewModel.Test
 
             var model = new ExtensionDataModel(this.service, this.vshelper, null)
             {
-                Issues = new System.Collections.Generic.List<Issue>
-                                        {
-                                           issueWithId,
-                                           new Issue { Status = "REOPENED" }
-                                        }
             };
 
             model.SelectAIssueFromList(new Guid());
@@ -255,7 +230,6 @@ namespace ExtensionViewModel.Test
             Assert.AreEqual("ver", model.SonarInfo);
             Assert.AreEqual("MessageData", model.DiagnosticMessage);
             Assert.IsFalse(model.DisableEditorTags);
-            Assert.AreEqual("source", model.LastReferenceSource);
             Assert.AreEqual(connector, model.RestService);
             Assert.AreEqual(projectAsso, model.AssociatedProject);
         }

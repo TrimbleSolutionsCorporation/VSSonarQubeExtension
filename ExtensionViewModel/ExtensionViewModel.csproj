@@ -51,6 +51,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cache\EditorData.cs" />
+    <Compile Include="Cache\ModelEditorCache.cs" />
     <Compile Include="Commands\ClearCacheCommand.cs" />
     <Compile Include="Commands\AssociateCommand.cs" />
     <Compile Include="Commands\ConfirmIssueCommand.cs" />

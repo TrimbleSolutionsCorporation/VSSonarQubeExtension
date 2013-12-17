@@ -83,8 +83,7 @@ namespace ExtensionViewModel.Test
             {
                 var data = new ExtensionDataModel(this.service, this.vshelper, null);
                 var sourceCoverage = new SourceCoverage();
-                data.CoverageInEditor = sourceCoverage;
-                Assert.AreEqual(sourceCoverage, data.CoverageInEditor);
+                Assert.AreEqual(sourceCoverage, data.GetCoverageInEditor(""));
             }
 
             /// <summary>
@@ -95,12 +94,9 @@ namespace ExtensionViewModel.Test
             {
                 var data = new ExtensionDataModel(this.service, this.vshelper, null);
                 var sourceCoverage = new SourceCoverage();
-                data.CoverageInEditor = sourceCoverage;
-                data.EnableCoverageInEditor = false;
-                Assert.IsFalse(data.EnableCoverageInEditor);
-                Assert.AreNotEqual(sourceCoverage, data.CoverageInEditor);
-                Assert.AreEqual(0, data.CoverageInEditor.BranchHits.Count);
-                Assert.AreEqual(0, data.CoverageInEditor.LinesHits.Count);
+                data.CoverageInEditorEnabled = false;
+                Assert.IsFalse(data.CoverageInEditorEnabled);
+                Assert.AreNotEqual(sourceCoverage, data.GetCoverageInEditor(""));
             }
 
             /// <summary>
@@ -125,12 +121,10 @@ namespace ExtensionViewModel.Test
                     .Return(sourceCoverage);
                 element.Key = "resource";
                 data.ResourceInEditor = element;
-                data.EnableCoverageInEditor = true;
-                Assert.IsTrue(data.EnableCoverageInEditor);
-                Assert.AreEqual(sourceCoverage, data.CoverageInEditor);
+                data.CoverageInEditorEnabled = true;
+                Assert.IsTrue(data.CoverageInEditorEnabled);
+                Assert.AreEqual(sourceCoverage, data.GetCoverageInEditor(""));
                 Assert.AreEqual(element, data.ResourceInEditor);
-                Assert.AreEqual(0, data.CoverageInEditor.BranchHits.Count);
-                Assert.AreEqual(0, data.CoverageInEditor.LinesHits.Count);
             }
         }
     }

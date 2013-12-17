@@ -40,11 +40,6 @@ namespace VSSonarExtension.SmartTags.Squiggle
         public class SonarTaggerProvider : IViewTaggerProvider
         {
             /// <summary>
-            /// The all spelling tags.
-            /// </summary>
-            //public static readonly Dictionary<string, SonarTagger> AllSpellingTags = new Dictionary<string, SonarTagger>();
-
-            /// <summary>
             /// Gets or sets the service provider.
             /// </summary>
             [Import]
@@ -61,9 +56,6 @@ namespace VSSonarExtension.SmartTags.Squiggle
             /// </summary>
             [Import]
             internal ITextStructureNavigatorSelectorService TextStructureNavigatorSelector { get; set; }
-
-            //[Import]
-            //IBufferTagAggregatorFactoryService AggregatorFactory = null;
 
             /// <summary>
             /// The create tagger.
@@ -98,25 +90,7 @@ namespace VSSonarExtension.SmartTags.Squiggle
                     throw new InvalidOperationException("ServiceProvider has not been set.");
                 }
 
-                SonarTagger sonartaginstance;
-
-                var document = BufferTagger.GetPropertyFromBuffer<ITextDocument>(buffer);
-
-
                 return buffer.Properties.GetOrCreateSingletonProperty(() => new SonarTagger(buffer)) as ITagger<T>;
-                /*
-                if (!AllSpellingTags.ContainsKey(document.FilePath))
-                {
-                    sonartaginstance = new SonarTagger(buffer, true, document.FilePath);
-                    AllSpellingTags.Add(document.FilePath, sonartaginstance);                    
-                }
-                else
-                {
-                    sonartaginstance = new SonarTagger(buffer, false, document.FilePath);
-                }
-
-                return (ITagger<T>)buffer.Properties.GetOrCreateSingletonProperty(() => sonartaginstance);
-                 * */
             }
         }
     }

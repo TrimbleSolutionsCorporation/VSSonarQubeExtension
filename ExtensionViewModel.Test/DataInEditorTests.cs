@@ -103,7 +103,7 @@ namespace ExtensionViewModel.Test
             public void ErrorWhenOnPluginsAreInstalled()
             {
                 var data = new ExtensionDataModel(this.service, this.vshelper, null);
-                data.UpdateResourceInEditor(@"e:\test\src.cs");
+                data.RefreshDataForResource(@"e:\test\src.cs");
                 Assert.AreEqual("No Plugins installed", data.ErrorMessage);
                 Assert.IsNull(data.ResourceInEditor);
             }
@@ -117,9 +117,9 @@ namespace ExtensionViewModel.Test
                 var data = new ExtensionDataModel(this.service, this.vshelper, null);
                 data.UpdateIssuesInEditorLocationWithModifiedBuffer("data");                
                 Assert.AreEqual(string.Empty, data.ErrorMessage);
-                Assert.AreEqual(0, data.IssuesInEditor.Count);
+                Assert.AreEqual(0, data.GetIssuesInEditor("file").Count);
                 data.UpdateIssuesInEditorLocationWithModifiedBuffer("data");
-                Assert.AreEqual(0, data.IssuesInEditor.Count);
+                Assert.AreEqual(0, data.GetIssuesInEditor("file").Count);
                 Assert.IsNull(data.ResourceInEditor);
             }
 
@@ -132,12 +132,11 @@ namespace ExtensionViewModel.Test
                 var data = new ExtensionDataModel(this.service, this.vshelper, null)
                                {
                                    AssociatedProject = new Resource(),
-                                   Issues = new List<Issue> { new Issue(), new Issue() }                                   
                                };
 
                 data.UpdateIssuesInEditorLocationWithModifiedBuffer("data");
                 Assert.AreEqual("Error Updating Locations Off Issues", data.ErrorMessage);
-                Assert.AreEqual(0, data.IssuesInEditor.Count);
+                Assert.AreEqual(0, data.GetIssuesInEditor("file"));
             }
 
             /// <summary>
@@ -177,9 +176,9 @@ namespace ExtensionViewModel.Test
 
                 var data = new ExtensionDataModel(this.service, this.vshelper, null);
                 data.AssociatedProject = new Resource { Key = "KEY"};
-                data.UpdateDataInEditor("c:\\src\\file.cpp", "#include xpto;\r\n#include ypto;");
+                data.RefreshDataForResource("c:\\src\\file.cpp");
                 Assert.AreEqual("Extension Not Ready", data.ErrorMessage);
-                Assert.AreEqual(0, data.IssuesInEditor.Count);
+                Assert.AreEqual(0, data.GetIssuesInEditor("file").Count);
             }
 
             /// <summary>
@@ -231,12 +230,12 @@ namespace ExtensionViewModel.Test
                 data.PluginRunningAnalysis = this.plugin;
                 data.AnalysisTrigger = true;
                 data.AssociatedProject = new Resource { Key = "KEY", Lname = "file.cpp"};
-                data.UpdateDataInEditor("c:\\src\\file.cpp", "#include xpto;\r\n#include ypto;");
+                data.RefreshDataForResource("c:\\src\\file.cpp");
                 Assert.AreEqual(string.Empty, data.ErrorMessage);
-                Assert.AreEqual(2, data.IssuesInEditor.Count);
+                Assert.AreEqual(2, data.GetIssuesInEditor("file").Count);
                 data.UpdateIssuesInEditorLocationWithModifiedBuffer("#include xpto;\r\n#include ypto;");
                 Assert.AreEqual(string.Empty, data.ErrorMessage);
-                Assert.AreEqual(2, data.IssuesInEditor.Count);
+                Assert.AreEqual(2, data.GetIssuesInEditor("file").Count);
             }
         }
     }

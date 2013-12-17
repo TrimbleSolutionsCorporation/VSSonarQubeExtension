@@ -59,8 +59,7 @@
             <Label Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}"  x:Name="DisplayStatsLabel" Content="{Binding StatsLabel}" Grid.Column="1" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}"/>
             <Label Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}"  x:Name="SonarInfoLabel" Content="{Binding SonarInfo}" Grid.Column="2" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}"/>
             <Label Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}"  x:Name="AssociationLabel" Grid.Column="4" Content="{Binding AssociatedProjectKey}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}"/>
-        </Grid>
-        <ComboBox Width="Auto" x:Name="CachedElements" Grid.Row="0" Grid.Column="1" SelectedItem="{Binding SelectedCachedElement, Mode=TwoWay}" ItemsSource="{Binding CachedIssuesListObs}" Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" BorderBrush="Transparent" Margin="0,-2,0,2" FocusVisualStyle="{DynamicResource DropBoxFocusVisualStyle}"/>
+        </Grid>        
         <Grid x:Name="CentralGrid" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0"
 			d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}">
             <Grid.ColumnDefinitions>
@@ -152,26 +151,33 @@
                             <Button Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="Clear Cache" Grid.Row="2" Grid.Column="1" Template="{DynamicResource SquareButtonTemplate}" Command="{Binding ClearCacheCommand}" />
                         </Grid>
                     </Expander>
-                    <Expander Header="Analysis" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}">
-                        <Grid Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Height="80" Margin="20,0,0,0">
+                    <Expander IsEnabled="{Binding IsSolutionOpen}" Header="Analysis" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}">
+                        <Grid Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Height="130" Margin="20,0,0,0">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="20"/>
                                 <RowDefinition Height="20"/>
                                 <RowDefinition Height="20"/>
                                 <RowDefinition Height="20"/>
+								<RowDefinition Height="10"/>
+								<RowDefinition Height="20"/>								
+								<RowDefinition Height="20"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="96"/>
+                                <ColumnDefinition Width="80"/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
+							<Label Grid.Row="5" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="Coverage" Style="{DynamicResource StyleOfLabels}"/>
+							<Label Grid.Row="6" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="Source" Style="{DynamicResource StyleOfLabels}"/>
                             <Label Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="Mode" Style="{DynamicResource StyleOfLabels}"/>
                             <Label Grid.Row="1" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="Type" Style="{DynamicResource StyleOfLabels}"/>
-                            <Label Grid.Row="2" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="New Issues" Style="{DynamicResource StyleOfLabels}"/>
+                            <Label IsEnabled="{Binding IsIssuesInModifiedLinesEnabled}" Grid.Row="2" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="New Issues" Style="{DynamicResource StyleOfLabels}"/>
                             <ToggleButton Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="{Binding AnalysisModeText}" IsChecked="{Binding AnalysisMode}" Grid.Row="0" Grid.Column="1" Template="{DynamicResource SquareToggleButtonTemplate}" />
                             <ToggleButton Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="{Binding AnalysisTypeText}" IsChecked="{Binding AnalysisType}" Grid.Row="1" Grid.Column="1" Template="{DynamicResource SquareToggleButtonTemplate}" />
-                            <ToggleButton ToolTip="If yes, issues will be reported in modified lines only" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="{Binding AnalysisChangeLinesText}" IsChecked="{Binding AnalysisChangeLines}" Grid.Row="1" Grid.Column="1" Template="{DynamicResource SquareToggleButtonTemplate}" Margin="0,19.107,0,0.893" Grid.RowSpan="2" />
+                            <ToggleButton IsEnabled="{Binding IsIssuesInModifiedLinesEnabled}" ToolTip="If yes, issues will be reported in modified lines only" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="{Binding AnalysisChangeLinesText}" IsChecked="{Binding AnalysisChangeLines}" Grid.Row="1" Grid.Column="1" Template="{DynamicResource SquareToggleButtonTemplate}" Margin="0,19.107,0,0.893" Grid.RowSpan="2" />
                             <ToggleButton Grid.Row="3" Grid.Column="1" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="{Binding AnalysisTriggerText}" IsChecked="{Binding AnalysisTrigger}" Template="{DynamicResource SquareToggleButtonTemplate}" />
                             <ToggleButton Grid.Row="3" Grid.Column="0" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" IsChecked="{Binding ElementName=pup, Path=IsOpen}" Content="Show Log" Template="{DynamicResource SquareToggleButtonTemplate}" />
+							<ToggleButton Grid.Row="5" Grid.Column="1" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" IsChecked="{Binding IsCoverageOn}" Content="{Binding CoverageIsOnText}" Template="{DynamicResource SquareToggleButtonTemplate}" />
+							<ToggleButton Grid.Row="6" Grid.Column="1" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" IsChecked="{Binding IsSourceDiffOn}" Content="Display Diff" Template="{DynamicResource SquareToggleButtonTemplate}" />
                         </Grid>
                     </Expander>
 

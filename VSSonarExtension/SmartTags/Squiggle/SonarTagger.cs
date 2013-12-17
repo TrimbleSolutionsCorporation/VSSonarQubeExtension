@@ -135,81 +135,6 @@ namespace VSSonarExtension.SmartTags.Squiggle
             GC.SuppressFinalize(this);
         }
 
-        /*
-        IEnumerable<ITagSpan<SonarTag>> ITagger<SonarTag>.GetTags(NormalizedSnapshotSpanCollection spans)
-        {
-            var issuesInEditor = VsSonarExtensionPackage.ExtensionModelData.IssuesInEditor;
-
-            if (spans.Count == 0 || issuesInEditor.Count == 0 || VsSonarExtensionPackage.ExtensionModelData.DisableEditorTags)
-            {
-                yield break;
-            }
-
-            var issuesPerLine = new List<Issue>();
-
-            var currline = issuesInEditor[0].Line;
-            var prevline = currline;
-
-            foreach (var issue in issuesInEditor)
-            {
-                currline = issue.Line;
-
-                if (currline != prevline)
-                {
-                    var lineToUseinVs = prevline - 1;
-                    if (lineToUseinVs < 0)
-                    {
-                        lineToUseinVs = 0;
-                    }
-
-                    ITextSnapshotLine textsnapshot;
-
-                    try
-                    {
-                        textsnapshot = this.SourceBuffer.CurrentSnapshot.GetLineFromLineNumber(lineToUseinVs);
-                    }
-                    catch (Exception)
-                    {
-                        yield break;
-                    }
-
-                    //var span = new SnapshotSpan(this.SourceBuffer.CurrentSnapshot, textsnapshot.Start, textsnapshot.Length);
-                    var issuesToSpan = issuesPerLine;
-                    issuesPerLine = new List<Issue>();
-
-                    var mappedSpan = new SnapshotSpan(this.SourceBuffer.CurrentSnapshot, textsnapshot.Start, textsnapshot.Length);
-
-                    yield return new TagSpan<SonarTag>(mappedSpan, new SonarTag(issuesToSpan, mappedSpan));
-                }
-
-                issuesPerLine.Add(issue);
-                prevline = currline;
-            }
-
-            var lastlineToUseinVs = prevline - 1;
-            if (lastlineToUseinVs < 0)
-            {
-                lastlineToUseinVs = 0;
-            }
-
-            ITextSnapshotLine lasttextsnapshot;
-
-            try
-            {
-                lasttextsnapshot = this.SourceBuffer.CurrentSnapshot.GetLineFromLineNumber(lastlineToUseinVs);
-            }
-            catch (Exception)
-            {
-                yield break;
-            }
-
-            var lastspan = new SnapshotSpan(
-                this.SourceBuffer.CurrentSnapshot, lasttextsnapshot.Start, lasttextsnapshot.Length);
-            yield return
-                new TagSpan<SonarTag>(new SnapshotSpan(lastspan.Start, lastspan.Length), new SonarTag(issuesPerLine, lastspan));
-        }
-        */
-
         /// <summary>
         /// The get tags.
         /// </summary>
@@ -225,9 +150,7 @@ namespace VSSonarExtension.SmartTags.Squiggle
         /// </returns>
         public IEnumerable<ITagSpan<SonarTag>> GetTags(NormalizedSnapshotSpanCollection spans)
         {
-            List<Issue> issuesInEditor = VsSonarExtensionPackage.ExtensionModelData.IssuesInEditor;
-
-            if (spans.Count == 0 || issuesInEditor.Count == 0 || VsSonarExtensionPackage.ExtensionModelData.DisableEditorTags)
+            if (spans.Count == 0 || !VsSonarExtensionPackage.ExtensionModelData.UpdateTagsInEditor)
             {
                 yield break;
             }
@@ -237,27 +160,22 @@ namespace VSSonarExtension.SmartTags.Squiggle
                 yield break;
             }
 
-            List<SonarTag> tags = this.sonarTags;
-
-            if (tags.Count == 0)
+            if (this.sonarTags.Count == 0)
             {
                 yield break;
             }
 
-            ITextSnapshot snapshot = spans[0].Snapshot;
+            var snapshot = spans[0].Snapshot;
 
-            foreach (SonarTag tag in tags)
+            foreach (var tag in this.sonarTags)
             {
-                ITagSpan<SonarTag> tagSpan = tag.ToTagSpan(snapshot);
+                var tagSpan = tag.ToTagSpan(snapshot);
                 if (tagSpan.Span.Length == 0)
                 {
                     continue;
                 }
-
-                if (spans.IntersectsWith(new NormalizedSnapshotSpanCollection(tagSpan.Span)))
-                {
-                    yield return tagSpan;
-                }
+                
+                yield return tagSpan;
             }
         }
 
@@ -353,83 +271,65 @@ namespace VSSonarExtension.SmartTags.Squiggle
                     return;
                 }
 
-                var document = BufferTagger.GetPropertyFromBuffer<ITextDocument>(this.SourceBuffer);
-                Resource resource = VsSonarExtensionPackage.ExtensionModelData.ResourceInEditor;
+                var document = VsEvents.GetPropertyFromBuffer<ITextDocument>(this.SourceBuffer);
+                var resource = VsSonarExtensionPackage.ExtensionModelData.ResourceInEditor;
+
+                if (resource == null)
+                {
+                    return;
+                }
 
                 if (!document.FilePath.Replace('\\', '/').EndsWith(resource.Lname, StringComparison.OrdinalIgnoreCase))
                 {
                     return;
                 }
 
-                List<Issue> issuesInEditor = VsSonarExtensionPackage.ExtensionModelData.IssuesInEditor;
+                var issuesInEditor = VsSonarExtensionPackage.ExtensionModelData.GetIssuesInEditor(this.SourceBuffer.CurrentSnapshot.GetText());
+                this.sonarTags.Clear();
 
                 if (issuesInEditor.Count == 0)
                 {
-                    var span = new SnapshotSpan(this.SourceBuffer.CurrentSnapshot, 0, this.SourceBuffer.CurrentSnapshot.Length);
-
-                    this.dispatcher.Invoke(
-                        () =>
-                            {
-                                EventHandler<SnapshotSpanEventArgs> temp = this.TagsChanged;
-                                if (temp != null)
-                                {
-                                    temp(this, new SnapshotSpanEventArgs(span));
-                                }
-                            });
-
+                    this.RefreshTags();
                     return;
                 }
 
-                IList<SnapshotSpan> dirtySpans = this.dirtySpansVar;
-                this.dirtySpansVar = new List<SnapshotSpan>();
-                this.sonarTags.Clear();
-
-                foreach (Issue issue in issuesInEditor)
+                var alreadyAddLine = new Dictionary<int, string>();
+                foreach (var issue in issuesInEditor)
                 {
-                    dirtySpans.Clear();
-                    ITextSnapshotLine textsnapshot = this.SourceBuffer.CurrentSnapshot.GetLineFromLineNumber(issue.Line);
-                    var newDirtySpan = new SnapshotSpan(this.SourceBuffer.CurrentSnapshot, textsnapshot.Start, textsnapshot.Length);
-                    dirtySpans.Add(newDirtySpan);
-
-                    ITextSnapshot snapshot = this.SourceBuffer.CurrentSnapshot;
-                    var dirty = new NormalizedSnapshotSpanCollection(dirtySpans.Select(span => span.TranslateTo(snapshot, SpanTrackingMode.EdgeInclusive)));
-
-                    if (dirty.Count == 0)
+                    if (alreadyAddLine.ContainsKey(issue.Line))
                     {
-                        Debug.WriteLine("The list of dirty spans is empty when normalized, which shouldn't be possible.");
-                        return;
+                        continue;
                     }
 
-                    var currentSonarTag = new List<SonarTag>();
-                    var newSonarTag = new List<SonarTag>();
-
-                    var removed = currentSonarTag.RemoveAll(tag => tag.ToTagSpan(snapshot).Span.OverlapsWith(dirty[0]));
-                    newSonarTag.AddRange(this.GetSonarTagsInSpanForLine(issuesInEditor, issue.Line));
-
-                    removed += currentSonarTag.RemoveAll(tag => tag.ToTagSpan(snapshot).Span.IsEmpty);
-
-                    if (newSonarTag.Count != 0 || removed != 0)
-                    {
-                        currentSonarTag.AddRange(newSonarTag);
-
-                        this.dispatcher.Invoke(
-                            () =>
-                                {
-                                    this.sonarTags.AddRange(currentSonarTag);
-
-                                    var temp = this.TagsChanged;
-                                    if (temp != null)
-                                    {
-                                        temp(this, new SnapshotSpanEventArgs(dirty[0]));
-                                    }
-                                });
-                    }
+                    alreadyAddLine.Add(issue.Line, string.Empty);
+                    this.sonarTags.AddRange(this.GetSonarTagsInSpanForLine(issuesInEditor, issue.Line));
                 }
+
+                this.RefreshTags();
             }
             catch (Exception ex)
             {
                 Debug.WriteLine("Failed To Update Issues: " + ex.Message + " : " + ex.StackTrace);
             }
+        }
+
+        /// <summary>
+        /// The refresh tags.
+        /// </summary>
+        private void RefreshTags()
+        {
+            this.dispatcher.Invoke(
+            () =>
+            {
+                var tempEvent = this.TagsChanged;
+                if (tempEvent != null)
+                {
+                    tempEvent(
+                        this,
+                        new SnapshotSpanEventArgs(
+                            new SnapshotSpan(this.SourceBuffer.CurrentSnapshot, 0, this.SourceBuffer.CurrentSnapshot.Length)));
+                }
+            });
         }
 
         /// <summary>

@@ -77,7 +77,7 @@ namespace ExtensionViewModel.Test
         {
             var data = new ExtensionDataModel(this.service, this.vshelper, null)
                            {
-                               UpdateSelectedIssuesInView =
+                               SelectedIssuesInView =
                                    new List<Issue>
                                        {
                                            new Issue { Status = "OPEN" },
@@ -103,7 +103,7 @@ namespace ExtensionViewModel.Test
         {
             var data = new ExtensionDataModel(this.service, this.vshelper, null)
             {
-                UpdateSelectedIssuesInView =
+                SelectedIssuesInView =
                     new List<Issue>
                                        {
                                            new Issue { Status = "OPEN" },
@@ -130,7 +130,7 @@ namespace ExtensionViewModel.Test
         {
             var data = new ExtensionDataModel(this.service, this.vshelper, null)
             {
-                UpdateSelectedIssuesInView =
+                SelectedIssuesInView =
                     new List<Issue>
                                        {
                                            new Issue { Status = "CLOSED" }
@@ -155,7 +155,7 @@ namespace ExtensionViewModel.Test
         {
             var data = new ExtensionDataModel(this.service, this.vshelper, null)
             {
-                UpdateSelectedIssuesInView =
+                SelectedIssuesInView =
                     new List<Issue>
                                        {
                                            new Issue { Status = "RESOLVED" }
@@ -184,7 +184,7 @@ namespace ExtensionViewModel.Test
         {
             var data = new ExtensionDataModel(this.service, this.vshelper, null)
             {
-                UpdateSelectedIssuesInView =
+                SelectedIssuesInView =
                     new List<Issue>
                                        {
                                            new Issue { Status = null }
@@ -204,7 +204,7 @@ namespace ExtensionViewModel.Test
             var lenthTextCrl = data.UserTextControlsHeight;
             Assert.AreEqual(0.0, lenthTextCrl.Value);
             Assert.AreEqual(0.0, lentthCrl.Value);
-            Assert.AreEqual(1, data.UpdateSelectedIssuesInView.Count);
+            Assert.AreEqual(1, data.SelectedIssuesInView.Count);
         }
     }
 }

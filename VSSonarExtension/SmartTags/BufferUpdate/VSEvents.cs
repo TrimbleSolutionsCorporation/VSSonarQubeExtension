@@ -15,14 +15,22 @@
 namespace VSSonarExtension.SmartTags.BufferUpdate
 {
     using System;
+    using System.Linq;
+    using System.Windows;
 
     using EnvDTE;
 
     using ExtensionHelpers;
 
+    using ExtensionTypes;
+
     using ExtensionViewModel.ViewModel;
 
+    using Microsoft.VisualStudio.Text;
+
     using VSSonarExtension.PackageImplementation;
+
+    using Window = EnvDTE.Window;
 
     /// <summary>
     /// The vs events.
@@ -93,7 +101,7 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
 
             try
             {
-                VsSonarExtensionPackage.ExtensionModelData.UpdateDataInEditor(document.FullName, text);
+                this.model.RefreshDataForResource(document.FullName);
             }
             catch (Exception ex)
             {
@@ -103,11 +111,37 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
         }
 
         /// <summary>
+        /// The validate project key.
+        /// </summary>
+        /// <returns>
+        /// The System.String.
+        /// </returns>
+        public static Resource AssociateSolutionWithSonarProject()
+        {
+            var vsinter = VsSonarExtensionPackage.ExtensionModelData.Vsenvironmenthelper;
+            var restService = VsSonarExtensionPackage.ExtensionModelData.RestService;
+            var conf = ConnectionConfigurationHelpers.GetConnectionConfiguration(vsinter, restService);
+            var solutionName = vsinter.ActiveSolutionName();
+            var key = vsinter.ReadOptionFromApplicationData(solutionName, "PROJECTKEY");
+
+            if (!string.IsNullOrEmpty(key))
+            {
+                return restService.GetResourcesData(conf, key)[0];
+            }
+
+            var solutionPath = vsinter.ActiveSolutionPath();
+            key = VsSonarUtils.GetProjectKey(solutionPath);
+            vsinter.WriteOptionInApplicationData(solutionName, "PROJECTKEY", key);
+
+            return string.IsNullOrEmpty(key) ? null : restService.GetResourcesData(conf, key)[0];
+        }
+
+        /// <summary>
         /// The solution opened.
         /// </summary>
         private void SolutionOpened()
         {
-            this.model.AssociateProjectToSolution(BufferTagger.AssociateSolutionWithSonarProject());
+            this.model.AssociateProjectToSolution(AssociateSolutionWithSonarProject());
 
             var text = this.environment.GetCurrentTextInView();
             if (string.IsNullOrEmpty(text))
@@ -116,8 +150,28 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
             }
 
             var fileName = this.environment.ActiveFileFullPath();
-            this.model.UpdateDataInEditor(fileName, text);
+            this.model.RefreshDataForResource(fileName);
         }
+
+        public static T GetPropertyFromBuffer<T>(ITextBuffer buffer)
+        {
+            try
+            {
+                foreach (var item in buffer.Properties.PropertyList.Where(item => item.Value is T))
+                {
+                    return (T)item.Value;
+                }
+            }
+            catch (Exception ex)
+            {
+                VsSonarExtensionPackage.ExtensionModelData.ErrorMessage = "Something Terrible Happen";
+                VsSonarExtensionPackage.ExtensionModelData.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
+            }
+
+            return default(T);
+        }
+
+
 
         /// <summary>
         /// The solution closed.
@@ -157,7 +211,7 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
             try
             {
                 this.LastDocumentWindowWithFocus = gotFocus;
-                this.model.UpdateDataInEditor(gotFocus.Document.FullName, text);
+                this.model.RefreshDataForResource(gotFocus.Document.FullName);
             }
             catch (Exception ex)
             {

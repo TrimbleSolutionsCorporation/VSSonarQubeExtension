@@ -68,57 +68,6 @@ namespace ExtensionViewModel.Test
         /// The test loading of window.
         /// </summary>
         [Test]
-        public void UpdateIssueDataForResourceEmtpyDataTest()
-        {
-            var element = new Resource { Date = new DateTime(2000, 1, 1) };
-
-            this.service.Expect(
-                mp => mp.GetResourcesData(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource")))
-                .Return(new List<Resource> { element })
-                .Repeat.Once();
-            this.service.Expect(
-                mp => mp.GetIssuesInResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource"), Arg<bool>.Is.Anything))
-                .Return(new List<Issue> { new Issue() });
-
-            var data = new ExtensionDataModel(this.service, this.vshelper, null);
-            Assert.AreEqual(1, data.UpdateIssueDataForResource("resource").Count);
-            Assert.AreEqual("resource", data.SelectedCachedElement);
-        }
-
-        /// <summary>
-        /// The test loading of window.
-        /// </summary>
-        [Test]
-        public void UpdateIssueDataForResourceWithNewDateDataTest()
-        {
-            var element = new Resource();
-            var newResource = new Resource { Date = DateTime.Now };
-
-            this.service.Expect(
-                mp => mp.GetResourcesData(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource")))
-                .Return(new List<Resource> { element })
-                .Repeat.Once();
-            this.service.Expect(
-                mp => mp.GetResourcesData(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource")))
-                .Return(new List<Resource> { newResource });
-
-            this.service.Expect(
-                mp => mp.GetIssuesInResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource"), Arg<bool>.Is.Anything))
-                .Return(new List<Issue> { new Issue() })
-                .Repeat.Once();
-            this.service.Expect(
-                mp => mp.GetIssuesInResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource"), Arg<bool>.Is.Anything))
-                .Return(new List<Issue> { new Issue(), new Issue() });
-
-            var data = new ExtensionDataModel(this.service, this.vshelper, null);
-            Assert.AreEqual(1, data.UpdateIssueDataForResource("resource").Count);
-            Assert.AreEqual(2, data.UpdateIssueDataForResource("resource").Count);
-        }
-
-        /// <summary>
-        /// The test loading of window.
-        /// </summary>
-        [Test]
         public void UpdateIssueDataForResourceWithNewDateDataTestWithCache()
         {
             var element = new Resource();
@@ -148,130 +97,8 @@ namespace ExtensionViewModel.Test
                 .Return(new List<Issue> { new Issue() });
 
             var data = new ExtensionDataModel(this.service, this.vshelper, null);
-            Assert.AreEqual(1, data.UpdateIssueDataForResource("resource").Count);
-            Assert.AreEqual(2, data.UpdateIssueDataForResource("resource").Count);
-            Assert.AreEqual(2, data.UpdateIssueDataForResource("resource").Count);
-            Assert.AreEqual(1, data.UpdateIssueDataForResource("resource1").Count);
-            Assert.AreEqual("resource1", data.SelectedCachedElement);
-            data.SelectedCachedElement = "resource1";
-            Assert.AreEqual(1, data.Issues.Count);
-            data.SelectedCachedElement = "resource";
-            Assert.AreEqual(2, data.Issues.Count);
-            Assert.AreEqual("resource", data.SelectedCachedElement);
-        }
-
-        /// <summary>
-        /// The test loading of window.
-        /// </summary>
-        [Test]
-        public void UpdateResourceDataForResourceEmtpyDataTest()
-        {
-            var element = new Resource { Date = new DateTime(2000, 1, 1) };
-
-            this.service.Expect(
-                mp => mp.GetResourcesData(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource")))
-                .Return(new List<Resource> { element })
-                .Repeat.Once();
-
-            var data = new ExtensionDataModel(this.service, this.vshelper, null);
-            Assert.AreEqual(element, data.UpdateDataForResource("resource"));
-        }
-
-        /// <summary>
-        /// The test loading of window.
-        /// </summary>
-        [Test]
-        public void UpdateResourceDataForResourceWithNewDateDataTest()
-        {
-            var element = new Resource();
-            var newResource = new Resource { Date = DateTime.Now };
-
-            this.service.Expect(
-                mp => mp.GetResourcesData(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource")))
-                .Return(new List<Resource> { element })
-                .Repeat.Once();
-            this.service.Expect(
-                mp => mp.GetResourcesData(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource")))
-                .Return(new List<Resource> { newResource });
-
-            var data = new ExtensionDataModel(this.service, this.vshelper, null);
-            Assert.AreEqual(element, data.UpdateDataForResource("resource"));
-            Assert.AreEqual(newResource, data.UpdateDataForResource("resource"));
-            Assert.AreEqual(newResource, data.UpdateDataForResource("resource"));
-        }
-
-        /// <summary>
-        /// The test loading of window.
-        /// </summary>
-        [Test]
-        public void UpdateSourceDataForResourceEmtpyDataTest()
-        {
-            var element = new Resource { Date = new DateTime(2000, 1, 1) };
-            var source = new Source();
-
-            this.service.Expect(
-                mp => mp.GetResourcesData(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource")))
-                .Return(new List<Resource> { element })
-                .Repeat.Once();
-            this.service.Expect(
-                mp => mp.GetSourceForFileResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource")))
-                .Return(source);
-
-            var data = new ExtensionDataModel(this.service, this.vshelper, null);
-            Assert.AreEqual(source, data.UpdateSourceDataForResource("resource", false));
-        }
-
-        /// <summary>
-        /// The test loading of window.
-        /// </summary>
-        [Test]
-        public void UpdateSourceDataForResourceWithNewDateDataTest()
-        {
-            var element = new Resource();
-            var newResource = new Resource { Date = DateTime.Now };
-            var source1 = new Source();
-            var source2 = new Source();
-
-            this.service.Expect(
-                mp => mp.GetResourcesData(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource")))
-                .Return(new List<Resource> { element })
-                .Repeat.Once();
-            this.service.Expect(
-                mp => mp.GetResourcesData(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource")))
-                .Return(new List<Resource> { newResource });
-
-            this.service.Expect(
-                mp => mp.GetSourceForFileResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource")))
-                .Return(source1)
-                .Repeat.Once();
-            this.service.Expect(
-                mp => mp.GetSourceForFileResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource")))
-                .Return(source2);
-
-            var data = new ExtensionDataModel(this.service, this.vshelper, null);
-            Assert.AreEqual(source1, data.UpdateSourceDataForResource("resource", false));
-            Assert.AreEqual(source2, data.UpdateSourceDataForResource("resource", false));
-        }
-
-        /// <summary>
-        /// The test loading of window.
-        /// </summary>
-        [Test]
-        public void UpdateCoverageDataForResourceEmtpyDataTest()
-        {
-            var element = new Resource { Date = new DateTime(2000, 1, 1) };
-            var source = new SourceCoverage();
-
-            this.service.Expect(
-                mp => mp.GetResourcesData(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource")))
-                .Return(new List<Resource> { element })
-                .Repeat.Once();
-            this.service.Expect(
-                mp => mp.GetCoverageInResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource")))
-                .Return(source);
-
-            var data = new ExtensionDataModel(this.service, this.vshelper, null);
-            Assert.AreEqual(source, data.UpdateCoverageDataForResource("resource", false));
+            data.RefreshDataForResource("resource");
+            Assert.AreEqual(1, data.GetIssuesInEditor("alksjdlakjs").Count);
         }
 
         /// <summary>
@@ -304,9 +131,9 @@ namespace ExtensionViewModel.Test
                 .Return(source2);
 
             var data = new ExtensionDataModel(this.service, this.vshelper, null);
-            data.EnableCoverageInEditor = true;
-            Assert.AreEqual(source1, data.UpdateCoverageDataForResource("resource", false));
-            Assert.AreEqual(source2, data.UpdateCoverageDataForResource("resource", false));
+            data.CoverageInEditorEnabled = true;
+            data.RefreshDataForResource("resource");
+            Assert.AreEqual(source1, data.GetCoverageInEditor("resource"));
         }
     }
 }

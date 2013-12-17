@@ -46,6 +46,9 @@ namespace ExtensionViewModel.ViewModel
         /// </summary>
         private string selectedPluginItem;
 
+        /// <summary>
+        /// The open solution.
+        /// </summary>
         private Resource openSolution;
 
         /// <summary>

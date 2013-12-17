@@ -525,9 +525,13 @@
     </ViewModel:ExtensionDataModel.AnalysisTypeText>
 
     <ViewModel:ExtensionDataModel.AnalysisTriggerText>
-        <System:String>Execute</System:String>
+        <System:String>Start</System:String>
     </ViewModel:ExtensionDataModel.AnalysisTriggerText>
 
+    <ViewModel:ExtensionDataModel.CoverageIsOnText>
+        <System:String>Turn On</System:String>
+    </ViewModel:ExtensionDataModel.CoverageIsOnText>
+    
     <ViewModel:ExtensionDataModel.AnalysisChangeLinesText>
         <System:String>Yes</System:String>
     </ViewModel:ExtensionDataModel.AnalysisChangeLinesText>

@@ -20,29 +20,9 @@ namespace VSSonarExtension.VSControls
     public static class PkgCmdIdList
     {
         /// <summary>
-        /// The cmdid coverage command.
-        /// </summary>
-        public const uint CmdidCoverageCommand = 0x120;
-
-        /// <summary>
-        /// The cmdid source diff command.
-        /// </summary>
-        public const uint CmdidSourceDiffCommand = 0x130;
-
-        /// <summary>
         /// The cmdid reviews command.
         /// </summary>
         public const uint CmdidReviewsCommand = 0x145;
-
-        /// <summary>
-        /// The cmdid my command.
-        /// </summary>
-        public const uint ToolBarReportCoverage = 0x180;
-
-        /// <summary>
-        /// The cmdid my command.
-        /// </summary>
-        public const uint ToolBarReportSource = 0x190;
 
         /// <summary>
         /// The cmdid my command.

@@ -132,56 +132,6 @@ namespace VSSonarExtension.PackageImplementation
         }
 
         /// <summary>
-        /// The get coverage menu item callback.
-        /// </summary>
-        /// <param name="sender">
-        /// The sender.
-        /// </param>
-        /// <param name="e">
-        /// The e.
-        /// </param>
-        private void CallbackGetCoverageMenuItem(object sender, EventArgs e)
-        {
-            if (sender == null)
-            {
-                return;
-            }
-
-            var command = sender as OleMenuCommand;
-            if (command == null)
-            {
-                return;
-            }
-
-            if (command.Checked)
-            {
-                this.sonarCoverageMenuCommand.Checked = false;
-                this.sonarCoverageCommandBar.Checked = false;
-                ExtensionModelData.EnableCoverageInEditor = false;
-            }
-            else
-            {
-                this.sonarCoverageMenuCommand.Checked = true;
-                this.sonarCoverageCommandBar.Checked = true;
-                (new Thread(() => { ExtensionModelData.EnableCoverageInEditor = true; })).Start();
-            }
-        }
-
-        /// <summary>
-        /// The get source diff menu item callback.
-        /// </summary>
-        /// <param name="sender">
-        /// The sender.
-        /// </param>
-        /// <param name="e">
-        /// The e.
-        /// </param>
-        private void CallbackGetSourceDiffMenuItem(object sender, EventArgs e)
-        {
-            ExtensionModelData.DisplayDiferenceToServerSource();
-        }
-
-        /// <summary>
         ///     The init general options.
         /// </summary>
         private void InitGeneralOptions()
@@ -232,26 +182,10 @@ namespace VSSonarExtension.PackageImplementation
                 return;
             }
 
-            var menuCommandId = new CommandID(GuidList.GuidVSSonarExtensionCmdSet, (int)PkgCmdIdList.CmdidCoverageCommand);
-            this.sonarCoverageMenuCommand = new OleMenuCommand(this.CallbackGetCoverageMenuItem, menuCommandId);
-            mcs.AddCommand(this.sonarCoverageMenuCommand);
 
-            menuCommandId = new CommandID(GuidList.GuidVSSonarExtensionCmdSet, (int)PkgCmdIdList.CmdidSourceDiffCommand);
-            this.sonarSourceDiffMenuCommand = new OleMenuCommand(this.CallbackGetSourceDiffMenuItem, menuCommandId);
-            mcs.AddCommand(this.sonarSourceDiffMenuCommand);
-
-            menuCommandId = new CommandID(GuidList.GuidVSSonarExtensionCmdSet, (int)PkgCmdIdList.CmdidReviewsCommand);
+            var menuCommandId = new CommandID(GuidList.GuidVSSonarExtensionCmdSet, (int)PkgCmdIdList.CmdidReviewsCommand);
             this.sonarReviewsCommand = new OleMenuCommand(this.ShowIssuesToolWindow, menuCommandId);
             mcs.AddCommand(this.sonarReviewsCommand);
-
-            menuCommandId = new CommandID(
-                GuidList.GuidShowInitialToolbarCmdSet, (int)PkgCmdIdList.ToolBarReportCoverage);
-            this.sonarCoverageCommandBar = new OleMenuCommand(this.CallbackGetCoverageMenuItem, menuCommandId);
-            mcs.AddCommand(this.sonarCoverageCommandBar);
-
-            menuCommandId = new CommandID(GuidList.GuidShowInitialToolbarCmdSet, (int)PkgCmdIdList.ToolBarReportSource);
-            this.sonarSourceDiffCommandBar = new OleMenuCommand(this.CallbackGetSourceDiffMenuItem, menuCommandId);
-            mcs.AddCommand(this.sonarSourceDiffCommandBar);
 
             menuCommandId = new CommandID(GuidList.GuidShowInitialToolbarCmdSet, (int)PkgCmdIdList.ToolBarReportReviews);
             this.sonarReviewsCommandBar = new OleMenuCommand(this.ShowIssuesToolWindow, menuCommandId);

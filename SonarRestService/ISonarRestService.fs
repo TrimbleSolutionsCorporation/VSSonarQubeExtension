@@ -39,12 +39,14 @@ type ISonarRestService =
   abstract member AuthenticateUser : ConnectionConfiguration -> bool
   abstract member GetResourcesData : ConnectionConfiguration * string -> System.Collections.Generic.List<Resource>
   abstract member GetProjectsList : ConnectionConfiguration -> System.Collections.Generic.List<Resource>
-  abstract member GetEnabledRulesInProfile : ConnectionConfiguration * string * string -> System.Collections.Generic.List<Profile>
-  abstract member GetQualityProfile : ConnectionConfiguration * string -> System.Collections.Generic.List<Resource>
   abstract member GetServerInfo : ConnectionConfiguration ->  float
   abstract member GetCoverageInResource : ConnectionConfiguration * string ->  SourceCoverage
   abstract member GetSourceForFileResource : ConnectionConfiguration * string ->  Source
 
   abstract member GetProperties : ConnectionConfiguration -> System.Collections.Generic.Dictionary<string, string>
+
+  abstract member GetEnabledRulesInProfile : ConnectionConfiguration * string * string -> System.Collections.Generic.List<Profile>
+  abstract member GetQualityProfile : ConnectionConfiguration * string -> System.Collections.Generic.List<Resource>
+  abstract member GetRules : ConnectionConfiguration * string -> System.Collections.Generic.List<Rule>
         
 

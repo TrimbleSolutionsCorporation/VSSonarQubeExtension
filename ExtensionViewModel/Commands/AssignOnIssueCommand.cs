@@ -112,7 +112,7 @@ namespace ExtensionViewModel.Commands
                 if (allGood)
                 {
                     this.model.CommentData = string.Empty;
-                    this.model.RefreshView();
+                    this.model.RefreshIssuesInViews();
                 }
             }
         }

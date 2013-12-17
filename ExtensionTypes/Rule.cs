@@ -1,36 +1,75 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Rule.cs" company="Copyright © 2013 Tekla Corporation. Tekla is a Trimble Company">
-//     Copyright (C) 2013 [Jorge Costa, Jorge.Costa@tekla.com]
+// <copyright file="Rule.cs" company="">
+//   
 // </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-// This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
-// as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
-// of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. 
-// You should have received a copy of the GNU Lesser General Public License along with this program; if not, write to the Free
-// Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+// <summary>
+//   The rule.
+// </summary>
 // --------------------------------------------------------------------------------------------------------------------
 namespace ExtensionTypes
 {
     /// <summary>
-    /// The rule.
+    ///     The rule.
     /// </summary>
     public class Rule
     {
+        #region Public Properties
+
         /// <summary>
-        /// Gets or sets the key.
+        /// Gets or sets the category.
+        /// </summary>
+        public string Category { get; set; }
+
+        /// <summary>
+        /// Gets or sets the config key.
+        /// </summary>
+        public string ConfigKey { get; set; }
+
+        /// <summary>
+        /// Gets or sets the description.
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the key.
         /// </summary>
         public string Key { get; set; }
 
         /// <summary>
-        /// Gets or sets the repo.
+        /// Gets or sets the name.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the remediation factor function.
+        /// </summary>
+        public string RemediationFactorFunction { get; set; }
+
+        /// <summary>
+        /// Gets or sets the remediation factor txt.
+        /// </summary>
+        public string RemediationFactorTxt { get; set; }
+
+        /// <summary>
+        /// Gets or sets the remediation factor val.
+        /// </summary>
+        public string RemediationFactorVal { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the repo.
         /// </summary>
         public string Repo { get; set; }
 
         /// <summary>
-        /// Gets or sets the severity.
+        ///     Gets or sets the severity.
         /// </summary>
         public string Severity { get; set; }
+
+        /// <summary>
+        /// Gets or sets the sub category.
+        /// </summary>
+        public string SubCategory { get; set; }
+
+        #endregion
     }
 }

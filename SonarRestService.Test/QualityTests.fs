@@ -55,3 +55,11 @@ type QualityTests() =
         resourceinfo.[0].Lname |> should equal "bla"
         resourceinfo.[0].Metrics.[0].Key |> should equal "profile"
         resourceinfo.[0].Metrics.[0].Data |> should equal "DefaultC++"
+
+    //[<Test>]
+    member test.``Should Get Rules`` () =
+        let conf = ConnectionConfiguration("http://sonar", "jocs1", "jocs1")
+
+        let service = SonarRestService(new JsonSonarConnector())
+        let rules = (service :> ISonarRestService).GetRules(conf, "c++")
+        rules.Count |> should equal 1

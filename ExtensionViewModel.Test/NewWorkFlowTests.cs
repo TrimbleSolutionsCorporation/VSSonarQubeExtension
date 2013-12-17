@@ -78,7 +78,7 @@ namespace ExtensionViewModel.Test
         {
             var data = new ExtensionDataModel(this.service, this.vshelper, null)
                            {
-                               UpdateSelectedIssuesInView =
+                               SelectedIssuesInView =
                                    new List<Issue>
                                        {
                                            new Issue { Status = "OPEN" },
@@ -104,7 +104,7 @@ namespace ExtensionViewModel.Test
         {
             var data = new ExtensionDataModel(this.service, this.vshelper, null)
             {
-                UpdateSelectedIssuesInView =
+                SelectedIssuesInView =
                     new List<Issue>
                                        {
                                            new Issue { Status = "CONFIRMED" }
@@ -129,7 +129,7 @@ namespace ExtensionViewModel.Test
         {
             var data = new ExtensionDataModel(this.service, this.vshelper, null)
             {
-                UpdateSelectedIssuesInView =
+                SelectedIssuesInView =
                     new List<Issue>
                                        {
                                            new Issue { Status = "RESOLVED" }
@@ -154,7 +154,7 @@ namespace ExtensionViewModel.Test
         {
             var data = new ExtensionDataModel(this.service, this.vshelper, null)
             {
-                UpdateSelectedIssuesInView =
+                SelectedIssuesInView =
                     new List<Issue>
                                        {
                                            new Issue { Status = "REOPENED" },

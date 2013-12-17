@@ -14,14 +14,11 @@
 
 namespace VSSonarExtension.SmartTags.Coverage
 {
-    using System.Collections.Generic;
     using System.ComponentModel.Composition;
     using Microsoft.VisualStudio.Text;
     using Microsoft.VisualStudio.Text.Editor;
     using Microsoft.VisualStudio.Text.Tagging;
     using Microsoft.VisualStudio.Utilities;
-
-    using VSSonarExtension.SmartTags.BufferUpdate;
 
     /// <summary>
     /// The highlight word tagger provider.
@@ -31,11 +28,6 @@ namespace VSSonarExtension.SmartTags.Coverage
     [TagType(typeof(TextMarkerTag))]
     public class HighlightCoverageTaggerProvider : IViewTaggerProvider
     {
-        /// <summary>
-        /// The all spelling tags.
-        /// </summary>
-        public static readonly Dictionary<string, HighlightCoverageTagger> AllCoverageTags = new Dictionary<string, HighlightCoverageTagger>();
-
         /// <summary>
         /// The create tagger.
         /// </summary>
@@ -58,16 +50,7 @@ namespace VSSonarExtension.SmartTags.Coverage
                 return null;
             }
 
-            var document = BufferTagger.GetPropertyFromBuffer<ITextDocument>(buffer);
-
-            if (AllCoverageTags.ContainsKey(document.FilePath))
-            {
-                return new HighlightCoverageTagger(buffer, document.FilePath, false) as ITagger<T>;
-            }
-
-            var taginstance = new HighlightCoverageTagger(buffer, document.FilePath, true);
-            AllCoverageTags.Add(document.FilePath, taginstance);
-            return taginstance as ITagger<T>;
+            return buffer.Properties.GetOrCreateSingletonProperty(() => new HighlightCoverageTagger(buffer) as ITagger<T>);
         }
     }
 }

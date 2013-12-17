@@ -25,39 +25,9 @@ namespace ExtensionViewModel.ViewModel
     public partial class ExtensionDataModel
     {
         /// <summary>
-        ///     The all resource data.
-        /// </summary>
-        private readonly Dictionary<string, Resource> allResourceData;
-
-        /// <summary>
-        ///     The all source coverage data.
-        /// </summary>
-        private readonly Dictionary<string, SourceCoverage> allSourceCoverageData;
-
-        /// <summary>
-        ///     The all source data.
-        /// </summary>
-        private readonly Dictionary<string, Source> cachedServerSources;
-
-        /// <summary>
-        ///     The allissues date.
-        /// </summary>
-        private readonly Dictionary<string, List<Issue>> cachedIssuesList;
-
-        /// <summary>
-        ///     The cached issues list obs.
-        /// </summary>
-        private readonly List<string> cachedIssuesListObs;
-
-        /// <summary>
         ///     The comments.
         /// </summary>
         private List<Comment> comments = new List<Comment>();
-
-        /// <summary>
-        ///     The issues.
-        /// </summary>
-        private List<Issue> issues = new List<Issue>();
 
         /// <summary>
         ///     The selected issue.
@@ -67,7 +37,7 @@ namespace ExtensionViewModel.ViewModel
         /// <summary>
         ///     The selected issues in view.
         /// </summary>
-        private IList updateSelectedIssuesInView = new List<Issue>();
+        private IList selectedIssuesInView = new List<Issue>();
 
         /// <summary>
         ///     The users.
@@ -79,17 +49,9 @@ namespace ExtensionViewModel.ViewModel
         /// </summary>
         public void ClearCaches()
         {
-            this.allResourceData.Clear();
-            this.allSourceCoverageData.Clear();
-            this.cachedServerSources.Clear();
-            this.cachedIssuesList.Clear();
-            this.cachedIssuesListObs.Clear();
             this.OnPropertyChanged("CachedIssuesListObs");
             this.OnPropertyChanged("CachedIssuesListObs");
-            this.IssuesInEditor.Clear();
-            this.Issues.Clear();
             this.Comments.Clear();
-            this.updateSelectedIssuesInView.Clear();
         }
     }
 }

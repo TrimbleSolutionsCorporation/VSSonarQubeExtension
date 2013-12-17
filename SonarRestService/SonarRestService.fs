@@ -363,6 +363,23 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             resourcelist.Add(res)
         resourcelist
 
+    let getRulesFromResponseContent(responsecontent : string) = 
+        let rules = JSonRule.Parse(responsecontent)
+        let rulesToReturn = new System.Collections.Generic.List<Rule>()
+
+        for ruleInServer in rules do
+            let rule = new Rule()
+            rule.Name <- ruleInServer.Title            
+            rule.ConfigKey <- ruleInServer.ConfigKey
+            rule.Description <- ruleInServer.Description
+            rule.Key <- ruleInServer.Key
+            rule.Severity <- ruleInServer.Priority
+            rule.Repo <- ruleInServer.Plugin
+            rulesToReturn.Add(rule)
+
+        rulesToReturn
+        
+
     let GetProfileFromContent(responsecontent : string) = 
         let parsed = JSonProfile.Parse(responsecontent)
         let profiles = new System.Collections.Generic.List<Profile>()
@@ -551,6 +568,16 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
         member this.GetEnabledRulesInProfile(conf : ConnectionConfiguration, language : string, profile : string) =
             let url = "/api/profiles?language=" + HttpUtility.UrlEncode(language) + "&name=" + HttpUtility.UrlEncode(profile)
             GetProfileFromContent(httpconnector.HttpSonarGetRequest(conf, url))
+
+        member this.GetRules(conf : ConnectionConfiguration, language : string) = 
+            let GetLanguageUrl =
+                if language = "" then
+                    ""
+                else
+                    "?language=" + HttpUtility.UrlEncode(language)
+
+            let url = "/api/rules" + GetLanguageUrl
+            getRulesFromResponseContent(httpconnector.HttpSonarGetRequest(conf, url))
 
         member this.GetServerInfo(conf : ConnectionConfiguration) = 
             let url = "/api/server"

@@ -80,7 +80,7 @@ namespace ExtensionView.Test
             var issues = service.GetIssuesInResource(config, "resource", false);
             var associatedProject = new Resource { Key = "core:Common" };
 
-            this.model = new ExtensionDataModel(service, mockVsHelpers, associatedProject) { Issues = issues };
+            this.model = new ExtensionDataModel(service, mockVsHelpers, associatedProject) {};
             var t = new Thread(new ThreadStart(this.Threadprc));
             t.SetApartmentState(ApartmentState.STA);
             t.Start();

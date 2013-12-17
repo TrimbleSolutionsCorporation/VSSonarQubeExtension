@@ -13,12 +13,9 @@
 namespace ExtensionViewModel.ViewModel
 {
     using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
+    using System.Diagnostics;
     using System.Linq;
     using System.Windows;
-
-    using ExtensionHelpers;
 
     using ExtensionTypes;
 
@@ -65,6 +62,11 @@ namespace ExtensionViewModel.ViewModel
         ///     The analysis type text.
         /// </summary>
         private AnalysisTypes analysisTypeText = AnalysisTypes.File;
+
+        /// <summary>
+        /// The is coverage on.
+        /// </summary>
+        private bool isCoverageOn;
 
         #endregion
 
@@ -115,6 +117,23 @@ namespace ExtensionViewModel.ViewModel
         #endregion
 
         #region Public Properties
+
+        /// <summary>
+        /// Gets or sets a value indicating whether is issues in modified lines enabled.
+        /// </summary>
+        public bool IsIssuesInModifiedLinesEnabled
+        {
+            get
+            {
+                return this.analysisChangeLines;
+            }
+
+            set
+            {
+                this.analysisChangeLines = value;
+                this.OnPropertyChanged("IsIssuesInModifiedLinesEnabled");
+            }
+        }
 
         /// <summary>
         ///     Gets or sets a value indicating whether analysis change lines.
@@ -178,6 +197,10 @@ namespace ExtensionViewModel.ViewModel
 
                 this.OnPropertyChanged("AnalysisModeText");
                 this.OnPropertyChanged("AnalysisMode");
+
+                this.localEditorCache.ClearData();
+                this.TriggerUpdateSignals();
+                this.OnPropertyChanged("Issues");
             }
         }
 
@@ -210,6 +233,17 @@ namespace ExtensionViewModel.ViewModel
         }
 
         /// <summary>
+        /// Gets a value indicating whether is solution open.
+        /// </summary>
+        public bool IsSolutionOpen
+        {
+            get
+            {
+                return this.AssociatedProject != null;
+            }
+        }
+
+        /// <summary>
         ///     Gets or sets a value indicating whether analysis mode.
         /// </summary>
         public bool AnalysisType
@@ -237,6 +271,15 @@ namespace ExtensionViewModel.ViewModel
                 if (this.analysisModeText.Equals(AnalysisModes.Server))
                 {
                     this.analysisTypeText = AnalysisTypes.File;
+                }
+
+                if (this.analysisTypeText.Equals(AnalysisTypes.File))
+                {
+                    this.IsIssuesInModifiedLinesEnabled = true;
+                }
+                else
+                {
+                    this.IsIssuesInModifiedLinesEnabled = false;
                 }
 
                 this.OnPropertyChanged("AnalysisTypeText");
@@ -274,6 +317,52 @@ namespace ExtensionViewModel.ViewModel
             }
         }
 
+        /// <summary>
+        /// Gets the coverage is on text.
+        /// </summary>
+        public string CoverageIsOnText
+        {
+            get
+            {
+                return this.IsCoverageOn ? "Turn Off" : "Turn On";
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether is coverage on.
+        /// </summary>
+        public bool IsCoverageOn
+        {
+            get
+            {
+                return this.isCoverageOn;
+            }
+
+            set
+            {
+                this.isCoverageOn = value;
+                this.CoverageInEditorEnabled = this.isCoverageOn;
+                this.OnPropertyChanged("CoverageIsOnText");
+                this.OnPropertyChanged("IsCoverageOn");
+            }            
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether is source diff on.
+        /// </summary>
+        public bool IsSourceDiffOn
+        {
+            get
+            {
+                return true;
+            }
+
+            set
+            {
+                this.DisplayDiferenceToServerSource();
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -286,6 +375,7 @@ namespace ExtensionViewModel.ViewModel
         /// </param>
         private void PerformfAnalysis(bool startStop)
         {
+            this.IssuesInViewAreLocked = false;
             switch (this.analysisModeText)
             {
                 case AnalysisModes.Server:
@@ -334,45 +424,48 @@ namespace ExtensionViewModel.ViewModel
 
             this.AnalysisLog = string.Empty;            
             if (this.ExtensionRunningLocalAnalysis == null)
-            {
-                this.Issues = new List<Issue>();
+            {                
                 MessageBox.Show("Current Plugin does not support Local analysis");
+                this.analysisTrigger = false;
+                this.OnPropertyChanged("AnalysisTriggerText");
+                this.OnPropertyChanged("AnalysisTrigger");
                 return;
             }
 
             try
-            {
-                if (!this.analysisTypeText.Equals(AnalysisTypes.File))
-                {
-                    this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted += this.UpdateLocalIssues;
-                }
-                else
-                {
-                    this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted += this.UpdateLocalIssuesForFileAnalysis;
-                }
-                                
+            {            
                 this.ExtensionRunningLocalAnalysis.StdErrEvent += this.UpdateOutputMessagesFromPlugin;
                 this.ExtensionRunningLocalAnalysis.StdOutEvent += this.UpdateOutputMessagesFromPlugin;
+
                 switch (analysis)
                 {
                     case AnalysisTypes.File:
+                        this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted += this.UpdateLocalIssuesForFileAnalysis;
                         this.localAnalyserThread = this.ExtensionRunningLocalAnalysis.GetFileAnalyserThread(this.DocumentInView);
                         break;
                     case AnalysisTypes.Analysis:
+                        this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted += this.UpdateLocalIssues;
                         this.localAnalyserThread = this.ExtensionRunningLocalAnalysis.GetAnalyserThread(this.vsenvironmenthelper.ActiveSolutionPath());
                         break;
                     case AnalysisTypes.Incremental:
+                        this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted += this.UpdateLocalIssues;
                         this.localAnalyserThread = this.ExtensionRunningLocalAnalysis.GetIncrementalAnalyserThread(this.vsenvironmenthelper.ActiveSolutionPath());
                         break;
                     case AnalysisTypes.Preview:
+                        this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted += this.UpdateLocalIssues;
                         this.localAnalyserThread = this.ExtensionRunningLocalAnalysis.GetPreviewAnalyserThread(this.vsenvironmenthelper.ActiveSolutionPath());
                         break;
                 }
 
                 if (this.localAnalyserThread == null)
                 {
-                    this.Issues = new List<Issue>();
                     MessageBox.Show("Analysis Type Not Supported By Plugin");
+                    this.analysisTrigger = false;
+                    this.OnPropertyChanged("AnalysisTriggerText");
+                    this.OnPropertyChanged("AnalysisTrigger");
+                    this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted -= this.UpdateLocalIssuesForFileAnalysis;
+                    this.ExtensionRunningLocalAnalysis.StdErrEvent -= this.UpdateOutputMessagesFromPlugin;
+                    this.ExtensionRunningLocalAnalysis.StdOutEvent -= this.UpdateOutputMessagesFromPlugin;
                     return;
                 }
 
@@ -421,19 +514,9 @@ namespace ExtensionViewModel.ViewModel
             }
             catch (Exception ex)
             {
-
-            }
-
-            if (!this.analysisTypeText.Equals(AnalysisTypes.File))
-            {
-                this.analysisTrigger = false;
-                this.OnPropertyChanged("AnalysisTriggerText");
-                this.OnPropertyChanged("AnalysisTrigger");
-            }
-
-            if (this.ResourceInEditor == null)
-            {
-                return;
+                this.ErrorMessage = "Failed to retrive issues from Plugin";
+                this.DiagnosticMessage = ex.StackTrace;
+                Debug.WriteLine("ex: " + ex.Message + " error: " + ex.StackTrace);
             }
 
             try
@@ -441,12 +524,16 @@ namespace ExtensionViewModel.ViewModel
                 this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted -= this.UpdateLocalIssues;
                 this.ExtensionRunningLocalAnalysis.StdErrEvent -= this.UpdateOutputMessagesFromPlugin;
                 this.ExtensionRunningLocalAnalysis.StdOutEvent -= this.UpdateOutputMessagesFromPlugin;
-                this.Issues = this.ExtensionRunningLocalAnalysis.GetIssues();
+
+                this.ReplaceAllIssuesInCache(this.ExtensionRunningLocalAnalysis.GetIssues());
+                this.ErrorMessage = string.Empty;
+                this.DiagnosticMessage = string.Empty;
             }
             catch (Exception ex)
             {
                 this.ErrorMessage = "Failed to retrive issues from Plugin";
                 this.DiagnosticMessage = ex.StackTrace;
+                Debug.WriteLine("ex: " + ex.Message + " error: " + ex.StackTrace);
             }
         }
 
@@ -480,14 +567,9 @@ namespace ExtensionViewModel.ViewModel
             }
             catch (Exception ex)
             {
-
-            }
-
-            if (!this.analysisTypeText.Equals(AnalysisTypes.File))
-            {
-                this.analysisTrigger = false;
-                this.OnPropertyChanged("AnalysisTriggerText");
-                this.OnPropertyChanged("AnalysisTrigger");
+                this.ErrorMessage = "Failed to retrive issues from Plugin";
+                this.DiagnosticMessage = ex.StackTrace;
+                Debug.WriteLine("ex: " + ex.Message + " error: " + ex.StackTrace);
             }
 
             if (this.ResourceInEditor == null)
@@ -500,7 +582,9 @@ namespace ExtensionViewModel.ViewModel
                 this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted -= this.UpdateLocalIssuesForFileAnalysis;
                 this.ExtensionRunningLocalAnalysis.StdErrEvent -= this.UpdateOutputMessagesFromPlugin;
                 this.ExtensionRunningLocalAnalysis.StdOutEvent -= this.UpdateOutputMessagesFromPlugin;
+
                 var issuesInExtension = this.ExtensionRunningLocalAnalysis.GetIssues();
+
                 if (issuesInExtension.Count == 0)
                 {
                     return;
@@ -534,7 +618,9 @@ namespace ExtensionViewModel.ViewModel
                     }
                 }
 
-                this.Issues = issuesInExtension;
+                this.localEditorCache.UpdateIssues(issuesInExtension);
+                this.OnPropertyChanged("IssuesInEditor");
+                this.OnPropertyChanged("Issues");
             }
             catch (Exception ex)
             {
@@ -569,14 +655,11 @@ namespace ExtensionViewModel.ViewModel
         {
             if (this.ResourceInEditor == null || !startStop)
             {
-                this.Issues = new List<Issue>();
+                this.TriggerUpdateSignals();
                 return;
             }
 
-            var issuesForResource = this.UpdateIssueDataForResource(this.ResourceInEditor.Key);
-            this.UpdateSourceDataForResource(this.ResourceInEditor.Key, false);
-
-            this.Issues = issuesForResource;
+            this.RefreshDataForResource(this.DocumentInView);
         }
 
         #endregion

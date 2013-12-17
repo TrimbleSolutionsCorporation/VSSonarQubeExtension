@@ -116,18 +116,12 @@
   <ItemGroup>
     <Compile Include="PackageImplementation\InternalStateVariables.cs" />
     <Compile Include="SmartTags\BufferUpdate\VSEvents.cs" />
-    <Compile Include="SmartTags\ContextMenu\ISonarTag.cs" />
-    <Compile Include="SmartTags\ContextMenu\SonarSmartTag.cs" />
-    <Compile Include="SmartTags\ContextMenu\SonarSmartTagger.cs" />
-    <Compile Include="SmartTags\ContextMenu\SonarSmartTaggerProvider.cs" />
-    <Compile Include="SmartTags\ContextMenu\SonarTagDisplayViolationsAction.cs" />
-    <Compile Include="SmartTags\BufferUpdate\BufferProvider.cs" />
-    <Compile Include="SmartTags\BufferUpdate\BufferTagger.cs" />
     <Compile Include="SmartTags\Coverage\CoveredFormatDefinition.cs" />
     <Compile Include="SmartTags\Coverage\HighlightCoverageTagger.cs" />
     <Compile Include="SmartTags\Coverage\HighlightCoverageTaggerProvider.cs" />
     <Compile Include="SmartTags\Coverage\NotCoveredFormatDefinition.cs" />
     <Compile Include="SmartTags\Coverage\PartialCoveredFormatDefinition.cs" />
+    <Compile Include="SmartTags\Coverage\CoverageTag.cs" />
     <Compile Include="SmartTags\Squiggle\SonarTag.cs" />
     <Compile Include="SmartTags\Squiggle\SonarTagFormatDefinition.cs" />
     <Compile Include="SmartTags\Squiggle\SonarTagger.cs" />
