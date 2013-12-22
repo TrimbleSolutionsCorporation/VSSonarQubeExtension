@@ -170,6 +170,7 @@
   <ItemGroup>
     <VSCTCompile Include="VSControls\VSSonarExtension.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
+      <SubType>Designer</SubType>
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>

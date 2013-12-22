@@ -166,7 +166,7 @@ namespace ExtensionViewModel.ViewModel
                     return "No";
                 }
 
-                this.analysisChangeLinesText = this.analysisChangeLines ? "No" : "Yes";
+                this.analysisChangeLinesText = this.analysisChangeLines ? "Yes" : "No";
 
                 return this.analysisChangeLinesText;
             }
@@ -216,6 +216,17 @@ namespace ExtensionViewModel.ViewModel
         }
 
         /// <summary>
+        /// Gets a value indicating whether is server analysis on.
+        /// </summary>
+        public bool IsServerAnalysisOn
+        {
+            get
+            {
+                return this.analysisModeText.Equals(AnalysisModes.Server);
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the analysis log.
         /// </summary>
         public string AnalysisLog { get; set; }
@@ -228,6 +239,7 @@ namespace ExtensionViewModel.ViewModel
             get
             {
                 this.OnPropertyChanged("AnalysisChangeLinesText");
+                this.OnPropertyChanged("IsServerAnalysisOn");
                 return this.analysisModeText.ToString();
             }
         }
@@ -273,15 +285,6 @@ namespace ExtensionViewModel.ViewModel
                     this.analysisTypeText = AnalysisTypes.File;
                 }
 
-                if (this.analysisTypeText.Equals(AnalysisTypes.File))
-                {
-                    this.IsIssuesInModifiedLinesEnabled = true;
-                }
-                else
-                {
-                    this.IsIssuesInModifiedLinesEnabled = false;
-                }
-
                 this.OnPropertyChanged("AnalysisTypeText");
                 this.OnPropertyChanged("AnalysisType");
             }
@@ -294,6 +297,15 @@ namespace ExtensionViewModel.ViewModel
         {
             get
             {
+                if (this.analysisTypeText.Equals(AnalysisTypes.File))
+                {
+                    this.IsIssuesInModifiedLinesEnabled = true;
+                }
+                else
+                {
+                    this.IsIssuesInModifiedLinesEnabled = false;
+                }
+
                 return this.analysisTypeText.ToString();
             }
         }
@@ -312,6 +324,7 @@ namespace ExtensionViewModel.ViewModel
             {
                 this.analysisTrigger = value;
                 this.PerformfAnalysis(value);
+                this.AnalysisLog = string.Empty;
                 this.OnPropertyChanged("AnalysisTriggerText");
                 this.OnPropertyChanged("AnalysisTrigger");
             }
@@ -421,8 +434,7 @@ namespace ExtensionViewModel.ViewModel
 
                 return;
             }
-
-            this.AnalysisLog = string.Empty;            
+        
             if (this.ExtensionRunningLocalAnalysis == null)
             {                
                 MessageBox.Show("Current Plugin does not support Local analysis");
@@ -441,7 +453,7 @@ namespace ExtensionViewModel.ViewModel
                 {
                     case AnalysisTypes.File:
                         this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted += this.UpdateLocalIssuesForFileAnalysis;
-                        this.localAnalyserThread = this.ExtensionRunningLocalAnalysis.GetFileAnalyserThread(this.DocumentInView);
+                        this.localAnalyserThread = this.ExtensionRunningLocalAnalysis.GetFileAnalyserThread(this.vsenvironmenthelper.VsProjectItem(this.DocumentInView), this.AssociatedProject.Key);
                         break;
                     case AnalysisTypes.Analysis:
                         this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted += this.UpdateLocalIssues;
@@ -586,21 +598,6 @@ namespace ExtensionViewModel.ViewModel
                 var issuesInExtension = this.ExtensionRunningLocalAnalysis.GetIssues();
 
                 if (issuesInExtension.Count == 0)
-                {
-                    return;
-                }
-
-                var firstNonNullELems = issuesInExtension.First();
-
-                foreach (var issue in issuesInExtension.ToList().Where(issue => issue.Component != null))
-                {
-                    firstNonNullELems = issue;
-                    break;
-                }
-
-                if (firstNonNullELems.Component == null
-                    || !firstNonNullELems.Component.Replace('\\', '/')
-                            .Equals(this.DocumentInView, StringComparison.OrdinalIgnoreCase))
                 {
                     return;
                 }

@@ -152,12 +152,10 @@ namespace ExtensionHelpers
         /// <returns>
         /// The <see cref="ArrayList"/>.
         /// </returns>
-        public static ArrayList GetDifferenceReport(string filePath, Source sourceInServer, bool displayWindow)
+        public static ArrayList GetDifferenceReport(string filePath, string sourceInServer, bool displayWindow)
         {
-            string lines = GetLinesFromSource(sourceInServer, "\r\n");
-
             var sLf = new DiffListTextFile(filePath);
-            var dLf = new DiffListTextFile(lines, "\r\n");
+            var dLf = new DiffListTextFile(sourceInServer, "\r\n");
 
             var de = new DiffEngine();
             de.ProcessDiff(dLf, sLf, DiffEngineLevel.SlowPerfect);

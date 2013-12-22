@@ -607,7 +607,9 @@ namespace ExtensionViewModel.ViewModel
                         return filteredIssues;
                     }
 
-                    var diffReport = VsSonarUtils.GetDifferenceReport(this.DocumentInView, this.restService.GetSourceForFileResource(this.UserConfiguration, this.ResourceInEditor.Key), false);
+                    var source = this.restService.GetSourceForFileResource(this.UserConfiguration, this.ResourceInEditor.Key);
+                    var sourcestr = VsSonarUtils.GetLinesFromSource(source, "\r\n");
+                    var diffReport = VsSonarUtils.GetDifferenceReport(this.DocumentInView, sourcestr, false);
                     return VsSonarUtils.GetIssuesInModifiedLinesOnly(filteredIssues, diffReport);
                 }
 
@@ -1187,7 +1189,9 @@ namespace ExtensionViewModel.ViewModel
             if (this.AnalysisChangeLines && this.analysisModeText.Equals(AnalysisModes.Local))
             {
                 var filteredIssues = this.ApplyFilterToIssues(this.localEditorCache.GetIssuesForResource(this.ResourceInEditor));
-                var diffReport = VsSonarUtils.GetDifferenceReport(this.DocumentInView, this.restService.GetSourceForFileResource(this.UserConfiguration, this.ResourceInEditor.Key), false);
+                var source = this.restService.GetSourceForFileResource(this.UserConfiguration, this.ResourceInEditor.Key);
+                var sourcestr = VsSonarUtils.GetLinesFromSource(source, "\r\n");
+                var diffReport = VsSonarUtils.GetDifferenceReport(this.DocumentInView, sourcestr, false);
                 return VsSonarUtils.GetIssuesInModifiedLinesOnly(filteredIssues, diffReport);
             }
 
@@ -1215,7 +1219,12 @@ namespace ExtensionViewModel.ViewModel
             if (this.analysisModeText.Equals(AnalysisModes.Server))
             {
                 this.UpdateDataFromServer(this.ResourceInEditor);
-            }            
+            }
+
+            if (this.analysisModeText.Equals(AnalysisModes.Local) && this.analysisTypeText.Equals(AnalysisTypes.File))
+            {
+                this.PerformfAnalysis(this.analysisTrigger);
+            }
 
             this.TriggerUpdateSignals();
         }

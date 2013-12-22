@@ -299,7 +299,7 @@ namespace VSSonarExtension.SmartTags.Coverage
                 yield break;
             }
 
-            var lineToUseinVs = line - 1;
+            var lineToUseinVs = line;
             if (lineToUseinVs < 0)
             {
                 yield break;

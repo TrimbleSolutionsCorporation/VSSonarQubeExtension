@@ -55,7 +55,7 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="bool"/>.
         /// </returns>
-        Thread GetFileAnalyserThread(string filePath);
+        Thread GetFileAnalyserThread(VsProjectItem item, string projectKey);
 
         /// <summary>
         /// The get incremental analyser thread.

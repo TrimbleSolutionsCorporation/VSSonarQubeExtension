@@ -304,9 +304,18 @@ namespace ExtensionViewModel.Cache
             elem.Issues.AddRange(issues);
         }
 
-        internal Source GetSourceForResource(Resource resource)
+        /// <summary>
+        /// The get source for resource.
+        /// </summary>
+        /// <param name="resource">
+        /// The resource.
+        /// </param>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
+        internal string GetSourceForResource(Resource resource)
         {
-            throw new System.NotImplementedException();
+            return data.ContainsKey(resource.Key) ? data[resource.Key].ServerSource : string.Empty;
         }
 
         internal List<Issue> GetIssues()

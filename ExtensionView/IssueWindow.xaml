@@ -176,8 +176,8 @@
                             <ToggleButton IsEnabled="{Binding IsIssuesInModifiedLinesEnabled}" ToolTip="If yes, issues will be reported in modified lines only" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="{Binding AnalysisChangeLinesText}" IsChecked="{Binding AnalysisChangeLines}" Grid.Row="1" Grid.Column="1" Template="{DynamicResource SquareToggleButtonTemplate}" Margin="0,19.107,0,0.893" Grid.RowSpan="2" />
                             <ToggleButton Grid.Row="3" Grid.Column="1" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="{Binding AnalysisTriggerText}" IsChecked="{Binding AnalysisTrigger}" Template="{DynamicResource SquareToggleButtonTemplate}" />
                             <ToggleButton Grid.Row="3" Grid.Column="0" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" IsChecked="{Binding ElementName=pup, Path=IsOpen}" Content="Show Log" Template="{DynamicResource SquareToggleButtonTemplate}" />
-							<ToggleButton Grid.Row="5" Grid.Column="1" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" IsChecked="{Binding IsCoverageOn}" Content="{Binding CoverageIsOnText}" Template="{DynamicResource SquareToggleButtonTemplate}" />
-							<ToggleButton Grid.Row="6" Grid.Column="1" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" IsChecked="{Binding IsSourceDiffOn}" Content="Display Diff" Template="{DynamicResource SquareToggleButtonTemplate}" />
+							<ToggleButton Grid.Row="5" Grid.Column="1" IsEnabled="{Binding IsServerAnalysisOn}" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" IsChecked="{Binding IsCoverageOn}" Content="{Binding CoverageIsOnText}" Template="{DynamicResource SquareToggleButtonTemplate}" />
+							<ToggleButton Grid.Row="6" Grid.Column="1" IsEnabled="{Binding IsServerAnalysisOn}" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" IsChecked="{Binding IsSourceDiffOn}" Content="Display Diff" Template="{DynamicResource SquareToggleButtonTemplate}" />
                         </Grid>
                     </Expander>
 
