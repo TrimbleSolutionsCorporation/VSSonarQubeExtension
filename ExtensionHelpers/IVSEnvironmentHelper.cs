@@ -412,6 +412,30 @@ namespace ExtensionHelpers
             }
         }
 
+        public void DeleteOptionsForPlugin(string pluginKey)
+        {
+            IEnumerable<string> content = new List<string>();
+            var contentWrite = string.Empty;
+            if (File.Exists(this.ApplicationDataUserSettingsFile))
+            {
+                content = File.ReadLines(this.ApplicationDataUserSettingsFile);
+            }
+            else
+            {
+                Directory.CreateDirectory(Directory.GetParent(this.ApplicationDataUserSettingsFile).ToString());
+                using (File.Create(this.ApplicationDataUserSettingsFile))
+                {
+                }
+            }
+
+            contentWrite = content.Where(line => !line.StartsWith(pluginKey + "=")).Aggregate(contentWrite, (current, line) => current + (line + "\r\n"));
+
+            using (var writer = new StreamWriter(this.ApplicationDataUserSettingsFile))
+            {
+                writer.Write(contentWrite);
+            }
+        }
+
         /// <summary>
         /// The set all options for plugin option in application data.
         /// </summary>
@@ -423,6 +447,7 @@ namespace ExtensionHelpers
         /// </param>
         public void WriteAllOptionsForPluginOptionInApplicationData(string pluginKey, Dictionary<string, string> options)
         {
+            this.DeleteOptionsForPlugin(pluginKey);
             foreach (var option in options)
             {
                 this.WriteOptionInApplicationData(pluginKey, option.Key, option.Value);

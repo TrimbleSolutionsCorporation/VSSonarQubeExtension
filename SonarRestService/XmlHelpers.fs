@@ -31,8 +31,11 @@ type XmlHelpersService() =
             for data in helper.GetPropertyGroups() do
                 try
                     let condition = data.Condition
-                    if condition.Value.Contains("'Work'") || condition.Value = "''"  || condition.Value = "" then
-                        value <- data.UserSrcdIr
+                    if not(obj.ReferenceEquals(data.Condition, null)) then
+                        if condition.Value.Contains("'Work'") || condition.Value = "''"  || condition.Value = "" then
+                            value <- data.UserSrcdIr
+                    else
+                        value <- data.UserSrcdIr                        
                 with
                 | ex -> value <- data.UserSrcdIr
             value

@@ -241,8 +241,12 @@ namespace ExtensionViewModel.ViewModel
                 if (!fileIsMissing 
                     || this.Vsenvironmenthelper.ReadAllOptionsForPluginOptionInApplicationData(plugin.GetKey(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper))).Count == 0)
                 {
-                    plugin.GetPluginControlOptions(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper), this.OpenSolution).ResetDefaults();
-                    this.Vsenvironmenthelper.WriteAllOptionsForPluginOptionInApplicationData(plugin.GetKey(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper)), plugin.GetPluginControlOptions(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper), this.OpenSolution).GetOptions());                    
+                    var configuration = ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper);
+                    plugin.GetPluginControlOptions(configuration, this.OpenSolution).ResetDefaults();
+
+                    var pluginKey = plugin.GetKey(configuration);
+                    var optionsToSave = plugin.GetPluginControlOptions(configuration, this.OpenSolution).GetOptions();
+                    this.Vsenvironmenthelper.WriteAllOptionsForPluginOptionInApplicationData(pluginKey, optionsToSave);                    
                 }
             }
         }
@@ -405,11 +409,8 @@ namespace ExtensionViewModel.ViewModel
                 if (this.model.PluginInView != null)
                 {
                     var options = this.model.PluginInView.GetPluginControlOptions(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.model.Vsenvironmenthelper), this.model.OpenSolution).GetOptions();
-                    foreach (var option in options)
-                    {
-                        var key = this.model.PluginInView.GetKey(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.model.Vsenvironmenthelper));
-                        this.model.Vsenvironmenthelper.WriteOptionInApplicationData(key, option.Key, option.Value);
-                    }
+                    var key = this.model.PluginInView.GetKey(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.model.Vsenvironmenthelper));
+                    this.model.Vsenvironmenthelper.WriteAllOptionsForPluginOptionInApplicationData(key, options);
                 }
             }
         }
