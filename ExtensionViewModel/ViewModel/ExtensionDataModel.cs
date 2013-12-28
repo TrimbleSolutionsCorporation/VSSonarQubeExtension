@@ -1253,7 +1253,7 @@ namespace ExtensionViewModel.ViewModel
                 }
                 else
                 {
-                    this.ReplaceAllIssuesInCache(this.RestService.GetIssuesForProjects(this.UserConfiguration, this.AssociatedProject.Key, false));
+                    this.ReplaceAllIssuesInCache(this.RestService.GetIssuesForProjects(this.UserConfiguration, this.AssociatedProject.Key));
                 }
 
                 return;
@@ -1758,7 +1758,7 @@ namespace ExtensionViewModel.ViewModel
 
             var newCoverage = this.restService.GetCoverageInResource(this.UserConfiguration, this.resourceInEditor.Key);
             var newSource = VsSonarUtils.GetLinesFromSource(this.restService.GetSourceForFileResource(this.UserConfiguration, this.resourceInEditor.Key), "\r\n");
-            var newIssues = this.restService.GetIssuesInResource(this.UserConfiguration, this.resourceInEditor.Key, false);
+            var newIssues = this.restService.GetIssuesInResource(this.UserConfiguration, this.resourceInEditor.Key);
             this.localEditorCache.UpdateResourceData(this.ResourceInEditor, newCoverage, newIssues, newSource);
         }
 

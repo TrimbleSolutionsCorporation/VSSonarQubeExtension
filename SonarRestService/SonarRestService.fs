@@ -59,15 +59,11 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
         for user in data.Users do
             let newUser = new User()
 
-            try
+            if not(obj.ReferenceEquals(user.Email, null)) then
                 newUser.Email <- user.Email.Value
-            with
-            | ex -> newUser.Email <- ""
 
-            try
+            if not(obj.ReferenceEquals(user.Name, null)) then
                 newUser.Name <- user.Name
-            with
-            | ex -> newUser.Name <- ""
 
             newUser.Active <- user.Active
             newUser.Login <- user.Login
@@ -94,37 +90,29 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
         issue.Severity <- GetSeverity(data.Severity)
         issue.Rule <- data.Rule
         issue.Key <- data.Key
-        try
-            issue.Assignee <- data.Assignee
-        with
-        | ex -> ()
-        match data.JsonValue.TryGetProperty("comments") with
-        | NotNull ->
-            for elemC in data.Comments do issue.Comments.Add(new Comment(elemC.CreatedAt, elemC.HtmlText, elemC.Key, elemC.Login, -1))
-        | _ -> ()
 
-        match data.JsonValue.TryGetProperty("effortToFix") with
-        | NotNull ->
+        if not(obj.ReferenceEquals(data.Assignee, null)) then
+            issue.Assignee <- data.Assignee
+
+        if not(obj.ReferenceEquals(data.Comments, null)) then
+            for elemC in data.Comments do issue.Comments.Add(new Comment(elemC.CreatedAt, elemC.HtmlText, elemC.Key, elemC.Login, -1))
+
+        if not(obj.ReferenceEquals(data.EffortToFix, null)) then
             let itemValue = data.JsonValue.Item("effortToFix")
             match itemValue with
             | decimal -> issue.EffortToFix <- itemValue.AsDecimal()
-            | float -> issue.EffortToFix <- Convert.ToDecimal(itemValue.AsFloat())
-            | int -> issue.EffortToFix <- Convert.ToDecimal(itemValue.AsInteger())
-        | _ -> ()
+//            | float -> issue.EffortToFix <- Convert.ToDecimal(itemValue.AsFloat())
+//            | int -> issue.EffortToFix <- Convert.ToDecimal(itemValue.AsInteger())
 
-        match data.JsonValue.TryGetProperty("closeDate") with
-        | NotNull ->
+        if not(obj.ReferenceEquals(data.CloseDate, null)) then
             issue.CloseDate <- data.CloseDate
-        | _ -> ()
 
-        match data.JsonValue.TryGetProperty("resolution") with
-        | NotNull ->
+        if not(obj.ReferenceEquals(data.Resolution, null)) then
             issue.Resolution <- data.Resolution
-        | _ -> ()
 
         issue
                         
-    let getIssuesFromString(responsecontent : string, includeClosed : bool) =
+    let getIssuesFromString(responsecontent : string) =
         let data = JsonIssues.Parse(responsecontent)
         let issueList = new System.Collections.Generic.List<Issue>()
         for elem in data.Issues do
@@ -144,40 +132,27 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             issue.Severity <- GetSeverity(elem.Severity)
             issue.Rule <- elem.Rule
             issue.Key <- elem.Key
-            try
+
+            if not(obj.ReferenceEquals(elem.Assignee, null)) then
                 issue.Assignee <- elem.Assignee.Value
-            with
-            | ex -> ()
             
-
-            match elem.JsonValue.TryGetProperty("comments") with
-            | NotNull ->
+            if not(obj.ReferenceEquals(elem.Comments, null)) then
                 for elemC in elem.Comments.Value do issue.Comments.Add(new Comment(elemC.CreatedAt, elemC.HtmlText, elemC.Key, elemC.Login, -1))
-            | _ -> ()
 
-            match elem.JsonValue.TryGetProperty("effortToFix") with
-            | NotNull ->
+            if not(obj.ReferenceEquals(elem.EffortToFix, null)) then
                 let itemValue = elem.JsonValue.Item("effortToFix")
                 match itemValue with
                 | decimal -> issue.EffortToFix <- itemValue.AsDecimal()
-                | float -> issue.EffortToFix <- Convert.ToDecimal(itemValue.AsFloat())
-                | int -> issue.EffortToFix <- Convert.ToDecimal(itemValue.AsInteger())
-            | _ -> ()
+                //| float -> issue.EffortToFix <- Convert.ToDecimal(itemValue.AsFloat())
+                //| int -> issue.EffortToFix <- Convert.ToDecimal(itemValue.AsInteger())
 
-            match elem.JsonValue.TryGetProperty("closeDate") with
-            | NotNull ->
+            if not(obj.ReferenceEquals(elem.CloseDate, null)) then
                 issue.CloseDate <- elem.CloseDate.Value
-            | _ -> ()
 
-            match elem.JsonValue.TryGetProperty("resolution") with
-            | NotNull ->
+            if not(obj.ReferenceEquals(elem.Resolution, null)) then
                 issue.Resolution <- elem.Resolution.Value
-            | _ -> ()
 
-            if includeClosed = false && issue.Status.Equals("CLOSED") then
-                ()
-            else
-                issueList.Add(issue)
+            issueList.Add(issue)
 
         issueList
 
@@ -247,7 +222,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
         issueList
 
-    let getIssuesOldAndNewVersions(userConf, newurl : string, oldurlreviews: string, oldurlviolations, includeClosed : bool) = 
+    let getIssuesOldAndNewVersions(userConf, newurl : string, oldurlreviews: string, oldurlviolations) = 
         try
             let allIssues = new System.Collections.Generic.List<Issue>()
             let responsecontent = httpconnector.HttpSonarGetRequest(userConf, newurl)
@@ -257,14 +232,14 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 for issue in all do
                     allIssues.Add(issue)
 
-            AddElements(getIssuesFromString(responsecontent, includeClosed))
+            AddElements(getIssuesFromString(responsecontent))
 
             // we need to get all pages
             
             for i = 2 to data.Paging.Pages do
                 let url = newurl + "&pageIndex=" + Convert.ToString(i)
                 let newresponse = httpconnector.HttpSonarGetRequest(userConf, url)
-                AddElements(getIssuesFromString(newresponse, includeClosed))
+                AddElements(getIssuesFromString(newresponse))
 
             allIssues
         with
@@ -278,11 +253,11 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 getViolationsFromString(oldcontent, reviewsInResource)
 
 
-    let getViolationsOldAndNewFormat(userConf, resource : string, includeClosed : bool) = 
+    let getViolationsOldAndNewFormat(userConf, resource : string) = 
         try
             let url =  "/api/issues/search?components=" + resource
             let responsecontent = httpconnector.HttpSonarGetRequest(userConf, url)
-            getIssuesFromString(responsecontent, includeClosed)
+            getIssuesFromString(responsecontent)
         with
         | ex ->            
             let reviewsurl = "/api/reviews?resources="+ resource
@@ -493,31 +468,31 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             let url =  "/api/issues/search" + query + "&pageSize=200"
             let oldurlreview = "/api/reviews?projects="+ project
             let oldurlviolations = "/api/violations?resource="+ project + "&depth=-1"
-            getIssuesOldAndNewVersions(newConf, url, oldurlreview, oldurlviolations, true)
+            getIssuesOldAndNewVersions(newConf, url, oldurlreview, oldurlviolations)
 
-        member this.GetIssuesByAssigneeInProject(newConf : ConnectionConfiguration, project : string, login : string, includeClosed : bool) = 
+        member this.GetIssuesByAssigneeInProject(newConf : ConnectionConfiguration, project : string, login : string) = 
             let url =  "/api/issues/search?componentRoots=" + project + "&assignees="+ login
             let oldurl = "/api/reviews?projects=" + project + "&assignees="+ login
-            getIssuesOldAndNewVersions(newConf, url, oldurl, "", includeClosed)
+            getIssuesOldAndNewVersions(newConf, url, oldurl, "")
    
-        member this.GetAllIssuesByAssignee(newConf : ConnectionConfiguration, login : string, includeClosed : bool) = 
+        member this.GetAllIssuesByAssignee(newConf : ConnectionConfiguration, login : string) = 
             let url =  "/api/issues/search?assignees="+ login
             let oldurl = "/api/reviews?assignees="+ login
-            getIssuesOldAndNewVersions(newConf, url, oldurl, "", includeClosed)
+            getIssuesOldAndNewVersions(newConf, url, oldurl, "")
 
-        member this.GetIssuesForProjectsCreatedAfterDate(newConf : ConnectionConfiguration, project : string, date : DateTime, includeClosed : bool) =
+        member this.GetIssuesForProjectsCreatedAfterDate(newConf : ConnectionConfiguration, project : string, date : DateTime) =
             let url =  "/api/issues/search?componentRoots=" + project + "&pageSize=200&createdAfter=" + Convert.ToString(date.Year) + "-" + Convert.ToString(date.Month) + "-"  + Convert.ToString(date.Day)
             let oldurl = "/api/reviews?projects="+ project
-            getIssuesOldAndNewVersions(newConf, url, oldurl, "", includeClosed)
+            getIssuesOldAndNewVersions(newConf, url, oldurl, "")
 
-        member this.GetIssuesForProjects(newConf : ConnectionConfiguration, project : string, includeClosed : bool) =
+        member this.GetIssuesForProjects(newConf : ConnectionConfiguration, project : string) =
             let url =  "/api/issues/search?componentRoots=" + project + "&pageSize=200"
             let oldurlreview = "/api/reviews?projects="+ project
             let oldurlviolations = "/api/violations?resource="+ project + "&depth=-1"
-            getIssuesOldAndNewVersions(newConf, url, oldurlreview, oldurlviolations, includeClosed)
+            getIssuesOldAndNewVersions(newConf, url, oldurlreview, oldurlviolations)
 
-        member this.GetIssuesInResource(conf : ConnectionConfiguration, resource : string, includeClosed : bool) =
-            getViolationsOldAndNewFormat(conf, resource, includeClosed)
+        member this.GetIssuesInResource(conf : ConnectionConfiguration, resource : string) =
+            getViolationsOldAndNewFormat(conf, resource)
         
         member this.GetUserList(newConf : ConnectionConfiguration) =
             let url = "/api/users/search"           

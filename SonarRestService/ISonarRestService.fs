@@ -20,11 +20,11 @@ open System
 open System.Web
 
 type ISonarRestService = 
-  abstract member GetIssuesByAssigneeInProject : ConnectionConfiguration * string *  string * bool -> System.Collections.Generic.List<Issue>
-  abstract member GetAllIssuesByAssignee : ConnectionConfiguration * string  * bool -> System.Collections.Generic.List<Issue>
-  abstract member GetIssuesForProjects : ConnectionConfiguration * string  * bool -> System.Collections.Generic.List<Issue>
-  abstract member GetIssuesForProjectsCreatedAfterDate : ConnectionConfiguration * string * DateTime  * bool-> System.Collections.Generic.List<Issue>
-  abstract member GetIssuesInResource : ConnectionConfiguration * string  * bool -> System.Collections.Generic.List<Issue>
+  abstract member GetIssuesByAssigneeInProject : ConnectionConfiguration * string *  string -> System.Collections.Generic.List<Issue>
+  abstract member GetAllIssuesByAssignee : ConnectionConfiguration * string -> System.Collections.Generic.List<Issue>
+  abstract member GetIssuesForProjects : ConnectionConfiguration * string -> System.Collections.Generic.List<Issue>
+  abstract member GetIssuesForProjectsCreatedAfterDate : ConnectionConfiguration * string * DateTime -> System.Collections.Generic.List<Issue>
+  abstract member GetIssuesInResource : ConnectionConfiguration * string  -> System.Collections.Generic.List<Issue>
   abstract member GetIssues : ConnectionConfiguration * string * string -> System.Collections.Generic.List<Issue>
   
   abstract member CommentOnIssues : ConnectionConfiguration * System.Collections.Generic.List<Issue> * comment : string -> System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>

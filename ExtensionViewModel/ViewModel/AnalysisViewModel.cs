@@ -510,7 +510,7 @@ namespace ExtensionViewModel.ViewModel
             try
             {
                 var exceptionMsg = (LocalAnalysisCompletedEventArgs)e;
-                if (exceptionMsg.Ex != null)
+                if (exceptionMsg != null && exceptionMsg.Ex != null)
                 {
                     MessageBox.Show(
                         "Cannot Execute Analysis: " + exceptionMsg.ErrorMessage + " StackTrace:"

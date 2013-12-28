@@ -104,34 +104,15 @@ namespace ExtensionViewModel.ViewModel
                 this.selectedLicense = value;
                 if (value == null)
                 {
-                    this.IsGenTokenEnable = false;
                     this.errorMessage = string.Empty;
                     this.GeneratedToken = string.Empty;
                 }
                 else
                 {
-                    this.IsGenTokenEnable = true;
                     this.ErrorMessage = this.selectedLicense.ErrorMessage;
                 }
 
                 this.OnPropertyChanged("SelectedLicense");
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether is gen token enable.
-        /// </summary>
-        public bool IsGenTokenEnable
-        {
-            get
-            {
-                return this.isGenTokenEnable;
-            }
-
-            set
-            {
-                this.isGenTokenEnable = value;
-                this.OnPropertyChanged("IsGenTokenEnable");
             }
         }
 
@@ -152,26 +133,7 @@ namespace ExtensionViewModel.ViewModel
                 this.isLicenseEnable = value;
                 if (value)
                 {
-                    this.optionsInView = null;
-                    this.OnPropertyChanged("OptionsInView");
-                    this.PluginInView = null;
-                    this.OnPropertyChanged("PluginInView");
-                    var licenses = new ObservableCollection<VsLicense>();
-
-                    if (this.plugins != null)
-                    {
-                        foreach (var plugin in this.plugins)
-                        {
-                            foreach (var license in plugin.GetLicenses(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper)))
-                            {
-                                licenses.Add(license.Value);
-                            }
-                        }
-                    }
-                    
-                    this.AvailableLicenses = licenses;
-                    this.selectedPluginItem = "License Manager";
-                    this.OnPropertyChanged("SelectedPluginItem");
+                    this.RefreshLicenses(false);
                 }
                 else
                 {
@@ -181,6 +143,36 @@ namespace ExtensionViewModel.ViewModel
 
                 this.OnPropertyChanged("IsLicenseEnable");
             }
+        }
+
+        /// <summary>
+        /// The refresh licenses.
+        /// </summary>
+        /// <param name="forceRetriveFromServer">
+        /// The force retrive from server.
+        /// </param>
+        public void RefreshLicenses(bool forceRetriveFromServer)
+        {
+            this.optionsInView = null;
+            this.OnPropertyChanged("OptionsInView");
+            this.PluginInView = null;
+            this.OnPropertyChanged("PluginInView");
+            var licenses = new ObservableCollection<VsLicense>();
+
+            if (this.plugins != null)
+            {
+                foreach (var plugin in this.plugins)
+                {
+                    foreach (var license in plugin.GetLicenses(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper), forceRetriveFromServer))
+                    {
+                        licenses.Add(license.Value);
+                    }
+                }
+            }
+
+            this.AvailableLicenses = licenses;
+            this.selectedPluginItem = "License Manager";
+            this.OnPropertyChanged("SelectedPluginItem");
         }
 
         /// <summary>

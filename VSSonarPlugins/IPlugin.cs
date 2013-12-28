@@ -137,10 +137,13 @@ namespace VSSonarPlugins
         /// <param name="configuration">
         /// The configuration.
         /// </param>
+        /// <param name="forceRetriveFromServer">
+        /// The force Retrive From Server.
+        /// </param>
         /// <returns>
         /// The <see cref="List"/>.
         /// </returns>
-        Dictionary<string, VsLicense> GetLicenses(ConnectionConfiguration configuration);
+        Dictionary<string, VsLicense> GetLicenses(ConnectionConfiguration configuration, bool forceRetriveFromServer);
 
         /// <summary>
         /// The generate token id.

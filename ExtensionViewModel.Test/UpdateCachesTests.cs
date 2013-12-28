@@ -86,14 +86,14 @@ namespace ExtensionViewModel.Test
                 .Return(new List<Resource> { newResource1 });
 
             this.service.Expect(
-                mp => mp.GetIssuesInResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource"), Arg<bool>.Is.Anything))
+                mp => mp.GetIssuesInResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource")))
                 .Return(new List<Issue> { new Issue() })
                 .Repeat.Once();
             this.service.Expect(
-                mp => mp.GetIssuesInResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource"), Arg<bool>.Is.Anything))
+                mp => mp.GetIssuesInResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource")))
                 .Return(new List<Issue> { new Issue(), new Issue() });
             this.service.Expect(
-                mp => mp.GetIssuesInResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource1"), Arg<bool>.Is.Anything))
+                mp => mp.GetIssuesInResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource1")))
                 .Return(new List<Issue> { new Issue() });
 
             var data = new ExtensionDataModel(this.service, this.vshelper, null);

@@ -103,26 +103,26 @@ namespace ExtensionViewModel.Commands
 
             if (header.Equals("All Issues"))
             {
-                this.model.ReplaceAllIssuesInCache(this.service.GetIssuesForProjects(this.model.UserConfiguration, this.model.AssociatedProject.Key, false));
+                this.model.ReplaceAllIssuesInCache(this.service.GetIssuesForProjects(this.model.UserConfiguration, this.model.AssociatedProject.Key));
                 return;
             }
 
             if (header.Equals("All Issues Since Last Analysis"))
             {
-                this.model.ReplaceAllIssuesInCache(this.service.GetIssuesForProjectsCreatedAfterDate(this.model.UserConfiguration, this.model.AssociatedProject.Key, this.model.AssociatedProject.Date, false));
+                this.model.ReplaceAllIssuesInCache(this.service.GetIssuesForProjectsCreatedAfterDate(this.model.UserConfiguration, this.model.AssociatedProject.Key, this.model.AssociatedProject.Date));
                 return;
             }
 
             if (header.Equals("My Issues In Project"))
             {
                 this.model.ReplaceAllIssuesInCache(
-                    this.service.GetIssuesByAssigneeInProject(this.model.UserConfiguration, this.model.AssociatedProject.Key, this.model.UserConfiguration.Username, false));
+                    this.service.GetIssuesByAssigneeInProject(this.model.UserConfiguration, this.model.AssociatedProject.Key, this.model.UserConfiguration.Username));
                 return;
             }
 
             if (header.Equals("All My Issues"))
             {
-                this.model.ReplaceAllIssuesInCache(this.service.GetAllIssuesByAssignee(this.model.UserConfiguration, this.model.UserConfiguration.Username, false));
+                this.model.ReplaceAllIssuesInCache(this.service.GetAllIssuesByAssignee(this.model.UserConfiguration, this.model.UserConfiguration.Username));
                 return;
             }
 

@@ -33,7 +33,7 @@ type IssuesTests() =
                 .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText("testdata/issuessearchbycomponent.txt"))
                 .Create()
         let service = SonarRestService(mockHttpReq)
-        let issues = (service :> ISonarRestService).GetIssuesInResource(conf, "groupid:projectid:directory/file.cpp", true)
+        let issues = (service :> ISonarRestService).GetIssuesInResource(conf, "groupid:projectid:directory/file.cpp")
         issues.Count |> should equal 59
 
     [<Test>]
@@ -47,7 +47,7 @@ type IssuesTests() =
                 .Setup(fun x -> <@ x.HttpSonarGetRequest(conf, "/api/issues/search?components=groupid:projectid:directory/file.cpp") @>).Returns(File.ReadAllText("testdata/NonExistentPage.xml"))
                 .Create()
         let service = SonarRestService(mockHttpReq)
-        let issues = (service :> ISonarRestService).GetIssuesInResource(conf, "groupid:projectid:directory/file.cpp", true)
+        let issues = (service :> ISonarRestService).GetIssuesInResource(conf, "groupid:projectid:directory/file.cpp")
         issues.Count |> should equal 30
   
     [<Test>]
@@ -60,7 +60,7 @@ type IssuesTests() =
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        let issues = (service :> ISonarRestService).GetIssuesByAssigneeInProject(conf, "groupid:projectid:directory/file.cpp", "jocs1", true)
+        let issues = (service :> ISonarRestService).GetIssuesByAssigneeInProject(conf, "groupid:projectid:directory/file.cpp", "jocs1")
         issues.Count |> should equal 2
 
     [<Test>]
@@ -74,7 +74,7 @@ type IssuesTests() =
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        let issues = (service :> ISonarRestService).GetIssuesByAssigneeInProject(conf, "groupid:projectid", "login1", true)
+        let issues = (service :> ISonarRestService).GetIssuesByAssigneeInProject(conf, "groupid:projectid", "login1")
         issues.Count |> should equal 5
 
     [<Test>]
@@ -87,7 +87,7 @@ type IssuesTests() =
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        let issues = (service :> ISonarRestService).GetAllIssuesByAssignee(conf, "jocs1", true)
+        let issues = (service :> ISonarRestService).GetAllIssuesByAssignee(conf, "jocs1")
         issues.Count |> should equal 2
 
     [<Test>]
@@ -101,7 +101,7 @@ type IssuesTests() =
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        let issues = (service :> ISonarRestService).GetAllIssuesByAssignee(conf, "login1", true)
+        let issues = (service :> ISonarRestService).GetAllIssuesByAssignee(conf, "login1")
         issues.Count |> should equal 5
 
     [<Test>]
@@ -114,7 +114,7 @@ type IssuesTests() =
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        let issues = (service :> ISonarRestService).GetIssuesForProjects(conf, "project:id", true)
+        let issues = (service :> ISonarRestService).GetIssuesForProjects(conf, "project:id")
         issues.Count |> should equal 59
 
     [<Test>]
@@ -129,7 +129,7 @@ type IssuesTests() =
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        let issues = (service :> ISonarRestService).GetIssuesForProjects(conf, "project:id", true)
+        let issues = (service :> ISonarRestService).GetIssuesForProjects(conf, "project:id")
         issues.Count |> should equal 30
 
     [<Test>]
@@ -144,7 +144,7 @@ type IssuesTests() =
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        let issues = (service :> ISonarRestService).GetIssuesInResource(conf, "filename", true)
+        let issues = (service :> ISonarRestService).GetIssuesInResource(conf, "filename")
         issues.Count |> should equal 30
 
 

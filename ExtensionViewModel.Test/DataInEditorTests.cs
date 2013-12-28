@@ -207,7 +207,7 @@ namespace ExtensionViewModel.Test
                     .Return(new List<Resource> { element })
                     .Repeat.Times(3);
                 this.service.Expect(
-                    mp => mp.GetIssuesInResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything, Arg<bool>.Is.Anything))
+                    mp => mp.GetIssuesInResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything))
                     .Return(new List<Issue> { new Issue { Component = "file.cpp", Line = 1, Status = "OPEN" }, new Issue { Component = "file.cpp", Line = 1, Status = "OPEN" } })
                     .Repeat.Once();
                 //this.pluginController.Expect(

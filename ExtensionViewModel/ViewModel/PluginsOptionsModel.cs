@@ -18,6 +18,7 @@ namespace ExtensionViewModel.ViewModel
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.IO;
+    using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
     using ExtensionHelpers;
@@ -370,17 +371,26 @@ namespace ExtensionViewModel.ViewModel
 
                 if (header.Equals("Generate Token"))
                 {
-                    if (this.model.SelectedLicense != null)
+                    if (this.model.SelectedLicense == null)
                     {
-                        foreach (var plugin in this.model.Plugins)
+                        MessageBox.Show("Select a license first");
+                        return;
+                    }
+
+                    foreach (var plugin in this.model.Plugins)
+                    {
+                        if (plugin.GetKey(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.model.Vsenvironmenthelper)).Equals(this.model.SelectedLicense.ProductId))
                         {
-                            if (plugin.GetKey(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.model.Vsenvironmenthelper)).Equals(this.model.SelectedLicense.ProductId))
-                            {
-                                this.model.GeneratedToken = plugin.GenerateTokenId(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.model.Vsenvironmenthelper));
-                            }
+                            this.model.GeneratedToken = plugin.GenerateTokenId(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.model.Vsenvironmenthelper));
                         }
                     }
 
+                    return;
+                }
+
+                if (header.Equals("Refresh"))
+                {
+                    this.model.RefreshLicenses(true);
                     return;
                 }
                 

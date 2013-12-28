@@ -77,7 +77,7 @@ namespace ExtensionView.Test
             }
 
             ISonarRestService service = new SonarRestService(mockHttpReq);
-            var issues = service.GetIssuesInResource(config, "resource", false);
+            var issues = service.GetIssuesInResource(config, "resource");
             var associatedProject = new Resource { Key = "core:Common" };
 
             this.model = new ExtensionDataModel(service, mockVsHelpers, associatedProject) {};
@@ -141,7 +141,7 @@ namespace ExtensionView.Test
                 throw new NotImplementedException();
             }
 
-            public Dictionary<string, VsLicense> GetLicenses(ConnectionConfiguration configuration)
+            public Dictionary<string, VsLicense> GetLicenses(ConnectionConfiguration configuration, bool dsad)
             {
                 throw new NotImplementedException();
             }
