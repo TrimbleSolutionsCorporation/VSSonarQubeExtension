@@ -131,6 +131,11 @@ namespace ExtensionView.Test
                 throw new NotImplementedException();
             }
 
+            public ILocalAnalyserExtension GetLocalAnalysisExtension(ConnectionConfiguration configuration, Resource project, double sonarVersion)
+            {
+                throw new NotImplementedException();
+            }
+
             public ILocalAnalyserExtension GetLocalAnalysisExtension(ConnectionConfiguration configuration, Resource project)
             {
                 throw new NotImplementedException();

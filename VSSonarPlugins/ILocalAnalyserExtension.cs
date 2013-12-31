@@ -46,38 +46,55 @@ namespace VSSonarPlugins
         event EventHandler StdErrEvent;
 
         /// <summary>
-        /// The model will spawned this method into a own thread, and read the results when
-        /// LocalAnalysisCompleted event is triggered.
+        /// The get file analyser thread.
         /// </summary>
-        /// <param name="filePath">
-        /// The file Path.
+        /// <param name="item">
+        /// The item.
+        /// </param>
+        /// <param name="projectKey">
+        /// The project key.
+        /// </param>
+        /// <param name="profile">
+        /// The profile.
+        /// </param>
+        /// <param name="fileSourceInServer">
+        /// The file Source In Server.
+        /// </param>
+        /// <param name="onModifiedLinesOnly">
+        /// The on Modified Lines Only.
         /// </param>
         /// <returns>
-        /// The <see cref="bool"/>.
+        /// The <see cref="Thread"/>.
         /// </returns>
-        Thread GetFileAnalyserThread(VsProjectItem item, string projectKey);
+        Thread GetFileAnalyserThread(VsProjectItem item, string projectKey, Profile profile, string fileSourceInServer, bool onModifiedLinesOnly);
 
         /// <summary>
         /// The get incremental analyser thread.
         /// </summary>
         /// <param name="solutionPath">
-        /// The solution Path.
+        /// The solution path.
+        /// </param>
+        /// <param name="profile">
+        /// The profile.
         /// </param>
         /// <returns>
         /// The <see cref="Thread"/>.
         /// </returns>
-        Thread GetIncrementalAnalyserThread(string solutionPath);
+        Thread GetIncrementalAnalyserThread(string solutionPath, Profile profile);
 
         /// <summary>
         /// The get preview analyser thread.
         /// </summary>
         /// <param name="solutionPath">
-        /// The solution Path.
+        /// The solution path.
+        /// </param>
+        /// <param name="profile">
+        /// The profile.
         /// </param>
         /// <returns>
         /// The <see cref="Thread"/>.
         /// </returns>
-        Thread GetPreviewAnalyserThread(string solutionPath);
+        Thread GetPreviewAnalyserThread(string solutionPath, Profile profile);
 
         /// <summary>
         /// The get analyser thread.

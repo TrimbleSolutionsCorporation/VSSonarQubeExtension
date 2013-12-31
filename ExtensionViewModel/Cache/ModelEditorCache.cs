@@ -332,6 +332,12 @@ namespace ExtensionViewModel.Cache
         internal void UpdateIssues(List<Issue> issues)
         {
             this.ClearData();
+
+            if (issues == null)
+            {
+                return;
+            }
+
             foreach (var issue in issues)
             {
                 if (!data.ContainsKey(issue.Component))

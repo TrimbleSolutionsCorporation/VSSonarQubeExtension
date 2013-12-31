@@ -158,7 +158,7 @@ namespace VSSonarExtension.PackageImplementation
             foreach (var plugin in ExtensionDataModel.PluginsOptionsData.Plugins)
             {
                 var configuration = ConnectionConfigurationHelpers.GetConnectionConfiguration(this.visualStudioInterface);
-                var controloption = plugin.GetPluginControlOptions(configuration);
+                var controloption = plugin.GetPluginControlOptions(configuration, null);
                 if (controloption == null)
                 {
                     continue;

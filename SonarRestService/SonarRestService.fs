@@ -23,6 +23,7 @@ open System.Collections.ObjectModel
 open System
 open System.Web
 open System.Net
+open System.IO
 open System.Text.RegularExpressions
 
 open SonarRestService
@@ -121,10 +122,10 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             issue.CreationDate <- elem.CreationDate
 
             issue.Component <- elem.Component
-            try
+            if not(obj.ReferenceEquals(elem.Line, null)) then
                 issue.Line <- elem.Line.Value
-            with
-            | ex -> issue.Line <- 0
+            else
+                issue.Line <- 0
 
             issue.Project <- elem.Project
             issue.UpdateDate <- elem.UpdateDate
@@ -319,10 +320,10 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                         met.Data <- metric.Data.Value.Trim()
                     | _ -> ()
 
-                    try
+                    if not(obj.ReferenceEquals(metric.FrmtVal.Number, null)) then
                         met.FormatedValue <- sprintf "%f" metric.FrmtVal.Number.Value
-                    with
-                        | ex -> met.FormatedValue <- sprintf "%s" metric.FrmtVal.String.Value
+                    else
+                        met.FormatedValue <- sprintf "%s" metric.FrmtVal.String.Value
 
                     match metric.JsonValue.TryGetProperty("val") with
                     | NotNull ->
@@ -760,3 +761,31 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 (this :> ISonarRestService).CommentOnIssues(newConf, issues, comment) |> ignore
 
             responseMap
+
+        member this.ParseReportOfIssues(path : string) =
+            let issuesInFile = JSonIssues.Parse(File.ReadAllText(path))
+            let currentListOfIssues = new System.Collections.Generic.List<Issue>()
+
+            let ConvertIssue(elem : JSonIssues.DomainTypes.Issue ) =
+                let issue = new Issue()
+                if not(obj.ReferenceEquals(elem.Component, null)) then
+                    issue.Component <- elem.Component.Value
+                if not(obj.ReferenceEquals(elem.CreationDate, null)) then
+                    issue.CreationDate <- elem.CreationDate.Value
+                if not(obj.ReferenceEquals(elem.Key, null)) && not(obj.ReferenceEquals(elem.Key.Guid, null)) then
+                    issue.Key <- elem.Key.Guid.Value
+                if not(obj.ReferenceEquals(elem.Line, null)) then
+                    issue.Line <- elem.Line.Value
+                if not(obj.ReferenceEquals(elem.Message, null)) then
+                    issue.Message <- elem.Message.Value
+                if not(obj.ReferenceEquals(elem.Rule, null)) then
+                    issue.Rule <- elem.Rule
+                if not(obj.ReferenceEquals(elem.Severity, null)) then
+                    issue.Severity <- elem.Severity.Value
+                if not(obj.ReferenceEquals(elem.UpdateDate, null)) then
+                    issue.UpdateDate <- elem.UpdateDate.Value
+
+                issue
+
+            issuesInFile.Issues |> Seq.iter (fun elem -> currentListOfIssues.Add(ConvertIssue(elem)))            
+            currentListOfIssues          

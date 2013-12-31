@@ -51,17 +51,6 @@ namespace VSSonarPlugins
         IPluginsOptions GetPluginControlOptions(ConnectionConfiguration configuration, Resource project);
 
         /// <summary>
-        /// The get plugin control options.
-        /// </summary>
-        /// <param name="configuration">
-        /// The configuration.
-        /// </param>
-        /// <returns>
-        /// The <see cref="IPluginsOptions"/>.
-        /// </returns>
-        IPluginsOptions GetPluginControlOptions(ConnectionConfiguration configuration);
-
-        /// <summary>
         /// The is supported.
         /// </summary>
         /// <param name="configuration">
@@ -104,7 +93,7 @@ namespace VSSonarPlugins
         string GetResourceKey(VsProjectItem projectItem, string projectKey);
 
         /// <summary>
-        /// The get local analysis extensions.
+        /// The get local analysis extension.
         /// </summary>
         /// <param name="configuration">
         /// The configuration.
@@ -112,10 +101,13 @@ namespace VSSonarPlugins
         /// <param name="project">
         /// The project.
         /// </param>
+        /// <param name="sonarVersion">
+        /// The sonar version.
+        /// </param>
         /// <returns>
-        /// The <see cref="List"/>.
+        /// The <see cref="ILocalAnalyserExtension"/>.
         /// </returns>
-        ILocalAnalyserExtension GetLocalAnalysisExtension(ConnectionConfiguration configuration, Resource project);
+        ILocalAnalyserExtension GetLocalAnalysisExtension(ConnectionConfiguration configuration, Resource project, double sonarVersion);
 
         /// <summary>
         /// The get server analyser extensions.

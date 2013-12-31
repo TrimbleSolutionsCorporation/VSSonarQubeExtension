@@ -10,6 +10,10 @@
 // You should have received a copy of the GNU Lesser General Public License along with this program; if not, write to the Free
 // Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 // --------------------------------------------------------------------------------------------------------------------
+
+using System.Collections.Generic;
+using ExtensionHelpers;
+
 namespace ExtensionViewModel.ViewModel
 {
     using System;
@@ -150,6 +154,7 @@ namespace ExtensionViewModel.ViewModel
                 this.analysisChangeLines = value;
                 this.OnPropertyChanged("AnalysisChangeLines");
                 this.OnPropertyChanged("AnalysisChangeLinesText");
+                this.AnalysisTrigger = false;
             }
         }
 
@@ -453,7 +458,9 @@ namespace ExtensionViewModel.ViewModel
                 {
                     case AnalysisTypes.File:
                         this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted += this.UpdateLocalIssuesForFileAnalysis;
-                        this.localAnalyserThread = this.ExtensionRunningLocalAnalysis.GetFileAnalyserThread(this.vsenvironmenthelper.VsProjectItem(this.DocumentInView), this.AssociatedProject.Key);
+                        var source = this.restService.GetSourceForFileResource(this.UserConfiguration, this.ResourceInEditor.Key);
+                        var sourcestr = VsSonarUtils.GetLinesFromSource(source, "\r\n");
+                        this.localAnalyserThread = this.ExtensionRunningLocalAnalysis.GetFileAnalyserThread(this.vsenvironmenthelper.VsProjectItem(this.DocumentInView), this.AssociatedProject.Key, this.Profile, sourcestr, this.AnalysisChangeLines);
                         break;
                     case AnalysisTypes.Analysis:
                         this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted += this.UpdateLocalIssues;
@@ -461,11 +468,11 @@ namespace ExtensionViewModel.ViewModel
                         break;
                     case AnalysisTypes.Incremental:
                         this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted += this.UpdateLocalIssues;
-                        this.localAnalyserThread = this.ExtensionRunningLocalAnalysis.GetIncrementalAnalyserThread(this.vsenvironmenthelper.ActiveSolutionPath());
+                        this.localAnalyserThread = this.ExtensionRunningLocalAnalysis.GetIncrementalAnalyserThread(this.vsenvironmenthelper.ActiveSolutionPath(), this.Profile);
                         break;
                     case AnalysisTypes.Preview:
                         this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted += this.UpdateLocalIssues;
-                        this.localAnalyserThread = this.ExtensionRunningLocalAnalysis.GetPreviewAnalyserThread(this.vsenvironmenthelper.ActiveSolutionPath());
+                        this.localAnalyserThread = this.ExtensionRunningLocalAnalysis.GetPreviewAnalyserThread(this.vsenvironmenthelper.ActiveSolutionPath(), this.Profile);
                         break;
                 }
 
@@ -596,25 +603,6 @@ namespace ExtensionViewModel.ViewModel
                 this.ExtensionRunningLocalAnalysis.StdOutEvent -= this.UpdateOutputMessagesFromPlugin;
 
                 var issuesInExtension = this.ExtensionRunningLocalAnalysis.GetIssues();
-
-                if (issuesInExtension.Count == 0)
-                {
-                    return;
-                }
-
-                foreach (var issue in issuesInExtension.ToList())
-                {
-                    var ruleInProfile = Profile.IsRuleEnabled(this.Profile, issue.Rule);
-                    if (ruleInProfile == null)
-                    {
-                        issuesInExtension.Remove(issue);
-                    }
-                    else
-                    {
-                        issue.Severity = ruleInProfile.Severity;
-                    }
-                }
-
                 this.localEditorCache.UpdateIssues(issuesInExtension);
                 this.OnPropertyChanged("IssuesInEditor");
                 this.OnPropertyChanged("Issues");

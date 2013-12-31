@@ -21,16 +21,11 @@ namespace ExtensionViewModel.ViewModel
     using System.Linq;
     using System.Threading;
     using System.Windows;
-
+    using Cache;
+    using Commands;
     using ExtensionHelpers;
-
     using ExtensionTypes;
-
-    using ExtensionViewModel.Cache;
-    using ExtensionViewModel.Commands;
-
     using SonarRestService;
-
     using VSSonarPlugins;
 
     /// <summary>
@@ -167,10 +162,12 @@ namespace ExtensionViewModel.ViewModel
             this.restService = new SonarRestService(new JsonSonarConnector());
             this.UserTextControlsHeight = new GridLength(0);
             this.UserControlsHeight = new GridLength(0);
-            this.IssuesFilterWidth = new GridLength(0);
 
             this.RestoreUserSettingsInIssuesDataGrid();
             this.RestoreUserFilteringOptions();
+
+            this.AnalysisChangeLines = false;
+            this.AnalysisTrigger = false;
         }
 
         /// <summary>
@@ -210,10 +207,12 @@ namespace ExtensionViewModel.ViewModel
 
             this.UserTextControlsHeight = new GridLength(0);
             this.UserControlsHeight = new GridLength(0);
-            this.IssuesFilterWidth = new GridLength(0);
 
             this.RestoreUserSettingsInIssuesDataGrid();
             this.RestoreUserFilteringOptions();
+
+            this.AnalysisChangeLines = false;
+            this.AnalysisTrigger = false;
         }
 
         #endregion
@@ -600,17 +599,7 @@ namespace ExtensionViewModel.ViewModel
                         return new List<Issue>();
                     }
 
-                    var filteredIssues = this.ApplyFilterToIssues(this.localEditorCache.GetIssuesForResource(this.ResourceInEditor));
-
-                    if (!this.AnalysisChangeLines || !this.analysisModeText.Equals(AnalysisModes.Local))
-                    {
-                        return filteredIssues;
-                    }
-
-                    var source = this.restService.GetSourceForFileResource(this.UserConfiguration, this.ResourceInEditor.Key);
-                    var sourcestr = VsSonarUtils.GetLinesFromSource(source, "\r\n");
-                    var diffReport = VsSonarUtils.GetDifferenceReport(this.DocumentInView, sourcestr, false);
-                    return VsSonarUtils.GetIssuesInModifiedLinesOnly(filteredIssues, diffReport);
+                    return this.ApplyFilterToIssues(this.localEditorCache.GetIssuesForResource(this.ResourceInEditor));
                 }
 
                 if (this.analysisModeText.Equals(AnalysisModes.Local))
@@ -619,23 +608,6 @@ namespace ExtensionViewModel.ViewModel
                 }
 
                 return new List<Issue>();
-            }
-        }
-
-        /// <summary>
-        ///     Gets or sets the comments width.
-        /// </summary>
-        public GridLength IssuesFilterWidth
-        {
-            get
-            {
-                return this.issuesFilterWidth;
-            }
-
-            set
-            {
-                this.issuesFilterWidth = value;
-                this.OnPropertyChanged("IssuesFilterWidth");
             }
         }
 
@@ -787,25 +759,6 @@ namespace ExtensionViewModel.ViewModel
 
                     this.SetWorkflowVisibility();
                 }
-            }
-        }
-
-        /// <summary>
-        ///     Gets or sets a value indicating whether issues in view locked.
-        /// </summary>
-        public bool ShowIssueFiltering
-        {
-            get
-            {
-                return this.showIssueFiltering;
-            }
-
-            set
-            {
-                this.showIssueFiltering = value;
-                this.IssuesFilterWidth = this.showIssueFiltering ? new GridLength(200) : new GridLength(0);
-
-                this.OnPropertyChanged("ShowIssueFiltering");
             }
         }
 
@@ -1064,7 +1017,13 @@ namespace ExtensionViewModel.ViewModel
             this.PluginRunningAnalysis = this.PluginController.GetPluginToRunResource(this.UserConfiguration, newProject);
             if (this.PluginRunningAnalysis != null)
             {
-                this.ExtensionRunningLocalAnalysis = this.PluginRunningAnalysis.GetLocalAnalysisExtension(this.UserConfiguration, newProject);
+                this.ExtensionRunningLocalAnalysis = this.PluginRunningAnalysis.GetLocalAnalysisExtension(this.UserConfiguration, newProject, this.SonarVersion);
+
+                // populate properties
+                var pluginKey = this.PluginRunningAnalysis.GetKey(this.UserConfiguration);
+                var options = this.Vsenvironmenthelper.ReadAllOptionsForPluginOptionInApplicationData(pluginKey);
+                var plugionController = this.PluginRunningAnalysis.GetPluginControlOptions(this.UserConfiguration, this.AssociatedProject);
+                plugionController.SetOptions(options);
             }
 
             this.OnPropertyChanged("IsSolutionOpen");
@@ -1186,13 +1145,9 @@ namespace ExtensionViewModel.ViewModel
                 return new List<Issue>();
             }
 
-            if (this.AnalysisChangeLines && this.analysisModeText.Equals(AnalysisModes.Local))
+            if (this.analysisModeText.Equals(AnalysisModes.Local))
             {
-                var filteredIssues = this.ApplyFilterToIssues(this.localEditorCache.GetIssuesForResource(this.ResourceInEditor));
-                var source = this.restService.GetSourceForFileResource(this.UserConfiguration, this.ResourceInEditor.Key);
-                var sourcestr = VsSonarUtils.GetLinesFromSource(source, "\r\n");
-                var diffReport = VsSonarUtils.GetDifferenceReport(this.DocumentInView, sourcestr, false);
-                return VsSonarUtils.GetIssuesInModifiedLinesOnly(filteredIssues, diffReport);
+                return this.ApplyFilterToIssues(this.localEditorCache.GetIssuesForResource(this.ResourceInEditor));
             }
 
             return this.ApplyFilterToIssues(this.localEditorCache.GetIssuesForResource(this.ResourceInEditor, sourceReference));

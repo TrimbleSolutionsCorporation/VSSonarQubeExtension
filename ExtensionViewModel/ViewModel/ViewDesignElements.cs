@@ -80,15 +80,5 @@ namespace ExtensionViewModel.ViewModel
         /// The comments width.
         /// </summary>
         private GridLength commentsWidth;
-
-        /// <summary>
-        /// The issues filter width.
-        /// </summary>
-        private GridLength issuesFilterWidth;
-
-        /// <summary>
-        /// The show issue filtering.
-        /// </summary>
-        private bool showIssueFiltering;
     }
 }
