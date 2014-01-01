@@ -73,14 +73,7 @@
     <Reference Include="FSharp.Data">
       <HintPath>..\references\FSharp.Data.dll</HintPath>
     </Reference>
-    <Reference Include="FSharp.Data.TypeProviders">
-      <HintPath>..\references\FSharp.Data.TypeProviders.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="mscorlib" />
-    <Reference Include="policy.4.3.FSharp.Core">
-      <HintPath>..\references\policy.4.3.FSharp.Core.dll</HintPath>
-    </Reference>
     <Reference Include="RestSharp">
       <HintPath>..\references\RestSharp.dll</HintPath>
       <Private>True</Private>

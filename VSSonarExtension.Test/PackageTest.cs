@@ -15,11 +15,9 @@
 namespace VSSonarExtension.Test
 {
     using Microsoft.VisualStudio.Shell.Interop;
-    using Microsoft.VsSDK.UnitTestLibrary;
-
     using NUnit.Framework;
 
-    using VSSonarExtension.PackageImplementation;
+    using PackageImplementation;
 
     /// <summary>
     /// The package test.
@@ -55,12 +53,6 @@ namespace VSSonarExtension.Test
             // Create the package
             var package = new VsSonarExtensionPackage() as IVsPackage;
             Assert.IsNotNull(package, "The object does not implement IVsPackage");
-
-            // Create a basic service provider
-            var serviceProvider = OleServiceProvider.CreateOleServiceProviderWithBasicServices();
-
-            // Site the package
-            Assert.AreEqual(0, package.SetSite(serviceProvider), "SetSite did not return S_OK");
 
             // Unsite the package
             Assert.AreEqual(0, package.SetSite(null), "SetSite(null) did not return S_OK");
