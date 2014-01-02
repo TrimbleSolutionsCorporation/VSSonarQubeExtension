@@ -11,13 +11,13 @@
 // Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 // --------------------------------------------------------------------------------------------------------------------
 
-using ExtensionHelpers;
-
 namespace ExtensionViewModel.ViewModel
 {
     using System;
     using System.Diagnostics;
     using System.Windows;
+
+    using ExtensionHelpers;
 
     using VSSonarPlugins;
 

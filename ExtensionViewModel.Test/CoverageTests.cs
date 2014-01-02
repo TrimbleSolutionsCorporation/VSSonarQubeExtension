@@ -21,6 +21,7 @@ namespace ExtensionViewModel.Test
 
     using ExtensionTypes;
 
+    using ExtensionViewModel.Cache;
     using ExtensionViewModel.ViewModel;
 
     using NUnit.Framework;
@@ -82,7 +83,7 @@ namespace ExtensionViewModel.Test
             public void CoverageInEditorSetAndGetTest()
             {
                 var data = new ExtensionDataModel(this.service, this.vshelper, null);
-                var sourceCoverage = new SourceCoverage();
+                var sourceCoverage = new Dictionary<int, CoverageElement>();
                 Assert.AreEqual(sourceCoverage, data.GetCoverageInEditor(""));
             }
 
@@ -97,34 +98,6 @@ namespace ExtensionViewModel.Test
                 data.CoverageInEditorEnabled = false;
                 Assert.IsFalse(data.CoverageInEditorEnabled);
                 Assert.AreNotEqual(sourceCoverage, data.GetCoverageInEditor(""));
-            }
-
-            /// <summary>
-            /// The enable coverage in editor.
-            /// </summary>
-            [Test]
-            public void EnableCoverageInEditor()
-            {
-                var data = new ExtensionDataModel(this.service, this.vshelper, null);
-                var sourceCoverage = new SourceCoverage();
-                var source = new Source { Lines = new List<Line> { new Line { Id = 1, Val = "#include bal" }, new Line { Id = 2, Val = "#include bals" } } };
-                var element = new Resource { Date = new DateTime(2000, 1, 1) };
-                this.service.Expect(
-                    mp => mp.GetResourcesData(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource")))
-                    .Return(new List<Resource> { element })
-                    .Repeat.Twice();
-                this.service.Expect(
-                    mp => mp.GetSourceForFileResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource")))
-                    .Return(source);
-                this.service.Expect(
-                    mp => mp.GetCoverageInResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource")))
-                    .Return(sourceCoverage);
-                element.Key = "resource";
-                data.ResourceInEditor = element;
-                data.CoverageInEditorEnabled = true;
-                Assert.IsTrue(data.CoverageInEditorEnabled);
-                Assert.AreEqual(sourceCoverage, data.GetCoverageInEditor(""));
-                Assert.AreEqual(element, data.ResourceInEditor);
             }
         }
     }

@@ -44,22 +44,18 @@ namespace ExtensionViewModel.Cache
     public class ModelEditorCache
     {
         /// <summary>
-        /// Gets or sets the coverage data.
+        /// Gets or sets the coverage DataCache.
         /// </summary>
-        private static Dictionary<string, EditorData> data = new Dictionary<string, EditorData>();
-
-        #region Public Properties
-
-        #endregion
+        private static readonly Dictionary<string, EditorData> DataCache = new Dictionary<string, EditorData>();
 
         /// <summary>
-        /// The update coverage data.
+        /// The update coverage DataCache.
         /// </summary>
         /// <param name="resource">
         /// The resource.
         /// </param>
         /// <param name="coverageData">
-        /// The coverage data.
+        /// The coverage DataCache.
         /// </param>
         /// <param name="issues">
         /// The issues.
@@ -69,19 +65,19 @@ namespace ExtensionViewModel.Cache
         /// </param>
         public void UpdateResourceData(Resource resource, SourceCoverage coverageData, List<Issue> issues, string serverSource)
         {
-            if (!data.ContainsKey(resource.Key))
+            if (!DataCache.ContainsKey(resource.Key))
             {
-                data.Add(resource.Key, new EditorData(resource));
+                DataCache.Add(resource.Key, new EditorData(resource));
             }
 
-            var elem = data[resource.Key];
+            var elem = DataCache[resource.Key];
             elem.ServerSource = serverSource;
             this.UpdateCoverageData(elem, coverageData);
             this.UpdateIssuesData(elem, issues);
         }
 
         /// <summary>
-        /// The get coverage data for resource.
+        /// The get coverage DataCache for resource.
         /// </summary>
         /// <param name="resource">
         /// The resource.
@@ -96,12 +92,12 @@ namespace ExtensionViewModel.Cache
         {
             var coverageLine = new Dictionary<int, CoverageElement>();
 
-            if (!data.ContainsKey(resource.Key))
+            if (!DataCache.ContainsKey(resource.Key))
             {
                 return coverageLine;
             }
 
-            var element = data[resource.Key];
+            var element = DataCache[resource.Key];
 
             var diffReport = VsSonarUtils.GetSourceDiffFromStrings(
                 element.ServerSource, 
@@ -142,12 +138,12 @@ namespace ExtensionViewModel.Cache
         {
             var issues = new List<Issue>();
 
-            if (!data.ContainsKey(resource.Key))
+            if (!DataCache.ContainsKey(resource.Key))
             {
                 return issues;
             }
 
-            var element = data[resource.Key];
+            var element = DataCache[resource.Key];
 
             if (element.ServerSource == null)
             {
@@ -183,12 +179,12 @@ namespace ExtensionViewModel.Cache
                 return issues;
             }
 
-            if (!data.ContainsKey(resource.Key))
+            if (!DataCache.ContainsKey(resource.Key))
             {
                 return issues;
             }
 
-            var element = data[resource.Key];
+            var element = DataCache[resource.Key];
 
             foreach (var issue in element.Issues)
             {
@@ -199,15 +195,15 @@ namespace ExtensionViewModel.Cache
         }
 
         /// <summary>
-        /// The clear data.
+        /// The clear DataCache.
         /// </summary>
         public void ClearData()
         {
-            data.Clear();
+            DataCache.Clear();
         }
 
         /// <summary>
-        /// The is data updated.
+        /// The is DataCache updated.
         /// </summary>
         /// <param name="resource">
         /// The resource.
@@ -217,7 +213,7 @@ namespace ExtensionViewModel.Cache
         /// </returns>
         public bool IsDataUpdated(Resource resource)
         {
-            if (!data.ContainsKey(resource.Key) || resource.Date > data[resource.Key].Resource.Date)
+            if (!DataCache.ContainsKey(resource.Key) || resource.Date > DataCache[resource.Key].Resource.Date)
             {
                 return false;
             }
@@ -226,13 +222,13 @@ namespace ExtensionViewModel.Cache
         }
 
         /// <summary>
-        /// The update coverage data.
+        /// The update coverage DataCache.
         /// </summary>
         /// <param name="elem">
         /// The elem.
         /// </param>
         /// <param name="coverageData">
-        /// The coverage data.
+        /// The coverage DataCache.
         /// </param>
         private void UpdateCoverageData(EditorData elem, SourceCoverage coverageData)
         {
@@ -290,7 +286,7 @@ namespace ExtensionViewModel.Cache
         }
 
         /// <summary>
-        /// The update issues data.
+        /// The update issues DataCache.
         /// </summary>
         /// <param name="elem">
         /// The elem.
@@ -315,13 +311,13 @@ namespace ExtensionViewModel.Cache
         /// </returns>
         internal string GetSourceForResource(Resource resource)
         {
-            return data.ContainsKey(resource.Key) ? data[resource.Key].ServerSource : string.Empty;
+            return DataCache.ContainsKey(resource.Key) ? DataCache[resource.Key].ServerSource : string.Empty;
         }
 
         internal List<Issue> GetIssues()
         {
             var issues = new List<Issue>();
-            foreach (var editorData in data)
+            foreach (var editorData in DataCache)
             {
                 issues.AddRange(editorData.Value.Issues);                
             }
@@ -340,14 +336,14 @@ namespace ExtensionViewModel.Cache
 
             foreach (var issue in issues)
             {
-                if (!data.ContainsKey(issue.Component))
+                if (!DataCache.ContainsKey(issue.Component))
                 {
                     var resource = new Resource();
                     resource.Key = issue.Component;
-                    data.Add(issue.Component, new EditorData(new Resource()));
+                    DataCache.Add(issue.Component, new EditorData(new Resource()));
                 }
 
-                var elem = data[issue.Component];
+                var elem = DataCache[issue.Component];
                 elem.Issues.Add(issue);
             }
         }

@@ -104,7 +104,7 @@ namespace ExtensionViewModel.Test
             {
                 var data = new ExtensionDataModel(this.service, this.vshelper, null);
                 data.RefreshDataForResource(@"e:\test\src.cs");
-                Assert.AreEqual("No Plugins installed", data.ErrorMessage);
+                Assert.AreEqual("Extension Not Ready", data.ErrorMessage);
                 Assert.IsNull(data.ResourceInEditor);
             }
 
@@ -121,22 +121,6 @@ namespace ExtensionViewModel.Test
                 data.UpdateIssuesInEditorLocationWithModifiedBuffer("data");
                 Assert.AreEqual(0, data.GetIssuesInEditor("file").Count);
                 Assert.IsNull(data.ResourceInEditor);
-            }
-
-            /// <summary>
-            /// The should throw w excepion when data is invalid.
-            /// </summary>
-            [Test]
-            public void ShouldThrowWExcepionWhenDataIsInvalid()
-            {
-                var data = new ExtensionDataModel(this.service, this.vshelper, null)
-                               {
-                                   AssociatedProject = new Resource(),
-                               };
-
-                data.UpdateIssuesInEditorLocationWithModifiedBuffer("data");
-                Assert.AreEqual("Error Updating Locations Off Issues", data.ErrorMessage);
-                Assert.AreEqual(0, data.GetIssuesInEditor("file"));
             }
 
             /// <summary>
@@ -179,63 +163,6 @@ namespace ExtensionViewModel.Test
                 data.RefreshDataForResource("c:\\src\\file.cpp");
                 Assert.AreEqual("Extension Not Ready", data.ErrorMessage);
                 Assert.AreEqual(0, data.GetIssuesInEditor("file").Count);
-            }
-
-            /// <summary>
-            /// The test loading of window.
-            /// </summary>
-            [Test]
-            public void DoServerAnalysisUpdateBufferFileFound()
-            {
-                var source = new Source { Lines = new List<Line> { new Line { Id = 1, Val = "#include xpto;" }, new Line { Id = 2, Val = "#include ypto;" } } };
-
-                this.vshelper.Expect(
-                    mp => mp.CurrentSelectedDocumentLanguage())
-                    .Return("c++");
-                this.vshelper.Expect(
-                    mp => mp.ActiveFileFullPath())
-                    .Return("c:\\src\\file.cpp");
-                this.vshelper.Expect(
-                    mp => mp.ActiveSolutionPath())
-                    .Return("c:\\src");
-                this.service.Expect(
-                    mp => mp.GetSourceForFileResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything))
-                    .Return(source);
-                var element = new Resource { Date = new DateTime(2000, 1, 1), Key = "resourceKey", Lname = "file.cpp" };
-                this.service.Expect(
-                    mp => mp.GetResourcesData(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything))
-                    .Return(new List<Resource> { element })
-                    .Repeat.Times(3);
-                this.service.Expect(
-                    mp => mp.GetIssuesInResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything))
-                    .Return(new List<Issue> { new Issue { Component = "file.cpp", Line = 1, Status = "OPEN" }, new Issue { Component = "file.cpp", Line = 1, Status = "OPEN" } })
-                    .Repeat.Once();
-                //this.pluginController.Expect(
-                //    mp => mp.GetPluginToRunResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything))
-                //    .Return(this.plugin)
-                //    .Repeat.Once();
-
-
-                this.plugin.Expect(mp => mp.IsSupported(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything)).Return(true).Repeat.Once();
-                this.plugin.Expect(mp => mp.GetServerAnalyserExtension(Arg<ConnectionConfiguration>.Is.Anything, Arg<Resource>.Is.Anything)).Return(this.extension).Repeat.Once();
-                this.plugin.Expect(
-                    mp =>
-                    mp.GetResourceKey(
-                        Arg<VsProjectItem>.Is.Anything,
-                        Arg<string>.Is.Anything)).Return("key").Repeat.Once();
-
-
-                var data = new ExtensionDataModel(this.service, this.vshelper, null);
-                data.PluginController = this.pluginController;
-                data.PluginRunningAnalysis = this.plugin;
-                data.AnalysisTrigger = true;
-                data.AssociatedProject = new Resource { Key = "KEY", Lname = "file.cpp"};
-                data.RefreshDataForResource("c:\\src\\file.cpp");
-                Assert.AreEqual(string.Empty, data.ErrorMessage);
-                Assert.AreEqual(2, data.GetIssuesInEditor("file").Count);
-                data.UpdateIssuesInEditorLocationWithModifiedBuffer("#include xpto;\r\n#include ypto;");
-                Assert.AreEqual(string.Empty, data.ErrorMessage);
-                Assert.AreEqual(2, data.GetIssuesInEditor("file").Count);
             }
         }
     }

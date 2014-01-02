@@ -23,6 +23,8 @@ namespace ExtensionViewModel.Test
     using Rhino.Mocks;
     using SonarRestService;
 
+    using VSSonarPlugins;
+
     /// <summary>
     /// The comment on issue command test.
     /// </summary>
@@ -44,6 +46,9 @@ namespace ExtensionViewModel.Test
         /// </summary>
         private IVsEnvironmentHelper vshelper;
 
+        private IPlugin plugin;
+
+        private Source fileSource;
         /// <summary>
         /// The setup.
         /// </summary>
@@ -53,6 +58,15 @@ namespace ExtensionViewModel.Test
             this.mocks = new MockRepository();
             this.service = this.mocks.Stub<ISonarRestService>();
             this.vshelper = this.mocks.Stub<IVsEnvironmentHelper>();
+            this.plugin = this.mocks.Stub<IPlugin>();
+
+
+            var Lines = new List<Line>();
+            Lines.Add(new Line { Id = 0, Val = "ghfggfgf" });
+            Lines.Add(new Line { Id = 1, Val = "ghfggfgf" });
+            Lines.Add(new Line { Id = 2, Val = "ghfggfgf" });
+            Lines.Add(new Line { Id = 3, Val = "ghfggfgf" });
+            this.fileSource = new Source { Lines = Lines };
 
             using (this.mocks.Record())
             {
@@ -70,35 +84,41 @@ namespace ExtensionViewModel.Test
         [Test]
         public void UpdateIssueDataForResourceWithNewDateDataTestWithCache()
         {
-            var element = new Resource();
-            var newResource = new Resource { Date = DateTime.Now };
-            var newResource1 = new Resource { Date = DateTime.Now };
+            var newResource = new Resource { Date = DateTime.Now, Key = "resource" };
+            var source1 = new SourceCoverage();
+            source1.SetLineCoverageData("1=0;2=3;3=3");
+            source1.SetBranchCoverageData("1=0;2=3;3=3", "1=0;2=3;3=3");
 
             this.service.Expect(
-                mp => mp.GetResourcesData(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource")))
-                .Return(new List<Resource> { element })
-                .Repeat.Once();
-            this.service.Expect(
-                mp => mp.GetResourcesData(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource")))
+                mp => mp.GetResourcesData(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything))
                 .Return(new List<Resource> { newResource });
-            this.service.Expect(
-                mp => mp.GetResourcesData(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource1")))
-                .Return(new List<Resource> { newResource1 });
 
             this.service.Expect(
-                mp => mp.GetIssuesInResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource")))
-                .Return(new List<Issue> { new Issue() })
+                mp => mp.GetSourceForFileResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything))
+                .Return(this.fileSource)
                 .Repeat.Once();
+
             this.service.Expect(
-                mp => mp.GetIssuesInResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource")))
-                .Return(new List<Issue> { new Issue(), new Issue() });
+                mp => mp.GetIssuesInResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything))
+                .Return(new List<Issue> { new Issue { Severity = "CRITICAL", Line = 1 } })
+                .Repeat.Once();
+
             this.service.Expect(
-                mp => mp.GetIssuesInResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource1")))
-                .Return(new List<Issue> { new Issue() });
+                mp => mp.GetCoverageInResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything))
+                .Return(source1)
+                .Repeat.Once();
+
+            this.plugin.Expect(
+                mp => mp.GetResourceKey(Arg<VsProjectItem>.Is.Anything, Arg<string>.Is.Anything))
+                .Return("resource");
 
             var data = new ExtensionDataModel(this.service, this.vshelper, null);
+            data.PluginController = new PluginController();
+            data.PluginRunningAnalysis = this.plugin;
+            data.AssociatedProject = new Resource() { Key = "sonar.com:common" };
+
             data.RefreshDataForResource("resource");
-            Assert.AreEqual(1, data.GetIssuesInEditor("alksjdlakjs").Count);
+            Assert.AreEqual(1, data.GetIssuesInEditor("ghfggfgf\r\nghfggfgf\r\nghfggfgf\r\nghfggfgf\r\n").Count);
         }
 
         /// <summary>
@@ -107,33 +127,43 @@ namespace ExtensionViewModel.Test
         [Test]
         public void UpdateCoverageDataForResourceWithNewDateDataTest()
         {
-            var element = new Resource();
-            var newResource = new Resource { Date = DateTime.Now };
+            var newResource = new Resource { Date = DateTime.Now, Key = "resource" };
             var source1 = new SourceCoverage();
-            source1.SetLineCoverageData("1=0;2=3;2=3");
-            source1.SetBranchCoverageData("1=0;2=3;2=3", "1=0;2=3;2=3");
-            var source2 = new SourceCoverage();
+            source1.SetLineCoverageData("1=0;2=3;3=3");
+            source1.SetBranchCoverageData("1=0;2=3;3=3", "1=0;2=3;3=3");
 
             this.service.Expect(
-                mp => mp.GetResourcesData(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource")))
-                .Return(new List<Resource> { element })
-                .Repeat.Once();
-            this.service.Expect(
-                mp => mp.GetResourcesData(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource")))
+                mp => mp.GetResourcesData(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything))
                 .Return(new List<Resource> { newResource });
 
             this.service.Expect(
-                mp => mp.GetCoverageInResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource")))
+                mp => mp.GetSourceForFileResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything))
+                .Return(new Source { Lines = new List<Line>() })
+                .Repeat.Once();
+
+            this.service.Expect(
+                mp => mp.GetIssuesInResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything))
+                .Return(new List<Issue>())
+                .Repeat.Once();
+
+            this.service.Expect(
+                mp => mp.GetCoverageInResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything))
                 .Return(source1)
                 .Repeat.Once();
-            this.service.Expect(
-                mp => mp.GetCoverageInResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("resource")))
-                .Return(source2);
+
+            this.plugin.Expect(
+                mp => mp.GetResourceKey(Arg<VsProjectItem>.Is.Anything, Arg<string>.Is.Anything))
+                .Return("resource");
 
             var data = new ExtensionDataModel(this.service, this.vshelper, null);
+            data.PluginController = new PluginController();
+            data.PluginRunningAnalysis = this.plugin;
+            data.AssociatedProject = new Resource() { Key = "sonar.com:common" };
             data.CoverageInEditorEnabled = true;
+            
             data.RefreshDataForResource("resource");
-            Assert.AreEqual(source1, data.GetCoverageInEditor("resource"));
+            var data1 = data.GetCoverageInEditor("ghfggfgf\r\nghfggfgf\r\nghfggfgf\r\nghfggfgf\r\n");
+            Assert.IsNotNull(data1);
         }
     }
 }

@@ -62,9 +62,13 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
             if not(obj.ReferenceEquals(user.Email, null)) then
                 newUser.Email <- user.Email.Value
+            else
+                newUser.Email <- ""
 
             if not(obj.ReferenceEquals(user.Name, null)) then
                 newUser.Name <- user.Name
+            else
+                newUser.Name <- ""
 
             newUser.Active <- user.Active
             newUser.Login <- user.Login
@@ -140,18 +144,17 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             if not(obj.ReferenceEquals(elem.Comments, null)) then
                 for elemC in elem.Comments.Value do issue.Comments.Add(new Comment(elemC.CreatedAt, elemC.HtmlText, elemC.Key, elemC.Login, -1))
 
-            if not(obj.ReferenceEquals(elem.EffortToFix, null)) then
-                let itemValue = elem.JsonValue.Item("effortToFix")
-                match itemValue with
-                | decimal -> issue.EffortToFix <- itemValue.AsDecimal()
-                //| float -> issue.EffortToFix <- Convert.ToDecimal(itemValue.AsFloat())
-                //| int -> issue.EffortToFix <- Convert.ToDecimal(itemValue.AsInteger())
-
             if not(obj.ReferenceEquals(elem.CloseDate, null)) then
                 issue.CloseDate <- elem.CloseDate.Value
 
             if not(obj.ReferenceEquals(elem.Resolution, null)) then
                 issue.Resolution <- elem.Resolution.Value
+
+            if not(obj.ReferenceEquals(elem.EffortToFix, null)) then
+                let itemValue = elem.JsonValue.Item("effortToFix")
+                issue.EffortToFix <- 0.0m
+                match itemValue with
+                | decimal -> issue.EffortToFix <- itemValue.AsDecimal()
 
             issueList.Add(issue)
 

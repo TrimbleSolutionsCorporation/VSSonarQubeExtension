@@ -588,7 +588,9 @@ namespace ExtensionViewModel.ViewModel
             {
                 if (this.IssuesInViewAreLocked)
                 {
-                    return this.ApplyFilterToIssues(this.localEditorCache.GetIssues());
+                    var issues = this.ApplyFilterToIssues(this.localEditorCache.GetIssues());
+                    this.StatsLabel = "Number of Issues: " + issues.Count + " ";
+                    return issues;
                 }
 
                 if (this.analysisModeText.Equals(AnalysisModes.Server) || 
@@ -596,17 +598,23 @@ namespace ExtensionViewModel.ViewModel
                 {
                     if (!this.AnalysisTrigger)
                     {
+                        this.StatsLabel = "Number of Issues: 0 ";
                         return new List<Issue>();
                     }
 
-                    return this.ApplyFilterToIssues(this.localEditorCache.GetIssuesForResource(this.ResourceInEditor));
+                    var issues = this.ApplyFilterToIssues(this.localEditorCache.GetIssuesForResource(this.ResourceInEditor));
+                    this.StatsLabel = "Number of Issues: " + issues.Count + " ";
+                    return issues;
                 }
 
                 if (this.analysisModeText.Equals(AnalysisModes.Local))
                 {
-                    return this.ApplyFilterToIssues(this.localEditorCache.GetIssues());
+                    var issues = this.ApplyFilterToIssues(this.localEditorCache.GetIssues());
+                    this.StatsLabel = "Number of Issues: " + issues.Count + " ";
+                    return issues;
                 }
 
+                this.StatsLabel = "Number of Issues: 0 ";
                 return new List<Issue>();
             }
         }

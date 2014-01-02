@@ -15,6 +15,7 @@
 namespace ExtensionViewModel.Test
 {
     using System;
+    using System.Collections.Generic;
 
     using ExtensionHelpers;
 
@@ -27,6 +28,8 @@ namespace ExtensionViewModel.Test
     using Rhino.Mocks;
 
     using SonarRestService;
+
+    using VSSonarPlugins;
 
     /// <summary>
     /// The comment on issue command test.
@@ -98,12 +101,15 @@ namespace ExtensionViewModel.Test
         [Test]
         public void TestSetIssuesList()
         {
-            var model = new ExtensionDataModel(this.service, this.vshelper, null)
-            {
-            };
+            var issueWithId = new Issue { Id = 20, Component = "asdaskjd:sdaskjd:aksjdkas/asdkasj.cs", Key = new Guid() };
 
-            Assert.AreEqual(2, model.Issues.Count);
-            Assert.AreEqual("Number Of Issues: 2", model.StatsLabel);
+            var model = new ExtensionDataModel(this.service, this.vshelper, null);
+            model.ResourceInEditor = new Resource { Key = "asdaskjd:sdaskjd:aksjdkas/asdkasj.cs" };
+            model.DocumentInView = "aksjdkas/asdkasj.cs";
+            model.ReplaceAllIssuesInCache(new List<Issue> { issueWithId });
+
+            Assert.AreEqual(1, model.Issues.Count);
+            Assert.AreEqual("Number of Issues: 1 ", model.StatsLabel);
             Assert.AreEqual(string.Empty, model.ErrorMessage);
         }
 
@@ -113,11 +119,14 @@ namespace ExtensionViewModel.Test
         [Test]
         public void TestSetIssuesInEditor()
         {
-            var model = new ExtensionDataModel(this.service, this.vshelper, null)
-            {
-            };
+            var issueWithId = new Issue { Id = 20, Component = "asdaskjd:sdaskjd:aksjdkas/asdkasj.cs", Key = new Guid() };
 
-            Assert.AreEqual(2, model.GetIssuesInEditor("file").Count);
+            var model = new ExtensionDataModel(this.service, this.vshelper, null);
+            model.ResourceInEditor = new Resource { Key = "asdaskjd:sdaskjd:aksjdkas/asdkasj.cs" };
+            model.DocumentInView = "aksjdkas/asdkasj.cs";
+            model.ReplaceAllIssuesInCache(new List<Issue> { issueWithId });
+
+            Assert.AreEqual(1, model.GetIssuesInEditor("asdaskjd:sdaskjd:aksjdkas/asdkasj.cs").Count);
             Assert.AreEqual(string.Empty, model.ErrorMessage);
         }
 
@@ -127,15 +136,20 @@ namespace ExtensionViewModel.Test
         [Test]
         public void TestSetIssuesListWithCommentsWithRefreshView()
         {
-            var issueWithComment = new Issue();
-            issueWithComment.Comments.Add(new Comment());
-            var model = new ExtensionDataModel(this.service, this.vshelper, null)
-            {
-            };
-            model.RefreshIssuesInViews();
-            Assert.AreEqual(2, model.Issues.Count);
+
+            var issueWithId = new Issue { Id = 20, Component = "asdaskjd:sdaskjd:aksjdkas/asdkasj.cs", Key = new Guid() };
+            issueWithId.Comments.Add(new Comment());
+            var list = new List<Issue> { issueWithId };
+            var model = new ExtensionDataModel(this.service, this.vshelper, null);
+            model.ResourceInEditor = new Resource { Key = "asdaskjd:sdaskjd:aksjdkas/asdkasj.cs" };
+            model.DocumentInView = "aksjdkas/asdkasj.cs";
+            model.ReplaceAllIssuesInCache(list);
+
+
+            model.SelectedIssuesInView = list;
+            Assert.AreEqual(1, model.Issues.Count);
             Assert.AreEqual(1, model.Comments.Count);
-            Assert.AreEqual("Number Of Issues: 2", model.StatsLabel);
+            Assert.AreEqual("Number of Issues: 1 ", model.StatsLabel);
         }
 
         /// <summary>
@@ -144,12 +158,10 @@ namespace ExtensionViewModel.Test
         [Test]
         public void TestSelectIssueFromListUsingId()
         {
-            var issueWithId = new Issue { Id = 20 };
+            var issueWithId = new Issue { Id = 20, Component = "asdaskjd:sdaskjd:aksjdkas/asdkasj.cs" };
 
-            var model = new ExtensionDataModel(this.service, this.vshelper, null)
-            {
-            };
-
+            var model = new ExtensionDataModel(this.service, this.vshelper, null);
+            model.ReplaceAllIssuesInCache(new List<Issue> { issueWithId });
             model.SelectAIssueFromList(20);
             Assert.AreEqual(issueWithId, model.SelectedIssue);
         }
@@ -160,11 +172,10 @@ namespace ExtensionViewModel.Test
         [Test]
         public void TestSelectIssueFromListUsingKey()
         {
-            var issueWithId = new Issue { Key = new Guid() };
+            var issueWithId = new Issue { Id = 20, Component = "asdaskjd:sdaskjd:aksjdkas/asdkasj.cs", Key = new Guid() };
 
-            var model = new ExtensionDataModel(this.service, this.vshelper, null)
-            {
-            };
+            var model = new ExtensionDataModel(this.service, this.vshelper, null);
+            model.ReplaceAllIssuesInCache(new List<Issue> { issueWithId });
 
             model.SelectAIssueFromList(new Guid());
             Assert.AreEqual(issueWithId, model.SelectedIssue);
@@ -193,6 +204,7 @@ namespace ExtensionViewModel.Test
         public void TestAssociationWithSolution()
         {
             var model = new ExtensionDataModel(this.service, this.vshelper, null);
+            model.PluginController = new PluginController();
             var projectAsso = new Resource { Key = "KEY" };
 
             model.AssociateProjectToSolution(projectAsso);
