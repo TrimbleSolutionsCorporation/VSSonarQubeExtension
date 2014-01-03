@@ -1025,13 +1025,21 @@ namespace ExtensionViewModel.ViewModel
             this.PluginRunningAnalysis = this.PluginController.GetPluginToRunResource(this.UserConfiguration, newProject);
             if (this.PluginRunningAnalysis != null)
             {
-                this.ExtensionRunningLocalAnalysis = this.PluginRunningAnalysis.GetLocalAnalysisExtension(this.UserConfiguration, newProject, this.SonarVersion);
+                var pluginKey = this.PluginRunningAnalysis.GetKey(this.UserConfiguration);
+
+                if (this.VerifyLocalExtension(false))
+                {
+                    this.OnPropertyChanged("IsSolutionOpen");
+                    return;
+                }
 
                 // populate properties
-                var pluginKey = this.PluginRunningAnalysis.GetKey(this.UserConfiguration);
-                var options = this.Vsenvironmenthelper.ReadAllOptionsForPluginOptionInApplicationData(pluginKey);
                 var plugionController = this.PluginRunningAnalysis.GetPluginControlOptions(this.UserConfiguration, this.AssociatedProject);
-                plugionController.SetOptions(options);
+                if (plugionController != null)
+                {
+                    var options = this.Vsenvironmenthelper.ReadAllOptionsForPluginOptionInApplicationData(pluginKey);
+                    plugionController.SetOptions(options);
+                }                
             }
 
             this.OnPropertyChanged("IsSolutionOpen");

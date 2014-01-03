@@ -435,13 +435,9 @@ namespace ExtensionViewModel.ViewModel
 
                 return;
             }
-        
-            if (this.ExtensionRunningLocalAnalysis == null)
-            {                
-                MessageBox.Show("Current Plugin does not support Local analysis");
-                this.analysisTrigger = false;
-                this.OnPropertyChanged("AnalysisTriggerText");
-                this.OnPropertyChanged("AnalysisTrigger");
+
+            if (this.VerifyLocalExtension(true))
+            {
                 return;
             }
 
@@ -497,6 +493,55 @@ namespace ExtensionViewModel.ViewModel
                 this.ExtensionRunningLocalAnalysis.StdErrEvent -= this.UpdateOutputMessagesFromPlugin;
                 this.ExtensionRunningLocalAnalysis.StdOutEvent -= this.UpdateOutputMessagesFromPlugin;
             }           
+        }
+
+        /// <summary>
+        /// The verify local extension.
+        /// </summary>
+        /// <param name="showMsgBox">
+        /// The show Msg Box.
+        /// </param>
+        /// <returns>
+        /// The <see cref="bool"/>.
+        /// </returns>
+        private bool VerifyLocalExtension(bool showMsgBox)
+        {
+            if (this.ExtensionRunningLocalAnalysis == null)
+            {
+                try
+                {
+                    this.ExtensionRunningLocalAnalysis = this.PluginRunningAnalysis.GetLocalAnalysisExtension(
+                        this.UserConfiguration,
+                        this.AssociatedProject,
+                        this.SonarVersion);
+                    if (this.ExtensionRunningLocalAnalysis == null)
+                    {
+                        if (showMsgBox)
+                        {
+                            MessageBox.Show("Current Plugin does not support Local analysis");
+                        }
+                        
+                        this.analysisTrigger = false;
+                        this.OnPropertyChanged("AnalysisTriggerText");
+                        this.OnPropertyChanged("AnalysisTrigger");
+                        return true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (showMsgBox)
+                    {
+                        MessageBox.Show("Plugin Analyser Exception: " + ex.Message);
+                    }
+                    
+                    this.analysisTrigger = false;
+                    this.OnPropertyChanged("AnalysisTriggerText");
+                    this.OnPropertyChanged("AnalysisTrigger");
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>

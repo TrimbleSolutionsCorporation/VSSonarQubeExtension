@@ -24,6 +24,8 @@ namespace ExtensionHelpers
     using EnvDTE;
     using EnvDTE80;
 
+    using ExtensionTypes;
+
     using Microsoft.VisualStudio.Editor;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Text.Editor;
@@ -84,10 +86,13 @@ namespace ExtensionHelpers
         /// <param name="pluginKey">
         /// The plugin key.
         /// </param>
+        /// <param name="project">
+        /// The project.
+        /// </param>
         /// <param name="options">
         /// The options.
         /// </param>
-        void WriteAllOptionsForPluginOptionInApplicationData(string pluginKey, Dictionary<string, string> options);
+        void WriteAllOptionsForPluginOptionInApplicationData(string pluginKey, Resource project, Dictionary<string, string> options);
 
         /// <summary>
         /// The get user app data configuration file.
@@ -412,8 +417,22 @@ namespace ExtensionHelpers
             }
         }
 
-        public void DeleteOptionsForPlugin(string pluginKey)
+        /// <summary>
+        /// The delete options for plugin.
+        /// </summary>
+        /// <param name="pluginKey">
+        /// The plugin key.
+        /// </param>
+        /// <param name="project">
+        /// The project.
+        /// </param>
+        public void DeleteOptionsForPlugin(string pluginKey, Resource project)
         {
+            if (project == null)
+            {
+                return;
+            }
+
             IEnumerable<string> content = new List<string>();
             var contentWrite = string.Empty;
             if (File.Exists(this.ApplicationDataUserSettingsFile))
@@ -428,7 +447,7 @@ namespace ExtensionHelpers
                 }
             }
 
-            contentWrite = content.Where(line => !line.StartsWith(pluginKey + "=")).Aggregate(contentWrite, (current, line) => current + (line + "\r\n"));
+            contentWrite = content.Where(line => !line.StartsWith(pluginKey + "=" + project.Key + ".")).Aggregate(contentWrite, (current, line) => current + (line + "\r\n"));
 
             using (var writer = new StreamWriter(this.ApplicationDataUserSettingsFile))
             {
@@ -442,12 +461,15 @@ namespace ExtensionHelpers
         /// <param name="pluginKey">
         /// The plugin key.
         /// </param>
+        /// <param name="project">
+        /// The project.
+        /// </param>
         /// <param name="options">
         /// The options.
         /// </param>
-        public void WriteAllOptionsForPluginOptionInApplicationData(string pluginKey, Dictionary<string, string> options)
+        public void WriteAllOptionsForPluginOptionInApplicationData(string pluginKey, Resource project, Dictionary<string, string> options)
         {
-            this.DeleteOptionsForPlugin(pluginKey);
+            this.DeleteOptionsForPlugin(pluginKey, project);
             foreach (var option in options)
             {
                 this.WriteOptionInApplicationData(pluginKey, option.Key, option.Value);

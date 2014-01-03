@@ -113,16 +113,7 @@ namespace VSSonarPlugins
             {
                 if (plugin.IsSupported(configuration, project))
                 {
-                    if (plugin.GetPluginControlOptions(configuration, project) == null)
-                    {
-                        pluginsToUse.Add(plugin);
-                        continue;
-                    }
-
-                    if (plugin.GetPluginControlOptions(configuration, project).IsEnabled())
-                    {
-                        pluginsToUse.Add(plugin);
-                    }
+                    pluginsToUse.Add(plugin);
                 }
             }
 

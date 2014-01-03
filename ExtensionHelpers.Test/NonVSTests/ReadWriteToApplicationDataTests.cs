@@ -15,6 +15,9 @@ namespace ExtensionHelpers.Test.NonVSTests
 {
     using System.Collections.Generic;
     using System.IO;
+
+    using ExtensionTypes;
+
     using NUnit.Framework;
 
     /// <summary>
@@ -130,7 +133,7 @@ namespace ExtensionHelpers.Test.NonVSTests
                                   { "data2", "value2" },
                                   { "data3", "value3" }
                               };
-            vshelper.WriteAllOptionsForPluginOptionInApplicationData("key", options);
+            vshelper.WriteAllOptionsForPluginOptionInApplicationData("key", new Resource(), options);
             var value = vshelper.ReadAllOptionsForPluginOptionInApplicationData("key");
             Assert.AreEqual(4, value.Count);
             Assert.AreEqual("value", value["data"]);
