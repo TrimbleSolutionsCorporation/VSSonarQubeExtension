@@ -147,4 +147,17 @@ type IssuesTests() =
         let issues = (service :> ISonarRestService).GetIssuesInResource(conf, "filename")
         issues.Count |> should equal 30
 
+    [<Test>]
+    member test.``Should Parse Dry Run Reports Before 4.0`` () =
+        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1")
+
+        let mockHttpReq =
+            Mock<IHttpSonarConnector>()
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText("testdata/dryRunReport.txt"))
+                .Create()
+
+        let service = SonarRestService(mockHttpReq)
+        let issues = (service :> ISonarRestService).ParseReportOfIssuesOld("testdata/dryRunReport.txt")
+        issues.Count |> should equal 10
+
 

@@ -111,37 +111,11 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
         }
 
         /// <summary>
-        /// The validate project key.
-        /// </summary>
-        /// <returns>
-        /// The System.String.
-        /// </returns>
-        public static Resource AssociateSolutionWithSonarProject()
-        {
-            var vsinter = VsSonarExtensionPackage.ExtensionModelData.Vsenvironmenthelper;
-            var restService = VsSonarExtensionPackage.ExtensionModelData.RestService;
-            var conf = ConnectionConfigurationHelpers.GetConnectionConfiguration(vsinter, restService);
-            var solutionName = vsinter.ActiveSolutionName();
-            var key = vsinter.ReadOptionFromApplicationData(solutionName, "PROJECTKEY");
-
-            if (!string.IsNullOrEmpty(key))
-            {
-                return restService.GetResourcesData(conf, key)[0];
-            }
-
-            var solutionPath = vsinter.ActiveSolutionPath();
-            key = VsSonarUtils.GetProjectKey(solutionPath);
-            vsinter.WriteOptionInApplicationData(solutionName, "PROJECTKEY", key);
-
-            return string.IsNullOrEmpty(key) ? null : restService.GetResourcesData(conf, key)[0];
-        }
-
-        /// <summary>
         /// The solution opened.
         /// </summary>
         private void SolutionOpened()
         {
-            this.model.AssociateProjectToSolution(AssociateSolutionWithSonarProject());
+            this.model.AssociateProjectToSolution();
 
             var text = this.environment.GetCurrentTextInView();
             if (string.IsNullOrEmpty(text))
@@ -153,6 +127,17 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
             this.model.RefreshDataForResource(fileName);
         }
 
+        /// <summary>
+        /// The get property from buffer.
+        /// </summary>
+        /// <param name="buffer">
+        /// The buffer.
+        /// </param>
+        /// <typeparam name="T">
+        /// </typeparam>
+        /// <returns>
+        /// The <see cref="T"/>.
+        /// </returns>
         public static T GetPropertyFromBuffer<T>(ITextBuffer buffer)
         {
             try

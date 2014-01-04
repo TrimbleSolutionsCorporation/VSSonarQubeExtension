@@ -449,6 +449,15 @@ namespace ExtensionViewModel.ViewModel
                 switch (analysis)
                 {
                     case AnalysisTypes.File:
+                        if (this.ResourceInEditor == null)
+                        {
+                            this.ErrorMessage = "No File in Editor, please open a file";
+                            this.analysisTrigger = false;
+                            this.OnPropertyChanged("AnalysisTriggerText");
+                            this.OnPropertyChanged("AnalysisTrigger");
+                            return;
+                        }
+
                         this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted += this.UpdateLocalIssuesForFileAnalysis;
                         var source = this.restService.GetSourceForFileResource(this.UserConfiguration, this.ResourceInEditor.Key);
                         var sourcestr = VsSonarUtils.GetLinesFromSource(source, "\r\n");
@@ -484,7 +493,8 @@ namespace ExtensionViewModel.ViewModel
             }
             catch (Exception ex)
             {
-                this.ErrorMessage = "Analysis Type Not Supported By Plugin";
+                this.ErrorMessage = ex.Message;
+                this.DiagnosticMessage = ex.StackTrace;
                 this.analysisTrigger = false;
                 this.OnPropertyChanged("AnalysisTriggerText");
                 this.OnPropertyChanged("AnalysisTrigger");
@@ -591,6 +601,7 @@ namespace ExtensionViewModel.ViewModel
             }
             catch (Exception ex)
             {
+                this.AnalysisTrigger = false;
                 this.ErrorMessage = "Failed to retrive issues from Plugin";
                 this.DiagnosticMessage = ex.StackTrace;
                 Debug.WriteLine("ex: " + ex.Message + " error: " + ex.StackTrace);

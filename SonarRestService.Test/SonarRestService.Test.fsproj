@@ -105,6 +105,9 @@
     <Content Include="testdata\PropertiesResponse.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="testdata\dryRunReport.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Foq, Version=0.9.0.0, Culture=neutral, PublicKeyToken=null">

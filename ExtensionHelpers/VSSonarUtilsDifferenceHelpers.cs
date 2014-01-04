@@ -48,8 +48,20 @@ namespace ExtensionHelpers
         /// <returns>
         /// The System.Collections.ArrayList.
         /// </returns>
-        public static ArrayList GetSourceDiffFromStrings(string source, string sourceseparator, string destination, string destinationsepartor, DiffEngineLevel level = DiffEngineLevel.SlowPerfect)
+        public static ArrayList GetSourceDiffFromStrings(string source, string destination, DiffEngineLevel level = DiffEngineLevel.SlowPerfect)
         {
+            var sourceseparator = "\n";
+            if (source.Contains("\r\n"))
+            {
+                sourceseparator = "\r\n";
+            }
+
+            var destinationsepartor = "\n";
+            if (destination.Contains("\r\n"))
+            {
+                destinationsepartor = "\r\n";
+            }
+
             var sLf = new DiffListTextFile(source, sourceseparator);
             var dLf = new DiffListTextFile(destination, destinationsepartor);
             var de = new DiffEngine();
@@ -81,7 +93,7 @@ namespace ExtensionHelpers
         /// </returns>
         public static List<Issue> ConvertIssuesToLocal(List<Issue> issuesIn, Resource currentResource, string currentBufferData, string lastReferenceSource)
         {
-            var diffReport = GetSourceDiffFromStrings(lastReferenceSource, "\r\n", currentBufferData, "\r\n", DiffEngineLevel.FastImperfect);
+            var diffReport = GetSourceDiffFromStrings(lastReferenceSource, currentBufferData, DiffEngineLevel.FastImperfect);
             return ConvertOpenIssuesToLocalSource(issuesIn, diffReport, currentResource);
         }
 

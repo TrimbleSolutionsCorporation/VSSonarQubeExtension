@@ -101,9 +101,7 @@ namespace ExtensionViewModel.Cache
 
             var diffReport = VsSonarUtils.GetSourceDiffFromStrings(
                 element.ServerSource, 
-                "\r\n",
                 currentSource, 
-                "\r\n", 
                 DiffEngineLevel.FastImperfect);
 
             foreach (var linecov in element.CoverageData)
@@ -152,9 +150,7 @@ namespace ExtensionViewModel.Cache
 
             var diffReport = VsSonarUtils.GetSourceDiffFromStrings(
                 element.ServerSource,
-                "\r\n",
                 currentSource,
-                "\r\n",
                 DiffEngineLevel.FastImperfect);
 
             foreach (var issue in element.Issues)

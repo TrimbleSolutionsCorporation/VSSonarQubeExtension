@@ -20,6 +20,8 @@ namespace VSSonarExtension.VSControls.DialogOptions
 
     using Microsoft.VisualStudio.Shell;
 
+    using VSSonarExtension.PackageImplementation;
+
     /// <summary>
     /// The a style general options page.
     /// </summary>
@@ -179,6 +181,8 @@ namespace VSSonarExtension.VSControls.DialogOptions
             this.SonarHost = this.control.SonarHost;
             this.SonarUserName = this.control.UserName;
             this.SonarUserPassword = this.control.UserPassword;
+
+            VsSonarExtensionPackage.ExtensionModelData.StartupModelData();
         }
     }
 }

@@ -207,9 +207,9 @@ namespace ExtensionViewModel.Test
             model.PluginController = new PluginController();
             var projectAsso = new Resource { Key = "KEY" };
 
-            model.AssociateProjectToSolution(projectAsso);
+            model.AssociateProjectToSolution();
             Assert.AreEqual("Selected Project: KEY", model.AssociatedProjectKey);
-            model.AssociateProjectToSolution(null);
+            model.AssociateProjectToSolution();
             Assert.AreEqual("Selected Project: KEY", model.AssociatedProjectKey);
         }
 

@@ -50,5 +50,6 @@ type ISonarRestService =
   abstract member GetRules : ConnectionConfiguration * string -> System.Collections.Generic.List<Rule>
 
   abstract member ParseReportOfIssues : string -> System.Collections.Generic.List<Issue>
+  abstract member ParseReportOfIssuesOld : string -> System.Collections.Generic.List<Issue>
         
 

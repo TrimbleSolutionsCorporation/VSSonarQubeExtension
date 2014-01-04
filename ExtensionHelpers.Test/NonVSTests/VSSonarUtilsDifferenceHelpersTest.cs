@@ -49,7 +49,7 @@ namespace ExtensionHelpers.Test.NonVSTests
         {
             var source = Path.Combine(this.sampleDataPath, "SonarSource.txt");
             var destination = Path.Combine(this.sampleDataPath, "LocalSource.txt");
-            var rep = VsSonarUtils.GetSourceDiffFromStrings(File.ReadAllText(source), "\r\n", File.ReadAllText(destination), "\r\n");
+            var rep = VsSonarUtils.GetSourceDiffFromStrings(File.ReadAllText(source), File.ReadAllText(destination));
             Assert.AreEqual(9, rep.Count);
         }
 
@@ -61,7 +61,7 @@ namespace ExtensionHelpers.Test.NonVSTests
         {
             var source = Path.Combine(this.sampleDataPath, "OriginalFileTest.txt");
             var destination = Path.Combine(this.sampleDataPath, "ModifyFileTest.txt");
-            var rep = VsSonarUtils.GetSourceDiffFromStrings(File.ReadAllText(source), "\r\n", File.ReadAllText(destination), "\r\n");
+            var rep = VsSonarUtils.GetSourceDiffFromStrings(File.ReadAllText(source), File.ReadAllText(destination));
 
             var issueList = new List<Issue>
                                 {

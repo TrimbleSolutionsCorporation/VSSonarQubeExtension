@@ -93,7 +93,6 @@ namespace ExtensionViewModel.Commands
         {
             var solutionName = this.vsenvironmenthelper.ActiveSolutionName();
             var selectedProjectInFilter = this.model.SelectedProjectInFilter;
-            this.model.AssociatedProject = this.model.SelectedProjectInFilter;
             if (selectedProjectInFilter == null || string.IsNullOrEmpty(solutionName))
             {
                 return;
@@ -111,6 +110,8 @@ namespace ExtensionViewModel.Commands
                     this.vsenvironmenthelper.WriteOptionInApplicationData(solutionName, "PROJECTKEY", selectedProjectInFilter.Key);
                 }
             }
+
+            this.model.AssociateProjectToSolution();
         }
     }
 }

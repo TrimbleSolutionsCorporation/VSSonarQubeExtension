@@ -1009,13 +1009,38 @@ namespace ExtensionViewModel.ViewModel
         }
 
         /// <summary>
+        /// The validate project key.
+        /// </summary>
+        /// <returns>
+        /// The System.String.
+        /// </returns>
+        public Resource AssociateSolutionWithSonarProject()
+        {
+            var vsinter = this.Vsenvironmenthelper;
+            var restService = this.RestService;
+            var conf = this.UserConfiguration;
+            var solutionName = vsinter.ActiveSolutionName();
+            var key = vsinter.ReadOptionFromApplicationData(solutionName, "PROJECTKEY");
+
+            if (!string.IsNullOrEmpty(key))
+            {
+                return restService.GetResourcesData(conf, key)[0];
+            }
+
+            var solutionPath = vsinter.ActiveSolutionPath();
+            key = VsSonarUtils.GetProjectKey(solutionPath);
+            vsinter.WriteOptionInApplicationData(solutionName, "PROJECTKEY", key);
+
+            return string.IsNullOrEmpty(key) ? null : restService.GetResourcesData(conf, key)[0];
+        }
+
+        /// <summary>
         /// The associate project to solution.
         /// </summary>
-        /// <param name="newProject">
-        /// The associated project.
-        /// </param>
-        public void AssociateProjectToSolution(Resource newProject)
+        public void AssociateProjectToSolution()
         {
+            Resource newProject = this.AssociateSolutionWithSonarProject();
+
             if (newProject == null)
             {
                 return;
@@ -1079,6 +1104,36 @@ namespace ExtensionViewModel.ViewModel
         /// <summary>
         /// The extension data model update.
         /// </summary>
+        public void StartupModelData()
+        {
+            this.InitCommanding();
+
+            // start some data
+            List<User> usortedList = this.RestService.GetUserList(this.UserConfiguration);
+            if (usortedList != null)
+            {
+                this.UsersList = new List<User>(usortedList.OrderBy(i => i.Login)) { new User() };
+            }
+
+            List<Resource> projects = this.RestService.GetProjectsList(this.UserConfiguration);
+            if (projects != null)
+            {
+                this.ProjectResources = new List<Resource>(projects.OrderBy(i => i.Name));
+            }
+
+            this.UserTextControlsHeight = new GridLength(0);
+            this.UserControlsHeight = new GridLength(0);
+            this.CommentsWidth = new GridLength(0);
+
+            this.RestoreUserSettingsInIssuesDataGrid();
+            this.RestoreUserFilteringOptions();
+
+            this.localEditorCache.ClearData();
+        }
+
+        /// <summary>
+        /// The extension data model update.
+        /// </summary>
         /// <param name="restServiceIn">
         /// The rest service in.
         /// </param>
@@ -1116,6 +1171,8 @@ namespace ExtensionViewModel.ViewModel
 
             this.RestoreUserSettingsInIssuesDataGrid();
             this.RestoreUserFilteringOptions();
+
+            this.localEditorCache.ClearData();
         }
 
         /// <summary>
