@@ -51,5 +51,6 @@ type ISonarRestService =
 
   abstract member ParseReportOfIssues : string -> System.Collections.Generic.List<Issue>
   abstract member ParseReportOfIssuesOld : string -> System.Collections.Generic.List<Issue>
+  abstract member ParseDryRunReportOfIssues : string -> System.Collections.Generic.List<Issue>
         
 

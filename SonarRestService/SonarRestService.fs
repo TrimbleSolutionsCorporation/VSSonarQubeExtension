@@ -804,6 +804,48 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             currentListOfIssues                       
                             
 
+        member this.ParseDryRunReportOfIssues(path : string) =
+
+            let txt = File.ReadAllText(path)
+            let issuesInFile = JSonIssuesDryRun.Parse(File.ReadAllText(path))
+
+            let currentListOfIssues = new System.Collections.Generic.List<Issue>()
+
+            let CreateIssue(resource : string, elem : JsonValue) =                
+                let issue = new Issue()
+                let message = elem.GetProperty("message")
+                let severity = elem.GetProperty("severity")
+                let rule_repository = elem.GetProperty("rule_repository")
+                let rule_key = elem.GetProperty("rule_key")
+                let created_at = elem.GetProperty("created_at")
+                let is_new = elem.GetProperty("is_new")
+
+                issue.Component <- resource
+                issue.Line <- 0
+                issue.Message <- message.AsString()
+                issue.Rule <- rule_key.AsString()
+                issue.Severity <- severity.AsString()
+                issue.CreationDate <- created_at.AsDateTime()
+                currentListOfIssues.Add(issue)
+
+            let ProcessViolation(str : string, elem : JsonValue) =
+                let resource = str
+                let data = elem
+                elem.AsArray() |> Seq.iter (fun elem -> CreateIssue(resource, elem))
+                ()
+
+            let ProcessElem(str : string, elem : JsonValue) =
+                
+                if str.Equals("violations_per_resource") then
+                    elem.Properties |> Seq.iter (fun elem -> ProcessViolation(elem))
+                ()
+
+            issuesInFile.JsonValue.Properties |> Seq.iter (fun elem -> ProcessElem(elem))
+
+            currentListOfIssues 
+
+
+
         member this.ParseReportOfIssues(path : string) =
             let issuesInFile = JSonIssues.Parse(File.ReadAllText(path))
             let currentListOfIssues = new System.Collections.Generic.List<Issue>()
