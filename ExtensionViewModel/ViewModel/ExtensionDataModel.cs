@@ -189,30 +189,33 @@ namespace ExtensionViewModel.ViewModel
 
             // commands
             this.InitCommanding();
+            this.UserTextControlsHeight = new GridLength(0);
+            this.UserControlsHeight = new GridLength(0);
+            this.RestoreUserSettingsInIssuesDataGrid();
+            this.RestoreUserFilteringOptions();
+            this.AnalysisChangeLines = false;
+            this.AnalysisTrigger = false;
+
+            var conf = this.UserConfiguration;
+            if (conf == null)
+            {
+                return;
+            }
 
             // start some data
-            List<User> usortedList = restService.GetUserList(this.UserConfiguration);
+            List<User> usortedList = restService.GetUserList(conf);
             if (usortedList != null && usortedList.Count > 0)
             {
                 this.UsersList = new List<User>(usortedList.OrderBy(i => i.Login));
             }
 
-            List<Resource> projects = restService.GetProjectsList(this.UserConfiguration);
+            List<Resource> projects = restService.GetProjectsList(conf);
             if (projects != null && projects.Count > 0)
             {
                 this.ProjectResources = new List<Resource>(projects.OrderBy(i => i.Name));
             }
 
             this.AssociatedProject = associatedProj;
-
-            this.UserTextControlsHeight = new GridLength(0);
-            this.UserControlsHeight = new GridLength(0);
-
-            this.RestoreUserSettingsInIssuesDataGrid();
-            this.RestoreUserFilteringOptions();
-
-            this.AnalysisChangeLines = false;
-            this.AnalysisTrigger = false;
         }
 
         #endregion
@@ -254,10 +257,15 @@ namespace ExtensionViewModel.ViewModel
                 {
                     this.AssociatedProjectKey = value.Key;
                 }
+                else
+                {
+                    this.AssociatedProjectKey = string.Empty;
+                }
 
                 PluginsOptionsData.OpenSolution = value;
                 this.associatedProject = value;
                 this.OnPropertyChanged("AssociatedProject");
+                this.OnPropertyChanged("IsSolutionOpen");
             }
         }
 
@@ -1022,6 +1030,12 @@ namespace ExtensionViewModel.ViewModel
             var solutionName = vsinter.ActiveSolutionName();
             var key = vsinter.ReadOptionFromApplicationData(solutionName, "PROJECTKEY");
 
+            if (conf == null)
+            {
+                this.ErrorMessage = "User Not Logged In, Extension is Unusable. Configure User Settions in Tools > Options > Sonar";
+                return null;
+            }
+
             if (!string.IsNullOrEmpty(key))
             {
                 return restService.GetResourcesData(conf, key)[0];
@@ -1108,27 +1122,44 @@ namespace ExtensionViewModel.ViewModel
         {
             this.InitCommanding();
 
-            // start some data
-            List<User> usortedList = this.RestService.GetUserList(this.UserConfiguration);
-            if (usortedList != null)
+            try
             {
-                this.UsersList = new List<User>(usortedList.OrderBy(i => i.Login)) { new User() };
-            }
+                this.UserTextControlsHeight = new GridLength(0);
+                this.UserControlsHeight = new GridLength(0);
+                this.CommentsWidth = new GridLength(0);
+                this.RestoreUserSettingsInIssuesDataGrid();
+                this.RestoreUserFilteringOptions();
+                this.localEditorCache.ClearData();
 
-            List<Resource> projects = this.RestService.GetProjectsList(this.UserConfiguration);
-            if (projects != null)
+                var configuration = this.UserConfiguration;
+                if (configuration == null)
+                {
+                    this.AssociatedProject = null;
+                    this.ErrorMessage = "Extension is not in usable condition, Check User Configuration. Host, UserName and Password needs to be set";
+                    return;
+                }                
+
+                // start some data
+                List<User> usortedList = this.RestService.GetUserList(configuration);
+                if (usortedList != null)
+                {
+                    this.UsersList = new List<User>(usortedList.OrderBy(i => i.Login)) { new User() };
+                }
+
+                List<Resource> projects = this.RestService.GetProjectsList(configuration);
+                if (projects != null)
+                {
+                    this.ProjectResources = new List<Resource>(projects.OrderBy(i => i.Name));
+                }
+
+                this.AssociateProjectToSolution();
+            }
+            catch (Exception ex)
             {
-                this.ProjectResources = new List<Resource>(projects.OrderBy(i => i.Name));
+                this.AssociatedProject = null;
+                this.ErrorMessage = "Extension is not in usable condition, Check User Configuration. Host, UserName and Password needs to be set";
+                this.DiagnosticMessage = ex.StackTrace;
             }
-
-            this.UserTextControlsHeight = new GridLength(0);
-            this.UserControlsHeight = new GridLength(0);
-            this.CommentsWidth = new GridLength(0);
-
-            this.RestoreUserSettingsInIssuesDataGrid();
-            this.RestoreUserFilteringOptions();
-
-            this.localEditorCache.ClearData();
         }
 
         /// <summary>
@@ -1149,30 +1180,34 @@ namespace ExtensionViewModel.ViewModel
             this.Vsenvironmenthelper = vsenvironmenthelperIn;
 
             this.InitCommanding();
+            this.UserTextControlsHeight = new GridLength(0);
+            this.UserControlsHeight = new GridLength(0);
+            this.CommentsWidth = new GridLength(0);
+            this.RestoreUserSettingsInIssuesDataGrid();
+            this.RestoreUserFilteringOptions();
+            this.localEditorCache.ClearData();
+
+            var conf = this.UserConfiguration;
+            if (conf == null)
+            {
+                this.AssociatedProject = null;
+                return;
+            }
 
             // start some data
-            List<User> usortedList = restServiceIn.GetUserList(this.UserConfiguration);
+            List<User> usortedList = restServiceIn.GetUserList(conf);
             if (usortedList != null)
             {
                 this.UsersList = new List<User>(usortedList.OrderBy(i => i.Login)) { new User() };
             }
 
-            List<Resource> projects = restServiceIn.GetProjectsList(this.UserConfiguration);
+            List<Resource> projects = restServiceIn.GetProjectsList(conf);
             if (projects != null)
             {
                 this.ProjectResources = new List<Resource>(projects.OrderBy(i => i.Name));
             }
 
             this.AssociatedProject = associatedProj;
-
-            this.UserTextControlsHeight = new GridLength(0);
-            this.UserControlsHeight = new GridLength(0);
-            this.CommentsWidth = new GridLength(0);
-
-            this.RestoreUserSettingsInIssuesDataGrid();
-            this.RestoreUserFilteringOptions();
-
-            this.localEditorCache.ClearData();
         }
 
         /// <summary>
@@ -1714,6 +1749,11 @@ namespace ExtensionViewModel.ViewModel
         /// </summary>
         private void InitCommanding()
         {
+            if (this.CommentOnIssueCommand != null)
+            {
+                return;
+            }
+
             // commands
             this.CommentOnIssueCommand = new CommentOnIssueCommand(this, this.restService);
             this.FalsePositiveOnIssueCommand = new FalsePositiveOnIssueCommand(this, this.restService);

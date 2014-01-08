@@ -158,6 +158,7 @@ namespace VSSonarExtension.VSControls.DialogOptions
             if (this.control != null)
             {
                 this.UpdateProperties();
+                VsSonarExtensionPackage.ExtensionModelData.StartupModelData();
             }
 
             base.OnApply(e);
@@ -181,8 +182,6 @@ namespace VSSonarExtension.VSControls.DialogOptions
             this.SonarHost = this.control.SonarHost;
             this.SonarUserName = this.control.UserName;
             this.SonarUserPassword = this.control.UserPassword;
-
-            VsSonarExtensionPackage.ExtensionModelData.StartupModelData();
         }
     }
 }

@@ -123,24 +123,12 @@ namespace ExtensionViewModel.ViewModel
         {
             get
             {
-                this.selectedPluginItem = "non existent";
-                this.OnPropertyChanged("SelectedPluginItem");
                 return this.isLicenseEnable;
             }
 
             set
             {
                 this.isLicenseEnable = value;
-                if (value)
-                {
-                    this.RefreshLicenses(false);
-                }
-                else
-                {
-                    this.selectedPluginItem = "No Plugin Selected";
-                    this.OnPropertyChanged("SelectedPluginItem");
-                }
-
                 this.OnPropertyChanged("IsLicenseEnable");
             }
         }

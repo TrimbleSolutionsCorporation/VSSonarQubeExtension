@@ -159,6 +159,7 @@ namespace ExtensionViewModel.ViewModel
                     options.Add(plugin.GetKey(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper)));
                 }
 
+                options.Add("Licenses");
                 return options;
             }
         }
@@ -181,6 +182,14 @@ namespace ExtensionViewModel.ViewModel
                     this.OptionsInView = null;
                     this.PluginInView = null;
                     this.OnPropertyChanged("PluginInView");
+
+                    this.IsLicenseEnable = false;
+                    if (value.Equals("Licenses"))
+                    {
+                        this.RefreshLicenses(false);
+                        this.IsLicenseEnable = true;
+                        return;
+                    }
 
                     foreach (var plugin in this.plugins)
                     {

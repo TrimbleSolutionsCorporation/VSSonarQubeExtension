@@ -173,6 +173,7 @@
 					<MenuItem Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" x:Name="ConfIssuesWindow" Header="Show Properties" Command="{Binding}" CommandParameter="{Binding Header, ElementName=ConfIssuesWindow}"/>
 					<MenuItem Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" x:Name="ConfPluginsOptions" Header="Plugins Properties" Command="{Binding}" CommandParameter="{Binding Header, ElementName=ConfPluginsOptions}"/>
 				</MenuItem>
+				<MenuItem Header="Tools" Width="auto" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Template="{DynamicResource MenuTemplate}"/>
 			</MenuItem>
 			<CheckBox Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="Disable Tags" Height="18" Width="90" ToolTip="Disable Tags in Editor, Only Issues Window will be Populated" IsChecked="{Binding DisableEditorTags}"/>
 		</Menu>

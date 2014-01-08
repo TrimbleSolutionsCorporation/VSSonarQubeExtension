@@ -661,7 +661,7 @@ namespace ExtensionHelpers
         {
             var outstring = string.Empty;
 
-            if (!File.Exists(this.ApplicationDataUserSettingsFile))
+            if (!File.Exists(this.ApplicationDataUserSettingsFile) || string.IsNullOrEmpty(pluginKey))
             {
                 return string.Empty;
             }

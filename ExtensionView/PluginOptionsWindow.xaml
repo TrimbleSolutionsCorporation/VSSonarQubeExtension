@@ -67,10 +67,10 @@
 			<ColumnDefinition MinWidth="820" Width="820"/>
 		</Grid.ColumnDefinitions>
 		<ListBox Foreground="White" ItemsSource="{Binding AvailablePluginsCollection}" SelectedItem="{Binding SelectedPluginItem}" BorderBrush="{x:Null}" Background="Transparent" Margin="0,1,0,-1"/>
-		<GroupBox Grid.Column="1" Header="{Binding SelectedPluginItem}" BorderBrush="Black" Visibility="{Binding IsPluginsEnable, Converter={StaticResource Bool2VisibilityConverter}}" Content="{Binding OptionsInView}" Style="{DynamicResource GroupBoxStyle1}"/>
-		<GroupBox Grid.Column="1" Header="{Binding SelectedPluginItem}" BorderBrush="Black" Visibility="{Binding IsLicenseEnable, Converter={StaticResource Bool2VisibilityConverter}}" Style="{DynamicResource GroupBoxStyle1}" Margin="2,0,-2,0">
-		<!--GroupBox Grid.Column="1" Header="{Binding SelectedPluginItem}" BorderBrush="Black" Visibility="Collapsed" Content="{Binding OptionsInView}" Style="{DynamicResource GroupBoxStyle1}"/ -->
-		<!--GroupBox Grid.Column="1" Header="{Binding SelectedPluginItem}" BorderBrush="Black" Visibility="Visible" Margin="2,0,-2,0" -->			
+		<GroupBox Grid.Column="1" BorderBrush="Black" Visibility="{Binding IsPluginsEnable, Converter={StaticResource Bool2VisibilityConverter}}" Content="{Binding OptionsInView}" Style="{DynamicResource GroupBoxStyle1}"/>
+		<GroupBox Grid.Column="1" BorderBrush="Black" Visibility="{Binding IsLicenseEnable, Converter={StaticResource Bool2VisibilityConverter}}" Style="{DynamicResource GroupBoxStyle1}">
+		<!--GroupBox Grid.Column="1" Header="{Binding SelectedPluginItem}" BorderBrush="Black" Visibility="Collapsed" Content="{Binding OptionsInView}" Style="{DynamicResource GroupBoxStyle1}"/>
+		<GroupBox Grid.Column="1" Header="{Binding SelectedPluginItem}" BorderBrush="Black" Visibility="Visible" Margin="2,0,-2,0"-->			
 			<Grid>
 				<Grid.RowDefinitions>
 					<RowDefinition Height="34*"/>
@@ -111,6 +111,5 @@
 			<Button Foreground="White" x:Name="ApplyButton" Content="Apply" Grid.Column="1" Command="{Binding ControlCommand}" CommandParameter="{Binding Content, ElementName=ApplyButton}" Template="{DynamicResource SquareButtonTemplate}"/>
 			<Button Foreground="White" x:Name="CancelButton" Content="Cancel and Exit" Grid.Column="3" Command="{Binding ControlCommand}" CommandParameter="{Binding Content, ElementName=CancelButton}" Template="{DynamicResource SquareButtonTemplate}"/>			
 		</Grid>
-		<ToggleButton Foreground="White" Content="Licenses" Grid.Row="1" Template="{DynamicResource SquareToggleButtonTemplate}" IsChecked="{Binding IsLicenseEnable}"/>        
 	</Grid>
 </Window>

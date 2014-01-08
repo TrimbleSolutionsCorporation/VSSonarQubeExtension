@@ -55,17 +55,20 @@ type JsonSonarConnector() =
 
 
         member this.HttpSonarGetRequest(userConf : ConnectionConfiguration, url : string) =
-            let req = HttpWebRequest.Create(userConf.Hostname + url) :?> HttpWebRequest 
-            req.Method <- "GET"
-            req.ContentType <- "text/json"
-            let auth = "Basic " + (userConf.Username + ":" + userConf.Password |> Encoding.UTF8.GetBytes |> Convert.ToBase64String)
-            req.Headers.Add("Authorization", auth)
+            if obj.ReferenceEquals(userConf, null) then
+                ""
+            else
+                let req = HttpWebRequest.Create(userConf.Hostname + url) :?> HttpWebRequest 
+                req.Method <- "GET"
+                req.ContentType <- "text/json"
+                let auth = "Basic " + (userConf.Username + ":" + userConf.Password |> Encoding.UTF8.GetBytes |> Convert.ToBase64String)
+                req.Headers.Add("Authorization", auth)
         
-            // read data
-            let rsp = req.GetResponse()
-            use stream = rsp.GetResponseStream()
-            use reader = new StreamReader(stream)
-            reader.ReadToEnd()
+                // read data
+                let rsp = req.GetResponse()
+                use stream = rsp.GetResponseStream()
+                use reader = new StreamReader(stream)
+                reader.ReadToEnd()
 
         member this.HttpSonarRequest(userconf : ConnectionConfiguration, urltosue : string, methodin : Method) =
             let client = new RestClient(userconf.Hostname)
