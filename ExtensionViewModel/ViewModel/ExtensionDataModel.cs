@@ -1025,10 +1025,8 @@ namespace ExtensionViewModel.ViewModel
         public Resource AssociateSolutionWithSonarProject()
         {
             var vsinter = this.Vsenvironmenthelper;
-            var restService = this.RestService;
             var conf = this.UserConfiguration;
             var solutionName = vsinter.ActiveSolutionName();
-            var key = vsinter.ReadOptionFromApplicationData(solutionName, "PROJECTKEY");
 
             if (conf == null)
             {
@@ -1036,16 +1034,17 @@ namespace ExtensionViewModel.ViewModel
                 return null;
             }
 
-            if (!string.IsNullOrEmpty(key))
+            var sourceKey = vsinter.ReadOptionFromApplicationData(solutionName, "PROJECTKEY");
+            if (!string.IsNullOrEmpty(sourceKey))
             {
-                return restService.GetResourcesData(conf, key)[0];
+                return this.RestService.GetResourcesData(conf, sourceKey)[0];
             }
 
             var solutionPath = vsinter.ActiveSolutionPath();
-            key = VsSonarUtils.GetProjectKey(solutionPath);
-            vsinter.WriteOptionInApplicationData(solutionName, "PROJECTKEY", key);
+            sourceKey = VsSonarUtils.GetProjectKey(solutionPath);
+            vsinter.WriteOptionInApplicationData(solutionName, "PROJECTKEY", sourceKey);
 
-            return string.IsNullOrEmpty(key) ? null : restService.GetResourcesData(conf, key)[0];
+            return string.IsNullOrEmpty(sourceKey) ? null : this.RestService.GetResourcesData(conf, sourceKey)[0];
         }
 
         /// <summary>

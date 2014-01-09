@@ -233,20 +233,6 @@ namespace ExtensionHelpers
         /// <param name="sourceSource">
         /// The source source.
         /// </param>
-        /// <returns>
-        /// The System.Collections.Generic.List`1[T -&gt; System.String].
-        /// </returns>
-        public static List<string> GetLinesFromSource(Source sourceSource)
-        {
-            return sourceSource.Lines.Select(line => line.Val).ToList();
-        }
-
-        /// <summary>
-        /// The get lines from source.
-        /// </summary>
-        /// <param name="sourceSource">
-        /// The source source.
-        /// </param>
         /// <param name="sep">
         /// The sep.
         /// </param>
@@ -255,7 +241,36 @@ namespace ExtensionHelpers
         /// </returns>
         public static string GetLinesFromSource(Source sourceSource, string sep)
         {
-            return sourceSource.Lines.Aggregate(string.Empty, (current, line) => current + (line.Val + sep));
+            return sourceSource.Lines.Aggregate(string.Empty, (current, line) => current + (line + sep));
+        }
+
+        /// <summary>
+        /// The get lines from source.
+        /// </summary>
+        /// <param name="sourceSource">
+        /// The source source.
+        /// </param>
+        /// <param name="lineSep">
+        /// The line sep.
+        /// </param>
+        /// <param name="startLine">
+        /// The start line.
+        /// </param>
+        /// <param name="lenght">
+        /// The lenght.
+        /// </param>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
+        public static string GetLinesFromSource(Source sourceSource, string lineSep, int startLine, int lenght)
+        {
+            var data = string.Empty;
+            for (var i = startLine; i < startLine + lenght; i++)
+            {
+                data += sourceSource.Lines[i] + lineSep;
+            }
+
+            return data;
         }
 
         /// <summary>

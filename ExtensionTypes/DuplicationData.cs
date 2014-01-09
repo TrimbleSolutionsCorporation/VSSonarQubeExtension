@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Source.cs" company="Copyright © 2013 Tekla Corporation. Tekla is a Trimble Company">
+// <copyright file="DuplicationData.cs" company="Copyright © 2013 Tekla Corporation. Tekla is a Trimble Company">
 //     Copyright (C) 2013 [Jorge Costa, Jorge.Costa@tekla.com]
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -16,13 +16,26 @@ namespace ExtensionTypes
     using System.Collections.Generic;
 
     /// <summary>
-    /// The source.
+    /// The duplication.
     /// </summary>
-    public class Source
+    public class DuplicationData
     {
         /// <summary>
-        /// Gets or sets the line.
+        /// Initializes a new instance of the <see cref="DuplicationData"/> class.
         /// </summary>
-        public string[] Lines { get; set; }
+        public DuplicationData()
+        {
+            this.DuplicatedGroups = new List<DuplicatedGroup>();
+        }
+
+        /// <summary>
+        /// Gets or sets the resource.
+        /// </summary>
+        public Resource Resource { get; set; }
+
+        /// <summary>
+        /// Gets or sets the duplicated groups.
+        /// </summary>
+        public List<DuplicatedGroup> DuplicatedGroups { get; set; }
     }
 }

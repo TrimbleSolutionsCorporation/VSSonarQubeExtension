@@ -56,10 +56,10 @@
     <Compile Include="IHttpSonarConnector.fs" />
     <Compile Include="HttpSonarConnector.fs" />
     <Compile Include="TypeProviders.fs" />
-    <Compile Include="ISonarRestService.fs" />
-    <Compile Include="SonarRestService.fs" />
     <Compile Include="XmlTypeProviders.fs" />
     <Compile Include="XmlHelpers.fs" />
+    <Compile Include="ISonarRestService.fs" />
+    <Compile Include="SonarRestService.fs" />
     <Compile Include="AssemblyInfo.fs">
       <SubType>
       </SubType>

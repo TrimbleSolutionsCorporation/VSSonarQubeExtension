@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Source.cs" company="Copyright © 2013 Tekla Corporation. Tekla is a Trimble Company">
+// <copyright file="DuplicatedBlock.cs" company="Copyright © 2013 Tekla Corporation. Tekla is a Trimble Company">
 //     Copyright (C) 2013 [Jorge Costa, Jorge.Costa@tekla.com]
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -13,16 +13,24 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace ExtensionTypes
 {
-    using System.Collections.Generic;
-
     /// <summary>
-    /// The source.
+    /// The duplicated block.
     /// </summary>
-    public class Source
+    public class DuplicatedBlock
     {
         /// <summary>
-        /// Gets or sets the line.
+        /// Gets or sets the resource.
         /// </summary>
-        public string[] Lines { get; set; }
+        public Resource Resource { get; set; }
+
+        /// <summary>
+        /// Gets or sets the startline.
+        /// </summary>
+        public int Startline { get; set; }
+
+        /// <summary>
+        /// Gets or sets the lenght.
+        /// </summary>
+        public int Lenght { get; set; }
     }
 }

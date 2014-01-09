@@ -90,7 +90,9 @@ type ResourceTests() =
 
         let service = SonarRestService(mockHttpReq)
         let resourceinfo = (service :> ISonarRestService).GetSourceForFileResource(conf, "resource")
-        resourceinfo.Lines.Count |> should equal 20
+        resourceinfo.Lines.Length |> should equal 20
+        resourceinfo.Lines.[0] |> should equal "/**"
+        resourceinfo.Lines.[1] |> should equal "    @file       ssds.cpp"
 
     [<Test>]
     member test.``Should PutComment Correctly On Sonar Less than 3.6 Review Attached`` () =

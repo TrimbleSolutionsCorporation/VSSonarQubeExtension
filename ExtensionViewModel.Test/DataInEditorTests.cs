@@ -129,7 +129,7 @@ namespace ExtensionViewModel.Test
             [Test]
             public void DoServerAnalysisUpdateBufferFileNotFound()
             {
-                var source = new Source { Lines = new List<Line> { new Line { Id = 1, Val = "#include bal" }, new Line { Id = 2, Val = "#include bals" } } };
+                var source = new Source { Lines = new[] { "line1", "line2", "line3", "line4" } };
 
                 this.vshelper.Expect(
                     mp => mp.CurrentSelectedDocumentLanguage())

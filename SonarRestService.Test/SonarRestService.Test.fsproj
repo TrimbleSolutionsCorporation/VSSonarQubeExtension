@@ -51,12 +51,16 @@
   </Choose>
   <Import Project="$(FSharpTargetsPath)" Condition="Exists('$(FSharpTargetsPath)')" />
   <ItemGroup>
+    <Compile Include="MetricsTests.fs" />
     <Compile Include="IssuesTests.fs" />
     <Compile Include="AdministrationTests.fs" />
     <Compile Include="ResourceTests.fs" />
     <Compile Include="QualityTests.fs" />
     <Compile Include="XmlTests.fs" />
     <None Include="app.config" />
+    <Content Include="testdata\duplicationsdata.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="testdata\issuessearchbycomponent.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -96,9 +100,6 @@
     <Content Include="testdata\ResponseToAddCommentOldFormat.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="testdata\commentsReply.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="testdata\UserSettingsData.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -109,6 +110,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="testdata\dryrunissues.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="testdata\commentsReply.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

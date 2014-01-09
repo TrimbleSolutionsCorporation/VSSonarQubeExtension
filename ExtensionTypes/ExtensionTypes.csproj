@@ -48,6 +48,9 @@
     <Compile Include="BranchCoverage.cs" />
     <Compile Include="Comment.cs" />
     <Compile Include="ConnectionConfiguration.cs" />
+    <Compile Include="DuplicatedBlock.cs" />
+    <Compile Include="DuplicatedGroup.cs" />
+    <Compile Include="DuplicationData.cs" />
     <Compile Include="Issue.cs" />
     <Compile Include="Line.cs" />
     <Compile Include="LineCoverage.cs" />

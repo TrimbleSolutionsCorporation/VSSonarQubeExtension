@@ -49,6 +49,7 @@ namespace ExtensionViewModel.Test
         private IPlugin plugin;
 
         private Source fileSource;
+
         /// <summary>
         /// The setup.
         /// </summary>
@@ -60,13 +61,7 @@ namespace ExtensionViewModel.Test
             this.vshelper = this.mocks.Stub<IVsEnvironmentHelper>();
             this.plugin = this.mocks.Stub<IPlugin>();
 
-
-            var Lines = new List<Line>();
-            Lines.Add(new Line { Id = 0, Val = "ghfggfgf" });
-            Lines.Add(new Line { Id = 1, Val = "ghfggfgf" });
-            Lines.Add(new Line { Id = 2, Val = "ghfggfgf" });
-            Lines.Add(new Line { Id = 3, Val = "ghfggfgf" });
-            this.fileSource = new Source { Lines = Lines };
+            this.fileSource.Lines = new[] { "line1", "line2", "line3", "line4" };
 
             using (this.mocks.Record())
             {
@@ -138,7 +133,7 @@ namespace ExtensionViewModel.Test
 
             this.service.Expect(
                 mp => mp.GetSourceForFileResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything))
-                .Return(new Source { Lines = new List<Line>() })
+                .Return(new Source { Lines = new[] { "line1", "line2", "line3", "line4" } })
                 .Repeat.Once();
 
             this.service.Expect(

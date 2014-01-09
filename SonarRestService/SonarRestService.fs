@@ -307,13 +307,12 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             res.Name <- resource.Name
             res.Qualifier <- resource.Qualifier
             res.Scope <- resource.Scope
-            try
+            if not(obj.ReferenceEquals(res.Version, null)) then
                 res.Version <- sprintf "%s" resource.Version
-            with
-                | ex -> ()
 
             let metrics = new System.Collections.Generic.List<Metric>()
-            try
+
+            if not(obj.ReferenceEquals(resource.JsonValue.TryGetProperty("Msr"), null)) then
                 for metric in resource.Msr do
                     let met = new Metric()
 
@@ -337,8 +336,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                     metrics.Add(met)
 
                     res.Metrics <- metrics
-            with
-                | ex -> ()
+
 
             resourcelist.Add(res)
         resourcelist
@@ -409,21 +407,52 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
     let GetSourceFromContent(content : string) =
         let data = JsonValue.Parse(content)
-
         let source = new Source()
-        source.Lines <- new Collections.Generic.List<Line>()
-        let mutable linei = 1
-        try
-            while true do
-                let linestr = data.[0].Item(sprintf "%i" linei)
-                let line = new Line()
-                line.Id <- linei
-                line.Val <- linestr.AsString()
-                linei <- linei + 1
-                source.Lines.Add(line)
-        with
-            | ex -> ()
+
+        let arrayOfLines : string array = Array.zeroCreate (data.[0].Properties |> Seq.length)
+
+        let CreateLine(data : string, elem : JsonValue) =
+            let line = new Line()
+            arrayOfLines.[Int32.Parse(data) - 1] <- elem.InnerText
+            ()
+
+        data.[0].Properties |> Seq.iter (fun elem -> CreateLine(elem))
+
+        source.Lines <- arrayOfLines
         source
+
+    let GetDuplicationsFromContent(responsecontent : string) = 
+        let dups = JSonDuplications.Parse(responsecontent)
+        let duplicationData = new Collections.Generic.List<DuplicationData>()
+
+        dups |> Seq.iter (fun x ->
+                            let duplicatedResource = new DuplicationData()
+                            let resource = new Resource(Date = x.Date,
+                                                        Id = x.Id,
+                                                        Key = x.Key,
+                                                        Name = x.Name,
+                                                        Lname = x.Lname,
+                                                        Qualifier = x.Qualifier,
+                                                        Scope = x.Scope,
+                                                        Lang = x.Lang)
+                            
+                            duplicatedResource.Resource <- resource
+
+                            let data = DupsData.Parse(x.Msr.[0].Data)
+                            for group in data.GetGs() do
+                                let groupToAdd = new DuplicatedGroup()
+                                for block in group.GetBs() do
+                                    let blockToAdd = new DuplicatedBlock()
+                                    blockToAdd.Lenght <- block.L
+                                    blockToAdd.Startline <- block.S
+                                    blockToAdd.Resource <- new Resource(Key = block.R)
+                                    groupToAdd.DuplicatedBlocks.Add(blockToAdd)
+                                duplicatedResource.DuplicatedGroups.Add(groupToAdd)
+
+                            duplicationData.Add(duplicatedResource))
+                            
+
+        duplicationData
 
     let GetCoverageFromContent(responsecontent : string) = 
         let resources = JsonResourceWithMetrics.Parse(responsecontent)
@@ -573,6 +602,10 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
         member this.GetCoverageInResource(conf : ConnectionConfiguration, resource : string) =
             let url = "/api/resources?resource=" + resource + "&metrics=coverage_line_hits_data,conditions_by_line,covered_conditions_by_line";
             GetCoverageFromContent(httpconnector.HttpSonarGetRequest(conf, url))
+
+        member this.GetDuplicationsDataInResource(conf : ConnectionConfiguration, resource : string) =
+            let url = "/api/resources?resource=" + resource + "&metrics=duplications_data&depth=-1";
+            GetDuplicationsFromContent(httpconnector.HttpSonarGetRequest(conf, url))
 
         member this.CommentOnIssues(newConf : ConnectionConfiguration, issues : System.Collections.Generic.List<Issue>, comment : string) =
             let responseMap = new System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>()
