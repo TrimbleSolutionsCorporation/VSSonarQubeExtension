@@ -175,6 +175,14 @@
 				</MenuItem>
 				<MenuItem Header="Tools" Width="auto" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Template="{DynamicResource MenuTemplate}"/>
 			</MenuItem>
+			<MenuItem x:Name="PluginsMenu" Header="Tools" ItemsSource="{Binding ToolsProvidedByPlugins}" Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}">
+				<MenuItem.ItemContainerStyle>
+					<Style TargetType="MenuItem">
+						<Setter Property="Command" Value="{Binding ToolSwitchCommand}" />
+                        <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource Self}, Path=Header}" />
+					</Style>
+				</MenuItem.ItemContainerStyle>
+			</MenuItem>
 			<CheckBox Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="Disable Tags" Height="18" Width="90" ToolTip="Disable Tags in Editor, Only Issues Window will be Populated" IsChecked="{Binding DisableEditorTags}"/>
 		</Menu>
 		<Grid x:Name="UserInputGrid" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="2" Margin="0"/>
@@ -209,7 +217,7 @@
 				<RowDefinition Height="{Binding UserTextControlsHeight}" />
 				<RowDefinition Height="{Binding UserControlsHeight}" />
 			</Grid.RowDefinitions>
-			<DataGrid Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" x:Name="IssuesDataGrid" Grid.Column="1" SelectionChanged="IssuesDataGridSelectionChanged" AutoGenerateColumns="False" SelectedItem="{Binding SelectedIssue}" ItemsSource="{Binding Issues}" VerticalScrollBarVisibility="Visible" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" GridLinesVisibility="None" Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" BorderBrush="Transparent" BorderThickness="1" RowBackground="Transparent" RowHeaderStyle="{DynamicResource DataGridRowHeaderStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" ColumnHeaderHeight="20" HeadersVisibility="Column" RowHeaderWidth="0" >
+			<DataGrid x:Name="IssuesDataGrid" Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" AutoGenerateColumns="False" VerticalScrollBarVisibility="Visible" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" GridLinesVisibility="None" BorderBrush="Transparent" BorderThickness="1" RowBackground="Transparent" RowHeaderStyle="{DynamicResource DataGridRowHeaderStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" ColumnHeaderHeight="20" HeadersVisibility="Column" RowHeaderWidth="0" Grid.Column="1" SelectionChanged="IssuesDataGridSelectionChanged" SelectedItem="{Binding SelectedIssue}" ItemsSource="{Binding Issues}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" >
 				<DataGrid.InputBindings>
 					<MouseBinding MouseAction="LeftDoubleClick" Command="{Binding OpenInVsCommand}" CommandParameter="{Binding SelectedItems, ElementName=IssuesDataGrid}" />
 				</DataGrid.InputBindings>

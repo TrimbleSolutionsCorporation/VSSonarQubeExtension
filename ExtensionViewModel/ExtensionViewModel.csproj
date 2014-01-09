@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Cache\EditorData.cs" />
     <Compile Include="Cache\ModelEditorCache.cs" />
+    <Compile Include="Commands\ViewSwitchCommand.cs" />
     <Compile Include="Commands\ClearCacheCommand.cs" />
     <Compile Include="Commands\AssociateCommand.cs" />
     <Compile Include="Commands\ConfirmIssueCommand.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Commands\ResolveIssueCommand.cs" />
     <Compile Include="ViewModel\AnalysisViewModel.cs" />
     <Compile Include="ViewModel\BindingProxy.cs" />
+    <Compile Include="ViewModel\PluginCommandsModel.cs" />
     <Compile Include="ViewModel\LicenseOptionsModel.cs" />
     <Compile Include="ViewModel\DataGridControlViewModel.cs" />
     <Compile Include="ViewModel\ModelData.cs" />

@@ -19,6 +19,7 @@ namespace VSSonarExtension.PackageImplementation
     using System.Diagnostics;
     using System.Globalization;
     using System.Runtime.InteropServices;
+    using System.Windows.Controls;
 
     using EnvDTE;
 
@@ -54,8 +55,8 @@ namespace VSSonarExtension.PackageImplementation
     [ProvideProfile(typeof(SonarGeneralOptionsPage), "Sonar Options", "General", 1002, 1003, true)]
     [ProvideAutoLoad("{05ca2046-1eb1-4813-a91f-a69df9b27698}")]
     [ProvideAutoLoad(UIContextGuids80.SolutionExists)]
-    [ProvideToolWindow(typeof(IssuesToolWindow), Style = VsDockStyle.Tabbed, 
-        Window = "ac305e7a-a44b-4541-8ece-3c88d5425338")]
+    [ProvideToolWindow(typeof(IssuesToolWindow), Style = VsDockStyle.Tabbed, Window = "ac305e7a-a44b-4541-8ece-3c88d5425338")]
+    [ProvideToolWindow(typeof(PluginToolWindow), Style = VsDockStyle.Tabbed, MultiInstances = true)]
     [Guid(GuidList.GuidVSSonarExtensionPkgString)]
     public sealed partial class VsSonarExtensionPackage : Package
     {
@@ -240,6 +241,41 @@ namespace VSSonarExtension.PackageImplementation
             var win = window as IssuesToolWindow;
             modelToUse.ExtensionDataModelUpdate(new SonarRestService(new JsonSonarConnector()), new VsPropertiesHelper(this.dte2), null);
             win.UpdateModel(modelToUse);
+        }
+
+        /// <summary>
+        /// The show tool window.
+        /// </summary>
+        /// <param name="control">
+        /// The control.
+        /// </param>
+        /// <param name="id">
+        /// The id.
+        /// </param>
+        /// <exception cref="NotSupportedException">
+        /// </exception>
+        public void ShowToolWindow(System.Windows.Forms.UserControl control, int id, string name)
+        {
+                // Find existing windows. 
+                var currentWindow = this.FindToolWindow(typeof(PluginToolWindow), id, false);
+                if (currentWindow == null)
+                {
+                    // Create the window with the first free ID. 
+                    var window = (ToolWindowPane)this.CreateToolWindow(typeof(PluginToolWindow), id);
+
+                    if ((null == window) || (null == window.Frame))
+                    {
+                        throw new NotSupportedException("CAnnot Create Tool");
+                    }
+                    IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
+
+                    // Display the window.
+                    Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(
+                        windowFrame.Show());
+
+                    var win = window as PluginToolWindow;
+                    win.UpdateModel(control, name);
+                }
         }
 
         #endregion

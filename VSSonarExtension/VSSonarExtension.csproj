@@ -135,6 +135,7 @@
     <Compile Include="PackageImplementation\VSSonarQubeExtensionPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VSControls\IssuesToolWindow.cs" />
+    <Compile Include="VSControls\PluginToolWindow.cs" />
     <Compile Include="VSControls\PkgCmdIdList.cs" />
     <Compile Include="VSControls\DialogOptions\SonarGeneralOptionsControlForm.cs">
       <SubType>UserControl</SubType>

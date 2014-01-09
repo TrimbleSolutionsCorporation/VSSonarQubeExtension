@@ -36,10 +36,21 @@ namespace VSSonarPlugins
         private readonly ReadOnlyCollection<IPlugin> loadedPlugins;
 
         /// <summary>
+        /// The loaded plugins.
+        /// </summary>
+        private readonly ReadOnlyCollection<IMenuCommandPlugin> menuCommandPlugins;
+
+        /// <summary>
         /// The plugins.
         /// </summary>
         [ImportMany]
         private IEnumerable<Lazy<IPlugin>> plugins;
+
+        /// <summary>
+        /// The plugins.
+        /// </summary>
+        [ImportMany]
+        private IEnumerable<Lazy<IMenuCommandPlugin>> menuPlugins;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PluginController"/> class. 
@@ -71,6 +82,11 @@ namespace VSSonarPlugins
             if (this.plugins != null)
             {
                 this.loadedPlugins = new ReadOnlyCollection<IPlugin>(this.plugins.Select(plugin => plugin.Value).ToList());
+            }
+
+            if (this.menuPlugins != null)
+            {
+                this.menuCommandPlugins = new ReadOnlyCollection<IMenuCommandPlugin>(this.menuPlugins.Select(plugin => plugin.Value).ToList());
             }
         }
 
@@ -118,6 +134,28 @@ namespace VSSonarPlugins
             }
 
             return this.PickPluginFromMultipleSupportedPlugins(pluginsToUse);
+        }
+
+        /// <summary>
+        /// The get menu command plugin to run command.
+        /// </summary>
+        /// <param name="configuration">
+        /// The configuration.
+        /// </param>
+        /// <param name="key">
+        /// The key.
+        /// </param>
+        /// <returns>
+        /// The <see cref="IMenuCommandPlugin"/>.
+        /// </returns>
+        public IMenuCommandPlugin GetMenuCommandPluginToRunCommand(ConnectionConfiguration configuration, string key)
+        {
+            if (this.menuCommandPlugins == null)
+            {
+                return null;
+            }
+
+            return (from plugin in this.menuPlugins where plugin.Value.GetHeader().Equals(key) select plugin.Value).FirstOrDefault();
         }
 
         /// <summary>

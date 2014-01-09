@@ -1766,6 +1766,7 @@ namespace ExtensionViewModel.ViewModel
             this.GetIssuesCommand = new GetIssuesCommand(this, this.restService);
             this.AssignProjectCommand = new AssociateCommand(this, this.vsenvironmenthelper);
             this.ClearCacheCommand = new ClearCacheCommand(this);
+            this.ToolSwitchCommand = new ViewSwitchCommand(this);
         }
 
         /// <summary>
