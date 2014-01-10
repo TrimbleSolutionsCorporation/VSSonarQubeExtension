@@ -44,7 +44,7 @@
     <!---->
     <Reference Include="Microsoft.VisualStudio.Editor, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <Reference Include="Microsoft.VisualStudio.Shell.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.Shell.12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
@@ -65,6 +65,9 @@
     <Reference Include="Rhino.Mocks">
       <HintPath>..\references\Rhino.Mocks.dll</HintPath>
     </Reference>
+    <Reference Include="SonarRestService">
+      <HintPath>..\SonarRestService.Test\bin\Release\SonarRestService.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Design" />
@@ -81,11 +84,26 @@
     <Compile Include="PackageTest.cs" />
     <!---->
     <Compile Include="TestUtils.cs" />
+    <Compile Include="TestViewModel\AnalysesTests.cs" />
+    <Compile Include="TestViewModel\CoverageTests.cs" />
+    <Compile Include="TestViewModel\DataInEditorTests.cs" />
+    <Compile Include="TestViewModel\ModelPropertiesTest.cs" />
+    <Compile Include="TestViewModel\NewWorkFlowTests.cs" />
+    <Compile Include="TestViewModel\OldWorkFlowTests.cs" />
+    <Compile Include="TestViewModel\UpdateCachesTests.cs" />
+    <Compile Include="TestView\DummyOptionsController.cs" />
+    <Compile Include="TestView\TestMainWindow.cs" />
     <!---->
     <!---->
     <!---->
   </ItemGroup>
   <ItemGroup>
+    <Content Include="TestView\TestData\issuessearchbycomponent.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestView\TestData\userList.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="app.config" />
     <None Include="PckResources\Key.snk" />
     <Content Include="TestData\settings.xml">
@@ -106,9 +124,9 @@
       <Project>{82914bc7-eee5-49e7-ac2b-a7451a7a797d}</Project>
       <Name>ExtensionHelpers</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ExtensionView.Test\ExtensionView.Test.csproj">
-      <Project>{0d387ff9-b4c0-4ba3-b845-b51c2e3f0239}</Project>
-      <Name>ExtensionView.Test</Name>
+    <ProjectReference Include="..\ExtensionTypes\ExtensionTypes.csproj">
+      <Project>{75A39A9B-06B2-4249-9D3C-C2319951BC53}</Project>
+      <Name>ExtensionTypes</Name>
     </ProjectReference>
     <ProjectReference Include="..\VSSonarPlugins\VSSonarPlugins.csproj">
       <Project>{3311c918-b662-436d-8bc8-f38b447b1414}</Project>
@@ -119,6 +137,5 @@
       <Name>VSSonarExtension</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

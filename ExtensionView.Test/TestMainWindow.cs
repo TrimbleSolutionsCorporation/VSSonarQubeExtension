@@ -33,6 +33,8 @@ namespace ExtensionView.Test
 
     using SonarRestService;
 
+    using VSSonarExtension.MainView;
+
     using VSSonarPlugins;
 
     /// <summary>

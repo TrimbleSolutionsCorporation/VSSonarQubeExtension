@@ -17,6 +17,8 @@ namespace ExtensionHelpers
 
     using SonarRestService;
 
+    using VSSonarPlugins;
+
     /// <summary>
     /// The connection configuration helpers.
     /// </summary>

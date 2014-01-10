@@ -73,9 +73,9 @@
       <Project>{BE15869A-B7F6-459E-93F9-E4C9130DB42B}</Project>
       <Name>ExtensionViewModel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ExtensionView\ExtensionView.csproj">
-      <Project>{709c3cce-fbf8-4b7e-b211-dcd402aefc3d}</Project>
-      <Name>ExtensionView</Name>
+    <ProjectReference Include="..\VSSonarExtension\VSSonarExtension.csproj">
+      <Project>{7D094D65-9165-4FFC-A6E4-CAEE27A64FAD}</Project>
+      <Name>VSSonarExtension</Name>
     </ProjectReference>
     <ProjectReference Include="..\VSSonarPlugins\VSSonarPlugins.csproj">
       <Project>{3311c918-b662-436d-8bc8-f38b447b1414}</Project>

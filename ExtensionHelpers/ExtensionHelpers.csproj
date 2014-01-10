@@ -68,7 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConnectionConfigurationHelpers.cs" />
-    <Compile Include="IVSEnvironmentHelper.cs" />
+    <Compile Include="VsPropertiesHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VSSonarUtils.cs" />
     <Compile Include="VSSonarUtilsCallbacks.cs" />

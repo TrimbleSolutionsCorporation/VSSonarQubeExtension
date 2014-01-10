@@ -51,6 +51,7 @@
     <Compile Include="ILocalAnalyserExtension.cs" />
     <Compile Include="IPlugin.cs" />
     <Compile Include="IPluginsOptions.cs" />
+    <Compile Include="IVsEnvironmentHelper.cs" />
     <Compile Include="PluginController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VsProjectItem.cs" />

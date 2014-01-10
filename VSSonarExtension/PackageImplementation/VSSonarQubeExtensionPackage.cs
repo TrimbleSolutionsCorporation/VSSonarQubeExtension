@@ -27,15 +27,13 @@ namespace VSSonarExtension.PackageImplementation
 
     using ExtensionHelpers;
 
-    using ExtensionViewModel.ViewModel;
-
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
 
     using SonarRestService;
 
-    using VSSonarExtension.PckResources;
+    using VSSonarExtension.MainViewModel.ViewModel;
     using VSSonarExtension.SmartTags.BufferUpdate;
     using VSSonarExtension.VSControls;
     using VSSonarExtension.VSControls.DialogOptions;
@@ -43,7 +41,6 @@ namespace VSSonarExtension.PackageImplementation
     using VSSonarPlugins;
 
     using MessageBox = System.Windows.Forms.MessageBox;
-    using Thread = System.Threading.Thread;
 
     /// <summary>
     ///     The vs sonar extension package.
@@ -66,11 +63,21 @@ namespace VSSonarExtension.PackageImplementation
         ///     The issue model.
         /// </summary>
         public static readonly ExtensionDataModel ExtensionModelData = new ExtensionDataModel();
-
+       
         /// <summary>
         /// The plugin control.
         /// </summary>
         public static readonly PluginController PluginControl  = new PluginController();
+
+        /// <summary>
+        /// The current plugin control.
+        /// </summary>
+        public static UserControl CurrentPluginControl = new UserControl();
+
+        /// <summary>
+        /// The current plugin name.
+        /// </summary>
+        public static string CurrentPluginName = "Plugin Window";
 
         #endregion
 
@@ -87,6 +94,44 @@ namespace VSSonarExtension.PackageImplementation
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// The show tool window.
+        /// </summary>
+        /// <param name="control">
+        /// The control.
+        /// </param>
+        /// <param name="id">
+        /// The id.
+        /// </param>
+        /// <param name="name">
+        /// The name.
+        /// </param>
+        /// <exception>
+        ///     <cref>NotSupportedException</cref>
+        /// </exception>
+        public void ShowToolWindow(UserControl control, int id, string name)
+        {
+            // Find existing windows. 
+            var currentWindow = this.FindToolWindow(typeof(PluginToolWindow), id, false);
+            if (currentWindow != null)
+            {
+                return;
+            }
+
+            // Create the window with the first free ID.
+            CurrentPluginControl = control;
+            CurrentPluginName = name;
+            var window = (ToolWindowPane)this.CreateToolWindow(typeof(PluginToolWindow), id);
+
+            if ((null == window) || (null == window.Frame))
+            {
+                throw new NotSupportedException("CAnnot Create Tool");
+            }
+
+            var windowFrame = (IVsWindowFrame)window.Frame;
+            ErrorHandler.ThrowOnFailure(windowFrame.Show());
+        }
 
         /// <summary>
         ///     The initialize.
@@ -108,7 +153,7 @@ namespace VSSonarExtension.PackageImplementation
 
                 this.visualStudioInterface = new VsPropertiesHelper(this.dte2);
                 this.restService = new SonarRestService(new JsonSonarConnector());
-                this.vsEvents = new VsEvents(ExtensionModelData, this.visualStudioInterface);
+                this.vsEvents = new VsEvents(ExtensionModelData, this.visualStudioInterface, this.dte2);
 
                 // int configuration options
                 this.InitOptions();
@@ -118,6 +163,8 @@ namespace VSSonarExtension.PackageImplementation
                     ExtensionModelData.Vsenvironmenthelper = this.visualStudioInterface;
                     ExtensionModelData.RestService = this.restService;
                     ExtensionModelData.PluginController = PluginControl;
+                    ExtensionModelData.VSPackage = this;
+
                     this.UpdateModelInToolWindow(ExtensionModelData);
                 }
                 catch (Exception ex)
@@ -127,7 +174,7 @@ namespace VSSonarExtension.PackageImplementation
             }
             catch (Exception ex)
             {
-                MessageBox.Show(Resources.VSEXTENSIONFAILEDINIT + ex.Message + " " + ex.StackTrace);
+                MessageBox.Show("Extension Failed to Start: " + ex.Message + " " + ex.StackTrace);
                 throw;
             }
         }
@@ -151,6 +198,7 @@ namespace VSSonarExtension.PackageImplementation
             ExtensionDataModel.PluginsOptionsData.Plugins = PluginControl.GetPlugins();
             ExtensionDataModel.PluginsOptionsData.Vsenvironmenthelper = this.visualStudioInterface;
             ExtensionDataModel.PluginsOptionsData.ResetUserData();
+
             if (ExtensionDataModel.PluginsOptionsData.Plugins == null)
             {
                 return;
@@ -241,41 +289,6 @@ namespace VSSonarExtension.PackageImplementation
             var win = window as IssuesToolWindow;
             modelToUse.ExtensionDataModelUpdate(new SonarRestService(new JsonSonarConnector()), new VsPropertiesHelper(this.dte2), null);
             win.UpdateModel(modelToUse);
-        }
-
-        /// <summary>
-        /// The show tool window.
-        /// </summary>
-        /// <param name="control">
-        /// The control.
-        /// </param>
-        /// <param name="id">
-        /// The id.
-        /// </param>
-        /// <exception cref="NotSupportedException">
-        /// </exception>
-        public void ShowToolWindow(System.Windows.Forms.UserControl control, int id, string name)
-        {
-                // Find existing windows. 
-                var currentWindow = this.FindToolWindow(typeof(PluginToolWindow), id, false);
-                if (currentWindow == null)
-                {
-                    // Create the window with the first free ID. 
-                    var window = (ToolWindowPane)this.CreateToolWindow(typeof(PluginToolWindow), id);
-
-                    if ((null == window) || (null == window.Frame))
-                    {
-                        throw new NotSupportedException("CAnnot Create Tool");
-                    }
-                    IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
-
-                    // Display the window.
-                    Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(
-                        windowFrame.Show());
-
-                    var win = window as PluginToolWindow;
-                    win.UpdateModel(control, name);
-                }
         }
 
         #endregion

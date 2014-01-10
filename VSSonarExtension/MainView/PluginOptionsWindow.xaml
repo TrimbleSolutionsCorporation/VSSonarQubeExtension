@@ -1,0 +1,117 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:SampleData="clr-namespace:Expression.Blend.SampleData.SampleDataForButtons"
+    xmlns:viewModel="clr-namespace:VSSonarExtension.MainViewModel.ViewModel"
+    mc:Ignorable="d" x:Class="VSSonarExtension.MainView.PluginOptionsWindow"
+        Title="PluginOptionsWindow" MouseDown="MouseButtonEventHandler" Height="472" Width="1020" Background="#FF2D2D30" Foreground="White" BorderThickness="2" Visibility="Visible" Opacity="0.95" WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True">
+	<Window.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="StylesAndTemplates.xaml"/>
+			</ResourceDictionary.MergedDictionaries>			<SampleData:SampleDataForButtons x:Key="SampleDataForButtons" d:IsDataSource="True"/>
+
+			<viewModel:PluginsOptionsModel x:Key="PluginsOptionsModelDataSource" d:IsDataSource="True"/>
+			<BorderGapMaskConverter x:Key="BorderGapMaskConverter"/>
+			<Style x:Key="GroupBoxStyle1" TargetType="{x:Type GroupBox}">
+				<Setter Property="BorderBrush" Value="#D5DFE5"/>
+				<Setter Property="BorderThickness" Value="1"/>
+				<Setter Property="Template">
+					<Setter.Value>
+						<ControlTemplate TargetType="{x:Type GroupBox}">
+							<Grid SnapsToDevicePixels="true">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="6"/>
+									<ColumnDefinition Width="Auto"/>
+									<ColumnDefinition Width="*"/>
+									<ColumnDefinition Width="6"/>
+								</Grid.ColumnDefinitions>
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition Height="*"/>
+									<RowDefinition Height="6"/>
+								</Grid.RowDefinitions>
+								<Border BorderBrush="Black" Background="{TemplateBinding Background}" Grid.ColumnSpan="4" Grid.Column="0" CornerRadius="0" Grid.Row="1" Grid.RowSpan="3" Margin="0,0,6,0"/>
+								<Border BorderBrush="Black" Grid.ColumnSpan="4" CornerRadius="0" Grid.Row="1" Grid.RowSpan="3" Margin="0,0,6,0">
+									<Border.OpacityMask>
+										<MultiBinding ConverterParameter="7" Converter="{StaticResource BorderGapMaskConverter}">
+											<Binding ElementName="Header" Path="ActualWidth"/>
+											<Binding Path="ActualWidth" RelativeSource="{RelativeSource Self}"/>
+											<Binding Path="ActualHeight" RelativeSource="{RelativeSource Self}"/>
+										</MultiBinding>
+									</Border.OpacityMask>
+									<Border BorderBrush="Black" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="0">
+										<Border BorderBrush="Black" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="0"/>
+									</Border>
+								</Border>
+								<Border x:Name="Header" Grid.Column="1" Padding="3,1,3,0" Grid.Row="0" Grid.RowSpan="2">
+									<ContentPresenter ContentSource="Header" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+								</Border>
+								<ContentPresenter Grid.ColumnSpan="2" Grid.Column="1" Margin="2,0,0,0" Grid.Row="2" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+							</Grid>
+						</ControlTemplate>
+					</Setter.Value>
+				</Setter>
+			</Style>
+		</ResourceDictionary>
+	</Window.Resources>
+	<Window.DataContext>
+		<Binding Source="{StaticResource PluginsOptionsModelDataSource}"/>
+	</Window.DataContext>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="34*"/>
+			<RowDefinition Height="30"/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition MinWidth="200" Width="200"/>
+			<ColumnDefinition MinWidth="820" Width="820"/>
+		</Grid.ColumnDefinitions>
+		<ListBox Foreground="White" ItemsSource="{Binding AvailablePluginsCollection}" SelectedItem="{Binding SelectedPluginItem}" BorderBrush="{x:Null}" Background="Transparent" Margin="0,1,0,-1"/>
+		<GroupBox Grid.Column="1" BorderBrush="Black" Visibility="{Binding IsPluginsEnable, Converter={StaticResource Bool2VisibilityConverter}}" Content="{Binding OptionsInView}" Style="{DynamicResource GroupBoxStyle1}"/>
+		<GroupBox Grid.Column="1" BorderBrush="Black" Visibility="{Binding IsLicenseEnable, Converter={StaticResource Bool2VisibilityConverter}}" Style="{DynamicResource GroupBoxStyle1}">
+		<!--GroupBox Grid.Column="1" Header="{Binding SelectedPluginItem}" BorderBrush="Black" Visibility="Collapsed" Content="{Binding OptionsInView}" Style="{DynamicResource GroupBoxStyle1}"/>
+		<GroupBox Grid.Column="1" Header="{Binding SelectedPluginItem}" BorderBrush="Black" Visibility="Visible" Margin="2,0,-2,0"-->			
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="34*"/>
+					<RowDefinition Height="25"/>
+					<RowDefinition Height="30"/>
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="227*"/>
+					<ColumnDefinition Width="100"/>
+					<ColumnDefinition Width="100"/>
+				</Grid.ColumnDefinitions>
+				<DataGrid Grid.Row="0" Grid.ColumnSpan="3" Foreground="White" SelectedItem="{Binding SelectedLicense}" ItemsSource="{Binding AvailableLicenses}" Visibility="{Binding IsLicenseEnable, Converter={StaticResource Bool2VisibilityConverter}}" AutoGenerateColumns="False" VerticalScrollBarVisibility="Visible" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" GridLinesVisibility="None" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" RowBackground="Transparent" RowHeaderStyle="{DynamicResource DataGridRowHeaderStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" ColumnHeaderHeight="20" HeadersVisibility="Column" RowHeaderWidth="0" d:DataContext="{d:DesignData /SampleData/SampleDataForButtons/SampleDataForButtons.xaml}">
+					<DataGrid.Columns>
+						<DataGridTextColumn Binding="{Binding IsValid}" Header="Valid   "/>
+						<DataGridTextColumn Binding="{Binding ProductId}" Header="Product   "/>
+						<DataGridTextColumn Binding="{Binding UserId}" Header="User   "/>
+						<DataGridTextColumn Binding="{Binding LicenseData.ExpirationDate}" Header="Expire Date   "/>
+						<DataGridTextColumn Binding="{Binding LicenseData.LicenseType}" Header="Type   "/>
+						<DataGridTextColumn Binding="{Binding LicenseData.Name}" Header="Name   "/>
+						<DataGridTextColumn Binding="{Binding LicenseData.UserId}" Header="License Id   "/>
+						<DataGridTextColumn Binding="{Binding ServerId}" Header="Server ID   "/>
+					</DataGrid.Columns>
+				</DataGrid>
+				<Label   Grid.Column="2" Grid.Row="2" Grid.ColumnSpan="3" Content="{Binding ErrorMessage}" />
+				<Button  Foreground="White" Grid.Column="1" Grid.Row="1" x:Name="GenerateTokenButton" Content="Generate Token" Visibility="{Binding IsLicenseEnable, Converter={StaticResource Bool2VisibilityConverter}}" Template="{DynamicResource SquareButtonTemplate}" Command="{Binding ControlCommand}" CommandParameter="{Binding Content, ElementName=GenerateTokenButton}" d:DataContext="{d:DesignData /SampleData/SampleDataForButtons/SampleDataForButtons.xaml}" ToolTip="Copy Past Token and Fill the user property in the SonarQube server"/>				
+				<Button  Foreground="White" Grid.Column="2" Grid.Row="1" x:Name="Refresh" Content="Refresh" Visibility="{Binding IsLicenseEnable, Converter={StaticResource Bool2VisibilityConverter}}" Template="{DynamicResource SquareButtonTemplate}" Command="{Binding ControlCommand}" CommandParameter="Refresh" d:DataContext="{d:DesignData /SampleData/SampleDataForButtons/SampleDataForButtons.xaml}" ToolTip="Copy Past Token and Fill the user property in the SonarQube server"/>				
+				<TextBox Grid.Column="0" Grid.Row="1"  TextWrapping="Wrap" Text="{Binding GeneratedToken}" Visibility="{Binding IsLicenseEnable, Converter={StaticResource Bool2VisibilityConverter}}" d:DataContext="{d:DesignData /SampleData/SampleDataForButtons/SampleDataForButtons.xaml}"/>
+			</Grid>
+		</GroupBox>
+		<Grid Grid.Column="1" Grid.Row="1">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="100"/>
+				<ColumnDefinition Width="100"/>
+				<ColumnDefinition Width="263*"/>
+				<ColumnDefinition Width="100"/>
+			</Grid.ColumnDefinitions>
+			<Button Foreground="White" x:Name="OkButton" Content="Save and Exit" Command="{Binding ControlCommand}" CommandParameter="{Binding Content, ElementName=OkButton}" Template="{DynamicResource SquareButtonTemplate}"/>
+			<Button Foreground="White" x:Name="ApplyButton" Content="Apply" Grid.Column="1" Command="{Binding ControlCommand}" CommandParameter="{Binding Content, ElementName=ApplyButton}" Template="{DynamicResource SquareButtonTemplate}"/>
+			<Button Foreground="White" x:Name="CancelButton" Content="Cancel and Exit" Grid.Column="3" Command="{Binding ControlCommand}" CommandParameter="{Binding Content, ElementName=CancelButton}" Template="{DynamicResource SquareButtonTemplate}"/>			
+		</Grid>
+	</Grid>
+</Window>

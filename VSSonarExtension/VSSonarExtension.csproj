@@ -24,7 +24,7 @@
     <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <ExpressionBlendVersion>5.0.40218.0</ExpressionBlendVersion>
+    <ExpressionBlendVersion>12.0.41002.1</ExpressionBlendVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -69,10 +69,16 @@
     <Reference Include="Microsoft.VisualStudio.Editor, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.Language.Intellisense, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.OLE.Interop" />
-    <Reference Include="Microsoft.VisualStudio.Shell.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.Shell.12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.11.0, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
@@ -84,6 +90,7 @@
     <Reference Include="Microsoft.VisualStudio.TextManager.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="PresentationFramework.Aero" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
@@ -92,6 +99,24 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
+    <Reference Include="Xceed.Wpf.AvalonDock">
+      <HintPath>..\references\Xceed.Wpf.AvalonDock.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero">
+      <HintPath>..\references\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro">
+      <HintPath>..\references\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010">
+      <HintPath>..\references\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.DataGrid">
+      <HintPath>..\references\Xceed.Wpf.DataGrid.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.Toolkit">
+      <HintPath>..\references\Xceed.Wpf.Toolkit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="EnvDTE">
@@ -114,74 +139,115 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MainView\Commands\ExtensionMenuCommand.cs" />
+    <Compile Include="MainViewModel\Cache\EditorData.cs" />
+    <Compile Include="MainViewModel\Cache\ModelEditorCache.cs" />
+    <Compile Include="MainViewModel\Commands\AssignOnIssueCommand.cs" />
+    <Compile Include="MainViewModel\Commands\AssociateCommand.cs" />
+    <Compile Include="MainViewModel\Commands\ClearCacheCommand.cs" />
+    <Compile Include="MainViewModel\Commands\CommentOnIssueCommand.cs" />
+    <Compile Include="MainViewModel\Commands\ConfirmIssueCommand.cs" />
+    <Compile Include="MainViewModel\Commands\FalsePositiveOnIssueCommand.cs" />
+    <Compile Include="MainViewModel\Commands\GetIssuesCommand.cs" />
+    <Compile Include="MainViewModel\Commands\OpenInSonarCommand.cs" />
+    <Compile Include="MainViewModel\Commands\OpenInVSCommand.cs" />
+    <Compile Include="MainViewModel\Commands\ReOpenIssueCommand.cs" />
+    <Compile Include="MainViewModel\Commands\ResolveIssueCommand.cs" />
+    <Compile Include="MainViewModel\Commands\UnConfirmIssueCommand.cs" />
+    <Compile Include="MainViewModel\Commands\ViewSwitchCommand.cs" />
+    <Compile Include="MainView\IssuesGridSettingsDialog.xaml.cs">
+      <DependentUpon>IssuesGridSettingsDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainView\IssueWindow.xaml.cs">
+      <DependentUpon>IssueWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainView\PluginOptionsWindow.xaml.cs">
+      <DependentUpon>PluginOptionsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainView\SampleData\SampleDataForButtons\SampleDataForButtons.xaml.cs">
+      <DependentUpon>SampleDataForButtons.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PackageImplementation\InternalStateVariables.cs" />
-    <Compile Include="SmartTags\BufferUpdate\VSEvents.cs" />
-    <Compile Include="SmartTags\Coverage\CoveredFormatDefinition.cs" />
-    <Compile Include="SmartTags\Coverage\HighlightCoverageTagger.cs" />
-    <Compile Include="SmartTags\Coverage\HighlightCoverageTaggerProvider.cs" />
-    <Compile Include="SmartTags\Coverage\NotCoveredFormatDefinition.cs" />
-    <Compile Include="SmartTags\Coverage\PartialCoveredFormatDefinition.cs" />
-    <Compile Include="SmartTags\Coverage\CoverageTag.cs" />
-    <Compile Include="SmartTags\Squiggle\SonarTag.cs" />
-    <Compile Include="SmartTags\Squiggle\SonarTagFormatDefinition.cs" />
-    <Compile Include="SmartTags\Squiggle\SonarTagger.cs" />
-    <Compile Include="SmartTags\Squiggle\SonarTaggerProvider.cs" />
-    <Compile Include="VSControls\GuidList.cs" />
-    <Compile Include="PckResources\Resources.Designer.cs">
+    <Compile Include="PackageImplementation\SmartTags\BufferUpdate\VSEvents.cs" />
+    <Compile Include="PackageImplementation\SmartTags\Coverage\CoveredFormatDefinition.cs" />
+    <Compile Include="PackageImplementation\SmartTags\Coverage\HighlightCoverageTagger.cs" />
+    <Compile Include="PackageImplementation\SmartTags\Coverage\HighlightCoverageTaggerProvider.cs" />
+    <Compile Include="PackageImplementation\SmartTags\Coverage\NotCoveredFormatDefinition.cs" />
+    <Compile Include="PackageImplementation\SmartTags\Coverage\PartialCoveredFormatDefinition.cs" />
+    <Compile Include="PackageImplementation\SmartTags\Coverage\CoverageTag.cs" />
+    <Compile Include="PackageImplementation\SmartTags\Squiggle\SonarTag.cs" />
+    <Compile Include="PackageImplementation\SmartTags\Squiggle\SonarTagFormatDefinition.cs" />
+    <Compile Include="PackageImplementation\SmartTags\Squiggle\SonarTagger.cs" />
+    <Compile Include="PackageImplementation\SmartTags\Squiggle\SonarTaggerProvider.cs" />
+    <Compile Include="MainViewModel\ViewModel\AnalysisViewModel.cs" />
+    <Compile Include="MainViewModel\ViewModel\BindingProxy.cs" />
+    <Compile Include="MainViewModel\ViewModel\DataGridControlViewModel.cs" />
+    <Compile Include="MainViewModel\ViewModel\ExtensionDataModel.cs" />
+    <Compile Include="MainViewModel\ViewModel\IssuesFilterViewModel.cs" />
+    <Compile Include="MainViewModel\ViewModel\LicenseOptionsModel.cs" />
+    <Compile Include="MainViewModel\ViewModel\ModelData.cs" />
+    <Compile Include="MainViewModel\ViewModel\PluginCommandsModel.cs" />
+    <Compile Include="MainViewModel\ViewModel\PluginsOptionsModel.cs" />
+    <Compile Include="MainViewModel\ViewModel\ViewDesignElements.cs" />
+    <Compile Include="PackageImplementation\VSControls\GuidList.cs" />
+    <Compile Include="PackageImplementation\PckResources\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="PackageImplementation\VSSonarQubeExtensionPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="VSControls\IssuesToolWindow.cs" />
-    <Compile Include="VSControls\PluginToolWindow.cs" />
-    <Compile Include="VSControls\PkgCmdIdList.cs" />
-    <Compile Include="VSControls\DialogOptions\SonarGeneralOptionsControlForm.cs">
+    <Compile Include="PackageImplementation\VSControls\IssuesToolWindow.cs" />
+    <Compile Include="PackageImplementation\VSControls\PluginToolWindow.cs" />
+    <Compile Include="PackageImplementation\VSControls\PkgCmdIdList.cs" />
+    <Compile Include="PackageImplementation\VSControls\DialogOptions\SonarGeneralOptionsControlForm.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="VSControls\DialogOptions\SonarGeneralOptionsControlForm.designer.cs">
+    <Compile Include="PackageImplementation\VSControls\DialogOptions\SonarGeneralOptionsControlForm.designer.cs">
       <DependentUpon>SonarGeneralOptionsControlForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="VSControls\DialogOptions\SonarGeneralOptionsPage.cs">
+    <Compile Include="PackageImplementation\VSControls\DialogOptions\SonarGeneralOptionsPage.cs">
       <SubType>Component</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="PckResources\Resources.resx">
+    <EmbeddedResource Include="PackageImplementation\PckResources\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="PckResources\VSPackage.resx">
+    <EmbeddedResource Include="PackageImplementation\PckResources\VSPackage.resx">
       <MergeWithCTO>true</MergeWithCTO>
       <ManifestResourceName>VSPackage</ManifestResourceName>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="VSControls\DialogOptions\SonarGeneralOptionsControlForm.resx">
+    <EmbeddedResource Include="PackageImplementation\VSControls\DialogOptions\SonarGeneralOptionsControlForm.resx">
       <DependentUpon>SonarGeneralOptionsControlForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="PckResources\Source.extension.vsixmanifest">
+    <CodeAnalysisDictionary Include="MainView\SampleData\SampleDataForButtons\SampleDataForButtons.xsd">
+      <SubType>Designer</SubType>
+    </CodeAnalysisDictionary>
+    <None Include="PackageImplementation\PckResources\Source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <VSCTCompile Include="VSControls\VSSonarExtension.vsct">
+    <VSCTCompile Include="PackageImplementation\VSControls\VSSonarExtension.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
       <SubType>Designer</SubType>
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\sonarreviews.bmp" />
-    <Content Include="Resources\Package.ico" />
-    <Resource Include="Resources\sonariconcoverage.bmp" />
-    <Resource Include="Resources\sonariconsource.bmp" />
-    <Resource Include="Resources\sonariconviolationslocaladded.bmp" />
-    <Resource Include="Resources\sonariconviolationslocal.bmp" />
-    <Resource Include="Resources\sonarviolations.bmp" />
+    <Resource Include="PackageImplementation\Resources\sonarreviews.bmp" />
+    <Content Include="PackageImplementation\Resources\Package.ico" />
+    <Resource Include="PackageImplementation\Resources\sonariconcoverage.bmp" />
+    <Resource Include="PackageImplementation\Resources\sonariconsource.bmp" />
+    <Resource Include="PackageImplementation\Resources\sonariconviolationslocaladded.bmp" />
+    <Resource Include="PackageImplementation\Resources\sonariconviolationslocal.bmp" />
+    <Resource Include="PackageImplementation\Resources\sonarviolations.bmp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DifferenceEngine\DifferenceEngine.csproj">
@@ -195,14 +261,6 @@
     <ProjectReference Include="..\ExtensionTypes\ExtensionTypes.csproj">
       <Project>{75A39A9B-06B2-4249-9D3C-C2319951BC53}</Project>
       <Name>ExtensionTypes</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ExtensionViewModel\ExtensionViewModel.csproj">
-      <Project>{BE15869A-B7F6-459E-93F9-E4C9130DB42B}</Project>
-      <Name>ExtensionViewModel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ExtensionView\ExtensionView.csproj">
-      <Project>{709C3CCE-FBF8-4B7E-B211-DCD402AEFC3D}</Project>
-      <Name>ExtensionView</Name>
     </ProjectReference>
     <ProjectReference Include="..\SonarRestService\SonarRestService.fsproj">
       <Project>{64728a55-1166-4ec6-b066-22c4e01fc1c7}</Project>
@@ -232,6 +290,39 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="MainView\SampleData\ExtensionDataModelSampleData.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MainView\SampleData\PluginsOptionsModelSampleData.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MainView\SampleData\SampleDataForButtons\SampleDataForButtons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MainView\StylesAndTemplates.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MainView\PluginOptionsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MainView\IssueWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MainView\IssuesGridSettingsDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Properties\DesignTimeResources.xaml" Condition="'$(DesignTime)'=='true' OR ('$(SolutionPath)'!='' AND Exists('$(SolutionPath)') AND '$(BuildingInsideVisualStudio)'!='true' AND '$(BuildingInsideExpressionBlend)'!='true')">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <ContainsDesignTimeResources>true</ContainsDesignTimeResources>
+    </Page>
   </ItemGroup>
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>

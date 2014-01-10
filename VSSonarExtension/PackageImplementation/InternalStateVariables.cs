@@ -24,6 +24,8 @@ namespace VSSonarExtension.PackageImplementation
 
     using VSSonarExtension.SmartTags.BufferUpdate;
 
+    using VSSonarPlugins;
+
     /// <summary>
     /// The vs sonar extension package.
     /// </summary>

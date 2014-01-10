@@ -36,6 +36,17 @@ namespace VSSonarPlugins
         ReadOnlyCollection<IPlugin> GetPlugins();
 
         /// <summary>
+        /// The get menu item plugins.
+        /// </summary>
+        /// <returns>
+        /// The <see>
+        ///         <cref>ReadOnlyCollection</cref>
+        ///     </see>
+        ///     .
+        /// </returns>
+        ReadOnlyCollection<IMenuCommandPlugin> GetMenuItemPlugins();
+
+        /// <summary>
         /// The get plugin to run resource.
         /// </summary>
         /// <param name="configuration">

@@ -29,7 +29,6 @@ namespace ExtensionHelpers.Test.VSTests
         public void NoExcpetionsThrownTests()
         {
             var vshelper = new VsPropertiesHelper(null);
-            Assert.IsNull(vshelper.ActiveDocument());
             Assert.IsNullOrEmpty(vshelper.ActiveFileFullPath());
             Assert.IsNullOrEmpty(vshelper.ActiveProjectFileFullPath());
             Assert.IsNullOrEmpty(vshelper.ActiveProjectName());

@@ -105,6 +105,20 @@ namespace VSSonarPlugins
         }
 
         /// <summary>
+        /// The get plugins options.
+        /// </summary>
+        /// <returns>
+        /// The <see>
+        ///     <cref>Dictionary</cref>
+        /// </see>
+        ///     .
+        /// </returns>
+        public ReadOnlyCollection<IMenuCommandPlugin> GetMenuItemPlugins()
+        {
+            return this.menuCommandPlugins;
+        }
+
+        /// <summary>
         /// The get plugin to run resource.
         /// </summary>
         /// <param name="configuration">

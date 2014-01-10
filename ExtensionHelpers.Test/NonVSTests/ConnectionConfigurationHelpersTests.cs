@@ -23,6 +23,8 @@ namespace ExtensionHelpers.Test.NonVSTests
 
     using SonarRestService;
 
+    using VSSonarPlugins;
+
     /// <summary>
     /// The comment on issue command test.
     /// </summary>
