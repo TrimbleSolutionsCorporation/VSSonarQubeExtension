@@ -8,6 +8,8 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace ExtensionTypes
 {
+    using System;
+
     using Rhino.Licensing;
 
     /// <summary>
@@ -46,6 +48,31 @@ namespace ExtensionTypes
         ///     Gets or sets the License.
         /// </summary>
         public LicenseValidator LicenseData { get; set; }
+
+        /// <summary>
+        /// Gets or sets the license txt.
+        /// </summary>
+        public string LicenseTxt { get; set; }
+
+        /// <summary>
+        /// Gets or sets the license id.
+        /// </summary>
+        public string LicenseId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the license name.
+        /// </summary>
+        public string LicenseName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the license type.
+        /// </summary>
+        public string LicenseType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the expire date.
+        /// </summary>
+        public DateTime ExpireDate { get; set; }
 
         #endregion
     }

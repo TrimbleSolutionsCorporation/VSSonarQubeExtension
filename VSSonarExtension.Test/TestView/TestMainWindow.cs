@@ -147,7 +147,7 @@ namespace VSSonarExtension.Test.TestView
                 throw new NotImplementedException();
             }
 
-            public Dictionary<string, VsLicense> GetLicenses(ConnectionConfiguration configuration, bool dsad)
+            public Dictionary<string, VsLicense> GetLicenses(ConnectionConfiguration configuration)
             {
                 throw new NotImplementedException();
             }

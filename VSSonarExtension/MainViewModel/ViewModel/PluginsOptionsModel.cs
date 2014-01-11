@@ -187,7 +187,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                     this.IsLicenseEnable = false;
                     if (value.Equals("Licenses"))
                     {
-                        this.RefreshLicenses(false);
+                        this.GetAvailableLicenses();
                         this.IsLicenseEnable = true;
                         return;
                     }
@@ -403,12 +403,6 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         }
                     }
 
-                    return;
-                }
-
-                if (header.Equals("Refresh"))
-                {
-                    this.model.RefreshLicenses(true);
                     return;
                 }
                 

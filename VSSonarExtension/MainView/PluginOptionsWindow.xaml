@@ -89,16 +89,15 @@
 						<DataGridTextColumn Binding="{Binding IsValid}" Header="Valid   "/>
 						<DataGridTextColumn Binding="{Binding ProductId}" Header="Product   "/>
 						<DataGridTextColumn Binding="{Binding UserId}" Header="User   "/>
-						<DataGridTextColumn Binding="{Binding LicenseData.ExpirationDate}" Header="Expire Date   "/>
-						<DataGridTextColumn Binding="{Binding LicenseData.LicenseType}" Header="Type   "/>
-						<DataGridTextColumn Binding="{Binding LicenseData.Name}" Header="Name   "/>
-						<DataGridTextColumn Binding="{Binding LicenseData.UserId}" Header="License Id   "/>
+						<DataGridTextColumn Binding="{Binding ExpireDate}" Header="Expire Date   "/>
+						<DataGridTextColumn Binding="{Binding LicenseType}" Header="Type   "/>
+						<DataGridTextColumn Binding="{Binding LicenseName}" Header="Name   "/>
+						<DataGridTextColumn Binding="{Binding LicenseId}" Header="License Id   "/>
 						<DataGridTextColumn Binding="{Binding ServerId}" Header="Server ID   "/>
 					</DataGrid.Columns>
 				</DataGrid>
 				<Label   Grid.Column="2" Grid.Row="2" Grid.ColumnSpan="3" Content="{Binding ErrorMessage}" />
 				<Button  Foreground="White" Grid.Column="1" Grid.Row="1" x:Name="GenerateTokenButton" Content="Generate Token" Visibility="{Binding IsLicenseEnable, Converter={StaticResource Bool2VisibilityConverter}}" Template="{DynamicResource SquareButtonTemplate}" Command="{Binding ControlCommand}" CommandParameter="{Binding Content, ElementName=GenerateTokenButton}" d:DataContext="{d:DesignData /SampleData/SampleDataForButtons/SampleDataForButtons.xaml}" ToolTip="Copy Past Token and Fill the user property in the SonarQube server"/>				
-				<Button  Foreground="White" Grid.Column="2" Grid.Row="1" x:Name="Refresh" Content="Refresh" Visibility="{Binding IsLicenseEnable, Converter={StaticResource Bool2VisibilityConverter}}" Template="{DynamicResource SquareButtonTemplate}" Command="{Binding ControlCommand}" CommandParameter="Refresh" d:DataContext="{d:DesignData /SampleData/SampleDataForButtons/SampleDataForButtons.xaml}" ToolTip="Copy Past Token and Fill the user property in the SonarQube server"/>				
 				<TextBox Grid.Column="0" Grid.Row="1"  TextWrapping="Wrap" Text="{Binding GeneratedToken}" Visibility="{Binding IsLicenseEnable, Converter={StaticResource Bool2VisibilityConverter}}" d:DataContext="{d:DesignData /SampleData/SampleDataForButtons/SampleDataForButtons.xaml}"/>
 			</Grid>
 		</GroupBox>

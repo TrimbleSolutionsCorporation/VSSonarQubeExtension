@@ -148,10 +148,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// <summary>
         /// The refresh licenses.
         /// </summary>
-        /// <param name="forceRetriveFromServer">
-        /// The force retrive from server.
-        /// </param>
-        public void RefreshLicenses(bool forceRetriveFromServer)
+        public void GetAvailableLicenses()
         {
             this.optionsInView = null;
             this.OnPropertyChanged("OptionsInView");
@@ -163,7 +160,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             {
                 foreach (var plugin in this.plugins)
                 {
-                    foreach (var license in plugin.GetLicenses(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper), forceRetriveFromServer))
+                    foreach (var license in plugin.GetLicenses(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper)))
                     {
                         licenses.Add(license.Value);
                     }
