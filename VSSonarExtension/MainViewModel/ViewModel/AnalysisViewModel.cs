@@ -426,6 +426,11 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                 return;
             }
 
+            if (this.VerifyLocalExtension(true))
+            {
+                return;
+            }
+
             if (!startStop)
             {
                 if (this.localAnalyserThread == null || !this.localAnalyserThread.IsAlive)
@@ -444,11 +449,6 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             }
 
             if (this.localAnalyserThread != null && this.localAnalyserThread.IsAlive)
-            {
-                return;
-            }
-
-            if (this.VerifyLocalExtension(true))
             {
                 return;
             }

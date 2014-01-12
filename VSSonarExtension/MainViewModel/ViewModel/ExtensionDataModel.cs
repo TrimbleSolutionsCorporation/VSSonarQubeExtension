@@ -1169,6 +1169,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                     this.ProjectResources = new List<Resource>(projects.OrderBy(i => i.Name));
                 }
 
+                this.ExtensionRunningLocalAnalysis = null;
                 this.AssociateProjectToSolution();
             }
             catch (Exception ex)
