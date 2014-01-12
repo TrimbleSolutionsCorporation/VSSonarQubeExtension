@@ -108,6 +108,14 @@ namespace VSSonarPlugins
         Thread GetAnalyserThread(string solutionPath);
 
         /// <summary>
+        /// The stop all execution.
+        /// </summary>
+        /// <param name="runningThread">
+        /// The running thread.
+        /// </param>
+        void StopAllExecution(Thread runningThread);
+
+        /// <summary>
         /// The get issues.
         /// </summary>
         /// <returns>

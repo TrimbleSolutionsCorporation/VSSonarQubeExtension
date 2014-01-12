@@ -28,6 +28,9 @@ namespace VSSonarExtension.MainViewModel.ViewModel
 
     using ExtensionViewModel.Commands;
 
+    using Microsoft.VisualStudio.Shell;
+    using Microsoft.VisualStudio.Shell.Interop;
+
     using SonarRestService;
 
     using VSSonarExtension.MainViewModel.Cache;
@@ -151,6 +154,14 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// </summary>
         private IVsEnvironmentHelper vsenvironmenthelper;
 
+        private IVsOutputWindow outWindow;
+
+        private string customTitle;
+
+        IVsOutputWindowPane customPane;
+
+        private Guid customGuid;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="ExtensionDataModel" /> class.
         ///     This is here only for blend to recognize the data class
@@ -166,6 +177,13 @@ namespace VSSonarExtension.MainViewModel.ViewModel
 
             this.AnalysisChangeLines = false;
             this.AnalysisTrigger = false;
+
+            this.outWindow = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
+            this.customGuid = new Guid("0F44E2D1-F5FA-4d2d-AB30-22BE8ECD9789");
+            this.customTitle = "VSSonarQube Output";
+            this.outWindow.CreatePane(ref this.customGuid, this.customTitle, 1, 1);
+            this.outWindow.GetPane(ref customGuid, out this.customPane);
+            this.customPane.Activate();
         }
 
         /// <summary>
@@ -1413,9 +1431,11 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         public void ReplaceAllIssuesInCache(List<Issue> getAllIssuesByAssignee)
         {
             this.localEditorCache.UpdateIssues(getAllIssuesByAssignee);
-            this.AnalysisTrigger = false;
+            this.analysisTrigger = false;
             this.IssuesInViewAreLocked = true;
             this.OnPropertyChanged("Issues");
+            this.OnPropertyChanged("AnalysisTriggerText");
+            this.OnPropertyChanged("AnalysisTrigger");
         }
 
         /// <summary>

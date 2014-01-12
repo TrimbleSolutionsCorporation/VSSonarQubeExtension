@@ -307,12 +307,12 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             res.Name <- resource.Name
             res.Qualifier <- resource.Qualifier
             res.Scope <- resource.Scope
-            if not(obj.ReferenceEquals(res.Version, null)) then
+            if not(obj.ReferenceEquals(resource.Version, null)) then
                 res.Version <- sprintf "%s" resource.Version
 
             let metrics = new System.Collections.Generic.List<Metric>()
 
-            if not(obj.ReferenceEquals(resource.JsonValue.TryGetProperty("Msr"), null)) then
+            if not(obj.ReferenceEquals(resource.JsonValue.TryGetProperty("msr"), null)) then
                 for metric in resource.Msr do
                     let met = new Metric()
 

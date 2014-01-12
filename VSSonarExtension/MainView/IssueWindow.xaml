@@ -173,7 +173,6 @@
 					<MenuItem Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" x:Name="ConfIssuesWindow" Header="Show Properties" Command="{Binding}" CommandParameter="{Binding Header, ElementName=ConfIssuesWindow}"/>
 					<MenuItem Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" x:Name="ConfPluginsOptions" Header="Plugins Properties" Command="{Binding}" CommandParameter="{Binding Header, ElementName=ConfPluginsOptions}"/>
 				</MenuItem>
-				<MenuItem Header="Tools" Width="auto" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Template="{DynamicResource MenuTemplate}"/>
 			</MenuItem>
 			<MenuItem x:Name="PluginsMenu" Header="Tools" ItemsSource="{Binding ToolsProvidedByPlugins}" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Template="{DynamicResource MenuTemplate}">
 				<MenuItem.ItemContainerStyle>
@@ -319,7 +318,6 @@
 							<ToggleButton Grid.Row="1" Grid.Column="1" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="{Binding AnalysisTypeText}" IsChecked="{Binding AnalysisType}" Template="{DynamicResource SquareToggleButtonTemplate}" />
 							<ToggleButton Grid.Row="1" Grid.Column="1" IsEnabled="{Binding IsIssuesInModifiedLinesEnabled}" ToolTip="If yes, issues will be reported in modified lines only" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="{Binding AnalysisChangeLinesText}" IsChecked="{Binding AnalysisChangeLines}" Template="{DynamicResource SquareToggleButtonTemplate}" Margin="0,19.107,0,0.893" Grid.RowSpan="2" />
 							<ToggleButton Grid.Row="3" Grid.Column="1" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Content="{Binding AnalysisTriggerText}" IsChecked="{Binding AnalysisTrigger}" Template="{DynamicResource SquareToggleButtonTemplate}" />
-							<ToggleButton Grid.Row="3" Grid.Column="0" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" IsChecked="{Binding IsOpen, ElementName=LogPopPup}" Content="Show Log" Template="{DynamicResource SquareToggleButtonTemplate}" />
 							<ToggleButton Grid.Row="4" Grid.Column="1" IsEnabled="{Binding IsServerAnalysisOn}" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" IsChecked="{Binding IsCoverageOn}" Content="{Binding CoverageIsOnText}" Template="{DynamicResource SquareToggleButtonTemplate}" />
 							<ToggleButton Grid.Row="5" Grid.Column="1" IsEnabled="{Binding IsServerAnalysisOn}" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" IsChecked="{Binding IsSourceDiffOn}" Content="Display Diff" Template="{DynamicResource SquareToggleButtonTemplate}" />
 						</Grid>
@@ -481,14 +479,6 @@
 					</Expander>
 				</StackPanel>
 			</ScrollViewer>
-			<Popup Placement="Bottom" PopupAnimation="Fade" x:Name="LogPopPup" VerticalOffset="-150">
-				<StackPanel>
-					<TextBox TextWrapping="Wrap" VerticalScrollBarVisibility="auto" AcceptsReturn="True" Text="{Binding AnalysisLog}" Foreground="White" Background="#FF5A595A" Height="150" Width="938" />						
-					<Border BorderThickness="1">
-						<ToggleButton Foreground="White" Grid.Row="1" Grid.Column="0" IsChecked="{Binding IsOpen, ElementName=LogPopPup}" Content="Close Log" Template="{DynamicResource SquareToggleButtonTemplate}" />
-					</Border>
-				</StackPanel>
-			</Popup>
 
 		</Grid>
 	</Grid>

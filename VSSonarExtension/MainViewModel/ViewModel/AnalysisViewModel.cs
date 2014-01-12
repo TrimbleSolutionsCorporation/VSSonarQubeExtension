@@ -19,6 +19,9 @@ namespace VSSonarExtension.MainViewModel.ViewModel
 
     using ExtensionHelpers;
 
+    using Microsoft.VisualStudio.Shell;
+    using Microsoft.VisualStudio.Shell.Interop;
+
     using VSSonarPlugins;
 
     /// <summary>
@@ -226,11 +229,6 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                 return this.analysisModeText.Equals(AnalysisModes.Server);
             }
         }
-
-        /// <summary>
-        /// Gets or sets the analysis log.
-        /// </summary>
-        public string AnalysisLog { get; set; }
         
         /// <summary>
         ///     Gets the analysis mode text.
@@ -324,8 +322,14 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             set
             {
                 this.analysisTrigger = value;
+
+                if (this.customPane != null && this.analysisTrigger)
+                {
+                    this.customPane.Clear();
+                }
+
                 this.PerformfAnalysis(value);
-                this.AnalysisLog = string.Empty;
+
                 this.OnPropertyChanged("AnalysisTriggerText");
                 this.OnPropertyChanged("AnalysisTrigger");
             }
@@ -413,26 +417,34 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// </param>
         private void RunLocalAnalysis(bool startStop, AnalysisTypes analysis)
         {
-            if (this.PluginRunningAnalysis == null || (this.localAnalyserThread != null && this.localAnalyserThread.IsAlive))
+            if (this.PluginRunningAnalysis == null)
             {
+                this.analysisTrigger = false;
+                this.OnPropertyChanged("AnalysisTriggerText");
+                this.OnPropertyChanged("AnalysisTrigger");
+                this.ErrorMessage = "No Plugin to run analysis, check settings";
                 return;
             }
 
             if (!startStop)
             {
-                if (this.localAnalyserThread == null)
+                if (this.localAnalyserThread == null || !this.localAnalyserThread.IsAlive)
                 {
                     return;
                 }
 
-                if (!this.localAnalyserThread.IsAlive)
+                this.ExtensionRunningLocalAnalysis.StopAllExecution(this.localAnalyserThread);
+                this.localAnalyserThread.Join(1000);
+                if (this.localAnalyserThread.IsAlive)
                 {
-                    return;
+                    this.localAnalyserThread.Abort();
                 }
+                this.localAnalyserThread = null;
+                return;
+            }
 
-                this.localAnalyserThread.Abort();
-                this.localAnalyserThread.Join();
-
+            if (this.localAnalyserThread != null && this.localAnalyserThread.IsAlive)
+            {
                 return;
             }
 
@@ -570,15 +582,13 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                 var exceptionMsg = (LocalAnalysisCompletedEventArgs)e;
                 if (exceptionMsg != null && exceptionMsg.Ex != null)
                 {
-                    MessageBox.Show(
-                        "Cannot Execute Analysis: " + exceptionMsg.ErrorMessage + " StackTrace:"
-                        + exceptionMsg.Ex.StackTrace);
                     this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted -= this.UpdateLocalIssues;
                     this.ExtensionRunningLocalAnalysis.StdErrEvent -= this.UpdateOutputMessagesFromPlugin;
                     this.ExtensionRunningLocalAnalysis.StdOutEvent -= this.UpdateOutputMessagesFromPlugin;
                     this.analysisTrigger = false;
                     this.OnPropertyChanged("AnalysisTriggerText");
                     this.OnPropertyChanged("AnalysisTrigger");
+                    MessageBox.Show("Cannot Execute Analysis: " + exceptionMsg.ErrorMessage);
                     return;
                 }
             }
@@ -678,8 +688,10 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         private void UpdateOutputMessagesFromPlugin(object sender, EventArgs e)
         {
             var exceptionMsg = (LocalAnalysisCompletedEventArgs)e;
-            this.AnalysisLog += exceptionMsg.ErrorMessage + "\r\n";
-            this.OnPropertyChanged("AnalysisLog");
+
+            this.customPane.OutputString(exceptionMsg.ErrorMessage + "\r\n");
+            this.customPane.FlushToTaskList();
+            //customPane.Activate();
         }
 
         /// <summary>
