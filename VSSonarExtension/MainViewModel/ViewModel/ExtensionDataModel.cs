@@ -1340,41 +1340,35 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                 return;
             }
 
-            if (this.DocumentInView != null)
+            string request = "?componentRoots=" + this.AssociatedProject.Key;
+
+            if (this.IsAssigneeChecked)
             {
-                this.RefreshDataForResource(this.DocumentInView);
+                request += "&assignees=" + this.AssigneeInFilter.Login;
             }
-            else
+
+            if (this.IsReporterChecked)
             {
-                string request = "?componentRoots=" + this.AssociatedProject.Key;
-
-                if (this.IsAssigneeChecked)
-                {
-                    request += "&assignees=" + this.AssigneeInFilter.Login;
-                }
-
-                if (this.IsReporterChecked)
-                {
-                    request += "&reporters=" + this.ReporterInFilter.Login;
-                }
-
-                if (this.IsDateBeforeChecked)
-                {
-                    request += "&createdBefore=" + Convert.ToString(this.CreatedBeforeDate.Year) + "-" + Convert.ToString(this.CreatedBeforeDate.Month) + "-"
-                               + Convert.ToString(this.CreatedBeforeDate.Day);
-                }
-
-                if (this.IsDateSinceChecked)
-                {
-                    request += "&createdAfter=" + Convert.ToString(this.CreatedSinceDate.Year) + "-" + Convert.ToString(this.CreatedSinceDate.Month) + "-" + Convert.ToString(this.CreatedSinceDate.Day);
-                }
-
-                request += this.FilterSeverities();
-                request += this.FilterStatus();
-                request += this.FilterResolutions();
-
-                this.ReplaceAllIssuesInCache(this.RestService.GetIssues(this.UserConfiguration, request, this.AssociatedProject.Key));
+                request += "&reporters=" + this.ReporterInFilter.Login;
             }
+
+            if (this.IsDateBeforeChecked)
+            {
+                request += "&createdBefore=" + Convert.ToString(this.CreatedBeforeDate.Year) + "-" + Convert.ToString(this.CreatedBeforeDate.Month) + "-"
+                            + Convert.ToString(this.CreatedBeforeDate.Day);
+            }
+
+            if (this.IsDateSinceChecked)
+            {
+                request += "&createdAfter=" + Convert.ToString(this.CreatedSinceDate.Year) + "-" + Convert.ToString(this.CreatedSinceDate.Month) + "-" + Convert.ToString(this.CreatedSinceDate.Day);
+            }
+
+            request += this.FilterSeverities();
+            request += this.FilterStatus();
+            request += this.FilterResolutions();
+
+            this.ReplaceAllIssuesInCache(this.RestService.GetIssues(this.UserConfiguration, request, this.AssociatedProject.Key));
+
         }
 
         /// <summary>
