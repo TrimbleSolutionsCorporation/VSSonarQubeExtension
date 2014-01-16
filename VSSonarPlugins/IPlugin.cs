@@ -56,27 +56,13 @@ namespace VSSonarPlugins
         /// <param name="configuration">
         /// The configuration.
         /// </param>
-        /// <param name="resource">
-        /// The language.
-        /// </param>
-        /// <returns>
-        /// The <see cref="bool"/>.
-        /// </returns>
-        bool IsSupported(ConnectionConfiguration configuration, string resource);
-
-        /// <summary>
-        /// The is supported.
-        /// </summary>
-        /// <param name="configuration">
-        /// The configuration.
-        /// </param>
-        /// <param name="resource">
+        /// <param name="project">
         /// The resource.
         /// </param>
         /// <returns>
         /// The <see cref="bool"/>.
         /// </returns>
-        bool IsSupported(ConnectionConfiguration configuration, Resource resource);
+        bool IsSupported(ConnectionConfiguration configuration, Resource project);
 
         /// <summary>
         /// The get resource key.

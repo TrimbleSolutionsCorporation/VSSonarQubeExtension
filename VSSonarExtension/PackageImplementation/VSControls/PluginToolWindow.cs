@@ -14,6 +14,7 @@
 
 namespace VSSonarExtension.VSControls
 {
+    using System;
     using System.Runtime.InteropServices;
     using System.Windows.Controls;
 
@@ -33,6 +34,10 @@ namespace VSSonarExtension.VSControls
         {
             this.BitmapResourceID = 301;
             this.BitmapIndex = 1;
+            if (PackageImplementation.VsSonarExtensionPackage.CurrentPluginName == null)
+            {
+                throw  new Exception("Not implemented");
+            }
             this.Caption = PackageImplementation.VsSonarExtensionPackage.CurrentPluginName;
             this.Content = PackageImplementation.VsSonarExtensionPackage.CurrentPluginControl;
         }

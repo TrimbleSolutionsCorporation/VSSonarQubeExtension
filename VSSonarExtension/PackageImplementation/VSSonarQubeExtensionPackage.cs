@@ -110,6 +110,43 @@ namespace VSSonarExtension.PackageImplementation
         /// <exception>
         ///     <cref>NotSupportedException</cref>
         /// </exception>
+        public void CloseToolWindow()
+        {
+            for (int i = 0; i < 100; i++)
+            {
+                try
+                {
+                    // Find existing windows. 
+                    var currentWindow = this.FindToolWindow(typeof(PluginToolWindow), i, false);
+                    if (currentWindow == null)
+                    {
+                        continue;
+                    }
+
+                    var windowFrame = (IVsWindowFrame)currentWindow.Frame;
+                    ErrorHandler.ThrowOnFailure(windowFrame.Hide());
+                }
+                catch (Exception)
+                {
+                }
+            }
+        }
+
+        /// <summary>
+        /// The show tool window.
+        /// </summary>
+        /// <param name="control">
+        /// The control.
+        /// </param>
+        /// <param name="id">
+        /// The id.
+        /// </param>
+        /// <param name="name">
+        /// The name.
+        /// </param>
+        /// <exception>
+        ///     <cref>NotSupportedException</cref>
+        /// </exception>
         public void ShowToolWindow(UserControl control, int id, string name)
         {
             // Find existing windows. 
@@ -166,6 +203,8 @@ namespace VSSonarExtension.PackageImplementation
                     ExtensionModelData.VSPackage = this;
 
                     this.UpdateModelInToolWindow(ExtensionModelData);
+
+                    //this.CloseToolWindow();
                 }
                 catch (Exception ex)
                 {

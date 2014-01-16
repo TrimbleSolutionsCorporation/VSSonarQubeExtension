@@ -394,6 +394,12 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         private void PerformfAnalysis(bool startStop)
         {
             this.IssuesInViewAreLocked = false;
+            if (this.PluginRunningAnalysis == null || !this.PluginRunningAnalysis.IsSupported(this.UserConfiguration, AssociatedProject))
+            {
+                this.ErrorMessage = "No Plugin Installed Supporting this Language";
+                return;
+            }
+
             switch (this.analysisModeText)
             {
                 case AnalysisModes.Server:

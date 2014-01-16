@@ -149,7 +149,7 @@ namespace VSSonarExtension.Test.TestViewModel
                     .Return(new List<Resource> { element })
                     .Repeat.Twice();
 
-                this.plugin.Expect(mp => mp.IsSupported(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything)).Return(true).Repeat.Once();
+                this.plugin.Expect(mp => mp.IsSupported(Arg<ConnectionConfiguration>.Is.Anything, Arg<Resource>.Is.Anything)).Return(true).Repeat.Once();
                 this.plugin.Expect(mp => mp.GetServerAnalyserExtension(Arg<ConnectionConfiguration>.Is.Anything, Arg<Resource>.Is.Anything)).Return(this.extension).Repeat.Once();
                 this.plugin.Expect(
                     mp =>
