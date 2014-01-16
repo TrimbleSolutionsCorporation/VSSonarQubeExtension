@@ -1,0 +1,1055 @@
+﻿<ViewModel:ExtensionDataModel xmlns:ViewModel="clr-namespace:VSSonarExtension.MainViewModel.ViewModel" xmlns:ExtensionTypes="clr-namespace:ExtensionTypes;assembly=ExtensionTypes" xmlns:Commands="clr-namespace:VSSonarExtension.MainViewModel.Commands" xmlns:System="clr-namespace:System;assembly=mscorlib" xmlns:Windows="clr-namespace:System.Windows;assembly=PresentationFramework" xmlns:Commands1="clr-namespace:ExtensionViewModel.Commands" xmlns:PackageImplementation="clr-namespace:VSSonarExtension.PackageImplementation" AssigneeVisible="False" AnalysisMode="True" AnalysisType="False" AnalysisChangeLines="False" AnalysisTrigger="True" AnalysisChangeLinesText="Maecenas vestibulum cras duis" AnalysisTypeText="Nunc accumsan" AnalysisModeText="Mauris curabitur" AssigneeIndex="73" AnalysisTriggerText="Aliquam praesent adipiscing nam aenean" AssociatedProjectKey="Posuere neque vestibulum adipiscing volutpat" CloseDateIndex="43" CloseDateVisible="True" CommentData="Netus rutrum nisl" CreatedBeforeDate="01/15/2014 21:13:19" CoverageIsOnText="Class curae donec bibendum" CreationDateVisible="True" ComponentIndex="79" CreatedSinceDate="01/15/2014 21:13:19" ComponentVisible="False" CreationDateIndex="75" CoverageInEditorEnabled="True" DisplayReporterInFilter="Luctus justo" DisableEditorTags="False" DisplayAssigneeInFilter="Vestibulum habitasse mattis vestibulum cras" DiagnosticMessage="Sit vel parturient duis" DocumentInView="Nunc lobortis tempor lorem" DisplaySelectedUser="Mus parturient" EffortToFixIndex="69" ErrorMessage="Aliquam amet nascetur vestibulum aliquet" EffortToFixVisible="False" IsUnconfirmVisible="Hidden" IsCoverageOn="False" IsDateBeforeChecked="True" IsStatusResolvedChecked="False" IsMajaorChecked="False" IsReopenVisible="Collapsed" IsSolutionOpen="True" IsStatusClosedChecked="False" IssuesInViewAreLocked="False" IsFalsePositiveChecked="True" IsStatusConfirmedChecked="True" IsAssignVisible="Hidden" IsStatusReopenedChecked="True" IsInfoChecked="True" IsFalsePositiveVisible="Hidden" IdIndex="98" IsRemovedChecked="False" IsResolveVisible="Hidden" IsCriticalChecked="False" IsConfirmVisible="Hidden" IsSourceDiffOn="True" IsReporterChecked="True" IsCommentingVisible="Hidden" IsAssigneeChecked="False" IsOpenExternallyVisible="Collapsed" IsServerAnalysisOn="False" IsStatusOpenChecked="False" IsFixedChecked="False" IdVisible="True" IsIssuesInModifiedLinesEnabled="True" IsDateSinceChecked="False" IsMinorChecked="True" IsBlockerChecked="True" KeyIndex="10" KeyVisible="False" LineIndex="18" LineVisible="True" MessageIndex="29" MessageVisible="False" ProjectVisible="True" ProjectIndex="68" PreventUpdateOfIssuesList="True" RuleIndex="61" ResolutionVisible="False" ResolutionIndex="35" RuleVisible="True" SeverityVisible="False" SeverityIndex="40" StatusIndex="38" SonarVersion="773.11" StatsLabel="Fames felis nunc adipiscing" SonarInfo="Per vestibulum libero volutpat" SelectedProjectInFilterList="Euismod feugiat" StatusVisible="True" UpdateDateVisible="False" UpdateDateIndex="95" UserInputTextBoxVisibility="Hidden" UpdateTagsInEditor="True">
+	<ViewModel:ExtensionDataModel.AssigneeInFilter>
+		<ExtensionTypes:User Active="False" Email="Mauris duis" Login="Massa hendrerit adipiscing" Name="Hac rhoncus nascetur"/>
+	</ViewModel:ExtensionDataModel.AssigneeInFilter>
+	<ViewModel:ExtensionDataModel.AssignProjectCommand>
+		<Commands:AssociateCommand/>
+	</ViewModel:ExtensionDataModel.AssignProjectCommand>
+	<ViewModel:ExtensionDataModel.AssociatedProject>
+		<ExtensionTypes:Resource Date="01/15/2014 21:13:18" Id="15" Key="Phasellus etiam integer fusce" Lname="Ante arcu" Lang="Vivamus lorem nullam aliquam aliquet" Name="Consequat parturient sed vestibulum amet" Qualifier="Dis diam quisque" Scope="Convallis vestibulum dictumst" Version="Blandit aptent">
+			<ExtensionTypes:Resource.Metrics>
+				<ExtensionTypes:Metric Data="Est hac cursus" FormatedValue="Conubia congue dignissim" Key="Commodo adipiscing auctor eleifend">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Eget dictum dapibus facilisis proin" FormatedValue="Elementum parturient vestibulum leo" Key="Morbi nulla cubilia">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Fringilla non augue" FormatedValue="Vestibulum mus fermentum nec" Key="Egestas facilisi faucibus">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Himenaeos ligula" FormatedValue="Lectus dolor inceptos libero per" Key="Habitant elit habitasse hendrerit euismod">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Magnis sed" FormatedValue="Fames luctus" Key="Litora imperdiet interdum malesuada feugiat">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Felis vel nam erat mauris" FormatedValue="Enim mattis nascetur sit pharetra" Key="Sem lobortis">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Placerat penatibus" FormatedValue="Eros montes" Key="Adipiscing gravida mollis sed">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Lacus lorem senectus" FormatedValue="Est ipsum porttitor justo" Key="Pulvinar dis sagittis iaculis">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Tincidunt ornare torquent massa" FormatedValue="Suscipit lacinia laoreet magna" Key="Nostra sociosqu nibh">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Ultrices primis vestibulum vehicula" FormatedValue="Platea nisi morbi" Key="Metus hac natoque parturient">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+			</ExtensionTypes:Resource.Metrics>
+		</ExtensionTypes:Resource>
+	</ViewModel:ExtensionDataModel.AssociatedProject>
+	<ViewModel:ExtensionDataModel.AssignOnIssueCommand>
+		<Commands:AssignOnIssueCommand/>
+	</ViewModel:ExtensionDataModel.AssignOnIssueCommand>
+	<ViewModel:ExtensionDataModel.ClearCacheCommand>
+		<Commands:ClearCacheCommand/>
+	</ViewModel:ExtensionDataModel.ClearCacheCommand>
+	<ViewModel:ExtensionDataModel.ConfirmIssueCommand>
+		<Commands:ConfirmIssueCommand/>
+	</ViewModel:ExtensionDataModel.ConfirmIssueCommand>
+	<ViewModel:ExtensionDataModel.Comments>
+		<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Nulla leo maecenas porta" Id="83" Login="Praesent tristique accumsan parturient">
+			<ExtensionTypes:Comment.Key>
+				<System:Guid/>
+			</ExtensionTypes:Comment.Key>
+		</ExtensionTypes:Comment>
+		<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Ultricies potenti venenatis" Id="63" Login="Pretium nunc odio purus vulputate">
+			<ExtensionTypes:Comment.Key>
+				<System:Guid/>
+			</ExtensionTypes:Comment.Key>
+		</ExtensionTypes:Comment>
+		<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Bibendum vestibulum" Id="28" Login="Mus curabitur">
+			<ExtensionTypes:Comment.Key>
+				<System:Guid/>
+			</ExtensionTypes:Comment.Key>
+		</ExtensionTypes:Comment>
+		<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Rhoncus nec sodales" Id="79" Login="Vestibulum phasellus dictumst">
+			<ExtensionTypes:Comment.Key>
+				<System:Guid/>
+			</ExtensionTypes:Comment.Key>
+		</ExtensionTypes:Comment>
+		<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Non adipiscing consequat" Id="12" Login="Viverra convallis parturient risus">
+			<ExtensionTypes:Comment.Key>
+				<System:Guid/>
+			</ExtensionTypes:Comment.Key>
+		</ExtensionTypes:Comment>
+		<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Orci sapien velit aliquam eleifend" Id="35" Login="Vestibulum pede facilisi vitae semper">
+			<ExtensionTypes:Comment.Key>
+				<System:Guid/>
+			</ExtensionTypes:Comment.Key>
+		</ExtensionTypes:Comment>
+		<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Quam integer class quisque sociis" Id="65" Login="Vestibulum quis">
+			<ExtensionTypes:Comment.Key>
+				<System:Guid/>
+			</ExtensionTypes:Comment.Key>
+		</ExtensionTypes:Comment>
+		<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Curae dignissim" Id="45" Login="Donec faucibus vivamus">
+			<ExtensionTypes:Comment.Key>
+				<System:Guid/>
+			</ExtensionTypes:Comment.Key>
+		</ExtensionTypes:Comment>
+		<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Etiam taciti elementum tellus" Id="77" Login="Per habitant facilisis sed urna">
+			<ExtensionTypes:Comment.Key>
+				<System:Guid/>
+			</ExtensionTypes:Comment.Key>
+		</ExtensionTypes:Comment>
+		<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Inceptos fermentum fusce" Id="86" Login="Adipiscing interdum sem cras">
+			<ExtensionTypes:Comment.Key>
+				<System:Guid/>
+			</ExtensionTypes:Comment.Key>
+		</ExtensionTypes:Comment>
+	</ViewModel:ExtensionDataModel.Comments>
+	<ViewModel:ExtensionDataModel.CommentsWidth>
+		<Windows:GridLength/>
+	</ViewModel:ExtensionDataModel.CommentsWidth>
+	<ViewModel:ExtensionDataModel.CommentOnIssueCommand>
+		<Commands1:CommentOnIssueCommand/>
+	</ViewModel:ExtensionDataModel.CommentOnIssueCommand>
+	<ViewModel:ExtensionDataModel.DisplayUsersList>
+		<System:String>Dictum convallis nibh</System:String>
+		<System:String>Dignissim nisi vestibulum</System:String>
+		<System:String>Lectus elementum facilisis sed dis</System:String>
+		<System:String>Libero nisl adipiscing parturient</System:String>
+		<System:String>Nunc posuere dolor</System:String>
+		<System:String>Potenti ligula vestibulum</System:String>
+		<System:String>Fermentum odio interdum</System:String>
+		<System:String>Pretium vestibulum fames</System:String>
+		<System:String>Orci litora felis</System:String>
+		<System:String>Est ipsum pede</System:String>
+	</ViewModel:ExtensionDataModel.DisplayUsersList>
+	<ViewModel:ExtensionDataModel.FalsePositiveOnIssueCommand>
+		<Commands:FalsePositiveOnIssueCommand/>
+	</ViewModel:ExtensionDataModel.FalsePositiveOnIssueCommand>
+	<ViewModel:ExtensionDataModel.GetIssuesCommand>
+		<Commands:GetIssuesCommand/>
+	</ViewModel:ExtensionDataModel.GetIssuesCommand>
+	<ViewModel:ExtensionDataModel.Issues>
+		<ExtensionTypes:Issue Assignee="Nulla conubia" CreationDate="01/15/2014 21:13:18" Component="Pharetra placerat blandit sed vestibulum" CloseDate="01/15/2014 21:13:18" Id="91" Line="55" Message="Morbi nam" Project="Fringilla ante" Resolution="Vestibulum dis eget senectus" Rule="Parturient commodo sagittis" Severity="Tortor pulvinar" Status="Adipiscing tempus habitasse arcu diam" UpdateDate="01/15/2014 21:13:18" ViolationId="31">
+			<ExtensionTypes:Issue.Comments>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Turpis sociosqu est cubilia vestibulum" Id="40" Login="Hendrerit adipiscing parturient dapibus vestibulum">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Suscipit hac egestas proin" Id="98" Login="Euismod leo varius">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Himenaeos elit aenean" Id="63" Login="Augue vestibulum mauris adipiscing">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Feugiat gravida torquent" Id="44" Login="Mus parturient">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Iaculis nec dolor fames enim" Id="60" Login="Erat nullam vestibulum">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+			</ExtensionTypes:Issue.Comments>
+			<ExtensionTypes:Issue.EffortToFix>
+				<System:Decimal/>
+			</ExtensionTypes:Issue.EffortToFix>
+			<ExtensionTypes:Issue.Key>
+				<System:Guid/>
+			</ExtensionTypes:Issue.Key>
+		</ExtensionTypes:Issue>
+		<ExtensionTypes:Issue Assignee="Penatibus lacus porttitor" CreationDate="01/15/2014 21:13:18" Component="Aptent vestibulum ultrices ipsum imperdiet" CloseDate="01/15/2014 21:13:18" Id="31" Line="85" Message="Eros felis non" Project="Lacinia auctor nibh per" Resolution="Vestibulum vestibulum adipiscing" Rule="Parturient justo nunc" Severity="Nisi cursus nisl sed" Status="Malesuada vehicula congue laoreet adipiscing" UpdateDate="01/15/2014 21:13:18" ViolationId="83">
+			<ExtensionTypes:Issue.Comments>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Dictum odio" Id="32" Login="Sem orci">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Pede natoque sit parturient" Id="25" Login="Lorem magna">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Quam vel vestibulum" Id="46" Login="Quis lectus nam urna">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Vestibulum volutpat" Id="86" Login="Maecenas libero adipiscing tincidunt">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Massa tristique metus" Id="98" Login="Parturient vestibulum">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+			</ExtensionTypes:Issue.Comments>
+			<ExtensionTypes:Issue.EffortToFix>
+				<System:Decimal/>
+			</ExtensionTypes:Issue.EffortToFix>
+			<ExtensionTypes:Issue.Key>
+				<System:Guid/>
+			</ExtensionTypes:Issue.Key>
+		</ExtensionTypes:Issue>
+		<ExtensionTypes:Issue Assignee="Adipiscing phasellus" CreationDate="01/15/2014 21:13:18" Component="Ultricies potenti" CloseDate="01/15/2014 21:13:18" Id="25" Line="84" Message="Posuere vestibulum" Project="Ligula venenatis adipiscing" Resolution="Hac accumsan" Rule="Est vestibulum vestibulum" Severity="Pretium dis curabitur cras" Status="Sed parturient praesent litora vulputate" UpdateDate="01/15/2014 21:13:18" ViolationId="63">
+			<ExtensionTypes:Issue.Comments>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Parturient leo rhoncus" Id="83" Login="Luctus magnis morbi consequat">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Mattis vestibulum sodales mus neque" Id="77" Login="Mauris mollis bibendum viverra">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Duis netus" Id="82" Login="Montes nec aliquam nostra">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Convallis nunc nulla non" Id="89" Login="Dictumst porta">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Dignissim purus vestibulum" Id="77" Login="Risus eleifend amet elementum ornare">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+			</ExtensionTypes:Issue.Comments>
+			<ExtensionTypes:Issue.EffortToFix>
+				<System:Decimal/>
+			</ExtensionTypes:Issue.EffortToFix>
+			<ExtensionTypes:Issue.Key>
+				<System:Guid/>
+			</ExtensionTypes:Issue.Key>
+		</ExtensionTypes:Issue>
+		<ExtensionTypes:Issue Assignee="Per class inceptos taciti" CreationDate="01/15/2014 21:13:18" Component="Facilisi ante arcu" CloseDate="01/15/2014 21:13:18" Id="46" Line="33" Message="Adipiscing platea integer" Project="Quisque diam primis" Resolution="Elit sociis" Rule="Eget fringilla vitae semper" Severity="Velit facilisis fermentum" Status="Faucibus rutrum habitant sapien" UpdateDate="01/15/2014 21:13:18" ViolationId="85">
+			<ExtensionTypes:Issue.Comments>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Vivamus aliquam interdum habitasse" Id="22" Login="Lobortis enim nascetur erat">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Pharetra placerat hendrerit" Id="47" Login="Himenaeos parturient curae vestibulum aliquet">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Imperdiet pulvinar sagittis" Id="48" Login="Vestibulum adipiscing tellus blandit">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Sed sem malesuada" Id="77" Login="Parturient donec eros">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Commodo tempor" Id="44" Login="Nibh vestibulum senectus conubia">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+			</ExtensionTypes:Issue.Comments>
+			<ExtensionTypes:Issue.EffortToFix>
+				<System:Decimal/>
+			</ExtensionTypes:Issue.EffortToFix>
+			<ExtensionTypes:Issue.Key>
+				<System:Guid/>
+			</ExtensionTypes:Issue.Key>
+		</ExtensionTypes:Issue>
+		<ExtensionTypes:Issue Assignee="Morbi nulla adipiscing nunc" CreationDate="01/15/2014 21:13:18" Component="Vel nisi sociosqu" CloseDate="01/15/2014 21:13:18" Id="83" Line="98" Message="Sit cubilia dapibus vestibulum etiam" Project="Nam sed" Resolution="Nisl est ultrices vehicula porttitor" Rule="Suscipit torquent gravida" Severity="Egestas euismod feugiat lorem" Status="Fusce penatibus dis" UpdateDate="01/15/2014 21:13:18" ViolationId="52">
+			<ExtensionTypes:Issue.Comments>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Proin iaculis tincidunt augue" Id="18" Login="Volutpat parturient hac">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Odio maecenas dolor vestibulum praesent" Id="87" Login="Tristique tempus leo accumsan mus">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Vestibulum ultricies bibendum adipiscing" Id="89" Login="Nec tortor orci">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Pede turpis parturient" Id="70" Login="Venenatis vulputate">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Quam vestibulum dictumst" Id="72" Login="Fames varius">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+			</ExtensionTypes:Issue.Comments>
+			<ExtensionTypes:Issue.EffortToFix>
+				<System:Decimal/>
+			</ExtensionTypes:Issue.EffortToFix>
+			<ExtensionTypes:Issue.Key>
+				<System:Guid/>
+			</ExtensionTypes:Issue.Key>
+		</ExtensionTypes:Issue>
+		<ExtensionTypes:Issue Assignee="Cursus nunc dictum lectus" CreationDate="01/15/2014 21:13:18" Component="Felis eleifend nullam" CloseDate="01/15/2014 21:13:18" Id="79" Line="26" Message="Curabitur aenean mauris lacinia" Project="Ipsum laoreet justo phasellus" Resolution="Duis adipiscing massa congue posuere" Rule="Magna quis urna faucibus cras" Severity="Convallis aptent auctor lorem" Status="Consequat lacus natoque facilisi vestibulum" UpdateDate="01/15/2014 21:13:18" ViolationId="53">
+			<ExtensionTypes:Issue.Comments>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Potenti pretium amet rhoncus sodales" Id="74" Login="Ante arcu viverra aliquam">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Non libero" Id="32" Login="Ligula per">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Litora diam dignissim" Id="60" Login="Metus integer eget sed sem">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Habitant morbi elementum neque" Id="48" Login="Sit inceptos elit parturient vestibulum">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Vestibulum quisque" Id="82" Login="Netus adipiscing parturient vel interdum">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+			</ExtensionTypes:Issue.Comments>
+			<ExtensionTypes:Issue.EffortToFix>
+				<System:Decimal/>
+			</ExtensionTypes:Issue.EffortToFix>
+			<ExtensionTypes:Issue.Key>
+				<System:Guid/>
+			</ExtensionTypes:Issue.Key>
+		</ExtensionTypes:Issue>
+		<ExtensionTypes:Issue Assignee="Aliquet nisi vestibulum hac leo" CreationDate="01/15/2014 21:13:18" Component="Lobortis nascetur" CloseDate="01/15/2014 21:13:18" Id="14" Line="93" Message="Nulla vestibulum porta nam" Project="Sed enim facilisis erat" Resolution="Parturient pharetra" Rule="Magnis nibh mattis mauris" Severity="Est luctus risus adipiscing eros" Status="Vivamus dis aliquam purus vestibulum" UpdateDate="01/15/2014 21:13:18" ViolationId="50">
+			<ExtensionTypes:Issue.Comments>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Mollis nisl nunc mus placerat" Id="49" Login="Vestibulum adipiscing montes parturient">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Velit blandit commodo vestibulum odio" Id="81" Login="Orci nostra pulvinar nec conubia">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Vestibulum sagittis adipiscing" Id="93" Login="Parturient vitae">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Pede ornare vestibulum" Id="18" Login="Quam non per">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Fermentum class senectus sed" Id="72" Login="Sem vestibulum platea quis">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+			</ExtensionTypes:Issue.Comments>
+			<ExtensionTypes:Issue.EffortToFix>
+				<System:Decimal/>
+			</ExtensionTypes:Issue.EffortToFix>
+			<ExtensionTypes:Issue.Key>
+				<System:Guid/>
+			</ExtensionTypes:Issue.Key>
+		</ExtensionTypes:Issue>
+		<ExtensionTypes:Issue Assignee="Imperdiet semper parturient" CreationDate="01/15/2014 21:13:18" Component="Parturient habitasse" CloseDate="01/15/2014 21:13:18" Id="53" Line="11" Message="Curae sit primis fringilla adipiscing" Project="Cubilia dapibus urna hendrerit" Resolution="Himenaeos vestibulum duis adipiscing" Rule="Sapien fusce" Severity="Etiam vel rutrum" Status="Donec vestibulum cras" UpdateDate="01/15/2014 21:13:18" ViolationId="16">
+			<ExtensionTypes:Issue.Comments>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Egestas lorem vestibulum malesuada" Id="61" Login="Nunc morbi nam">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Sociis penatibus taciti euismod vestibulum" Id="77" Login="Adipiscing parturient">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Feugiat gravida porttitor" Id="31" Login="Tincidunt tellus sociosqu amet suscipit">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Vestibulum torquent ultrices" Id="22" Login="Vehicula volutpat iaculis nulla">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Sed ante lacinia tempor" Id="47" Login="Dis tempus tortor">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+			</ExtensionTypes:Issue.Comments>
+			<ExtensionTypes:Issue.EffortToFix>
+				<System:Decimal/>
+			</ExtensionTypes:Issue.EffortToFix>
+			<ExtensionTypes:Issue.Key>
+				<System:Guid/>
+			</ExtensionTypes:Issue.Key>
+		</ExtensionTypes:Issue>
+		<ExtensionTypes:Issue Assignee="Bibendum auctor" CreationDate="01/15/2014 21:13:18" Component="Turpis proin varius aenean adipiscing" CloseDate="01/15/2014 21:13:18" Id="48" Line="53" Message="Laoreet maecenas vestibulum" Project="Natoque mauris nullam" Resolution="Diam posuere" Rule="Praesent accumsan tristique ipsum justo" Severity="Fames felis arcu aptent" Status="Augue dolor" UpdateDate="01/15/2014 21:13:18" ViolationId="33">
+			<ExtensionTypes:Issue.Comments>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Est dictumst lacus parturient" Id="41" Login="Potenti vestibulum pretium hac vestibulum">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Eget ultricies adipiscing" Id="93" Login="Congue eleifend lorem leo mus">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Elit enim magna massa" Id="77" Login="Nec facilisi">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Parturient erat" Id="21" Login="Faucibus cursus">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Rhoncus eros" Id="94" Login="Metus dictum lectus venenatis vulputate">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+			</ExtensionTypes:Issue.Comments>
+			<ExtensionTypes:Issue.EffortToFix>
+				<System:Decimal/>
+			</ExtensionTypes:Issue.EffortToFix>
+			<ExtensionTypes:Issue.Key>
+				<System:Guid/>
+			</ExtensionTypes:Issue.Key>
+		</ExtensionTypes:Issue>
+		<ExtensionTypes:Issue Assignee="Odio per sed purus" CreationDate="01/15/2014 21:13:18" Component="Inceptos sodales" CloseDate="01/15/2014 21:13:18" Id="91" Line="55" Message="Morbi habitant" Project="Vestibulum viverra interdum nibh" Resolution="Nulla porta" Rule="Aliquam netus nunc non" Severity="Ligula nisl vestibulum" Status="Neque nisi libero" UpdateDate="01/15/2014 21:13:18" ViolationId="66">
+			<ExtensionTypes:Issue.Comments>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Curabitur phasellus integer sem consequat" Id="97" Login="Lobortis nascetur risus orci">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Pharetra litora placerat" Id="39" Login="Velit quisque">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Pede pulvinar sagittis sit" Id="24" Login="Senectus vivamus aliquam sociosqu">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Luctus magnis adipiscing convallis" Id="54" Login="Quam mattis">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Quis mauris aliquet vitae blandit" Id="73" Login="Mollis dignissim urna vel commodo">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+			</ExtensionTypes:Issue.Comments>
+			<ExtensionTypes:Issue.EffortToFix>
+				<System:Decimal/>
+			</ExtensionTypes:Issue.EffortToFix>
+			<ExtensionTypes:Issue.Key>
+				<System:Guid/>
+			</ExtensionTypes:Issue.Key>
+		</ExtensionTypes:Issue>
+	</ViewModel:ExtensionDataModel.Issues>
+	<ViewModel:ExtensionDataModel.OpenInSonarCommand>
+		<Commands:OpenInSonarCommand/>
+	</ViewModel:ExtensionDataModel.OpenInSonarCommand>
+	<ViewModel:ExtensionDataModel.OpenInVsCommand>
+		<Commands:OpenInVsCommand/>
+	</ViewModel:ExtensionDataModel.OpenInVsCommand>
+	<ViewModel:ExtensionDataModel.ProjectResources>
+		<ExtensionTypes:Resource Date="01/15/2014 21:13:19" Id="63" Key="Sodales phasellus est eros" Lname="Aliquam dignissim nisi morbi nisl" Lang="Odio leo netus vestibulum" Name="Consequat convallis nibh viverra" Qualifier="Hac parturient mollis" Scope="Mauris neque elementum facilisis nunc" Version="Vestibulum adipiscing">
+			<ExtensionTypes:Resource.Metrics>
+				<ExtensionTypes:Metric Data="Nulla nec fringilla vestibulum habitasse" FormatedValue="Vestibulum pede integer mus fermentum" Key="Parturient orci">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Porta quisque non nostra" FormatedValue="Hendrerit facilisi" Key="Montes quam eleifend">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Purus primis rutrum faucibus habitant" FormatedValue="Himenaeos platea" Key="Ornare quis urna">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Duis sapien" FormatedValue="Velit vivamus inceptos interdum" Key="Cras adipiscing imperdiet risus">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Curae donec sed semper penatibus" FormatedValue="Class aliquam lobortis nascetur" Key="Nunc vitae per malesuada">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+			</ExtensionTypes:Resource.Metrics>
+		</ExtensionTypes:Resource>
+		<ExtensionTypes:Resource Date="01/15/2014 21:13:19" Id="73" Key="Sociis taciti parturient" Lname="Sem tincidunt" Lang="Aliquet vestibulum" Name="Porttitor etiam" Qualifier="Ultricies vestibulum" Scope="Tellus tristique fusce sit" Version="Tempor lorem vel">
+			<ExtensionTypes:Resource.Metrics>
+				<ExtensionTypes:Metric Data="Tortor adipiscing blandit venenatis" FormatedValue="Ante nulla" Key="Pharetra tempus placerat morbi amet">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Phasellus dolor sagittis" FormatedValue="Sed turpis curabitur augue" Key="Nam proin pulvinar vulputate">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Senectus ipsum hac justo" FormatedValue="Vestibulum est varius vestibulum" Key="Fames dis felis parturient">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Lorem consequat aenean parturient" FormatedValue="Arcu leo" Key="Lacus adipiscing">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Non per nullam" FormatedValue="Nec mauris vestibulum dignissim diam" Key="Mus magna sociosqu convallis">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+			</ExtensionTypes:Resource.Metrics>
+		</ExtensionTypes:Resource>
+		<ExtensionTypes:Resource Date="01/15/2014 21:13:19" Id="12" Key="Suscipit sed eget" Lname="Sit vestibulum" Lang="Neque commodo conubia auctor congue" Name="Torquent sem elit massa metus" Qualifier="Parturient morbi facilisis vestibulum" Scope="Elementum aptent adipiscing" Version="Cubilia vel netus">
+			<ExtensionTypes:Resource.Metrics>
+				<ExtensionTypes:Metric Data="Volutpat porta" FormatedValue="Dapibus fermentum ultrices nulla vehicula" Key="Cursus vestibulum dictum nam">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Habitasse est lectus" FormatedValue="Sed dis euismod enim" Key="Fringilla egestas">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Parturient nisi ligula leo purus" FormatedValue="Adipiscing himenaeos feugiat libero" Key="Erat hendrerit hac eros nibh">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Nunc odio orci velit" FormatedValue="Nisl iaculis" Key="Gravida risus imperdiet">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Class maecenas magnis praesent quam" FormatedValue="Vestibulum litora vitae luctus mus" Key="Pede vestibulum">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+			</ExtensionTypes:Resource.Metrics>
+		</ExtensionTypes:Resource>
+		<ExtensionTypes:Resource Date="01/15/2014 21:13:19" Id="78" Key="Lacinia adipiscing curae malesuada" Lname="Natoque penatibus" Lang="Vestibulum donec" Name="Laoreet parturient nec vestibulum accumsan" Qualifier="Tincidunt bibendum" Scope="Porttitor quis posuere" Version="Adipiscing urna non">
+			<ExtensionTypes:Resource.Metrics>
+				<ExtensionTypes:Metric Data="Sed mattis sem parturient mauris" FormatedValue="Rhoncus per fusce dictumst sodales" Key="Potenti tristique cras etiam pretium">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Eleifend amet ante arcu" FormatedValue="Vestibulum duis nunc morbi aliquam" Key="Viverra lorem">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Montes diam vestibulum sit vel" FormatedValue="Mollis proin quisque" Key="Facilisi integer nulla">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Vestibulum ultricies augue sed" FormatedValue="Parturient aliquam nam" Key="Vivamus adipiscing nostra">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Venenatis dis est" FormatedValue="Aliquet dolor habitant vestibulum" Key="Faucibus ornare eget">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+			</ExtensionTypes:Resource.Metrics>
+		</ExtensionTypes:Resource>
+		<ExtensionTypes:Resource Date="01/15/2014 21:13:19" Id="49" Key="Hac elit platea" Lname="Enim rutrum parturient" Lang="Interdum ipsum consequat" Name="Vulputate primis adipiscing fames" Qualifier="Adipiscing phasellus erat inceptos semper" Scope="Vestibulum vestibulum felis sapien curabitur" Version="Leo mus eros nibh">
+			<ExtensionTypes:Resource.Metrics>
+				<ExtensionTypes:Metric Data="Commodo conubia taciti cubilia facilisis" FormatedValue="Sociis elementum vestibulum nec justo" Key="Convallis parturient dignissim blandit">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Fermentum pharetra tellus" FormatedValue="Nisi nascetur nisl" Key="Lobortis lacus lorem">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Pulvinar massa" FormatedValue="Placerat magna" Key="Vestibulum fringilla non">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Sagittis tortor" FormatedValue="Tempus morbi" Key="Tempor habitasse metus hendrerit">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Odio egestas sed" FormatedValue="Aenean nunc himenaeos" Key="Dapibus per neque turpis varius">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+			</ExtensionTypes:Resource.Metrics>
+		</ExtensionTypes:Resource>
+		<ExtensionTypes:Resource Date="01/15/2014 21:13:19" Id="25" Key="Sem mauris adipiscing netus" Lname="Euismod parturient" Lang="Pede sociosqu quam imperdiet" Name="Sit nullam vel" Qualifier="Feugiat porta nam" Scope="Senectus nulla orci" Version="Aptent auctor suscipit vestibulum">
+			<ExtensionTypes:Resource.Metrics>
+				<ExtensionTypes:Metric Data="Ultrices vestibulum adipiscing quis" FormatedValue="Malesuada purus risus sed" Key="Gravida torquent">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Laoreet vitae congue cursus" FormatedValue="Parturient lacinia" Key="Velit iaculis">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Dis dictum class" FormatedValue="Vestibulum porttitor" Key="Penatibus vehicula volutpat urna">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Lectus potenti donec" FormatedValue="Cras posuere" Key="Natoque maecenas curae">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Libero vestibulum duis" FormatedValue="Est tincidunt pretium fusce accumsan" Key="Praesent etiam">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+			</ExtensionTypes:Resource.Metrics>
+		</ExtensionTypes:Resource>
+		<ExtensionTypes:Resource Date="01/15/2014 21:13:19" Id="85" Key="Bibendum hac dictumst nunc" Lname="Adipiscing eleifend" Lang="Venenatis facilisi mus" Name="Tristique ligula" Qualifier="Lorem ultricies parturient morbi" Scope="Leo amet" Version="Nulla rhoncus vestibulum vulputate ante">
+			<ExtensionTypes:Resource.Metrics>
+				<ExtensionTypes:Metric Data="Sodales diam dolor parturient" FormatedValue="Adipiscing augue" Key="Proin arcu vestibulum">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Phasellus vestibulum eget consequat luctus" FormatedValue="Viverra fames felis faucibus litora" Key="Curabitur vestibulum">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Elementum nec mattis" FormatedValue="Parturient dignissim elit magnis" Key="Ipsum adipiscing convallis justo habitant">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Integer fringilla" FormatedValue="Non mollis montes inceptos erat" Key="Aliquam facilisis mauris enim fermentum">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Habitasse vestibulum hendrerit adipiscing lacus" FormatedValue="Interdum vivamus lobortis" Key="Nostra vestibulum quisque per">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+			</ExtensionTypes:Resource.Metrics>
+		</ExtensionTypes:Resource>
+		<ExtensionTypes:Resource Date="01/15/2014 21:13:19" Id="28" Key="Sed nascetur pharetra" Lname="Sem aliquam parturient vestibulum" Lang="Imperdiet malesuada" Name="Placerat ornare" Qualifier="Nibh vestibulum" Scope="Sit himenaeos aliquet eros" Version="Platea pulvinar nisi primis adipiscing">
+			<ExtensionTypes:Resource.Metrics>
+				<ExtensionTypes:Metric Data="Nisl nunc" FormatedValue="Rutrum sagittis blandit tincidunt" Key="Penatibus porttitor">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Sociosqu vel suscipit torquent conubia" FormatedValue="Orci pede sapien" Key="Commodo senectus tristique odio">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Cubilia dapibus ultricies" FormatedValue="Quam vestibulum vestibulum" Key="Parturient lorem">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Phasellus quis ultrices" FormatedValue="Sed curabitur" Key="Adipiscing egestas nam venenatis vulputate">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Dis praesent est" FormatedValue="Volutpat maecenas feugiat" Key="Euismod vehicula">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+			</ExtensionTypes:Resource.Metrics>
+		</ExtensionTypes:Resource>
+		<ExtensionTypes:Resource Date="01/15/2014 21:13:19" Id="66" Key="Parturient consequat semper hac magna" Lname="Taciti gravida tellus dignissim" Lang="Massa nec" Name="Leo sociis convallis mus" Qualifier="Tempor cras vestibulum iaculis adipiscing" Scope="Vestibulum urna" Version="Metus lacinia">
+			<ExtensionTypes:Resource.Metrics>
+				<ExtensionTypes:Metric Data="Neque facilisis" FormatedValue="Parturient elementum" Key="Tempus morbi non">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Vestibulum nunc sed nulla sem" FormatedValue="Fermentum laoreet fringilla netus" Key="Per duis">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Turpis posuere varius hendrerit himenaeos" FormatedValue="Accumsan natoque porta" Key="Sit tortor amet habitasse vestibulum">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Vestibulum bibendum dictumst sodales" FormatedValue="Pretium vel vestibulum rhoncus" Key="Adipiscing potenti parturient">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Viverra eleifend" FormatedValue="Risus imperdiet" Key="Ante adipiscing purus aenean nam">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+			</ExtensionTypes:Resource.Metrics>
+		</ExtensionTypes:Resource>
+		<ExtensionTypes:Resource Date="01/15/2014 21:13:19" Id="23" Key="Velit parturient vestibulum" Lname="Nullam aliquam" Lang="Diam eget penatibus dis" Name="Vitae facilisi class mauris" Qualifier="Sed faucibus curae auctor donec" Scope="Malesuada arcu integer aptent" Version="Congue habitant inceptos quisque vestibulum">
+			<ExtensionTypes:Resource.Metrics>
+				<ExtensionTypes:Metric Data="Parturient aliquam" FormatedValue="Adipiscing erat vivamus" Key="Etiam elit fusce enim porttitor">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Vestibulum lobortis" FormatedValue="Cursus eros dictum tincidunt lectus" Key="Aliquet vestibulum interdum">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Parturient commodo lorem vestibulum nibh" FormatedValue="Est blandit" Key="Adipiscing nascetur">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Odio pharetra" FormatedValue="Nisl libero nunc morbi" Key="Conubia nisi cubilia">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Litora egestas venenatis" FormatedValue="Nulla dapibus tristique pulvinar ultricies" Key="Ligula placerat">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+			</ExtensionTypes:Resource.Metrics>
+		</ExtensionTypes:Resource>
+	</ViewModel:ExtensionDataModel.ProjectResources>
+	<ViewModel:ExtensionDataModel.ProjectResourcesList>
+		<System:String>Justo arcu</System:String>
+		<System:String>Praesent adipiscing parturient lacus</System:String>
+		<System:String>Lorem accumsan posuere potenti</System:String>
+		<System:String>Imperdiet malesuada diam penatibus porttitor</System:String>
+		<System:String>Magna vestibulum vel nam eget</System:String>
+		<System:String>Bibendum tincidunt tristique ultricies elit</System:String>
+		<System:String>Dictumst enim luctus</System:String>
+		<System:String>Massa magnis pretium mattis venenatis</System:String>
+		<System:String>Metus vestibulum vulputate sed</System:String>
+		<System:String>Dis adipiscing rhoncus erat curabitur</System:String>
+	</ViewModel:ExtensionDataModel.ProjectResourcesList>
+	<ViewModel:ExtensionDataModel.Profile>
+		<ExtensionTypes:Profile Default="False" Language="Class suscipit" Name="Montes nam curae conubia cubilia">
+			<ExtensionTypes:Profile.Alerts>
+				<ExtensionTypes:Alert Error="98" Metric="Parturient sed dapibus" Operator="Elementum torquent egestas cras donec" Warning="13"/>
+				<ExtensionTypes:Alert Error="29" Metric="Euismod ultrices" Operator="Dis etiam" Warning="43"/>
+				<ExtensionTypes:Alert Error="97" Metric="Est hac leo" Operator="Nostra fusce duis vehicula" Warning="37"/>
+				<ExtensionTypes:Alert Error="63" Metric="Mus nunc nec vestibulum facilisis" Operator="Non volutpat amet maecenas" Warning="15"/>
+				<ExtensionTypes:Alert Error="75" Metric="Per sed feugiat lorem" Operator="Vestibulum fermentum sem fringilla gravida" Warning="80"/>
+				<ExtensionTypes:Alert Error="17" Metric="Iaculis lacinia" Operator="Adipiscing ornare" Warning="43"/>
+				<ExtensionTypes:Alert Error="83" Metric="Parturient sit praesent accumsan" Operator="Habitasse vestibulum platea" Warning="18"/>
+				<ExtensionTypes:Alert Error="95" Metric="Morbi ante arcu hendrerit" Operator="Bibendum primis rutrum" Warning="95"/>
+				<ExtensionTypes:Alert Error="67" Metric="Vestibulum diam himenaeos imperdiet" Operator="Adipiscing sapien" Warning="16"/>
+				<ExtensionTypes:Alert Error="31" Metric="Laoreet nulla semper eget" Operator="Malesuada sociis elit vel enim" Warning="83"/>
+			</ExtensionTypes:Profile.Alerts>
+			<ExtensionTypes:Profile.Rules>
+				<ExtensionTypes:Rule Category="Parturient dictumst eleifend facilisi faucibus" ConfigKey="Erat nam eros sed nibh" Description="Penatibus habitant proin porttitor vestibulum" Key="Inceptos interdum natoque taciti" Name="Nisi lobortis nascetur tincidunt posuere" RemediationFactorFunction="Potenti tristique pharetra pretium" RemediationFactorVal="Augue placerat tellus nisl" Repo="Dolor tempor nunc" RemediationFactorTxt="Rhoncus vestibulum" SubCategory="Parturient venenatis" Severity="Adipiscing pulvinar odio ultricies"/>
+				<ExtensionTypes:Rule Category="Sodales orci sagittis" ConfigKey="Pede tempus viverra aliquam dis" Description="Vestibulum vulputate" Key="Vestibulum tortor quam" Name="Adipiscing quis urna" RemediationFactorFunction="Curabitur integer quisque vivamus est" RemediationFactorVal="Cras aliquam aliquet blandit senectus" Repo="Consequat duis felis sociosqu" RemediationFactorTxt="Phasellus hac fames" SubCategory="Commodo amet vestibulum leo" Severity="Parturient nunc ipsum convallis"/>
+				<ExtensionTypes:Rule Category="Dignissim turpis" ConfigKey="Vestibulum varius suscipit ante aenean" Description="Mus torquent elementum ultrices" Key="Justo lacus" Name="Vehicula volutpat arcu" RemediationFactorFunction="Lorem nec adipiscing" RemediationFactorVal="Mauris sed" Repo="Maecenas conubia facilisis" RemediationFactorTxt="Non per" SubCategory="Magna cubilia" Severity="Diam fermentum fringilla nullam eget"/>
+				<ExtensionTypes:Rule Category="Dapibus massa aptent" ConfigKey="Elit habitasse" Description="Auctor metus sem" Key="Congue sit parturient egestas vestibulum" Name="Morbi neque cursus enim" RemediationFactorFunction="Dictum euismod netus" RemediationFactorVal="Parturient hendrerit vestibulum praesent" Repo="Erat purus feugiat" RemediationFactorTxt="Vestibulum adipiscing lectus nulla porta" SubCategory="Accumsan velit" Severity="Risus himenaeos"/>
+				<ExtensionTypes:Rule Category="Vitae vestibulum libero gravida iaculis" ConfigKey="Adipiscing lacinia ligula eros" Description="Vel laoreet litora" Key="Parturient luctus bibendum vestibulum" Name="Dictumst nam natoque eleifend imperdiet" RemediationFactorFunction="Nibh vestibulum" RemediationFactorVal="Class curae" Repo="Malesuada mattis" RemediationFactorTxt="Adipiscing posuere magnis" SubCategory="Nunc vestibulum vestibulum" Severity="Nisi nisl potenti parturient sed"/>
+				<ExtensionTypes:Rule Category="Penatibus adipiscing" ConfigKey="Mauris dis odio orci donec" Description="Mollis est etiam pretium fusce" Key="Porttitor pede quam hac rhoncus" Name="Quis leo montes parturient urna" RemediationFactorFunction="Facilisi cras sodales" RemediationFactorVal="Lorem ornare vestibulum" Repo="Ultricies morbi" RemediationFactorTxt="Tincidunt vestibulum nostra tristique mus" SubCategory="Venenatis adipiscing" Severity="Viverra duis"/>
+				<ExtensionTypes:Rule Category="Vulputate faucibus" ConfigKey="Nunc platea nec curabitur" Description="Primis aliquam" Key="Non parturient integer rutrum vestibulum" Name="Amet quisque vestibulum" RemediationFactorFunction="Habitant nulla ante" RemediationFactorVal="Proin phasellus" Repo="Vivamus per sed sem augue" RemediationFactorTxt="Sapien semper" SubCategory="Aliquam parturient inceptos" Severity="Sit adipiscing"/>
+				<ExtensionTypes:Rule Category="Arcu diam" ConfigKey="Consequat convallis" Description="Dignissim aliquet sociis eget dolor" Key="Vestibulum taciti fames interdum" Name="Felis elit tellus vestibulum" RemediationFactorFunction="Lobortis ipsum adipiscing" RemediationFactorVal="Lacus vel pharetra enim tempor" Repo="Nam lorem placerat" RemediationFactorTxt="Justo blandit commodo elementum nascetur" SubCategory="Vestibulum senectus fermentum" Severity="Pulvinar facilisis parturient sagittis sed"/>
+				<ExtensionTypes:Rule Category="Magna erat massa tempus eros" ConfigKey="Metus sociosqu vestibulum fringilla nibh" Description="Nisi morbi adipiscing tortor" Key="Conubia suscipit parturient nisl turpis" Name="Cubilia habitasse vestibulum hendrerit himenaeos" RemediationFactorFunction="Dis torquent vestibulum dapibus" RemediationFactorVal="Malesuada egestas nunc est varius" Repo="Odio aenean mauris adipiscing nullam" RemediationFactorTxt="Neque ultrices imperdiet" SubCategory="Nulla parturient hac vehicula porta" Severity="Penatibus netus"/>
+				<ExtensionTypes:Rule Category="Orci purus porttitor vestibulum" ConfigKey="Aptent pede vestibulum" Description="Risus velit euismod vitae feugiat" Key="Auctor leo gravida mus" Name="Class congue" RemediationFactorFunction="Tincidunt volutpat curae nec iaculis" RemediationFactorVal="Dictum quam" Repo="Non praesent lectus adipiscing per" RemediationFactorTxt="Cursus maecenas" SubCategory="Tristique donec" Severity="Parturient accumsan libero sed vestibulum"/>
+			</ExtensionTypes:Profile.Rules>
+		</ExtensionTypes:Profile>
+	</ViewModel:ExtensionDataModel.Profile>
+	<ViewModel:ExtensionDataModel.ResourceInEditor>
+		<ExtensionTypes:Resource Date="01/15/2014 21:13:18" Id="37" Key="Ligula quis ultricies urna" Lname="Cras duis sit litora fusce" Lang="Parturient vestibulum bibendum vulputate" Name="Lacinia sem vestibulum laoreet etiam" Qualifier="Nunc sed" Scope="Vel adipiscing nam venenatis luctus" Version="Dictumst lorem natoque">
+			<ExtensionTypes:Resource.Metrics>
+				<ExtensionTypes:Metric Data="Morbi mattis pretium vestibulum adipiscing" FormatedValue="Amet magnis dis" Key="Eleifend posuere potenti">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Dignissim parturient facilisi proin" FormatedValue="Consequat convallis mauris mollis montes" Key="Nulla curabitur phasellus">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Dolor est fames" FormatedValue="Faucibus ante rhoncus" Key="Augue nostra">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Viverra ornare adipiscing aliquam" FormatedValue="Vestibulum facilisis sodales hac" Key="Vestibulum elementum felis">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Ipsum mus diam" FormatedValue="Fermentum leo primis" Key="Platea arcu">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Eget lorem habitant" FormatedValue="Lacus sapien integer parturient" Key="Justo rutrum">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Quisque sociis hendrerit" FormatedValue="Inceptos nec" Key="Fringilla vestibulum habitasse elit semper">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Metus morbi enim" FormatedValue="Massa himenaeos vestibulum imperdiet" Key="Non magna">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Interdum netus tincidunt adipiscing vivamus" FormatedValue="Per penatibus porttitor" Key="Taciti tellus neque malesuada tempor">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Tempus tristique" FormatedValue="Aliquam eros porta parturient" Key="Erat nulla lobortis">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+			</ExtensionTypes:Resource.Metrics>
+		</ExtensionTypes:Resource>
+	</ViewModel:ExtensionDataModel.ResourceInEditor>
+	<ViewModel:ExtensionDataModel.ReporterInFilter>
+		<ExtensionTypes:User Active="True" Email="Magna fringilla parturient urna" Login="Lacus quam lobortis" Name="Adipiscing magnis quis lorem"/>
+	</ViewModel:ExtensionDataModel.ReporterInFilter>
+	<ViewModel:ExtensionDataModel.ReOpenIssueCommand>
+		<Commands:ReOpenIssueCommand/>
+	</ViewModel:ExtensionDataModel.ReOpenIssueCommand>
+	<ViewModel:ExtensionDataModel.ResolveIssueCommand>
+		<Commands:ResolveIssueCommand/>
+	</ViewModel:ExtensionDataModel.ResolveIssueCommand>
+	<ViewModel:ExtensionDataModel.SelectedUser>
+		<ExtensionTypes:User Active="True" Email="Pulvinar sagittis senectus" Login="Metus pharetra morbi neque" Name="Mollis leo placerat netus"/>
+	</ViewModel:ExtensionDataModel.SelectedUser>
+	<ViewModel:ExtensionDataModel.SelectedProjectInFilter>
+		<ExtensionTypes:Resource Date="01/15/2014 21:13:19" Id="70" Key="Gravida proin vulputate" Lname="Sagittis leo senectus" Lang="Urna adipiscing cras duis parturient" Name="Curabitur hac" Qualifier="Dolor luctus vestibulum suscipit quis" Scope="Orci pede sociosqu quam augue" Version="Nunc magnis mattis phasellus fames">
+			<ExtensionTypes:Resource.Metrics>
+				<ExtensionTypes:Metric Data="Convallis ipsum" FormatedValue="Felis ultrices nec consequat" Key="Torquent iaculis mus mauris">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Ante mollis lorem vestibulum vehicula" FormatedValue="Lacus non per" Key="Justo lacinia amet laoreet natoque">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Montes potenti" FormatedValue="Volutpat massa metus" Key="Magna posuere">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Arcu diam adipiscing" FormatedValue="Maecenas vestibulum rhoncus" Key="Nostra pretium dignissim">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Aliquam enim" FormatedValue="Elementum praesent accumsan bibendum dictumst" Key="Sodales eget viverra elit ornare">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Faucibus primis netus" FormatedValue="Parturient eleifend fermentum facilisi neque" Key="Morbi erat platea sed facilisis">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Interdum nisi lobortis" FormatedValue="Vestibulum eros habitasse nibh" Key="Vestibulum fringilla habitant rutrum inceptos">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Purus semper" FormatedValue="Pharetra placerat hendrerit porta sem" Key="Nascetur nulla sapien adipiscing parturient">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Nisl nunc integer" FormatedValue="Sociis risus" Key="Pulvinar sit sagittis">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+				<ExtensionTypes:Metric Data="Taciti vitae orci vivamus" FormatedValue="Velit sed senectus" Key="Odio vestibulum quisque vel nam">
+					<ExtensionTypes:Metric.Val>
+						<System:Decimal/>
+					</ExtensionTypes:Metric.Val>
+				</ExtensionTypes:Metric>
+			</ExtensionTypes:Resource.Metrics>
+		</ExtensionTypes:Resource>
+	</ViewModel:ExtensionDataModel.SelectedProjectInFilter>
+	<ViewModel:ExtensionDataModel.SelectedIssue>
+		<ExtensionTypes:Issue Assignee="Sed nisl" CreationDate="01/15/2014 21:13:18" Component="Vestibulum aliquet purus" CloseDate="01/15/2014 21:13:18" Id="88" Line="16" Message="Tortor vestibulum turpis sed ultricies" Project="Nascetur nibh blandit sem adipiscing" Resolution="Conubia nam" Rule="Aenean nisi placerat parturient" Severity="Varius vel pharetra venenatis" Status="Risus commodo sit" UpdateDate="01/15/2014 21:13:18" ViolationId="26">
+			<ExtensionTypes:Issue.Comments>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Mauris pulvinar vestibulum nullam" Id="92" Login="Sagittis cubilia">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Vestibulum velit vitae" Id="56" Login="Class curae adipiscing donec">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Etiam senectus dapibus" Id="94" Login="Aptent egestas fusce dis">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Nunc euismod vulputate" Id="90" Login="Lorem morbi sociosqu">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Auctor nulla odio feugiat gravida" Id="36" Login="Curabitur phasellus congue consequat est">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Orci pede" Id="20" Login="Proin augue dolor quam suscipit">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Hac convallis torquent" Id="42" Login="Cursus leo dictum">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Quis iaculis" Id="86" Login="Mus dignissim nec">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Parturient vestibulum" Id="99" Login="Elementum ultrices urna">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+				<ExtensionTypes:Comment CreatedAt="01/15/2014 21:13:18" HtmlText="Non cras vehicula duis" Id="42" Login="Facilisis fermentum lectus">
+					<ExtensionTypes:Comment.Key>
+						<System:Guid/>
+					</ExtensionTypes:Comment.Key>
+				</ExtensionTypes:Comment>
+			</ExtensionTypes:Issue.Comments>
+			<ExtensionTypes:Issue.EffortToFix>
+				<System:Decimal/>
+			</ExtensionTypes:Issue.EffortToFix>
+			<ExtensionTypes:Issue.Key>
+				<System:Guid/>
+			</ExtensionTypes:Issue.Key>
+		</ExtensionTypes:Issue>
+	</ViewModel:ExtensionDataModel.SelectedIssue>
+	<ViewModel:ExtensionDataModel.ToolSwitchCommand>
+		<Commands:ViewSwitchCommand/>
+	</ViewModel:ExtensionDataModel.ToolSwitchCommand>
+	<ViewModel:ExtensionDataModel.UserConfiguration>
+		<ExtensionTypes:ConnectionConfiguration Hostname="Maecenas parturient fringilla habitasse" Password="Sed sem laoreet sit" Username="Ligula lacinia amet ipsum hendrerit"/>
+	</ViewModel:ExtensionDataModel.UserConfiguration>
+	<ViewModel:ExtensionDataModel.UserControlsHeight>
+		<Windows:GridLength/>
+	</ViewModel:ExtensionDataModel.UserControlsHeight>
+	<ViewModel:ExtensionDataModel.UserTextControlsHeight>
+		<Windows:GridLength/>
+	</ViewModel:ExtensionDataModel.UserTextControlsHeight>
+	<ViewModel:ExtensionDataModel.UnConfirmIssueCommand>
+		<Commands:UnConfirmIssueCommand/>
+	</ViewModel:ExtensionDataModel.UnConfirmIssueCommand>
+	<ViewModel:ExtensionDataModel.UsersList>
+		<ExtensionTypes:User Active="True" Email="Parturient imperdiet tempor class malesuada" Login="Pede tellus dis sociosqu quam" Name="Vestibulum himenaeos suscipit adipiscing torquent"/>
+		<ExtensionTypes:User Active="False" Email="Penatibus volutpat curae vestibulum aliquet" Login="Aliquam quis ultrices tempus" Name="Vestibulum tortor vehicula turpis"/>
+		<ExtensionTypes:User Active="True" Email="Parturient leo cras varius" Login="Blandit est donec hac adipiscing" Name="Porttitor urna etiam"/>
+		<ExtensionTypes:User Active="False" Email="Praesent accumsan cubilia nullam dapibus" Login="Aenean commodo" Name="Conubia mauris vestibulum maecenas"/>
+		<ExtensionTypes:User Active="True" Email="Tristique parturient amet ante" Login="Bibendum tincidunt duis nunc" Name="Egestas vestibulum fusce adipiscing"/>
+		<ExtensionTypes:User Active="False" Email="Arcu euismod nec" Login="Vestibulum lorem vestibulum ultricies" Name="Dictumst mus aptent eleifend"/>
+		<ExtensionTypes:User Active="True" Email="Venenatis per facilisi diam" Login="Feugiat adipiscing" Name="Non parturient"/>
+		<ExtensionTypes:User Active="False" Email="Vulputate lacinia faucibus" Login="Sed eget gravida" Name="Iaculis elit"/>
+		<ExtensionTypes:User Active="True" Email="Laoreet sem sit curabitur" Login="Morbi habitant enim" Name="Nulla auctor erat congue"/>
+		<ExtensionTypes:User Active="False" Email="Augue cursus vestibulum" Login="Vel natoque nam phasellus proin" Name="Eros consequat inceptos"/>
+	</ViewModel:ExtensionDataModel.UsersList>
+	<ViewModel:ExtensionDataModel.VSPackage>
+		<PackageImplementation:VsSonarExtensionPackage UserDataPath="Himenaeos litora" UserLocalDataPath="Vestibulum ante natoque vestibulum" Zombied="True"/>
+	</ViewModel:ExtensionDataModel.VSPackage>
+</ViewModel:ExtensionDataModel>
