@@ -95,8 +95,14 @@ namespace VSSonarExtension.MainViewModel.Commands
         {
             var solutionName = this.vsenvironmenthelper.ActiveSolutionName();
             var selectedProjectInFilter = this.model.SelectedProjectInFilter;
-            if (selectedProjectInFilter == null || string.IsNullOrEmpty(solutionName))
+            if (selectedProjectInFilter == null && string.IsNullOrEmpty(solutionName))
+            {                
+                return;
+            }
+
+            if (string.IsNullOrEmpty(solutionName))
             {
+                this.model.PerformSolutionNotOpenAssociation(selectedProjectInFilter);
                 return;
             }
 

@@ -108,7 +108,7 @@ namespace VSSonarExtension.MainViewModel.Commands
         public void Execute(object parameter)
         {
             var list = parameter as IList;
-            if (list == null)
+            if (list == null || !this.model.IsSolutionOpen)
             {
                 return;
             }

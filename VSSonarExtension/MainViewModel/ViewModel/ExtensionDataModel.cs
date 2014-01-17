@@ -982,6 +982,27 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         public VsSonarExtensionPackage VSPackage { get; set; }
 
         /// <summary>
+        /// The perform solution not open association.
+        /// </summary>
+        /// <param name="resource">
+        /// The resource.
+        /// </param>
+        public void PerformSolutionNotOpenAssociation(Resource resource)
+        {
+            if (resource != null)
+            {
+                this.AssociatedProjectKey = resource.Key;
+            }
+            else
+            {
+                this.AssociatedProjectKey = string.Empty;
+            }
+
+            this.associatedProject = resource;
+            this.OnPropertyChanged("AssociatedProject");
+        }
+
+        /// <summary>
         /// The get issues for resource from list.
         /// </summary>
         /// <param name="resource">
@@ -1926,6 +1947,6 @@ namespace VSSonarExtension.MainViewModel.ViewModel
 
             this.OnPropertyChanged("CoverageInEditor");
             this.OnPropertyChanged("IssuesInEditor");
-        }  
+        }
     }
 }

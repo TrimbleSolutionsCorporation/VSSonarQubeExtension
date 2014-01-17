@@ -172,6 +172,11 @@ namespace ExtensionHelpers
         /// </param>
         public void WriteOptionInApplicationData(string pluginKey, string key, string value)
         {
+            if (string.IsNullOrEmpty(pluginKey) || string.IsNullOrEmpty(key))
+            {
+                return;
+            }
+
             IEnumerable<string> content = new List<string>();
             var contentWrite = string.Empty;
             if (File.Exists(this.ApplicationDataUserSettingsFile))
@@ -206,7 +211,7 @@ namespace ExtensionHelpers
         /// </param>
         public void DeleteOptionsForPlugin(string pluginKey, Resource project)
         {
-            if (project == null)
+            if (project == null || string.IsNullOrEmpty(pluginKey))
             {
                 return;
             }
