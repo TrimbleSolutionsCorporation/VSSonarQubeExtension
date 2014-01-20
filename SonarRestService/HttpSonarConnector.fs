@@ -24,6 +24,8 @@ open ExtensionTypes
 open RestSharp
 
 type JsonSonarConnector() = 
+    let userRoamingFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "VSSonarExtension\\restCalls.log");
+
     interface IHttpSonarConnector with
         member this.HttpSonarPutRequest(userConf : ConnectionConfiguration, url : string, data : Map<string, string>) =
 
@@ -63,12 +65,27 @@ type JsonSonarConnector() =
                 req.ContentType <- "text/json"
                 let auth = "Basic " + (userConf.Username + ":" + userConf.Password |> Encoding.UTF8.GetBytes |> Convert.ToBase64String)
                 req.Headers.Add("Authorization", auth)
-        
+
+                let addLine (line:string) =
+                    if not(String.IsNullOrEmpty(Environment.GetEnvironmentVariable("VSSONAREXTENSIONDEBUG"))) then
+                        use wr = StreamWriter(userRoamingFile, true)
+                        wr.WriteLine(line)
+                                
                 // read data
-                let rsp = req.GetResponse()
-                use stream = rsp.GetResponseStream()
-                use reader = new StreamReader(stream)
-                reader.ReadToEnd()
+                try
+                    let rsp = req.GetResponse()
+                    use stream = rsp.GetResponseStream()
+                    use reader = new StreamReader(stream)
+                    let timeNow = System.DateTime.Now.ToString()
+
+                    addLine (sprintf """ [%s] : %s """ timeNow url)                
+                    reader.ReadToEnd()
+                with
+                 | ex -> 
+                    let timeNow = System.DateTime.Now.ToString()
+                    addLine (sprintf """ [%s] : Error: %s""" timeNow ex.Message)
+                    addLine (sprintf """        StackTrace: %s""" ex.StackTrace)
+                    raise ex
 
         member this.HttpSonarRequest(userconf : ConnectionConfiguration, urltosue : string, methodin : Method) =
             let client = new RestClient(userconf.Hostname)
