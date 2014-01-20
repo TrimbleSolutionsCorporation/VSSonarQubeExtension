@@ -278,6 +278,15 @@ namespace VSSonarExtension.PackageImplementation
             menuCommandId = new CommandID(GuidList.GuidShowInitialToolbarCmdSet, (int)PkgCmdIdList.ToolBarReportReviews);
             this.sonarReviewsCommandBar = new OleMenuCommand(this.ShowIssuesToolWindow, menuCommandId);
             mcs.AddCommand(this.sonarReviewsCommandBar);
+
+            // CONTEXT MENUS
+            menuCommandId = new CommandID(GuidList.GuidStartAnalysisSolutionCTXCmdSet, PkgCmdIdList.CmdidRunAnalysisInSolution);
+            this.runAnalysisCmd = new OleMenuCommand(this.AnalyseSolutionCmd, menuCommandId);
+            mcs.AddCommand(this.runAnalysisCmd);
+
+            menuCommandId = new CommandID(GuidList.GuidStartAnalysisSolutionCTXCmdSet, PkgCmdIdList.CmdidRunAnalysisInProject);
+            this.runAnalysisInProjectCmd = new OleMenuCommand(this.ShowIssuesToolWindow, menuCommandId);
+            mcs.AddCommand(this.runAnalysisInProjectCmd);
         }
 
         /// <summary>
@@ -328,6 +337,20 @@ namespace VSSonarExtension.PackageImplementation
             var win = window as IssuesToolWindow;
             modelToUse.ExtensionDataModelUpdate(new SonarRestService(new JsonSonarConnector()), new VsPropertiesHelper(this.dte2), null);
             win.UpdateModel(modelToUse);
+        }
+
+        /// <summary>
+        /// The analyse solution cmd.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void AnalyseSolutionCmd(object sender, EventArgs e)
+        {
+            ExtensionModelData.AnalysisTrigger = !ExtensionModelData.AnalysisTrigger;
         }
 
         #endregion

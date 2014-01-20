@@ -45,5 +45,10 @@ namespace VSSonarExtension.VSControls
         /// The guid show initial toolbar cmd set.
         /// </summary>
         public static readonly Guid GuidShowInitialToolbarCmdSet = new Guid("{91489787-3361-4715-bb3a-76dbd86353dc}");
+
+        /// <summary>
+        /// The guid start analysis solution ctx cmd set.
+        /// </summary>
+        public static readonly Guid GuidStartAnalysisSolutionCTXCmdSet = new Guid("{7FFF1BD4-5BFD-4F5C-9EBC-52AFE79D7BFE}");
     }
 }

@@ -28,5 +28,15 @@ namespace VSSonarExtension.VSControls
         /// The cmdid my command.
         /// </summary>
         public const uint ToolBarReportReviews = 0x200;
+
+        /// <summary>
+        /// The cmdid run analysis in solution.
+        /// </summary>
+        public const int CmdidRunAnalysisInSolution = 0x300;
+
+        /// <summary>
+        /// The cmdid run analysis in project.
+        /// </summary>
+        public const int CmdidRunAnalysisInProject = 0x0200;        
     }
 }

@@ -61,6 +61,10 @@ namespace VSSonarExtension.PackageImplementation
         /// </summary>
         private OleMenuCommand sonarSourceDiffMenuCommand;
 
+        private OleMenuCommand runAnalysisCmd;
+
+        private OleMenuCommand runAnalysisInProjectCmd;
+
         /// <summary>
         /// The sonar reviews command.
         /// </summary>
@@ -80,5 +84,6 @@ namespace VSSonarExtension.PackageImplementation
         /// The vs events.
         /// </summary>
         private VsEvents vsEvents;
+
     }
 }

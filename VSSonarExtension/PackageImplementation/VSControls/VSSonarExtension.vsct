@@ -96,6 +96,25 @@
             <ButtonText>Issues Output Window</ButtonText>
         </Strings>
     </Button>
+
+    <Button guid="GuidStartAnalysisSolutionCTXCmdSet" id="cmdidRunAnalysisInSolution" priority="0x0300" type="Button">
+        <Parent guid="guidReferenceContext" id="cmdAddReferenceGroup" />
+        <Icon guid="bmpPicReviews" id="bmpPicReviewsName" />
+        <Strings>
+            <CommandName>cmdRestorePackages</CommandName>
+            <ButtonText>SQ: Analyse Solution</ButtonText>
+        </Strings>
+    </Button>
+        
+        <Button guid="GuidStartAnalysisSolutionCTXCmdSet" id="cmdidRunAnalysisInProject" priority="0x0200" type="Button">
+            <Parent guid="guidReferenceContext" id="cmdAddReferenceGroup" />
+            <Icon guid="bmpPicReviews" id="bmpPicReviewsName" />
+            <Strings>
+                <CommandName>cmdidAddPackages</CommandName>
+                <ButtonText>SQ: Analyse Project</ButtonText>
+            </Strings>
+        </Button>        
+        
     </Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
@@ -111,7 +130,16 @@
  
   </Commands>
 
-  <Symbols>
+    <CommandPlacements>
+        <CommandPlacement guid="GuidStartAnalysisSolutionCTXCmdSet" id="cmdidRunAnalysisInSolution" priority="0xF101">
+            <Parent guid="guidSHLMainMenu" id="IDG_VS_CTXT_SOLUTION_BUILD" />
+        </CommandPlacement>
+        <!--CommandPlacement guid="GuidStartAnalysisSolutionCTXCmdSet" id="cmdidRunAnalysisInProject" priority="0xF100">
+            <Parent guid="guidSHLMainMenu" id="IDG_VS_CTXT_PROJECT_ADD"/>
+        </CommandPlacement -->
+    </CommandPlacements>
+
+    <Symbols>
     <!-- This is the package guid. -->
     <GuidSymbol name="guidVSSonarExtensionPkg" value="{84feee6a-374a-4c3d-a2e6-15e14fd5000e}" />
 
@@ -128,10 +156,17 @@
       <IDSymbol name="CmdidReviewsCommand" value="0x0145" />
     </GuidSymbol>
 
-    <GuidSymbol name="bmpPicReviews" value="{fac5fb1e-1010-4665-bf1f-c56305358ef1}" >
+        <GuidSymbol name="GuidStartAnalysisSolutionCTXCmdSet" value="{7FFF1BD4-5BFD-4F5C-9EBC-52AFE79D7BFE}">
+            <IDSymbol name="cmdidRunAnalysisInProject" value="0x0200" />
+            <IDSymbol name="cmdidRunAnalysisInSolution" value="0x0300" />
+        </GuidSymbol>
+
+        <GuidSymbol name="bmpPicReviews" value="{fac5fb1e-1010-4665-bf1f-c56305358ef1}" >
         <IDSymbol name="bmpPicReviewsName" value="1" />
     </GuidSymbol>
-
+        <GuidSymbol name="guidReferenceContext" value="{C59571BD-7D8F-4B2E-B1B1-E32918CA4C89}">
+            <IdSymbol name="cmdAddReferenceGroup" value="0x450" />
+        </GuidSymbol>
   </Symbols>
 
 </CommandTable>
