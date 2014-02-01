@@ -179,6 +179,8 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// </summary>
         private int updateDateIndex;
 
+        private bool queryForIssuesIsRunning = false;
+
         #endregion
 
         #region Public Properties
@@ -930,6 +932,45 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                 }
 
                 this.OnPropertyChanged("UpdateDateVisible");
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether extension is busy.
+        /// </summary>
+        public bool ExtensionIsBusy
+        {
+            get
+            {
+                if (this.AnalysisTrigger)
+                {
+                    return true;
+                }
+
+                if (!this.QueryForIssuesIsRunning)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether query for issues is running.
+        /// </summary>
+        public bool QueryForIssuesIsRunning
+        {
+            get
+            {
+                return !this.queryForIssuesIsRunning;
+            }
+
+            set
+            {
+                this.queryForIssuesIsRunning = value;
+                this.OnPropertyChanged("QueryForIssuesIsRunning");
+                this.OnPropertyChanged("ExtensionIsBusy");
             }
         }
 

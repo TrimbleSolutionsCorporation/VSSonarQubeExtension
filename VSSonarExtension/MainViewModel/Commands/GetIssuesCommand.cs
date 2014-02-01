@@ -15,6 +15,8 @@
 namespace VSSonarExtension.MainViewModel.Commands
 {
     using System;
+    using System.ComponentModel;
+    using System.Threading;
     using System.Windows.Input;
 
     using SonarRestService;
@@ -82,6 +84,9 @@ namespace VSSonarExtension.MainViewModel.Commands
             return true;
         }
 
+
+
+
         /// <summary>
         /// The execute.
         /// </summary>
@@ -104,32 +109,72 @@ namespace VSSonarExtension.MainViewModel.Commands
 
             if (header.Equals("All Issues"))
             {
-                this.model.ReplaceAllIssuesInCache(this.service.GetIssuesForProjects(this.model.UserConfiguration, this.model.AssociatedProject.Key));
+                this.model.QueryForIssuesIsRunning = true;
+                var bw = new BackgroundWorker { WorkerReportsProgress = true };
+                bw.RunWorkerCompleted += delegate { this.model.QueryForIssuesIsRunning = false; };
+
+                bw.DoWork += delegate
+                    {
+                        this.model.ReplaceAllIssuesInCache(this.service.GetIssuesForProjects(this.model.UserConfiguration, this.model.AssociatedProject.Key));                        
+                    };
+
+                bw.RunWorkerAsync();
                 return;
             }
 
             if (header.Equals("All Issues Since Last Analysis"))
             {
-                this.model.ReplaceAllIssuesInCache(this.service.GetIssuesForProjectsCreatedAfterDate(this.model.UserConfiguration, this.model.AssociatedProject.Key, this.model.AssociatedProject.Date));
+                this.model.QueryForIssuesIsRunning = true;
+                var bw = new BackgroundWorker { WorkerReportsProgress = true };
+                bw.RunWorkerCompleted += delegate { this.model.QueryForIssuesIsRunning = false; };
+
+                bw.DoWork += delegate
+                {
+                    this.model.ReplaceAllIssuesInCache(this.service.GetIssuesForProjectsCreatedAfterDate(this.model.UserConfiguration, this.model.AssociatedProject.Key, this.model.AssociatedProject.Date));
+                };
+                
+                bw.RunWorkerAsync();
                 return;
             }
 
             if (header.Equals("My Issues In Project"))
             {
-                this.model.ReplaceAllIssuesInCache(
-                    this.service.GetIssuesByAssigneeInProject(this.model.UserConfiguration, this.model.AssociatedProject.Key, this.model.UserConfiguration.Username));
+                this.model.QueryForIssuesIsRunning = true;
+                var bw = new BackgroundWorker { WorkerReportsProgress = true };
+                bw.RunWorkerCompleted += delegate { this.model.QueryForIssuesIsRunning = false; };
+
+                bw.DoWork += delegate
+                {
+                    this.model.ReplaceAllIssuesInCache(
+                        this.service.GetIssuesByAssigneeInProject(this.model.UserConfiguration, this.model.AssociatedProject.Key, this.model.UserConfiguration.Username));
+                };
+
+                bw.RunWorkerAsync();
                 return;
             }
 
             if (header.Equals("All My Issues"))
             {
-                this.model.ReplaceAllIssuesInCache(this.service.GetAllIssuesByAssignee(this.model.UserConfiguration, this.model.UserConfiguration.Username));
+                this.model.QueryForIssuesIsRunning = true;
+                var bw = new BackgroundWorker { WorkerReportsProgress = true };
+                bw.RunWorkerCompleted += delegate { this.model.QueryForIssuesIsRunning = false; };
+
+                bw.RunWorkerAsync();
                 return;
             }
 
             if (header.Equals("Update Issues"))
             {
-                this.model.RetrieveIssuesUsingCurrentFilter();
+                this.model.QueryForIssuesIsRunning = true;
+                var bw = new BackgroundWorker { WorkerReportsProgress = true };
+                bw.RunWorkerCompleted += delegate { this.model.QueryForIssuesIsRunning = false; };
+
+                bw.DoWork += delegate
+                {
+                    this.model.RetrieveIssuesUsingCurrentFilter();
+                };
+
+                bw.RunWorkerAsync();
                 return;
             }
 

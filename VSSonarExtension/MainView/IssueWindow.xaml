@@ -202,7 +202,7 @@
 			<Label Grid.Column="1" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}"  x:Name="DisplayStatsLabel" Content="{Binding StatsLabel}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}"/>
 			<Label Grid.Column="2" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}"  x:Name="SonarInfoLabel" Content="{Binding SonarInfo}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}"/>
 			<Label Grid.Column="4" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}"  x:Name="AssociationLabel"  Content="{Binding AssociatedProjectKey}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}"/>
-			<xctk:BusyIndicator Grid.Column="5" Visibility="{Binding AnalysisTrigger, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="Running Analysis" IsBusy="True" Style="{DynamicResource BusyIndicatorStyle1}" />
+			<xctk:BusyIndicator Grid.Column="5" Visibility="{Binding ExtensionIsBusy, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="Running Analysis" IsBusy="True" Style="{DynamicResource BusyIndicatorStyle1}" />
 		</Grid>        
 		<Grid x:Name="CentralGrid" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0"
 			d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}">
@@ -405,11 +405,10 @@
 									<Grid.ColumnDefinitions>
 										<ColumnDefinition Width="20*"/>
 									</Grid.ColumnDefinitions>
-									<Button Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Grid.Row="0" Grid.Column="0" Template="{DynamicResource SquareButtonTemplate}" x:Name="AllIssues" Content="All Issues" Command="{Binding GetIssuesCommand}" CommandParameter="{Binding Content, ElementName=AllIssues}"/>
-									<Button Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Grid.Row="1" Grid.Column="0" Template="{DynamicResource SquareButtonTemplate}" x:Name="IssuesSinceLastAnalysis" Content="All Issues Since Last Analysis" Command="{Binding GetIssuesCommand}" CommandParameter="{Binding Content, ElementName=IssuesSinceLastAnalysis}"/>
-									<Button Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Grid.Row="2" Grid.Column="0" Template="{DynamicResource SquareButtonTemplate}" x:Name="MyIssuesInProject" Content="My Issues In Project" Command="{Binding GetIssuesCommand}" CommandParameter="{Binding Content, ElementName=MyIssuesInProject}"/>
-									<Button Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Grid.Row="3" Grid.Column="0" Template="{DynamicResource SquareButtonTemplate}" x:Name="AllMyIssues" Content="All My Issues" Command="{Binding GetIssuesCommand}" CommandParameter="{Binding Content, ElementName=AllMyIssues}"/>
-
+									<Button Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Grid.Row="0" Grid.Column="0" Template="{DynamicResource SquareButtonTemplate}" x:Name="AllIssues" Content="All Issues" Command="{Binding GetIssuesCommand}" CommandParameter="{Binding Content, ElementName=AllIssues}" IsEnabled="{Binding QueryForIssuesIsRunning}"/>
+									<Button Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Grid.Row="1" Grid.Column="0" Template="{DynamicResource SquareButtonTemplate}" x:Name="IssuesSinceLastAnalysis" Content="All Issues Since Last Analysis" Command="{Binding GetIssuesCommand}" CommandParameter="{Binding Content, ElementName=IssuesSinceLastAnalysis}" IsEnabled="{Binding QueryForIssuesIsRunning}"/>
+									<Button Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Grid.Row="2" Grid.Column="0" Template="{DynamicResource SquareButtonTemplate}" x:Name="MyIssuesInProject" Content="My Issues In Project" Command="{Binding GetIssuesCommand}" CommandParameter="{Binding Content, ElementName=MyIssuesInProject}" IsEnabled="{Binding QueryForIssuesIsRunning}"/>
+									<Button Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Grid.Row="3" Grid.Column="0" Template="{DynamicResource SquareButtonTemplate}" x:Name="AllMyIssues" Content="All My Issues" Command="{Binding GetIssuesCommand}" CommandParameter="{Binding Content, ElementName=AllMyIssues}" IsEnabled="{Binding QueryForIssuesIsRunning}"/>
 								</Grid>
 							</Expander>
 
@@ -479,8 +478,8 @@
 									<CheckBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsDateBeforeChecked}"/>
 								</Grid>
 							</Expander>
-							<Button Grid.Row="7" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" x:Name="GetFromServer" Content="Update Issues" Grid.Column="1" Template="{DynamicResource SquareButtonTemplate}" Command="{Binding GetIssuesCommand}" CommandParameter="{Binding Content, ElementName=GetFromServer}"/>
-							<Button Grid.Row="7" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" x:Name="ApplyFilter" Content="Apply Filter" Grid.Column="0" Template="{DynamicResource SquareButtonTemplate}" Command="{Binding GetIssuesCommand}" CommandParameter="{Binding Content, ElementName=ApplyFilter}"/>
+							<Button Grid.Row="7" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" x:Name="GetFromServer" Content="Update Issues" Grid.Column="1" Template="{DynamicResource SquareButtonTemplate}" Command="{Binding GetIssuesCommand}" CommandParameter="{Binding Content, ElementName=GetFromServer}" IsEnabled="{Binding QueryForIssuesIsRunning}" />
+							<Button Grid.Row="7" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" x:Name="ApplyFilter" Content="Apply Filter" Grid.Column="0" Template="{DynamicResource SquareButtonTemplate}" Command="{Binding GetIssuesCommand}" CommandParameter="{Binding Content, ElementName=ApplyFilter}" IsEnabled="{Binding QueryForIssuesIsRunning}"/>
 						</Grid>
 					</Expander>
 				</StackPanel>
