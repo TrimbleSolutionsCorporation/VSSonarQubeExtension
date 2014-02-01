@@ -96,23 +96,21 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
         issue.Rule <- data.Rule
         issue.Key <- data.Key
 
-        if not(obj.ReferenceEquals(data.Assignee, null)) then
+        if not(obj.ReferenceEquals(data.JsonValue.TryGetProperty("assignee"), null)) then
             issue.Assignee <- data.Assignee
 
-        if not(obj.ReferenceEquals(data.Comments, null)) then
+        if not(obj.ReferenceEquals(data.JsonValue.TryGetProperty("comments"), null)) then
             for elemC in data.Comments do issue.Comments.Add(new Comment(elemC.CreatedAt, elemC.HtmlText, elemC.Key, elemC.Login, -1))
-
-        if not(obj.ReferenceEquals(data.EffortToFix, null)) then
+            
+        if not(obj.ReferenceEquals(data.JsonValue.TryGetProperty("effortToFix"), null)) then
             let itemValue = data.JsonValue.Item("effortToFix")
             match itemValue with
             | decimal -> issue.EffortToFix <- itemValue.AsDecimal()
-//            | float -> issue.EffortToFix <- Convert.ToDecimal(itemValue.AsFloat())
-//            | int -> issue.EffortToFix <- Convert.ToDecimal(itemValue.AsInteger())
 
-        if not(obj.ReferenceEquals(data.CloseDate, null)) then
+        if not(obj.ReferenceEquals(data.JsonValue.TryGetProperty("closeDate"), null)) then
             issue.CloseDate <- data.CloseDate
 
-        if not(obj.ReferenceEquals(data.Resolution, null)) then
+        if not(obj.ReferenceEquals(data.JsonValue.TryGetProperty("resolution"), null)) then
             issue.Resolution <- data.Resolution
 
         issue

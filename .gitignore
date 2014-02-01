@@ -36,6 +36,7 @@ x64/
 *.vspscc
 *.vssscc
 .builds
+**/target/sonar
 
 # Visual C++ cache files
 ipch/
