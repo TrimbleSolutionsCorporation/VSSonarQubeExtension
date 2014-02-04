@@ -82,7 +82,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// <summary>
         ///     The id.
         /// </summary>
-        private bool id;
+        private bool idVisible;
 
         /// <summary>
         ///     The id index.
@@ -179,7 +179,22 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// </summary>
         private int updateDateIndex;
 
-        private bool queryForIssuesIsRunning = false;
+        /// <summary>
+        /// The is new visible.
+        /// </summary>
+        private bool isNewVisible;
+
+        /// <summary>
+        /// The is new visible.
+        /// </summary>
+        private int isNewIndex;
+
+        private bool isNew;
+
+        /// <summary>
+        /// The query for issues is running.
+        /// </summary>
+        private bool queryForIssuesIsRunning;
 
         #endregion
 
@@ -467,12 +482,12 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         {
             get
             {
-                return this.id;
+                return this.idVisible;
             }
 
             set
             {
-                this.id = value;
+                this.idVisible = value;
                 if (this.vsenvironmenthelper != null)
                 {
                     this.vsenvironmenthelper.WriteOptionInApplicationData(
@@ -482,6 +497,57 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                 }
 
                 this.OnPropertyChanged("IdVisible");
+            }
+        }
+
+        /// <summary>
+        ///     Gets or sets the id index.
+        /// </summary>
+        public int IsNewIndex
+        {
+            get
+            {
+                return this.isNewIndex;
+            }
+
+            set
+            {
+                this.isNewIndex = value;
+                if (this.vsenvironmenthelper != null)
+                {
+                    this.vsenvironmenthelper.WriteOptionInApplicationData(
+                        DataGridOptionsKey,
+                        "IsNewIndex",
+                        value.ToString(CultureInfo.InvariantCulture));
+                }
+
+                this.OnPropertyChanged("IsNewIndex");
+            }
+        }
+
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether id visible.
+        /// </summary>
+        public bool IsNewVisible
+        {
+            get
+            {
+                return this.isNewVisible;
+            }
+
+            set
+            {
+                this.isNewVisible = value;
+                if (this.vsenvironmenthelper != null)
+                {
+                    this.vsenvironmenthelper.WriteOptionInApplicationData(
+                        DataGridOptionsKey,
+                        "IsNewVisible",
+                        value.ToString(CultureInfo.InvariantCulture));
+                }
+
+                this.OnPropertyChanged("IsNewVisible");
             }
         }
 
@@ -1020,6 +1086,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             this.CloseDateIndex = 12;
             this.KeyIndex = 13;
             this.IdIndex = 14;
+            this.IsNewIndex = 15;
 
             this.ComponentVisible = true;
             this.LineVisible = true;
@@ -1073,6 +1140,8 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             this.vsenvironmenthelper.WriteOptionInApplicationData(DataGridOptionsKey, "KeyIndex", "13");
             this.IdIndex = 14;
             this.vsenvironmenthelper.WriteOptionInApplicationData(DataGridOptionsKey, "IdIndex", "14");
+            this.IsNewIndex = 15;
+            this.vsenvironmenthelper.WriteOptionInApplicationData(DataGridOptionsKey, "IsNewIndex", "15");
 
             this.ComponentVisible = true;
             this.vsenvironmenthelper.WriteOptionInApplicationData(DataGridOptionsKey, "ComponentVisible", "true");
@@ -1104,6 +1173,8 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             this.vsenvironmenthelper.WriteOptionInApplicationData(DataGridOptionsKey, "KeyVisible", "true");
             this.IdVisible = true;
             this.vsenvironmenthelper.WriteOptionInApplicationData(DataGridOptionsKey, "IdVisible", "true");
+            this.IsNewVisible = true;
+            this.vsenvironmenthelper.WriteOptionInApplicationData(DataGridOptionsKey, "IsNewVisible", "true");
         }
 
         /// <summary>
@@ -1129,6 +1200,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             this.CloseDateIndex = int.Parse(options["CloseDateIndex"], CultureInfo.InvariantCulture);
             this.KeyIndex = int.Parse(options["KeyIndex"], CultureInfo.InvariantCulture);
             this.IdIndex = int.Parse(options["IdIndex"], CultureInfo.InvariantCulture);
+            this.IsNewIndex = int.Parse(options["IsNewIndex"], CultureInfo.InvariantCulture);
 
             this.ComponentVisible = bool.Parse(options["ComponentVisible"]);
             this.LineVisible = bool.Parse(options["LineVisible"]);
@@ -1145,6 +1217,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             this.CloseDateVisible = bool.Parse(options["CloseDateVisible"]);
             this.KeyVisible = bool.Parse(options["KeyVisible"]);
             this.IdVisible = bool.Parse(options["IdVisible"]);
+            this.IsNewVisible = bool.Parse(options["IsNewVisible"]);
         }
 
         #endregion

@@ -151,6 +151,15 @@ namespace ExtensionHelpers
             return this.environment;
         }
 
+        /// <summary>
+        /// The get file real path for solution.
+        /// </summary>
+        /// <param name="fileInView">
+        /// The file in view.
+        /// </param>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
         public string GetFileRealPathForSolution(string fileInView)
         {
             var solutionPath = this.ActiveSolutionPath();

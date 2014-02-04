@@ -95,6 +95,11 @@ namespace ExtensionTypes
         public string Assignee { get; set; }
 
         /// <summary>
+        /// Gets or sets the assignee.
+        /// </summary>
+        public bool IsNew { get; set; }
+
+        /// <summary>
         /// Gets or sets the key.
         /// </summary>
         public Guid Key { get; set; }

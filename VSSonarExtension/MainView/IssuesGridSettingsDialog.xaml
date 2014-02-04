@@ -5,7 +5,7 @@
 	x:Class="VSSonarExtension.MainView.IssuesGridSettingsDialog"
 	x:Name="Window"
 	Title="Issues Grid Visibity"
-	d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Width="290" Height="187" Background="#FFEFEFEF" Opacity="0.95" BorderThickness="1">
+	d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" MouseDown="MouseButtonEventHandler" Width="222" Height="155" Background="#FF2D2D30" Foreground="White" BorderThickness="2" Visibility="Visible" Opacity="0.95" WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True">
 	<Window.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
@@ -34,22 +34,24 @@
 				<RowDefinition Height="16"/>
 				<RowDefinition Height="26"/>
 			</Grid.RowDefinitions>
-			<CheckBox x:Name="ComponentVisible" Content="Component" IsChecked="{Binding ComponentVisible}"/>
-			<CheckBox x:Name="LineVisible" Content="Line" IsChecked="{Binding LineVisible}" Grid.Row="1"/>
-			<CheckBox x:Name="AssigneeVisible" Content="Assignee" IsChecked="{Binding AssigneeVisible}"  Grid.Row="2" />
-			<CheckBox x:Name="MessageVisible" Content="Message" IsChecked="{Binding MessageVisible}"  Grid.Row="3" />
-			<CheckBox x:Name="StatusVisible" Content="Status" IsChecked="{Binding StatusVisible}"  Grid.Row="4"/>
-			<CheckBox x:Name="RuleVisible" Content="Rule" IsChecked="{Binding RuleVisible}"  Grid.Row="5"/>
-			<CheckBox x:Name="CreationDateVisible" Content="CreationDate" IsChecked="{Binding CreationDateVisible}"  Grid.Row="6" />
-			<CheckBox x:Name="SeverityVisible" Content="Severity" IsChecked="{Binding SeverityVisible}"  Grid.Row="7" />
-			<CheckBox x:Name="ProjectVisible" Content="Project" IsChecked="{Binding ProjectVisible}"  Grid.Row="6" Grid.Column="1"/>
-			<CheckBox x:Name="ResolutionVisible" Content="Resolution" IsChecked="{Binding ResolutionVisible}"  Grid.Row="5" Grid.Column="1"/>
-			<CheckBox x:Name="EffortToFixVisible" Content="Effort" IsChecked="{Binding EffortToFixVisible}"  Grid.Row="4" Grid.Column="1"/>
-			<CheckBox x:Name="UpdateDateVisible" Content="UpdateDate" IsChecked="{Binding UpdateDateVisible}"  Grid.Row="3" Grid.Column="1"/>
-			<CheckBox x:Name="CloseDateVisible" Content="CloseDate" IsChecked="{Binding CloseDateVisible}"  Grid.Row="2" Grid.Column="1" />
-			<CheckBox x:Name="KeyVisible" Content="Key" IsChecked="{Binding KeyVisible}"  Grid.Row="1" Grid.Column="1" />
-			<CheckBox x:Name="IdVisible" Content="Id" IsChecked="{Binding IdVisible}" Grid.Column="1" />
-			<Button x:Name="CancelButton" Content="Close" Grid.Row="8" Grid.Column="1" Command="ApplicationCommands.Close" Template="{DynamicResource SquareButtonTemplate}"/>
+			<CheckBox Foreground="White" x:Name="ComponentVisible" Content="Component" IsChecked="{Binding ComponentVisible}"/>
+			<CheckBox Foreground="White" x:Name="LineVisible" Content="Line" IsChecked="{Binding LineVisible}" Grid.Row="1"/>
+			<CheckBox Foreground="White" x:Name="AssigneeVisible" Content="Assignee" IsChecked="{Binding AssigneeVisible}"  Grid.Row="2" />
+			<CheckBox Foreground="White" x:Name="MessageVisible" Content="Message" IsChecked="{Binding MessageVisible}"  Grid.Row="3" />
+			<CheckBox Foreground="White" x:Name="StatusVisible" Content="Status" IsChecked="{Binding StatusVisible}"  Grid.Row="4"/>
+			<CheckBox Foreground="White" x:Name="RuleVisible" Content="Rule" IsChecked="{Binding RuleVisible}"  Grid.Row="5"/>
+			<CheckBox Foreground="White" x:Name="CreationDateVisible" Content="CreationDate" IsChecked="{Binding CreationDateVisible}"  Grid.Row="6" />
+			<CheckBox Foreground="White" x:Name="IsNewVisible" Content="IsNew" IsChecked="{Binding IsNewVisible}" Grid.Column="1" Grid.Row="7" />
+			<CheckBox Foreground="White" x:Name="SeverityVisible" Content="Severity" IsChecked="{Binding SeverityVisible}"  Grid.Row="7" />
+			<CheckBox Foreground="White" x:Name="ProjectVisible" Content="Project" IsChecked="{Binding ProjectVisible}"  Grid.Row="6" Grid.Column="1"/>
+			<CheckBox Foreground="White" x:Name="ResolutionVisible" Content="Resolution" IsChecked="{Binding ResolutionVisible}"  Grid.Row="5" Grid.Column="1"/>
+			<CheckBox Foreground="White" x:Name="EffortToFixVisible" Content="Effort" IsChecked="{Binding EffortToFixVisible}"  Grid.Row="4" Grid.Column="1"/>
+			<CheckBox Foreground="White" x:Name="UpdateDateVisible" Content="UpdateDate" IsChecked="{Binding UpdateDateVisible}"  Grid.Row="3" Grid.Column="1"/>
+			<CheckBox Foreground="White" x:Name="CloseDateVisible" Content="CloseDate" IsChecked="{Binding CloseDateVisible}"  Grid.Row="2" Grid.Column="1" />
+			<CheckBox Foreground="White" x:Name="KeyVisible" Content="Key" IsChecked="{Binding KeyVisible}"  Grid.Row="1" Grid.Column="1" />
+			<CheckBox Foreground="White" x:Name="IdVisible" Content="Id" IsChecked="{Binding IdVisible}" Grid.Column="1" />
+			
+			<Button Foreground="White" x:Name="CancelButton" Content="Close" Grid.Row="8" Grid.Column="1" Command="ApplicationCommands.Close" Template="{DynamicResource SquareButtonTemplate}"/>
 		</Grid>
 	</Grid>
 </Window>

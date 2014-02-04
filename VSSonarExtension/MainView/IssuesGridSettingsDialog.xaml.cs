@@ -51,5 +51,22 @@ namespace VSSonarExtension.MainView
         {
             this.Close();
         }
+
+        /// <summary>
+        /// The mouse button event handler.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void MouseButtonEventHandler(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                this.DragMove();
+            }
+        }
     }
 }

@@ -899,6 +899,8 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                     issue.Severity <- elem.Severity.Value
                 if not(obj.ReferenceEquals(elem.UpdateDate, null)) then
                     issue.UpdateDate <- elem.UpdateDate.Value
+                if not(obj.ReferenceEquals(elem.IsNew, null)) then
+                    issue.IsNew <- elem.IsNew.Value
 
                 issue
 

@@ -32,16 +32,6 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         #region Fields
 
         /// <summary>
-        ///     The analysis change lines.
-        /// </summary>
-        private bool analysisChangeLines;
-
-        /// <summary>
-        ///     The analysis change lines text.
-        /// </summary>
-        private string analysisChangeLinesText = "Yes";
-
-        /// <summary>
         ///     The analysis mode.
         /// </summary>
         private bool analysisMode = true;
@@ -54,7 +44,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// <summary>
         ///     The analysis trigger.
         /// </summary>
-        private bool analysisTrigger;
+        private bool analysisTrigger = false;
 
         /// <summary>
         ///     The analysis type.
@@ -70,6 +60,11 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// The is coverage on.
         /// </summary>
         private bool isCoverageOn;
+
+        /// <summary>
+        /// The analysis change lines.
+        /// </summary>
+        private bool analysisChangeLines;
 
         #endregion
 
@@ -122,38 +117,21 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         #region Public Properties
 
         /// <summary>
-        /// Gets or sets a value indicating whether is issues in modified lines enabled.
-        /// </summary>
-        public bool IsIssuesInModifiedLinesEnabled
-        {
-            get
-            {
-                return this.analysisChangeLines;
-            }
-
-            set
-            {
-                this.analysisChangeLines = value;
-                this.OnPropertyChanged("IsIssuesInModifiedLinesEnabled");
-            }
-        }
-
-        /// <summary>
         ///     Gets or sets a value indicating whether analysis change lines.
         /// </summary>
         public bool AnalysisChangeLines
         {
             get
-            {
+            {                
                 return this.analysisChangeLines;
             }
 
             set
             {
                 this.analysisChangeLines = value;
-                this.OnPropertyChanged("AnalysisChangeLines");
                 this.OnPropertyChanged("AnalysisChangeLinesText");
-                this.AnalysisTrigger = false;
+                this.OnPropertyChanged("AnalysisChangeLines");
+                this.RefreshIssuesInViews();
             }
         }
 
@@ -164,15 +142,12 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         {
             get
             {
-                if (this.analysisModeText.Equals(AnalysisModes.Server))
+                if (this.analysisChangeLines)
                 {
-                    this.analysisChangeLines = false;
-                    return "No";
+                    return "Yes";
                 }
 
-                this.analysisChangeLinesText = this.analysisChangeLines ? "Yes" : "No";
-
-                return this.analysisChangeLinesText;
+                return "No";
             }
         }
 
@@ -215,6 +190,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         {
             get
             {
+                this.OnPropertyChanged("ExtensionIsBusy");
                 return this.AnalysisTrigger ? "Stop" : "Start";
             }
         }
@@ -296,15 +272,6 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         {
             get
             {
-                if (this.analysisTypeText.Equals(AnalysisTypes.File))
-                {
-                    this.IsIssuesInModifiedLinesEnabled = true;
-                }
-                else
-                {
-                    this.IsIssuesInModifiedLinesEnabled = false;
-                }
-
                 return this.analysisTypeText.ToString();
             }
         }
@@ -450,6 +417,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                 {
                     this.localAnalyserThread.Abort();
                 }
+
                 this.localAnalyserThread = null;
                 return;
             }
@@ -672,8 +640,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
 
                 var issuesInExtension = this.ExtensionRunningLocalAnalysis.GetIssues();
                 this.localEditorCache.UpdateIssues(issuesInExtension);
-                this.OnPropertyChanged("IssuesInEditor");
-                this.OnPropertyChanged("Issues");
+                this.RefreshIssuesInViews();
             }
             catch (Exception ex)
             {

@@ -154,11 +154,20 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// </summary>
         private IVsEnvironmentHelper vsenvironmenthelper;
 
+        /// <summary>
+        /// The out window.
+        /// </summary>
         private IVsOutputWindow outWindow;
 
+        /// <summary>
+        /// The custom title.
+        /// </summary>
         private string customTitle;
 
-        IVsOutputWindowPane customPane;
+        /// <summary>
+        /// The custom pane.
+        /// </summary>
+        readonly IVsOutputWindowPane customPane;
 
         private Guid customGuid;
 
@@ -175,15 +184,20 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             this.RestoreUserSettingsInIssuesDataGrid();
             this.RestoreUserFilteringOptions();
 
-            this.AnalysisChangeLines = false;
             this.AnalysisTrigger = false;
 
-            this.outWindow = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
-            this.customGuid = new Guid("0F44E2D1-F5FA-4d2d-AB30-22BE8ECD9789");
-            this.customTitle = "VSSonarQube Output";
-            this.outWindow.CreatePane(ref this.customGuid, this.customTitle, 1, 1);
-            this.outWindow.GetPane(ref customGuid, out this.customPane);
-            this.customPane.Activate();
+            try
+            {
+                this.outWindow = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
+                this.customGuid = new Guid("0F44E2D1-F5FA-4d2d-AB30-22BE8ECD9789");
+                this.customTitle = "VSSonarQube Output";
+                this.outWindow.CreatePane(ref this.customGuid, this.customTitle, 1, 1);
+                this.outWindow.GetPane(ref customGuid, out this.customPane);
+                this.customPane.Activate();
+            }
+            catch (Exception ex)
+            {
+            }
         }
 
         /// <summary>
@@ -209,7 +223,6 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             this.UserControlsHeight = new GridLength(0);
             this.RestoreUserSettingsInIssuesDataGrid();
             this.RestoreUserFilteringOptions();
-            this.AnalysisChangeLines = false;
             this.AnalysisTrigger = false;
 
             var conf = this.UserConfiguration;
@@ -604,7 +617,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             {
                 if (this.IssuesInViewAreLocked)
                 {
-                    var issues = this.ApplyFilterToIssues(this.localEditorCache.GetIssues());
+                    var issues = this.ApplyFilterToIssues(this.localEditorCache.GetIssues(), this.AnalysisChangeLines);
                     this.StatsLabel = "Number of Issues: " + issues.Count + " ";
                     return issues;
                 }
@@ -618,14 +631,14 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         return new List<Issue>();
                     }
 
-                    var issues = this.ApplyFilterToIssues(this.localEditorCache.GetIssuesForResource(this.ResourceInEditor));
+                    var issues = this.ApplyFilterToIssues(this.localEditorCache.GetIssuesForResource(this.ResourceInEditor), this.AnalysisChangeLines);
                     this.StatsLabel = "Number of Issues: " + issues.Count + " ";
                     return issues;
                 }
 
                 if (this.analysisModeText.Equals(AnalysisModes.Local))
                 {
-                    var issues = this.ApplyFilterToIssues(this.localEditorCache.GetIssues());
+                    var issues = this.ApplyFilterToIssues(this.localEditorCache.GetIssues(), this.AnalysisChangeLines);
                     this.StatsLabel = "Number of Issues: " + issues.Count + " ";
                     return issues;
                 }
@@ -1027,8 +1040,9 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// The apply filter to issues.
         /// </summary>
         /// <param name="issuesToFilter">
-        /// The issues to filter.
+        ///     The issues to filter.
         /// </param>
+        /// <param name="changeLines"></param>
         /// <returns>
         /// The
         ///     <see>
@@ -1036,14 +1050,14 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         ///     </see>
         ///     .
         /// </returns>
-        public List<Issue> ApplyFilterToIssues(List<Issue> issuesToFilter)
+        public List<Issue> ApplyFilterToIssues(List<Issue> issuesToFilter, bool changeLines)
         {
             if (issuesToFilter == null)
             {
                 return new List<Issue>();
             }
 
-            return issuesToFilter.Where(issue => !this.ApplyFilter(issue)).ToList();
+            return issuesToFilter.Where(issue => !this.ApplyFilter(issue, changeLines)).ToList();
         }
 
         /// <summary>
@@ -1294,10 +1308,10 @@ namespace VSSonarExtension.MainViewModel.ViewModel
 
             if (this.analysisModeText.Equals(AnalysisModes.Local))
             {
-                return this.ApplyFilterToIssues(this.localEditorCache.GetIssuesForResource(this.ResourceInEditor));
+                return this.ApplyFilterToIssues(this.localEditorCache.GetIssuesForResource(this.ResourceInEditor), this.AnalysisChangeLines);
             }
 
-            return this.ApplyFilterToIssues(this.localEditorCache.GetIssuesForResource(this.ResourceInEditor, sourceReference));
+            return this.ApplyFilterToIssues(this.localEditorCache.GetIssuesForResource(this.ResourceInEditor, sourceReference), this.AnalysisChangeLines);
         }
 
         /// <summary>
@@ -1449,7 +1463,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             this.localEditorCache.UpdateIssues(getAllIssuesByAssignee);
             this.analysisTrigger = false;
             this.IssuesInViewAreLocked = true;
-            this.OnPropertyChanged("Issues");
+            this.RefreshIssuesInViews();
             this.OnPropertyChanged("AnalysisTriggerText");
             this.OnPropertyChanged("AnalysisTrigger");
         }
@@ -1475,10 +1489,13 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// <param name="issue">
         /// The issue.
         /// </param>
+        /// <param name="newIssuesOnly">
+        /// The new Issues Only.
+        /// </param>
         /// <returns>
         /// The <see cref="bool"/>.
         /// </returns>
-        private bool ApplyFilter(Issue issue)
+        private bool ApplyFilter(Issue issue, bool newIssuesOnly)
         {
             if (this.IsAssigneeChecked && !this.AssigneeInFilter.Login.Equals(issue.Assignee))
             {
@@ -1498,6 +1515,14 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             if (this.FilterBySeverity(issue))
             {
                 return true;
+            }
+
+            if (newIssuesOnly)
+            {
+                if (!issue.IsNew)
+                {
+                    return true;
+                }
             }
 
             return false;

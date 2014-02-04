@@ -9,6 +9,7 @@
 
 namespace VSSonarExtension.MainViewModel.Cache
 {
+    using System;
     using System.Collections.Generic;
 
     using DifferenceEngine;
@@ -148,22 +149,29 @@ namespace VSSonarExtension.MainViewModel.Cache
                 return element.Issues;
             }
 
-            var diffReport = VsSonarUtils.GetSourceDiffFromStrings(
-                element.ServerSource,
-                currentSource,
-                DiffEngineLevel.FastImperfect);
-
-            foreach (var issue in element.Issues)
+            try
             {
-                var line = VsSonarUtils.EstimateWhereSonarLineIsUsingSourceDifference(issue.Line, diffReport);
+                var diffReport = VsSonarUtils.GetSourceDiffFromStrings(
+                    element.ServerSource,
+                    currentSource,
+                    DiffEngineLevel.FastImperfect);
 
-                if (line >= 0)
+                foreach (var issue in element.Issues)
                 {
-                    issues.Add(issue);
-                }
-            }
+                    var line = VsSonarUtils.EstimateWhereSonarLineIsUsingSourceDifference(issue.Line, diffReport);
 
-            return issues;
+                    if (line >= 0)
+                    {
+                        issues.Add(issue);
+                    }
+                }
+
+                return issues;
+            }
+            catch (Exception)
+            {
+                return element.Issues;
+            }
         }
 
         public List<Issue> GetIssuesForResource(Resource resource)

@@ -161,7 +161,7 @@ namespace VSSonarExtension.Test.TestView
         //[Test]
         public void TestPluginsOptionWindow()
         {
-            var t = new Thread(new ThreadStart(this.WindowPlugins));
+            var t = new Thread(new ThreadStart(this.Threadprc));
             t.SetApartmentState(ApartmentState.STA);
             t.Start();
             t.Join();

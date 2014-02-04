@@ -17,8 +17,6 @@ namespace VSSonarExtension.Test.TestViewModel
     using System;
     using System.Collections.Generic;
 
-    using ExtensionHelpers;
-
     using ExtensionTypes;
 
     using NUnit.Framework;
@@ -48,13 +46,14 @@ namespace VSSonarExtension.Test.TestViewModel
         private ISonarRestService service;
 
         /// <summary>
-        /// The vshelper.
+        /// The vs helper.
         /// </summary>
         private IVsEnvironmentHelper vshelper;
 
+        /// <summary>
+        /// The plugin.
+        /// </summary>
         private IPlugin plugin;
-
-        private Source fileSource;
 
         /// <summary>
         /// The setup.
@@ -66,8 +65,6 @@ namespace VSSonarExtension.Test.TestViewModel
             this.service = this.mocks.Stub<ISonarRestService>();
             this.vshelper = this.mocks.Stub<IVsEnvironmentHelper>();
             this.plugin = this.mocks.Stub<IPlugin>();
-
-            this.fileSource.Lines = new[] { "line1", "line2", "line3", "line4" };
 
             using (this.mocks.Record())
             {
@@ -85,6 +82,8 @@ namespace VSSonarExtension.Test.TestViewModel
         [Test]
         public void UpdateIssueDataForResourceWithNewDateDataTestWithCache()
         {
+            var fileSource = new Source { Lines = new[] { "line1", "line2", "line3", "line4" } };
+
             var newResource = new Resource { Date = DateTime.Now, Key = "resource" };
             var source1 = new SourceCoverage();
             source1.SetLineCoverageData("1=0;2=3;3=3");
@@ -96,7 +95,7 @@ namespace VSSonarExtension.Test.TestViewModel
 
             this.service.Expect(
                 mp => mp.GetSourceForFileResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything))
-                .Return(this.fileSource)
+                .Return(fileSource)
                 .Repeat.Once();
 
             this.service.Expect(
@@ -116,7 +115,7 @@ namespace VSSonarExtension.Test.TestViewModel
             var data = new ExtensionDataModel(this.service, this.vshelper, null);
             data.PluginController = new PluginController();
             data.PluginRunningAnalysis = this.plugin;
-            data.AssociatedProject = new Resource() { Key = "sonar.com:common" };
+            data.AssociatedProject = new Resource { Key = "sonar.com:common" };
 
             data.RefreshDataForResource("resource");
             Assert.AreEqual(1, data.GetIssuesInEditor("ghfggfgf\r\nghfggfgf\r\nghfggfgf\r\nghfggfgf\r\n").Count);
@@ -159,7 +158,7 @@ namespace VSSonarExtension.Test.TestViewModel
             var data = new ExtensionDataModel(this.service, this.vshelper, null);
             data.PluginController = new PluginController();
             data.PluginRunningAnalysis = this.plugin;
-            data.AssociatedProject = new Resource() { Key = "sonar.com:common" };
+            data.AssociatedProject = new Resource { Key = "sonar.com:common" };
             data.CoverageInEditorEnabled = true;
             
             data.RefreshDataForResource("resource");
