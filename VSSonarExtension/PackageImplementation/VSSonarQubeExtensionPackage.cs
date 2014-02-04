@@ -208,7 +208,7 @@ namespace VSSonarExtension.PackageImplementation
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("SonarQubeExtension is not usable condition, check credential and host from tools > options > Sonar, and restart visual studio after settings are set : ", ex.StackTrace);
+                    MessageBox.Show("SonarQubeExtension is not usable condition, check credential and host from tools > options > Sonar, and restart visual studio after settings are set : " + ex.StackTrace);
                 }
             }
             catch (Exception ex)

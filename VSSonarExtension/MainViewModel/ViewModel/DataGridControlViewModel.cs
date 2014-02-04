@@ -14,6 +14,7 @@
 
 namespace VSSonarExtension.MainViewModel.ViewModel
 {
+    using System;
     using System.Collections.Generic;
     using System.Globalization;
 
@@ -1185,39 +1186,45 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// </param>
         private void ReadWindowOptions(Dictionary<string, string> options)
         {
-            this.ComponentIndex = int.Parse(options["ComponentIndex"], CultureInfo.InvariantCulture);
-            this.LineIndex = int.Parse(options["LineIndex"], CultureInfo.InvariantCulture);
-            this.AssigneeIndex = int.Parse(options["AssigneeIndex"], CultureInfo.InvariantCulture);
-            this.MessageIndex = int.Parse(options["MessageIndex"], CultureInfo.InvariantCulture);
-            this.StatusIndex = int.Parse(options["StatusIndex"], CultureInfo.InvariantCulture);
-            this.SeverityIndex = int.Parse(options["SeverityIndex"], CultureInfo.InvariantCulture);
-            this.RuleIndex = int.Parse(options["RuleIndex"], CultureInfo.InvariantCulture);
-            this.CreationDateIndex = int.Parse(options["CreationDateIndex"], CultureInfo.InvariantCulture);
-            this.ProjectIndex = int.Parse(options["ProjectIndex"], CultureInfo.InvariantCulture);
-            this.ResolutionIndex = int.Parse(options["ResolutionIndex"], CultureInfo.InvariantCulture);
-            this.EffortToFixIndex = int.Parse(options["EffortToFixIndex"], CultureInfo.InvariantCulture);
-            this.UpdateDateIndex = int.Parse(options["UpdateDateIndex"], CultureInfo.InvariantCulture);
-            this.CloseDateIndex = int.Parse(options["CloseDateIndex"], CultureInfo.InvariantCulture);
-            this.KeyIndex = int.Parse(options["KeyIndex"], CultureInfo.InvariantCulture);
-            this.IdIndex = int.Parse(options["IdIndex"], CultureInfo.InvariantCulture);
-            this.IsNewIndex = int.Parse(options["IsNewIndex"], CultureInfo.InvariantCulture);
+            try
+            {
+                this.ComponentIndex = int.Parse(options["ComponentIndex"], CultureInfo.InvariantCulture);
+                this.LineIndex = int.Parse(options["LineIndex"], CultureInfo.InvariantCulture);
+                this.AssigneeIndex = int.Parse(options["AssigneeIndex"], CultureInfo.InvariantCulture);
+                this.MessageIndex = int.Parse(options["MessageIndex"], CultureInfo.InvariantCulture);
+                this.StatusIndex = int.Parse(options["StatusIndex"], CultureInfo.InvariantCulture);
+                this.SeverityIndex = int.Parse(options["SeverityIndex"], CultureInfo.InvariantCulture);
+                this.RuleIndex = int.Parse(options["RuleIndex"], CultureInfo.InvariantCulture);
+                this.CreationDateIndex = int.Parse(options["CreationDateIndex"], CultureInfo.InvariantCulture);
+                this.ProjectIndex = int.Parse(options["ProjectIndex"], CultureInfo.InvariantCulture);
+                this.ResolutionIndex = int.Parse(options["ResolutionIndex"], CultureInfo.InvariantCulture);
+                this.EffortToFixIndex = int.Parse(options["EffortToFixIndex"], CultureInfo.InvariantCulture);
+                this.UpdateDateIndex = int.Parse(options["UpdateDateIndex"], CultureInfo.InvariantCulture);
+                this.CloseDateIndex = int.Parse(options["CloseDateIndex"], CultureInfo.InvariantCulture);
+                this.KeyIndex = int.Parse(options["KeyIndex"], CultureInfo.InvariantCulture);
+                this.IdIndex = int.Parse(options["IdIndex"], CultureInfo.InvariantCulture);
 
-            this.ComponentVisible = bool.Parse(options["ComponentVisible"]);
-            this.LineVisible = bool.Parse(options["LineVisible"]);
-            this.AssigneeVisible = bool.Parse(options["AssigneeVisible"]);
-            this.MessageVisible = bool.Parse(options["MessageVisible"]);
-            this.StatusVisible = bool.Parse(options["StatusVisible"]);
-            this.SeverityVisible = bool.Parse(options["SeverityVisible"]);
-            this.RuleVisible = bool.Parse(options["RuleVisible"]);
-            this.CreationDateVisible = bool.Parse(options["CreationDateVisible"]);
-            this.ProjectVisible = bool.Parse(options["ProjectVisible"]);
-            this.ResolutionVisible = bool.Parse(options["ResolutionVisible"]);
-            this.EffortToFixVisible = bool.Parse(options["EffortToFixVisible"]);
-            this.UpdateDateVisible = bool.Parse(options["UpdateDateVisible"]);
-            this.CloseDateVisible = bool.Parse(options["CloseDateVisible"]);
-            this.KeyVisible = bool.Parse(options["KeyVisible"]);
-            this.IdVisible = bool.Parse(options["IdVisible"]);
-            this.IsNewVisible = bool.Parse(options["IsNewVisible"]);
+                this.ComponentVisible = bool.Parse(options["ComponentVisible"]);
+                this.LineVisible = bool.Parse(options["LineVisible"]);
+                this.AssigneeVisible = bool.Parse(options["AssigneeVisible"]);
+                this.MessageVisible = bool.Parse(options["MessageVisible"]);
+                this.StatusVisible = bool.Parse(options["StatusVisible"]);
+                this.SeverityVisible = bool.Parse(options["SeverityVisible"]);
+                this.RuleVisible = bool.Parse(options["RuleVisible"]);
+                this.CreationDateVisible = bool.Parse(options["CreationDateVisible"]);
+                this.ProjectVisible = bool.Parse(options["ProjectVisible"]);
+                this.ResolutionVisible = bool.Parse(options["ResolutionVisible"]);
+                this.EffortToFixVisible = bool.Parse(options["EffortToFixVisible"]);
+                this.UpdateDateVisible = bool.Parse(options["UpdateDateVisible"]);
+                this.CloseDateVisible = bool.Parse(options["CloseDateVisible"]);
+                this.KeyVisible = bool.Parse(options["KeyVisible"]);
+                this.IdVisible = bool.Parse(options["IdVisible"]);
+                this.IsNewIndex = int.Parse(options["IsNewIndex"], CultureInfo.InvariantCulture);
+                this.IsNewVisible = bool.Parse(options["IsNewVisible"]);
+            }
+            catch (Exception ex)
+            {
+            }
         }
 
         #endregion
