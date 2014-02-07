@@ -79,10 +79,14 @@ type JsonSonarConnector() =
                     let timeNow = System.DateTime.Now.ToString()
 
                     addLine (sprintf """ [%s] : %s """ timeNow url)                
-                    reader.ReadToEnd()
+                    let data = reader.ReadToEnd()
+                    if not(String.IsNullOrEmpty(Environment.GetEnvironmentVariable("VSSONAREXTENSIONDEBUGVERBOSE"))) then
+                        addLine (sprintf """ [%s] : %s """ timeNow data)
+                    data
                 with
                  | ex -> 
                     let timeNow = System.DateTime.Now.ToString()
+                    addLine (sprintf """ [%s] : %s """ timeNow url)
                     addLine (sprintf """ [%s] : Error: %s""" timeNow ex.Message)
                     addLine (sprintf """        StackTrace: %s""" ex.StackTrace)
                     raise ex

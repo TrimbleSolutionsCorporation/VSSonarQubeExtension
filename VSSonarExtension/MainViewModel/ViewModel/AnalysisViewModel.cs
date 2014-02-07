@@ -290,9 +290,9 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             {
                 this.analysisTrigger = value;
 
-                if (this.customPane != null && this.analysisTrigger)
+                if (this.CustomPane != null && this.analysisTrigger)
                 {
-                    this.customPane.Clear();
+                    this.CustomPane.Clear();
                 }
 
                 this.PerformfAnalysis(value);
@@ -661,10 +661,8 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         private void UpdateOutputMessagesFromPlugin(object sender, EventArgs e)
         {
             var exceptionMsg = (LocalAnalysisCompletedEventArgs)e;
-
-            this.customPane.OutputString(exceptionMsg.ErrorMessage + "\r\n");
-            this.customPane.FlushToTaskList();
-            //customPane.Activate();
+            this.CustomPane.OutputString(exceptionMsg.ErrorMessage + "\r\n");
+            this.CustomPane.FlushToTaskList();
         }
 
         /// <summary>

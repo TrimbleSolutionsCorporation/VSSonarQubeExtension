@@ -112,13 +112,18 @@ namespace ExtensionViewModel.Commands
                     if (httpStatusCode.Value != HttpStatusCode.OK)
                     {
                         allGood = false;
-                        MessageBox.Show("Cannot Modify Status of Issue: " + httpStatusCode.Key);
+                        this.model.CustomPane.OutputString("Cannot Comment Status of Issue: " + httpStatusCode.Key + " Return Code: " + httpStatusCode.Value);
+                        this.model.CustomPane.FlushToTaskList();
                     }
                 }
 
                 if (allGood)
                 {
                     this.model.CommentData = string.Empty;
+                }
+                else
+                {
+                    MessageBox.Show("Cannot Modify Status of one or more Issues Check Output log");
                 }
             }
         }

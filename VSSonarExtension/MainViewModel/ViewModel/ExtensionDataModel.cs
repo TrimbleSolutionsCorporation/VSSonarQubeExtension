@@ -167,7 +167,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// <summary>
         /// The custom pane.
         /// </summary>
-        readonly IVsOutputWindowPane customPane;
+        private readonly IVsOutputWindowPane customPane;
 
         private Guid customGuid;
 
@@ -193,7 +193,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                 this.customTitle = "VSSonarQube Output";
                 this.outWindow.CreatePane(ref this.customGuid, this.customTitle, 1, 1);
                 this.outWindow.GetPane(ref customGuid, out this.customPane);
-                this.customPane.Activate();
+                this.CustomPane.Activate();
             }
             catch (Exception ex)
             {
@@ -993,6 +993,17 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// Gets or sets the vs package.
         /// </summary>
         public VsSonarExtensionPackage VSPackage { get; set; }
+
+        /// <summary>
+        /// The custom pane.
+        /// </summary>
+        public IVsOutputWindowPane CustomPane
+        {
+            get
+            {
+                return this.customPane;
+            }
+        }
 
         /// <summary>
         /// The perform solution not open association.

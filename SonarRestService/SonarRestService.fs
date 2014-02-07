@@ -659,29 +659,30 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                         if not(String.IsNullOrEmpty(comment)) then
                             (this :> ISonarRestService).CommentOnIssues(newConf, issues, comment) |> ignore
                     else
-                        idstr <- Convert.ToString(issue.Id)
-                        let CheckReponse(response : IRestResponse)= 
-                            if response.StatusCode = Net.HttpStatusCode.OK then
-                                let reviews = getReviewsFromString(response.Content)
-                                issue.Id <- reviews.[0].Id
-                                issue.Status <- reviews.[0].Status
-                                issue.Resolution <- "FALSE-POSITIVE"
-                                let newComment = new Comment()
-                                newComment.CreatedAt <- DateTime.Now
-                                newComment.HtmlText <- comment
-                                newComment.Login <- newConf.Username
-                                issue.Comments.Add(newComment)
+                        if not(idstr.Equals("0")) then
+                            idstr <- Convert.ToString(issue.Id)
+                            let CheckReponse(response : IRestResponse)= 
+                                if response.StatusCode = Net.HttpStatusCode.OK then
+                                    let reviews = getReviewsFromString(response.Content)
+                                    issue.Id <- reviews.[0].Id
+                                    issue.Status <- reviews.[0].Status
+                                    issue.Resolution <- "FALSE-POSITIVE"
+                                    let newComment = new Comment()
+                                    newComment.CreatedAt <- DateTime.Now
+                                    newComment.HtmlText <- comment
+                                    newComment.Login <- newConf.Username
+                                    issue.Comments.Add(newComment)
 
-                        if issue.Comments.Count > 0 then
-                            let parameters = Map.empty.Add("id", idstr).Add("resolution", "FALSE-POSITIVE").Add("comment", comment)
-                            let response = httpconnector.HttpSonarPutRequest(newConf, "/api/reviews/resolve", parameters)
-                            status <- response.StatusCode
-                            CheckReponse(response)
-                        else
-                            let url = "/api/reviews?violation_id=" + Convert.ToString(idstr) + "&status=RESOLVED&resolution=FALSE-POSITIVE" + GetComment(comment)
-                            let response = httpconnector.HttpSonarRequest(newConf, url, Method.POST)
-                            CheckReponse(response)
-                            status <- response.StatusCode
+                            if issue.Comments.Count > 0 then
+                                let parameters = Map.empty.Add("id", idstr).Add("resolution", "FALSE-POSITIVE").Add("comment", comment)
+                                let response = httpconnector.HttpSonarPutRequest(newConf, "/api/reviews/resolve", parameters)
+                                status <- response.StatusCode
+                                CheckReponse(response)
+                            else
+                                let url = "/api/reviews?violation_id=" + Convert.ToString(idstr) + "&status=RESOLVED&resolution=FALSE-POSITIVE" + GetComment(comment)
+                                let response = httpconnector.HttpSonarRequest(newConf, url, Method.POST)
+                                CheckReponse(response)
+                                status <- response.StatusCode
 
                     responseMap.Add(idstr, status)
 

@@ -106,7 +106,8 @@ namespace VSSonarExtension.MainViewModel.Commands
                     if (httpStatusCode.Value != HttpStatusCode.OK)
                     {
                         allGood = false;
-                        MessageBox.Show("Cannot Modify Status of Issue" + httpStatusCode.Key);
+                        this.model.CustomPane.OutputString("Cannot Modify Status of Issue: " + httpStatusCode.Key + " Return Code: " + httpStatusCode.Value);
+                        this.model.CustomPane.FlushToTaskList();
                     }
                 }
 
@@ -114,6 +115,10 @@ namespace VSSonarExtension.MainViewModel.Commands
                 {
                     this.model.CommentData = string.Empty;
                     this.model.RefreshIssuesInViews();
+                }
+                else
+                {
+                    MessageBox.Show("Cannot Modify Status of one or more Issues Check Output log");
                 }
             }
         }
