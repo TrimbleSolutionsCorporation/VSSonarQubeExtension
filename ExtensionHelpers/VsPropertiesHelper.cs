@@ -1,5 +1,5 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IVSEnvironmentHelper.cs" company="Copyright © 2013 Tekla Corporation. Tekla is a Trimble Company">
+// <copyright file="VsPropertiesHelper.cs" company="Copyright © 2013 Tekla Corporation. Tekla is a Trimble Company">
 //     Copyright (C) 2013 [Jorge Costa, Jorge.Costa@tekla.com]
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -600,13 +600,13 @@ namespace ExtensionHelpers
             var files = this.environment.Solution.FindProjectItem(filename);
             if (files != null)
             {
-                var masterPath = files.Properties.Item("FullPath").Value;
                 (new System.Threading.Thread(() =>
                 {
-                    this.environment.ItemOperations.OpenFile(masterPath.ToString());
-                    var textSelection = (TextSelection)this.environment.ActiveDocument.Selection;
                     try
                     {
+                        var masterPath = files.Properties.Item("FullPath").Value;
+                        this.environment.ItemOperations.OpenFile(masterPath.ToString());
+                        var textSelection = (TextSelection)this.environment.ActiveDocument.Selection;
                         textSelection.GotoLine(line < 1 ? 1 : line);
                         textSelection.SelectLine();
                     }
@@ -616,23 +616,6 @@ namespace ExtensionHelpers
                     }
                 })).Start();
             }
-        }
-
-        static string GetProperDirectoryCapitalization(DirectoryInfo dirInfo)
-        {
-            DirectoryInfo parentDirInfo = dirInfo.Parent;
-            if (null == parentDirInfo)
-                return dirInfo.Name;
-            return Path.Combine(GetProperDirectoryCapitalization(parentDirInfo),
-                                parentDirInfo.GetDirectories(dirInfo.Name)[0].Name);
-        }
-
-        static string GetProperFilePathCapitalization(string filename)
-        {
-            FileInfo fileInfo = new FileInfo(filename);
-            DirectoryInfo dirInfo = fileInfo.Directory;
-            return Path.Combine(GetProperDirectoryCapitalization(dirInfo),
-                                dirInfo.GetFiles(fileInfo.Name)[0].Name);
         }
 
         /// <summary>
@@ -655,6 +638,37 @@ namespace ExtensionHelpers
             var solutionName = this.ActiveSolutionName();
             var solutionPath = driveLetter + this.ActiveSolutionPath().Substring(1);
             return new VsProjectItem(documentName, documentPath, projectName, projectPath, solutionName, solutionPath);
+        }
+
+        /// <summary>
+        /// The get proper directory capitalization.
+        /// </summary>
+        /// <param name="dirInfo">
+        /// The dir info.
+        /// </param>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
+        private static string GetProperDirectoryCapitalization(DirectoryInfo dirInfo)
+        {
+            var parentDirInfo = dirInfo.Parent;
+            return null == parentDirInfo ? dirInfo.Name : Path.Combine(GetProperDirectoryCapitalization(parentDirInfo), parentDirInfo.GetDirectories(dirInfo.Name)[0].Name);
+        }
+
+        /// <summary>
+        /// The get proper file path capitalization.
+        /// </summary>
+        /// <param name="filename">
+        /// The filename.
+        /// </param>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
+        private static string GetProperFilePathCapitalization(string filename)
+        {
+            var fileInfo = new FileInfo(filename);
+            var dirInfo = fileInfo.Directory;
+            return dirInfo != null ? Path.Combine(GetProperDirectoryCapitalization(dirInfo), dirInfo.GetFiles(fileInfo.Name)[0].Name) : string.Empty;
         }
 
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
