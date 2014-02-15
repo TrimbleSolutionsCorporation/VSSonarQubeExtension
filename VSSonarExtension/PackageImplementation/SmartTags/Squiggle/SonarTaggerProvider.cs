@@ -24,8 +24,6 @@ namespace VSSonarExtension.SmartTags.Squiggle
     using Microsoft.VisualStudio.Text.Tagging;
     using Microsoft.VisualStudio.Utilities;
 
-    using VSSonarExtension.SmartTags.BufferUpdate;
-
     /// <summary>
     /// The sonar tagger.
     /// </summary>

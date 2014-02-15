@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="SonarTag.cs" company="Copyright © 2013 Tekla Corporation. Tekla is a Trimble Company">
+// <copyright file="CoverateTag.cs" company="Copyright © 2013 Tekla Corporation. Tekla is a Trimble Company">
 //     Copyright (C) 2013 [Jorge Costa, Jorge.Costa@tekla.com]
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -11,13 +11,10 @@
 // You should have received a copy of the GNU Lesser General Public License along with this program; if not, write to the Free
 // Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 // --------------------------------------------------------------------------------------------------------------------
-
-namespace VSSonarExtension.SmartTags.Coverage
+namespace VSSonarExtension.PackageImplementation.SmartTags.Coverage
 {
     using System;
     using System.Collections.Generic;
-
-    using ExtensionTypes;
 
     using Microsoft.VisualStudio.Text;
     using Microsoft.VisualStudio.Text.Tagging;
@@ -38,17 +35,14 @@ namespace VSSonarExtension.SmartTags.Coverage
         private IEnumerable<string> suggestions;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SonarTag"/> class.
+        /// Initializes a new instance of the <see cref="CoverageTag"/> class.
         /// </summary>
-        /// <param name="issues">
-        /// The issues.
-        /// </param>
         /// <param name="span">
         /// The span.
         /// </param>
-        /// <exception cref="ArgumentNullException">
-        /// serviceProvider, trackingSpan and violation
-        /// </exception>
+        /// <param name="tagDefinition">
+        /// The tag definition.
+        /// </param>
         public CoverageTag(SnapshotSpan span, string tagDefinition)
             : base(tagDefinition)
         {

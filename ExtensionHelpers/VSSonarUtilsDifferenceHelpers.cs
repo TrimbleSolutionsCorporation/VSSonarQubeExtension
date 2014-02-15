@@ -33,20 +33,14 @@ namespace ExtensionHelpers
         /// <param name="source">
         /// The source.
         /// </param>
-        /// <param name="sourceseparator">
-        /// The sourceseparator.
-        /// </param>
         /// <param name="destination">
         /// The destination.
-        /// </param>
-        /// <param name="destinationsepartor">
-        /// The destinationsepartor.
         /// </param>
         /// <param name="level">
         /// The level.
         /// </param>
         /// <returns>
-        /// The System.Collections.ArrayList.
+        /// The <see cref="ArrayList"/>.
         /// </returns>
         public static ArrayList GetSourceDiffFromStrings(string source, string destination, DiffEngineLevel level = DiffEngineLevel.SlowPerfect)
         {

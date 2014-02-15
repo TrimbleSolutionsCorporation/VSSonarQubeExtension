@@ -16,7 +16,6 @@ namespace VSSonarExtension.MainViewModel.Commands
 {
     using System;
     using System.ComponentModel;
-    using System.Threading;
     using System.Windows.Input;
 
     using SonarRestService;
@@ -83,9 +82,6 @@ namespace VSSonarExtension.MainViewModel.Commands
         {
             return true;
         }
-
-
-
 
         /// <summary>
         /// The execute.

@@ -1,15 +1,16 @@
 ﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:SampleData="clr-namespace:Expression.Blend.SampleData.SampleDataForButtons"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModel="clr-namespace:VSSonarExtension.MainViewModel.ViewModel"
+    xmlns:sampleDataForButtons="clr-namespace:VSSonarExtension.MainView.SampleData.SampleDataForButtons"
     mc:Ignorable="d" x:Class="VSSonarExtension.MainView.PluginOptionsWindow"
         Title="PluginOptionsWindow" MouseDown="MouseButtonEventHandler" Height="472" Width="1020" Background="#FF2D2D30" Foreground="White" BorderThickness="2" Visibility="Visible" Opacity="0.95" WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True">
 	<Window.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
 				<ResourceDictionary Source="StylesAndTemplates.xaml"/>
-			</ResourceDictionary.MergedDictionaries>			<SampleData:SampleDataForButtons x:Key="SampleDataForButtons" d:IsDataSource="True"/>
+			</ResourceDictionary.MergedDictionaries>			<sampleDataForButtons:SampleDataForButtons x:Key="SampleDataForButtons" d:IsDataSource="True"/>
 
 			<viewModel:PluginsOptionsModel x:Key="PluginsOptionsModelDataSource" d:IsDataSource="True"/>
 			<BorderGapMaskConverter x:Key="BorderGapMaskConverter"/>

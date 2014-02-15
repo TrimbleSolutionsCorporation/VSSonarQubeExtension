@@ -22,7 +22,7 @@ namespace VSSonarExtension.PackageImplementation
 
     using SonarRestService;
 
-    using VSSonarExtension.SmartTags.BufferUpdate;
+    using VSSonarExtension.PackageImplementation.SmartTags.BufferUpdate;
 
     using VSSonarPlugins;
 

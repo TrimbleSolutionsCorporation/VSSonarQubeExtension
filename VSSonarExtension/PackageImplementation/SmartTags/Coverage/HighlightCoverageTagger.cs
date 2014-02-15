@@ -27,7 +27,8 @@ namespace VSSonarExtension.SmartTags.Coverage
 
     using VSSonarExtension.MainViewModel.Cache;
     using VSSonarExtension.PackageImplementation;
-    using VSSonarExtension.SmartTags.BufferUpdate;
+    using VSSonarExtension.PackageImplementation.SmartTags.BufferUpdate;
+    using VSSonarExtension.PackageImplementation.SmartTags.Coverage;
 
     /// <summary>
     ///     This tagger will provide tags for every word in the buffer that

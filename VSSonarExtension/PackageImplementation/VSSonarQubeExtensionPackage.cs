@@ -34,7 +34,7 @@ namespace VSSonarExtension.PackageImplementation
     using SonarRestService;
 
     using VSSonarExtension.MainViewModel.ViewModel;
-    using VSSonarExtension.SmartTags.BufferUpdate;
+    using VSSonarExtension.PackageImplementation.SmartTags.BufferUpdate;
     using VSSonarExtension.VSControls;
     using VSSonarExtension.VSControls.DialogOptions;
 

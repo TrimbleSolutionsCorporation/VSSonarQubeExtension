@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AssignOnIssueCommand.cs" company="Copyright © 2013 Tekla Corporation. Tekla is a Trimble Company">
+// <copyright file="ViewSwitchCommand.cs" company="Copyright © 2013 Tekla Corporation. Tekla is a Trimble Company">
 //     Copyright (C) 2013 [Jorge Costa, Jorge.Costa@tekla.com]
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -42,13 +42,10 @@ namespace VSSonarExtension.MainViewModel.Commands
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AssignOnIssueCommand"/> class. 
+        /// Initializes a new instance of the <see cref="ViewSwitchCommand"/> class.
         /// </summary>
         /// <param name="model">
         /// The model.
-        /// </param>
-        /// <param name="service">
-        /// The service.
         /// </param>
         public ViewSwitchCommand(ExtensionDataModel model)
         {

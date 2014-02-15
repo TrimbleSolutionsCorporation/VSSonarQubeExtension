@@ -11,20 +11,14 @@
 // You should have received a copy of the GNU Lesser General Public License along with this program; if not, write to the Free
 // Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 // --------------------------------------------------------------------------------------------------------------------
-
-namespace VSSonarExtension.SmartTags.BufferUpdate
+namespace VSSonarExtension.PackageImplementation.SmartTags.BufferUpdate
 {
     using System;
     using System.Linq;
-    using System.Windows;
 
     using EnvDTE;
 
     using EnvDTE80;
-
-    using ExtensionHelpers;
-
-    using ExtensionTypes;
 
     using Microsoft.VisualStudio.Text;
 
@@ -33,114 +27,85 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
 
     using VSSonarPlugins;
 
-    using Window = EnvDTE.Window;
-
     /// <summary>
-    /// The vs events.
+    ///     The vs events.
     /// </summary>
     public class VsEvents
     {
+        #region Fields
+
         /// <summary>
-        /// The environment.
+        ///     The documents events.
+        /// </summary>
+        public readonly DocumentEvents DocumentsEvents;
+
+        /// <summary>
+        ///     The events.
+        /// </summary>
+        public readonly Events SolutionEvents;
+
+        /// <summary>
+        ///     The environment.
         /// </summary>
         private readonly IVsEnvironmentHelper environment;
 
         /// <summary>
-        /// The model.
+        ///     The model.
         /// </summary>
         private readonly ExtensionDataModel model;
 
-        /// <summary>
-        /// The documents events.
-        /// </summary>
-        private readonly DocumentEvents documentsEvents;
+        #endregion
 
-        /// <summary>
-        /// The events.
-        /// </summary>
-        private readonly Events events;
+        #region Constructors and Destructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VsEvents"/> class.
         /// </summary>
         /// <param name="model">
-        ///     The model.
+        /// The model.
         /// </param>
         /// <param name="environment">
-        ///     The environment.
+        /// The environment.
         /// </param>
-        /// <param name="dte2"></param>
+        /// <param name="dte2">
+        /// The dte 2.
+        /// </param>
         public VsEvents(ExtensionDataModel model, IVsEnvironmentHelper environment, DTE2 dte2)
         {
             this.model = model;
             this.environment = environment;
-            this.events = dte2.Events;
-            this.documentsEvents = this.events.DocumentEvents;
+            this.SolutionEvents = dte2.Events;
+            this.DocumentsEvents = this.SolutionEvents.DocumentEvents;
 
-            this.events.SolutionEvents.Opened += this.SolutionOpened;
-            this.events.SolutionEvents.AfterClosing += this.SolutionClosed;
-            this.events.WindowEvents.WindowActivated += this.WindowActivated;
-            this.documentsEvents.DocumentSaved += this.DoumentSaved;
+            this.SolutionEvents.SolutionEvents.Opened += this.SolutionOpened;
+            this.SolutionEvents.SolutionEvents.AfterClosing += this.SolutionClosed;
+            this.SolutionEvents.WindowEvents.WindowActivated += this.WindowActivated;
+            this.DocumentsEvents.DocumentSaved += this.DoumentSaved;
         }
+
+        #endregion
+
+        #region Public Properties
 
         /// <summary>
-        /// The doument saved.
+        ///     Gets or sets the last document window with focus.
         /// </summary>
-        /// <param name="document">
-        /// The document.
-        /// </param>
-        private void DoumentSaved(Document document)
-        {
-            if (document == null)
-            {
-                return;
-            }
+        public Window LastDocumentWindowWithFocus { get; set; }
 
-            var text = this.environment.GetCurrentTextInView();
-            if (string.IsNullOrEmpty(text))
-            {
-                return;
-            }
+        #endregion
 
-            try
-            {
-                this.model.RefreshDataForResource(document.FullName);
-            }
-            catch (Exception ex)
-            {
-                VsSonarExtensionPackage.ExtensionModelData.ErrorMessage = "Something Terrible Happen";
-                VsSonarExtensionPackage.ExtensionModelData.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
-            }
-        }
-
-        /// <summary>
-        /// The solution opened.
-        /// </summary>
-        private void SolutionOpened()
-        {
-            this.model.AssociateProjectToSolution();
-
-            var text = this.environment.GetCurrentTextInView();
-            if (string.IsNullOrEmpty(text))
-            {
-                return;
-            }
-
-            var fileName = this.environment.ActiveFileFullPath();
-            this.model.RefreshDataForResource(fileName);
-        }
+        #region Public Methods and Operators
 
         /// <summary>
         /// The get property from buffer.
         /// </summary>
-        /// <param name="buffer">
+        /// <param>
         /// The buffer.
+        ///     <name>buffer</name>
         /// </param>
-        /// <typeparam name="T">
+        /// <typeparam>
+        ///     <name>T</name>
         /// </typeparam>
-        /// <returns>
-        /// The <see cref="T"/>.
-        /// </returns>
         public static T GetPropertyFromBuffer<T>(ITextBuffer buffer)
         {
             try
@@ -159,14 +124,63 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
             return default(T);
         }
 
+        #endregion
 
+        #region Methods
 
         /// <summary>
-        /// The solution closed.
+        /// The doument saved.
+        /// </summary>
+        /// <param name="document">
+        /// The document.
+        /// </param>
+        private void DoumentSaved(Document document)
+        {
+            if (document == null)
+            {
+                return;
+            }
+
+            string text = this.environment.GetCurrentTextInView();
+            if (string.IsNullOrEmpty(text))
+            {
+                return;
+            }
+
+            try
+            {
+                this.model.RefreshDataForResource(document.FullName);
+            }
+            catch (Exception ex)
+            {
+                VsSonarExtensionPackage.ExtensionModelData.ErrorMessage = "Something Terrible Happen";
+                VsSonarExtensionPackage.ExtensionModelData.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
+            }
+        }
+
+        /// <summary>
+        ///     The solution closed.
         /// </summary>
         private void SolutionClosed()
         {
             this.model.ClearProjectAssociation();
+        }
+
+        /// <summary>
+        ///     The solution opened.
+        /// </summary>
+        private void SolutionOpened()
+        {
+            this.model.AssociateProjectToSolution();
+
+            string text = this.environment.GetCurrentTextInView();
+            if (string.IsNullOrEmpty(text))
+            {
+                return;
+            }
+
+            string fileName = this.environment.ActiveFileFullPath();
+            this.model.RefreshDataForResource(fileName);
         }
 
         /// <summary>
@@ -185,7 +199,7 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
                 return;
             }
 
-            var text = this.environment.GetCurrentTextInView();
+            string text = this.environment.GetCurrentTextInView();
             if (string.IsNullOrEmpty(text))
             {
                 return;
@@ -208,9 +222,6 @@ namespace VSSonarExtension.SmartTags.BufferUpdate
             }
         }
 
-        /// <summary>
-        /// Gets or sets the last document window with focus.
-        /// </summary>
-        public Window LastDocumentWindowWithFocus { get; set; }
+        #endregion
     }
 }
