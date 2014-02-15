@@ -103,8 +103,11 @@ namespace VSSonarExtension.PackageImplementation.SmartTags.BufferUpdate
         /// The buffer.
         ///     <name>buffer</name>
         /// </param>
+        /// <param name="buffer">
+        /// The buffer.
+        /// </param>
         /// <typeparam>
-        ///     <name>T</name>
+        /// <name>T</name>
         /// </typeparam>
         public static T GetPropertyFromBuffer<T>(ITextBuffer buffer)
         {

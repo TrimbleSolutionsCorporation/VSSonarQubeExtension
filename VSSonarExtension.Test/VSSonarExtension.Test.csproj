@@ -63,9 +63,6 @@
     <Reference Include="Rhino.Mocks">
       <HintPath>..\references\Rhino.Mocks.dll</HintPath>
     </Reference>
-    <Reference Include="SonarRestService">
-      <HintPath>..\SonarRestService.Test\bin\Debug\SonarRestService.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Design" />
@@ -131,6 +128,10 @@
     <ProjectReference Include="..\ExtensionTypes\ExtensionTypes.csproj">
       <Project>{75A39A9B-06B2-4249-9D3C-C2319951BC53}</Project>
       <Name>ExtensionTypes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SonarRestService\SonarRestService.fsproj">
+      <Project>{64728a55-1166-4ec6-b066-22c4e01fc1c7}</Project>
+      <Name>SonarRestService</Name>
     </ProjectReference>
     <ProjectReference Include="..\VSSonarPlugins\VSSonarPlugins.csproj">
       <Project>{3311c918-b662-436d-8bc8-f38b447b1414}</Project>

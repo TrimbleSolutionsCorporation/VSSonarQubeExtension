@@ -1,26 +1,22 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="HighlightCoverageTagger.cs" company="Copyright © 2013 Tekla Corporation. Tekla is a Trimble Company">
-//     Copyright (C) 2013 [Jorge Costa, Jorge.Costa@tekla.com]
+// <copyright file="HighlightCoverageTagger.cs" company="">
+//   
 // </copyright>
+// <summary>
+//   This tagger will provide tags for every word in the buffer that
+//   matches the word currently under the cursor.
+// </summary>
 // --------------------------------------------------------------------------------------------------------------------
-// This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
-// as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
-// of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. 
-// You should have received a copy of the GNU Lesser General Public License along with this program; if not, write to the Free
-// Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// --------------------------------------------------------------------------------------------------------------------
-
 namespace VSSonarExtension.SmartTags.Coverage
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
-    using System.Linq;
     using System.Threading;
     using System.Windows.Threading;
+
+    using ExtensionTypes;
 
     using Microsoft.VisualStudio.Text;
     using Microsoft.VisualStudio.Text.Tagging;
@@ -38,35 +34,28 @@ namespace VSSonarExtension.SmartTags.Coverage
     {
         #region Fields
 
-        private volatile List<CoverageTag> coverageTags = new List<CoverageTag>();
-
         /// <summary>
-        /// The dispatcher.
+        ///     The dispatcher.
         /// </summary>
         private readonly Dispatcher dispatcher;
 
         /// <summary>
-        /// The dirty spans var.
+        ///     The coverage tags.
         /// </summary>
-        private List<SnapshotSpan> dirtySpansVar;
+        private volatile List<CoverageTag> coverageTags = new List<CoverageTag>();
 
         /// <summary>
-        /// The m disposed.
+        ///     The m disposed.
         /// </summary>
         private bool isDisposed;
 
         /// <summary>
-        ///     The temp coverage line.
-        /// </summary>
-        private Dictionary<int, string> tempCoverageLine;
-
-        /// <summary>
-        /// The timer.
+        ///     The timer.
         /// </summary>
         private DispatcherTimer timer;
 
         /// <summary>
-        /// The update thread.
+        ///     The update thread.
         /// </summary>
         private Thread updateThread;
 
@@ -86,7 +75,7 @@ namespace VSSonarExtension.SmartTags.Coverage
             VsSonarExtensionPackage.ExtensionModelData.PropertyChanged += this.CoverageDataChanged;
 
             this.dispatcher = Dispatcher.CurrentDispatcher;
-            this.dirtySpansVar = new List<SnapshotSpan>();
+            new List<SnapshotSpan>();
 
             try
             {
@@ -96,42 +85,7 @@ namespace VSSonarExtension.SmartTags.Coverage
             {
                 Debug.WriteLine("Problems schedulling update: " + ex.Message + "::" + ex.StackTrace);
             }
-
         }
-
-        /// <summary>
-        /// The schedule update.
-        /// </summary>
-        private void ScheduleUpdate()
-        {
-            if (this.timer == null)
-            {
-                this.timer = new DispatcherTimer(DispatcherPriority.ApplicationIdle, this.dispatcher) { Interval = TimeSpan.FromMilliseconds(500) };
-
-                this.timer.Tick += (sender, args) =>
-                {
-                    if (this.updateThread != null && this.updateThread.IsAlive)
-                    {
-                        return;
-                    }
-
-                    this.timer.Stop();
-
-                    this.updateThread = new Thread(this.UpdateDataAfterConstructor) { Name = "Spell Check", Priority = ThreadPriority.Normal };
-
-                    if (!this.updateThread.TrySetApartmentState(ApartmentState.STA))
-                    {
-                        Debug.Fail("Unable to set thread apartment state to STA, things *will* break.");
-                    }
-
-                    this.updateThread.Start();
-                };
-            }
-
-            this.timer.Stop();
-            this.timer.Start();
-        }
-
 
         #endregion
 
@@ -171,7 +125,8 @@ namespace VSSonarExtension.SmartTags.Coverage
         /// The spans.
         /// </param>
         /// <returns>
-        /// The System.Collections.Generic.IEnumerable`1[T -&gt; Microsoft.VisualStudio.Text.Tagging.ITagSpan`1[T -&gt; SmartTags.Coverage.HighlightCoverageTag]].
+        /// The System.Collections.Generic.IEnumerable`1[T -&gt; Microsoft.VisualStudio.Text.Tagging.ITagSpan`1[T -&gt;
+        ///     SmartTags.Coverage.HighlightCoverageTag]].
         /// </returns>
         public IEnumerable<ITagSpan<CoverageTag>> GetTags(NormalizedSnapshotSpanCollection spans)
         {
@@ -192,7 +147,7 @@ namespace VSSonarExtension.SmartTags.Coverage
 
             ITextSnapshot snapshot = spans[0].Snapshot;
 
-            foreach (var tag in this.coverageTags)
+            foreach (CoverageTag tag in this.coverageTags)
             {
                 ITagSpan<CoverageTag> tagSpan = tag.ToTagSpan(snapshot);
                 if (tagSpan.Span.Length == 0)
@@ -232,20 +187,20 @@ namespace VSSonarExtension.SmartTags.Coverage
                 }
 
                 var document = VsEvents.GetPropertyFromBuffer<ITextDocument>(this.SourceBuffer);
-                var resource = VsSonarExtensionPackage.ExtensionModelData.ResourceInEditor;
+                Resource resource = VsSonarExtensionPackage.ExtensionModelData.ResourceInEditor;
 
                 if (resource == null || document == null)
                 {
                     return;
                 }
 
-
                 if (!document.FilePath.Replace('\\', '/').EndsWith(resource.Lname, StringComparison.OrdinalIgnoreCase))
                 {
                     return;
                 }
 
-                var coverageLine = VsSonarExtensionPackage.ExtensionModelData.GetCoverageInEditor(this.SourceBuffer.CurrentSnapshot.GetText());
+                Dictionary<int, CoverageElement> coverageLine =
+                    VsSonarExtensionPackage.ExtensionModelData.GetCoverageInEditor(this.SourceBuffer.CurrentSnapshot.GetText());
                 this.coverageTags.Clear();
 
                 if (coverageLine.Count == 0)
@@ -260,7 +215,6 @@ namespace VSSonarExtension.SmartTags.Coverage
                 }
 
                 this.RefreshTags();
-
             }
             catch (Exception ex)
             {
@@ -269,24 +223,40 @@ namespace VSSonarExtension.SmartTags.Coverage
         }
 
         /// <summary>
-        /// The refresh tags.
+        /// The dispose.
         /// </summary>
-        private void RefreshTags()
+        /// <param name="disposing">
+        /// The disposing.
+        /// </param>
+        private void Dispose(bool disposing)
         {
-            this.dispatcher.Invoke(
-            () =>
+            if (this.isDisposed)
             {
-                var tempEvent = this.TagsChanged;
-                if (tempEvent != null)
-                {
-                    tempEvent(
-                        this,
-                        new SnapshotSpanEventArgs(
-                            new SnapshotSpan(this.SourceBuffer.CurrentSnapshot, 0, this.SourceBuffer.CurrentSnapshot.Length)));
-                }
-            });
+                return;
+            }
+
+            if (disposing)
+            {
+                VsSonarExtensionPackage.ExtensionModelData.PropertyChanged -= this.CoverageDataChanged;
+
+                this.SourceBuffer = null;
+            }
+
+            this.isDisposed = true;
         }
 
+        /// <summary>
+        /// The get coverage tags in span for line.
+        /// </summary>
+        /// <param name="data">
+        /// The data.
+        /// </param>
+        /// <param name="line">
+        /// The line.
+        /// </param>
+        /// <returns>
+        /// The <see cref="IEnumerable"/>.
+        /// </returns>
         private IEnumerable<CoverageTag> GetCoverageTagsInSpanForLine(Dictionary<int, CoverageElement> data, int line)
         {
             if (data.Count == 0)
@@ -299,7 +269,7 @@ namespace VSSonarExtension.SmartTags.Coverage
                 yield break;
             }
 
-            var lineToUseinVs = line;
+            int lineToUseinVs = line;
             if (lineToUseinVs < 0)
             {
                 yield break;
@@ -321,26 +291,55 @@ namespace VSSonarExtension.SmartTags.Coverage
         }
 
         /// <summary>
-        /// The dispose.
+        ///     The refresh tags.
         /// </summary>
-        /// <param name="disposing">
-        /// The disposing.
-        /// </param>
-        private void Dispose(bool disposing)
+        private void RefreshTags()
         {
-            if (this.isDisposed)
+            this.dispatcher.Invoke(
+                () =>
+                    {
+                        EventHandler<SnapshotSpanEventArgs> tempEvent = this.TagsChanged;
+                        if (tempEvent != null)
+                        {
+                            tempEvent(
+                                this, 
+                                new SnapshotSpanEventArgs(
+                                    new SnapshotSpan(this.SourceBuffer.CurrentSnapshot, 0, this.SourceBuffer.CurrentSnapshot.Length)));
+                        }
+                    });
+        }
+
+        /// <summary>
+        ///     The schedule update.
+        /// </summary>
+        private void ScheduleUpdate()
+        {
+            if (this.timer == null)
             {
-                return;
+                this.timer = new DispatcherTimer(DispatcherPriority.ApplicationIdle, this.dispatcher) { Interval = TimeSpan.FromMilliseconds(500) };
+
+                this.timer.Tick += (sender, args) =>
+                    {
+                        if (this.updateThread != null && this.updateThread.IsAlive)
+                        {
+                            return;
+                        }
+
+                        this.timer.Stop();
+
+                        this.updateThread = new Thread(this.UpdateDataAfterConstructor) { Name = "Spell Check", Priority = ThreadPriority.Normal };
+
+                        if (!this.updateThread.TrySetApartmentState(ApartmentState.STA))
+                        {
+                            Debug.Fail("Unable to set thread apartment state to STA, things *will* break.");
+                        }
+
+                        this.updateThread.Start();
+                    };
             }
 
-            if (disposing)
-            {
-                    VsSonarExtensionPackage.ExtensionModelData.PropertyChanged -= this.CoverageDataChanged;
-
-                this.SourceBuffer = null;
-            }
-
-            this.isDisposed = true;
+            this.timer.Stop();
+            this.timer.Start();
         }
 
         /// <summary>
