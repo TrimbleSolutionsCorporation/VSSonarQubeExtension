@@ -44,4 +44,3 @@ namespace VSSonarExtension.VSControls
         }
     }
 }
-

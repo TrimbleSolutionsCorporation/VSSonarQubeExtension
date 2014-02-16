@@ -69,6 +69,6 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="IPlugin"/>.
         /// </returns>
-        IPlugin PickPluginFromMultipleSupportedPlugins(List<IPlugin> pluginsToUse);
+        IPlugin PickPluginFromMultipleSupportedPlugins(ReadOnlyCollection<IPlugin> pluginsToUse);
     }
 }

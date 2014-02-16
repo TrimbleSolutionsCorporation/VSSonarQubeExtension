@@ -1,27 +1,18 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TestMainWindow.cs" company="Copyright © 2013 Tekla Corporation. Tekla is a Trimble Company">
-//     Copyright (C) 2013 [Jorge Costa, Jorge.Costa@tekla.com]
+// <copyright file="TestMainWindow.cs" company="">
+//   
 // </copyright>
+// <summary>
+//   The comment on issue command test.
+// </summary>
 // --------------------------------------------------------------------------------------------------------------------
-// This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
-// as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
-// of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. 
-// You should have received a copy of the GNU Lesser General Public License along with this program; if not, write to the Free
-// Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// --------------------------------------------------------------------------------------------------------------------
-
 namespace VSSonarExtension.Test.TestView
 {
-    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.IO;
     using System.Threading;
     using System.Windows;
-
-    using ExtensionHelpers;
 
     using ExtensionTypes;
 
@@ -37,18 +28,24 @@ namespace VSSonarExtension.Test.TestView
     using VSSonarPlugins;
 
     /// <summary>
-    /// The comment on issue command test.
+    ///     The comment on issue command test.
     /// </summary>
     [TestFixture]
     public class TestMainWindow
     {
+        #region Fields
+
         /// <summary>
-        /// The model.
+        ///     The model.
         /// </summary>
         private ExtensionDataModel model;
 
+        #endregion
+
+        #region Public Methods and Operators
+
         /// <summary>
-        /// The should not throw any exceptions when creating issues window.
+        ///     The should not throw any exceptions when creating issues window.
         /// </summary>
         [Test]
         public void ShouldNotThrowAnyExceptionsWhenCreatingIssuesWindow()
@@ -60,9 +57,19 @@ namespace VSSonarExtension.Test.TestView
         }
 
         /// <summary>
-        /// The test window.
+        ///     The test plugins option window.
         /// </summary>
-        //[Test]
+        public void TestPluginsOptionWindow()
+        {
+            var t = new Thread(this.Threadprc);
+            t.SetApartmentState(ApartmentState.STA);
+            t.Start();
+            t.Join();
+        }
+
+        /// <summary>
+        ///     The test window.
+        /// </summary>
         public void TestWindow()
         {
             var mocks = new MockRepository();
@@ -73,7 +80,8 @@ namespace VSSonarExtension.Test.TestView
             // set expectations
             using (mocks.Record())
             {
-                SetupResult.For(mockHttpReq.HttpSonarGetRequest(config, "/api/issues/search?components=resource")).Return(File.ReadAllText("TestData/issuessearchbycomponent.txt"));
+                SetupResult.For(mockHttpReq.HttpSonarGetRequest(config, "/api/issues/search?components=resource"))
+                    .Return(File.ReadAllText("TestData/issuessearchbycomponent.txt"));
                 SetupResult.For(mockHttpReq.HttpSonarGetRequest(config, "/api/users/search")).Return(File.ReadAllText("TestData/userList.txt"));
             }
 
@@ -81,94 +89,41 @@ namespace VSSonarExtension.Test.TestView
             var issues = service.GetIssuesInResource(config, "resource");
             var associatedProject = new Resource { Key = "core:Common" };
 
-            this.model = new ExtensionDataModel(service, mockVsHelpers, associatedProject) {};
-            var t = new Thread(new ThreadStart(this.Threadprc));
-            t.SetApartmentState(ApartmentState.STA);
-            t.Start();
-            t.Join();    
-        }
-
-        private class DummyLocalAnalyserExtension : IPlugin
-        {
-            private IPluginsOptions pluginOptions = new VSSonarExtension.Test.TestView.DummyOptionsController();
-
-            public IPluginsOptions GetUsePluginControlOptions()
-            {
-                return this.pluginOptions;
-            }
-
-            public string GetKey()
-            {
-                return "dummy plugin";
-            }
-
-            public string GetKey(ConnectionConfiguration configuration)
-            {
-                throw new NotImplementedException();
-            }
-
-            public IPluginsOptions GetPluginControlOptions(ConnectionConfiguration configuration, Resource project)
-            {
-                throw new NotImplementedException();
-            }
-
-            public IPluginsOptions GetPluginControlOptions(ConnectionConfiguration configuration)
-            {
-                throw new NotImplementedException();
-            }
-
-            public bool IsSupported(ConnectionConfiguration configuration, string resource)
-            {
-                throw new NotImplementedException();
-            }
-
-            public bool IsSupported(ConnectionConfiguration configuration, Resource resource)
-            {
-                throw new NotImplementedException();
-            }
-
-            public string GetResourceKey(VsProjectItem projectItem, string projectKey)
-            {
-                throw new NotImplementedException();
-            }
-
-            public ILocalAnalyserExtension GetLocalAnalysisExtension(ConnectionConfiguration configuration, Resource project, double sonarVersion)
-            {
-                throw new NotImplementedException();
-            }
-
-            public ILocalAnalyserExtension GetLocalAnalysisExtension(ConnectionConfiguration configuration, Resource project)
-            {
-                throw new NotImplementedException();
-            }
-
-            public IServerAnalyserExtension GetServerAnalyserExtension(ConnectionConfiguration configuration, Resource project)
-            {
-                throw new NotImplementedException();
-            }
-
-            public Dictionary<string, VsLicense> GetLicenses(ConnectionConfiguration configuration)
-            {
-                throw new NotImplementedException();
-            }
-
-            public string GenerateTokenId(ConnectionConfiguration configuration)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        //[Test]
-        public void TestPluginsOptionWindow()
-        {
-            var t = new Thread(new ThreadStart(this.Threadprc));
+            this.model = new ExtensionDataModel(service, mockVsHelpers, associatedProject);
+            var t = new Thread(this.Threadprc);
             t.SetApartmentState(ApartmentState.STA);
             t.Start();
             t.Join();
         }
 
+        #endregion
+
+        #region Methods
+
         /// <summary>
-        /// The threadprc.
+        ///     The threadprc.
+        /// </summary>
+        private void CreateMainIssueWindow()
+        {
+            var win = new Window();
+            var view = new IssueWindow(this.model);
+            win.Content = view;
+            view.UpdateDataContext(this.model);
+        }
+
+        /// <summary>
+        ///     The threadprc.
+        /// </summary>
+        private void Threadprc()
+        {
+            var win = new Window();
+            var view = new IssueWindow(this.model);
+            win.Content = view;
+            win.ShowDialog();
+        }
+
+        /// <summary>
+        ///     The threadprc.
         /// </summary>
         private void WindowPlugins()
         {
@@ -180,26 +135,132 @@ namespace VSSonarExtension.Test.TestView
             windowPlugins.ShowDialog();
         }
 
-        /// <summary>
-        /// The threadprc.
-        /// </summary>
-        private void CreateMainIssueWindow()
-        {
-            var win = new Window();
-            var view = new IssueWindow(this.model);
-            win.Content = view;
-            view.UpdateDataContext(this.model);
-        }
+        #endregion
 
         /// <summary>
-        /// The threadprc.
+        ///     The dummy local analyser extension.
         /// </summary>
-        private void Threadprc()
+        private class DummyLocalAnalyserExtension : IPlugin
         {
-            var win = new Window();
-            var view = new IssueWindow(this.model);
-            win.Content = view;
-            win.ShowDialog();
+            #region Public Methods and Operators
+
+            /// <summary>
+            /// The generate token id.
+            /// </summary>
+            /// <param name="configuration">
+            /// The configuration.
+            /// </param>
+            /// <returns>
+            /// The <see cref="string"/>.
+            /// </returns>
+            public string GenerateTokenId(ConnectionConfiguration configuration)
+            {
+                return string.Empty;
+            }
+
+            /// <summary>
+            /// The get key.
+            /// </summary>
+            /// <param name="configuration">
+            /// The configuration.
+            /// </param>
+            /// <returns>
+            /// The <see cref="string"/>.
+            /// </returns>
+            public string GetKey(ConnectionConfiguration configuration)
+            {
+                return string.Empty;
+            }
+
+            /// <summary>
+            /// The get licenses.
+            /// </summary>
+            /// <param name="configuration">
+            /// The configuration.
+            /// </param>
+            /// <returns>
+            /// The <see>
+            ///         <cref>Dictionary</cref>
+            ///     </see>
+            ///     .
+            /// </returns>
+            public Dictionary<string, VsLicense> GetLicenses(ConnectionConfiguration configuration)
+            {
+                return null;
+            }
+
+            /// <summary>
+            /// The get local analysis extension.
+            /// </summary>
+            /// <param name="configuration">
+            /// The configuration.
+            /// </param>
+            /// <param name="project">
+            /// The project.
+            /// </param>
+            /// <param name="sonarVersion">
+            /// The sonar version.
+            /// </param>
+            /// <returns>
+            /// The <see cref="ILocalAnalyserExtension"/>.
+            /// </returns>
+            public ILocalAnalyserExtension GetLocalAnalysisExtension(ConnectionConfiguration configuration, Resource project, double sonarVersion)
+            {
+                return null;
+            }
+
+            /// <summary>
+            /// The get plugin control options.
+            /// </summary>
+            /// <param name="configuration">
+            /// The configuration.
+            /// </param>
+            /// <param name="project">
+            /// The project.
+            /// </param>
+            /// <returns>
+            /// The <see cref="IPluginsOptions"/>.
+            /// </returns>
+            public IPluginsOptions GetPluginControlOptions(ConnectionConfiguration configuration, Resource project)
+            {
+                return null;
+            }
+
+            /// <summary>
+            /// The get resource key.
+            /// </summary>
+            /// <param name="projectItem">
+            /// The project item.
+            /// </param>
+            /// <param name="projectKey">
+            /// The project key.
+            /// </param>
+            /// <returns>
+            /// The <see cref="string"/>.
+            /// </returns>
+            public string GetResourceKey(VsProjectItem projectItem, string projectKey)
+            {
+                return string.Empty;
+            }
+
+            /// <summary>
+            /// The is supported.
+            /// </summary>
+            /// <param name="configuration">
+            /// The configuration.
+            /// </param>
+            /// <param name="project">
+            /// The project.
+            /// </param>
+            /// <returns>
+            /// The <see cref="bool"/>.
+            /// </returns>
+            public bool IsSupported(ConnectionConfiguration configuration, Resource project)
+            {
+                return true;
+            }
+
+            #endregion
         }
     }
 }

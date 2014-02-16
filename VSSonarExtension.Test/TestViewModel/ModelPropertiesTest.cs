@@ -136,7 +136,6 @@ namespace VSSonarExtension.Test.TestViewModel
         [Test]
         public void TestSetIssuesListWithCommentsWithRefreshView()
         {
-
             var issueWithId = new Issue { Id = 20, Component = "asdaskjd:sdaskjd:aksjdkas/asdkasj.cs", Key = new Guid() };
             issueWithId.Comments.Add(new Comment());
             var list = new List<Issue> { issueWithId };

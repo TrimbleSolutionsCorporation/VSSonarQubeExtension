@@ -15,10 +15,8 @@
 namespace ExtensionHelpers.Test.NonVSTests
 {
     using System;
-    using System.Collections.Generic;
     using System.IO;
     using ExtensionHelpers;
-    using ExtensionTypes;
 
     using NUnit.Framework;
 
@@ -51,29 +49,6 @@ namespace ExtensionHelpers.Test.NonVSTests
             var destination = Path.Combine(this.sampleDataPath, "LocalSource.txt");
             var rep = VsSonarUtils.GetSourceDiffFromStrings(File.ReadAllText(source), File.ReadAllText(destination));
             Assert.AreEqual(9, rep.Count);
-        }
-
-        /// <summary>
-        /// The test convert open issues to local source.
-        /// </summary>
-        [Test]
-        public void TestConvertOpenIssuesToLocalSourceSomeLinesAdded()
-        {
-            var source = Path.Combine(this.sampleDataPath, "OriginalFileTest.txt");
-            var destination = Path.Combine(this.sampleDataPath, "ModifyFileTest.txt");
-            var rep = VsSonarUtils.GetSourceDiffFromStrings(File.ReadAllText(source), File.ReadAllText(destination));
-
-            var issueList = new List<Issue>
-                                {
-                                    new Issue { Line = 8, Status = "OPEN" },
-                                    new Issue { Line = 2, Status = "OPEN" },
-                                    new Issue { Line = 2, Status = "CLOSE" }
-                                };
-
-            //var convertedIssue = VsSonarUtils.ConvertOpenIssuesToLocalSource(issueList, rep);
-            //Assert.AreEqual(2, convertedIssue.Count);
-            //Assert.AreEqual(2, convertedIssue[0].Line);
-            //Assert.AreEqual(24, convertedIssue[1].Line);
         }
     }
 }

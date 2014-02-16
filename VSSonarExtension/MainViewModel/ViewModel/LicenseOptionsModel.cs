@@ -63,7 +63,9 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             set
             {
                 this.availableLicenses = value;
+                this.OnPropertyChanged("SelectedPluginItem");
                 this.OnPropertyChanged("AvailableLicenses");
+                this.selectedPluginItem = "License Manager";
             }
         }
 
@@ -148,12 +150,14 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// <summary>
         /// The refresh licenses.
         /// </summary>
-        public void GetAvailableLicenses()
+        /// <returns>
+        /// The <see>
+        ///         <cref>ObservableCollection</cref>
+        ///     </see>
+        ///     .
+        /// </returns>
+        public ObservableCollection<VsLicense> GetLicensesFromServer()
         {
-            this.optionsInView = null;
-            this.OnPropertyChanged("OptionsInView");
-            this.PluginInView = null;
-            this.OnPropertyChanged("PluginInView");
             var licenses = new ObservableCollection<VsLicense>();
 
             if (this.plugins != null)
@@ -171,9 +175,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                 }
             }
 
-            this.AvailableLicenses = licenses;
-            this.selectedPluginItem = "License Manager";
-            this.OnPropertyChanged("SelectedPluginItem");
+            return licenses;
         }
     }
 }

@@ -26,15 +26,6 @@ namespace VSSonarExtension.Test
     public class PackageTest
     {
         /// <summary>
-        /// The create instance.
-        /// </summary>
-        [Test]
-        public void CreateInstance()
-        {
-            new VsSonarExtensionPackage();
-        }
-
-        /// <summary>
         /// The is i vs package.
         /// </summary>
         [Test]
@@ -56,16 +47,6 @@ namespace VSSonarExtension.Test
 
             // Unsite the package
             Assert.AreEqual(0, package.SetSite(null), "SetSite(null) did not return S_OK");
-        }
-
-        /// <summary>
-        /// The set site.
-        /// </summary>
-        [Test]
-        public void TestReal()
-        {
-            // Create the package
-            var vsPackage = new VsSonarExtensionPackage() as IVsPackage;
         }
     }
 }

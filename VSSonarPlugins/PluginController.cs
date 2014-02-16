@@ -137,17 +137,9 @@ namespace VSSonarPlugins
                 return null;
             }
 
-            var pluginsToUse = new List<IPlugin>();
+            var pluginsToUse = this.loadedPlugins.Where(plugin => plugin.IsSupported(configuration, project)).ToList();
 
-            foreach (var plugin in this.loadedPlugins)
-            {
-                if (plugin.IsSupported(configuration, project))
-                {
-                    pluginsToUse.Add(plugin);
-                }
-            }
-
-            return this.PickPluginFromMultipleSupportedPlugins(pluginsToUse);
+            return this.PickPluginFromMultipleSupportedPlugins(new ReadOnlyCollection<IPlugin>(pluginsToUse));
         }
 
         /// <summary>
@@ -181,7 +173,7 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="IPlugin"/>.
         /// </returns>
-        public IPlugin PickPluginFromMultipleSupportedPlugins(List<IPlugin> pluginsToUse)
+        public IPlugin PickPluginFromMultipleSupportedPlugins(ReadOnlyCollection<IPlugin> pluginsToUse)
         {
             if (pluginsToUse != null && pluginsToUse.Any())
             {

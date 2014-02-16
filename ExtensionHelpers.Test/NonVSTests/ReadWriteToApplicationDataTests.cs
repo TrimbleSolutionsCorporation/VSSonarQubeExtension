@@ -142,7 +142,6 @@ namespace ExtensionHelpers.Test.NonVSTests
             Assert.AreEqual("value3", value["data3"]);
         }
 
-
         /// <summary>
         /// The test write of option to file.
         /// </summary>
@@ -157,7 +156,6 @@ namespace ExtensionHelpers.Test.NonVSTests
                 writer.Write("key=data,value1\r\n");
                 writer.Write("key=data,value2\r\n");
             }
-
 
             var value = vshelper.ReadAllOptionsForPluginOptionInApplicationData("key");
             Assert.AreEqual(1, value.Count);

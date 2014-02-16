@@ -20,6 +20,8 @@ namespace VSSonarExtension.PackageImplementation
 
     using SonarRestService;
 
+    using VSSonarExtension.PackageImplementation.SmartTags.BufferUpdate;
+
     using VSSonarPlugins;
 
     /// <summary>
@@ -61,5 +63,10 @@ namespace VSSonarExtension.PackageImplementation
         /// The visual studio interface.
         /// </summary>
         private IVsEnvironmentHelper visualStudioInterface;
+
+        /// <summary>
+        /// Gets or sets the vs events.
+        /// </summary>
+        public VsEvents VsEvents { get; set; }
     }
 }

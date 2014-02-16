@@ -14,7 +14,6 @@
 
 namespace VSSonarExtension.Test.TestView
 {
-    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Windows.Controls;
@@ -24,43 +23,49 @@ namespace VSSonarExtension.Test.TestView
     using VSSonarPlugins;
 
     /// <summary>
-    /// The dummy options controller.
+    ///     The dummy options controller.
     /// </summary>
     public class DummyOptionsController : IPluginsOptions, INotifyPropertyChanged
     {
+        #region Fields
+
         /// <summary>
-        /// The text box.
+        /// The dummy control.
+        /// </summary>
+        private UserControl dummyControl;
+
+        /// <summary>
+        ///     The text box.
         /// </summary>
         private string textBox;
 
+        #endregion
+
+        #region Constructors and Destructors
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="DummyOptionsController"/> class.
+        ///     Initializes a new instance of the <see cref="DummyOptionsController" /> class.
         /// </summary>
         public DummyOptionsController()
         {
             this.textBox = "sdsasd";
         }
 
-        private UserControl dummyControl = null;
+        #endregion
+
+        #region Public Events
 
         /// <summary>
-        /// The get user control options.
+        ///     The property changed.
         /// </summary>
-        /// <returns>
-        /// The <see cref="UserControl"/>.
-        /// </returns>
-        public UserControl GetUserControlOptions()
-        {
-            if (this.dummyControl == null)
-            {
-                this.dummyControl = new UserControl();
-            }
+        public event PropertyChangedEventHandler PropertyChanged;
 
-            return this.dummyControl;
-        }
+        #endregion
+
+        #region Public Properties
 
         /// <summary>
-        /// Gets or sets the text box.
+        ///     Gets or sets the text box.
         /// </summary>
         public string TextBox
         {
@@ -76,18 +81,19 @@ namespace VSSonarExtension.Test.TestView
             }
         }
 
-        public UserControl GetUserControlOptions(Resource project)
-        {
-            throw new NotImplementedException();
-        }
+        #endregion
+
+        #region Public Methods and Operators
 
         /// <summary>
-        /// The get options.
+        ///     The get options.
         /// </summary>
         /// <returns>
-        /// The <see>
-        ///     <cref>Dictionary</cref>
-        /// </see></returns>
+        ///     The
+        ///     <see>
+        ///         <cref>Dictionary</cref>
+        ///     </see>
+        /// </returns>
         public Dictionary<string, string> GetOptions()
         {
             var options = new Dictionary<string, string>();
@@ -96,32 +102,66 @@ namespace VSSonarExtension.Test.TestView
         }
 
         /// <summary>
+        ///     The get user control options.
+        /// </summary>
+        /// <returns>
+        ///     The <see cref="UserControl" />.
+        /// </returns>
+        public UserControl GetUserControlOptions()
+        {
+            if (this.dummyControl == null)
+            {
+                this.dummyControl = new UserControl();
+            }
+
+            return this.dummyControl;
+        }
+
+        /// <summary>
+        /// The get user control options.
+        /// </summary>
+        /// <param name="project">
+        /// The project.
+        /// </param>
+        /// <returns>
+        /// The <see cref="UserControl"/>.
+        /// </returns>
+        public UserControl GetUserControlOptions(Resource project)
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// The is enabled.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="bool"/>.
+        /// </returns>
+        public bool IsEnabled()
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// The reset defaults.
+        /// </summary>
+        public void ResetDefaults()
+        {
+        }
+
+        /// <summary>
         /// The set options.
         /// </summary>
         /// <param name="options">
         /// The options.
         /// </param>
-        /// <exception cref="NotImplementedException">
-        /// </exception>
         public void SetOptions(Dictionary<string, string> options)
         {
-            throw new NotImplementedException();
         }
 
-        public bool IsEnabled()
-        {
-            throw new NotImplementedException();
-        }
+        #endregion
 
-        public void ResetDefaults()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// The property changed.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
+        #region Methods
 
         /// <summary>
         /// The on property changed.
@@ -132,7 +172,12 @@ namespace VSSonarExtension.Test.TestView
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChangedEventHandler handler = this.PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
+
+        #endregion
     }
 }

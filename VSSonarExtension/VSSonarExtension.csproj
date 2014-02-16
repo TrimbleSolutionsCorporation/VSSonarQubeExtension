@@ -147,6 +147,7 @@
     <Compile Include="MainView\PluginOptionsWindow.xaml.cs">
       <DependentUpon>PluginOptionsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MainView\SampleData\SampleDataForButtons\Item.cs" />
     <Compile Include="MainView\SampleData\SampleDataForButtons\SampleDataForButtons.xaml.cs">
       <DependentUpon>SampleDataForButtons.xaml</DependentUpon>
     </Compile>

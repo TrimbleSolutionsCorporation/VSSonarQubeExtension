@@ -63,11 +63,6 @@ namespace VSSonarExtension.Test.TestViewModel
             private IPluginController pluginController;
 
             /// <summary>
-            /// The extension.
-            /// </summary>
-            private IServerAnalyserExtension extension;
-
-            /// <summary>
             /// The plugin.
             /// </summary>
             private IPlugin plugin;
@@ -81,10 +76,8 @@ namespace VSSonarExtension.Test.TestViewModel
                 this.mocks = new MockRepository();
                 this.service = this.mocks.Stub<ISonarRestService>();
                 this.vshelper = this.mocks.Stub<IVsEnvironmentHelper>();
-                this.extension = this.mocks.Stub<IServerAnalyserExtension>();
                 this.pluginController = this.mocks.Stub<IPluginController>();
                 this.plugin = this.mocks.Stub<IPlugin>();
-
 
                 using (this.mocks.Record())
                 {
@@ -150,13 +143,11 @@ namespace VSSonarExtension.Test.TestViewModel
                     .Repeat.Twice();
 
                 this.plugin.Expect(mp => mp.IsSupported(Arg<ConnectionConfiguration>.Is.Anything, Arg<Resource>.Is.Anything)).Return(true).Repeat.Once();
-                this.plugin.Expect(mp => mp.GetServerAnalyserExtension(Arg<ConnectionConfiguration>.Is.Anything, Arg<Resource>.Is.Anything)).Return(this.extension).Repeat.Once();
                 this.plugin.Expect(
                     mp =>
                     mp.GetResourceKey(
                         Arg<VsProjectItem>.Is.Anything,
                         Arg<string>.Is.Anything)).Return("key").Repeat.Once();
-
 
                 var data = new ExtensionDataModel(this.service, this.vshelper, null);
                 data.AssociatedProject = new Resource { Key = "KEY"};

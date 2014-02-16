@@ -47,7 +47,6 @@
   <ItemGroup>
     <Compile Include="IMenuCommandPlugin.cs" />
     <Compile Include="IPluginController.cs" />
-    <Compile Include="IServerAnalyserExtension.cs" />
     <Compile Include="ILocalAnalyserExtension.cs" />
     <Compile Include="IPlugin.cs" />
     <Compile Include="IPluginsOptions.cs" />

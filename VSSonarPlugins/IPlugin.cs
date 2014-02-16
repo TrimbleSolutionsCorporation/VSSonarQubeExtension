@@ -96,20 +96,6 @@ namespace VSSonarPlugins
         ILocalAnalyserExtension GetLocalAnalysisExtension(ConnectionConfiguration configuration, Resource project, double sonarVersion);
 
         /// <summary>
-        /// The get server analyser extensions.
-        /// </summary>
-        /// <param name="configuration">
-        /// The configuration.
-        /// </param>
-        /// <param name="project">
-        /// The project.
-        /// </param>
-        /// <returns>
-        /// The <see cref="List"/>.
-        /// </returns>
-        IServerAnalyserExtension GetServerAnalyserExtension(ConnectionConfiguration configuration, Resource project);
-
-        /// <summary>
         /// The get licenses.
         /// </summary>
         /// <param name="configuration">

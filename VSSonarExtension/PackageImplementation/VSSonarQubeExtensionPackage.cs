@@ -190,7 +190,7 @@ namespace VSSonarExtension.PackageImplementation
 
                 this.visualStudioInterface = new VsPropertiesHelper(this.dte2);
                 this.restService = new SonarRestService(new JsonSonarConnector());
-                new VsEvents(ExtensionModelData, this.visualStudioInterface, this.dte2);
+                this.VsEvents = new VsEvents(ExtensionModelData, this.visualStudioInterface, this.dte2);
 
                 // int configuration options
                 this.InitOptions();
@@ -203,8 +203,6 @@ namespace VSSonarExtension.PackageImplementation
                     ExtensionModelData.VSPackage = this;
 
                     this.UpdateModelInToolWindow(ExtensionModelData);
-
-                    //this.CloseToolWindow();
                 }
                 catch (Exception ex)
                 {
@@ -269,7 +267,6 @@ namespace VSSonarExtension.PackageImplementation
             {
                 return;
             }
-
 
             var menuCommandId = new CommandID(GuidList.GuidVSSonarExtensionCmdSet, (int)PkgCmdIdList.CmdidReviewsCommand);
             this.sonarReviewsCommand = new OleMenuCommand(this.ShowIssuesToolWindow, menuCommandId);

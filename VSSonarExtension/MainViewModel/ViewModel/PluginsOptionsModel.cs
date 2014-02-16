@@ -187,7 +187,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                     this.IsLicenseEnable = false;
                     if (value.Equals("Licenses"))
                     {
-                        this.GetAvailableLicenses();
+                        this.AvailableLicenses = this.GetLicensesFromServer();
                         this.IsLicenseEnable = true;
                         return;
                     }
