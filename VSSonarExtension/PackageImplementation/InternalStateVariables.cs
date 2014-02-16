@@ -16,13 +16,9 @@ namespace VSSonarExtension.PackageImplementation
 {
     using EnvDTE80;
 
-    using ExtensionHelpers;
-
     using Microsoft.VisualStudio.Shell;
 
     using SonarRestService;
-
-    using VSSonarExtension.PackageImplementation.SmartTags.BufferUpdate;
 
     using VSSonarPlugins;
 
@@ -37,32 +33,18 @@ namespace VSSonarExtension.PackageImplementation
         private DTE2 dte2;
 
         /// <summary>
-        /// The sonar coverage menu command.
-        /// </summary>
-        private OleMenuCommand sonarCoverageMenuCommand;
-
-        /// <summary>
-        /// The sonar coverage command bar.
-        /// </summary>
-        private OleMenuCommand sonarCoverageCommandBar;
-
-        /// <summary>
-        /// The sonar source diff command bar.
-        /// </summary>
-        private OleMenuCommand sonarSourceDiffCommandBar;
-
-        /// <summary>
         /// The sonar reviews command bar.
         /// </summary>
         private OleMenuCommand sonarReviewsCommandBar;
-        
-        /// <summary>
-        /// The sonar source diff menu command.
-        /// </summary>
-        private OleMenuCommand sonarSourceDiffMenuCommand;
 
+        /// <summary>
+        /// The run analysis cmd.
+        /// </summary>
         private OleMenuCommand runAnalysisCmd;
 
+        /// <summary>
+        /// The run analysis in project cmd.
+        /// </summary>
         private OleMenuCommand runAnalysisInProjectCmd;
 
         /// <summary>
@@ -79,11 +61,5 @@ namespace VSSonarExtension.PackageImplementation
         /// The visual studio interface.
         /// </summary>
         private IVsEnvironmentHelper visualStudioInterface;
-
-        /// <summary>
-        /// The vs events.
-        /// </summary>
-        private VsEvents vsEvents;
-
     }
 }

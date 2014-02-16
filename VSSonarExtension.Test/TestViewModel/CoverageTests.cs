@@ -85,7 +85,7 @@ namespace VSSonarExtension.Test.TestViewModel
             {
                 var data = new ExtensionDataModel(this.service, this.vshelper, null);
                 var sourceCoverage = new Dictionary<int, CoverageElement>();
-                Assert.AreEqual(sourceCoverage, data.GetCoverageInEditor(""));
+                Assert.AreEqual(sourceCoverage, data.GetCoverageInEditor(string.Empty));
             }
 
             /// <summary>
@@ -98,7 +98,7 @@ namespace VSSonarExtension.Test.TestViewModel
                 var sourceCoverage = new SourceCoverage();
                 data.CoverageInEditorEnabled = false;
                 Assert.IsFalse(data.CoverageInEditorEnabled);
-                Assert.AreNotEqual(sourceCoverage, data.GetCoverageInEditor(""));
+                Assert.AreNotEqual(sourceCoverage, data.GetCoverageInEditor(string.Empty));
             }
         }
     }

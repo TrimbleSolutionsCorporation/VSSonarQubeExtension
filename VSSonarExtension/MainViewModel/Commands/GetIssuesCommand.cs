@@ -105,80 +105,126 @@ namespace VSSonarExtension.MainViewModel.Commands
 
             if (header.Equals("All Issues"))
             {
-                this.model.QueryForIssuesIsRunning = true;
-                var bw = new BackgroundWorker { WorkerReportsProgress = true };
-                bw.RunWorkerCompleted += delegate { this.model.QueryForIssuesIsRunning = false; };
-
-                bw.DoWork += delegate
-                    {
-                        this.model.ReplaceAllIssuesInCache(this.service.GetIssuesForProjects(this.model.UserConfiguration, this.model.AssociatedProject.Key));                        
-                    };
-
-                bw.RunWorkerAsync();
+                this.GetAllIssues();
                 return;
             }
 
             if (header.Equals("All Issues Since Last Analysis"))
             {
-                this.model.QueryForIssuesIsRunning = true;
-                var bw = new BackgroundWorker { WorkerReportsProgress = true };
-                bw.RunWorkerCompleted += delegate { this.model.QueryForIssuesIsRunning = false; };
-
-                bw.DoWork += delegate
-                {
-                    this.model.ReplaceAllIssuesInCache(this.service.GetIssuesForProjectsCreatedAfterDate(this.model.UserConfiguration, this.model.AssociatedProject.Key, this.model.AssociatedProject.Date));
-                };
-                
-                bw.RunWorkerAsync();
+                this.GetAllIssuesSinceLastAnalysis();
                 return;
             }
 
             if (header.Equals("My Issues In Project"))
             {
-                this.model.QueryForIssuesIsRunning = true;
-                var bw = new BackgroundWorker { WorkerReportsProgress = true };
-                bw.RunWorkerCompleted += delegate { this.model.QueryForIssuesIsRunning = false; };
-
-                bw.DoWork += delegate
-                {
-                    this.model.ReplaceAllIssuesInCache(
-                        this.service.GetIssuesByAssigneeInProject(this.model.UserConfiguration, this.model.AssociatedProject.Key, this.model.UserConfiguration.Username));
-                };
-
-                bw.RunWorkerAsync();
+                this.GetAllIssuesInProject();
                 return;
             }
 
             if (header.Equals("All My Issues"))
             {
-                this.model.QueryForIssuesIsRunning = true;
-                var bw = new BackgroundWorker { WorkerReportsProgress = true };
-                bw.RunWorkerCompleted += delegate { this.model.QueryForIssuesIsRunning = false; };
-
-                bw.RunWorkerAsync();
+                this.GetAllMyIssues();
                 return;
             }
 
             if (header.Equals("Update Issues"))
             {
-                this.model.QueryForIssuesIsRunning = true;
-                var bw = new BackgroundWorker { WorkerReportsProgress = true };
-                bw.RunWorkerCompleted += delegate { this.model.QueryForIssuesIsRunning = false; };
-
-                bw.DoWork += delegate
-                {
-                    this.model.RetrieveIssuesUsingCurrentFilter();
-                };
-
-                bw.RunWorkerAsync();
+                this.GetIssuesUsingCurrentFilter();
                 return;
             }
 
             if (header.Equals("Apply Filter"))
             {
                 this.model.SaveFilterToDisk();
-                this.model.RefreshIssuesInViews();                
+                this.model.RefreshIssuesInViews();
             }
+        }
+
+        /// <summary>
+        /// The get issues using current filter.
+        /// </summary>
+        private void GetIssuesUsingCurrentFilter()
+        {
+            this.model.QueryForIssuesIsRunning = true;
+            var bw = new BackgroundWorker { WorkerReportsProgress = true };
+            bw.RunWorkerCompleted += delegate { this.model.QueryForIssuesIsRunning = false; };
+
+            bw.DoWork += delegate { this.model.RetrieveIssuesUsingCurrentFilter(); };
+
+            bw.RunWorkerAsync();
+        }
+
+        /// <summary>
+        /// The get all my issues.
+        /// </summary>
+        private void GetAllMyIssues()
+        {
+            this.model.QueryForIssuesIsRunning = true;
+            var bw = new BackgroundWorker { WorkerReportsProgress = true };
+            bw.RunWorkerCompleted += delegate { this.model.QueryForIssuesIsRunning = false; };
+            bw.RunWorkerAsync();
+        }
+
+        /// <summary>
+        /// The get all issues in project.
+        /// </summary>
+        private void GetAllIssuesInProject()
+        {
+            this.model.QueryForIssuesIsRunning = true;
+            var bw = new BackgroundWorker { WorkerReportsProgress = true };
+            bw.RunWorkerCompleted += delegate { this.model.QueryForIssuesIsRunning = false; };
+
+            bw.DoWork +=
+                delegate
+                    {
+                        this.model.ReplaceAllIssuesInCache(
+                            this.service.GetIssuesByAssigneeInProject(
+                                this.model.UserConfiguration,
+                                this.model.AssociatedProject.Key,
+                                this.model.UserConfiguration.Username));
+                    };
+
+            bw.RunWorkerAsync();
+        }
+
+        /// <summary>
+        /// The get all issues since last analysis.
+        /// </summary>
+        private void GetAllIssuesSinceLastAnalysis()
+        {
+            this.model.QueryForIssuesIsRunning = true;
+            var bw = new BackgroundWorker { WorkerReportsProgress = true };
+            bw.RunWorkerCompleted += delegate { this.model.QueryForIssuesIsRunning = false; };
+
+            bw.DoWork +=
+                delegate
+                    {
+                        this.model.ReplaceAllIssuesInCache(
+                            this.service.GetIssuesForProjectsCreatedAfterDate(
+                                this.model.UserConfiguration,
+                                this.model.AssociatedProject.Key,
+                                this.model.AssociatedProject.Date));
+                    };
+
+            bw.RunWorkerAsync();
+        }
+
+        /// <summary>
+        /// The get all issues.
+        /// </summary>
+        private void GetAllIssues()
+        {
+            this.model.QueryForIssuesIsRunning = true;
+            var bw = new BackgroundWorker { WorkerReportsProgress = true };
+            bw.RunWorkerCompleted += delegate { this.model.QueryForIssuesIsRunning = false; };
+
+            bw.DoWork +=
+                delegate
+                    {
+                        this.model.ReplaceAllIssuesInCache(this.service.GetIssuesForProjects(this.model.UserConfiguration, this.model.AssociatedProject.Key));
+                    };
+
+            bw.RunWorkerAsync();
         }
 
         /// <summary>

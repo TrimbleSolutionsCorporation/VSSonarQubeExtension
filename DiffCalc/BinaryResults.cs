@@ -77,7 +77,7 @@ namespace DiffCalc
         public BinaryResults(ArrayList al, double secs)
         {
             this.InitializeComponent();
-            this.Text = string.Format("Binary Results: {0} secs.", secs.ToString("#0.00"));
+            this.Text = string.Format("Binary Results: {0} secs.", secs.ToString("#0.00", CultureInfo.InvariantCulture));
             foreach (DiffResultSpan drs in al)
             {
                 var lvi = new ListViewItem(drs.Status.ToString());

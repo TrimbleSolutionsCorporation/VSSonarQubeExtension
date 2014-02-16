@@ -190,7 +190,7 @@ namespace VSSonarExtension.PackageImplementation
 
                 this.visualStudioInterface = new VsPropertiesHelper(this.dte2);
                 this.restService = new SonarRestService(new JsonSonarConnector());
-                this.vsEvents = new VsEvents(ExtensionModelData, this.visualStudioInterface, this.dte2);
+                new VsEvents(ExtensionModelData, this.visualStudioInterface, this.dte2);
 
                 // int configuration options
                 this.InitOptions();

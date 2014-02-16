@@ -18,6 +18,7 @@ namespace DifferenceEngine
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Text.RegularExpressions;
 
@@ -99,8 +100,7 @@ namespace DifferenceEngine
             {
                 if (line.Length > MaxLineLength)
                 {
-                    throw new InvalidOperationException(
-                        string.Format("File contains a line greater than {0} characters.", MaxLineLength));
+                    throw new InvalidOperationException(string.Format("File contains a line greater than {0} characters.", MaxLineLength));
                 }
 
                 this.lines.Add(new TextLine(line));

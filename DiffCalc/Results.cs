@@ -19,6 +19,7 @@ namespace DiffCalc
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Drawing;
+    using System.Globalization;
     using System.Windows.Forms;
 
     using DifferenceEngine;
@@ -87,7 +88,7 @@ namespace DiffCalc
         public Results(DiffListTextFile source, DiffListTextFile destination, ArrayList diffLines, double seconds)
         {
             this.InitializeComponent();
-            this.Text = string.Format("Results: {0} secs.", seconds.ToString("#0.00"));
+            this.Text = string.Format("Results: {0} secs.", seconds.ToString("#0.00", CultureInfo.InvariantCulture));
 
             var cnt = 1;
 
@@ -103,8 +104,8 @@ namespace DiffCalc
                         case DiffResultSpanStatus.DeleteSource:
                             for (i = 0; i < drs.Length; i++)
                             {
-                                lviS = new ListViewItem(cnt.ToString("00000"));
-                                lviD = new ListViewItem(cnt.ToString("00000"));
+                                lviS = new ListViewItem(cnt.ToString("00000", CultureInfo.InvariantCulture));
+                                lviD = new ListViewItem(cnt.ToString("00000", CultureInfo.InvariantCulture));
                                 lviS.BackColor = Color.Red;
                                 lviS.SubItems.Add(((TextLine)source.GetByIndex(drs.SourceIndex + i)).Line);
                                 lviD.BackColor = Color.LightGray;
@@ -119,8 +120,8 @@ namespace DiffCalc
                         case DiffResultSpanStatus.NoChange:
                             for (i = 0; i < drs.Length; i++)
                             {
-                                lviS = new ListViewItem(cnt.ToString("00000"));
-                                lviD = new ListViewItem(cnt.ToString("00000"));
+                                lviS = new ListViewItem(cnt.ToString("00000", CultureInfo.InvariantCulture));
+                                lviD = new ListViewItem(cnt.ToString("00000", CultureInfo.InvariantCulture));
                                 lviS.BackColor = Color.White;
                                 lviS.SubItems.Add(((TextLine)source.GetByIndex(drs.SourceIndex + i)).Line);
                                 lviD.BackColor = Color.White;
@@ -135,8 +136,8 @@ namespace DiffCalc
                         case DiffResultSpanStatus.AddDestination:
                             for (i = 0; i < drs.Length; i++)
                             {
-                                lviS = new ListViewItem(cnt.ToString("00000"));
-                                lviD = new ListViewItem(cnt.ToString("00000"));
+                                lviS = new ListViewItem(cnt.ToString("00000", CultureInfo.InvariantCulture));
+                                lviD = new ListViewItem(cnt.ToString("00000", CultureInfo.InvariantCulture));
                                 lviS.BackColor = Color.LightGray;
                                 lviS.SubItems.Add(string.Empty);
                                 lviD.BackColor = Color.LightGreen;
@@ -151,8 +152,8 @@ namespace DiffCalc
                         case DiffResultSpanStatus.Replace:
                             for (i = 0; i < drs.Length; i++)
                             {
-                                lviS = new ListViewItem(cnt.ToString("00000"));
-                                lviD = new ListViewItem(cnt.ToString("00000"));
+                                lviS = new ListViewItem(cnt.ToString("00000", CultureInfo.InvariantCulture));
+                                lviD = new ListViewItem(cnt.ToString("00000", CultureInfo.InvariantCulture));
                                 lviS.BackColor = Color.Red;
                                 lviS.SubItems.Add(((TextLine)source.GetByIndex(drs.SourceIndex + i)).Line);
                                 lviD.BackColor = Color.LightGreen;

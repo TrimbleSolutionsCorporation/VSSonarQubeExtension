@@ -16,6 +16,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Globalization;
 
     /// <summary>
@@ -189,8 +190,6 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// The is new visible.
         /// </summary>
         private int isNewIndex;
-
-        private bool isNew;
 
         /// <summary>
         /// The query for issues is running.
@@ -525,7 +524,6 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                 this.OnPropertyChanged("IsNewIndex");
             }
         }
-
 
         /// <summary>
         ///     Gets or sets a value indicating whether id visible.
@@ -1224,6 +1222,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             }
             catch (Exception ex)
             {
+                Debug.WriteLine(ex.Message);
             }
         }
 

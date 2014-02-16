@@ -13,8 +13,10 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace ExtensionHelpers
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
 
     using DifferenceEngine;
@@ -106,8 +108,9 @@ namespace ExtensionHelpers
 
                 line = -1;
             }
-            catch
+            catch (Exception ex)
             {
+                Debug.WriteLine(ex.Message);
                 line = -1;
             }
 

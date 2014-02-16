@@ -36,8 +36,9 @@ namespace VSSonarExtension.VSControls
             this.BitmapIndex = 1;
             if (PackageImplementation.VsSonarExtensionPackage.CurrentPluginName == null)
             {
-                throw  new Exception("Not implemented");
+                throw new NotImplementedException("No Plugin Defined");
             }
+
             this.Caption = PackageImplementation.VsSonarExtensionPackage.CurrentPluginName;
             this.Content = PackageImplementation.VsSonarExtensionPackage.CurrentPluginControl;
         }
