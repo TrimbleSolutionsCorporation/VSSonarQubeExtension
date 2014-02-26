@@ -25,6 +25,13 @@ namespace ExtensionHelpers
     public class ConnectionConfigurationHelpers
     {
         /// <summary>
+        /// Prevents a default instance of the <see cref="ConnectionConfigurationHelpers"/> class from being created.
+        /// </summary>
+        private ConnectionConfigurationHelpers()
+        {
+        }
+
+        /// <summary>
         /// Gets or sets the error message.
         /// </summary>
         public static string ErrorMessage { get; set; }
