@@ -11,7 +11,8 @@ All information on configuration and usage will be found in the wiki pages. [Hom
 
 # Installation
 
-**When using VS2010 or VS2012, you will need to install http://www.microsoft.com/en-us/download/details.aspx?id=40764**
+**When using VS2010 or VS2012, you will need to install http://www.microsoft.com/en-us/download/details.aspx?id=40764** Also IE 10 or above is required before installing the shell integrated environment
+
 
 Use the Visual Studio Extension Manager
 ![Image](../master/wiki/installation.png?raw=true)
