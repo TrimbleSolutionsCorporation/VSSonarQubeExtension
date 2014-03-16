@@ -296,47 +296,53 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
         let resourcelist = System.Collections.Generic.List<Resource>()
             
         for resource in resources do
-            let res = new Resource()
-            res.Id <- resource.Id
-            res.Date <- resource.Date
-            res.Key <- resource.Key.Trim()
-            res.Lang <- resource.Lang
-            res.Lname <- resource.Lname
-            res.Name <- resource.Name
-            res.Qualifier <- resource.Qualifier
-            res.Scope <- resource.Scope
-            if not(obj.ReferenceEquals(resource.JsonValue.TryGetProperty("version"), null)) then
-                res.Version <- sprintf "%s" resource.Version
+            try
+                let res = new Resource()
+                res.Id <- resource.Id
+                res.Date <- resource.Date
+                res.Key <- resource.Key.Trim()
 
-            let metrics = new System.Collections.Generic.List<Metric>()
+                if not(obj.ReferenceEquals(resource.JsonValue.TryGetProperty("lang"), null)) then
+                    res.Lang <- sprintf "%s" resource.Lang
 
-            if not(obj.ReferenceEquals(resource.JsonValue.TryGetProperty("msr"), null)) then
-                for metric in resource.Msr do
-                    let met = new Metric()
+                res.Lname <- resource.Lname
+                res.Name <- resource.Name
+                res.Qualifier <- resource.Qualifier
+                res.Scope <- resource.Scope
+                if not(obj.ReferenceEquals(resource.JsonValue.TryGetProperty("version"), null)) then
+                    res.Version <- sprintf "%s" resource.Version
 
-                    met.Key <- metric.Key
+                let metrics = new System.Collections.Generic.List<Metric>()
 
-                    match metric.JsonValue.TryGetProperty("data") with
-                    | NotNull ->
-                        met.Data <- metric.Data.Value.Trim()
-                    | _ -> ()
+                if not(obj.ReferenceEquals(resource.JsonValue.TryGetProperty("msr"), null)) then
+                    for metric in resource.Msr do
+                        let met = new Metric()
 
-                    if not(obj.ReferenceEquals(metric.FrmtVal.Number, null)) then
-                        met.FormatedValue <- sprintf "%f" metric.FrmtVal.Number.Value
-                    else
-                        met.FormatedValue <- sprintf "%s" metric.FrmtVal.String.Value
+                        met.Key <- metric.Key
 
-                    match metric.JsonValue.TryGetProperty("val") with
-                    | NotNull ->
-                        met.Val <- metric.Val
-                    | _ -> ()
+                        match metric.JsonValue.TryGetProperty("data") with
+                        | NotNull ->
+                            met.Data <- metric.Data.Value.Trim()
+                        | _ -> ()
 
-                    metrics.Add(met)
+                        if not(obj.ReferenceEquals(metric.FrmtVal.Number, null)) then
+                            met.FormatedValue <- sprintf "%f" metric.FrmtVal.Number.Value
+                        else
+                            met.FormatedValue <- sprintf "%s" metric.FrmtVal.String.Value
 
-                    res.Metrics <- metrics
+                        match metric.JsonValue.TryGetProperty("val") with
+                        | NotNull ->
+                            met.Val <- metric.Val
+                        | _ -> ()
+
+                        metrics.Add(met)
+
+                        res.Metrics <- metrics
 
 
-            resourcelist.Add(res)
+                resourcelist.Add(res)
+            with
+                | ex -> ()
         resourcelist
 
     let getRulesFromResponseContent(responsecontent : string) = 
