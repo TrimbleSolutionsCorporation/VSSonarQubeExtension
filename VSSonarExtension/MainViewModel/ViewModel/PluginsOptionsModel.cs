@@ -397,7 +397,8 @@ namespace VSSonarExtension.MainViewModel.ViewModel
 
                     foreach (var plugin in this.model.Plugins)
                     {
-                        if (plugin.GetKey(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.model.Vsenvironmenthelper)).Equals(this.model.SelectedLicense.ProductId))
+                        var key = plugin.GetKey(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.model.Vsenvironmenthelper));
+                        if (this.model.SelectedLicense.ProductId.Contains(key))
                         {
                             this.model.GeneratedToken = plugin.GenerateTokenId(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.model.Vsenvironmenthelper));
                         }

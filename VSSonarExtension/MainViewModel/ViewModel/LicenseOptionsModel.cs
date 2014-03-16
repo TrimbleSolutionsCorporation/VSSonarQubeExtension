@@ -169,7 +169,19 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                     {
                         foreach (var license in lics)
                         {
-                            licenses.Add(license.Value);
+                            bool existsAlready = false;
+                            foreach (var existinglicense in licenses)
+                            {
+                                if (existinglicense.LicenseTxt.Equals(license.Value.LicenseTxt))
+                                {
+                                    existsAlready = true;
+                                }
+                            }
+
+                            if (!existsAlready)
+                            {
+                                licenses.Add(license.Value);
+                            }                            
                         }
                     }
                 }
