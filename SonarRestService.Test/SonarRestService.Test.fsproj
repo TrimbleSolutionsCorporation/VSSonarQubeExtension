@@ -117,8 +117,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Foq, Version=0.9.0.0, Culture=neutral, PublicKeyToken=null">
-      <Private>True</Private>
+    <Reference Include="Foq">
       <HintPath>..\references\Foq.dll</HintPath>
     </Reference>
     <Reference Include="FSharp.Core">
@@ -128,10 +127,6 @@
     <Reference Include="FSharp.Data">
       <HintPath>..\references\FSharp.Data.dll</HintPath>
     </Reference>
-    <Reference Include="FSharp.Data.TypeProviders">
-      <HintPath>..\references\FSharp.Data.TypeProviders.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="FsUnit.NUnit">
       <HintPath>..\references\FsUnit.NUnit.dll</HintPath>
     </Reference>
@@ -139,9 +134,6 @@
     <Reference Include="nunit.framework">
       <HintPath>..\references\nunit.framework.dll</HintPath>
       <Private>True</Private>
-    </Reference>
-    <Reference Include="policy.4.3.FSharp.Core">
-      <HintPath>..\references\policy.4.3.FSharp.Core.dll</HintPath>
     </Reference>
     <Reference Include="RestSharp">
       <HintPath>..\references\RestSharp.dll</HintPath>

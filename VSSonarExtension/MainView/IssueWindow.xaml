@@ -170,8 +170,7 @@
 		<Menu x:Name="MainMenuIssues" Grid.ColumnSpan="3" Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}">
 			<MenuItem x:Name="ToolsMenu" Header="Menu" Width="auto" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Template="{DynamicResource MenuTemplate}">
 				<MenuItem Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" x:Name="OptionsMenu" Header="Configuration Options" Template="{DynamicResource MenuTemplate}">
-					<MenuItem Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" x:Name="ConfIssuesWindow" Header="Show Properties" Command="{Binding}" CommandParameter="{Binding Header, ElementName=ConfIssuesWindow}"/>
-					<MenuItem Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" x:Name="ConfPluginsOptions" Header="Plugins Properties" Command="{Binding}" CommandParameter="{Binding Header, ElementName=ConfPluginsOptions}"/>
+					<MenuItem Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" x:Name="ConfPluginsOptions" Header="Properties" Command="{Binding}" CommandParameter="{Binding Header, ElementName=ConfPluginsOptions}"/>
 				</MenuItem>
 			</MenuItem>
 			<MenuItem x:Name="PluginsMenu" Header="Tools" ItemsSource="{Binding ToolsProvidedByPlugins}" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}" Template="{DynamicResource MenuTemplate}">

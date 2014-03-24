@@ -45,12 +45,12 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             get
             {
                 var menuItemsList = new List<MenuItem>();
-                if (this.PluginController == null)
+                if (this.PluginControl == null)
                 {
                     return menuItemsList;
                 }
 
-                var plugins = this.PluginController.GetMenuItemPlugins();
+                var plugins = this.PluginControl.GetMenuItemPlugins();
 
                 if (plugins == null)
                 {

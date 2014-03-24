@@ -1,7 +1,7 @@
-﻿<viewModel:PluginsOptionsModel xmlns:ExtensionTypes="clr-namespace:ExtensionTypes;assembly=ExtensionTypes" xmlns:Controls="clr-namespace:System.Windows.Controls;assembly=PresentationFramework" xmlns:Effects="clr-namespace:System.Windows.Media.Effects;assembly=PresentationCore" xmlns:Windows="clr-namespace:System.Windows;assembly=WindowsBase" xmlns:Windows1="clr-namespace:System.Windows;assembly=PresentationFramework" xmlns:Data="clr-namespace:System.Windows.Data;assembly=PresentationFramework" xmlns:Windows2="clr-namespace:System.Windows;assembly=PresentationCore" xmlns:Media="clr-namespace:System.Windows.Media;assembly=PresentationCore" xmlns:Input="clr-namespace:System.Windows.Input;assembly=PresentationCore"
+﻿<viewModel:ExtensionOptionsModel xmlns:ExtensionTypes="clr-namespace:ExtensionTypes;assembly=ExtensionTypes" xmlns:Controls="clr-namespace:System.Windows.Controls;assembly=PresentationFramework" xmlns:Effects="clr-namespace:System.Windows.Media.Effects;assembly=PresentationCore" xmlns:Windows="clr-namespace:System.Windows;assembly=WindowsBase" xmlns:Windows1="clr-namespace:System.Windows;assembly=PresentationFramework" xmlns:Data="clr-namespace:System.Windows.Data;assembly=PresentationFramework" xmlns:Windows2="clr-namespace:System.Windows;assembly=PresentationCore" xmlns:Media="clr-namespace:System.Windows.Media;assembly=PresentationCore" xmlns:Input="clr-namespace:System.Windows.Input;assembly=PresentationCore"
                                xmlns:viewModel="clr-namespace:VSSonarExtension.MainViewModel.ViewModel"
                                IsLicenseEnable="True" SelectedPluginItem="Fringilla vel class praesent">
-	<viewModel:PluginsOptionsModel.AvailableLicenses>
+	<viewModel:ExtensionOptionsModel.AvailableLicenses>
 		<ExtensionTypes:VsLicense IsValid="True" ProductId="Integer curabitur cras adipiscing phasellus" UserId="Vestibulum aenean class aliquam"/>
 		<ExtensionTypes:VsLicense IsValid="False" ProductId="Mauris nullam maecenas vestibulum vestibulum" UserId="Curae nam sed parturient"/>
 		<ExtensionTypes:VsLicense IsValid="True" ProductId="Dis vivamus consequat vestibulum" UserId="Adipiscing parturient quisque"/>
@@ -12,8 +12,8 @@
 		<ExtensionTypes:VsLicense IsValid="False" ProductId="Bibendum dictum vestibulum nec" UserId="Mus parturient morbi"/>
 		<ExtensionTypes:VsLicense IsValid="True" ProductId="Nulla proin libero dictumst ligula" UserId="Euismod lectus eget non per"/>
 		<ExtensionTypes:VsLicense IsValid="False" ProductId="Elit sem enim dignissim" UserId="Vestibulum sed"/>
-	</viewModel:PluginsOptionsModel.AvailableLicenses>
-	<viewModel:PluginsOptionsModel.OptionsInView>
+	</viewModel:ExtensionOptionsModel.AvailableLicenses>
+	<viewModel:ExtensionOptionsModel.OptionsInView>
 		<Controls:UserControl AllowDrop="False" BorderBrush="#FF21C5E9" Background="#FF690C45" ClipToBounds="True" ContentStringFormat="Adipiscing parturient suscipit venenatis neque" Foreground="#FFAE9080" Focusable="True" ForceCursor="False" FlowDirection="LeftToRight" FontSize="677.6" HorizontalAlignment="Right" HorizontalContentAlignment="Left" Height="734.16" IsHitTestVisible="False" IsTabStop="False" IsManipulationEnabled="False" IsEnabled="True" MaxWidth="343.32" MaxHeight="797.55" MinWidth="510.82" MinHeight="993.53" Opacity="413.89" OverridesDefaultStyle="True" OpacityMask="#FF027764" SnapsToDevicePixels="False" TabIndex="66" Uid="Fermentum sit vitae" UseLayoutRounding="False" Visibility="Visible" VerticalAlignment="Bottom" VerticalContentAlignment="Bottom" Width="707.18">
 			<Controls:UserControl.BitmapEffectInput>
 				<Effects:BitmapEffectInput AreaToApplyEffectUnits="Absolute">
@@ -133,8 +133,8 @@
 				<Windows:Point X="263.36" Y="557.13"/>
 			</Controls:UserControl.RenderTransformOrigin>
 		</Controls:UserControl>
-	</viewModel:PluginsOptionsModel.OptionsInView>
-	<viewModel:PluginsOptionsModel.SelectedLicense>
+	</viewModel:ExtensionOptionsModel.OptionsInView>
+	<viewModel:ExtensionOptionsModel.SelectedLicense>
 		<ExtensionTypes:VsLicense IsValid="True" ProductId="Elementum facilisis vel litora" UserId="Sit adipiscing augue"/>
-	</viewModel:PluginsOptionsModel.SelectedLicense>
-</viewModel:PluginsOptionsModel>
+	</viewModel:ExtensionOptionsModel.SelectedLicense>
+</viewModel:ExtensionOptionsModel>

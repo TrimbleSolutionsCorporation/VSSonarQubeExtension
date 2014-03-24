@@ -559,12 +559,12 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
             if newConf.Username = "" && newConf.Password = "" then
                 true
-            else             
-                let responsecontent = httpconnector.HttpSonarGetRequest(newConf, url)
+            else                             
                 try
+                    let responsecontent = httpconnector.HttpSonarGetRequest(newConf, url)
                     JsonValidateUser.Parse(responsecontent).Valid
                 with
-                    | ex -> true
+                    | ex -> false
 
         member this.GetResourcesData(conf : ConnectionConfiguration, resource : string) =
             let url = "/api/resources?resource=" + resource

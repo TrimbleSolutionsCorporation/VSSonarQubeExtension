@@ -40,7 +40,7 @@ namespace VSSonarExtension.VSControls
             this.Caption = "Issues Window";
             this.BitmapResourceID = 301;
             this.BitmapIndex = 1;
-            this.windowToUse = new IssueWindow(new ExtensionDataModel());
+            this.windowToUse = new IssueWindow();
             this.Content = this.windowToUse;
         }
 

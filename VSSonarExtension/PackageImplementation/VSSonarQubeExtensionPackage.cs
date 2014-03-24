@@ -33,6 +33,7 @@ namespace VSSonarExtension.PackageImplementation
 
     using SonarRestService;
 
+    using VSSonarExtension.MainView;
     using VSSonarExtension.MainViewModel.ViewModel;
     using VSSonarExtension.PackageImplementation.SmartTags.BufferUpdate;
     using VSSonarExtension.VSControls;
@@ -64,21 +65,6 @@ namespace VSSonarExtension.PackageImplementation
         /// </summary>
         public static readonly ExtensionDataModel ExtensionModelData = new ExtensionDataModel();
        
-        /// <summary>
-        /// The plugin control.
-        /// </summary>
-        public static readonly PluginController PluginControl  = new PluginController();
-
-        /// <summary>
-        /// The current plugin control.
-        /// </summary>
-        public static UserControl CurrentPluginControl = new UserControl();
-
-        /// <summary>
-        /// The current plugin name.
-        /// </summary>
-        public static string CurrentPluginName = "Plugin Window";
-
         #endregion
 
         #region Constructors and Destructors
@@ -156,9 +142,6 @@ namespace VSSonarExtension.PackageImplementation
                 return;
             }
 
-            // Create the window with the first free ID.
-            CurrentPluginControl = control;
-            CurrentPluginName = name;
             var window = (ToolWindowPane)this.CreateToolWindow(typeof(PluginToolWindow), id);
 
             if ((null == window) || (null == window.Frame))
@@ -199,19 +182,36 @@ namespace VSSonarExtension.PackageImplementation
                 {
                     ExtensionModelData.Vsenvironmenthelper = this.visualStudioInterface;
                     ExtensionModelData.RestService = this.restService;
-                    ExtensionModelData.PluginController = PluginControl;
                     ExtensionModelData.VSPackage = this;
 
                     this.UpdateModelInToolWindow(ExtensionModelData);
+
+                    try
+                    {
+                        var outWindow = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
+                        var customGuid = new Guid("CDA8E85D-C469-4855-878B-0E778CD0DD53");
+                        if (outWindow != null)
+                        {
+                            outWindow.CreatePane(ref customGuid, "VSSonarQube Output", 1, 1);
+                            IVsOutputWindowPane customPane;
+                            outWindow.GetPane(ref customGuid, out customPane);
+                            ExtensionModelData.CustomPane = customPane;
+                            ExtensionModelData.CustomPane.Activate();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.Message);
+                    }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("SonarQubeExtension is not usable condition, check credential and host from tools > options > Sonar, and restart visual studio after settings are set : " + ex.StackTrace);
+                    UserExceptionMessageBox.ShowException("SonarQubeExtension not able to start", ex);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Extension Failed to Start: " + ex.Message + " " + ex.StackTrace);
+                UserExceptionMessageBox.ShowException("Extension Failed to Start", ex);
                 throw;
             }
         }
@@ -231,29 +231,6 @@ namespace VSSonarExtension.PackageImplementation
         private void InitOptions()
         {
             this.InitGeneralOptions();
-
-            ExtensionDataModel.PluginsOptionsData.Plugins = PluginControl.GetPlugins();
-            ExtensionDataModel.PluginsOptionsData.Vsenvironmenthelper = this.visualStudioInterface;
-            ExtensionDataModel.PluginsOptionsData.ResetUserData();
-
-            if (ExtensionDataModel.PluginsOptionsData.Plugins == null)
-            {
-                return;
-            }
-
-            foreach (var plugin in ExtensionDataModel.PluginsOptionsData.Plugins)
-            {
-                var configuration = ConnectionConfigurationHelpers.GetConnectionConfiguration(this.visualStudioInterface);
-                var controloption = plugin.GetPluginControlOptions(configuration, null);
-                if (controloption == null)
-                {
-                    continue;
-                }
-
-                var pluginKey = plugin.GetKey(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.visualStudioInterface));
-                var options = this.visualStudioInterface.ReadAllOptionsForPluginOptionInApplicationData(pluginKey);
-                controloption.SetOptions(options);
-            }
         }
 
         /// <summary>

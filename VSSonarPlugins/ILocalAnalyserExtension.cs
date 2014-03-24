@@ -21,6 +21,33 @@ namespace VSSonarPlugins
 
     using ExtensionTypes;
 
+
+    /// <summary>
+    /// The analysis mode.
+    /// </summary>
+    public enum AnalysisMode
+    {
+        /// <summary>
+        /// The file.
+        /// </summary>
+        File,
+
+        /// <summary>
+        /// The incremental.
+        /// </summary>
+        Incremental,
+
+        /// <summary>
+        /// The preview.
+        /// </summary>
+        Preview,
+
+        /// <summary>
+        /// The full.
+        /// </summary>
+        Full,
+    }
+
     /// <summary>
     /// The Sensors interface.
     /// </summary>
@@ -69,45 +96,6 @@ namespace VSSonarPlugins
         Thread GetFileAnalyserThread(VsProjectItem item, string projectKey, Profile profile, string fileSourceInServer, bool onModifiedLinesOnly);
 
         /// <summary>
-        /// The get incremental analyser thread.
-        /// </summary>
-        /// <param name="solutionPath">
-        /// The solution path.
-        /// </param>
-        /// <param name="profile">
-        /// The profile.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Thread"/>.
-        /// </returns>
-        Thread GetIncrementalAnalyserThread(string solutionPath, Profile profile);
-
-        /// <summary>
-        /// The get preview analyser thread.
-        /// </summary>
-        /// <param name="solutionPath">
-        /// The solution path.
-        /// </param>
-        /// <param name="profile">
-        /// The profile.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Thread"/>.
-        /// </returns>
-        Thread GetPreviewAnalyserThread(string solutionPath, Profile profile);
-
-        /// <summary>
-        /// The get analyser thread.
-        /// </summary>
-        /// <param name="solutionPath">
-        /// The solution Path.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Thread"/>.
-        /// </returns>
-        Thread GetAnalyserThread(string solutionPath);
-
-        /// <summary>
         /// The stop all execution.
         /// </summary>
         /// <param name="runningThread">
@@ -116,51 +104,47 @@ namespace VSSonarPlugins
         void StopAllExecution(Thread runningThread);
 
         /// <summary>
+        /// The execute analysis on file.
+        /// </summary>
+        /// <param name="itemInView">
+        /// The item in view.
+        /// </param>
+        /// <param name="externlProfile">
+        /// The externl profile.
+        /// </param>
+        /// <param name="project">
+        /// The project.
+        /// </param>
+        /// <returns>
+        /// The <see cref="List"/>.
+        /// </returns>
+        List<Issue> ExecuteAnalysisOnFile(VsProjectItem itemInView, Profile externlProfile, Resource project);
+
+        /// <summary>
         /// The get issues.
         /// </summary>
         /// <returns>
         /// The <see cref="List"/>.
         /// </returns>
         List<Issue> GetIssues();
-    }
-
-    /// <summary>
-    /// The model expectes this argument to be sent refering the plugin key
-    /// </summary>
-    public class LocalAnalysisCompletedEventArgs : EventArgs
-    {
-        /// <summary>
-        /// The key.
-        /// </summary>
-        public readonly string Key;
 
         /// <summary>
-        /// The error message.
+        /// The get issues.
         /// </summary>
-        public readonly string ErrorMessage;
-
-        /// <summary>
-        /// The ex.
-        /// </summary>
-        public readonly Exception Ex;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LocalAnalysisCompletedEventArgs"/> class.
-        /// </summary>
-        /// <param name="key">
-        /// The key.
+        /// <param name="issues">
+        /// The issues.
         /// </param>
-        /// <param name="errorMessage">
-        /// The error Message.
-        /// </param>
-        /// <param name="ex">
-        /// The ex.
-        /// </param>
-        public LocalAnalysisCompletedEventArgs(string key, string errorMessage, Exception ex)
-        {
-            this.Key = key;
-            this.Ex = ex;
-            this.ErrorMessage = errorMessage;
-        }
+        /// <returns>
+        /// The <see cref="List"/>.
+        /// </returns>
+        List<Issue> GetSupportedIssues(List<Issue> issues);
+
+        /// <summary>
+        /// The get local analysis paramenters.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="ICollection"/>.
+        /// </returns>
+        List<SonarQubeProperties> GetLocalAnalysisParamenters();
     }
 }

@@ -23,6 +23,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtensionHelpers.Test", "Ex
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSSonarPlugins", "VSSonarPlugins\VSSonarPlugins.csproj", "{3311C918-B662-436D-8BC8-F38B447B1414}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SonarLocalAnalyser", "SonarLocalAnalyser\SonarLocalAnalyser.fsproj", "{A7D09C0C-EFC5-4662-83B6-DAE14E68C94C}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SonarLocalAnalyser.Test", "SonarLocalAnalyser.Test\SonarLocalAnalyser.Test.fsproj", "{0356E7DE-C73C-431E-8B7D-7AB2024C4756}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +73,14 @@ Global
 		{3311C918-B662-436D-8BC8-F38B447B1414}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3311C918-B662-436D-8BC8-F38B447B1414}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3311C918-B662-436D-8BC8-F38B447B1414}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7D09C0C-EFC5-4662-83B6-DAE14E68C94C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7D09C0C-EFC5-4662-83B6-DAE14E68C94C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7D09C0C-EFC5-4662-83B6-DAE14E68C94C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7D09C0C-EFC5-4662-83B6-DAE14E68C94C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0356E7DE-C73C-431E-8B7D-7AB2024C4756}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0356E7DE-C73C-431E-8B7D-7AB2024C4756}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0356E7DE-C73C-431E-8B7D-7AB2024C4756}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0356E7DE-C73C-431E-8B7D-7AB2024C4756}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

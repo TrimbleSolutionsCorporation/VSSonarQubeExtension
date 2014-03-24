@@ -28,11 +28,21 @@ namespace ExtensionHelpers
     using RestSharp;
     using RestSharp.Deserializers;
 
+    using VSSonarPlugins;
+
     /// <summary>
     /// The vs sonar utils.
     /// </summary>
     public static partial class VsSonarUtils
     {
+        /// <summary>
+        /// Gets the solution glob prop key.
+        /// </summary>
+        public static string SolutionGlobPropKey(string projectKey)
+        {
+            return GlobalIds.GeneralSolutionPropsKey + "." + projectKey;
+        }
+
         /// <summary>
         /// The get document language.
         /// </summary>

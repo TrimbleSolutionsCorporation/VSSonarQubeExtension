@@ -113,8 +113,6 @@ namespace VSSonarExtension.Test.TestViewModel
                 .Return("resource");
 
             var data = new ExtensionDataModel(this.service, this.vshelper, null);
-            data.PluginController = new PluginController();
-            data.PluginRunningAnalysis = this.plugin;
             data.AssociatedProject = new Resource { Key = "sonar.com:common" };
 
             data.RefreshDataForResource("resource");
@@ -156,8 +154,6 @@ namespace VSSonarExtension.Test.TestViewModel
                 .Return("resource");
 
             var data = new ExtensionDataModel(this.service, this.vshelper, null);
-            data.PluginController = new PluginController();
-            data.PluginRunningAnalysis = this.plugin;
             data.AssociatedProject = new Resource { Key = "sonar.com:common" };
             data.CoverageInEditorEnabled = true;
             

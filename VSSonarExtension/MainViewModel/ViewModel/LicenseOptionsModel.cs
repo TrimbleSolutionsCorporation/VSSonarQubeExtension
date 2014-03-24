@@ -23,7 +23,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
     /// <summary>
     ///     The plugins options model.
     /// </summary>
-    public partial class PluginsOptionsModel
+    public partial class ExtensionOptionsModel
     {
         /// <summary>
         /// The is license enable.

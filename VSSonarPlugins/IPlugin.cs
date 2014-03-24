@@ -42,13 +42,10 @@ namespace VSSonarPlugins
         /// <param name="configuration">
         /// The configuration.
         /// </param>
-        /// <param name="project">
-        /// The project.
-        /// </param>
         /// <returns>
         /// The <see cref="UserControl"/>.
         /// </returns>
-        IPluginsOptions GetPluginControlOptions(ConnectionConfiguration configuration, Resource project);
+        IPluginsOptions GetPluginControlOptions(ConnectionConfiguration configuration);
 
         /// <summary>
         /// The is supported.
@@ -63,6 +60,17 @@ namespace VSSonarPlugins
         /// The <see cref="bool"/>.
         /// </returns>
         bool IsSupported(ConnectionConfiguration configuration, Resource project);
+
+        /// <summary>
+        /// The is supported.
+        /// </summary>
+        /// <param name="fileToAnalyse">
+        /// The file to analyse.
+        /// </param>
+        /// <returns>
+        /// The <see cref="bool"/>.
+        /// </returns>
+        bool IsSupported(VsProjectItem fileToAnalyse);
 
         /// <summary>
         /// The get resource key.
@@ -87,13 +95,10 @@ namespace VSSonarPlugins
         /// <param name="project">
         /// The project.
         /// </param>
-        /// <param name="sonarVersion">
-        /// The sonar version.
-        /// </param>
         /// <returns>
         /// The <see cref="ILocalAnalyserExtension"/>.
         /// </returns>
-        ILocalAnalyserExtension GetLocalAnalysisExtension(ConnectionConfiguration configuration, Resource project, double sonarVersion);
+        ILocalAnalyserExtension GetLocalAnalysisExtension(ConnectionConfiguration configuration, Resource project);
 
         /// <summary>
         /// The get licenses.

@@ -35,6 +35,17 @@ namespace VSSonarExtension.MainView
         /// <param name="dataModelIn">
         /// The data Model In.
         /// </param>
+        public IssueWindow()
+        {
+            this.InitializeComponent();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IssueWindow"/> class.
+        /// </summary>
+        /// <param name="dataModelIn">
+        /// The data Model In.
+        /// </param>
         public IssueWindow(ExtensionDataModel dataModelIn)
         {
             this.InitializeComponent();
@@ -88,7 +99,6 @@ namespace VSSonarExtension.MainView
         {
             // bind commands
             this.ConfPluginsOptions.DataContext = new ExtensionMenuCommand(dataModelIn);
-            this.ConfIssuesWindow.DataContext = new ExtensionMenuCommand(dataModelIn);
         }
     }
 }

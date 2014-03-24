@@ -34,10 +34,7 @@
             this.labelSonarHost = new System.Windows.Forms.Label();
             this.textBoxSonarHost = new System.Windows.Forms.TextBox();
             this.toolTipSonarServer = new System.Windows.Forms.ToolTip(this.components);
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.PluginsUserControl = new System.Windows.Forms.Button();
             this.groupBoxCPP.SuspendLayout();
-            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBoxCPP
@@ -119,37 +116,15 @@
             // 
             this.toolTipSonarServer.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.PluginsUserControl);
-            this.groupBox2.Location = new System.Drawing.Point(0, 144);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(380, 52);
-            this.groupBox2.TabIndex = 8;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "PluginController";
-            // 
-            // PluginsUserControl
-            // 
-            this.PluginsUserControl.Location = new System.Drawing.Point(9, 19);
-            this.PluginsUserControl.Name = "PluginsUserControl";
-            this.PluginsUserControl.Size = new System.Drawing.Size(129, 23);
-            this.PluginsUserControl.TabIndex = 0;
-            this.PluginsUserControl.Text = "PluginController Configuration";
-            this.PluginsUserControl.UseVisualStyleBackColor = true;
-            this.PluginsUserControl.Click += new System.EventHandler(this.PluginsUserControlClick);
-            // 
             // SonarGeneralOptionsControlForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBoxCPP);
             this.Name = "SonarGeneralOptionsControlForm";
             this.Size = new System.Drawing.Size(383, 281);
             this.groupBoxCPP.ResumeLayout(false);
             this.groupBoxCPP.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -165,8 +140,6 @@
         private System.Windows.Forms.Label labelSonarUserName;
         private System.Windows.Forms.Button buttonTestConnection;
         private System.Windows.Forms.TextBox textBoxUserName;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Button PluginsUserControl;
 
     }
 }

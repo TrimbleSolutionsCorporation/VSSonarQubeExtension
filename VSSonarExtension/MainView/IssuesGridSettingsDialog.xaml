@@ -1,23 +1,20 @@
-﻿<Window
+﻿<UserControl
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
 	x:Class="VSSonarExtension.MainView.IssuesGridSettingsDialog"
 	x:Name="Window"
-	Title="Issues Grid Visibity"
-	d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" MouseDown="MouseButtonEventHandler" Width="222" Height="155" Background="#FF2D2D30" Foreground="White" BorderThickness="2" Visibility="Visible" Opacity="0.95" WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True">
-	<Window.Resources>
-		<ResourceDictionary>
-			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="StylesAndTemplates.xaml"/>
-			</ResourceDictionary.MergedDictionaries>
-		</ResourceDictionary>
-	</Window.Resources>
-<Window.CommandBindings>
-        <CommandBinding Command="ApplicationCommands.Close"
-                        Executed="CloseCommandHandler"/>
-    </Window.CommandBindings>
-	<Grid x:Name="LayoutRoot">
+	d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Height="400" Width="800" Background="#FF2D2D30" Foreground="White">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="StylesAndTemplates.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid x:Name="LayoutRoot">
+		<StackPanel>
+			<Expander Header="Issues Parameter Visibility" Foreground="White">
 		<Grid>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition></ColumnDefinition>
@@ -51,7 +48,9 @@
 			<CheckBox Foreground="White" x:Name="KeyVisible" Content="Key" IsChecked="{Binding KeyVisible}"  Grid.Row="1" Grid.Column="1" />
 			<CheckBox Foreground="White" x:Name="IdVisible" Content="Id" IsChecked="{Binding IdVisible}" Grid.Column="1" />
 			
-			<Button Foreground="White" x:Name="CancelButton" Content="Close" Grid.Row="8" Grid.Column="1" Command="ApplicationCommands.Close" Template="{DynamicResource SquareButtonTemplate}"/>
-		</Grid>
+		</Grid>				
+			</Expander>
+		</StackPanel>
+
 	</Grid>
-</Window>
+</UserControl>

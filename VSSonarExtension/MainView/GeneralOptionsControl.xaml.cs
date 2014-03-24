@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IssuesGridSettingsDialog.xaml.cs" company="Copyright © 2013 Tekla Corporation. Tekla is a Trimble Company">
+// <copyright file="CxxUserControl.xaml.cs" company="Copyright © 2013 Tekla Corporation. Tekla is a Trimble Company">
 //     Copyright (C) 2013 [Jorge Costa, Jorge.Costa@tekla.com]
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -11,32 +11,27 @@
 // You should have received a copy of the GNU Lesser General Public License along with this program; if not, write to the Free
 // Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 // --------------------------------------------------------------------------------------------------------------------
-
 namespace VSSonarExtension.MainView
 {
-    using System.Windows;
     using System.Windows.Controls;
-    using System.Windows.Input;
 
     using VSSonarExtension.MainViewModel.ViewModel;
 
     /// <summary>
-    /// Interaction logic for IssuesGridSettingsDialog.xaml
+    /// Interaction logic for GeneralOptionsControl.xaml
     /// </summary>
-    public partial class IssuesGridSettingsDialog
+    public partial class GeneralOptionsControl : UserControl
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="IssuesGridSettingsDialog"/> class.
+        /// Initializes a new instance of the <see cref="GeneralOptionsControl"/> class.
         /// </summary>
-        /// <param name="dataModelIn">
-        /// The data model in.
+        /// <param name="controller">
+        /// The controller.
         /// </param>
-        public IssuesGridSettingsDialog(ExtensionDataModel dataModelIn)
+        public GeneralOptionsControl(GeneralOptionsModel controller)
         {
             this.InitializeComponent();
-
-            this.DataContext = null;
-            this.DataContext = dataModelIn;
+            this.DataContext = controller;
         }
     }
 }

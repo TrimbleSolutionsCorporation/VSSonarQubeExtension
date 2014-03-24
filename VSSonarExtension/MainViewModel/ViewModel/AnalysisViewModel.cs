@@ -15,12 +15,10 @@ namespace VSSonarExtension.MainViewModel.ViewModel
 {
     using System;
     using System.Diagnostics;
-    using System.Windows;
 
-    using ExtensionHelpers;
+    using SonarLocalAnalyser;
 
-    using Microsoft.VisualStudio.Shell;
-    using Microsoft.VisualStudio.Shell.Interop;
+    using VSSonarExtension.MainView;
 
     using VSSonarPlugins;
 
@@ -44,7 +42,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// <summary>
         ///     The analysis trigger.
         /// </summary>
-        private bool analysisTrigger = false;
+        private bool analysisTrigger;
 
         /// <summary>
         ///     The analysis type.
@@ -348,6 +346,16 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             }
         }
 
+        /// <summary>
+        /// Gets or sets the output log.
+        /// </summary>
+        public string OutputLog { get; set; }
+
+        /// <summary>
+        /// Gets or sets the local analyser module.
+        /// </summary>
+        public ISonarLocalAnalyser LocalAnalyserModule { get; set; }
+
         #endregion
 
         #region Methods
@@ -360,13 +368,6 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// </param>
         private void PerformfAnalysis(bool startStop)
         {
-            this.IssuesInViewAreLocked = false;
-            if (this.PluginRunningAnalysis == null || !this.PluginRunningAnalysis.IsSupported(this.UserConfiguration, this.AssociatedProject))
-            {
-                this.ErrorMessage = "No Plugin Installed Supporting this Language";
-                return;
-            }
-
             switch (this.analysisModeText)
             {
                 case AnalysisModes.Server:
@@ -390,154 +391,78 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// </param>
         private void RunLocalAnalysis(bool startStop, AnalysisTypes analysis)
         {
-            if (this.PluginRunningAnalysis == null)
-            {
-                this.analysisTrigger = false;
-                this.OnPropertyChanged("AnalysisTriggerText");
-                this.OnPropertyChanged("AnalysisTrigger");
-                this.ErrorMessage = "No Plugin to run analysis, check settings";
-                return;
-            }
-
-            if (this.VerifyLocalExtension(true))
-            {
-                return;
-            }
-
             if (!startStop)
             {
-                if (this.localAnalyserThread == null || !this.localAnalyserThread.IsAlive)
-                {
-                    return;
-                }
-
-                this.ExtensionRunningLocalAnalysis.StopAllExecution(this.localAnalyserThread);
-                this.localAnalyserThread.Join(1000);
-                if (this.localAnalyserThread.IsAlive)
-                {
-                    this.localAnalyserThread.Abort();
-                }
-
-                this.localAnalyserThread = null;
+                this.LocalAnalyserModule.StopAllExecution();
                 return;
             }
 
-            if (this.localAnalyserThread != null && this.localAnalyserThread.IsAlive)
+            if (this.LocalAnalyserModule.IsExecuting())
             {
                 return;
             }
 
             try
-            {            
-                this.ExtensionRunningLocalAnalysis.StdErrEvent += this.UpdateOutputMessagesFromPlugin;
-                this.ExtensionRunningLocalAnalysis.StdOutEvent += this.UpdateOutputMessagesFromPlugin;
-
+            {
+                this.IssuesInViewAreLocked = false;
+                this.OutputLog = string.Empty;
                 switch (analysis)
                 {
                     case AnalysisTypes.File:
-                        if (this.ResourceInEditor == null)
-                        {
-                            this.ErrorMessage = "No File in Editor, please open a file";
-                            this.analysisTrigger = false;
-                            this.OnPropertyChanged("AnalysisTriggerText");
-                            this.OnPropertyChanged("AnalysisTrigger");
-                            return;
-                        }
-
-                        this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted += this.UpdateLocalIssuesForFileAnalysis;
-                        var source = this.restService.GetSourceForFileResource(this.UserConfiguration, this.ResourceInEditor.Key);
-                        var sourcestr = VsSonarUtils.GetLinesFromSource(source, "\r\n");
-                        this.localAnalyserThread = this.ExtensionRunningLocalAnalysis.GetFileAnalyserThread(this.vsenvironmenthelper.VsProjectItem(this.DocumentInView), this.AssociatedProject.Key, this.Profile, sourcestr, this.AnalysisChangeLines);
+                        this.LocalAnalyserModule.AnalyseFile(
+                            this.vsenvironmenthelper.VsProjectItem(this.DocumentInView),
+                            this.AssociatedProject,
+                            this.Profile,
+                            this.AnalysisChangeLines,
+                            this.SonarVersion,
+                            this.UserConfiguration);
                         break;
                     case AnalysisTypes.Analysis:
-                        this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted += this.UpdateLocalIssues;
-                        this.localAnalyserThread = this.ExtensionRunningLocalAnalysis.GetAnalyserThread(this.vsenvironmenthelper.ActiveSolutionPath());
+                        this.LocalAnalyserModule.RunFullAnalysis(
+                            this.vsenvironmenthelper.ActiveSolutionPath(),
+                            this.AssociatedProject,
+                            this.SonarVersion,
+                            this.UserConfiguration);
                         break;
                     case AnalysisTypes.Incremental:
-                        this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted += this.UpdateLocalIssues;
-                        this.localAnalyserThread = this.ExtensionRunningLocalAnalysis.GetIncrementalAnalyserThread(this.vsenvironmenthelper.ActiveSolutionPath(), this.Profile);
+                        this.LocalAnalyserModule.RunIncrementalAnalysis(
+                            this.vsenvironmenthelper.ActiveSolutionPath(),
+                            this.AssociatedProject,
+                            this.Profile,
+                            this.SonarVersion,
+                            this.UserConfiguration);
                         break;
                     case AnalysisTypes.Preview:
-                        this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted += this.UpdateLocalIssues;
-                        this.localAnalyserThread = this.ExtensionRunningLocalAnalysis.GetPreviewAnalyserThread(this.vsenvironmenthelper.ActiveSolutionPath(), this.Profile);
+                        this.LocalAnalyserModule.RunPreviewAnalysis(
+                            this.vsenvironmenthelper.ActiveSolutionPath(),
+                            this.AssociatedProject,
+                            this.Profile,
+                            this.SonarVersion,
+                            this.UserConfiguration);
                         break;
                 }
-
-                if (this.localAnalyserThread == null)
-                {
-                    MessageBox.Show("Analysis Type Not Supported By Plugin");
-                    this.analysisTrigger = false;
-                    this.OnPropertyChanged("AnalysisTriggerText");
-                    this.OnPropertyChanged("AnalysisTrigger");
-                    this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted -= this.UpdateLocalIssuesForFileAnalysis;
-                    this.ExtensionRunningLocalAnalysis.StdErrEvent -= this.UpdateOutputMessagesFromPlugin;
-                    this.ExtensionRunningLocalAnalysis.StdOutEvent -= this.UpdateOutputMessagesFromPlugin;
-                    return;
-                }
-
-                this.localAnalyserThread.Start();
+            }
+            catch (VSSonarExtension ex)
+            {
+                UserExceptionMessageBox.ShowException("Analysis Failed: ", ex);
+                this.ResetAnalysisTrigger();
             }
             catch (Exception ex)
             {
-                this.ErrorMessage = ex.Message;
-                this.DiagnosticMessage = ex.StackTrace;
-                this.analysisTrigger = false;
-                this.OnPropertyChanged("AnalysisTriggerText");
-                this.OnPropertyChanged("AnalysisTrigger");
-                this.DiagnosticMessage = ex.StackTrace;
-                this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted -= this.UpdateLocalIssuesForFileAnalysis;
-                this.ExtensionRunningLocalAnalysis.StdErrEvent -= this.UpdateOutputMessagesFromPlugin;
-                this.ExtensionRunningLocalAnalysis.StdOutEvent -= this.UpdateOutputMessagesFromPlugin;
-            }           
+                UserExceptionMessageBox.ShowException("Critical Error: Please Report This Error: ", ex);
+                this.ResetAnalysisTrigger();
+            }            
         }
 
         /// <summary>
-        /// The verify local extension.
+        /// The reset analysis trigger.
         /// </summary>
-        /// <param name="showMsgBox">
-        /// The show Msg Box.
-        /// </param>
-        /// <returns>
-        /// The <see cref="bool"/>.
-        /// </returns>
-        private bool VerifyLocalExtension(bool showMsgBox)
+        private void ResetAnalysisTrigger()
         {
-            if (this.ExtensionRunningLocalAnalysis == null)
-            {
-                try
-                {
-                    this.ExtensionRunningLocalAnalysis = this.PluginRunningAnalysis.GetLocalAnalysisExtension(
-                        this.UserConfiguration,
-                        this.AssociatedProject,
-                        this.SonarVersion);
-                    if (this.ExtensionRunningLocalAnalysis == null)
-                    {
-                        if (showMsgBox)
-                        {
-                            MessageBox.Show("Current Plugin does not support Local analysis");
-                        }
-                        
-                        this.analysisTrigger = false;
-                        this.OnPropertyChanged("AnalysisTriggerText");
-                        this.OnPropertyChanged("AnalysisTrigger");
-                        return true;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    if (showMsgBox)
-                    {
-                        MessageBox.Show("Plugin Analyser Exception: " + ex.Message);
-                    }
-                    
-                    this.analysisTrigger = false;
-                    this.OnPropertyChanged("AnalysisTriggerText");
-                    this.OnPropertyChanged("AnalysisTrigger");
-                    return true;
-                }
-            }
-
-            return false;
+            this.IssuesInViewAreLocked = true;
+            this.analysisTrigger = false;
+            this.OnPropertyChanged("AnalysisTriggerText");
+            this.OnPropertyChanged("AnalysisTrigger");
         }
 
         /// <summary>
@@ -553,16 +478,13 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         {
             try
             {
-                var exceptionMsg = (LocalAnalysisCompletedEventArgs)e;
+                var exceptionMsg = (LocalAnalysisEventArgs)e;
                 if (exceptionMsg != null && exceptionMsg.Ex != null)
                 {
-                    this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted -= this.UpdateLocalIssues;
-                    this.ExtensionRunningLocalAnalysis.StdErrEvent -= this.UpdateOutputMessagesFromPlugin;
-                    this.ExtensionRunningLocalAnalysis.StdOutEvent -= this.UpdateOutputMessagesFromPlugin;
                     this.analysisTrigger = false;
                     this.OnPropertyChanged("AnalysisTriggerText");
                     this.OnPropertyChanged("AnalysisTrigger");
-                    MessageBox.Show("Cannot Execute Analysis: " + exceptionMsg.ErrorMessage);
+                    UserExceptionMessageBox.ShowException("Analysis Ended: " + exceptionMsg.ErrorMessage, exceptionMsg.Ex, this.OutputLog);
                     return;
                 }
             }
@@ -574,12 +496,8 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             }
 
             try
-            {
-                this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted -= this.UpdateLocalIssues;
-                this.ExtensionRunningLocalAnalysis.StdErrEvent -= this.UpdateOutputMessagesFromPlugin;
-                this.ExtensionRunningLocalAnalysis.StdOutEvent -= this.UpdateOutputMessagesFromPlugin;
-
-                this.ReplaceAllIssuesInCache(this.ExtensionRunningLocalAnalysis.GetIssues());
+            {                
+                this.ReplaceAllIssuesInCache(this.LocalAnalyserModule.GetIssues(this.UserConfiguration));
                 this.ErrorMessage = string.Empty;
                 this.DiagnosticMessage = string.Empty;
             }
@@ -589,63 +507,6 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                 this.ErrorMessage = "Failed to retrive issues from Plugin";
                 this.DiagnosticMessage = ex.StackTrace;
                 Debug.WriteLine("ex: " + ex.Message + " error: " + ex.StackTrace);
-            }
-        }
-
-        /// <summary>
-        /// The update local issues in view.
-        /// </summary>
-        /// <param name="sender">
-        /// The sender.
-        /// </param>
-        /// <param name="e">
-        /// The e.
-        /// </param>
-        private void UpdateLocalIssuesForFileAnalysis(object sender, EventArgs e)
-        {
-            try
-            {
-                var exceptionMsg = (LocalAnalysisCompletedEventArgs)e;
-                if (exceptionMsg.Ex != null)
-                {
-                    MessageBox.Show(
-                        "Cannot Execute Analysis: " + exceptionMsg.ErrorMessage + " StackTrace:"
-                        + exceptionMsg.Ex.StackTrace);
-                    this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted -= this.UpdateLocalIssuesForFileAnalysis;
-                    this.ExtensionRunningLocalAnalysis.StdErrEvent -= this.UpdateOutputMessagesFromPlugin;
-                    this.ExtensionRunningLocalAnalysis.StdOutEvent -= this.UpdateOutputMessagesFromPlugin;
-                    this.analysisTrigger = false;
-                    this.OnPropertyChanged("AnalysisTriggerText");
-                    this.OnPropertyChanged("AnalysisTrigger");
-                    return;
-                }
-            }
-            catch (Exception ex)
-            {
-                this.ErrorMessage = "Failed to retrive issues from Plugin";
-                this.DiagnosticMessage = ex.StackTrace;
-                Debug.WriteLine("ex: " + ex.Message + " error: " + ex.StackTrace);
-            }
-
-            if (this.ResourceInEditor == null)
-            {
-                return;
-            }
-
-            try
-            {
-                this.ExtensionRunningLocalAnalysis.LocalAnalysisCompleted -= this.UpdateLocalIssuesForFileAnalysis;
-                this.ExtensionRunningLocalAnalysis.StdErrEvent -= this.UpdateOutputMessagesFromPlugin;
-                this.ExtensionRunningLocalAnalysis.StdOutEvent -= this.UpdateOutputMessagesFromPlugin;
-
-                var issuesInExtension = this.ExtensionRunningLocalAnalysis.GetIssues();
-                this.localEditorCache.UpdateIssues(issuesInExtension);
-                this.RefreshIssuesInViews();
-            }
-            catch (Exception ex)
-            {
-                this.ErrorMessage = "Local Analysis Failed";
-                this.DiagnosticMessage = ex.StackTrace;
             }
         }
 
@@ -660,9 +521,13 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// </param>
         private void UpdateOutputMessagesFromPlugin(object sender, EventArgs e)
         {
-            var exceptionMsg = (LocalAnalysisCompletedEventArgs)e;
-            this.CustomPane.OutputString(exceptionMsg.ErrorMessage + "\r\n");
-            this.CustomPane.FlushToTaskList();
+            var exceptionMsg = (LocalAnalysisEventArgs)e;
+            if (this.CustomPane != null)
+            {
+                this.OutputLog += exceptionMsg.ErrorMessage + "\r\n";
+                this.CustomPane.OutputString(exceptionMsg.ErrorMessage + "\r\n");
+                this.CustomPane.FlushToTaskList();
+            }
         }
 
         /// <summary>

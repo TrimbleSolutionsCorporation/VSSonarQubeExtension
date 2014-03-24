@@ -85,16 +85,10 @@ namespace VSSonarExtension.MainView.Commands
                 return;
             }
 
-            if (header.Equals("Plugins Properties"))
+            if (header.Equals("Properties"))
             {
-                var window = new PluginOptionsWindow(ExtensionDataModel.PluginsOptionsData);
+                var window = new ExtensionOptionsWindow(this.model.ExtensionOptionsData);
                 window.ShowDialog();
-            }
-
-            if (header.Equals("Show Properties"))
-            {
-                var data = new IssuesGridSettingsDialog(this.model);
-                data.ShowDialog();
             }
         }
     }
