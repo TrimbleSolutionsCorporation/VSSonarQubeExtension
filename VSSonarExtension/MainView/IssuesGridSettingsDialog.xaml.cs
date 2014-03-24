@@ -15,6 +15,7 @@
 namespace VSSonarExtension.MainView
 {
     using System.Windows;
+    using System.Windows.Controls;
     using System.Windows.Input;
 
     using VSSonarExtension.MainViewModel.ViewModel;
@@ -22,7 +23,7 @@ namespace VSSonarExtension.MainView
     /// <summary>
     /// Interaction logic for IssuesGridSettingsDialog.xaml
     /// </summary>
-    public partial class IssuesGridSettingsDialog : Window
+    public partial class IssuesGridSettingsDialog
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="IssuesGridSettingsDialog"/> class.
@@ -36,37 +37,6 @@ namespace VSSonarExtension.MainView
 
             this.DataContext = null;
             this.DataContext = dataModelIn;
-        }
-
-        /// <summary>
-        /// The close command handler.
-        /// </summary>
-        /// <param name="sender">
-        /// The sender.
-        /// </param>
-        /// <param name="e">
-        /// The e.
-        /// </param>
-        private void CloseCommandHandler(object sender, ExecutedRoutedEventArgs e)
-        {
-            this.Close();
-        }
-
-        /// <summary>
-        /// The mouse button event handler.
-        /// </summary>
-        /// <param name="sender">
-        /// The sender.
-        /// </param>
-        /// <param name="e">
-        /// The e.
-        /// </param>
-        private void MouseButtonEventHandler(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ChangedButton == MouseButton.Left)
-            {
-                this.DragMove();
-            }
         }
     }
 }

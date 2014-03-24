@@ -112,7 +112,7 @@ namespace ExtensionHelpers.Test.NonVSTests
             vshelper.WriteOptionInApplicationData("key", "data2", "value2");
             vshelper.WriteOptionInApplicationData("key1", "data3", "value3");
 
-            var value = vshelper.ReadAllOptionsForPluginOptionInApplicationData("key");
+            var value = vshelper.ReadAllAvailableOptionsInSettings("key");
             Assert.AreEqual(3, value.Count);
             Assert.AreEqual("value", value["data"]);
             Assert.AreEqual("value1", value["data1"]);
@@ -134,7 +134,7 @@ namespace ExtensionHelpers.Test.NonVSTests
                                   { "data3", "value3" }
                               };
             vshelper.WriteAllOptionsForPluginOptionInApplicationData("key", new Resource(), options);
-            var value = vshelper.ReadAllOptionsForPluginOptionInApplicationData("key");
+            var value = vshelper.ReadAllAvailableOptionsInSettings("key");
             Assert.AreEqual(4, value.Count);
             Assert.AreEqual("value", value["data"]);
             Assert.AreEqual("value1", value["data1"]);
@@ -157,7 +157,7 @@ namespace ExtensionHelpers.Test.NonVSTests
                 writer.Write("key=data,value2\r\n");
             }
 
-            var value = vshelper.ReadAllOptionsForPluginOptionInApplicationData("key");
+            var value = vshelper.ReadAllAvailableOptionsInSettings("key");
             Assert.AreEqual(1, value.Count);
             Assert.AreEqual("value", value["data"]);
         }

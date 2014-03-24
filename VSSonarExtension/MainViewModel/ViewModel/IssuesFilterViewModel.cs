@@ -246,7 +246,11 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             set
             {
                 this.projectResources = value;
-                this.ProjectResourcesList = this.projectResources.Select(projectResource => projectResource.Lname + "   -    " + projectResource.Lang).ToList();
+                if (value != null)
+                {
+                    this.ProjectResourcesList = this.projectResources.Select(projectResource => projectResource.Lname + "   -    " + projectResource.Lang).ToList();
+                }
+                
                 this.OnPropertyChanged("ProjectResources");
             }
         }
@@ -304,9 +308,13 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             set
             {
                 this.usersList = value;
-                var list = value.Select(variable => variable.Login + "   -   " + variable.Name).ToList();
+                this.DisplayUsersList = null;
+                if (value != null)
+                {
+                    var list = value.Select(variable => variable.Login + "   -   " + variable.Name).ToList();
+                    this.DisplayUsersList = list;
+                }
 
-                this.DisplayUsersList = list;
                 this.OnPropertyChanged("UsersList");
             }
         }
@@ -500,7 +508,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             }
 
             Dictionary<string, string> options =
-                this.vsenvironmenthelper.ReadAllOptionsForPluginOptionInApplicationData(IssuesFilterViewModelKey);
+                this.vsenvironmenthelper.ReadAllAvailableOptionsInSettings(IssuesFilterViewModelKey);
             if (options != null && options.Count > 0)
             {
                 this.IsStatusOpenChecked = bool.Parse(options["IsStatusOpenChecked"]);

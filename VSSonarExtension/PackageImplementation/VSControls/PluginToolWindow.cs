@@ -34,13 +34,13 @@ namespace VSSonarExtension.VSControls
         {
             this.BitmapResourceID = 301;
             this.BitmapIndex = 1;
-            if (PackageImplementation.VsSonarExtensionPackage.CurrentPluginName == null)
-            {
-                throw new NotImplementedException("No Plugin Defined");
-            }
+            //if (PackageImplementation.VsSonarExtensionPackage.CurrentPluginName == null)
+            //{
+            //    throw new NotImplementedException("No Plugin Defined");
+           // }
 
-            this.Caption = PackageImplementation.VsSonarExtensionPackage.CurrentPluginName;
-            this.Content = PackageImplementation.VsSonarExtensionPackage.CurrentPluginControl;
+            //this.Caption = PackageImplementation.VsSonarExtensionPackage.CurrentPluginName;
+            //this.Content = PackageImplementation.VsSonarExtensionPackage.CurrentPluginControl;
         }
     }
 }

@@ -63,7 +63,8 @@ namespace VSSonarPlugins
         /// </see>
         ///     .
         /// </returns>
-        Dictionary<string, string> ReadAllOptionsForPluginOptionInApplicationData(string pluginKey);
+        Dictionary<string, string> ReadAllAvailableOptionsInSettings(string pluginKey);
+
 
         /// <summary>
         /// The write all options for plugin option in application data.

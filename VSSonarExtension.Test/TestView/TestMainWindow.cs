@@ -126,12 +126,10 @@ namespace VSSonarExtension.Test.TestView
         ///     The threadprc.
         /// </summary>
         private void WindowPlugins()
-        {
-            var modelPl = new PluginsOptionsModel();
+        {            
             var plugins = new List<IPlugin> { new DummyLocalAnalyserExtension() };
-
-            var windowPlugins = new PluginOptionsWindow(modelPl);
-            modelPl.Plugins = new ReadOnlyCollection<IPlugin>(plugins);
+            var modelPl = new ExtensionOptionsModel(new ReadOnlyCollection<IPlugin>(plugins), null);
+            var windowPlugins = new ExtensionOptionsWindow(modelPl);
             windowPlugins.ShowDialog();
         }
 
@@ -158,6 +156,11 @@ namespace VSSonarExtension.Test.TestView
                 return string.Empty;
             }
 
+            public string GetAnalyisOption(string key)
+            {
+                throw new System.NotImplementedException();
+            }
+
             /// <summary>
             /// The get key.
             /// </summary>
@@ -170,6 +173,26 @@ namespace VSSonarExtension.Test.TestView
             public string GetKey(ConnectionConfiguration configuration)
             {
                 return string.Empty;
+            }
+
+            public IPluginsOptions GetPluginControlOptions(ConnectionConfiguration configuration)
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public ILocalAnalyserExtension GetLocalAnalysisExtension()
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public ILocalAnalyserExtension GetLocalAnalysisExtension(Resource project)
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public ILocalAnalyserExtension GetLocalAnalysisExtension(ConnectionConfiguration configuration, Resource project)
+            {
+                throw new System.NotImplementedException();
             }
 
             /// <summary>
@@ -224,6 +247,16 @@ namespace VSSonarExtension.Test.TestView
             public IPluginsOptions GetPluginControlOptions(ConnectionConfiguration configuration, Resource project)
             {
                 return null;
+            }
+
+            public IPluginsOptions GetPluginControlOptions(Resource associatedProject)
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public bool IsSupported(VsProjectItem fileToAnalyse)
+            {
+                throw new System.NotImplementedException();
             }
 
             /// <summary>

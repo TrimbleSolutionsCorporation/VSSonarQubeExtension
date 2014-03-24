@@ -1054,7 +1054,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                 return;
             }
 
-            var options = this.vsenvironmenthelper.ReadAllOptionsForPluginOptionInApplicationData(DataGridOptionsKey);
+            var options = this.vsenvironmenthelper.ReadAllAvailableOptionsInSettings(DataGridOptionsKey);
             if (options != null && options.Count > 0)
             {
                 this.ReadWindowOptions(options);

@@ -35,6 +35,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
 
     using SonarRestService;
 
+    using VSSonarExtension.MainView;
     using VSSonarExtension.MainViewModel.Cache;
     using VSSonarExtension.MainViewModel.Commands;
     using VSSonarExtension.PackageImplementation;
@@ -51,7 +52,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// <summary>
         ///     The plugins options data.
         /// </summary>
-        public static readonly PluginsOptionsModel PluginsOptionsData = new PluginsOptionsModel();
+        public ExtensionOptionsModel ExtensionOptionsData;
 
         /// <summary>
         ///     The comments width.
@@ -73,9 +74,9 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         #region Fields
 
         /// <summary>
-        ///     The custom pane.
+        /// The plugin control.
         /// </summary>
-        private readonly IVsOutputWindowPane customPane;
+        public readonly PluginController PluginControl = new PluginController();
 
         /// <summary>
         ///     The local editor cache.
@@ -121,11 +122,6 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         ///     The error message.
         /// </summary>
         private string errorMessage = string.Empty;
-
-        /// <summary>
-        ///     The local analyser thread.
-        /// </summary>
-        private Thread localAnalyserThread;
 
         /// <summary>
         ///     The profile.
@@ -185,22 +181,6 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             this.RestoreUserFilteringOptions();
 
             this.AnalysisTrigger = false;
-
-            try
-            {
-                var outWindow = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
-                var customGuid = new Guid("0F44E2D1-F5FA-4d2d-AB30-22BE8ECD9789");
-                if (outWindow != null)
-                {
-                    outWindow.CreatePane(ref customGuid, "VSSonarQube Output", 1, 1);
-                    outWindow.GetPane(ref customGuid, out this.customPane);
-                    this.CustomPane.Activate();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-            }
         }
 
         /// <summary>
@@ -248,6 +228,31 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             }
 
             this.AssociatedProject = associatedProj;
+            var plugins = this.PluginControl.GetPlugins();
+            if (plugins != null)
+            {
+                this.ExtensionOptionsData = new ExtensionOptionsModel(plugins, this);
+                this.LocalAnalyserModule = new SonarLocalAnalyser.SonarLocalAnalyser(new List<IPlugin>(plugins), this.RestService, this.vsenvironmenthelper);
+                this.LocalAnalyserModule.StdOutEvent += this.UpdateOutputMessagesFromPlugin;
+                this.LocalAnalyserModule.LocalAnalysisCompleted += this.UpdateLocalIssues;
+
+                this.ExtensionOptionsData.Vsenvironmenthelper = this.Vsenvironmenthelper;
+                this.ExtensionOptionsData.ResetUserData();
+
+                foreach (var plugin in plugins)
+                {
+                    var configuration = ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper);
+                    var controloption = plugin.GetPluginControlOptions(configuration);
+                    if (controloption == null)
+                    {
+                        continue;
+                    }
+
+                    var pluginKey = plugin.GetKey(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper));
+                    var options = this.Vsenvironmenthelper.ReadAllAvailableOptionsInSettings(pluginKey);
+                    controloption.SetOptions(options);
+                }
+            }
         }
 
         #endregion
@@ -294,7 +299,6 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                     this.AssociatedProjectKey = string.Empty;
                 }
 
-                PluginsOptionsData.OpenSolution = value;
                 this.associatedProject = value;
                 this.OnPropertyChanged("AssociatedProject");
                 this.OnPropertyChanged("IsSolutionOpen");
@@ -413,13 +417,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// <summary>
         ///     Gets the custom pane.
         /// </summary>
-        public IVsOutputWindowPane CustomPane
-        {
-            get
-            {
-                return this.customPane;
-            }
-        }
+        public IVsOutputWindowPane CustomPane { get; set; }
 
         /// <summary>
         ///     Gets or sets the diagnostic message.
@@ -478,11 +476,6 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                 this.OnPropertyChanged("ErrorMessage");
             }
         }
-
-        /// <summary>
-        ///     Gets or sets the extension running local analysis.
-        /// </summary>
-        public ILocalAnalyserExtension ExtensionRunningLocalAnalysis { get; set; }
 
         /// <summary>
         ///     Gets or sets the false positive on issue command.
@@ -686,16 +679,6 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         ///     Gets or sets the open in vs command.
         /// </summary>
         public OpenInVsCommand OpenInVsCommand { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the plugins.
-        /// </summary>
-        public IPluginController PluginController { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the plugin running local analysis.
-        /// </summary>
-        public IPlugin PluginRunningAnalysis { get; set; }
 
         /// <summary>
         ///     Gets or sets a value indicating whether prevent update of issues list.
@@ -1076,43 +1059,17 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// </summary>
         public void AssociateProjectToSolution()
         {
-            Resource newProject = this.AssociateSolutionWithSonarProject();
-
+            var newProject = this.AssociateSolutionWithSonarProject();
             if (newProject == null)
             {
                 return;
             }
 
+            this.ExtensionOptionsData.Project = newProject;
+            this.ExtensionOptionsData.RefreshGeneralProperties();
+            this.ExtensionOptionsData.RefreshPropertiesInPlugins();
+            this.ExtensionOptionsData.SyncOptionsToFile();
             this.AssociatedProject = newProject;
-            this.PluginRunningAnalysis = this.PluginController.GetPluginToRunResource(this.UserConfiguration, newProject);
-            if (this.PluginRunningAnalysis != null)
-            {
-                string pluginKey = this.PluginRunningAnalysis.GetKey(this.UserConfiguration);
-
-                if (this.VerifyLocalExtension(false))
-                {
-                    this.OnPropertyChanged("IsSolutionOpen");
-                    return;
-                }
-
-                // populate properties
-                IPluginsOptions plugionController = this.PluginRunningAnalysis.GetPluginControlOptions(this.UserConfiguration, this.AssociatedProject);
-                if (plugionController != null)
-                {
-                    Dictionary<string, string> options = this.Vsenvironmenthelper.ReadAllOptionsForPluginOptionInApplicationData(pluginKey);
-                    plugionController.SetOptions(options);
-                }
-
-                ReadOnlyCollection<IMenuCommandPlugin> plugins = this.PluginController.GetMenuItemPlugins();
-                if (plugins != null)
-                {
-                    foreach (IMenuCommandPlugin plugin in plugins)
-                    {
-                        plugin.UpdateConfiguration(this.UserConfiguration, this.AssociatedProject, this.vsenvironmenthelper);
-                    }
-                }
-            }
-
             this.OnPropertyChanged("IsSolutionOpen");
         }
 
@@ -1137,7 +1094,15 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             string sourceKey = vsinter.ReadOptionFromApplicationData(solutionName, "PROJECTKEY");
             if (!string.IsNullOrEmpty(sourceKey))
             {
-                return this.RestService.GetResourcesData(conf, sourceKey)[0];
+                try
+                {
+                    return this.RestService.GetResourcesData(conf, sourceKey)[0];
+                }
+                catch (Exception ex)
+                {
+                    UserExceptionMessageBox.ShowException("Associated Project does not exist in server, please configure association", ex);
+                    return null;
+                }                
             }
 
             string solutionPath = vsinter.ActiveSolutionPath();
@@ -1160,8 +1125,6 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// </summary>
         public void ClearProjectAssociation()
         {
-            this.PluginRunningAnalysis = null;
-            this.ExtensionRunningLocalAnalysis = null;
             this.AssociatedProject = null;
             this.ClearCaches();
             this.OnPropertyChanged("IsSolutionOpen");
@@ -1194,6 +1157,32 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         {
             this.RestService = restServiceIn;
             this.Vsenvironmenthelper = vsenvironmenthelperIn;
+            var plugins = this.PluginControl.GetPlugins();
+            if (plugins != null)
+            {
+                this.ExtensionOptionsData = new ExtensionOptionsModel(plugins, this);
+                this.LocalAnalyserModule = new SonarLocalAnalyser.SonarLocalAnalyser(new List<IPlugin>(plugins), this.RestService, this.Vsenvironmenthelper);
+                this.LocalAnalyserModule.StdOutEvent += this.UpdateOutputMessagesFromPlugin;
+                this.LocalAnalyserModule.LocalAnalysisCompleted += this.UpdateLocalIssues;
+
+                this.ExtensionOptionsData.Vsenvironmenthelper = this.Vsenvironmenthelper;
+                this.ExtensionOptionsData.ResetUserData();
+
+                foreach (var plugin in plugins)
+                {
+                    var configuration = ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper);
+                    var controloption = plugin.GetPluginControlOptions(configuration);
+                    if (controloption == null)
+                    {
+                        continue;
+                    }
+
+                    var pluginKey = plugin.GetKey(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper));
+                    var options = this.Vsenvironmenthelper.ReadAllAvailableOptionsInSettings(pluginKey);
+                    controloption.SetOptions(options);
+                }
+            }
+
 
             this.InitCommanding();
             this.UserTextControlsHeight = new GridLength(0);
@@ -1308,30 +1297,41 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// </param>
         public void RefreshDataForResource(string fullName)
         {
-            if (this.PluginController == null || string.IsNullOrEmpty(fullName) || this.AssociatedProject == null
-                || this.PluginRunningAnalysis == null)
+            if (string.IsNullOrEmpty(fullName) || this.AssociatedProject == null)
             {
                 this.ErrorMessage = "Extension Not Ready";
                 return;
             }
 
             this.DocumentInView = fullName;
-            string resourceKey = this.PluginRunningAnalysis.GetResourceKey(
-                this.vsenvironmenthelper.VsProjectItem(fullName), 
-                this.AssociatedProject.Key);
-            this.ResourceInEditor = this.restService.GetResourcesData(this.UserConfiguration, resourceKey)[0];
-
-            if (this.analysisModeText.Equals(AnalysisModes.Server))
+            try
             {
-                this.UpdateDataFromServer(this.ResourceInEditor);
-            }
+                var resourceKey =
+                    this.LocalAnalyserModule.GetResourceKey(
+                        this.vsenvironmenthelper.VsProjectItem(fullName),
+                        this.AssociatedProject,
+                        this.UserConfiguration);
 
-            if (this.analysisModeText.Equals(AnalysisModes.Local) && this.analysisTypeText.Equals(AnalysisTypes.File))
+                this.ResourceInEditor = this.restService.GetResourcesData(this.UserConfiguration, resourceKey)[0];
+
+                if (this.analysisModeText.Equals(AnalysisModes.Server))
+                {
+                    this.UpdateDataFromServer(this.ResourceInEditor);
+                }
+
+                if (this.analysisModeText.Equals(AnalysisModes.Local)
+                    && this.analysisTypeText.Equals(AnalysisTypes.File))
+                {
+                    this.PerformfAnalysis(this.analysisTrigger);
+                }
+
+                this.TriggerUpdateSignals();
+            }
+            catch (Exception ex)
             {
-                this.PerformfAnalysis(this.analysisTrigger);
+                this.ErrorMessage = "Resource in view not supported";
+                this.DiagnosticMessage = ex.StackTrace;
             }
-
-            this.TriggerUpdateSignals();
         }
 
         /// <summary>
@@ -1461,31 +1461,33 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                 if (configuration == null)
                 {
                     this.AssociatedProject = null;
+                    this.UsersList = null;
+                    this.ProjectResources = null;
                     this.ErrorMessage = "Extension is not in usable condition, Check User Configuration. Host, UserName and Password needs to be set";
                     return;
                 }
 
                 // start some data
-                List<User> usortedList = this.RestService.GetUserList(configuration);
+                var usortedList = this.RestService.GetUserList(configuration);
                 if (usortedList != null)
                 {
                     this.UsersList = new List<User>(usortedList.OrderBy(i => i.Login)) { new User() };
                 }
 
-                List<Resource> projects = this.RestService.GetProjectsList(configuration);
+                var projects = this.RestService.GetProjectsList(configuration);
                 if (projects != null)
                 {
                     this.ProjectResources = new List<Resource>(projects.OrderBy(i => i.Name));
                 }
 
-                this.ExtensionRunningLocalAnalysis = null;
                 this.AssociateProjectToSolution();
             }
             catch (Exception ex)
             {
                 this.AssociatedProject = null;
-                this.ErrorMessage = "Extension is not in usable condition, Check User Configuration. Host, UserName and Password needs to be set";
-                this.DiagnosticMessage = ex.StackTrace;
+                this.UsersList = null;
+                this.ProjectResources = null;
+                UserExceptionMessageBox.ShowException("Extension is not in usable condition, Check User Configuration. Host, UserName and Password needs to be set", ex);
             }
         }
 

@@ -1,0 +1,106 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:viewModel="clr-namespace:VSSonarExtension.MainViewModel.ViewModel"
+             x:Class="VSSonarExtension.MainView.GeneralOptionsControl" 
+             mc:Ignorable="d" Height="400" Width="800" Background="#FF2D2D30" Foreground="White">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="StylesAndTemplates.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <viewModel:GeneralOptionsModel x:Key="CsPluginOptionsControlDataSource" d:IsDataSource="True"/>
+            <DataTemplate x:Key="SonarQubePropertiesTemplate">
+                <StackPanel>
+                    <TextBlock Text="{Binding Key}"/>
+                    <TextBlock Text="{Binding Value}"/>
+                    <TextBlock Text="{Binding ValueInServer}"/>
+                </StackPanel>
+            </DataTemplate>
+            <BooleanToVisibilityConverter x:Key="bool2VisibilityConverter"/>
+
+            <Style x:Key="RowHeaderGripperStyle" TargetType="{x:Type Thumb}">
+                <Setter Property="Height" Value="8"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Cursor" Value="SizeNS"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Thumb}">
+                            <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}"/>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="ColumnHeaderGripperStyle" TargetType="{x:Type Thumb}">
+                <Setter Property="Width" Value="8"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Cursor" Value="SizeWE"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Thumb}">
+                            <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}"/>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+        <UserControl.DataContext>
+            <Binding Source="{StaticResource CsPluginOptionsControlDataSource}"/>
+    </UserControl.DataContext>
+    <Grid>
+        <ScrollViewer>
+            <StackPanel>
+                <Expander Header="Local Analysis Options" Foreground="White">
+                    <Grid Height="235" Background="Transparent">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="10"/>
+                            <RowDefinition Height="25"/>
+							<RowDefinition Height="25"/>
+							<RowDefinition Height="25"/>
+							<RowDefinition Height="25"/>
+							<RowDefinition Height="25"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="77*"/>
+                            <ColumnDefinition Width="249*"/>
+                            <ColumnDefinition Width="54*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label        Grid.Column="0" Foreground="White" Content="Java Executable Path"/>
+                        <TextBox      Grid.Column="1" IsReadOnly="true" Background="Transparent" Foreground="White" TextWrapping="Wrap" Text="{Binding JavaBinary}"  />
+                        <ToggleButton Grid.Column="2" Foreground="White" IsChecked="{Binding BrowseForJavaTrigger}" Content="Browse"  Template="{DynamicResource SquareToggleButtonTemplate}"/>
+                        <Label        Grid.Column="0" Grid.Row="1" Foreground="White" Content="SonarQube Runner Path" Height="25" VerticalAlignment="Bottom"/>
+                        <TextBox      Grid.Column="1" Grid.Row="1" IsReadOnly="true" Background="Transparent" Foreground="White" TextWrapping="Wrap" Text="{Binding SonarQubeBinary}"  />
+                        <ToggleButton Grid.Column="2" Grid.Row="1" Foreground="White" IsChecked="{Binding BrowseForSonarRunnerQubeTrigger}" Content="Browse"  Template="{DynamicResource SquareToggleButtonTemplate}"/>
+                        <CheckBox Grid.Column="0" Grid.Row="2" Content="Enable Debug" IsChecked="{Binding DebugIsChecked}" Background="Transparent" Foreground="White" VerticalAlignment="Center" />
+                        <Slider ToolTip="Timeout of Analysis in Minutes" Grid.Column="1" Grid.Row="2" Maximum="60" TickFrequency="10" Value="{Binding TimeoutValue}" />
+                        <Label        Grid.Column="2" Grid.Row="2" Foreground="White" Content="{Binding TimeoutValueString}" Height="25" VerticalAlignment="Bottom"/>
+
+						<Label Grid.Row="3" Grid.Column="0" Foreground="White" Content="Excluded Plugins:" Grid.ColumnSpan="2"/>
+						<TextBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Foreground="White" Background="Transparent"  Text="{Binding ExcludedPlugins}"/>
+                        
+                        <Label Grid.Row="5" Grid.Column="0" Foreground="White" Content="Project Id:" Grid.ColumnSpan="2"/>
+                        <Label Grid.Row="6" Grid.Column="0" Foreground="White" Content="Language:" Grid.ColumnSpan="2"/>                        
+						<Label Grid.Row="7" Grid.Column="0" Foreground="White" Content="Project Version:" Grid.ColumnSpan="2"/>
+						<Label Grid.Row="8" Grid.Column="0" Foreground="White" Content="Source Dir:" Grid.ColumnSpan="2"/>						
+						<Label Grid.Row="9" Grid.Column="0" Foreground="White" Content="Source Encoding:" Grid.ColumnSpan="2"/>
+
+                        <Label Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Foreground="White" Content="{Binding ProjectId}" IsEnabled="{Binding IsSolutionOpen}" />
+                        <Label Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Foreground="White" Content="{Binding Language}" IsEnabled="{Binding IsSolutionOpen}"/>                        
+						<Label Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" Foreground="White" Content="{Binding ProjectVersion}" Background="Transparent" />
+                        <TextBox Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2" Foreground="White" Text="{Binding SourceDir}" Background="Transparent" TextWrapping="Wrap" IsEnabled="{Binding IsSolutionOpen}"/>                        
+						<TextBox Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="2" Foreground="White" Text="{Binding SourceEncoding}" Background="Transparent" TextWrapping="Wrap" IsEnabled="{Binding IsSolutionOpen}"/>
+
+                    </Grid>
+                </Expander>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

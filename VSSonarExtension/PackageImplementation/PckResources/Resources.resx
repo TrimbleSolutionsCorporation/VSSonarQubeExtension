@@ -174,4 +174,8 @@
   <data name="ErrorMessageAutoAnalysis" xml:space="preserve">
     <value>Ups something went was wrong, please report this exception: </value>
   </data>
+    <data name="PluginsOptionsModel_SelectedPluginItem_GeneralOptionsKey" xml:space="preserve">
+    <value>GeneralOptionsKey</value>
+    <comment>Key for general options</comment>
+  </data>
 </root>

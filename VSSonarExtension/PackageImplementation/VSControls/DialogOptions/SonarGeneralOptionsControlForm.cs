@@ -122,20 +122,5 @@ namespace VSSonarExtension.VSControls.DialogOptions
                 MessageBox.Show("Cannot Authenticate" + ex.StackTrace + " Messsage: " + ex.Message);
             }
         }
-
-        /// <summary>
-        /// The plugins user control_ click.
-        /// </summary>
-        /// <param name="sender">
-        /// The sender.
-        /// </param>
-        /// <param name="e">
-        /// The e.
-        /// </param>
-        private void PluginsUserControlClick(object sender, EventArgs e)
-        {
-            var window = new PluginOptionsWindow(ExtensionDataModel.PluginsOptionsData);
-            window.ShowDialog();
-        }
     }
 }

@@ -203,7 +203,6 @@ namespace VSSonarExtension.Test.TestViewModel
         public void TestAssociationWithSolution()
         {
             var model = new ExtensionDataModel(this.service, this.vshelper, null);
-            model.PluginController = new PluginController();
             var projectAsso = new Resource { Key = "KEY" };
 
             model.AssociateProjectToSolution();

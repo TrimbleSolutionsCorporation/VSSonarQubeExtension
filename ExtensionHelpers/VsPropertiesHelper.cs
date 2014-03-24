@@ -463,7 +463,7 @@ namespace ExtensionHelpers
         /// </see>
         ///     .
         /// </returns>
-        public Dictionary<string, string> ReadAllOptionsForPluginOptionInApplicationData(string pluginKey)
+        public Dictionary<string, string> ReadAllAvailableOptionsInSettings(string pluginKey)
         {
             var options = new Dictionary<string, string>();
             if (!File.Exists(this.ApplicationDataUserSettingsFile))
@@ -629,8 +629,19 @@ namespace ExtensionHelpers
         /// </returns>
         public VsProjectItem VsProjectItem(string filename)
         {
+            if (string.IsNullOrEmpty(filename))
+            {
+                return null;
+            }
+
             var driveLetter = filename.Substring(0, 1);
             var item = this.environment.Solution.FindProjectItem(filename);
+
+            if (item == null)
+            {
+                return null;
+            }
+
             var documentName = item.Document.Name;
             var documentPath = driveLetter + GetProperFilePathCapitalization(item.Document.FullName).Substring(1);
             var projectName = item.ContainingProject.Name;
