@@ -27,7 +27,10 @@ namespace VSSonarExtension.MainView
         public ExtensionOptionsWindow(ExtensionOptionsModel dataModel)
         {
             this.InitializeComponent();
-            dataModel.RequestClose += (s, e) => this.Close();
+            if (dataModel != null)
+            {
+                dataModel.RequestClose += (s, e) => this.Close();
+            }            
             this.DataContext = dataModel;
         }
 
@@ -46,6 +49,17 @@ namespace VSSonarExtension.MainView
             {
                 this.DragMove();
             }
+        }
+
+        public void RefreshDataContext(ExtensionOptionsModel extensionOptionsData)
+        {
+            if (extensionOptionsData != null)
+            {
+                extensionOptionsData.RequestClose += (s, e) => this.Close();
+            }
+
+            this.DataContext = null;
+            this.DataContext = extensionOptionsData;
         }
     }
 }

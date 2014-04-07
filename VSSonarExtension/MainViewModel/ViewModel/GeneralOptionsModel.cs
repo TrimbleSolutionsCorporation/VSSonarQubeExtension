@@ -10,6 +10,8 @@ namespace VSSonarExtension.MainViewModel.ViewModel
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Collections.Specialized;
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Globalization;
@@ -99,6 +101,10 @@ namespace VSSonarExtension.MainViewModel.ViewModel
 
         private string language;
 
+        private NotifyCollectionChangedEventHandler collectionChanged;
+
+        private readonly ObservableCollection<PluginDescription> pluginList = new ObservableCollection<PluginDescription>();
+
         #endregion
 
         #region Constructors and Destructors
@@ -106,6 +112,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// <summary>
         ///     Initializes a new instance of the <see cref="GeneralOptionsModel" /> class.
         /// </summary>
+        /// <param name="readOnlyCollection"></param>
         /// <param name="openSolution"></param>
         public GeneralOptionsModel()
         {
@@ -120,7 +127,15 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             }
 
             this.ResetDefaults();
+            //this.collectionChanged = this.CollectionChanged;
+            //this.pluginList.CollectionChanged += this.collectionChanged;
         }
+
+        private void CollectionChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
+        {
+            var pl = this.PluginList;
+        }
+
 
         #endregion
 
@@ -418,6 +433,15 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             }
         }
 
+        public ObservableCollection<PluginDescription> PluginList
+        {
+            get
+            {
+                return this.pluginList;
+            }
+        }
+
+
         #endregion
 
         #region Public Methods and Operators
@@ -425,6 +449,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// <summary>
         ///     The get user control options.
         /// </summary>
+        /// <param name="plugincontroller"></param>
         /// <returns>
         ///     The <see cref="UserControl" />.
         /// </returns>

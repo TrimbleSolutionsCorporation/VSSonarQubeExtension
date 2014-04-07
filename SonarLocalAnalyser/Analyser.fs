@@ -172,15 +172,25 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IPlugin>, rest
                 let message = new LocalAnalysisEventArgs("LA:", e.Data, null)
                 stdOutEvent.Trigger([|x; message|])
                 let separator = [| "Populating index from" |]
-                let fileName = e.Data.Split(separator, StringSplitOptions.RemoveEmptyEntries).[1]
+                let mutable fileName = e.Data.Split(separator, StringSplitOptions.RemoveEmptyEntries).[1]
+
+                if fileName.Contains("abs=") then 
+                    let separator = [| "abs=" |]
+                    let absfileName = fileName.Split(separator, StringSplitOptions.RemoveEmptyEntries).[1].Trim()
+                    fileName <- absfileName.TrimEnd(']')
+
                 if File.Exists(fileName) then
                     let vsprojitem = new VsProjectItem(Path.GetFileName(fileName), fileName, "", "", "", x.ProjectRoot)
-                    let issues = x.AnalysisLocalExtension.ExecuteAnalysisOnFile(vsprojitem, x.QaProfile, x.Project)
 
-                    lock syncLock (
-                        fun () -> 
-                            localissues.AddRange(issues)
-                        )
+                    let extension = GetPluginThatSupportsResource(vsprojitem).GetLocalAnalysisExtension(x.Conf, x.Project)
+
+                    if not(extension = null) then
+                        let issues = extension.ExecuteAnalysisOnFile(vsprojitem, x.QaProfile, x.Project)
+                        lock syncLock (
+                            fun () -> 
+                                localissues.AddRange(issues)
+                            )
+
 
     member x.generateCommandArgsForMultiLangProject(mode : AnalysisMode, version : double, conf : ConnectionConfiguration, project : Resource) =
         let builder = GenerateCommonArgumentsForAnalysis(mode, version, conf, null, project)

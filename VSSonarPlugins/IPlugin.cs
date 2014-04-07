@@ -121,5 +121,13 @@ namespace VSSonarPlugins
         /// The <see cref="string"/>.
         /// </returns>
         string GenerateTokenId(ConnectionConfiguration configuration);
+
+        /// <summary>
+        /// The get plugin descritpion.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="PluginDescription"/>.
+        /// </returns>
+        PluginDescription GetPluginDescription();
     }
 }

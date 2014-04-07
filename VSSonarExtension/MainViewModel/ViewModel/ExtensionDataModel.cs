@@ -231,7 +231,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             var plugins = this.PluginControl.GetPlugins();
             if (plugins != null)
             {
-                this.ExtensionOptionsData = new ExtensionOptionsModel(plugins, this);
+                this.ExtensionOptionsData = new ExtensionOptionsModel(this.PluginControl, this);
                 this.LocalAnalyserModule = new SonarLocalAnalyser.SonarLocalAnalyser(new List<IPlugin>(plugins), this.RestService, this.vsenvironmenthelper);
                 this.LocalAnalyserModule.StdOutEvent += this.UpdateOutputMessagesFromPlugin;
                 this.LocalAnalyserModule.LocalAnalysisCompleted += this.UpdateLocalIssues;
@@ -1160,7 +1160,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             var plugins = this.PluginControl.GetPlugins();
             if (plugins != null)
             {
-                this.ExtensionOptionsData = new ExtensionOptionsModel(plugins, this);
+                this.ExtensionOptionsData = new ExtensionOptionsModel(this.PluginControl, this);
                 this.LocalAnalyserModule = new SonarLocalAnalyser.SonarLocalAnalyser(new List<IPlugin>(plugins), this.RestService, this.Vsenvironmenthelper);
                 this.LocalAnalyserModule.StdOutEvent += this.UpdateOutputMessagesFromPlugin;
                 this.LocalAnalyserModule.LocalAnalysisCompleted += this.UpdateLocalIssues;
@@ -1182,7 +1182,6 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                     controloption.SetOptions(options);
                 }
             }
-
 
             this.InitCommanding();
             this.UserTextControlsHeight = new GridLength(0);

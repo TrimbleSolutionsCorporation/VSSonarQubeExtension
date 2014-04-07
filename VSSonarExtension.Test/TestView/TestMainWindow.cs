@@ -128,7 +128,7 @@ namespace VSSonarExtension.Test.TestView
         private void WindowPlugins()
         {            
             var plugins = new List<IPlugin> { new DummyLocalAnalyserExtension() };
-            var modelPl = new ExtensionOptionsModel(new ReadOnlyCollection<IPlugin>(plugins), null);
+            var modelPl = new ExtensionOptionsModel(new PluginController(), null);
             var windowPlugins = new ExtensionOptionsWindow(modelPl);
             windowPlugins.ShowDialog();
         }
@@ -154,6 +154,11 @@ namespace VSSonarExtension.Test.TestView
             public string GenerateTokenId(ConnectionConfiguration configuration)
             {
                 return string.Empty;
+            }
+
+            public PluginDescription GetPluginDescription()
+            {
+                throw new System.NotImplementedException();
             }
 
             public string GetAnalyisOption(string key)
