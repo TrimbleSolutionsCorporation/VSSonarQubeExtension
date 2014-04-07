@@ -15,6 +15,7 @@
 namespace VSSonarExtension.MainViewModel.ViewModel
 {
     using System;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Globalization;
@@ -59,12 +60,13 @@ namespace VSSonarExtension.MainViewModel.ViewModel
 
         private ExtensionDataModel model;
 
+        private PluginController plugincontroller;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ExtensionOptionsModel"/> class.
         /// </summary>
         public ExtensionOptionsModel()
         {
-            this.GeneralOptions = new GeneralOptionsModel();
         }
 
         /// <summary>
@@ -82,12 +84,14 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// <param name="plugins">
         /// The plugins.
         /// </param>
-        public ExtensionOptionsModel(ReadOnlyCollection<IPlugin> plugins, ExtensionDataModel model)
+        public ExtensionOptionsModel(PluginController plugincontroller, ExtensionDataModel model)
         {
             this.model = model;
-            this.plugins = plugins;
-            this.ControlCommand = new UserSelectControl(this, plugins);
+            this.plugincontroller = plugincontroller;
+            this.plugins = plugincontroller.GetPlugins();
+            this.ControlCommand = new UserSelectControl(this, this.plugins);
             this.GeneralOptions = new GeneralOptionsModel();
+            this.GeneralOptionsFrame = this.GeneralOptions.GetUserControlOptions();
         }
 
         /// <summary>
@@ -103,7 +107,12 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// <summary>
         /// Gets or sets the general options.
         /// </summary>
-        public GeneralOptionsModel GeneralOptions { get; set; }
+        public readonly GeneralOptionsModel GeneralOptions;
+
+        /// <summary>
+        /// The general options frame.
+        /// </summary>
+        private UserControl GeneralOptionsFrame;
 
         /// <summary>
         ///     Gets or sets the options in view.
@@ -185,7 +194,14 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                     if (value.Equals("General Settings"))
                     {
                         this.ResetGeneralOptionsForProject();
-                        this.OptionsInView = this.GeneralOptions.GetUserControlOptions();
+
+                        this.GeneralOptions.PluginList.Clear();
+                        foreach (var plugin in this.plugincontroller.GetPlugins())
+                        {
+                            this.GeneralOptions.PluginList.Add(plugin.GetPluginDescription());
+                        }
+
+                        this.OptionsInView = this.GeneralOptionsFrame;
                         return;
                     }
 

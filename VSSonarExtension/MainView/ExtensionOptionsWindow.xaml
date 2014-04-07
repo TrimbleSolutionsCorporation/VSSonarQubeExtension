@@ -10,8 +10,8 @@
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
 				<ResourceDictionary Source="StylesAndTemplates.xaml"/>
-			</ResourceDictionary.MergedDictionaries>			<sampleDataForButtons:SampleDataForButtons x:Key="SampleDataForButtons" d:IsDataSource="True"/>
-
+			</ResourceDictionary.MergedDictionaries>
+			<sampleDataForButtons:SampleDataForButtons x:Key="SampleDataForButtons" d:IsDataSource="True"/>
 			<viewModel:ExtensionOptionsModel x:Key="PluginsOptionsModelDataSource" d:IsDataSource="True"/>
 			<BorderGapMaskConverter x:Key="BorderGapMaskConverter"/>
 			<Style x:Key="GroupBoxStyle1" TargetType="{x:Type GroupBox}">

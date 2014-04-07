@@ -54,6 +54,7 @@
     <Compile Include="IVsEnvironmentHelper.cs" />
     <Compile Include="LocalAnalysisEventArgs.cs" />
     <Compile Include="PluginController.cs" />
+    <Compile Include="PluginDescription.cs" />
     <Compile Include="PluginException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SonarQubeProperties.cs" />
