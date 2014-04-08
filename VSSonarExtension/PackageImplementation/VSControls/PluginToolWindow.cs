@@ -28,19 +28,29 @@ namespace VSSonarExtension.VSControls
     public sealed class PluginToolWindow : ToolWindowPane
     {
         /// <summary>
+        /// The current plugin control.
+        /// </summary>
+        public static UserControl CurrentPluginControl = new UserControl();
+
+        /// <summary>
+        /// The current plugin name.
+        /// </summary>
+        public static string CurrentPluginName = "Plugin Window";
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="PluginToolWindow"/> class.
         /// </summary>
         public PluginToolWindow() : base(null)
         {
             this.BitmapResourceID = 301;
             this.BitmapIndex = 1;
-            //if (PackageImplementation.VsSonarExtensionPackage.CurrentPluginName == null)
-            //{
-            //    throw new NotImplementedException("No Plugin Defined");
-           // }
+            if (CurrentPluginName == null)
+            {
+                throw new NotImplementedException("No Plugin Defined");
+            }
 
-            //this.Caption = PackageImplementation.VsSonarExtensionPackage.CurrentPluginName;
-            //this.Content = PackageImplementation.VsSonarExtensionPackage.CurrentPluginControl;
+            this.Caption = CurrentPluginName;
+            this.Content = CurrentPluginControl;
         }
     }
 }

@@ -128,6 +128,6 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="PluginDescription"/>.
         /// </returns>
-        PluginDescription GetPluginDescription();
+        PluginDescription GetPluginDescription(IVsEnvironmentHelper vsinter);
     }
 }

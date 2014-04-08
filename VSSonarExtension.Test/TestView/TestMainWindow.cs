@@ -156,6 +156,11 @@ namespace VSSonarExtension.Test.TestView
                 return string.Empty;
             }
 
+            public PluginDescription GetPluginDescription(IVsEnvironmentHelper vsinter)
+            {
+                throw new System.NotImplementedException();
+            }
+
             public PluginDescription GetPluginDescription()
             {
                 throw new System.NotImplementedException();

@@ -68,11 +68,11 @@
 				</Expander>
 				<Expander  Header="Available Plugins" Foreground="White">
 					<Grid Height="235" Background="Transparent">
-                        <DataGrid Background="Transparent" Foreground="White" Grid.Row="0" Grid.ColumnSpan="3" ItemsSource="{Binding PluginList}" AutoGenerateColumns="False" VerticalScrollBarVisibility="Visible" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" GridLinesVisibility="None" BorderBrush="Transparent" BorderThickness="1" RowBackground="Transparent" RowHeaderStyle="{DynamicResource DataGridRowHeaderStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" ColumnHeaderHeight="20" HeadersVisibility="Column" RowHeaderWidth="0" >			
+                        <DataGrid Background="Transparent" Foreground="White" Grid.Row="0" Grid.ColumnSpan="3" ItemsSource="{Binding PluginList}" AutoGenerateColumns="False" VerticalScrollBarVisibility="Visible" CanUserAddRows="False" CanUserDeleteRows="False" GridLinesVisibility="None" BorderBrush="Transparent" BorderThickness="1" RowBackground="Transparent" RowHeaderStyle="{DynamicResource DataGridRowHeaderStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" ColumnHeaderHeight="20" HeadersVisibility="Column" RowHeaderWidth="0" >			
 							<DataGrid.Columns>
-								<DataGridTextColumn Binding="{Binding Name}" Header="Name   "/>
-								<DataGridTextColumn Binding="{Binding SupportedExtensions}" Header="Supported Extensions   "/>
-								<DataGridTextColumn Binding="{Binding Description}" Header="Description   "/>
+								<DataGridTextColumn Binding="{Binding Name}" Header="Name   " IsReadOnly="True"/>
+								<DataGridTextColumn Binding="{Binding SupportedExtensions}" Header="Supported Extensions   " IsReadOnly="True"/>
+								<DataGridTextColumn Binding="{Binding Description}" Header="Description   " IsReadOnly="True"/>
 								<DataGridCheckBoxColumn Binding="{Binding Enabled}" Header="Enabled   " IsReadOnly="False" />
 							</DataGrid.Columns>											
 						</DataGrid>
