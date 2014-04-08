@@ -122,10 +122,17 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IPlugin>, rest
         if itemInView = null then        
             raise(new NoFileInViewException())
 
-        let item = (List.ofSeq plugins) |> List.find (fun plugin -> plugin.IsSupported(itemInView)) 
-        if item = null then
-            raise(new ResourceNotSupportedException())
-        item
+        let IsSupported(plugin : IPlugin, item : VsProjectItem) = 
+            let isEnabled = vsinter.ReadOptionFromApplicationData(GlobalIds.PluginEnabledControlId, plugin.GetPluginDescription(vsinter).Name)
+            if String.IsNullOrEmpty(isEnabled) then
+                plugin.IsSupported(item)
+            else
+                plugin.IsSupported(item) && isEnabled.Equals("true", StringComparison.CurrentCultureIgnoreCase)
+
+        try
+            (List.ofSeq plugins) |> List.find (fun plugin -> plugin.IsSupported(itemInView)) 
+        with
+        | ex -> null
 
     let monitor = new Object()
     let numberofFilesToAnalyse = ref 0;
@@ -181,33 +188,36 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IPlugin>, rest
 
                 if File.Exists(fileName) then
                     let vsprojitem = new VsProjectItem(Path.GetFileName(fileName), fileName, "", "", "", x.ProjectRoot)
+                    let plugin = GetPluginThatSupportsResource(vsprojitem)
 
-                    let extension = GetPluginThatSupportsResource(vsprojitem).GetLocalAnalysisExtension(x.Conf, x.Project)
-
-                    if not(extension = null) then
-                        let issues = extension.ExecuteAnalysisOnFile(vsprojitem, x.QaProfile, x.Project)
-                        lock syncLock (
-                            fun () -> 
-                                localissues.AddRange(issues)
-                            )
+                    if plugin <> null then
+                        let extension = GetPluginThatSupportsResource(vsprojitem).GetLocalAnalysisExtension(x.Conf, x.Project)
+                        if extension <> null then
+                            let issues = extension.ExecuteAnalysisOnFile(vsprojitem, x.QaProfile, x.Project)
+                            lock syncLock (
+                                fun () -> 
+                                    localissues.AddRange(issues)
+                                )
 
 
     member x.generateCommandArgsForMultiLangProject(mode : AnalysisMode, version : double, conf : ConnectionConfiguration, project : Resource) =
         let builder = GenerateCommonArgumentsForAnalysis(mode, version, conf, null, project)
 
         let AddProperties(extension : ILocalAnalyserExtension) = 
-            let argsforplugin = extension.GetLocalAnalysisParamenters()
-            for prop in argsforplugin do
-                builder.AppendSwitchIfNotNull("-D" + prop.Key + "=", prop.Value)
+            if extension <> null then
+                let argsforplugin = extension.GetLocalAnalysisParamenters()
+                for prop in argsforplugin do
+                    builder.AppendSwitchIfNotNull("-D" + prop.Key + "=", prop.Value)
 
         plugins |> Seq.iter (fun plugin -> AddProperties(plugin.GetLocalAnalysisExtension(conf, x.Project)))
         builder.ToString()
 
     member x.generateCommandArgsForSingleLangProject(mode : AnalysisMode, version : double, conf : ConnectionConfiguration, plugin : IPlugin, project : Resource) =
         let builder = GenerateCommonArgumentsForAnalysis(mode, version, conf, plugin, project)
-        let argsforplugin = x.AnalysisLocalExtension.GetLocalAnalysisParamenters()
-        for prop in argsforplugin do
-            builder.AppendSwitchIfNotNull("-D" + prop.Key + "=", prop.Value)
+        if x.AnalysisLocalExtension <> null then
+            let argsforplugin = x.AnalysisLocalExtension.GetLocalAnalysisParamenters()
+            for prop in argsforplugin do
+                builder.AppendSwitchIfNotNull("-D" + prop.Key + "=", prop.Value)
 
         builder.AppendSwitchIfNotNull("-Dsonar.language=", project.Lang)        
         builder.ToString()

@@ -198,7 +198,12 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         this.GeneralOptions.PluginList.Clear();
                         foreach (var plugin in this.plugincontroller.GetPlugins())
                         {
-                            this.GeneralOptions.PluginList.Add(plugin.GetPluginDescription());
+                            this.GeneralOptions.PluginList.Add(plugin.GetPluginDescription(this.Vsenvironmenthelper));
+                        }
+
+                        foreach (var plugin in this.plugincontroller.GetMenuItemPlugins())
+                        {
+                            this.GeneralOptions.PluginList.Add(plugin.GetPluginDescription(this.Vsenvironmenthelper));
                         }
 
                         this.OptionsInView = this.GeneralOptionsFrame;
@@ -307,6 +312,10 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             this.model.Vsenvironmenthelper.WriteOptionInApplicationData(GlobalIds.GlobalPropsId, GlobalIds.IsDebugAnalysisOnKey, this.GeneralOptions.DebugIsChecked.ToString());
             this.model.Vsenvironmenthelper.WriteOptionInApplicationData(GlobalIds.GlobalPropsId, GlobalIds.ExcludedPluginsKey, this.GeneralOptions.ExcludedPlugins);
 
+            foreach (var plugin in this.GeneralOptions.PluginList)
+            {
+                this.model.Vsenvironmenthelper.WriteOptionInApplicationData(GlobalIds.PluginEnabledControlId, plugin.Name, plugin.Enabled.ToString());                
+            }
 
             if (this.Project != null)
             {
@@ -386,9 +395,14 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                 var pluginOptionsController = plugin.GetPluginControlOptions(configuration);
                 var pluginKey = plugin.GetKey(configuration);
 
+                if (pluginOptionsController == null)
+                {
+                    continue;
+                }
+
                 if (!string.IsNullOrEmpty(selectedPlugin))
                 {
-                    if (!pluginKey.Equals(selectedPlugin) || pluginOptionsController == null)
+                    if (!pluginKey.Equals(selectedPlugin))
                     {
                         continue;
                     }

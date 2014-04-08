@@ -56,5 +56,13 @@ namespace VSSonarPlugins
         /// The vshelper.
         /// </param>
         void UpdateConfiguration(ConnectionConfiguration configuration, Resource project, IVsEnvironmentHelper vshelper);
+
+        /// <summary>
+        /// The get plugin descritpion.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="PluginDescription"/>.
+        /// </returns>
+        PluginDescription GetPluginDescription(IVsEnvironmentHelper vsinter);
     }
 }

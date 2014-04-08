@@ -64,7 +64,7 @@ namespace VSSonarExtension.PackageImplementation
         ///     The issue model.
         /// </summary>
         public static readonly ExtensionDataModel ExtensionModelData = new ExtensionDataModel();
-       
+
         #endregion
 
         #region Constructors and Destructors
@@ -142,6 +142,9 @@ namespace VSSonarExtension.PackageImplementation
                 return;
             }
 
+            // Create the window with the first free ID.
+            PluginToolWindow.CurrentPluginControl = control;
+            PluginToolWindow.CurrentPluginName = name;
             var window = (ToolWindowPane)this.CreateToolWindow(typeof(PluginToolWindow), id);
 
             if ((null == window) || (null == window.Frame))

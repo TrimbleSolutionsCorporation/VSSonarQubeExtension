@@ -58,5 +58,10 @@ namespace VSSonarPlugins
         /// The source encoding.
         /// </summary>
         public static readonly string SourceEncodingKey = "SourceEncoding";
+
+        /// <summary>
+        /// The plugin enabled control id.
+        /// </summary>
+        public static readonly string PluginEnabledControlId = "PluginEnableControl";
     }
 }

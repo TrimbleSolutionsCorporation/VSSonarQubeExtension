@@ -13,6 +13,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarExtension.MainViewModel.ViewModel
 {
+    using System;
     using System.Collections.Generic;
     using System.Windows.Forms;
 
@@ -79,7 +80,27 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             {
                 if (plugin.Value.GetHeader().Equals(header))
                 {
-                    this.VSPackage.ShowToolWindow(plugin.Value.GetUserControl(this.UserConfiguration, this.AssociatedProject, this.vsenvironmenthelper), plugin.Key, plugin.Value.GetHeader());
+                    var isEnabled =
+                        this.vsenvironmenthelper.ReadOptionFromApplicationData(
+                            GlobalIds.PluginEnabledControlId,
+                            plugin.Value.GetPluginDescription(this.vsenvironmenthelper).Name);
+
+                    if (string.IsNullOrEmpty(isEnabled)
+                        || isEnabled.Equals("true", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        this.VSPackage.ShowToolWindow(
+                            plugin.Value.GetUserControl(
+                                this.UserConfiguration,
+                                this.AssociatedProject,
+                                this.vsenvironmenthelper),
+                            plugin.Key,
+                            plugin.Value.GetHeader());
+                    }
+                    else
+                    {
+                        MessageBox.Show(
+                            plugin.Value.GetPluginDescription(this.vsenvironmenthelper).Name + " is disabled");
+                    }
                 }
             }
         }
