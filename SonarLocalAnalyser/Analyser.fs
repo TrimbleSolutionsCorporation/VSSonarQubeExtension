@@ -130,7 +130,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IPlugin>, rest
                 plugin.IsSupported(item) && isEnabled.Equals("true", StringComparison.CurrentCultureIgnoreCase)
 
         try
-            (List.ofSeq plugins) |> List.find (fun plugin -> plugin.IsSupported(itemInView)) 
+            (List.ofSeq plugins) |> List.find (fun plugin -> IsSupported(plugin, itemInView)) 
         with
         | ex -> null
 
@@ -416,6 +416,8 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IPlugin>, rest
                 
                 (new Thread(new ThreadStart(x.RunIncrementalBuild))).Start()
             else
+                x.AnalysisPlugin <- null
+                x.AnalysisLocalExtension <- null
                 x.RunningLanguageMethod <- LanguageType.MultiLang
                 (new Thread(new ThreadStart(x.RunIncrementalBuild))).Start()
 
@@ -434,6 +436,8 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IPlugin>, rest
                 x.AnalysisLocalExtension <- x.AnalysisPlugin.GetLocalAnalysisExtension(conf, project)
                 (new Thread(new ThreadStart(x.RunPreviewBuild))).Start()
             else
+                x.AnalysisPlugin <- null
+                x.AnalysisLocalExtension <- null
                 x.RunningLanguageMethod <- LanguageType.MultiLang
                 (new Thread(new ThreadStart(x.RunPreviewBuild))).Start()
                                 
