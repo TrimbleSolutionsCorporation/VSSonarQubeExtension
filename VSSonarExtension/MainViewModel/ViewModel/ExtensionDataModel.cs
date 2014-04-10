@@ -1315,6 +1315,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
 
                 if (this.analysisModeText.Equals(AnalysisModes.Server))
                 {
+                    this.IssuesInViewAreLocked = false;
                     this.UpdateDataFromServer(this.ResourceInEditor);
                 }
 

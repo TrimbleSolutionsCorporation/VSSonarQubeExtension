@@ -392,12 +392,17 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IPlugin>, rest
             x.AnalysisLocalExtension <- GetPluginThatSupportsResource(itemInView).GetLocalAnalysisExtension(conf, project)
 
             let keyOfItem = (x :> ISonarLocalAnalyser).GetResourceKey(itemInView, project, conf)
-            let source = restService.GetSourceForFileResource(conf, keyOfItem)
-            let sourcestr = VsSonarUtils.GetLinesFromSource(source, "\r\n");
+
+            let GetSourceFromServer = 
+                try
+                    let source = restService.GetSourceForFileResource(conf, keyOfItem)
+                    VsSonarUtils.GetLinesFromSource(source, "\r\n")
+                with
+                | ex -> String.Empty
 
             x.AnalysisLocalExtension.StdOutEvent.Add(x.ProcessOutputPluginData)
             x.AnalysisLocalExtension.LocalAnalysisCompleted.Add(x.ProcessExecutionEventComplete)
-            x.ExecutingThread <- x.AnalysisLocalExtension.GetFileAnalyserThread(itemInView, project.Key, profile, sourcestr, onModifiedLinesOnly)            
+            x.ExecutingThread <- x.AnalysisLocalExtension.GetFileAnalyserThread(itemInView, project.Key, profile, GetSourceFromServer, onModifiedLinesOnly)            
             x.ExecutingThread.Start()
 
         member x.RunIncrementalAnalysis(projectRoot : string, project : Resource, profile : Profile, version : double, conf : ConnectionConfiguration) =

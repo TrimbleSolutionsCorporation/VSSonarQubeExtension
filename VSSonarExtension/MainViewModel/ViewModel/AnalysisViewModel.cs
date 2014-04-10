@@ -87,7 +87,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// <summary>
         ///     The analysis types.
         /// </summary>
-        private enum AnalysisTypes
+        public enum AnalysisTypes
         {
             /// <summary>
             ///     The preview.
@@ -107,7 +107,9 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             /// <summary>
             ///     The analysis.
             /// </summary>
-            Analysis
+            Analysis,
+
+            None
         }
 
         #endregion
@@ -294,9 +296,6 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                 }
 
                 this.PerformfAnalysis(value);
-
-                this.OnPropertyChanged("AnalysisTriggerText");
-                this.OnPropertyChanged("AnalysisTrigger");
             }
         }
 
@@ -372,6 +371,8 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             {
                 case AnalysisModes.Server:
                     this.RunServerAnalysis(startStop);
+                    this.OnPropertyChanged("AnalysisTriggerText");
+                    this.OnPropertyChanged("AnalysisTrigger");
                     break;
 
                 case AnalysisModes.Local:
@@ -481,9 +482,13 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                 var exceptionMsg = (LocalAnalysisEventArgs)e;
                 if (exceptionMsg != null && exceptionMsg.Ex != null)
                 {
-                    this.analysisTrigger = false;
+                    if (this.analysisTypeText != AnalysisTypes.File)
+                    {
+                        this.analysisTrigger = false;
+                    }
+
                     this.OnPropertyChanged("AnalysisTriggerText");
-                    this.OnPropertyChanged("AnalysisTrigger");
+                    this.OnPropertyChanged("AnalysisTrigger");                    
                     UserExceptionMessageBox.ShowException("Analysis Ended: " + exceptionMsg.ErrorMessage, exceptionMsg.Ex, this.OutputLog);
                     return;
                 }
@@ -503,7 +508,11 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             }
             catch (Exception ex)
             {
-                this.AnalysisTrigger = false;
+                if (this.analysisTypeText != AnalysisTypes.File)
+                {
+                    this.analysisTrigger = false;
+                }
+
                 this.ErrorMessage = "Failed to retrive issues from Plugin";
                 this.DiagnosticMessage = ex.StackTrace;
                 Debug.WriteLine("ex: " + ex.Message + " error: " + ex.StackTrace);
