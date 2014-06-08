@@ -11,13 +11,11 @@ namespace VSSonarExtension.MainViewModel.ViewModel
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Collections.Specialized;
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
     using System.Reflection;
-    using System.Windows;
     using System.Windows.Forms;
 
     using ExtensionTypes;
@@ -26,7 +24,6 @@ namespace VSSonarExtension.MainViewModel.ViewModel
 
     using VSSonarPlugins;
 
-    using MessageBox = System.Windows.Forms.MessageBox;
     using UserControl = System.Windows.Controls.UserControl;
 
     /// <summary>
@@ -51,14 +48,29 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         #region Fields
 
         /// <summary>
+        /// The plugin list.
+        /// </summary>
+        private readonly ObservableCollection<PluginDescription> pluginList = new ObservableCollection<PluginDescription>();
+
+        /// <summary>
         ///     The debug is checked.
         /// </summary>
         private bool debugIsChecked;
 
         /// <summary>
-        /// The javabinary.
+        /// The is solution open.
+        /// </summary>
+        private bool isSolutionOpen;
+
+        /// <summary>
+        ///     The javabinary.
         /// </summary>
         private string javabinary;
+
+        /// <summary>
+        /// The language.
+        /// </summary>
+        private string language;
 
         /// <summary>
         ///     The project.
@@ -66,22 +78,27 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         private Resource project;
 
         /// <summary>
-        /// The project version.
+        /// The project id.
+        /// </summary>
+        private string projectId;
+
+        /// <summary>
+        ///     The project version.
         /// </summary>
         private string projectVersion;
 
         /// <summary>
-        /// The sonar qube binary.
+        ///     The sonar qube binary.
         /// </summary>
         private string sonarQubeBinary;
 
         /// <summary>
-        /// The source dir.
+        ///     The source dir.
         /// </summary>
         private string sourceDir;
 
         /// <summary>
-        /// The source encoding.
+        ///     The source encoding.
         /// </summary>
         private string sourceEncoding;
 
@@ -95,16 +112,6 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// </summary>
         private UserControl userControl;
 
-        private string projectId;
-
-        private bool isSolutionOpen;
-
-        private string language;
-
-        private NotifyCollectionChangedEventHandler collectionChanged;
-
-        private readonly ObservableCollection<PluginDescription> pluginList = new ObservableCollection<PluginDescription>();
-
         #endregion
 
         #region Constructors and Destructors
@@ -112,8 +119,6 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// <summary>
         ///     Initializes a new instance of the <see cref="GeneralOptionsModel" /> class.
         /// </summary>
-        /// <param name="readOnlyCollection"></param>
-        /// <param name="openSolution"></param>
         public GeneralOptionsModel()
         {
             if (string.IsNullOrEmpty(this.SonarQubeBinary))
@@ -127,15 +132,10 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             }
 
             this.ResetDefaults();
-            //this.collectionChanged = this.CollectionChanged;
-            //this.pluginList.CollectionChanged += this.collectionChanged;
-        }
 
-        private void CollectionChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
-        {
-            var pl = this.PluginList;
+            // this.collectionChanged = this.CollectionChanged;
+            // this.pluginList.CollectionChanged += this.collectionChanged;
         }
-
 
         #endregion
 
@@ -151,7 +151,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         #region Public Properties
 
         /// <summary>
-        /// Gets the assembly directory.
+        ///     Gets the assembly directory.
         /// </summary>
         public static string AssemblyDirectory
         {
@@ -251,6 +251,23 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         public string ExcludedPlugins { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether is solution open.
+        /// </summary>
+        public bool IsSolutionOpen
+        {
+            get
+            {
+                return this.isSolutionOpen;
+            }
+
+            set
+            {
+                this.isSolutionOpen = value;
+                this.OnPropertyChanged("IsSolutionOpen");
+            }
+        }
+
+        /// <summary>
         ///     Gets or sets the java binary.
         /// </summary>
         public string JavaBinary
@@ -285,6 +302,17 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         }
 
         /// <summary>
+        /// Gets the plugin list.
+        /// </summary>
+        public ObservableCollection<PluginDescription> PluginList
+        {
+            get
+            {
+                return this.pluginList;
+            }
+        }
+
+        /// <summary>
         ///     Gets or sets the project.
         /// </summary>
         public Resource Project
@@ -297,14 +325,24 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             set
             {
                 this.project = value;
-                if (value != null)
-                {
-                    this.IsSolutionOpen = true;
-                }
-                else
-                {
-                    this.IsSolutionOpen = false;
-                }
+                this.IsSolutionOpen = value != null;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the project id.
+        /// </summary>
+        public string ProjectId
+        {
+            get
+            {
+                return this.projectId;
+            }
+
+            set
+            {
+                this.projectId = value;
+                this.OnPropertyChanged("ProjectId");
             }
         }
 
@@ -405,43 +443,6 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             }
         }
 
-        public string ProjectId
-        {
-            get
-            {
-                return this.projectId;
-            }
-
-            set
-            {
-                this.projectId = value;
-                this.OnPropertyChanged("ProjectId");
-            }
-        }
-
-        public bool IsSolutionOpen
-        {
-            get
-            {
-                return this.isSolutionOpen;
-            }
-
-            set
-            {
-                this.isSolutionOpen = value;
-                this.OnPropertyChanged("IsSolutionOpen");
-            }
-        }
-
-        public ObservableCollection<PluginDescription> PluginList
-        {
-            get
-            {
-                return this.pluginList;
-            }
-        }
-
-
         #endregion
 
         #region Public Methods and Operators
@@ -449,7 +450,6 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// <summary>
         ///     The get user control options.
         /// </summary>
-        /// <param name="plugincontroller"></param>
         /// <returns>
         ///     The <see cref="UserControl" />.
         /// </returns>
@@ -488,7 +488,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
 
             try
             {
-                var timeout = this.GetOptionFromDictionary(options, GlobalIds.LocalAnalysisTimeoutKey);
+                string timeout = this.GetOptionFromDictionary(options, GlobalIds.LocalAnalysisTimeoutKey);
                 this.TimeoutValue = int.Parse(timeout);
             }
             catch
@@ -507,7 +507,6 @@ namespace VSSonarExtension.MainViewModel.ViewModel
 
             this.EnsureGeneralMandatoryPropertiesAreSet();
         }
-
 
         /// <summary>
         /// The set options.
@@ -598,34 +597,17 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         }
 
         /// <summary>
-        /// The get default sonar runner location.
-        /// </summary>
-        private void GetDefaultSonarRunnerLocation()
-        {
-            var runnigPath = AssemblyDirectory;
-            var sonarRunner = Path.Combine(runnigPath, "ThirdParty\\SonarRunner\\bin\\sonar-runner.bat");
-            if (File.Exists(sonarRunner))
-            {
-                this.SonarQubeBinary = sonarRunner;
-            }
-        }
-
-        /// <summary>
-        /// The get default java location if available.
+        ///     The get default java location if available.
         /// </summary>
         private void GetDefaultJavaLocationIfAvailable()
         {
-            string programFiles = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), 
-                "Java");
+            string programFiles = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Java");
 
             if (!string.IsNullOrEmpty(programFiles))
             {
                 try
                 {
-                    FileInfo[] fileList = new DirectoryInfo(programFiles).GetFiles(
-                        "java.exe", 
-                        SearchOption.AllDirectories);
+                    FileInfo[] fileList = new DirectoryInfo(programFiles).GetFiles("java.exe", SearchOption.AllDirectories);
                     if (fileList.Length > 0)
                     {
                         if (fileList[0].DirectoryName != null)
@@ -641,15 +623,12 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             }
             else
             {
-                string programFilesX86 =
-                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "Java");
+                string programFilesX86 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "Java");
                 if (!string.IsNullOrEmpty(programFilesX86))
                 {
                     try
                     {
-                        FileInfo[] fileList = new DirectoryInfo(programFilesX86).GetFiles(
-                            "java.exe", 
-                            SearchOption.AllDirectories);
+                        FileInfo[] fileList = new DirectoryInfo(programFilesX86).GetFiles("java.exe", SearchOption.AllDirectories);
                         if (fileList.Length > 0)
                         {
                             this.JavaBinary = fileList[0].Name;
@@ -660,6 +639,19 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         Debug.WriteLine("Cannot Find Java: " + ex.StackTrace);
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        ///     The get default sonar runner location.
+        /// </summary>
+        private void GetDefaultSonarRunnerLocation()
+        {
+            string runnigPath = AssemblyDirectory;
+            string sonarRunner = Path.Combine(runnigPath, "SonarRunner\\bin\\sonar-runner.bat");
+            if (File.Exists(sonarRunner))
+            {
+                this.SonarQubeBinary = sonarRunner;
             }
         }
 

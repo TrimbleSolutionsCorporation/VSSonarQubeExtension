@@ -17,24 +17,6 @@ namespace SonarRestService
 open System.Xml.Linq
 open FSharp.Data
 
-type UserSettingsXml = XmlProvider<"""<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-        <PropertyGroup>
-        <UserSourceDir>path</UserSourceDir> 
-        <UserOutputDir>path</UserOutputDir>
-        <UserTSExeDir>path</UserTSExeDir>
-        <UserApplicationsDir>path</UserApplicationsDir>
-        <UserSRCDir>path</UserSRCDir>
-        <UserOBJDir>path</UserOBJDir>
-        <UserBINDir>path</UserBINDir>
-    </PropertyGroup>
-  <PropertyGroup Condition="'$(COND)'=='version'">
-	<UserSRCDir>path1</UserSRCDir>
-	<UserOBJDir>path1</UserOBJDir> 
-	<UserBINDir>path2</UserBINDir> 
-  </PropertyGroup>
-</Project>""">
-
 type DupsData = XmlProvider<""" <duplications>
 <g>
     <b s="46" l="90" r="com.tekla.bim:Tekla.WPF:Composition/ImportMany.cs"/>

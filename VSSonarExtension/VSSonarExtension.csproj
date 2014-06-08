@@ -57,13 +57,14 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\BuildDrop\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
     <Prefer32Bit>false</Prefer32Bit>
     <DeployExtension>False</DeployExtension>
+    <CodeAnalysisIgnoreGeneratedCode>false</CodeAnalysisIgnoreGeneratedCode>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
@@ -225,6 +226,15 @@
     <None Include="PackageImplementation\PckResources\Source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
+    <Content Include="SonarRunner\bin\sonar-runner">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="SonarRunner\bin\sonar-runner.bat">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="SonarRunner\conf\sonar-runner.properties">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <VSCTCompile Include="PackageImplementation\VSControls\VSSonarExtension.vsct">
@@ -233,6 +243,9 @@
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="SonarRunner\lib\sonar-runner-dist-2.4.jar">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Resource Include="PackageImplementation\Resources\sonarreviews.bmp" />
     <Content Include="PackageImplementation\Resources\Package.ico" />
     <Resource Include="PackageImplementation\Resources\sonariconcoverage.bmp" />
@@ -331,6 +344,7 @@
   <ItemGroup>
     <DesignData Include="SampleData\ExtensionDataModelSampleData.xaml" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>
   </PropertyGroup>
