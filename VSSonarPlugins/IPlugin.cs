@@ -37,6 +37,14 @@ namespace VSSonarPlugins
         string GetKey(ConnectionConfiguration configuration);
 
         /// <summary>
+        /// The get language.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
+        string GetLanguageKey();
+
+        /// <summary>
         /// The get use plugin control options.
         /// </summary>
         /// <param name="configuration">

@@ -21,6 +21,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
     using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using System.Windows;
 
@@ -35,6 +36,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
 
     using SonarRestService;
 
+    using VSSonarExtension.Annotations;
     using VSSonarExtension.MainView;
     using VSSonarExtension.MainViewModel.Cache;
     using VSSonarExtension.MainViewModel.Commands;
@@ -688,30 +690,27 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// <summary>
         ///     Gets the profile.
         /// </summary>
-        public Profile Profile
+        public Profile GetProfile(IPlugin plugin, string projectKey)
         {
-            get
+            if (this.profile == null)
             {
-                if (this.profile == null)
+                try
                 {
-                    try
-                    {
-                        List<Resource> profileResource = this.restService.GetQualityProfile(this.UserConfiguration, this.AssociatedProject.Key);
-                        List<Profile> enabledrules = this.restService.GetEnabledRulesInProfile(
-                            this.UserConfiguration, 
-                            profileResource[0].Lang, 
-                            profileResource[0].Metrics[0].Data);
-                        this.profile = enabledrules[0];
-                    }
-                    catch (Exception ex)
-                    {
-                        this.ErrorMessage = "Cannot retrieve Profile From Server";
-                        this.DiagnosticMessage = ex.Message + " " + ex.StackTrace;
-                    }
+                    List<Resource> profileResource = this.restService.GetQualityProfile(this.UserConfiguration, projectKey);
+                    List<Profile> enabledrules = this.restService.GetEnabledRulesInProfile(
+                        this.UserConfiguration,
+                        plugin.GetLanguageKey(), 
+                        profileResource[0].Metrics[0].Data);
+                    this.profile = enabledrules[0];
                 }
-
-                return this.profile;
+                catch (Exception ex)
+                {
+                    this.ErrorMessage = "Cannot retrieve Profile From Server";
+                    this.DiagnosticMessage = ex.Message + " " + ex.StackTrace;
+                }
             }
+
+            return this.profile;
         }
 
         /// <summary>
@@ -1514,15 +1513,16 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// <summary>
         /// The on property changed.
         /// </summary>
-        /// <param name="name">
-        /// The name.
+        /// <param name="propertyName">
+        /// The property name.
         /// </param>
-        protected void OnPropertyChanged(string name)
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChangedEventHandler handler = this.PropertyChanged;
             if (handler != null)
             {
-                handler(this, new PropertyChangedEventArgs(name));
+                handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }
 

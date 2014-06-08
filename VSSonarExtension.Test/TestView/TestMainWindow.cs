@@ -185,6 +185,11 @@ namespace VSSonarExtension.Test.TestView
                 return string.Empty;
             }
 
+            public string GetLanguageKey()
+            {
+                throw new System.NotImplementedException();
+            }
+
             public IPluginsOptions GetPluginControlOptions(ConnectionConfiguration configuration)
             {
                 throw new System.NotImplementedException();

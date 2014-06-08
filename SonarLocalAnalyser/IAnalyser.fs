@@ -18,10 +18,10 @@ type ISonarLocalAnalyser =
   abstract member IsExecuting : unit -> bool
   abstract member GetResourceKey : VsProjectItem * Resource * ConnectionConfiguration -> string                               
 
-  abstract member AnalyseFile : VsProjectItem * Resource * Profile * bool * double * ConnectionConfiguration -> unit
-  abstract member RunIncrementalAnalysis : string * Resource * Profile * double * ConnectionConfiguration -> unit
-  abstract member RunPreviewAnalysis : string * Resource * Profile * double * ConnectionConfiguration -> unit
-  abstract member RunFullAnalysis : string * Resource * double * ConnectionConfiguration -> unit
+  abstract member AnalyseFile : VsProjectItem * Resource * onModifiedLinesOnly:bool *  version:double * ConnectionConfiguration -> unit
+  abstract member RunIncrementalAnalysis : string * Resource * version:double * ConnectionConfiguration -> unit
+  abstract member RunPreviewAnalysis : string * Resource * version:double * ConnectionConfiguration -> unit
+  abstract member RunFullAnalysis : string * Resource * version:double * ConnectionConfiguration -> unit
 
   abstract member GetIssues : ConnectionConfiguration -> System.Collections.Generic.List<Issue>
  

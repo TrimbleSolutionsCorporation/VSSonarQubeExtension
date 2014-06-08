@@ -130,7 +130,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             {
                 this.analysisChangeLines = value;
                 this.OnPropertyChanged("AnalysisChangeLinesText");
-                this.OnPropertyChanged("AnalysisChangeLines");
+                this.OnPropertyChanged();
                 this.RefreshIssuesInViews();
             }
         }
@@ -175,7 +175,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                 }
 
                 this.OnPropertyChanged("AnalysisModeText");
-                this.OnPropertyChanged("AnalysisMode");
+                this.OnPropertyChanged();
 
                 this.localEditorCache.ClearData();
                 this.TriggerUpdateSignals();
@@ -190,7 +190,6 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         {
             get
             {
-                this.OnPropertyChanged("ExtensionIsBusy");
                 return this.AnalysisTrigger ? "Stop" : "Start";
             }
         }
@@ -261,7 +260,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                 }
 
                 this.OnPropertyChanged("AnalysisTypeText");
-                this.OnPropertyChanged("AnalysisType");
+                this.OnPropertyChanged();
             }
         }
 
@@ -325,7 +324,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                 this.isCoverageOn = value;
                 this.CoverageInEditorEnabled = this.isCoverageOn;
                 this.OnPropertyChanged("CoverageIsOnText");
-                this.OnPropertyChanged("IsCoverageOn");
+                this.OnPropertyChanged();
             }            
         }
 
@@ -402,7 +401,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             {
                 return;
             }
-
+            
             try
             {
                 this.IssuesInViewAreLocked = false;
@@ -413,7 +412,6 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         this.LocalAnalyserModule.AnalyseFile(
                             this.vsenvironmenthelper.VsProjectItem(this.DocumentInView),
                             this.AssociatedProject,
-                            this.Profile,
                             this.AnalysisChangeLines,
                             this.SonarVersion,
                             this.UserConfiguration);
@@ -429,7 +427,6 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         this.LocalAnalyserModule.RunIncrementalAnalysis(
                             this.vsenvironmenthelper.ActiveSolutionPath(),
                             this.AssociatedProject,
-                            this.Profile,
                             this.SonarVersion,
                             this.UserConfiguration);
                         break;
@@ -437,11 +434,12 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         this.LocalAnalyserModule.RunPreviewAnalysis(
                             this.vsenvironmenthelper.ActiveSolutionPath(),
                             this.AssociatedProject,
-                            this.Profile,
                             this.SonarVersion,
                             this.UserConfiguration);
                         break;
                 }
+
+                this.ExtensionIsBusy = true;
             }
             catch (VSSonarExtension ex)
             {
@@ -477,6 +475,8 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// </param>
         private void UpdateLocalIssues(object sender, EventArgs e)
         {
+            this.ExtensionIsBusy = false;
+
             try
             {
                 var exceptionMsg = (LocalAnalysisEventArgs)e;
@@ -549,10 +549,12 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         {
             if (this.ResourceInEditor == null || !startStop)
             {
+                this.ExtensionIsBusy = false;
                 this.TriggerUpdateSignals();
                 return;
             }
 
+            this.ExtensionIsBusy = true;
             this.RefreshDataForResource(this.DocumentInView);
         }
 

@@ -1,17 +1,11 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="DataGridControlViewModel.cs" company="Copyright © 2013 Tekla Corporation. Tekla is a Trimble Company">
-//     Copyright (C) 2013 [Jorge Costa, Jorge.Costa@tekla.com]
+// <copyright file="DataGridControlViewModel.cs" company="">
+//   
 // </copyright>
+// <summary>
+//   The extension data model.
+// </summary>
 // --------------------------------------------------------------------------------------------------------------------
-// This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
-// as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
-// of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. 
-// You should have received a copy of the GNU Lesser General Public License along with this program; if not, write to the Free
-// Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// --------------------------------------------------------------------------------------------------------------------
-
 namespace VSSonarExtension.MainViewModel.ViewModel
 {
     using System;
@@ -24,12 +18,16 @@ namespace VSSonarExtension.MainViewModel.ViewModel
     /// </summary>
     public partial class ExtensionDataModel
     {
-        #region Fields
+        #region Constants
 
         /// <summary>
         ///     The data grid options key.
         /// </summary>
         private const string DataGridOptionsKey = "DataGridOptions";
+
+        #endregion
+
+        #region Fields
 
         /// <summary>
         ///     The assignee.
@@ -82,14 +80,29 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         private int effortToFixIndex;
 
         /// <summary>
-        ///     The id.
+        ///     The extension is busy.
         /// </summary>
-        private bool idVisible;
+        private bool extensionIsBusy;
 
         /// <summary>
         ///     The id index.
         /// </summary>
         private int idIndex;
+
+        /// <summary>
+        ///     The id.
+        /// </summary>
+        private bool idVisible;
+
+        /// <summary>
+        ///     The is new visible.
+        /// </summary>
+        private int isNewIndex;
+
+        /// <summary>
+        ///     The is new visible.
+        /// </summary>
+        private bool isNewVisible;
 
         /// <summary>
         ///     The key.
@@ -130,6 +143,11 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         ///     The project index.
         /// </summary>
         private int projectIndex;
+
+        /// <summary>
+        ///     The query for issues is running.
+        /// </summary>
+        private bool queryForIssuesIsRunning;
 
         /// <summary>
         ///     The resolution.
@@ -181,21 +199,6 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// </summary>
         private int updateDateIndex;
 
-        /// <summary>
-        /// The is new visible.
-        /// </summary>
-        private bool isNewVisible;
-
-        /// <summary>
-        /// The is new visible.
-        /// </summary>
-        private int isNewIndex;
-
-        /// <summary>
-        /// The query for issues is running.
-        /// </summary>
-        private bool queryForIssuesIsRunning;
-
         #endregion
 
         #region Public Properties
@@ -221,7 +224,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         value.ToString(CultureInfo.InvariantCulture));
                 }
 
-                this.OnPropertyChanged("AssigneeIndex");
+                this.OnPropertyChanged();
             }
         }
 
@@ -246,7 +249,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         value.ToString(CultureInfo.InvariantCulture));
                 }
 
-                this.OnPropertyChanged("AssigneeVisible");
+                this.OnPropertyChanged();
             }
         }
 
@@ -271,7 +274,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         value.ToString(CultureInfo.InvariantCulture));
                 }
 
-                this.OnPropertyChanged("CloseDateIndex");
+                this.OnPropertyChanged();
             }
         }
 
@@ -296,7 +299,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         value.ToString(CultureInfo.InvariantCulture));
                 }
 
-                this.OnPropertyChanged("CloseDateVisible");
+                this.OnPropertyChanged();
             }
         }
 
@@ -321,7 +324,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         value.ToString(CultureInfo.InvariantCulture));
                 }
 
-                this.OnPropertyChanged("ComponentIndex");
+                this.OnPropertyChanged();
             }
         }
 
@@ -346,7 +349,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         value.ToString(CultureInfo.InvariantCulture));
                 }
 
-                this.OnPropertyChanged("ComponentVisible");
+                this.OnPropertyChanged();
             }
         }
 
@@ -371,7 +374,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         value.ToString(CultureInfo.InvariantCulture));
                 }
 
-                this.OnPropertyChanged("CreationDateIndex");
+                this.OnPropertyChanged();
             }
         }
 
@@ -396,7 +399,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         value.ToString(CultureInfo.InvariantCulture));
                 }
 
-                this.OnPropertyChanged("CreationDateVisible");
+                this.OnPropertyChanged();
             }
         }
 
@@ -421,7 +424,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         value.ToString(CultureInfo.InvariantCulture));
                 }
 
-                this.OnPropertyChanged("EffortToFixIndex");
+                this.OnPropertyChanged();
             }
         }
 
@@ -446,7 +449,24 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         value.ToString(CultureInfo.InvariantCulture));
                 }
 
-                this.OnPropertyChanged("EffortToFixVisible");
+                this.OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether extension is busy.
+        /// </summary>
+        public bool ExtensionIsBusy
+        {
+            get
+            {
+                return this.extensionIsBusy;
+            }
+
+            set
+            {
+                this.extensionIsBusy = value;
+                this.OnPropertyChanged();
             }
         }
 
@@ -465,13 +485,10 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                 this.idIndex = value;
                 if (this.vsenvironmenthelper != null)
                 {
-                    this.vsenvironmenthelper.WriteOptionInApplicationData(
-                        DataGridOptionsKey, 
-                        "IdIndex", 
-                        value.ToString(CultureInfo.InvariantCulture));
+                    this.vsenvironmenthelper.WriteOptionInApplicationData(DataGridOptionsKey, "IdIndex", value.ToString(CultureInfo.InvariantCulture));
                 }
 
-                this.OnPropertyChanged("IdIndex");
+                this.OnPropertyChanged();
             }
         }
 
@@ -491,12 +508,12 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                 if (this.vsenvironmenthelper != null)
                 {
                     this.vsenvironmenthelper.WriteOptionInApplicationData(
-                        DataGridOptionsKey,
-                        "IdVisible",
+                        DataGridOptionsKey, 
+                        "IdVisible", 
                         value.ToString(CultureInfo.InvariantCulture));
                 }
 
-                this.OnPropertyChanged("IdVisible");
+                this.OnPropertyChanged();
             }
         }
 
@@ -516,12 +533,12 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                 if (this.vsenvironmenthelper != null)
                 {
                     this.vsenvironmenthelper.WriteOptionInApplicationData(
-                        DataGridOptionsKey,
-                        "IsNewIndex",
+                        DataGridOptionsKey, 
+                        "IsNewIndex", 
                         value.ToString(CultureInfo.InvariantCulture));
                 }
 
-                this.OnPropertyChanged("IsNewIndex");
+                this.OnPropertyChanged();
             }
         }
 
@@ -541,12 +558,12 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                 if (this.vsenvironmenthelper != null)
                 {
                     this.vsenvironmenthelper.WriteOptionInApplicationData(
-                        DataGridOptionsKey,
-                        "IsNewVisible",
+                        DataGridOptionsKey, 
+                        "IsNewVisible", 
                         value.ToString(CultureInfo.InvariantCulture));
                 }
 
-                this.OnPropertyChanged("IsNewVisible");
+                this.OnPropertyChanged();
             }
         }
 
@@ -571,7 +588,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         value.ToString(CultureInfo.InvariantCulture));
                 }
 
-                this.OnPropertyChanged("KeyIndex");
+                this.OnPropertyChanged();
             }
         }
 
@@ -596,7 +613,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         value.ToString(CultureInfo.InvariantCulture));
                 }
 
-                this.OnPropertyChanged("KeyVisible");
+                this.OnPropertyChanged();
             }
         }
 
@@ -621,7 +638,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         value.ToString(CultureInfo.InvariantCulture));
                 }
 
-                this.OnPropertyChanged("LineIndex");
+                this.OnPropertyChanged();
             }
         }
 
@@ -646,7 +663,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         value.ToString(CultureInfo.InvariantCulture));
                 }
 
-                this.OnPropertyChanged("LineVisible");
+                this.OnPropertyChanged();
             }
         }
 
@@ -671,7 +688,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         value.ToString(CultureInfo.InvariantCulture));
                 }
 
-                this.OnPropertyChanged("MessageIndex");
+                this.OnPropertyChanged();
             }
         }
 
@@ -696,7 +713,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         value.ToString(CultureInfo.InvariantCulture));
                 }
 
-                this.OnPropertyChanged("MessageVisible");
+                this.OnPropertyChanged();
             }
         }
 
@@ -721,7 +738,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         value.ToString(CultureInfo.InvariantCulture));
                 }
 
-                this.OnPropertyChanged("ProjectIndex");
+                this.OnPropertyChanged();
             }
         }
 
@@ -746,7 +763,24 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         value.ToString(CultureInfo.InvariantCulture));
                 }
 
-                this.OnPropertyChanged("ProjectVisible");
+                this.OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether query for issues is running.
+        /// </summary>
+        public bool QueryForIssuesIsRunning
+        {
+            get
+            {
+                return !this.queryForIssuesIsRunning;
+            }
+
+            set
+            {
+                this.queryForIssuesIsRunning = value;
+                this.OnPropertyChanged();
             }
         }
 
@@ -766,12 +800,12 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                 if (this.vsenvironmenthelper != null)
                 {
                     this.vsenvironmenthelper.WriteOptionInApplicationData(
-                        DataGridOptionsKey,
-                        "ResolutionIndex",
+                        DataGridOptionsKey, 
+                        "ResolutionIndex", 
                         value.ToString(CultureInfo.InvariantCulture));
                 }
 
-                this.OnPropertyChanged("ResolutionIndex");
+                this.OnPropertyChanged();
             }
         }
 
@@ -796,7 +830,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         value.ToString(CultureInfo.InvariantCulture));
                 }
 
-                this.OnPropertyChanged("ResolutionVisible");
+                this.OnPropertyChanged();
             }
         }
 
@@ -821,7 +855,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         value.ToString(CultureInfo.InvariantCulture));
                 }
 
-                this.OnPropertyChanged("RuleIndex");
+                this.OnPropertyChanged();
             }
         }
 
@@ -846,7 +880,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         value.ToString(CultureInfo.InvariantCulture));
                 }
 
-                this.OnPropertyChanged("RuleVisible");
+                this.OnPropertyChanged();
             }
         }
 
@@ -871,7 +905,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         value.ToString(CultureInfo.InvariantCulture));
                 }
 
-                this.OnPropertyChanged("SeverityIndex");
+                this.OnPropertyChanged();
             }
         }
 
@@ -896,7 +930,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         value.ToString(CultureInfo.InvariantCulture));
                 }
 
-                this.OnPropertyChanged("SeverityVisible");
+                this.OnPropertyChanged();
             }
         }
 
@@ -921,7 +955,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         value.ToString(CultureInfo.InvariantCulture));
                 }
 
-                this.OnPropertyChanged("StatusIndex");
+                this.OnPropertyChanged();
             }
         }
 
@@ -946,7 +980,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         value.ToString(CultureInfo.InvariantCulture));
                 }
 
-                this.OnPropertyChanged("StatusVisible");
+                this.OnPropertyChanged();
             }
         }
 
@@ -971,7 +1005,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         value.ToString(CultureInfo.InvariantCulture));
                 }
 
-                this.OnPropertyChanged("UpdateDateIndex");
+                this.OnPropertyChanged();
             }
         }
 
@@ -996,46 +1030,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         value.ToString(CultureInfo.InvariantCulture));
                 }
 
-                this.OnPropertyChanged("UpdateDateVisible");
-            }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether extension is busy.
-        /// </summary>
-        public bool ExtensionIsBusy
-        {
-            get
-            {
-                if (this.AnalysisTrigger)
-                {
-                    return true;
-                }
-
-                if (!this.QueryForIssuesIsRunning)
-                {
-                    return true;
-                }
-
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether query for issues is running.
-        /// </summary>
-        public bool QueryForIssuesIsRunning
-        {
-            get
-            {
-                return !this.queryForIssuesIsRunning;
-            }
-
-            set
-            {
-                this.queryForIssuesIsRunning = value;
-                this.OnPropertyChanged("QueryForIssuesIsRunning");
-                this.OnPropertyChanged("ExtensionIsBusy");
+                this.OnPropertyChanged();
             }
         }
 
@@ -1044,29 +1039,57 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         #region Methods
 
         /// <summary>
-        ///     The restore user settings.
+        /// The read window options.
         /// </summary>
-        private void RestoreUserSettingsInIssuesDataGrid()
+        /// <param name="options">
+        /// The options.
+        /// </param>
+        private void ReadWindowOptions(Dictionary<string, string> options)
         {
-            if (this.vsenvironmenthelper == null)
+            try
             {
-                this.ResetWindowDefaults();
-                return;
-            }
+                this.ComponentIndex = int.Parse(options["ComponentIndex"], CultureInfo.InvariantCulture);
+                this.LineIndex = int.Parse(options["LineIndex"], CultureInfo.InvariantCulture);
+                this.AssigneeIndex = int.Parse(options["AssigneeIndex"], CultureInfo.InvariantCulture);
+                this.MessageIndex = int.Parse(options["MessageIndex"], CultureInfo.InvariantCulture);
+                this.StatusIndex = int.Parse(options["StatusIndex"], CultureInfo.InvariantCulture);
+                this.SeverityIndex = int.Parse(options["SeverityIndex"], CultureInfo.InvariantCulture);
+                this.RuleIndex = int.Parse(options["RuleIndex"], CultureInfo.InvariantCulture);
+                this.CreationDateIndex = int.Parse(options["CreationDateIndex"], CultureInfo.InvariantCulture);
+                this.ProjectIndex = int.Parse(options["ProjectIndex"], CultureInfo.InvariantCulture);
+                this.ResolutionIndex = int.Parse(options["ResolutionIndex"], CultureInfo.InvariantCulture);
+                this.EffortToFixIndex = int.Parse(options["EffortToFixIndex"], CultureInfo.InvariantCulture);
+                this.UpdateDateIndex = int.Parse(options["UpdateDateIndex"], CultureInfo.InvariantCulture);
+                this.CloseDateIndex = int.Parse(options["CloseDateIndex"], CultureInfo.InvariantCulture);
+                this.KeyIndex = int.Parse(options["KeyIndex"], CultureInfo.InvariantCulture);
+                this.IdIndex = int.Parse(options["IdIndex"], CultureInfo.InvariantCulture);
 
-            var options = this.vsenvironmenthelper.ReadAllAvailableOptionsInSettings(DataGridOptionsKey);
-            if (options != null && options.Count > 0)
-            {
-                this.ReadWindowOptions(options);
+                this.ComponentVisible = bool.Parse(options["ComponentVisible"]);
+                this.LineVisible = bool.Parse(options["LineVisible"]);
+                this.AssigneeVisible = bool.Parse(options["AssigneeVisible"]);
+                this.MessageVisible = bool.Parse(options["MessageVisible"]);
+                this.StatusVisible = bool.Parse(options["StatusVisible"]);
+                this.SeverityVisible = bool.Parse(options["SeverityVisible"]);
+                this.RuleVisible = bool.Parse(options["RuleVisible"]);
+                this.CreationDateVisible = bool.Parse(options["CreationDateVisible"]);
+                this.ProjectVisible = bool.Parse(options["ProjectVisible"]);
+                this.ResolutionVisible = bool.Parse(options["ResolutionVisible"]);
+                this.EffortToFixVisible = bool.Parse(options["EffortToFixVisible"]);
+                this.UpdateDateVisible = bool.Parse(options["UpdateDateVisible"]);
+                this.CloseDateVisible = bool.Parse(options["CloseDateVisible"]);
+                this.KeyVisible = bool.Parse(options["KeyVisible"]);
+                this.IdVisible = bool.Parse(options["IdVisible"]);
+                this.IsNewIndex = int.Parse(options["IsNewIndex"], CultureInfo.InvariantCulture);
+                this.IsNewVisible = bool.Parse(options["IsNewVisible"]);
             }
-            else
+            catch (Exception ex)
             {
-                this.WriteWindowOptions();
+                Debug.WriteLine(ex.Message);
             }
         }
 
         /// <summary>
-        /// The reset window defaults.
+        ///     The reset window defaults.
         /// </summary>
         private void ResetWindowDefaults()
         {
@@ -1105,7 +1128,29 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         }
 
         /// <summary>
-        /// The write window options.
+        ///     The restore user settings.
+        /// </summary>
+        private void RestoreUserSettingsInIssuesDataGrid()
+        {
+            if (this.vsenvironmenthelper == null)
+            {
+                this.ResetWindowDefaults();
+                return;
+            }
+
+            Dictionary<string, string> options = this.vsenvironmenthelper.ReadAllAvailableOptionsInSettings(DataGridOptionsKey);
+            if (options != null && options.Count > 0)
+            {
+                this.ReadWindowOptions(options);
+            }
+            else
+            {
+                this.WriteWindowOptions();
+            }
+        }
+
+        /// <summary>
+        ///     The write window options.
         /// </summary>
         private void WriteWindowOptions()
         {
@@ -1174,56 +1219,6 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             this.vsenvironmenthelper.WriteOptionInApplicationData(DataGridOptionsKey, "IdVisible", "true");
             this.IsNewVisible = true;
             this.vsenvironmenthelper.WriteOptionInApplicationData(DataGridOptionsKey, "IsNewVisible", "true");
-        }
-
-        /// <summary>
-        /// The read window options.
-        /// </summary>
-        /// <param name="options">
-        /// The options.
-        /// </param>
-        private void ReadWindowOptions(Dictionary<string, string> options)
-        {
-            try
-            {
-                this.ComponentIndex = int.Parse(options["ComponentIndex"], CultureInfo.InvariantCulture);
-                this.LineIndex = int.Parse(options["LineIndex"], CultureInfo.InvariantCulture);
-                this.AssigneeIndex = int.Parse(options["AssigneeIndex"], CultureInfo.InvariantCulture);
-                this.MessageIndex = int.Parse(options["MessageIndex"], CultureInfo.InvariantCulture);
-                this.StatusIndex = int.Parse(options["StatusIndex"], CultureInfo.InvariantCulture);
-                this.SeverityIndex = int.Parse(options["SeverityIndex"], CultureInfo.InvariantCulture);
-                this.RuleIndex = int.Parse(options["RuleIndex"], CultureInfo.InvariantCulture);
-                this.CreationDateIndex = int.Parse(options["CreationDateIndex"], CultureInfo.InvariantCulture);
-                this.ProjectIndex = int.Parse(options["ProjectIndex"], CultureInfo.InvariantCulture);
-                this.ResolutionIndex = int.Parse(options["ResolutionIndex"], CultureInfo.InvariantCulture);
-                this.EffortToFixIndex = int.Parse(options["EffortToFixIndex"], CultureInfo.InvariantCulture);
-                this.UpdateDateIndex = int.Parse(options["UpdateDateIndex"], CultureInfo.InvariantCulture);
-                this.CloseDateIndex = int.Parse(options["CloseDateIndex"], CultureInfo.InvariantCulture);
-                this.KeyIndex = int.Parse(options["KeyIndex"], CultureInfo.InvariantCulture);
-                this.IdIndex = int.Parse(options["IdIndex"], CultureInfo.InvariantCulture);
-
-                this.ComponentVisible = bool.Parse(options["ComponentVisible"]);
-                this.LineVisible = bool.Parse(options["LineVisible"]);
-                this.AssigneeVisible = bool.Parse(options["AssigneeVisible"]);
-                this.MessageVisible = bool.Parse(options["MessageVisible"]);
-                this.StatusVisible = bool.Parse(options["StatusVisible"]);
-                this.SeverityVisible = bool.Parse(options["SeverityVisible"]);
-                this.RuleVisible = bool.Parse(options["RuleVisible"]);
-                this.CreationDateVisible = bool.Parse(options["CreationDateVisible"]);
-                this.ProjectVisible = bool.Parse(options["ProjectVisible"]);
-                this.ResolutionVisible = bool.Parse(options["ResolutionVisible"]);
-                this.EffortToFixVisible = bool.Parse(options["EffortToFixVisible"]);
-                this.UpdateDateVisible = bool.Parse(options["UpdateDateVisible"]);
-                this.CloseDateVisible = bool.Parse(options["CloseDateVisible"]);
-                this.KeyVisible = bool.Parse(options["KeyVisible"]);
-                this.IdVisible = bool.Parse(options["IdVisible"]);
-                this.IsNewIndex = int.Parse(options["IsNewIndex"], CultureInfo.InvariantCulture);
-                this.IsNewVisible = bool.Parse(options["IsNewVisible"]);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-            }
         }
 
         #endregion
