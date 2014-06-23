@@ -244,8 +244,28 @@ namespace VSSonarExtension.SmartTags.Squiggle
                 yield break;
             }
 
-            var mappedSpan = new SnapshotSpan(this.SourceBuffer.CurrentSnapshot, textsnapshot.Start, textsnapshot.Length);
+            var lineStart = GetLeadingWhitespaceLength(textsnapshot.GetText());
+
+            var mappedSpan = new SnapshotSpan(this.SourceBuffer.CurrentSnapshot, textsnapshot.Start + lineStart, textsnapshot.Length - lineStart);
             yield return new SonarTag(currentIssuesPerLine, mappedSpan);
+        }
+
+        public static int GetLeadingWhitespaceLength(string s, int tabLength = 4, bool trimToLowerTab = true)
+        {
+            if (s.Length < tabLength) return 0;
+
+            int whiteSpaceCount = 0;
+
+            while (Char.IsWhiteSpace(s[whiteSpaceCount])) whiteSpaceCount++;
+
+            if (whiteSpaceCount < tabLength) return 0;
+
+            if (trimToLowerTab)
+            {
+                whiteSpaceCount -= whiteSpaceCount % tabLength;
+            }
+
+            return whiteSpaceCount;
         }
 
         /// <summary>
