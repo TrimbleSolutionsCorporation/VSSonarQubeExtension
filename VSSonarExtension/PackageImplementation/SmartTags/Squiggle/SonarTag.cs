@@ -96,7 +96,7 @@ namespace VSSonarExtension.SmartTags.Squiggle
                 var violationstxt = string.Empty;
                 foreach (var issue in this.TagIssue)
                 {
-                    violationstxt = issue.Message;
+                    violationstxt = issue.Message + " [" + issue.Rule + "]";
                 }
 
                 return string.Format("{0}", violationstxt);
