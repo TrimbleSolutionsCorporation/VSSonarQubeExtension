@@ -16,6 +16,8 @@ namespace SonarRestService
 
 open FSharp.Data
 
+type JsonQualityProfiles = JsonProvider<""" [{"name":"Default Tekla C#","language":"cs","default":true},{"name":"Sonar way","language":"java","default":true},{"name":"Sonar way","language":"js","default":true},{"name":"Sonar way","language":"py","default":true},{"name":"Sonar way","language":"xml","default":true},{"name":"DefaultTeklaC++","language":"c++","default":true},{"name":"TeklaCopXaml","language":"xaml","default":true}]""">
+
 type JsonResourceWithMetrics = JsonProvider<""" [{"id":1,"key":"GroupId:ProjectId","name":"Common","scope":"PRJ","qualifier":"TRK","date":"2013-07-03T12:50:52+0300","lname":"Common","lang":"c++","version":"work","description":"","msr":[{"key":"ncloc","val":45499.0,"frmt_val":"45,499"},{"key":"coverage","val":54.7,"frmt_val":"54.7%"},{"key":"profile","val":7.0,"frmt_val":"7.0","data":"DefaultTeklaC++"}]}] """>
 
 type JsonValidateUser = JsonProvider<""" {"valid":true} """>

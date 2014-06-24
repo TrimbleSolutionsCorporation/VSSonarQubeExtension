@@ -47,6 +47,7 @@ type ISonarRestService =
 
   abstract member GetEnabledRulesInProfile : ConnectionConfiguration * string * string -> System.Collections.Generic.List<Profile>
   abstract member GetQualityProfile : ConnectionConfiguration * string -> System.Collections.Generic.List<Resource>
+  abstract member GetQualityProfilesForProject : ConnectionConfiguration * string -> System.Collections.Generic.List<Profile>
   abstract member GetRules : ConnectionConfiguration * string -> System.Collections.Generic.List<Rule>
 
   abstract member ParseReportOfIssues : string -> System.Collections.Generic.List<Issue>

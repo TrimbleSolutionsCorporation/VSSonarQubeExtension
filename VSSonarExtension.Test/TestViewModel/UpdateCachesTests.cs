@@ -109,7 +109,7 @@ namespace VSSonarExtension.Test.TestViewModel
                 .Repeat.Once();
 
             this.plugin.Expect(
-                mp => mp.GetResourceKey(Arg<VsProjectItem>.Is.Anything, Arg<string>.Is.Anything))
+                mp => mp.GetResourceKey(Arg<VsProjectItem>.Is.Anything, Arg<string>.Is.Anything, Arg<bool>.Is.Anything))
                 .Return("resource");
 
             var data = new ExtensionDataModel(this.service, this.vshelper, null);
@@ -150,7 +150,7 @@ namespace VSSonarExtension.Test.TestViewModel
                 .Repeat.Once();
 
             this.plugin.Expect(
-                mp => mp.GetResourceKey(Arg<VsProjectItem>.Is.Anything, Arg<string>.Is.Anything))
+                mp => mp.GetResourceKey(Arg<VsProjectItem>.Is.Anything, Arg<string>.Is.Anything, Arg<bool>.Is.Anything))
                 .Return("resource");
 
             var data = new ExtensionDataModel(this.service, this.vshelper, null);

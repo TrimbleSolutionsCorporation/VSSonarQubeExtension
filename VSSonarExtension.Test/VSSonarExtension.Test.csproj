@@ -129,6 +129,10 @@
       <Project>{75A39A9B-06B2-4249-9D3C-C2319951BC53}</Project>
       <Name>ExtensionTypes</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SonarLocalAnalyser\SonarLocalAnalyser.fsproj">
+      <Project>{a7d09c0c-efc5-4662-83b6-dae14e68c94c}</Project>
+      <Name>SonarLocalAnalyser</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SonarRestService\SonarRestService.fsproj">
       <Project>{64728a55-1166-4ec6-b066-22c4e01fc1c7}</Project>
       <Name>SonarRestService</Name>

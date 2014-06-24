@@ -93,7 +93,7 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="Thread"/>.
         /// </returns>
-        Thread GetFileAnalyserThread(VsProjectItem item, string projectKey, Profile profile, string fileSourceInServer, bool onModifiedLinesOnly);
+        Thread GetFileAnalyserThread(VsProjectItem item, Resource project, Profile profile, string fileSourceInServer, bool onModifiedLinesOnly);
 
         /// <summary>
         /// The stop all execution.
@@ -142,9 +142,12 @@ namespace VSSonarPlugins
         /// <summary>
         /// The get local analysis paramenters.
         /// </summary>
+        /// <param name="project">
+        /// The project.
+        /// </param>
         /// <returns>
         /// The <see cref="ICollection"/>.
         /// </returns>
-        List<SonarQubeProperties> GetLocalAnalysisParamenters();
+        List<SonarQubeProperties> GetLocalAnalysisParamenters(Resource project);
     }
 }

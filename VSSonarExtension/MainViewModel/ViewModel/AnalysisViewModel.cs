@@ -502,7 +502,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
 
             try
             {                
-                this.ReplaceAllIssuesInCache(this.LocalAnalyserModule.GetIssues(this.UserConfiguration));
+                this.ReplaceAllIssuesInCache(this.LocalAnalyserModule.GetIssues(this.UserConfiguration, this.AssociatedProject));
                 this.ErrorMessage = string.Empty;
                 this.DiagnosticMessage = string.Empty;
             }

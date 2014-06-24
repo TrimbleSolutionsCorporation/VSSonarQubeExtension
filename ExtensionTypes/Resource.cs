@@ -77,5 +77,10 @@ namespace ExtensionTypes
         /// Gets or sets the Metrics
         /// </summary>
         public List<Metric> Metrics { get; set; }
+
+        /// <summary>
+        /// Gets or sets the non safe key.
+        /// </summary>
+        public string NonSafeKey { get; set; }
     }
 }

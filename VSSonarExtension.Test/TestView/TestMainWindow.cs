@@ -205,7 +205,12 @@ namespace VSSonarExtension.Test.TestView
                 throw new System.NotImplementedException();
             }
 
-            public ILocalAnalyserExtension GetLocalAnalysisExtension(ConnectionConfiguration configuration, Resource project)
+            public string GetResourceKey(VsProjectItem projectItem, string projectKey, bool safeGeneration)
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public ILocalAnalyserExtension GetLocalAnalysisExtension(ConnectionConfiguration configuration)
             {
                 throw new System.NotImplementedException();
             }

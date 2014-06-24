@@ -361,6 +361,22 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
         rulesToReturn
         
+    let GetQualityProfilesFromContent(responsecontent : string) = 
+        let parsed = JsonQualityProfiles.Parse(responsecontent)
+        let profiles = new System.Collections.Generic.List<Profile>()
+
+        for eachprofile in parsed do
+            let newProfile = new Profile()
+            newProfile.Default <- eachprofile.Default
+            newProfile.Language <- eachprofile.Language
+            newProfile.Name <- eachprofile.Name
+
+            let profileRules = new System.Collections.Generic.List<Rule>()
+            let profileAlerts = new System.Collections.Generic.List<Alert>()
+
+            profiles.Add(newProfile)
+
+        profiles
 
     let GetProfileFromContent(responsecontent : string) = 
         let parsed = JSonProfile.Parse(responsecontent)
@@ -573,6 +589,10 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
         member this.GetQualityProfile(conf : ConnectionConfiguration, resource : string) =
             let url = "/api/resources?resource=" + resource + "&metrics=profile"
             getResourcesFromResponseContent(httpconnector.HttpSonarGetRequest(conf, url))
+
+        member this.GetQualityProfilesForProject(conf : ConnectionConfiguration, resource : string) = 
+            let url = "/api/profiles/list?project=" + resource
+            GetQualityProfilesFromContent(httpconnector.HttpSonarGetRequest(conf, url))
                         
         member this.GetProjectsList(conf : ConnectionConfiguration) =                   
             let url = "/api/resources"

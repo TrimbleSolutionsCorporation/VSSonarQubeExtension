@@ -47,20 +47,6 @@ namespace VSSonarPlugins
         ReadOnlyCollection<IMenuCommandPlugin> GetMenuItemPlugins();
 
         /// <summary>
-        /// The get plugin to run resource.
-        /// </summary>
-        /// <param name="configuration">
-        /// The configuration.
-        /// </param>
-        /// <param name="project">
-        /// The project.
-        /// </param>
-        /// <returns>
-        /// The <see cref="IPlugin"/>.
-        /// </returns>
-        IPlugin GetPluginToRunResource(ConnectionConfiguration configuration, Resource project);
-
-        /// <summary>
         /// The pick plugin from multiple supported plugins.
         /// </summary>
         /// <param name="pluginsToUse">

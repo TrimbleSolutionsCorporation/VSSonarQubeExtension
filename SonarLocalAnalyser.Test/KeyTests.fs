@@ -30,7 +30,7 @@ type KeyTests() =
     [<ExpectedException>]
     member test.``Should throw exception when no plugin is found`` () =
         let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), Mock<IVsEnvironmentHelper>().Create())
-        ((analyser :> ISonarLocalAnalyser).GetResourceKey(new VsProjectItem("fileName", "filePath", "projectName", "projectFilePath", "solutionName", "solutionPath"), new Resource(), new ConnectionConfiguration())) |> should throw typeof<ResourceNotSupportedException>
+        ((analyser :> ISonarLocalAnalyser).GetResourceKey(new VsProjectItem("fileName", "filePath", "projectName", "projectFilePath", "solutionName", "solutionPath"), new Resource(), new ConnectionConfiguration(), true)) |> should throw typeof<ResourceNotSupportedException>
 
     [<Test>]
     [<ExpectedException>]
@@ -38,7 +38,7 @@ type KeyTests() =
         let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), Mock<IVsEnvironmentHelper>().Create())
         let project = new Resource()
         project.Lang <- "c++"
-        ((analyser :> ISonarLocalAnalyser).GetResourceKey(new VsProjectItem("fileName", "filePath", "projectName", "projectFilePath", "solutionName", "solutionPath"), new Resource(), new ConnectionConfiguration())) |> should throw typeof<ResourceNotSupportedException>
+        ((analyser :> ISonarLocalAnalyser).GetResourceKey(new VsProjectItem("fileName", "filePath", "projectName", "projectFilePath", "solutionName", "solutionPath"), new Resource(), new ConnectionConfiguration(), true)) |> should throw typeof<ResourceNotSupportedException>
 
     [<Test>]
     member test.``Should Return Key Correctly`` () =
@@ -48,11 +48,11 @@ type KeyTests() =
         let mockAPlugin =
             Mock<IPlugin>()
                 .Setup(fun x -> <@ x.IsSupported(vsItem) @>).Returns(true)
-                .Setup(fun x -> <@ x.GetResourceKey(any(), any()) @>).Returns("Key")
+                .Setup(fun x -> <@ x.GetResourceKey(any(), any(), any()) @>).Returns("Key")
                 .Create()
 
         let listofPlugins = new System.Collections.Generic.List<IPlugin>()
         listofPlugins.Add(mockAPlugin)
         let analyser = new SonarLocalAnalyser(listofPlugins, Mock<ISonarRestService>().Create(), Mock<IVsEnvironmentHelper>().Create())
         
-        (analyser :> ISonarLocalAnalyser).GetResourceKey(vsItem, project, new ConnectionConfiguration()) |> should equal "Key"
+        (analyser :> ISonarLocalAnalyser).GetResourceKey(vsItem, project, new ConnectionConfiguration(), true) |> should equal "Key"

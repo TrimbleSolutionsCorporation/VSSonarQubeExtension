@@ -20,6 +20,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Globalization;
+    using System.IO;
     using System.Linq;
     using System.Runtime.CompilerServices;
     using System.Threading;
@@ -1304,13 +1305,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             this.DocumentInView = fullName;
             try
             {
-                var resourceKey =
-                    this.LocalAnalyserModule.GetResourceKey(
-                        this.vsenvironmenthelper.VsProjectItem(fullName),
-                        this.AssociatedProject,
-                        this.UserConfiguration);
-
-                this.ResourceInEditor = this.restService.GetResourcesData(this.UserConfiguration, resourceKey)[0];
+                this.ResourceInEditor = this.CreateAResourceForFileInEditor(fullName);
 
                 if (this.analysisModeText.Equals(AnalysisModes.Server))
                 {
@@ -1323,14 +1318,53 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                 {
                     this.PerformfAnalysis(this.analysisTrigger);
                 }
-
-                this.TriggerUpdateSignals();
             }
             catch (Exception ex)
             {
-                this.ErrorMessage = "Resource in view not supported";
+                this.ErrorMessage = ex.Message;
                 this.DiagnosticMessage = ex.StackTrace;
             }
+
+            this.TriggerUpdateSignals();
+        }
+
+        private Resource CreateAResourceForFileInEditor(string fullName)
+        {
+            Resource toReturn = new Resource();
+
+            var resourceKeySafe = this.LocalAnalyserModule.GetResourceKey(
+                this.vsenvironmenthelper.VsProjectItem(fullName),
+                this.AssociatedProject,
+                this.UserConfiguration,
+                true);
+            var resourceKeyNonSafe = this.LocalAnalyserModule.GetResourceKey(
+                this.vsenvironmenthelper.VsProjectItem(fullName),
+                this.AssociatedProject,
+                this.UserConfiguration,
+                false);
+
+            var fileName = Path.GetFileName(fullName);
+            toReturn.Name = fileName;
+            toReturn.Lname = fileName;
+            toReturn.Key = resourceKeySafe;
+            toReturn.NonSafeKey = resourceKeySafe;
+
+            try
+            {
+                toReturn = this.restService.GetResourcesData(this.UserConfiguration, resourceKeySafe)[0];
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    toReturn = this.restService.GetResourcesData(this.UserConfiguration, resourceKeyNonSafe)[0];
+                }
+                catch (Exception ex1)
+                {
+                }
+            }
+
+            return toReturn;
         }
 
         /// <summary>

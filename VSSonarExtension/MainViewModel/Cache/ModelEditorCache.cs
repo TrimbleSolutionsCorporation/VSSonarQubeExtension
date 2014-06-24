@@ -184,16 +184,23 @@ namespace VSSonarExtension.MainViewModel.Cache
                 return issues;
             }
 
-            if (!DataCache.ContainsKey(resource.Key))
+            if (DataCache.ContainsKey(resource.Key) || DataCache.ContainsKey(resource.NonSafeKey))
             {
-                return issues;
-            }
+                EditorData element = null;
 
-            EditorData element = DataCache[resource.Key];
+                if (DataCache.ContainsKey(resource.Key))
+                {
+                    element = DataCache[resource.Key];
+                }
+                else
+                {
+                    element = DataCache[resource.NonSafeKey];
+                }
 
-            foreach (Issue issue in element.Issues)
-            {
-                issues.Add(issue);
+                foreach (Issue issue in element.Issues)
+                {
+                    issues.Add(issue);
+                }
             }
 
             return issues;

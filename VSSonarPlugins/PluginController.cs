@@ -119,30 +119,6 @@ namespace VSSonarPlugins
         }
 
         /// <summary>
-        /// The get plugin to run resource.
-        /// </summary>
-        /// <param name="configuration">
-        /// The configuration.
-        /// </param>
-        /// <param name="project">
-        /// The project.
-        /// </param>
-        /// <returns>
-        /// The <see cref="IPlugin"/>.
-        /// </returns>
-        public IPlugin GetPluginToRunResource(ConnectionConfiguration configuration, Resource project)
-        {
-            if (this.loadedPlugins == null)
-            {
-                return null;
-            }
-
-            var pluginsToUse = this.loadedPlugins.Where(plugin => plugin.IsSupported(configuration, project)).ToList();
-
-            return this.PickPluginFromMultipleSupportedPlugins(new ReadOnlyCollection<IPlugin>(pluginsToUse));
-        }
-
-        /// <summary>
         /// The get menu command plugin to run command.
         /// </summary>
         /// <param name="configuration">

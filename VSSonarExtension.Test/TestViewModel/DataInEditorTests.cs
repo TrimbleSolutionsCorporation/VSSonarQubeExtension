@@ -147,7 +147,7 @@ namespace VSSonarExtension.Test.TestViewModel
                     mp =>
                     mp.GetResourceKey(
                         Arg<VsProjectItem>.Is.Anything,
-                        Arg<string>.Is.Anything)).Return("key").Repeat.Once();
+                        Arg<string>.Is.Anything, Arg<bool>.Is.Anything)).Return("key").Repeat.Once();
 
                 var data = new ExtensionDataModel(this.service, this.vshelper, null);
                 data.AssociatedProject = new Resource { Key = "KEY"};

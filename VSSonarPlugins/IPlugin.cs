@@ -89,10 +89,11 @@ namespace VSSonarPlugins
         /// <param name="projectKey">
         /// The project key.
         /// </param>
+        /// <param name="safeGeneration"></param>
         /// <returns>
         /// The <see cref="string"/>.
         /// </returns>
-        string GetResourceKey(VsProjectItem projectItem, string projectKey);
+        string GetResourceKey(VsProjectItem projectItem, string projectKey, bool safeGeneration);
 
         /// <summary>
         /// The get local analysis extension.
@@ -100,13 +101,10 @@ namespace VSSonarPlugins
         /// <param name="configuration">
         /// The configuration.
         /// </param>
-        /// <param name="project">
-        /// The project.
-        /// </param>
         /// <returns>
         /// The <see cref="ILocalAnalyserExtension"/>.
         /// </returns>
-        ILocalAnalyserExtension GetLocalAnalysisExtension(ConnectionConfiguration configuration, Resource project);
+        ILocalAnalyserExtension GetLocalAnalysisExtension(ConnectionConfiguration configuration);
 
         /// <summary>
         /// The get licenses.

@@ -294,7 +294,7 @@ namespace VSSonarExtension.SmartTags.Squiggle
                 var document = VsEvents.GetPropertyFromBuffer<ITextDocument>(this.SourceBuffer);
                 var resource = VsSonarExtensionPackage.ExtensionModelData.ResourceInEditor;
 
-                if (resource == null)
+                if (resource == null || document == null)
                 {
                     return;
                 }
