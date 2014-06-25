@@ -199,6 +199,11 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// </summary>
         private int updateDateIndex;
 
+        /// <summary>
+        /// The busy indicator tooltip.
+        /// </summary>
+        private string busyIndicatorTooltip = "Running Analysis";
+
         #endregion
 
         #region Public Properties
@@ -779,6 +784,8 @@ namespace VSSonarExtension.MainViewModel.ViewModel
 
             set
             {
+                this.BusyIndicatorTooltip = "Querying SonarQube Server";
+                this.ExtensionIsBusy = value;
                 this.queryForIssuesIsRunning = value;
                 this.OnPropertyChanged();
             }
@@ -1030,6 +1037,23 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         value.ToString(CultureInfo.InvariantCulture));
                 }
 
+                this.OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the busy indicator tooltip.
+        /// </summary>
+        public string BusyIndicatorTooltip
+        {
+            get
+            {
+                return this.busyIndicatorTooltip;
+            }
+
+            set
+            {
+                this.busyIndicatorTooltip = value;
                 this.OnPropertyChanged();
             }
         }

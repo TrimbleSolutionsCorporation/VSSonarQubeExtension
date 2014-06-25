@@ -162,6 +162,11 @@ namespace VSSonarExtension.MainViewModel.Commands
             this.model.QueryForIssuesIsRunning = true;
             var bw = new BackgroundWorker { WorkerReportsProgress = true };
             bw.RunWorkerCompleted += delegate { this.model.QueryForIssuesIsRunning = false; };
+            bw.DoWork +=
+                delegate
+                {
+                    this.model.ReplaceAllIssuesInCache(this.service.GetAllIssuesByAssignee(this.model.UserConfiguration, this.model.UserConfiguration.Username));
+                };
             bw.RunWorkerAsync();
         }
 

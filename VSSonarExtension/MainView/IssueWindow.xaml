@@ -201,7 +201,7 @@
 			<Label Grid.Column="1" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}"  x:Name="DisplayStatsLabel" Content="{Binding StatsLabel}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}"/>
 			<Label Grid.Column="2" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}"  x:Name="SonarInfoLabel" Content="{Binding SonarInfo}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}"/>
 			<Label Grid.Column="4" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}"  x:Name="AssociationLabel"  Content="{Binding AssociatedProjectKey}" d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}"/>
-			<xctk:BusyIndicator Grid.Column="5" Visibility="{Binding ExtensionIsBusy, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="Running Analysis" IsBusy="True" Style="{DynamicResource BusyIndicatorStyle1}" />
+			<xctk:BusyIndicator Grid.Column="5" Visibility="{Binding ExtensionIsBusy, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="{Binding BusyIndicatorTooltip}" IsBusy="True" Style="{DynamicResource BusyIndicatorStyle1}" />
 		</Grid>        
 		<Grid x:Name="CentralGrid" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0"
 			d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}">

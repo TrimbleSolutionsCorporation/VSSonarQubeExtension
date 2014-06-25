@@ -366,15 +366,18 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// </param>
         private void PerformfAnalysis(bool startStop)
         {
+            
             switch (this.analysisModeText)
             {
                 case AnalysisModes.Server:
+                    this.BusyIndicatorTooltip = "Running Server Analysis";
                     this.RunServerAnalysis(startStop);
                     this.OnPropertyChanged("AnalysisTriggerText");
                     this.OnPropertyChanged("AnalysisTrigger");
                     break;
 
                 case AnalysisModes.Local:
+                    this.BusyIndicatorTooltip = "Running Local Analysis: " + this.analysisTypeText;
                     this.RunLocalAnalysis(startStop, this.analysisTypeText);
                     break;
             }
