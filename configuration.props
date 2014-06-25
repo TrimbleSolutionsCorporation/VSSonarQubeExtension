@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <PropertyGroup>
+        <!-- Basic settings -->    
+        <ExtensionOutputPath                                     Condition="'$(ExtensionOutputPath)'==''">$(MSBuildThisFileDirectory)BuildDrop</ExtensionOutputPath>
+        
+        <!-- Version settings -->
+        <MajorVersionNumber           Condition="'$(MajorVersionNumber)'==''">1</MajorVersionNumber>
+            <MinorVersionNumber           Condition="'$(MinorVersionNumber)'==''">3</MinorVersionNumber>
+            <BuildNumber                  Condition="'$(BuildNumber)'==''">0</BuildNumber>
+            <RevisionNumber               Condition="'$(RevisionNumber)'==''">1</RevisionNumber>
+        <AssemblyPatcherTaskOn        Condition="'$(AssemblyPatcherTaskOn)'==''">true</AssemblyPatcherTaskOn>        
+    </PropertyGroup>
+    
+
+      
+</Project>
