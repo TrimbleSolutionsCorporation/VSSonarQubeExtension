@@ -1,0 +1,39 @@
+﻿<Project DefaultTargets="AfterBuild" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask TaskName="NunitRunnerTask" AssemblyFile="NunitRunnerTask.dll" />
+  <PropertyGroup>
+    <AssemblyExtension>.dll</AssemblyExtension>
+    <ProduceCoverage    Condition="'$(ProduceCoverage)' == ''">false</ProduceCoverage>
+    <Processor          Condition="'$(Processor)' == ''">x86</Processor>
+    <TestRunner         Condition="'$(TestRunner)' == ''">Gallio</TestRunner>
+    <OutputReportPaths  Condition="'$(OutputReportPaths)' == ''">$(BINDir)</OutputReportPaths>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(OutputType)' == 'WinExe'">
+    <AssemblyExtension>.exe</AssemblyExtension>
+  </PropertyGroup>
+  
+  <Target Name="AfterBuild" Condition="'$(NunitRunnerTaskEnabled)' != 'FALSE' And '$(UnitTestsDisabled)' != 'True'">
+  <Message Text="Run Nunit Test Assembly $(OutputPath)$(AssemblyName)$(AssemblyExtension)" Importance="High" />
+  <Message Text="Solution Path $(SolutionDir)" Importance="High" />
+  <Message Text="Gallio $(GallioPath)\bin\Gallio.Echo.exe" Importance="High" />
+  <Message Text="ProjectDir $(ProjectDir)" Importance="High" />
+
+  <NunitRunnerTask GallioPath="$(GallioPath)\bin\Gallio.Echo.exe"
+                  NunitPath="$(NunitPath)"
+                  OpenCoverPath="$(OpenCoverPath)\OpenCover.Console.exe"
+                  TestRunner="$(TestRunner)"
+                  Processor="$(Processor)"
+                  GallioTestFilter="$(GallioTestFilter)"
+                  NunitTestFilter="$(NunitTestFilter)"
+                  ProjectDir="$(ProjectDir)"
+                  OutputReportPaths="$(OutputReportPaths)"
+                  CoverageReportFormat="$(AssemblyName).coverage"
+                  UnitTestReportFormat="$(AssemblyName).unittest.report"
+                  GallioRunnerType="IsolatedProcess"
+                  AssembliesToTest="$(OutputPath)$(AssemblyName)$(AssemblyExtension)"
+                  TeklaStructuresExecPath="$(UserBINDir)\$(ActualBinDir)"
+                  ProduceCoverage="$(ProduceCoverage)"
+                  AttachDebugger="false"
+                  BreakBuildOnFailedTests="true"/>
+    </Target>
+</Project>

@@ -71,14 +71,15 @@ namespace VSSonarExtension.SmartTags.Coverage
         /// </param>
         public HighlightCoverageTagger(ITextBuffer sourceBuffer)
         {
-            this.SourceBuffer = sourceBuffer;
-            VsSonarExtensionPackage.ExtensionModelData.PropertyChanged += this.CoverageDataChanged;
-
-            this.dispatcher = Dispatcher.CurrentDispatcher;
-            new List<SnapshotSpan>();
-
             try
             {
+
+                this.SourceBuffer = sourceBuffer;
+                VsSonarExtensionPackage.ExtensionModelData.PropertyChanged += this.CoverageDataChanged;
+
+                this.dispatcher = Dispatcher.CurrentDispatcher;
+                new List<SnapshotSpan>();
+
                 this.ScheduleUpdate();
             }
             catch (Exception ex)

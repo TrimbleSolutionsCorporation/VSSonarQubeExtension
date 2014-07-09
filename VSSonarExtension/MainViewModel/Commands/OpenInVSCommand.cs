@@ -125,8 +125,16 @@ namespace VSSonarExtension.MainViewModel.Commands
                 }
                 catch (Exception ex)
                 {
-                    this.model.ErrorMessage = "Open file in VS failed";
-                    this.model.DiagnosticMessage = ex.Message + " : " + ex.StackTrace;
+                    try
+                    {
+                        var resources = this.restService.GetResourcesData(this.model.UserConfiguration, issue.ComponentSafe);
+                        filename = resources[0].Name;
+                    }
+                    catch (Exception final)
+                    {
+                        this.model.ErrorMessage = "Open file in VS failed";
+                        this.model.DiagnosticMessage = final.Message + " : " + final.StackTrace;
+                    }
                 }
 
                 this.model.PreventUpdateOfIssuesList = true;

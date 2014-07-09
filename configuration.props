@@ -3,7 +3,9 @@
 
     <PropertyGroup>
         <!-- Basic settings -->    
-        <ExtensionOutputPath                                     Condition="'$(ExtensionOutputPath)'==''">$(MSBuildThisFileDirectory)BuildDrop</ExtensionOutputPath>
+        <ExtensionOutputPath     Condition="'$(ExtensionOutputPath)'==''">$(MSBuildThisFileDirectory)BuildDrop</ExtensionOutputPath>
+        <GallioPath              Condition="'$(GallioPath)'==''">$(MSBuildThisFileDirectory)references\Gallio</GallioPath>
+        <OpenCoverPath           Condition="'$(OpenCoverPath)'==''">$(MSBuildThisFileDirectory)references\OpenCover</OpenCoverPath>
         
         <!-- Version settings -->
         <MajorVersionNumber           Condition="'$(MajorVersionNumber)'==''">1</MajorVersionNumber>

@@ -50,6 +50,11 @@ namespace ExtensionTypes
         public string Component { get; set; }
 
         /// <summary>
+        /// Gets or sets the component.
+        /// </summary>
+        public string ComponentSafe { get; set; }
+
+        /// <summary>
         /// Gets or sets the effort to fix.
         /// </summary>
         public decimal EffortToFix { get; set; }
