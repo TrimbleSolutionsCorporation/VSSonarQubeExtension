@@ -98,7 +98,7 @@ namespace VSSonarExtension.MainView
         private void BindCommandsInWindow(ExtensionDataModel dataModelIn)
         {
             // bind commands
-            this.ConfPluginsOptions.DataContext = new ExtensionMenuCommand(dataModelIn);
+            this.OptionsMenu.DataContext = new ExtensionMenuCommand(dataModelIn);
         }
     }
 }
