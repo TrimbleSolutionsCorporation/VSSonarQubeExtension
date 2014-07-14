@@ -182,6 +182,7 @@
     <Compile Include="MainViewModel\ViewModel\PluginCommandsModel.cs" />
     <Compile Include="MainViewModel\ViewModel\ExtensionOptionsModel.cs" />
     <Compile Include="MainViewModel\ViewModel\ViewDesignElements.cs" />
+    <Compile Include="PackageImplementation\SmartTags\StatusBar\VSSStatusBar.cs" />
     <Compile Include="PackageImplementation\VSControls\GuidList.cs" />
     <Compile Include="PackageImplementation\PckResources\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

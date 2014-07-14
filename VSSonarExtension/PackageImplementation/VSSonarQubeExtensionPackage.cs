@@ -36,6 +36,7 @@ namespace VSSonarExtension.PackageImplementation
     using VSSonarExtension.MainView;
     using VSSonarExtension.MainViewModel.ViewModel;
     using VSSonarExtension.PackageImplementation.SmartTags.BufferUpdate;
+    using VSSonarExtension.PackageImplementation.SmartTags.StatusBar;
     using VSSonarExtension.VSControls;
     using VSSonarExtension.VSControls.DialogOptions;
 
@@ -312,9 +313,14 @@ namespace VSSonarExtension.PackageImplementation
             }
 
             var win = window as IssuesToolWindow;
-            modelToUse.ExtensionDataModelUpdate(new SonarRestService(new JsonSonarConnector()), new VsPropertiesHelper(this.dte2), null);
+            var bar = GetService(typeof(SVsStatusbar)) as IVsStatusbar;
+            this.StatusBar = new VSSStatusBar(bar, this.dte2);
+            this.StatusBar.ShowIcons();
+            modelToUse.ExtensionDataModelUpdate(new SonarRestService(new JsonSonarConnector()), new VsPropertiesHelper(this.dte2), null, this.StatusBar, this);
             win.UpdateModel(modelToUse);
         }
+
+        public VSSStatusBar StatusBar { get; set; }
 
         /// <summary>
         /// The analyse solution cmd.

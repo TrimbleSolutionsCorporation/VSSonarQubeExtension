@@ -42,6 +42,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
     using VSSonarExtension.MainViewModel.Cache;
     using VSSonarExtension.MainViewModel.Commands;
     using VSSonarExtension.PackageImplementation;
+    using VSSonarExtension.PackageImplementation.SmartTags.StatusBar;
 
     using VSSonarPlugins;
 
@@ -77,7 +78,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         #region Fields
 
         /// <summary>
-        /// The plugin control.
+        /// The analysisPlugin control.
         /// </summary>
         public readonly PluginController PluginControl = new PluginController();
 
@@ -198,7 +199,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// <param name="associatedProj">
         /// The associated Proj.
         /// </param>
-        public ExtensionDataModel(ISonarRestService restService, IVsEnvironmentHelper vsenvironmenthelper, Resource associatedProj)
+        public ExtensionDataModel(ISonarRestService restService, IVsEnvironmentHelper vsenvironmenthelper, Resource associatedProj, IServiceProvider provider)
         {
             this.RestService = restService;
             this.Vsenvironmenthelper = vsenvironmenthelper;
@@ -234,8 +235,8 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             var plugins = this.PluginControl.GetPlugins();
             if (plugins != null)
             {
-                this.ExtensionOptionsData = new ExtensionOptionsModel(this.PluginControl, this);
-                this.LocalAnalyserModule = new SonarLocalAnalyser.SonarLocalAnalyser(new List<IPlugin>(plugins), this.RestService, this.vsenvironmenthelper);
+                this.ExtensionOptionsData = new ExtensionOptionsModel(this.PluginControl, this, provider, this.UserConfiguration);
+                this.LocalAnalyserModule = new SonarLocalAnalyser.SonarLocalAnalyser(new List<IAnalysisPlugin>(plugins), this.RestService, this.vsenvironmenthelper);
                 this.LocalAnalyserModule.StdOutEvent += this.UpdateOutputMessagesFromPlugin;
                 this.LocalAnalyserModule.LocalAnalysisCompleted += this.UpdateLocalIssues;
 
@@ -691,7 +692,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// <summary>
         ///     Gets the profile.
         /// </summary>
-        public Profile GetProfile(IPlugin plugin, string projectKey)
+        public Profile GetProfile(IAnalysisPlugin analysisPlugin, string projectKey)
         {
             if (this.profile == null)
             {
@@ -700,7 +701,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                     List<Resource> profileResource = this.restService.GetQualityProfile(this.UserConfiguration, projectKey);
                     List<Profile> enabledrules = this.restService.GetEnabledRulesInProfile(
                         this.UserConfiguration,
-                        plugin.GetLanguageKey(), 
+                        analysisPlugin.GetLanguageKey(), 
                         profileResource[0].Metrics[0].Data);
                     this.profile = enabledrules[0];
                 }
@@ -1145,23 +1146,25 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// The extension data model update.
         /// </summary>
         /// <param name="restServiceIn">
-        /// The rest service in.
+        ///     The rest service in.
         /// </param>
         /// <param name="vsenvironmenthelperIn">
-        /// The vsenvironmenthelper in.
+        ///     The vsenvironmenthelper in.
         /// </param>
         /// <param name="associatedProj">
-        /// The associated proj.
+        ///     The associated proj.
         /// </param>
-        public void ExtensionDataModelUpdate(ISonarRestService restServiceIn, IVsEnvironmentHelper vsenvironmenthelperIn, Resource associatedProj)
+        /// <param name="statusBar"></param>
+        public void ExtensionDataModelUpdate(ISonarRestService restServiceIn, IVsEnvironmentHelper vsenvironmenthelperIn, Resource associatedProj, VSSStatusBar statusBar, IServiceProvider provider)
         {
             this.RestService = restServiceIn;
             this.Vsenvironmenthelper = vsenvironmenthelperIn;
+            this.StatusBar = statusBar;
             var plugins = this.PluginControl.GetPlugins();
             if (plugins != null)
             {
-                this.ExtensionOptionsData = new ExtensionOptionsModel(this.PluginControl, this);
-                this.LocalAnalyserModule = new SonarLocalAnalyser.SonarLocalAnalyser(new List<IPlugin>(plugins), this.RestService, this.Vsenvironmenthelper);
+                this.ExtensionOptionsData = new ExtensionOptionsModel(this.PluginControl, this, provider, this.UserConfiguration);
+                this.LocalAnalyserModule = new SonarLocalAnalyser.SonarLocalAnalyser(new List<IAnalysisPlugin>(plugins), this.RestService, this.Vsenvironmenthelper);
                 this.LocalAnalyserModule.StdOutEvent += this.UpdateOutputMessagesFromPlugin;
                 this.LocalAnalyserModule.LocalAnalysisCompleted += this.UpdateLocalIssues;
 
@@ -1213,6 +1216,8 @@ namespace VSSonarExtension.MainViewModel.ViewModel
 
             this.AssociatedProject = associatedProj;
         }
+
+        public VSSStatusBar StatusBar { get; set; }
 
         /// <summary>
         /// Gets the coverage in editor.

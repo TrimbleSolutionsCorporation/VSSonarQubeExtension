@@ -89,7 +89,7 @@ namespace VSSonarExtension.Test.TestView
             var issues = service.GetIssuesInResource(config, "resource");
             var associatedProject = new Resource { Key = "core:Common" };
 
-            this.model = new ExtensionDataModel(service, mockVsHelpers, associatedProject);
+            this.model = new ExtensionDataModel(service, mockVsHelpers, associatedProject, null);
             var t = new Thread(this.Threadprc);
             t.SetApartmentState(ApartmentState.STA);
             t.Start();
@@ -127,8 +127,8 @@ namespace VSSonarExtension.Test.TestView
         /// </summary>
         private void WindowPlugins()
         {            
-            var plugins = new List<IPlugin> { new DummyLocalAnalyserExtension() };
-            var modelPl = new ExtensionOptionsModel(new PluginController(), null);
+            var plugins = new List<IAnalysisPlugin> { new DummyLocalAnalyserExtension() };
+            var modelPl = new ExtensionOptionsModel(new PluginController(), null, null, null);
             var windowPlugins = new ExtensionOptionsWindow(modelPl);
             windowPlugins.ShowDialog();
         }
@@ -138,7 +138,7 @@ namespace VSSonarExtension.Test.TestView
         /// <summary>
         ///     The dummy local analyser extension.
         /// </summary>
-        private class DummyLocalAnalyserExtension : IPlugin
+        private class DummyLocalAnalyserExtension : IAnalysisPlugin
         {
             #region Public Methods and Operators
 
@@ -314,6 +314,16 @@ namespace VSSonarExtension.Test.TestView
             }
 
             #endregion
+
+            public string GetVersion()
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public string GetAssemblyPath()
+            {
+                throw new System.NotImplementedException();
+            }
         }
     }
 }

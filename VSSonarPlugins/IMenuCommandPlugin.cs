@@ -16,7 +16,7 @@ namespace VSSonarPlugins
     /// <summary>
     /// The MenuCommandPlugin interface.
     /// </summary>
-    public interface IMenuCommandPlugin
+    public interface IMenuCommandPlugin : IPlugin
     {
         /// <summary>
         /// The get header.

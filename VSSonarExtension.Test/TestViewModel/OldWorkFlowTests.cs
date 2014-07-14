@@ -77,7 +77,7 @@ namespace ExtensionViewModel.Test
         [Test]
         public void VerifyOpenAndReopenStatusTest()
         {
-            var data = new ExtensionDataModel(this.service, this.vshelper, null)
+            var data = new ExtensionDataModel(this.service, this.vshelper, null, null)
                            {
                                SelectedIssuesInView =
                                    new List<Issue>
@@ -103,7 +103,7 @@ namespace ExtensionViewModel.Test
         [Test]
         public void VerifyMultiSelectionTest()
         {
-            var data = new ExtensionDataModel(this.service, this.vshelper, null)
+            var data = new ExtensionDataModel(this.service, this.vshelper, null, null)
             {
                 SelectedIssuesInView =
                     new List<Issue>
@@ -130,7 +130,11 @@ namespace ExtensionViewModel.Test
         [Test]
         public void VerifyClosedStatus()
         {
-            var data = new ExtensionDataModel(this.service, this.vshelper, null)
+            var data = new ExtensionDataModel(
+                this.service,
+                this.vshelper,
+                null,
+                null)
             {
                 SelectedIssuesInView =
                     new List<Issue>
@@ -155,7 +159,7 @@ namespace ExtensionViewModel.Test
         [Test]
         public void VerifyResolvedTest()
         {
-            var data = new ExtensionDataModel(this.service, this.vshelper, null)
+            var data = new ExtensionDataModel(this.service, this.vshelper, null, null)
             {
                 SelectedIssuesInView =
                     new List<Issue>
@@ -184,7 +188,7 @@ namespace ExtensionViewModel.Test
         [Test]
         public void VerifyResetVisibilitiesWhenStatusIsNotDefined()
         {
-            var data = new ExtensionDataModel(this.service, this.vshelper, null)
+            var data = new ExtensionDataModel(this.service, this.vshelper, null, null)
             {
                 SelectedIssuesInView =
                     new List<Issue>

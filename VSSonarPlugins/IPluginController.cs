@@ -11,40 +11,64 @@
 // You should have received a copy of the GNU Lesser General Public License along with this program; if not, write to the Free
 // Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 // --------------------------------------------------------------------------------------------------------------------
-
 namespace VSSonarPlugins
 {
-    using System.Collections.Generic;
     using System.Collections.ObjectModel;
 
     using ExtensionTypes;
 
     /// <summary>
-    /// The PluginController interface.
+    ///     The PluginController interface.
     /// </summary>
     public interface IPluginController
     {
-        /// <summary>
-        /// The get plugins options.
-        /// </summary>
-        /// <returns>
-        /// The <see>
-        ///     <cref>Dictionary</cref>
-        /// </see>
-        ///     .
-        /// </returns>
-        ReadOnlyCollection<IPlugin> GetPlugins();
+        #region Public Methods and Operators
 
         /// <summary>
-        /// The get menu item plugins.
+        /// The get error data.
         /// </summary>
         /// <returns>
-        /// The <see>
+        /// The <see cref="string"/>.
+        /// </returns>
+        string GetErrorData();
+
+        /// <summary>
+        ///     The get menu item plugins.
+        /// </summary>
+        /// <returns>
+        ///     The
+        ///     <see>
         ///         <cref>ReadOnlyCollection</cref>
         ///     </see>
         ///     .
         /// </returns>
         ReadOnlyCollection<IMenuCommandPlugin> GetMenuItemPlugins();
+
+        /// <summary>
+        ///     The get plugins options.
+        /// </summary>
+        /// <returns>
+        ///     The
+        ///     <see>
+        ///         <cref>Dictionary</cref>
+        ///     </see>
+        ///     .
+        /// </returns>
+        ReadOnlyCollection<IAnalysisPlugin> GetPlugins();
+
+        /// <summary>
+        /// The istall new plugin.
+        /// </summary>
+        /// <param name="fileName">
+        /// The file name.
+        /// </param>
+        /// <param name="conf">
+        /// The conf.
+        /// </param>
+        /// <returns>
+        /// The <see cref="PluginDescription"/>.
+        /// </returns>
+        PluginDescription IstallNewPlugin(string fileName, ConnectionConfiguration conf);
 
         /// <summary>
         /// The pick plugin from multiple supported plugins.
@@ -53,8 +77,24 @@ namespace VSSonarPlugins
         /// The plugins to use.
         /// </param>
         /// <returns>
-        /// The <see cref="IPlugin"/>.
+        /// The <see cref="IAnalysisPlugin"/>.
         /// </returns>
-        IPlugin PickPluginFromMultipleSupportedPlugins(ReadOnlyCollection<IPlugin> pluginsToUse);
+        IAnalysisPlugin PickPluginFromMultipleSupportedPlugins(ReadOnlyCollection<IAnalysisPlugin> pluginsToUse);
+
+        /// <summary>
+        /// The remove plugin.
+        /// </summary>
+        /// <param name="conf">
+        /// The conf.
+        /// </param>
+        /// <param name="selectedPlugin">
+        /// The selected plugin.
+        /// </param>
+        /// <returns>
+        /// The <see cref="bool"/>.
+        /// </returns>
+        bool RemovePlugin(ConnectionConfiguration conf, PluginDescription selectedPlugin);
+
+        #endregion
     }
 }

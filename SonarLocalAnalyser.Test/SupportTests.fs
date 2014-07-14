@@ -45,10 +45,10 @@ type SupportTests() =
         let vsItem = new VsProjectItem("fileName", "filePath", "projectName", "projectFilePath", "solutionName", "solutionPath")
 
         let mockAPlugin =
-            Mock<IPlugin>()
+            Mock<IAnalysisPlugin>()
                 .Setup(fun x -> <@ x.IsSupported(vsItem) @>).Returns(false)
                 .Create()
-        let listofPlugins = new System.Collections.Generic.List<IPlugin>()
+        let listofPlugins = new System.Collections.Generic.List<IAnalysisPlugin>()
         listofPlugins.Add(mockAPlugin)
         let analyser = new SonarLocalAnalyser(listofPlugins, Mock<ISonarRestService>().Create(), Mock<IVsEnvironmentHelper>().Create())
                 
@@ -60,11 +60,11 @@ type SupportTests() =
         let vsItem = new VsProjectItem("fileName", "filePath", "projectName", "projectFilePath", "solutionName", "solutionPath")
         
         let mockAPlugin =
-            Mock<IPlugin>()
+            Mock<IAnalysisPlugin>()
                 .Setup(fun x -> <@ x.IsSupported(vsItem) @>).Returns(true)
                 .Create()
 
-        let listofPlugins = new System.Collections.Generic.List<IPlugin>()
+        let listofPlugins = new System.Collections.Generic.List<IAnalysisPlugin>()
         listofPlugins.Add(mockAPlugin)
         let analyser = new SonarLocalAnalyser(listofPlugins, Mock<ISonarRestService>().Create(), Mock<IVsEnvironmentHelper>().Create())
                 
@@ -92,11 +92,11 @@ type SupportTests() =
         project.Lang <- "c++"
 
         let mockAPlugin =
-            Mock<IPlugin>()
+            Mock<IAnalysisPlugin>()
                 .Setup(fun x -> <@ x.IsSupported(any(), project) @>).Returns(false)
                 .Create()
 
-        let listofPlugins = new System.Collections.Generic.List<IPlugin>()
+        let listofPlugins = new System.Collections.Generic.List<IAnalysisPlugin>()
         listofPlugins.Add(mockAPlugin)
         let analyser = new SonarLocalAnalyser(listofPlugins, Mock<ISonarRestService>().Create(), Mock<IVsEnvironmentHelper>().Create())
                 
@@ -120,8 +120,8 @@ type SupportTests() =
     member test.``Should throw exception project is not associated for multilanguage scenario`` () =
         let project = new Resource()
 
-        let listofPlugins = new System.Collections.Generic.List<IPlugin>()
-        listofPlugins.Add(Mock<IPlugin>().Create())                
+        let listofPlugins = new System.Collections.Generic.List<IAnalysisPlugin>()
+        listofPlugins.Add(Mock<IAnalysisPlugin>().Create())                
         let analyser = new SonarLocalAnalyser(listofPlugins, Mock<ISonarRestService>().Create(), Mock<IVsEnvironmentHelper>().Create())        
         (analyser.IsMultiLanguageAnalysis(null)) |> should throw typeof<ProjectNotAssociatedException>
 
@@ -129,8 +129,8 @@ type SupportTests() =
     member test.``Should allow multi language if lang is not defined`` () =
         let project = new Resource()
 
-        let listofPlugins = new System.Collections.Generic.List<IPlugin>()
-        listofPlugins.Add(Mock<IPlugin>().Create())
+        let listofPlugins = new System.Collections.Generic.List<IAnalysisPlugin>()
+        listofPlugins.Add(Mock<IAnalysisPlugin>().Create())
         let analyser = new SonarLocalAnalyser(listofPlugins, Mock<ISonarRestService>().Create(), Mock<IVsEnvironmentHelper>().Create())
         (analyser.IsMultiLanguageAnalysis(project)) |> should be True
 
@@ -138,8 +138,8 @@ type SupportTests() =
     member test.``Should not allow multi language if lang is defined`` () =
         let project = new Resource(Lang = "c++")
 
-        let listofPlugins = new System.Collections.Generic.List<IPlugin>()
-        listofPlugins.Add(Mock<IPlugin>().Create())
+        let listofPlugins = new System.Collections.Generic.List<IAnalysisPlugin>()
+        listofPlugins.Add(Mock<IAnalysisPlugin>().Create())
         let analyser = new SonarLocalAnalyser(listofPlugins, Mock<ISonarRestService>().Create(), Mock<IVsEnvironmentHelper>().Create())
         (analyser.IsMultiLanguageAnalysis(project)) |> should be False
 

@@ -58,14 +58,14 @@ namespace VSSonarExtension.Test.TestViewModel
             private IVsEnvironmentHelper vshelper;
 
             /// <summary>
-            /// The plugin controller.
+            /// The analysisPlugin controller.
             /// </summary>
             private IPluginController pluginController;
 
             /// <summary>
-            /// The plugin.
+            /// The analysisPlugin.
             /// </summary>
-            private IPlugin plugin;
+            private IAnalysisPlugin analysisPlugin;
 
             /// <summary>
             /// The setup.
@@ -77,7 +77,7 @@ namespace VSSonarExtension.Test.TestViewModel
                 this.service = this.mocks.Stub<ISonarRestService>();
                 this.vshelper = this.mocks.Stub<IVsEnvironmentHelper>();
                 this.pluginController = this.mocks.Stub<IPluginController>();
-                this.plugin = this.mocks.Stub<IPlugin>();
+                this.analysisPlugin = this.mocks.Stub<IAnalysisPlugin>();
 
                 using (this.mocks.Record())
                 {
@@ -95,7 +95,7 @@ namespace VSSonarExtension.Test.TestViewModel
             [Test]
             public void ErrorWhenOnPluginsAreInstalled()
             {
-                var data = new ExtensionDataModel(this.service, this.vshelper, null);
+                var data = new ExtensionDataModel(this.service, this.vshelper, null, null);
                 data.RefreshDataForResource(@"e:\test\src.cs");
                 Assert.AreEqual("Extension Not Ready", data.ErrorMessage);
                 Assert.IsNull(data.ResourceInEditor);
@@ -107,7 +107,7 @@ namespace VSSonarExtension.Test.TestViewModel
             [Test]
             public void ShouldReturnWhenContstrainsAreNotMet()
             {
-                var data = new ExtensionDataModel(this.service, this.vshelper, null);
+                var data = new ExtensionDataModel(this.service, this.vshelper, null, null);
                 data.UpdateIssuesInEditorLocationWithModifiedBuffer("data");                
                 Assert.AreEqual(string.Empty, data.ErrorMessage);
                 Assert.AreEqual(0, data.GetIssuesInEditor("file").Count);
@@ -142,14 +142,14 @@ namespace VSSonarExtension.Test.TestViewModel
                     .Return(new List<Resource> { element })
                     .Repeat.Twice();
 
-                this.plugin.Expect(mp => mp.IsSupported(Arg<ConnectionConfiguration>.Is.Anything, Arg<Resource>.Is.Anything)).Return(true).Repeat.Once();
-                this.plugin.Expect(
+                this.analysisPlugin.Expect(mp => mp.IsSupported(Arg<ConnectionConfiguration>.Is.Anything, Arg<Resource>.Is.Anything)).Return(true).Repeat.Once();
+                this.analysisPlugin.Expect(
                     mp =>
                     mp.GetResourceKey(
                         Arg<VsProjectItem>.Is.Anything,
                         Arg<string>.Is.Anything, Arg<bool>.Is.Anything)).Return("key").Repeat.Once();
 
-                var data = new ExtensionDataModel(this.service, this.vshelper, null);
+                var data = new ExtensionDataModel(this.service, this.vshelper, null, null);
                 data.AssociatedProject = new Resource { Key = "KEY"};
                 data.RefreshDataForResource("c:\\src\\file.cpp");
                 Assert.AreEqual("Extension Not Ready", data.ErrorMessage);

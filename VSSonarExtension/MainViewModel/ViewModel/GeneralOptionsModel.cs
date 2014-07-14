@@ -20,6 +20,8 @@ namespace VSSonarExtension.MainViewModel.ViewModel
 
     using ExtensionTypes;
 
+    using Microsoft.VisualStudio.Shell.Interop;
+
     using VSSonarExtension.MainView;
 
     using VSSonarPlugins;
@@ -48,9 +50,24 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         #region Fields
 
         /// <summary>
-        /// The plugin list.
+        ///     The controller.
+        /// </summary>
+        private readonly IPluginController controller;
+
+        /// <summary>
+        ///     The plugin list.
         /// </summary>
         private readonly ObservableCollection<PluginDescription> pluginList = new ObservableCollection<PluginDescription>();
+
+        /// <summary>
+        /// The provider.
+        /// </summary>
+        private readonly IServiceProvider provider;
+
+        /// <summary>
+        /// The changes are required.
+        /// </summary>
+        private bool changesAreRequired;
 
         /// <summary>
         ///     The debug is checked.
@@ -58,7 +75,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         private bool debugIsChecked;
 
         /// <summary>
-        /// The is solution open.
+        ///     The is solution open.
         /// </summary>
         private bool isSolutionOpen;
 
@@ -68,9 +85,14 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         private string javabinary;
 
         /// <summary>
-        /// The language.
+        ///     The language.
         /// </summary>
         private string language;
+
+        /// <summary>
+        /// The plugin is selected.
+        /// </summary>
+        private bool pluginIsSelected;
 
         /// <summary>
         ///     The project.
@@ -78,7 +100,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         private Resource project;
 
         /// <summary>
-        /// The project id.
+        ///     The project id.
         /// </summary>
         private string projectId;
 
@@ -86,6 +108,11 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         ///     The project version.
         /// </summary>
         private string projectVersion;
+
+        /// <summary>
+        ///     The selected plugin.
+        /// </summary>
+        private PluginDescription selectedPlugin;
 
         /// <summary>
         ///     The sonar qube binary.
@@ -117,10 +144,29 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         #region Constructors and Destructors
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="GeneralOptionsModel" /> class.
+        /// Initializes a new instance of the <see cref="GeneralOptionsModel"/> class.
         /// </summary>
         public GeneralOptionsModel()
         {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GeneralOptionsModel"/> class.
+        /// </summary>
+        /// <param name="controller">
+        /// The controller.
+        /// </param>
+        /// <param name="provider">
+        /// The provider.
+        /// </param>
+        /// <param name="conf">
+        /// The conf.
+        /// </param>
+        public GeneralOptionsModel(IPluginController controller, IServiceProvider provider, ConnectionConfiguration conf)
+        {
+            this.Conf = conf;
+            this.provider = provider;
+            this.controller = controller;
             if (string.IsNullOrEmpty(this.SonarQubeBinary))
             {
                 this.GetDefaultSonarRunnerLocation();
@@ -229,6 +275,28 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether changes are required.
+        /// </summary>
+        public bool ChangesAreRequired
+        {
+            get
+            {
+                return this.changesAreRequired;
+            }
+
+            set
+            {
+                this.changesAreRequired = value;
+                this.OnPropertyChanged("ChangesAreRequired");
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the conf.
+        /// </summary>
+        public ConnectionConfiguration Conf { get; set; }
+
+        /// <summary>
         ///     Gets or sets a value indicating whether debug is checked.
         /// </summary>
         public bool DebugIsChecked
@@ -251,7 +319,55 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         public string ExcludedPlugins { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether is solution open.
+        /// Gets or sets a value indicating whether install new plugin.
+        /// </summary>
+        public bool InstallNewPlugin
+        {
+            get
+            {
+                return true;
+            }
+
+            set
+            {
+                var filedialog = new OpenFileDialog { Filter = @"VSSonar Plugin|*.VSQ" };
+                DialogResult result = filedialog.ShowDialog();
+
+                if (result == DialogResult.OK)
+                {
+                    if (!File.Exists(filedialog.FileName))
+                    {
+                        MessageBox.Show(@"Error Choosing File, File Does not exits");
+                    }
+                    else
+                    {
+                        PluginDescription plugin = this.controller.IstallNewPlugin(filedialog.FileName, this.Conf);
+
+                        if (plugin != null)
+                        {
+                            if (!this.UpdatePluginInListOfPlugins(plugin, "Plugin Will Be Updated in Next Restart"))
+                            {
+                                this.PluginList.Add(plugin);
+                            }
+
+                            this.ChangesAreRequired = true;
+                        }
+                        else
+                        {
+                            UserExceptionMessageBox.ShowException(
+                                "Cannot Install Plugin", 
+                                new Exception("Error Loading Plugin"), 
+                                this.controller.GetErrorData());
+                        }
+                    }
+                }
+
+                this.OnPropertyChanged("InstallNewPlugin");
+            }
+        }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether is solution open.
         /// </summary>
         public bool IsSolutionOpen
         {
@@ -302,7 +418,24 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         }
 
         /// <summary>
-        /// Gets the plugin list.
+        /// Gets or sets a value indicating whether plugin is selected.
+        /// </summary>
+        public bool PluginIsSelected
+        {
+            get
+            {
+                return this.pluginIsSelected;
+            }
+
+            set
+            {
+                this.pluginIsSelected = value;
+                this.OnPropertyChanged("PluginIsSelected");
+            }
+        }
+
+        /// <summary>
+        ///     Gets the plugin list.
         /// </summary>
         public ObservableCollection<PluginDescription> PluginList
         {
@@ -330,7 +463,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         }
 
         /// <summary>
-        /// Gets or sets the project id.
+        ///     Gets or sets the project id.
         /// </summary>
         public string ProjectId
         {
@@ -360,6 +493,64 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             {
                 this.projectVersion = value;
                 this.OnPropertyChanged("ProjectVersion");
+            }
+        }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether remove plugin.
+        /// </summary>
+        public bool RemovePlugin
+        {
+            get
+            {
+                return true;
+            }
+
+            set
+            {
+                if (this.controller.RemovePlugin(this.Conf, this.SelectedPlugin))
+                {
+                    this.UpdatePluginInListOfPlugins(this.SelectedPlugin, "Plugin Will Be Removed In Next Restart");
+                }
+
+                this.OnPropertyChanged("RemovePlugin");
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether restart vs.
+        /// </summary>
+        public bool RestartVS
+        {
+            get
+            {
+                return true;
+            }
+
+            set
+            {
+                var obj = (IVsShell4)this.provider.GetService(typeof(SVsShell));
+                obj.Restart((uint)__VSRESTARTTYPE.RESTART_Normal);
+                this.OnPropertyChanged("RestartVS");
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the selected plugin.
+        /// </summary>
+        public PluginDescription SelectedPlugin
+        {
+            get
+            {
+                return this.selectedPlugin;
+            }
+
+            set
+            {
+                this.selectedPlugin = value;
+                this.PluginIsSelected = this.selectedPlugin != null;
+
+                this.OnPropertyChanged("SelectedPlugin");
             }
         }
 
@@ -687,6 +878,54 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         private string GetOptionFromDictionary(Dictionary<string, string> options, string key)
         {
             return options.ContainsKey(key) ? options[key] : string.Empty;
+        }
+
+        /// <summary>
+        /// The update plugin in list of plugins.
+        /// </summary>
+        /// <param name="plugin">
+        /// The plugin.
+        /// </param>
+        /// <param name="pluginWillBeRemovedInNextRestart">
+        /// The plugin will be removed in next restart.
+        /// </param>
+        /// <returns>
+        /// The <see cref="bool"/>.
+        /// </returns>
+        private bool UpdatePluginInListOfPlugins(PluginDescription plugin, string pluginWillBeRemovedInNextRestart)
+        {
+            bool present = false;
+            var newList = new ObservableCollection<PluginDescription>();
+            foreach (PluginDescription pluginDescription in this.PluginList)
+            {
+                if (pluginDescription.Name.Equals(plugin.Name))
+                {
+                    var updatedDescription = new PluginDescription
+                                                 {
+                                                     Name = pluginDescription.Name, 
+                                                     Enabled = pluginDescription.Enabled, 
+                                                     Status = pluginWillBeRemovedInNextRestart, 
+                                                     SupportedExtensions = pluginDescription.SupportedExtensions, 
+                                                     Version = pluginDescription.Version
+                                                 };
+
+                    newList.Add(updatedDescription);
+                    present = true;
+                }
+                else
+                {
+                    newList.Add(pluginDescription);
+                }
+            }
+
+            this.PluginList.Clear();
+            foreach (PluginDescription pluginDescription in newList)
+            {
+                this.PluginList.Add(pluginDescription);
+            }
+
+            this.OnPropertyChanged("PluginList");
+            return present;
         }
 
         #endregion

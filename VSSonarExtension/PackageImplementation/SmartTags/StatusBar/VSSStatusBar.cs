@@ -10,6 +10,8 @@ namespace VSSonarExtension.PackageImplementation.SmartTags.StatusBar
     using System.Drawing;
     using System.Threading;
 
+    using EnvDTE80;
+
     using Microsoft.VisualStudio.Shell.Interop;
 
     /// <summary>
@@ -18,7 +20,6 @@ namespace VSSonarExtension.PackageImplementation.SmartTags.StatusBar
     public class VSSStatusBar
     {
         #region Fields
-        IServiceProvider serviceProvider;
         #endregion
 
         #region Constructors
@@ -26,14 +27,17 @@ namespace VSSonarExtension.PackageImplementation.SmartTags.StatusBar
         /// Initializes a new instance of the <see cref="StatusBar"/> class.
         /// </summary>
         /// <param name="serviceProvider">The service provider.</param>
-        public VSSStatusBar(IVsStatusbar bar)
+        public VSSStatusBar(IVsStatusbar bar, DTE2 dte)
         {
             this.bar = bar;
+            this.dte = dte;
         }
         #endregion
 
         #region Properties
         private IVsStatusbar bar;
+
+        private DTE2 dte;
 
         /// <summary>
         /// Gets the status bar.
@@ -43,11 +47,6 @@ namespace VSSonarExtension.PackageImplementation.SmartTags.StatusBar
         {
             get
             {
-                if (this.bar == null)
-                {
-                    this.bar = this.serviceProvider.GetService(typeof(SVsStatusbar)) as IVsStatusbar;
-                }
-
                 return this.bar;
             }
         }
@@ -70,27 +69,54 @@ namespace VSSonarExtension.PackageImplementation.SmartTags.StatusBar
             }
         }
 
+
+        [System.Runtime.InteropServices.DllImport("gdi32.dll")]
+        public static extern bool DeleteObject(IntPtr hObject);
+
+
+        public void ShowIcons()
+        {
+
+            Bitmap b = new Bitmap(@"E:\Development\SonarQube\VssonarExtension\VSSonarQubeExtension\VSSonarExtension\PackageImplementation\Resources\sonariconsource.bmp");
+            IntPtr hdc = IntPtr.Zero;
+            hdc = b.GetHbitmap();
+
+            object hdcObject = (object)hdc;
+
+            this.Bar.Animation(1, ref hdcObject);
+
+        }
+
         public void DisplayAndShowIcon(string message)
         {
-            if (this.Bar == null) return;
 
-            int frozen;
+            Bitmap b = new Bitmap(@"E:\Development\SonarQube\VssonarExtension\VSSonarQubeExtension\VSSonarExtension\PackageImplementation\Resources\sonariconsource.bmp");
+            IntPtr hdc = IntPtr.Zero;
+            hdc = b.GetHbitmap();
 
-            this.Bar.IsFrozen(out frozen);
+            object hdcObject = (object)hdc;
 
-            if (frozen == 0)
-            {
-                this.Bar.SetText(message);
-            }
+            this.Bar.Animation(1, ref hdcObject);
 
-            object icon = Constants.SBAI_Save;
-            this.Bar.Animation(1, ref icon);
-            this.Bar.SetText(message);
-            System.Windows.Forms.MessageBox.Show(
-        "Click OK to end status bar animation.");
+            Thread.Sleep(10000);
 
-            this.Bar.Animation(0, ref icon);
-            this.Bar.Clear();
+            this.Bar.Animation(0, ref hdcObject);
+            DeleteObject(hdc);
+
+
+            return;
+
+            object icon = Constants.SBAI_Build;
+            this.dte.StatusBar.Animate(true, icon);
+            //this.Bar.Animation(1, ref icon);
+            this.dte.StatusBar.Text = message;
+            //this.Bar.SetText(message);
+
+            
+
+            this.dte.StatusBar.Animate(false, icon);
+            //this.Bar.Animation(0, ref icon);
+            this.dte.StatusBar.Text = "Build Succeeded";
         }
 
         public void DisplayAndShowProgress(string message)

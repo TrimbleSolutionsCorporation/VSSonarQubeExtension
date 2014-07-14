@@ -479,6 +479,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         private void UpdateLocalIssues(object sender, EventArgs e)
         {
             this.ExtensionIsBusy = false;
+            this.StatusBar.DisplayAndShowIcon("Updating Local Issues");
 
             try
             {

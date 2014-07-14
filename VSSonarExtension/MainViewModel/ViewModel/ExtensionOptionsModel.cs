@@ -46,10 +46,10 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// <summary>
         ///     The plugins.
         /// </summary>
-        private ReadOnlyCollection<IPlugin> plugins;
+        private ReadOnlyCollection<IAnalysisPlugin> plugins;
 
         /// <summary>
-        ///     The selected plugin item.
+        ///     The selected analysisPlugin item.
         /// </summary>
         private string selectedPluginItem;
 
@@ -75,7 +75,6 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         public ExtensionOptionsModel(ExtensionDataModel model)
         {
             this.model = model;
-            this.GeneralOptions = new GeneralOptionsModel();
         }
 
         /// <summary>
@@ -84,13 +83,13 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// <param name="plugins">
         /// The plugins.
         /// </param>
-        public ExtensionOptionsModel(PluginController plugincontroller, ExtensionDataModel model)
+        public ExtensionOptionsModel(PluginController plugincontroller, ExtensionDataModel model, IServiceProvider provider, ConnectionConfiguration conf)
         {
             this.model = model;
             this.plugincontroller = plugincontroller;
             this.plugins = plugincontroller.GetPlugins();
             this.ControlCommand = new UserSelectControl(this, this.plugins);
-            this.GeneralOptions = new GeneralOptionsModel();
+            this.GeneralOptions = new GeneralOptionsModel(plugincontroller, provider, conf);
             this.GeneralOptionsFrame = this.GeneralOptions.GetUserControlOptions();
         }
 
@@ -159,7 +158,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         }
 
         /// <summary>
-        ///     Gets or sets the selected plugin item.
+        ///     Gets or sets the selected analysisPlugin item.
         /// </summary>
         public string SelectedPluginItem
         {
@@ -174,8 +173,8 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                 if (value != null)
                 {
                     this.OptionsInView = null;
-                    this.PluginInView = null;
-                    this.OnPropertyChanged("PluginInView");
+                    this.AnalysisPluginInView = null;
+                    this.OnPropertyChanged("AnalysisPluginInView");
 
                     this.IsLicenseEnable = false;
                     if (value.Equals("Licenses"))
@@ -228,9 +227,9 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         public UserSelectControl ControlCommand { get; set; }
 
         /// <summary>
-        /// Gets or sets the plugin in view.
+        /// Gets or sets the analysisPlugin in view.
         /// </summary>
-        public IPlugin PluginInView { get; set; }
+        public IAnalysisPlugin AnalysisPluginInView { get; set; }
 
         /// <summary>
         /// Gets or sets the vsenvironmenthelper.
@@ -325,10 +324,10 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             }
 
 
-            if (this.PluginInView != null)
+            if (this.AnalysisPluginInView != null)
             {
-                var options = this.PluginInView.GetPluginControlOptions(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.model.Vsenvironmenthelper)).GetOptions();
-                var key = this.PluginInView.GetKey(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.model.Vsenvironmenthelper));
+                var options = this.AnalysisPluginInView.GetPluginControlOptions(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.model.Vsenvironmenthelper)).GetOptions();
+                var key = this.AnalysisPluginInView.GetKey(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.model.Vsenvironmenthelper));
                 this.model.Vsenvironmenthelper.WriteAllOptionsForPluginOptionInApplicationData(key, this.Project, options);
             }
         }
@@ -382,10 +381,10 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         }
 
         /// <summary>
-        /// The update plugin options.
+        /// The update analysisPlugin options.
         /// </summary>
         /// <param name="selectedPlugin">
-        /// The selected plugin.
+        /// The selected analysisPlugin.
         /// </param>
         private void UpdatePluginOptions(string selectedPlugin)
         {
@@ -410,7 +409,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
 
                 var optionsInDsk = this.Vsenvironmenthelper.ReadAllAvailableOptionsInSettings(pluginKey);
                 this.OptionsInView = pluginOptionsController.GetUserControlOptions(this.Project);
-                this.PluginInView = plugin;
+                this.AnalysisPluginInView = plugin;
                 pluginOptionsController.SetOptions(optionsInDsk);                
             }
         }
@@ -428,7 +427,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             /// <summary>
             /// The plugins.
             /// </summary>
-            private ReadOnlyCollection<IPlugin> plugins;
+            private ReadOnlyCollection<IAnalysisPlugin> plugins;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="UserSelectControl"/> class.
@@ -448,7 +447,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             /// <param name="model">
             /// The model.
             /// </param>
-            public UserSelectControl(ExtensionOptionsModel model, ReadOnlyCollection<IPlugin> plugins )
+            public UserSelectControl(ExtensionOptionsModel model, ReadOnlyCollection<IAnalysisPlugin> plugins )
             {
                 this.plugins = plugins;
                 this.model = model;
@@ -501,7 +500,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
 
                 if (header.Equals("Cancel and Exit"))
                 {
-                    var pluginInView = this.model.PluginInView;
+                    var pluginInView = this.model.AnalysisPluginInView;
                     if (pluginInView != null)
                     {
                         pluginInView.GetPluginControlOptions(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.model.Vsenvironmenthelper)).SetOptions(this.model.Vsenvironmenthelper.ReadAllAvailableOptionsInSettings(pluginInView.GetKey(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.model.Vsenvironmenthelper))));

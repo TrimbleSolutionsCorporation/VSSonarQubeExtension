@@ -78,7 +78,7 @@ namespace VSSonarExtension.Test.TestViewModel
         [Test]
         public void VerifyOpenAndReopenStatusTest()
         {
-            var data = new ExtensionDataModel(this.service, this.vshelper, null)
+            var data = new ExtensionDataModel(this.service, this.vshelper, null, null)
                            {
                                SelectedIssuesInView =
                                    new List<Issue>
@@ -104,7 +104,7 @@ namespace VSSonarExtension.Test.TestViewModel
         [Test]
         public void VerifyConfirmStatus()
         {
-            var data = new ExtensionDataModel(this.service, this.vshelper, null)
+            var data = new ExtensionDataModel(this.service, this.vshelper, null, null)
             {
                 SelectedIssuesInView =
                     new List<Issue>
@@ -129,7 +129,7 @@ namespace VSSonarExtension.Test.TestViewModel
         [Test]
         public void VerifyResolveStatus()
         {
-            var data = new ExtensionDataModel(this.service, this.vshelper, null)
+            var data = new ExtensionDataModel(this.service, this.vshelper, null, null)
             {
                 SelectedIssuesInView =
                     new List<Issue>
@@ -154,7 +154,7 @@ namespace VSSonarExtension.Test.TestViewModel
         [Test]
         public void VerifyMultiSelectionStatus()
         {
-            var data = new ExtensionDataModel(this.service, this.vshelper, null)
+            var data = new ExtensionDataModel(this.service, this.vshelper, null, null)
             {
                 SelectedIssuesInView =
                     new List<Issue>

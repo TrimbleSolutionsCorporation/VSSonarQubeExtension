@@ -82,7 +82,7 @@ namespace VSSonarExtension.Test.TestViewModel
             [Test]
             public void TestOnOffAnalyses()
             {
-                var data = new ExtensionDataModel(this.service, this.vshelper, null) { AnalysisMode = true };
+                var data = new ExtensionDataModel(this.service, this.vshelper, null, null) { AnalysisMode = true };
                 Assert.AreEqual(data.AnalysisModeText, "Server");
                 data.AnalysisMode = false;
                 Assert.AreEqual(data.AnalysisModeText, "Local");
@@ -98,7 +98,7 @@ namespace VSSonarExtension.Test.TestViewModel
             [Test]
             public void TypeShouldBeFileWhenModeIsServer()
             {
-                var data = new ExtensionDataModel(this.service, this.vshelper, null)
+                var data = new ExtensionDataModel(this.service, this.vshelper, null, null)
                                {
                                    AnalysisMode = true,
                                    AnalysisType = true
@@ -114,7 +114,7 @@ namespace VSSonarExtension.Test.TestViewModel
             [Test]
             public void FrequencyAndTriggerOnDemandExecuteWhenTypeIsNotFile()
             {
-                var data = new ExtensionDataModel(this.service, this.vshelper, null)
+                var data = new ExtensionDataModel(this.service, this.vshelper, null, null)
                                {
                                    AnalysisMode = false,
                                    AnalysisType = true
@@ -135,7 +135,7 @@ namespace VSSonarExtension.Test.TestViewModel
             [Test]
             public void ShouldActivateAllTypesWhenModelIsLocal()
             {
-                var data = new ExtensionDataModel(this.service, this.vshelper, null)
+                var data = new ExtensionDataModel(this.service, this.vshelper, null, null)
                                {
                                    AnalysisMode = false,
                                    AnalysisType = true

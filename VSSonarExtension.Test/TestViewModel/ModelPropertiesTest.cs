@@ -89,7 +89,7 @@ namespace VSSonarExtension.Test.TestViewModel
         public void TestUpdateModelUpdateData()
         {
             var model = new ExtensionDataModel();
-            model.ExtensionDataModelUpdate(this.service, this.vshelper, new Resource());
+            model.ExtensionDataModelUpdate(this.service, this.vshelper, new Resource(), null, null);
             Assert.AreEqual(0, model.Issues.Count);
             Assert.AreEqual(this.service, model.RestService);
             Assert.AreEqual(this.vshelper, model.Vsenvironmenthelper);
@@ -103,7 +103,7 @@ namespace VSSonarExtension.Test.TestViewModel
         {
             var issueWithId = new Issue { Id = 20, Component = "asdaskjd:sdaskjd:aksjdkas/asdkasj.cs", Key = new Guid() };
 
-            var model = new ExtensionDataModel(this.service, this.vshelper, null);
+            var model = new ExtensionDataModel(this.service, this.vshelper, null, null);
             model.ResourceInEditor = new Resource { Key = "asdaskjd:sdaskjd:aksjdkas/asdkasj.cs" };
             model.DocumentInView = "aksjdkas/asdkasj.cs";
             model.ReplaceAllIssuesInCache(new List<Issue> { issueWithId });
@@ -121,7 +121,7 @@ namespace VSSonarExtension.Test.TestViewModel
         {
             var issueWithId = new Issue { Id = 20, Component = "asdaskjd:sdaskjd:aksjdkas/asdkasj.cs", Key = new Guid() };
 
-            var model = new ExtensionDataModel(this.service, this.vshelper, null);
+            var model = new ExtensionDataModel(this.service, this.vshelper, null, null);
             model.ResourceInEditor = new Resource { Key = "asdaskjd:sdaskjd:aksjdkas/asdkasj.cs" };
             model.DocumentInView = "aksjdkas/asdkasj.cs";
             model.ReplaceAllIssuesInCache(new List<Issue> { issueWithId });
@@ -139,7 +139,7 @@ namespace VSSonarExtension.Test.TestViewModel
             var issueWithId = new Issue { Id = 20, Component = "asdaskjd:sdaskjd:aksjdkas/asdkasj.cs", Key = new Guid() };
             issueWithId.Comments.Add(new Comment());
             var list = new List<Issue> { issueWithId };
-            var model = new ExtensionDataModel(this.service, this.vshelper, null);
+            var model = new ExtensionDataModel(this.service, this.vshelper, null, null);
             model.ResourceInEditor = new Resource { Key = "asdaskjd:sdaskjd:aksjdkas/asdkasj.cs" };
             model.DocumentInView = "aksjdkas/asdkasj.cs";
             model.ReplaceAllIssuesInCache(list);
@@ -159,7 +159,7 @@ namespace VSSonarExtension.Test.TestViewModel
         {
             var issueWithId = new Issue { Id = 20, Component = "asdaskjd:sdaskjd:aksjdkas/asdkasj.cs" };
 
-            var model = new ExtensionDataModel(this.service, this.vshelper, null);
+            var model = new ExtensionDataModel(this.service, this.vshelper, null, null);
             model.ReplaceAllIssuesInCache(new List<Issue> { issueWithId });
             model.SelectAIssueFromList(20);
             Assert.AreEqual(issueWithId, model.SelectedIssue);
@@ -173,7 +173,7 @@ namespace VSSonarExtension.Test.TestViewModel
         {
             var issueWithId = new Issue { Id = 20, Component = "asdaskjd:sdaskjd:aksjdkas/asdkasj.cs", Key = new Guid() };
 
-            var model = new ExtensionDataModel(this.service, this.vshelper, null);
+            var model = new ExtensionDataModel(this.service, this.vshelper, null, null);
             model.ReplaceAllIssuesInCache(new List<Issue> { issueWithId });
 
             model.SelectAIssueFromList(new Guid());
@@ -186,7 +186,7 @@ namespace VSSonarExtension.Test.TestViewModel
         [Test]
         public void TestSetUserList()
         {
-            var model = new ExtensionDataModel(this.service, this.vshelper, null)
+            var model = new ExtensionDataModel(this.service, this.vshelper, null, null)
             {
                 UsersList = new System.Collections.Generic.List<User>
                                         {
@@ -202,7 +202,7 @@ namespace VSSonarExtension.Test.TestViewModel
         [Test]
         public void TestAssociationWithSolution()
         {
-            var model = new ExtensionDataModel(this.service, this.vshelper, null);
+            var model = new ExtensionDataModel(this.service, this.vshelper, null, null);
             var projectAsso = new Resource { Key = "KEY" };
 
             model.AssociateProjectToSolution();
@@ -220,7 +220,7 @@ namespace VSSonarExtension.Test.TestViewModel
             var issue = new Issue();
             var connector = new SonarRestService(new JsonSonarConnector());
             var projectAsso = new Resource { Key = "proj" };
-            var model = new ExtensionDataModel(this.service, this.vshelper, null)
+            var model = new ExtensionDataModel(this.service, this.vshelper, null, null)
             {
                 AssociatedProjectKey = "proj",
                 CommentData = "comment",

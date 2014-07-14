@@ -51,9 +51,9 @@ namespace VSSonarExtension.Test.TestViewModel
         private IVsEnvironmentHelper vshelper;
 
         /// <summary>
-        /// The plugin.
+        /// The analysisPlugin.
         /// </summary>
-        private IPlugin plugin;
+        private IAnalysisPlugin analysisPlugin;
 
         /// <summary>
         /// The setup.
@@ -64,7 +64,7 @@ namespace VSSonarExtension.Test.TestViewModel
             this.mocks = new MockRepository();
             this.service = this.mocks.Stub<ISonarRestService>();
             this.vshelper = this.mocks.Stub<IVsEnvironmentHelper>();
-            this.plugin = this.mocks.Stub<IPlugin>();
+            this.analysisPlugin = this.mocks.Stub<IAnalysisPlugin>();
 
             using (this.mocks.Record())
             {
@@ -108,11 +108,11 @@ namespace VSSonarExtension.Test.TestViewModel
                 .Return(source1)
                 .Repeat.Once();
 
-            this.plugin.Expect(
+            this.analysisPlugin.Expect(
                 mp => mp.GetResourceKey(Arg<VsProjectItem>.Is.Anything, Arg<string>.Is.Anything, Arg<bool>.Is.Anything))
                 .Return("resource");
 
-            var data = new ExtensionDataModel(this.service, this.vshelper, null);
+            var data = new ExtensionDataModel(this.service, this.vshelper, null, null);
             data.AssociatedProject = new Resource { Key = "sonar.com:common" };
 
             data.RefreshDataForResource("resource");
@@ -149,11 +149,11 @@ namespace VSSonarExtension.Test.TestViewModel
                 .Return(source1)
                 .Repeat.Once();
 
-            this.plugin.Expect(
+            this.analysisPlugin.Expect(
                 mp => mp.GetResourceKey(Arg<VsProjectItem>.Is.Anything, Arg<string>.Is.Anything, Arg<bool>.Is.Anything))
                 .Return("resource");
 
-            var data = new ExtensionDataModel(this.service, this.vshelper, null);
+            var data = new ExtensionDataModel(this.service, this.vshelper, null, null);
             data.AssociatedProject = new Resource { Key = "sonar.com:common" };
             data.CoverageInEditorEnabled = true;
             

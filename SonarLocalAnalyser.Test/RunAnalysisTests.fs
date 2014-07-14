@@ -51,12 +51,12 @@ type RunAnalysisTests() =
         let vsItem = new VsProjectItem("fileName", "filePath", "projectName", "projectFilePath", "solutionName", "solutionPath")
 
         let mockAPlugin =
-            Mock<IPlugin>()
+            Mock<IAnalysisPlugin>()
                 .Setup(fun x -> <@ x.IsSupported(vsItem) @>).Returns(true)
                 .Setup(fun x -> <@ x.GetResourceKey(any(), any(), any()) @>).Returns("Key")
                 .Create()
 
-        let listofPlugins = new System.Collections.Generic.List<IPlugin>()
+        let listofPlugins = new System.Collections.Generic.List<IAnalysisPlugin>()
         listofPlugins.Add(mockAPlugin)
         let analyser = new SonarLocalAnalyser(listofPlugins, Mock<ISonarRestService>().Create(), Mock<IVsEnvironmentHelper>().Create())
         

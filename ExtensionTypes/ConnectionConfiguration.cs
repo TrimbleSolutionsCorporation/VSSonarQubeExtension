@@ -13,9 +13,12 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace ExtensionTypes
 {
+    using System;
+
     /// <summary>
     /// The connection configuration.
     /// </summary>
+    [Serializable]
     public class ConnectionConfiguration
     {
         /// <summary>
