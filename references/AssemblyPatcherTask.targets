@@ -1,6 +1,6 @@
 ﻿<Project DefaultTargets="BeforeBuild" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   
-  <UsingTask TaskName="AssemblyPatcherTask" AssemblyFile="$(MSBuildTasksFolder)\AssemblyPatcherTask.dll" />
+  <UsingTask TaskName="AssemblyPatcherTask" AssemblyFile="AssemblyPatcherTask.dll" />
 
   <!-- Set Defaults -->
   <PropertyGroup>
@@ -14,6 +14,8 @@
   </PropertyGroup>
   
   <Target Name="BeforeBuild" BeforeTargets="PrepareForBuild" Condition="'$(AssemblyPatcherTaskOn)' == 'true'">
+    <Message Text="Assembly Patcher: ProjectDir $(ProjectDir)" Importance="High" />
+    <Message Text="VersionResourceFile: $(VersionResourceFile)" Importance="High" />
     <AssemblyPatcherTask MSBuildProjectFullPath="$(MSBuildProjectFullPath)"
                          MajorVersionNumber="$(MajorVersionNumber)"
                          MinorVersionNumber="$(MinorVersionNumber)"
@@ -21,6 +23,7 @@
                          RevisionNumber="$(RevisionNumber)"
                          LegalCopyright="$(LegalCopyright)"
                          CompanyName="$(CompanyName)"
+                         VersionResourceFile="$(VersionResourceFile)"
                          />
   </Target>
 </Project>

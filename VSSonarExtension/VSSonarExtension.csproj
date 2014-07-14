@@ -364,4 +364,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Import Project="$(ReferencesFolder)\AssemblyPatcherTask.targets" />
 </Project>

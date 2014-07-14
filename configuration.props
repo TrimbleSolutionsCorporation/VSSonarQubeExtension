@@ -4,15 +4,16 @@
     <PropertyGroup>
         <!-- Basic settings -->    
         <ExtensionOutputPath     Condition="'$(ExtensionOutputPath)'==''">$(MSBuildThisFileDirectory)BuildDrop</ExtensionOutputPath>
+        <ReferencesFolder        Condition="'$(ReferencesFolder)'==''">$(MSBuildThisFileDirectory)references</ReferencesFolder>
         <GallioPath              Condition="'$(GallioPath)'==''">$(MSBuildThisFileDirectory)references\Gallio</GallioPath>
         <OpenCoverPath           Condition="'$(OpenCoverPath)'==''">$(MSBuildThisFileDirectory)references\OpenCover</OpenCoverPath>
         
         <!-- Version settings -->
         <MajorVersionNumber           Condition="'$(MajorVersionNumber)'==''">1</MajorVersionNumber>
-            <MinorVersionNumber           Condition="'$(MinorVersionNumber)'==''">3</MinorVersionNumber>
-            <BuildNumber                  Condition="'$(BuildNumber)'==''">0</BuildNumber>
-            <RevisionNumber               Condition="'$(RevisionNumber)'==''">1</RevisionNumber>
-        <AssemblyPatcherTaskOn        Condition="'$(AssemblyPatcherTaskOn)'==''">true</AssemblyPatcherTaskOn>        
+        <MinorVersionNumber           Condition="'$(MinorVersionNumber)'==''">3</MinorVersionNumber>
+        <BuildNumber                  Condition="'$(BuildNumber)'==''">3</BuildNumber>
+        <RevisionNumber               Condition="'$(RevisionNumber)'==''">1</RevisionNumber>
+        <AssemblyPatcherTaskOn        Condition="'$(AssemblyPatcherTaskOn)'==''">true</AssemblyPatcherTaskOn>
     </PropertyGroup>
     
 
