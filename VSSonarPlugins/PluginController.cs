@@ -440,23 +440,26 @@ namespace VSSonarPlugins
                 File.Delete(this.InstallPathFile);
             }
 
-            var filesToCopy = Directory.GetFiles(this.TempInstallPathFolder, "*.*").ToList();
-
-            foreach (var file in filesToCopy)
+            if (Directory.Exists(this.TempInstallPathFolder))
             {
-                try
-                {
-                    if (file == null)
-                    {
-                        continue;
-                    }
+                var files = Directory.GetFiles(this.TempInstallPathFolder, "*.*");
 
-                    var dest = Path.Combine(this.ExtensionFolder, Path.GetFileName(file));
-                    File.Move(file, dest);
-                }
-                catch (Exception ex)
+                foreach (var file in files)
                 {
-                    Debug.WriteLine("Cannot Move File: " + file + " : " + ex.Message);
+                    try
+                    {
+                        if (file == null)
+                        {
+                            continue;
+                        }
+
+                        var dest = Path.Combine(this.ExtensionFolder, Path.GetFileName(file));
+                        File.Move(file, dest);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine("Cannot Move File: " + file + " : " + ex.Message);
+                    }
                 }
             }
         }
