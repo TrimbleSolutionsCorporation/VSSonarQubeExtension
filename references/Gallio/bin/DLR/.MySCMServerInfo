@@ -1,0 +1,7 @@
+SCMBranch=Structures
+SCMRepository=Structures/MSBuild/BuildTools/Gallio/bin/DLR
+SCMMainlineUUID={a5eb9c95-fdd8-40d3-b610-836f3dffaa1e}
+SCMBranchRepositoryID=28203
+Gallio.DLRIntegration.dll;1383304991;1;1384858081;|37933|253532
+Gallio.DLRIntegration.dll.config;1662684492;1;1384858081;|37934|253533
+Gallio.DLRIntegration.plugin;1071174719;1;1384858081;|37935|253534

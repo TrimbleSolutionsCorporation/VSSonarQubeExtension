@@ -1,0 +1,8 @@
+SCMBranch=Structures
+SCMRepository=Structures/MSBuild/BuildTools/Gallio/bin/RSpec/libs/rspec-1.2.7/lib/spec/adapters/mock_frameworks
+SCMMainlineUUID={a5eb9c95-fdd8-40d3-b610-836f3dffaa1e}
+SCMBranchRepositoryID=28329
+flexmock.rb;3996083154;1;1384858082;|38745|254344
+mocha.rb;1757329291;1;1384858082;|38746|254345
+rr.rb;1673142993;1;1384858082;|38747|254346
+rspec.rb;2947942528;1;1384858082;|38748|254347

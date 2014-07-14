@@ -1,0 +1,12 @@
+SCMBranch=Structures
+SCMRepository=Structures/MSBuild/BuildTools/Gallio/bin/DLR/libs/IronRuby/lib/ruby/1.8/rexml/parsers
+SCMMainlineUUID={a5eb9c95-fdd8-40d3-b610-836f3dffaa1e}
+SCMBranchRepositoryID=28252
+baseparser.rb;1938473778;1;1384858081;|38250|253849
+lightparser.rb;179347516;1;1384858081;|38251|253850
+pullparser.rb;479815244;1;1384858081;|38252|253851
+sax2parser.rb;3402096966;1;1384858081;|38253|253852
+streamparser.rb;1465712341;1;1384858081;|38254|253853
+treeparser.rb;3263999859;1;1384858081;|38255|253854
+ultralightparser.rb;1326748157;1;1384858081;|38256|253855
+xpathparser.rb;4217588060;1;1384858081;|38257|253856

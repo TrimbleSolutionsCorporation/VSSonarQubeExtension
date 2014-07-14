@@ -1,0 +1,9 @@
+SCMBranch=Structures
+SCMRepository=Structures/MSBuild/BuildTools/Gallio/bin/DLR/libs/IronRuby/lib/ruby/1.8/rdoc/generators/template/html
+SCMMainlineUUID={a5eb9c95-fdd8-40d3-b610-836f3dffaa1e}
+SCMBranchRepositoryID=28239
+hefss.rb;156405187;1;1384858081;|38166|253765
+html.rb;2529179420;1;1384858081;|38167|253766
+kilmer.rb;3409864475;1;1384858081;|38168|253767
+old_html.rb;1351644961;1;1384858081;|38169|253768
+one_page_html.rb;3401531151;1;1384858081;|38170|253769

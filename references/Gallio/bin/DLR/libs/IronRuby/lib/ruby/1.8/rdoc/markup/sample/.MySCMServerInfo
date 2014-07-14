@@ -1,0 +1,6 @@
+SCMBranch=Structures
+SCMRepository=Structures/MSBuild/BuildTools/Gallio/bin/DLR/libs/IronRuby/lib/ruby/1.8/rdoc/markup/sample
+SCMMainlineUUID={a5eb9c95-fdd8-40d3-b610-836f3dffaa1e}
+SCMBranchRepositoryID=28242
+rdoc2latex.rb;562480608;1;1384858081;|38174|253773
+sample.rb;2738905616;1;1384858081;|38175|253774

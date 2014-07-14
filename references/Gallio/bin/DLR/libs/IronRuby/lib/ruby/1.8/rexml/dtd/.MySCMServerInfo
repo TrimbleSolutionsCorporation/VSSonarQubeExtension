@@ -1,0 +1,9 @@
+SCMBranch=Structures
+SCMRepository=Structures/MSBuild/BuildTools/Gallio/bin/DLR/libs/IronRuby/lib/ruby/1.8/rexml/dtd
+SCMMainlineUUID={a5eb9c95-fdd8-40d3-b610-836f3dffaa1e}
+SCMBranchRepositoryID=28248
+attlistdecl.rb;902713868;1;1384858081;|38230|253829
+dtd.rb;3016815897;1;1384858081;|38231|253830
+elementdecl.rb;1440462066;1;1384858081;|38232|253831
+entitydecl.rb;3906079055;1;1384858081;|38233|253832
+notationdecl.rb;2569212029;1;1384858081;|38234|253833

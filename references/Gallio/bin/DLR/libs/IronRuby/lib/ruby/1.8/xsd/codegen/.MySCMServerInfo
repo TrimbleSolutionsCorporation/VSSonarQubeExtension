@@ -1,0 +1,9 @@
+SCMBranch=Structures
+SCMRepository=Structures/MSBuild/BuildTools/Gallio/bin/DLR/libs/IronRuby/lib/ruby/1.8/xsd/codegen
+SCMMainlineUUID={a5eb9c95-fdd8-40d3-b610-836f3dffaa1e}
+SCMBranchRepositoryID=28284
+classdef.rb;498109643;1;1384858082;|38491|254090
+commentdef.rb;3819042390;1;1384858082;|38492|254091
+gensupport.rb;3389817379;1;1384858082;|38493|254092
+methoddef.rb;3272729058;1;1384858082;|38494|254093
+moduledef.rb;1696180397;1;1384858082;|38495|254094

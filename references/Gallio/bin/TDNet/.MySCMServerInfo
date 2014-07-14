@@ -1,0 +1,8 @@
+SCMBranch=Structures
+SCMRepository=Structures/MSBuild/BuildTools/Gallio/bin/TDNet
+SCMMainlineUUID={a5eb9c95-fdd8-40d3-b610-836f3dffaa1e}
+SCMBranchRepositoryID=28349
+Gallio.TDNetRunner.dll;2394009449;1;1384858082;|38852|254451
+Gallio.TDNetRunner.plugin;4053625149;1;1384858082;|38853|254452
+Gallio.TDNetRunner.UI.dll;2911155308;1;1384858082;|38850|254449
+Gallio.TDNetRunner.UI.plugin;2982901004;1;1384858082;|38851|254450
