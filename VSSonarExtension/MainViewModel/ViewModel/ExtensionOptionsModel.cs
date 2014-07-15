@@ -46,7 +46,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// <summary>
         ///     The plugins.
         /// </summary>
-        private ReadOnlyCollection<IAnalysisPlugin> plugins;
+        private List<IAnalysisPlugin> plugins;
 
         /// <summary>
         ///     The selected analysisPlugin item.
@@ -427,7 +427,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             /// <summary>
             /// The plugins.
             /// </summary>
-            private ReadOnlyCollection<IAnalysisPlugin> plugins;
+            private List<IAnalysisPlugin> plugins;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="UserSelectControl"/> class.
@@ -447,7 +447,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             /// <param name="model">
             /// The model.
             /// </param>
-            public UserSelectControl(ExtensionOptionsModel model, ReadOnlyCollection<IAnalysisPlugin> plugins )
+            public UserSelectControl(ExtensionOptionsModel model, List<IAnalysisPlugin> plugins )
             {
                 this.plugins = plugins;
                 this.model = model;

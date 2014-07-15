@@ -45,12 +45,12 @@ namespace VSSonarPlugins
         /// <summary>
         ///     The loaded plugins.
         /// </summary>
-        private readonly ReadOnlyCollection<IAnalysisPlugin> loadedPlugins;
+        private readonly List<IAnalysisPlugin> loadedPlugins = new List<IAnalysisPlugin>();
 
         /// <summary>
         ///     The loaded plugins.
         /// </summary>
-        private readonly ReadOnlyCollection<IMenuCommandPlugin> menuCommandPlugins;
+        private readonly List<IMenuCommandPlugin> menuCommandPlugins = new List<IMenuCommandPlugin>();
 
         #endregion
 
@@ -73,11 +73,26 @@ namespace VSSonarPlugins
 
             this.UpgradePlugins();
 
-            var pluginLoader = new AnalyisAnalysisPluginLoader();
-            var menuPluginLoader = new MenuPluginLoader();
+            var pluginLoader = new PluginLoader();
 
-            this.loadedPlugins = pluginLoader.LoadPluginsFromFolder(this.ExtensionFolder);
-            this.menuCommandPlugins = menuPluginLoader.LoadPluginsFromFolder(this.ExtensionFolder);
+            foreach (var plugin in pluginLoader.LoadPluginsFromFolder(this.ExtensionFolder))
+            {
+                try
+                {
+                    this.loadedPlugins.Add((IAnalysisPlugin)plugin);
+                }
+                catch (Exception)
+                {
+                    try
+                    {
+                        this.menuCommandPlugins.Add((IMenuCommandPlugin)plugin);
+                    }
+                    catch (Exception)
+                    {
+                        Debug.WriteLine("Cannot Import Plugin");
+                    }
+                }
+            }
         }
 
         #endregion
@@ -168,7 +183,7 @@ namespace VSSonarPlugins
         ///     </see>
         ///     .
         /// </returns>
-        public ReadOnlyCollection<IMenuCommandPlugin> GetMenuItemPlugins()
+        public List<IMenuCommandPlugin> GetMenuItemPlugins()
         {
             return this.menuCommandPlugins;
         }
@@ -183,7 +198,7 @@ namespace VSSonarPlugins
         ///     </see>
         ///     .
         /// </returns>
-        public ReadOnlyCollection<IAnalysisPlugin> GetPlugins()
+        public List<IAnalysisPlugin> GetPlugins()
         {
             return this.loadedPlugins;
         }
@@ -277,7 +292,15 @@ namespace VSSonarPlugins
                 }
                 catch (Exception ex)
                 {
-                    this.ErrorMessage = "Cannot Load Plugin: " + ex.Message;
+                    if (ex.InnerException != null)
+                    {
+                        this.ErrorMessage = "Cannot Load Plugin: " + ex.InnerException.Message + " : " + ex.InnerException.StackTrace;
+                    }
+                    else
+                    {
+                        this.ErrorMessage = "Cannot Load Plugin: " + ex.Message + " : " + ex.StackTrace;
+                    }
+
                     Debug.WriteLine(ex.Message + " " + ex.StackTrace);
                 }
 
@@ -454,7 +477,8 @@ namespace VSSonarPlugins
                         }
 
                         var dest = Path.Combine(this.ExtensionFolder, Path.GetFileName(file));
-                        File.Move(file, dest);
+                        File.Copy(file, dest, true);
+                        File.Delete(file);
                     }
                     catch (Exception ex)
                     {

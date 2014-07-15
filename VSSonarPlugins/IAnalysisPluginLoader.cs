@@ -14,7 +14,7 @@ namespace VSSonarPlugins
     /// <summary>
     /// The AnalysisPluginLoader interface.
     /// </summary>
-    public interface IAnalysisPluginLoader : IPluginLoader
+    public interface IPluginLoader
     {
         /// <summary>
         /// The load plugins from folder.
@@ -25,6 +25,14 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="ReadOnlyCollection{T}"/>.
         /// </returns>
-        ReadOnlyCollection<IAnalysisPlugin> LoadPluginsFromFolder(string folder);
+        ReadOnlyCollection<IPlugin> LoadPluginsFromFolder(string folder);
+
+        /// <summary>
+        /// The get error data.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
+        string GetErrorData();
     }
 }

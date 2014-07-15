@@ -13,6 +13,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarPlugins
 {
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
 
     using ExtensionTypes;
@@ -42,7 +43,7 @@ namespace VSSonarPlugins
         ///     </see>
         ///     .
         /// </returns>
-        ReadOnlyCollection<IMenuCommandPlugin> GetMenuItemPlugins();
+        List<IMenuCommandPlugin> GetMenuItemPlugins();
 
         /// <summary>
         ///     The get plugins options.
@@ -54,7 +55,7 @@ namespace VSSonarPlugins
         ///     </see>
         ///     .
         /// </returns>
-        ReadOnlyCollection<IAnalysisPlugin> GetPlugins();
+        List<IAnalysisPlugin> GetPlugins();
 
         /// <summary>
         /// The istall new plugin.

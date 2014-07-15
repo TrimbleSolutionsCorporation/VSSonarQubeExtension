@@ -142,6 +142,7 @@ namespace VSSonarPlugins
                         Debug.WriteLine(
                             "Cannot Cast Type In Assembly To: " + typeof(IAnalysisPlugin).FullName + "\r\n" + ex.Message + "\r\n" + ex.StackTrace);
                         Debug.WriteLine(ex.InnerException.Message + " : " + ex.InnerException.StackTrace);
+                        throw;
                     }
                 }
             }
