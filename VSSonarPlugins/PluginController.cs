@@ -217,33 +217,13 @@ namespace VSSonarPlugins
         /// </returns>
         public PluginDescription IstallNewPlugin(string fileName, ConnectionConfiguration conf)
         {
-            PluginDescription plugindesc;
-            if (!Directory.Exists(this.TempInstallPathFolder))
-            {
-                Directory.CreateDirectory(this.TempInstallPathFolder);
-            }
-
-            using (ZipArchive archive = ZipFile.OpenRead(fileName))
-            {
-                var listOfAssemblies = new List<string>();
-                foreach (ZipArchiveEntry entry in archive.Entries)
-                {
-                    string endFile = Path.Combine(this.TempInstallPathFolder, entry.FullName);
-                    try
-                    {
-                        entry.ExtractToFile(endFile, true);
-                        listOfAssemblies.Add(endFile);
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine("Cannot Extrac File: " + ex.Message + " : " + ex.StackTrace);
-                    }
-                }
-
-                plugindesc = this.LoadPluginUsingDedicatedDomain(listOfAssemblies.ToArray(), this.GetReferenceAssemblies(listOfAssemblies), this.TempInstallPathFolder, conf);
-            }
-
-            return plugindesc;
+            var assembliesInFile = this.UnzipFiles(fileName);
+            var assembliesToTempFolder = this.GetAssembliesInTempFolder();
+            return this.LoadPluginUsingDedicatedDomain(
+                assembliesInFile.ToArray(),
+                this.GetReferenceAssemblies(assembliesToTempFolder), 
+                this.TempInstallPathFolder, 
+                conf);
         }
 
         /// <summary>
@@ -265,7 +245,7 @@ namespace VSSonarPlugins
         /// The <see cref="PluginDescription"/>.
         /// </returns>
         public PluginDescription LoadPluginUsingDedicatedDomain(
-            string[] assemblies, 
+            string[] assemblies,
             List<string> refAssemblies, 
             string basePath, 
             ConnectionConfiguration conf)
@@ -359,7 +339,7 @@ namespace VSSonarPlugins
         /// </returns>
         public bool RemovePlugin(ConnectionConfiguration configuration, PluginDescription selectedPlugin)
         {
-            foreach (IAnalysisPlugin plugin in this.loadedPlugins)
+            foreach (var plugin in this.loadedPlugins)
             {
                 if (plugin.GetKey(configuration).Equals(selectedPlugin.Name))
                 {
@@ -367,7 +347,7 @@ namespace VSSonarPlugins
                 }
             }
 
-            foreach (IMenuCommandPlugin plugin in this.menuCommandPlugins)
+            foreach (var plugin in this.menuCommandPlugins)
             {
                 if (plugin.GetHeader().Equals(selectedPlugin.Name))
                 {
@@ -381,44 +361,6 @@ namespace VSSonarPlugins
         #endregion
 
         #region Methods
-
-        /// <summary>
-        /// The get reference assemblies.
-        /// </summary>
-        /// <param name="listOfAssemblies">
-        /// The list of assemblies.
-        /// </param>
-        /// <returns>
-        /// The <see>
-        ///         <cref>List</cref>
-        ///     </see>
-        ///     .
-        /// </returns>
-        private List<string> GetReferenceAssemblies(List<string> listOfAssemblies)
-        {
-            var assembliesInExtensionFolder = Directory.GetFiles(this.ExtensionFolder, "*.dll").ToList();
-            var refAssemblies = new List<string>();
-            foreach (var assembly in assembliesInExtensionFolder)
-            {
-                var isPresent = false;
-                foreach (var assemblyToImport in listOfAssemblies)
-                {
-                    var name = Path.GetFileName(assembly);
-
-                    if (name != null && name.Equals(Path.GetFileName(assemblyToImport), StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        isPresent = true;
-                    }
-                }
-
-                if (!isPresent)
-                {
-                    refAssemblies.Add(assembly);
-                }
-            }
-
-            return refAssemblies;
-        }
 
         /// <summary>
         /// The drop ref assemblies into base path.
@@ -456,6 +398,61 @@ namespace VSSonarPlugins
         }
 
         /// <summary>
+        ///     The get assemblies in temp folder.
+        /// </summary>
+        /// <returns>
+        ///     The <see>
+        ///         <cref>List</cref>
+        ///     </see>
+        ///     .
+        /// </returns>
+        private List<string> GetAssembliesInTempFolder()
+        {
+            List<string> files = Directory.GetFiles(this.TempInstallPathFolder, "*.*").ToList();
+
+            return files.ToList();
+        }
+
+        /// <summary>
+        /// The get reference assemblies.
+        /// </summary>
+        /// <param name="listOfAssemblies">
+        /// The list of assemblies.
+        /// </param>
+        /// <returns>
+        /// The
+        ///     <see>
+        ///         <cref>List</cref>
+        ///     </see>
+        ///     .
+        /// </returns>
+        private List<string> GetReferenceAssemblies(List<string> listOfAssemblies)
+        {
+            List<string> assembliesInExtensionFolder = Directory.GetFiles(this.ExtensionFolder, "*.dll").ToList();
+            var refAssemblies = new List<string>();
+            foreach (string assembly in assembliesInExtensionFolder)
+            {
+                bool isPresent = false;
+                foreach (string assemblyToImport in listOfAssemblies)
+                {
+                    string name = Path.GetFileName(assembly);
+
+                    if (name != null && name.Equals(Path.GetFileName(assemblyToImport), StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        isPresent = true;
+                    }
+                }
+
+                if (!isPresent)
+                {
+                    refAssemblies.Add(assembly);
+                }
+            }
+
+            return refAssemblies;
+        }
+
+        /// <summary>
         /// The sync file with remove plugin.
         /// </summary>
         /// <param name="plugin">
@@ -479,6 +476,46 @@ namespace VSSonarPlugins
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// The unzip files.
+        /// </summary>
+        /// <param name="fileName">
+        /// The file name.
+        /// </param>
+        /// <returns>
+        /// The <see>
+        ///         <cref>List</cref>
+        ///     </see>
+        ///     .
+        /// </returns>
+        private List<string> UnzipFiles(string fileName)
+        {
+            var files = new List<string>();
+            if (!Directory.Exists(this.TempInstallPathFolder))
+            {
+                Directory.CreateDirectory(this.TempInstallPathFolder);
+            }
+
+            using (var archive = ZipFile.OpenRead(fileName))
+            {
+                foreach (var entry in archive.Entries)
+                {
+                    var endFile = Path.Combine(this.TempInstallPathFolder, entry.FullName);
+                    try
+                    {
+                        entry.ExtractToFile(endFile, true);
+                        files.Add(endFile);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine("Cannot Extrac File: " + ex.Message + " : " + ex.StackTrace);
+                    }
+                }
+            }
+
+            return files;
         }
 
         /// <summary>
