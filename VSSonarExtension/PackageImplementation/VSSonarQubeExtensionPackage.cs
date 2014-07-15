@@ -315,7 +315,6 @@ namespace VSSonarExtension.PackageImplementation
             var win = window as IssuesToolWindow;
             var bar = GetService(typeof(SVsStatusbar)) as IVsStatusbar;
             this.StatusBar = new VSSStatusBar(bar, this.dte2);
-            this.StatusBar.ShowIcons();
             modelToUse.ExtensionDataModelUpdate(new SonarRestService(new JsonSonarConnector()), new VsPropertiesHelper(this.dte2), null, this.StatusBar, this);
             win.UpdateModel(modelToUse);
         }
