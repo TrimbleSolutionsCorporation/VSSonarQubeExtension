@@ -124,6 +124,7 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MainViewModel\ViewModel\PluginManagerModel.cs" />
     <Compile Include="MainViewModel\ViewModel\GeneralOptionsModel.cs" />
     <Compile Include="MainView\Commands\ExtensionMenuCommand.cs" />
     <Compile Include="MainViewModel\Cache\EditorData.cs" />
@@ -141,6 +142,9 @@
     <Compile Include="MainViewModel\Commands\ResolveIssueCommand.cs" />
     <Compile Include="MainViewModel\Commands\UnConfirmIssueCommand.cs" />
     <Compile Include="MainViewModel\Commands\ViewSwitchCommand.cs" />
+    <Compile Include="MainView\PluginManagerWindow.xaml.cs">
+      <DependentUpon>PluginManagerWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainView\IssuesGridSettingsDialog.xaml.cs">
       <DependentUpon>IssuesGridSettingsDialog.xaml</DependentUpon>
     </Compile>
@@ -303,6 +307,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="MainView\PluginManagerWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MainView\GeneralOptionsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

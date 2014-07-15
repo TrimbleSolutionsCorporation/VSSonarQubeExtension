@@ -89,9 +89,14 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             this.plugincontroller = plugincontroller;
             this.plugins = plugincontroller.GetPlugins();
             this.ControlCommand = new UserSelectControl(this, this.plugins);
-            this.GeneralOptions = new GeneralOptionsModel(plugincontroller, provider, conf);
+            this.GeneralOptions = new GeneralOptionsModel();
             this.GeneralOptionsFrame = this.GeneralOptions.GetUserControlOptions();
+            this.PluginManager = new PluginManagerModel(plugincontroller, provider, conf);
+            this.PluginsManagerOptionsFrame = this.PluginManager.GetUserControlOptions();
+            
         }
+
+        public UserControl PluginsManagerOptionsFrame { get; set; }
 
         /// <summary>
         ///     The property changed.
@@ -107,6 +112,11 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// Gets or sets the general options.
         /// </summary>
         public readonly GeneralOptionsModel GeneralOptions;
+
+        /// <summary>
+        /// The plugin manager.
+        /// </summary>
+        public readonly PluginManagerModel PluginManager;
 
         /// <summary>
         /// The general options frame.
@@ -142,6 +152,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                 var options = new ObservableCollection<string>();
                 options.Add("General Settings");
                 options.Add("Apperance Settings");
+                options.Add("Plugin Manager");
                 options.Add("Licenses");
                 if (this.plugins == null)
                 {
@@ -193,19 +204,24 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                     if (value.Equals("General Settings"))
                     {
                         this.ResetGeneralOptionsForProject();
+                        this.OptionsInView = this.GeneralOptionsFrame;
+                        return;
+                    }
 
-                        this.GeneralOptions.PluginList.Clear();
+                    if (value.Equals("Plugin Manager"))
+                    {
+                        this.PluginManager.PluginList.Clear();
                         foreach (var plugin in this.plugincontroller.GetPlugins())
                         {
-                            this.GeneralOptions.PluginList.Add(plugin.GetPluginDescription(this.Vsenvironmenthelper));
+                            this.PluginManager.PluginList.Add(plugin.GetPluginDescription(this.Vsenvironmenthelper));
                         }
 
                         foreach (var plugin in this.plugincontroller.GetMenuItemPlugins())
                         {
-                            this.GeneralOptions.PluginList.Add(plugin.GetPluginDescription(this.Vsenvironmenthelper));
+                            this.PluginManager.PluginList.Add(plugin.GetPluginDescription(this.Vsenvironmenthelper));
                         }
 
-                        this.OptionsInView = this.GeneralOptionsFrame;
+                        this.OptionsInView = this.PluginsManagerOptionsFrame;
                         return;
                     }
 
@@ -311,7 +327,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             this.model.Vsenvironmenthelper.WriteOptionInApplicationData(GlobalIds.GlobalPropsId, GlobalIds.IsDebugAnalysisOnKey, this.GeneralOptions.DebugIsChecked.ToString());
             this.model.Vsenvironmenthelper.WriteOptionInApplicationData(GlobalIds.GlobalPropsId, GlobalIds.ExcludedPluginsKey, this.GeneralOptions.ExcludedPlugins);
 
-            foreach (var plugin in this.GeneralOptions.PluginList)
+            foreach (var plugin in this.PluginManager.PluginList)
             {
                 this.model.Vsenvironmenthelper.WriteOptionInApplicationData(GlobalIds.PluginEnabledControlId, plugin.Name, plugin.Enabled.ToString());                
             }

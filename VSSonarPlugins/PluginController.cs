@@ -472,7 +472,7 @@ namespace VSSonarPlugins
 
             using (StreamWriter w = File.AppendText(this.InstallPathFile))
             {
-                w.Write(location);
+                w.WriteLine(location);
             }
 
             return true;

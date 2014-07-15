@@ -20,76 +20,50 @@
 	<Grid>
 		<ScrollViewer>
 			<StackPanel>
-				<Expander Header="Local Analysis Options" Foreground="White">
-					<Grid Height="235" Background="Transparent">
-						<Grid.RowDefinitions>
-							<RowDefinition Height="25"/>
-							<RowDefinition Height="25"/>
-							<RowDefinition Height="25"/>
-							<RowDefinition Height="25"/>
-							<RowDefinition Height="10"/>
-							<RowDefinition Height="25"/>
-							<RowDefinition Height="25"/>
-							<RowDefinition Height="25"/>
-							<RowDefinition Height="25"/>
-							<RowDefinition Height="25"/>
-						</Grid.RowDefinitions>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="77*"/>
-							<ColumnDefinition Width="249*"/>
-							<ColumnDefinition Width="54*"/>
-						</Grid.ColumnDefinitions>
-						<Label        Grid.Column="0" Foreground="White" Content="Java Executable Path"/>
-						<TextBox      Grid.Column="1" IsReadOnly="true" Background="Transparent" Foreground="White" TextWrapping="Wrap" Text="{Binding JavaBinary}"  />
-						<ToggleButton Grid.Column="2" Foreground="White" IsChecked="{Binding BrowseForJavaTrigger}" Content="Browse"  Template="{DynamicResource SquareToggleButtonTemplate}"/>
-						<Label        Grid.Column="0" Grid.Row="1" Foreground="White" Content="SonarQube Runner Path" Height="25" VerticalAlignment="Bottom"/>
-						<TextBox      Grid.Column="1" Grid.Row="1" IsReadOnly="true" Background="Transparent" Foreground="White" TextWrapping="Wrap" Text="{Binding SonarQubeBinary}"  />
-						<ToggleButton Grid.Column="2" Grid.Row="1" Foreground="White" IsChecked="{Binding BrowseForSonarRunnerQubeTrigger}" Content="Browse"  Template="{DynamicResource SquareToggleButtonTemplate}"/>
-						<CheckBox Grid.Column="0" Grid.Row="2" Content="Enable Debug" IsChecked="{Binding DebugIsChecked}" Background="Transparent" Foreground="White" VerticalAlignment="Center" />
-						<Slider ToolTip="Timeout of Analysis in Minutes" Grid.Column="1" Grid.Row="2" Maximum="60" TickFrequency="10" Value="{Binding TimeoutValue}" />
-						<Label        Grid.Column="2" Grid.Row="2" Foreground="White" Content="{Binding TimeoutValueString}" Height="25" VerticalAlignment="Bottom"/>
+				<Grid Height="235" Background="Transparent">
+					<Grid.RowDefinitions>
+						<RowDefinition Height="25"/>
+						<RowDefinition Height="25"/>
+						<RowDefinition Height="25"/>
+						<RowDefinition Height="25"/>
+						<RowDefinition Height="10"/>
+						<RowDefinition Height="25"/>
+						<RowDefinition Height="25"/>
+						<RowDefinition Height="25"/>
+						<RowDefinition Height="25"/>
+						<RowDefinition Height="25"/>
+					</Grid.RowDefinitions>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="77*"/>
+						<ColumnDefinition Width="249*"/>
+						<ColumnDefinition Width="54*"/>
+					</Grid.ColumnDefinitions>
+					<Label        Grid.Column="0" Foreground="White" Content="Java Executable Path"/>
+					<TextBox      Grid.Column="1" IsReadOnly="true" Background="Transparent" Foreground="White" TextWrapping="Wrap" Text="{Binding JavaBinary}"  />
+					<ToggleButton Grid.Column="2" Foreground="White" IsChecked="{Binding BrowseForJavaTrigger}" Content="Browse"  Template="{DynamicResource SquareToggleButtonTemplate}"/>
+					<Label        Grid.Column="0" Grid.Row="1" Foreground="White" Content="SonarQube Runner Path" Height="25" VerticalAlignment="Bottom"/>
+					<TextBox      Grid.Column="1" Grid.Row="1" IsReadOnly="true" Background="Transparent" Foreground="White" TextWrapping="Wrap" Text="{Binding SonarQubeBinary}"  />
+					<ToggleButton Grid.Column="2" Grid.Row="1" Foreground="White" IsChecked="{Binding BrowseForSonarRunnerQubeTrigger}" Content="Browse"  Template="{DynamicResource SquareToggleButtonTemplate}"/>
+					<CheckBox Grid.Column="0" Grid.Row="2" Content="Enable Debug" IsChecked="{Binding DebugIsChecked}" Background="Transparent" Foreground="White" VerticalAlignment="Center" />
+					<Slider ToolTip="Timeout of Analysis in Minutes" Grid.Column="1" Grid.Row="2" Maximum="60" TickFrequency="10" Value="{Binding TimeoutValue}" />
+					<Label        Grid.Column="2" Grid.Row="2" Foreground="White" Content="{Binding TimeoutValueString}" Height="25" VerticalAlignment="Bottom"/>
 
-						<Label Grid.Row="3" Grid.Column="0" Foreground="White" Content="Excluded Plugins:" Grid.ColumnSpan="2"/>
-						<TextBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Foreground="White" Background="Transparent"  Text="{Binding ExcludedPlugins}"/>
+					<Label Grid.Row="3" Grid.Column="0" Foreground="White" Content="Excluded Plugins:" Grid.ColumnSpan="2"/>
+					<TextBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Foreground="White" Background="Transparent"  Text="{Binding ExcludedPlugins}"/>
                         
-						<Label Grid.Row="5" Grid.Column="0" Foreground="White" Content="Project Id:" Grid.ColumnSpan="2"/>
-						<Label Grid.Row="6" Grid.Column="0" Foreground="White" Content="Language:" Grid.ColumnSpan="2"/>                        
-						<Label Grid.Row="7" Grid.Column="0" Foreground="White" Content="Project Version:" Grid.ColumnSpan="2"/>
-						<Label Grid.Row="8" Grid.Column="0" Foreground="White" Content="Source Dir:" Grid.ColumnSpan="2"/>						
-						<Label Grid.Row="9" Grid.Column="0" Foreground="White" Content="Source Encoding:" Grid.ColumnSpan="2"/>
+					<Label Grid.Row="5" Grid.Column="0" Foreground="White" Content="Project Id:" Grid.ColumnSpan="2"/>
+					<Label Grid.Row="6" Grid.Column="0" Foreground="White" Content="Language:" Grid.ColumnSpan="2"/>                        
+					<Label Grid.Row="7" Grid.Column="0" Foreground="White" Content="Project Version:" Grid.ColumnSpan="2"/>
+					<Label Grid.Row="8" Grid.Column="0" Foreground="White" Content="Source Dir:" Grid.ColumnSpan="2"/>						
+					<Label Grid.Row="9" Grid.Column="0" Foreground="White" Content="Source Encoding:" Grid.ColumnSpan="2"/>
 
-						<Label Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Foreground="White" Content="{Binding ProjectId}" IsEnabled="{Binding IsSolutionOpen}" />
-						<Label Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Foreground="White" Content="{Binding Language}" IsEnabled="{Binding IsSolutionOpen}"/>                        
-						<Label Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" Foreground="White" Content="{Binding ProjectVersion}" Background="Transparent" />
-						<TextBox Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2" Foreground="White" Text="{Binding SourceDir}" Background="Transparent" TextWrapping="Wrap" IsEnabled="{Binding IsSolutionOpen}"/>                        
-						<TextBox Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="2" Foreground="White" Text="{Binding SourceEncoding}" Background="Transparent" TextWrapping="Wrap" IsEnabled="{Binding IsSolutionOpen}"/>
+					<Label Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Foreground="White" Content="{Binding ProjectId}" IsEnabled="{Binding IsSolutionOpen}" />
+					<Label Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Foreground="White" Content="{Binding Language}" IsEnabled="{Binding IsSolutionOpen}"/>                        
+					<Label Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" Foreground="White" Content="{Binding ProjectVersion}" Background="Transparent" />
+					<TextBox Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2" Foreground="White" Text="{Binding SourceDir}" Background="Transparent" TextWrapping="Wrap" IsEnabled="{Binding IsSolutionOpen}"/>                        
+					<TextBox Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="2" Foreground="White" Text="{Binding SourceEncoding}" Background="Transparent" TextWrapping="Wrap" IsEnabled="{Binding IsSolutionOpen}"/>
 
-					</Grid>
-				</Expander>
-				<Expander  Header="Available Plugins" Foreground="White">
-					<Grid Height="235" Background="Transparent">
-						<Grid.RowDefinitions>
-							<RowDefinition Height="25*"/>
-							<RowDefinition Height="25"/>
-
-						</Grid.RowDefinitions>							
-                        <DataGrid Background="Transparent" Foreground="White" Grid.Row="0" Grid.ColumnSpan="3" SelectedItem="{Binding SelectedPlugin}" ItemsSource="{Binding PluginList}" AutoGenerateColumns="False" VerticalScrollBarVisibility="Visible" CanUserAddRows="False" CanUserDeleteRows="False" GridLinesVisibility="None" BorderBrush="Transparent" BorderThickness="1" RowBackground="Transparent" RowHeaderStyle="{DynamicResource DataGridRowHeaderStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" ColumnHeaderHeight="20" HeadersVisibility="Column" RowHeaderWidth="0" >			
-						
-							<DataGrid.Columns>
-								<DataGridTextColumn Binding="{Binding Name}" Header="Name   " IsReadOnly="True"/>
-								<DataGridTextColumn Binding="{Binding SupportedExtensions}" Header="Supported Extensions   " IsReadOnly="True"/>
-								<DataGridTextColumn Binding="{Binding Description}" Header="Description   " IsReadOnly="True"/>
-								<DataGridCheckBoxColumn Binding="{Binding Enabled}" Header="Enabled   " IsReadOnly="False" />
-								<DataGridTextColumn Binding="{Binding Version}" Header="Version   " IsReadOnly="True" />
-								<DataGridTextColumn Binding="{Binding Status}" Header="Status   " IsReadOnly="True" />
-							</DataGrid.Columns>											
-						</DataGrid>
-                        <ToggleButton Grid.Row="1" Margin="563.254,0,111.373,0" Background="Transparent" Foreground="White" Content="Install New" IsChecked="{Binding InstallNewPlugin}" Template="{DynamicResource SquareToggleButtonTemplate}"/>
-                        <ToggleButton Grid.Row="1" Margin="0,0,637.314,0" Background="Transparent" Foreground="White" Content="Restart Visual Studio" IsChecked="{Binding RestartVS}" IsEnabled="{Binding ChangesAreRequired}" Template="{DynamicResource SquareToggleButtonTemplate}"/>
-                        <ToggleButton Grid.Row="1" Margin="674.627,0,0,0" Background="Transparent" Foreground="White" Content="Remove" IsChecked="{Binding RemovePlugin}" IsEnabled="{Binding PluginIsSelected}" Template="{DynamicResource SquareToggleButtonTemplate}"/>
-					</Grid>
-				</Expander>
-
+				</Grid>
 			</StackPanel>
 		</ScrollViewer>
 	</Grid>
