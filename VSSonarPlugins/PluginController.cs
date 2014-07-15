@@ -75,7 +75,7 @@ namespace VSSonarPlugins
 
             var pluginLoader = new PluginLoader();
 
-            foreach (var plugin in pluginLoader.LoadPluginsFromFolder(this.ExtensionFolder))
+            foreach (IPlugin plugin in pluginLoader.LoadPluginsFromFolder(this.ExtensionFolder))
             {
                 try
                 {
@@ -110,7 +110,7 @@ namespace VSSonarPlugins
         public string ExtensionFolder { get; set; }
 
         /// <summary>
-        /// Gets or sets the install path file.
+        ///     Gets or sets the install path file.
         /// </summary>
         public string InstallPathFile { get; set; }
 
@@ -240,8 +240,7 @@ namespace VSSonarPlugins
                     }
                 }
 
-                List<string> refAssemblies = Directory.GetFiles(this.ExtensionFolder, "*.dll").ToList();
-                plugindesc = this.LoadPluginUsingDedicatedDomain(listOfAssemblies.ToArray(), refAssemblies, this.TempInstallPathFolder, conf);
+                plugindesc = this.LoadPluginUsingDedicatedDomain(listOfAssemblies.ToArray(), this.GetReferenceAssemblies(listOfAssemblies), this.TempInstallPathFolder, conf);
             }
 
             return plugindesc;
@@ -384,6 +383,44 @@ namespace VSSonarPlugins
         #region Methods
 
         /// <summary>
+        /// The get reference assemblies.
+        /// </summary>
+        /// <param name="listOfAssemblies">
+        /// The list of assemblies.
+        /// </param>
+        /// <returns>
+        /// The <see>
+        ///         <cref>List</cref>
+        ///     </see>
+        ///     .
+        /// </returns>
+        private List<string> GetReferenceAssemblies(List<string> listOfAssemblies)
+        {
+            var assembliesInExtensionFolder = Directory.GetFiles(this.ExtensionFolder, "*.dll").ToList();
+            var refAssemblies = new List<string>();
+            foreach (var assembly in assembliesInExtensionFolder)
+            {
+                var isPresent = false;
+                foreach (var assemblyToImport in listOfAssemblies)
+                {
+                    var name = Path.GetFileName(assembly);
+
+                    if (name != null && name.Equals(Path.GetFileName(assemblyToImport), StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        isPresent = true;
+                    }
+                }
+
+                if (!isPresent)
+                {
+                    refAssemblies.Add(assembly);
+                }
+            }
+
+            return refAssemblies;
+        }
+
+        /// <summary>
         /// The drop ref assemblies into base path.
         /// </summary>
         /// <param name="refAssemblies">
@@ -445,14 +482,14 @@ namespace VSSonarPlugins
         }
 
         /// <summary>
-        /// The upgrade plugins.
+        ///     The upgrade plugins.
         /// </summary>
         private void UpgradePlugins()
         {
             if (File.Exists(this.InstallPathFile))
             {
-                var content = File.ReadLines(this.InstallPathFile);
-                foreach (var line in content)
+                IEnumerable<string> content = File.ReadLines(this.InstallPathFile);
+                foreach (string line in content)
                 {
                     if (File.Exists(line))
                     {
@@ -465,9 +502,9 @@ namespace VSSonarPlugins
 
             if (Directory.Exists(this.TempInstallPathFolder))
             {
-                var files = Directory.GetFiles(this.TempInstallPathFolder, "*.*");
+                string[] files = Directory.GetFiles(this.TempInstallPathFolder, "*.*");
 
-                foreach (var file in files)
+                foreach (string file in files)
                 {
                     try
                     {
@@ -476,7 +513,7 @@ namespace VSSonarPlugins
                             continue;
                         }
 
-                        var dest = Path.Combine(this.ExtensionFolder, Path.GetFileName(file));
+                        string dest = Path.Combine(this.ExtensionFolder, Path.GetFileName(file));
                         File.Copy(file, dest, true);
                         File.Delete(file);
                     }
