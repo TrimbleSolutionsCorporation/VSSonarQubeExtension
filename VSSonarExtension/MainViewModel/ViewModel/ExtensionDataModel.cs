@@ -76,7 +76,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         #endregion
 
         #region Fields
-
+        
         /// <summary>
         /// The analysisPlugin control.
         /// </summary>
@@ -203,6 +203,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         {
             this.RestService = restService;
             this.Vsenvironmenthelper = vsenvironmenthelper;
+            this.ServiceProvider = provider;
 
             // commands
             this.InitCommanding();
@@ -257,7 +258,15 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                     controloption.SetOptions(options);
                 }
             }
+
+            // temp data folder
+            this.TempDataFolder = Path.GetTempPath();
         }
+
+        /// <summary>
+        /// Gets or sets the provider.
+        /// </summary>
+        public IServiceProvider ServiceProvider { get; set; }
 
         #endregion
 
@@ -1066,6 +1075,14 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                 return;
             }
 
+            // startup data
+            this.TempDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\VSSonarExtension\\" + newProject.Name;
+
+            if (Directory.Exists(this.TempDataFolder))
+            {
+                Directory.Delete(this.TempDataFolder, true);
+            }
+
             this.ExtensionOptionsData.Project = newProject;
             this.ExtensionOptionsData.RefreshGeneralProperties();
             this.ExtensionOptionsData.RefreshPropertiesInPlugins();
@@ -1138,7 +1155,25 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         {
             if (this.ResourceInEditor != null)
             {
-                VsSonarUtils.GetDifferenceReport(this.DocumentInView, this.localEditorCache.GetSourceForResource(this.ResourceInEditor), true);
+                try
+                {
+                    var diff = (IVsDifferenceService)this.ServiceProvider.GetService(typeof(SVsDifferenceService));
+                    if (!Directory.Exists(this.TempDataFolder))
+                    {
+                        Directory.CreateDirectory(this.TempDataFolder);
+                    }
+
+                    var tempfile = Path.Combine(this.TempDataFolder, "server." + Path.GetFileName(this.DocumentInView));
+
+                    File.WriteAllText(tempfile, this.localEditorCache.GetSourceForResource(this.ResourceInEditor));
+
+                    diff.OpenComparisonWindow(tempfile, this.DocumentInView);
+                }
+                catch (Exception ex)
+                {
+                    this.ErrorMessage = "Cannot Display Diff: " + ex.Message;
+                    this.DiagnosticMessage = ex.StackTrace;
+                }
             }
         }
 
@@ -1161,6 +1196,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             this.Vsenvironmenthelper = vsenvironmenthelperIn;
             this.StatusBar = statusBar;
             var plugins = this.PluginControl.GetPlugins();
+            this.ServiceProvider = provider;
             if (plugins != null)
             {
                 this.ExtensionOptionsData = new ExtensionOptionsModel(this.PluginControl, this, provider, this.UserConfiguration);
@@ -1218,6 +1254,8 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         }
 
         public VSSStatusBar StatusBar { get; set; }
+
+        public string TempDataFolder { get; set; }
 
         /// <summary>
         /// Gets the coverage in editor.
