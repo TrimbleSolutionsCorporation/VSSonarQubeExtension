@@ -24,7 +24,7 @@ open ExtensionTypes
 open RestSharp
 
 type JsonSonarConnector() = 
-    let userRoamingFile = Path.Combine("c:\\temp", "restCalls.log");
+    let userRoamingFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "VSSonarExtension\\restCalls.log");
 
     interface IHttpSonarConnector with
         member this.HttpSonarPutRequest(userConf : ConnectionConfiguration, url : string, data : Map<string, string>) =
@@ -67,8 +67,9 @@ type JsonSonarConnector() =
                 req.Headers.Add("Authorization", auth)
 
                 let addLine (line:string) =
-                    use wr = StreamWriter(userRoamingFile, true)
-                    wr.WriteLine(line)
+                    if not(String.IsNullOrEmpty(Environment.GetEnvironmentVariable("VSSONAREXTENSIONDEBUG"))) then
+                        use wr = StreamWriter(userRoamingFile, true)
+                        wr.WriteLine(line)
                                 
                 // read data
                 try
@@ -79,7 +80,8 @@ type JsonSonarConnector() =
 
                     addLine (sprintf """ [%s] : %s """ timeNow url)                
                     let data = reader.ReadToEnd()
-                    addLine (sprintf """ [%s] : %s """ timeNow data)
+                    if not(String.IsNullOrEmpty(Environment.GetEnvironmentVariable("VSSONAREXTENSIONDEBUGVERBOSE"))) then
+                        addLine (sprintf """ [%s] : %s """ timeNow data)
                     data
                 with
                  | ex -> 
