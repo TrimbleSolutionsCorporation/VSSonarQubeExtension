@@ -485,11 +485,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                 var exceptionMsg = (LocalAnalysisEventArgs)e;
                 if (exceptionMsg != null && exceptionMsg.Ex != null)
                 {
-                    if (this.analysisTypeText != AnalysisTypes.File)
-                    {
-                        this.analysisTrigger = false;
-                    }
-
+                    this.analysisTrigger = false;
                     this.OnPropertyChanged("AnalysisTriggerText");
                     this.OnPropertyChanged("AnalysisTrigger");                    
                     UserExceptionMessageBox.ShowException("Analysis Ended: " + exceptionMsg.ErrorMessage, exceptionMsg.Ex, this.OutputLog);
