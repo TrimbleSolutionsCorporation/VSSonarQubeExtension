@@ -17,8 +17,6 @@ namespace ExtensionHelpers
     using System.Collections.Generic;
     using System.Linq;
 
-    using DiffCalc;
-
     using DifferenceEngine;
     using ExtensionTypes;
 
@@ -141,42 +139,6 @@ namespace ExtensionHelpers
             }
 
             return new List<Issue>(local.OrderBy(i => i.Line));
-        }
-
-        /// <summary>
-        /// The get difference report.
-        /// </summary>
-        /// <param name="filePath">
-        /// The file Path.
-        /// </param>
-        /// <param name="sourceInServer">
-        /// The in server source.
-        /// </param>
-        /// <param name="displayWindow">
-        /// The display Window.
-        /// </param>
-        /// <returns>
-        /// The <see cref="ArrayList"/>.
-        /// </returns>
-        public static ArrayList GetDifferenceReport(string filePath, string sourceInServer, bool displayWindow)
-        {
-            var sLf = new DiffListTextFile(filePath);
-            var dLf = new DiffListTextFile(sourceInServer, "\r\n");
-
-            var de = new DiffEngine();
-            de.ProcessDiff(dLf, sLf, DiffEngineLevel.SlowPerfect);
-
-            if (!displayWindow)
-            {
-                return de.DiffReport();
-            }
-
-            using (var win = new Results(sLf, dLf, de.DiffReport(), 0))
-            {
-                win.ShowDialog();
-            }
-
-            return de.DiffReport();
         }
     }
 }

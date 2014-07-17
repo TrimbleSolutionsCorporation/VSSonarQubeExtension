@@ -1,13 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30516.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSSonarExtension", "VSSonarExtension\VSSonarExtension.csproj", "{7D094D65-9165-4FFC-A6E4-CAEE27A64FAD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSSonarExtension.Test", "VSSonarExtension.Test\VSSonarExtension.Test.csproj", "{2DD5EFBB-A28F-4A4F-BBDD-1394B4634C77}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiffCalc", "DiffCalc\DiffCalc.csproj", "{CA9B6FA7-9A52-49E9-9387-22C82B0F8962}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DifferenceEngine", "DifferenceEngine\DifferenceEngine.csproj", "{8AE4897A-EA74-49B1-BA55-D892C27AF9C9}"
 EndProject
@@ -41,10 +39,6 @@ Global
 		{2DD5EFBB-A28F-4A4F-BBDD-1394B4634C77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2DD5EFBB-A28F-4A4F-BBDD-1394B4634C77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2DD5EFBB-A28F-4A4F-BBDD-1394B4634C77}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CA9B6FA7-9A52-49E9-9387-22C82B0F8962}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CA9B6FA7-9A52-49E9-9387-22C82B0F8962}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CA9B6FA7-9A52-49E9-9387-22C82B0F8962}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CA9B6FA7-9A52-49E9-9387-22C82B0F8962}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8AE4897A-EA74-49B1-BA55-D892C27AF9C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8AE4897A-EA74-49B1-BA55-D892C27AF9C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8AE4897A-EA74-49B1-BA55-D892C27AF9C9}.Release|Any CPU.ActiveCfg = Release|Any CPU

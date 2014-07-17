@@ -113,10 +113,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DiffCalc\DiffCalc.csproj">
-      <Project>{CA9B6FA7-9A52-49E9-9387-22C82B0F8962}</Project>
-      <Name>DiffCalc</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DifferenceEngine\DifferenceEngine.csproj">
       <Project>{8AE4897A-EA74-49B1-BA55-D892C27AF9C9}</Project>
       <Name>DifferenceEngine</Name>
