@@ -1,0 +1,11 @@
+SCMBranch=Structures
+SCMRepository=Structures/MSBuild/BuildTools/Gallio/bin/DLR/libs/IronRuby/lib/ruby/1.8/webrick/httpauth
+SCMMainlineUUID={a5eb9c95-fdd8-40d3-b610-836f3dffaa1e}
+SCMBranchRepositoryID=28277
+authenticator.rb;931842012;1;1384858082;|38394|253993
+basicauth.rb;1450095698;1;1384858082;|38395|253994
+digestauth.rb;2369889446;1;1384858082;|38396|253995
+htdigest.rb;999812338;1;1384858082;|38397|253996
+htgroup.rb;2178820474;1;1384858082;|38398|253997
+htpasswd.rb;456803743;1;1384858082;|38399|253998
+userdb.rb;2611694310;1;1384858082;|38400|253999

@@ -1,0 +1,8 @@
+SCMBranch=Structures
+SCMRepository=Structures/MSBuild/BuildTools/Gallio/bin/DLR/Scripts/IronRuby/gallio/wrappers
+SCMMainlineUUID={a5eb9c95-fdd8-40d3-b610-836f3dffaa1e}
+SCMBranchRepositoryID=28207
+logger.rb;2553664624;1;1384858081;|37938|253537
+message_sink.rb;180883698;1;1384858081;|37939|253538
+progress_monitor.rb;1450891899;1;1384858081;|37940|253539
+runtime.rb;2112990323;1;1384858081;|37941|253540

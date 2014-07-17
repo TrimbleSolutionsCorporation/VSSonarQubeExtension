@@ -1,0 +1,7 @@
+SCMBranch=Structures
+SCMRepository=Structures/MSBuild/BuildTools/Gallio/bin/DLR/libs/IronRuby/lib/ruby/1.8/rexml/validation
+SCMMainlineUUID={a5eb9c95-fdd8-40d3-b610-836f3dffaa1e}
+SCMBranchRepositoryID=28253
+relaxng.rb;1233859972;1;1384858081;|38258|253857
+validation.rb;3846007830;1;1384858081;|38259|253858
+validationexception.rb;1542599334;1;1384858081;|38260|253859
