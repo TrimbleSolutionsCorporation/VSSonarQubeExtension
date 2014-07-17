@@ -14,6 +14,7 @@
 
 namespace VSSonarExtension.Test.TestViewModel
 {
+    using System;
     using System.Collections.Generic;
     using System.Windows;
 
@@ -76,6 +77,7 @@ namespace VSSonarExtension.Test.TestViewModel
         /// The test loading of window.
         /// </summary>
         [Test]
+        [STAThread]
         public void VerifyOpenAndReopenStatusTest()
         {
             var data = new ExtensionDataModel(this.service, this.vshelper, null, null)
@@ -102,6 +104,7 @@ namespace VSSonarExtension.Test.TestViewModel
         /// The verify confirm status.
         /// </summary>
         [Test]
+        [STAThread]
         public void VerifyConfirmStatus()
         {
             var data = new ExtensionDataModel(this.service, this.vshelper, null, null)
@@ -127,6 +130,7 @@ namespace VSSonarExtension.Test.TestViewModel
         /// The verify resolve status.
         /// </summary>
         [Test]
+        [STAThread]
         public void VerifyResolveStatus()
         {
             var data = new ExtensionDataModel(this.service, this.vshelper, null, null)
@@ -152,6 +156,7 @@ namespace VSSonarExtension.Test.TestViewModel
         /// The verify reopen status.
         /// </summary>
         [Test]
+        [STAThread]
         public void VerifyMultiSelectionStatus()
         {
             var data = new ExtensionDataModel(this.service, this.vshelper, null, null)

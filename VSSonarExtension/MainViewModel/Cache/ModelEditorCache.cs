@@ -396,7 +396,10 @@ namespace VSSonarExtension.MainViewModel.Cache
         private void UpdateIssuesData(EditorData elem, IEnumerable<Issue> issues)
         {
             elem.Issues.Clear();
-            elem.Issues.AddRange(issues);
+            if (issues != null)
+            {
+                elem.Issues.AddRange(issues);
+            }            
         }
 
         #endregion

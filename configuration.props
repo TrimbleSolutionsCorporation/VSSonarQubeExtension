@@ -15,6 +15,8 @@
         <BuildNumber                  Condition="'$(BuildNumber)'==''">3</BuildNumber>
         <RevisionNumber               Condition="'$(RevisionNumber)'==''">1</RevisionNumber>
         <AssemblyPatcherTaskOn        Condition="'$(AssemblyPatcherTaskOn)'==''">false</AssemblyPatcherTaskOn>
+        <UnitTestsDisabled            Condition="'$(UnitTestsDisabled)'==''">false</UnitTestsDisabled>
+        
     </PropertyGroup>
     
 

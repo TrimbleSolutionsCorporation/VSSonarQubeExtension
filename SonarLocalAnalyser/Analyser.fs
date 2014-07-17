@@ -42,7 +42,8 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
             raise(new NoFileInViewException())
 
         let IsSupported(plugin : IAnalysisPlugin, item : VsProjectItem) = 
-            let isEnabled = vsinter.ReadOptionFromApplicationData(GlobalIds.PluginEnabledControlId, plugin.GetPluginDescription(vsinter).Name)
+            let name = plugin.GetPluginDescription(vsinter).Name
+            let isEnabled = vsinter.ReadOptionFromApplicationData(GlobalIds.PluginEnabledControlId, name)
             if String.IsNullOrEmpty(isEnabled) then
                 plugin.IsSupported(item)
             else
@@ -571,4 +572,6 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
             if itemInView = null then
                 raise(new NoFileInViewException())
 
-            GetPluginThatSupportsResource(itemInView).GetResourceKey(itemInView, associatedProject.Key, safeIsOn)
+            let plugin = GetPluginThatSupportsResource(itemInView)
+
+            plugin.GetResourceKey(itemInView, associatedProject.Key, safeIsOn)

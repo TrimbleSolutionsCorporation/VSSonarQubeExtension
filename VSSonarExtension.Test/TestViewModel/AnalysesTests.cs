@@ -14,6 +14,8 @@
 
 namespace VSSonarExtension.Test.TestViewModel
 {
+    using System;
+
     using ExtensionTypes;
 
     using NUnit.Framework;
@@ -80,6 +82,7 @@ namespace VSSonarExtension.Test.TestViewModel
             /// The test on off analyses.
             /// </summary>
             [Test]
+            [STAThread]
             public void TestOnOffAnalyses()
             {
                 var data = new ExtensionDataModel(this.service, this.vshelper, null, null) { AnalysisMode = true };
@@ -96,6 +99,7 @@ namespace VSSonarExtension.Test.TestViewModel
             /// The test loading of window.
             /// </summary>
             [Test]
+            [STAThread]
             public void TypeShouldBeFileWhenModeIsServer()
             {
                 var data = new ExtensionDataModel(this.service, this.vshelper, null, null)
@@ -112,6 +116,7 @@ namespace VSSonarExtension.Test.TestViewModel
             /// The frequency and trigger on demand execute when type is not file.
             /// </summary>
             [Test]
+            [STAThread]
             public void FrequencyAndTriggerOnDemandExecuteWhenTypeIsNotFile()
             {
                 var data = new ExtensionDataModel(this.service, this.vshelper, null, null)
@@ -133,6 +138,7 @@ namespace VSSonarExtension.Test.TestViewModel
             /// The test loading of window.
             /// </summary>
             [Test]
+            [STAThread]
             public void ShouldActivateAllTypesWhenModelIsLocal()
             {
                 var data = new ExtensionDataModel(this.service, this.vshelper, null, null)

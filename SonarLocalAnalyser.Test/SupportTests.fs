@@ -58,22 +58,26 @@ type SupportTests() =
     member test.``Should Allow File Local Execution if Plugin is Not Supported`` () =
         let project = new Resource()
         let vsItem = new VsProjectItem("fileName", "filePath", "projectName", "projectFilePath", "solutionName", "solutionPath")
+        let pluginDescription = new PluginDescription()
+        pluginDescription.Name <- "TestPlugin"
+
+        let mockAVsinterface =
+            Mock<IVsEnvironmentHelper>()
+                .Setup(fun x -> <@ x.ReadOptionFromApplicationData(VSSonarPlugins.GlobalIds.PluginEnabledControlId, "TestPlugin") @>).Returns("True")
+                .Create()
+
         
         let mockAPlugin =
             Mock<IAnalysisPlugin>()
                 .Setup(fun x -> <@ x.IsSupported(vsItem) @>).Returns(true)
+                .Setup(fun x -> <@ x.GetPluginDescription(mockAVsinterface) @>).Returns(pluginDescription)
                 .Create()
 
         let listofPlugins = new System.Collections.Generic.List<IAnalysisPlugin>()
         listofPlugins.Add(mockAPlugin)
-        let analyser = new SonarLocalAnalyser(listofPlugins, Mock<ISonarRestService>().Create(), Mock<IVsEnvironmentHelper>().Create())
+        let analyser = new SonarLocalAnalyser(listofPlugins, Mock<ISonarRestService>().Create(), mockAVsinterface)
                 
         (analyser.GetPluginThatRunFileAnalysis(vsItem, new ConnectionConfiguration())) |> should be (sameAs mockAPlugin)
-
-
-
-
-
 
 
     [<Test>]

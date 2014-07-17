@@ -25,6 +25,8 @@ namespace VSSonarExtension.Test.TestViewModel
 
     using Rhino.Mocks;
 
+    using SonarLocalAnalyser;
+
     using SonarRestService;
 
     using VSSonarExtension.MainViewModel.ViewModel;
@@ -93,6 +95,7 @@ namespace VSSonarExtension.Test.TestViewModel
             /// The test loading of window.
             /// </summary>
             [Test]
+            [STAThread]
             public void ErrorWhenOnPluginsAreInstalled()
             {
                 var data = new ExtensionDataModel(this.service, this.vshelper, null, null);
@@ -105,6 +108,7 @@ namespace VSSonarExtension.Test.TestViewModel
             /// The test loading of window.
             /// </summary>
             [Test]
+            [STAThread]
             public void ShouldReturnWhenContstrainsAreNotMet()
             {
                 var data = new ExtensionDataModel(this.service, this.vshelper, null, null);
@@ -120,7 +124,8 @@ namespace VSSonarExtension.Test.TestViewModel
             /// The test loading of window.
             /// </summary>
             [Test]
-            public void DoServerAnalysisUpdateBufferFileNotFound()
+            [STAThread]
+            public void UpdatesResourceWithoutAnyIssues()
             {
                 var source = new Source { Lines = new[] { "line1", "line2", "line3", "line4" } };
 
@@ -150,9 +155,18 @@ namespace VSSonarExtension.Test.TestViewModel
                         Arg<string>.Is.Anything, Arg<bool>.Is.Anything)).Return("key").Repeat.Once();
 
                 var data = new ExtensionDataModel(this.service, this.vshelper, null, null);
+
+                var localAnalyser = this.mocks.Stub<ISonarLocalAnalyser>();
+                data.LocalAnalyserModule = localAnalyser;
+
+                using (this.mocks.Record())
+                {
+                    SetupResult.For(localAnalyser.GetResourceKey(Arg<VsProjectItem>.Is.Anything, Arg<Resource>.Is.Anything, Arg<ConnectionConfiguration>.Is.Anything, Arg<bool>.Is.Equal(true))).Return("Key1");
+                    SetupResult.For(localAnalyser.GetResourceKey(Arg<VsProjectItem>.Is.Anything, Arg<Resource>.Is.Anything, Arg<ConnectionConfiguration>.Is.Anything, Arg<bool>.Is.Equal(false))).Return("Key2");
+                }
+
                 data.AssociatedProject = new Resource { Key = "KEY"};
                 data.RefreshDataForResource("c:\\src\\file.cpp");
-                Assert.AreEqual("Extension Not Ready", data.ErrorMessage);
                 Assert.AreEqual(0, data.GetIssuesInEditor("file").Count);
             }
         }

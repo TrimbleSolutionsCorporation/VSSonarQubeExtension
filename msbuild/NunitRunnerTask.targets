@@ -12,7 +12,7 @@
     <AssemblyExtension>.exe</AssemblyExtension>
   </PropertyGroup>
   
-  <Target Name="AfterBuild" Condition="'$(NunitRunnerTaskEnabled)' != 'FALSE' And '$(UnitTestsDisabled)' != 'True'">
+  <Target Name="AfterBuild" Condition="'$(UnitTestsDisabled)' != 'True'">
   <Message Text="Run Nunit Test Assembly $(OutputPath)$(AssemblyName)$(AssemblyExtension)" Importance="High" />
   <Message Text="Solution Path $(SolutionDir)" Importance="High" />
   <Message Text="Gallio $(GallioPath)\bin\Gallio.Echo.exe" Importance="High" />

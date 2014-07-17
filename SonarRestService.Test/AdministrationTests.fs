@@ -83,7 +83,7 @@ type AdministrationTests() =
         (service :> ISonarRestService).AuthenticateUser(conf) |> should be False
 
     [<Test>]
-    member test.``Should Throw Exception When Sonar less than 3.3 so skip authetication`` () =
+    member test.``Should Fail authentication When Sonar less than 3.3 so skip authetication`` () =
         let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1")
 
         let mockHttpReq =
@@ -92,7 +92,7 @@ type AdministrationTests() =
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        (service :> ISonarRestService).AuthenticateUser(conf) |> should be True
+        (service :> ISonarRestService).AuthenticateUser(conf) |> should be False
 
     [<Test>]
     member test.``Should Get Correct server version with 3.6`` () =

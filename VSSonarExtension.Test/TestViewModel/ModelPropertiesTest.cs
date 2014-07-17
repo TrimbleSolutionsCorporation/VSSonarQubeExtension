@@ -86,6 +86,7 @@ namespace VSSonarExtension.Test.TestViewModel
         /// The test loading of window.
         /// </summary>
         [Test]
+        [STAThread]
         public void TestUpdateModelUpdateData()
         {
             var model = new ExtensionDataModel();
@@ -99,6 +100,7 @@ namespace VSSonarExtension.Test.TestViewModel
         /// The test loading of window.
         /// </summary>
         [Test]
+        [STAThread]
         public void TestSetIssuesList()
         {
             var issueWithId = new Issue { Id = 20, Component = "asdaskjd:sdaskjd:aksjdkas/asdkasj.cs", Key = new Guid() };
@@ -117,6 +119,7 @@ namespace VSSonarExtension.Test.TestViewModel
         /// The test loading of window.
         /// </summary>
         [Test]
+        [STAThread]
         public void TestSetIssuesInEditor()
         {
             var issueWithId = new Issue { Id = 20, Component = "asdaskjd:sdaskjd:aksjdkas/asdkasj.cs", Key = new Guid() };
@@ -134,6 +137,7 @@ namespace VSSonarExtension.Test.TestViewModel
         /// The test loading of window.
         /// </summary>
         [Test]
+        [STAThread]
         public void TestSetIssuesListWithCommentsWithRefreshView()
         {
             var issueWithId = new Issue { Id = 20, Component = "asdaskjd:sdaskjd:aksjdkas/asdkasj.cs", Key = new Guid() };
@@ -155,6 +159,7 @@ namespace VSSonarExtension.Test.TestViewModel
         /// The test loading of window.
         /// </summary>
         [Test]
+        [STAThread]
         public void TestSelectIssueFromListUsingId()
         {
             var issueWithId = new Issue { Id = 20, Component = "asdaskjd:sdaskjd:aksjdkas/asdkasj.cs" };
@@ -169,6 +174,7 @@ namespace VSSonarExtension.Test.TestViewModel
         /// The test loading of window.
         /// </summary>
         [Test]
+        [STAThread]
         public void TestSelectIssueFromListUsingKey()
         {
             var issueWithId = new Issue { Id = 20, Component = "asdaskjd:sdaskjd:aksjdkas/asdkasj.cs", Key = new Guid() };
@@ -184,6 +190,7 @@ namespace VSSonarExtension.Test.TestViewModel
         /// The test loading of window.
         /// </summary>
         [Test]
+        [STAThread]
         public void TestSetUserList()
         {
             var model = new ExtensionDataModel(this.service, this.vshelper, null, null)
@@ -200,10 +207,28 @@ namespace VSSonarExtension.Test.TestViewModel
         /// The test association with solution.
         /// </summary>
         [Test]
+        [STAThread]
         public void TestAssociationWithSolution()
         {
+            this.mocks = new MockRepository();
+            this.service = this.mocks.Stub<ISonarRestService>();
+            this.vshelper = this.mocks.Stub<IVsEnvironmentHelper>();
+            var resource = new Resource { Key = "KEY" };
+            var resources = new List<Resource> { resource };
+
+            using (this.mocks.Record())
+            {
+                SetupResult.For(this.service.GetServerInfo(Arg<ConnectionConfiguration>.Is.Anything)).Return(3.6);
+                SetupResult.For(this.service.AuthenticateUser(Arg<ConnectionConfiguration>.Is.Anything)).Return(true);
+                SetupResult.For(this.service.GetResourcesData(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Equal("KEY"))).Return(resources);
+                SetupResult.For(this.vshelper.ReadSavedOption("Sonar Options", "General", "SonarHost")).Return("serveraddr");
+                SetupResult.For(this.vshelper.ReadSavedOption("Sonar Options", "General", "SonarUserPassword")).Return("password");
+                SetupResult.For(this.vshelper.ReadSavedOption("Sonar Options", "General", "SonarUserName")).Return("login");
+                SetupResult.For(this.vshelper.ActiveSolutionName()).Return("Solution");
+                SetupResult.For(this.vshelper.ReadOptionFromApplicationData("Solution", "PROJECTKEY")).Return("KEY");
+            }
+
             var model = new ExtensionDataModel(this.service, this.vshelper, null, null);
-            var projectAsso = new Resource { Key = "KEY" };
 
             model.AssociateProjectToSolution();
             Assert.AreEqual("Selected Project: KEY", model.AssociatedProjectKey);
@@ -215,6 +240,7 @@ namespace VSSonarExtension.Test.TestViewModel
         /// The test loading of window.
         /// </summary>
         [Test]
+        [STAThread]
         public void TesRestOfProperties()
         {
             var issue = new Issue();

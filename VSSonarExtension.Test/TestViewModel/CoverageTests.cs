@@ -14,6 +14,7 @@
 
 namespace VSSonarExtension.Test.TestViewModel
 {
+    using System;
     using System.Collections.Generic;
 
     using ExtensionHelpers;
@@ -81,6 +82,7 @@ namespace VSSonarExtension.Test.TestViewModel
             /// The test loading of window.
             /// </summary>
             [Test]
+            [STAThread]
             public void CoverageInEditorSetAndGetTest()
             {
                 var data = new ExtensionDataModel(this.service, this.vshelper, null, null);
@@ -92,6 +94,7 @@ namespace VSSonarExtension.Test.TestViewModel
             /// The test loading of window.
             /// </summary>
             [Test]
+            [STAThread]
             public void DisableCoverageInEditor()
             {
                 var data = new ExtensionDataModel(this.service, this.vshelper, null, null);

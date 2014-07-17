@@ -49,16 +49,24 @@ type RunAnalysisTests() =
     member test.``Should Return Key When Single language is set`` () =
         let project = new Resource()
         let vsItem = new VsProjectItem("fileName", "filePath", "projectName", "projectFilePath", "solutionName", "solutionPath")
+        let pluginDescription = new PluginDescription()
+        pluginDescription.Name <- "TestPlugin"
+
+        let mockAVsinterface =
+            Mock<IVsEnvironmentHelper>()
+                .Setup(fun x -> <@ x.ReadOptionFromApplicationData(VSSonarPlugins.GlobalIds.PluginEnabledControlId, "TestPlugin") @>).Returns("True")
+                .Create()
 
         let mockAPlugin =
             Mock<IAnalysisPlugin>()
                 .Setup(fun x -> <@ x.IsSupported(vsItem) @>).Returns(true)
                 .Setup(fun x -> <@ x.GetResourceKey(any(), any(), any()) @>).Returns("Key")
+                .Setup(fun x -> <@ x.GetPluginDescription(mockAVsinterface) @>).Returns(pluginDescription)
                 .Create()
 
         let listofPlugins = new System.Collections.Generic.List<IAnalysisPlugin>()
         listofPlugins.Add(mockAPlugin)
-        let analyser = new SonarLocalAnalyser(listofPlugins, Mock<ISonarRestService>().Create(), Mock<IVsEnvironmentHelper>().Create())
+        let analyser = new SonarLocalAnalyser(listofPlugins, Mock<ISonarRestService>().Create(), mockAVsinterface)
         
         
         (analyser :> ISonarLocalAnalyser).GetResourceKey(vsItem, project, new ConnectionConfiguration(), true) |> should equal "Key"

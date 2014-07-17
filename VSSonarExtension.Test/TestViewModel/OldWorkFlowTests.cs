@@ -14,6 +14,7 @@
 
 namespace ExtensionViewModel.Test
 {
+    using System;
     using System.Collections.Generic;
     using System.Windows;
 
@@ -75,6 +76,7 @@ namespace ExtensionViewModel.Test
         /// The test loading of window.
         /// </summary>
         [Test]
+        [STAThread]
         public void VerifyOpenAndReopenStatusTest()
         {
             var data = new ExtensionDataModel(this.service, this.vshelper, null, null)
@@ -101,6 +103,7 @@ namespace ExtensionViewModel.Test
         /// The test loading of window.
         /// </summary>
         [Test]
+        [STAThread]
         public void VerifyMultiSelectionTest()
         {
             var data = new ExtensionDataModel(this.service, this.vshelper, null, null)
@@ -126,8 +129,9 @@ namespace ExtensionViewModel.Test
 
         /// <summary>
         /// The verify open and resolved reopen status test.
-        /// </summary>
+        /// </summary>        
         [Test]
+        [STAThread]
         public void VerifyClosedStatus()
         {
             var data = new ExtensionDataModel(
@@ -157,6 +161,7 @@ namespace ExtensionViewModel.Test
         /// The verify open and resolved reopen status test.
         /// </summary>
         [Test]
+        [STAThread]
         public void VerifyResolvedTest()
         {
             var data = new ExtensionDataModel(this.service, this.vshelper, null, null)
@@ -186,6 +191,7 @@ namespace ExtensionViewModel.Test
         /// The verify open and resolved reopen status test.
         /// </summary>
         [Test]
+        [STAThread]
         public void VerifyResetVisibilitiesWhenStatusIsNotDefined()
         {
             var data = new ExtensionDataModel(this.service, this.vshelper, null, null)

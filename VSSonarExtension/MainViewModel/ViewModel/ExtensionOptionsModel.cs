@@ -386,13 +386,18 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// </summary>
         private void ResetGeneralOptionsForProject()
         {
-            var optionsInDsk = this.Vsenvironmenthelper.ReadAllAvailableOptionsInSettings(GlobalIds.GlobalPropsId);
-            this.GeneralOptions.SetGeneralOptions(optionsInDsk);
-            if (this.Project != null)
+            var generalOptionsInDsk = this.Vsenvironmenthelper.ReadAllAvailableOptionsInSettings(GlobalIds.GlobalPropsId);
+
+            if (generalOptionsInDsk != null)
+            {
+                this.GeneralOptions.SetGeneralOptions(generalOptionsInDsk);
+            }
+
+            if (this.Project == null)
             {
                 var solId = VsSonarUtils.SolutionGlobPropKey(this.Project.Key);
-                optionsInDsk = this.Vsenvironmenthelper.ReadAllAvailableOptionsInSettings(solId);
-                this.GeneralOptions.SetProjectOptions(optionsInDsk);
+                var projectOptionsInDsk = this.Vsenvironmenthelper.ReadAllAvailableOptionsInSettings(solId);
+                this.GeneralOptions.SetProjectOptions(projectOptionsInDsk);
             }
         }
 

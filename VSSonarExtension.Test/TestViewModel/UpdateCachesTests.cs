@@ -23,6 +23,8 @@ namespace VSSonarExtension.Test.TestViewModel
 
     using Rhino.Mocks;
 
+    using SonarLocalAnalyser;
+
     using SonarRestService;
 
     using VSSonarExtension.MainViewModel.ViewModel;
@@ -80,6 +82,7 @@ namespace VSSonarExtension.Test.TestViewModel
         /// The test loading of window.
         /// </summary>
         [Test]
+        [STAThread]
         public void UpdateIssueDataForResourceWithNewDateDataTestWithCache()
         {
             var fileSource = new Source { Lines = new[] { "line1", "line2", "line3", "line4" } };
@@ -115,14 +118,24 @@ namespace VSSonarExtension.Test.TestViewModel
             var data = new ExtensionDataModel(this.service, this.vshelper, null, null);
             data.AssociatedProject = new Resource { Key = "sonar.com:common" };
 
+            var localAnalyser = this.mocks.Stub<ISonarLocalAnalyser>();
+            data.LocalAnalyserModule = localAnalyser;
+
+            using (this.mocks.Record())
+            {
+                SetupResult.For(localAnalyser.GetResourceKey(Arg<VsProjectItem>.Is.Anything, Arg<Resource>.Is.Anything, Arg<ConnectionConfiguration>.Is.Anything, Arg<bool>.Is.Equal(true))).Return("Key1");
+                SetupResult.For(localAnalyser.GetResourceKey(Arg<VsProjectItem>.Is.Anything, Arg<Resource>.Is.Anything, Arg<ConnectionConfiguration>.Is.Anything, Arg<bool>.Is.Equal(false))).Return("Key2");
+            }
+
             data.RefreshDataForResource("resource");
-            Assert.AreEqual(1, data.GetIssuesInEditor("ghfggfgf\r\nghfggfgf\r\nghfggfgf\r\nghfggfgf\r\n").Count);
+            Assert.AreEqual(1, data.GetIssuesInEditor("line1\r\nline2\r\nline3\r\nline4\r\n").Count);
         }
 
         /// <summary>
         /// The test loading of window.
         /// </summary>
         [Test]
+        [STAThread]
         public void UpdateCoverageDataForResourceWithNewDateDataTest()
         {
             var newResource = new Resource { Date = DateTime.Now, Key = "resource" };
@@ -156,6 +169,15 @@ namespace VSSonarExtension.Test.TestViewModel
             var data = new ExtensionDataModel(this.service, this.vshelper, null, null);
             data.AssociatedProject = new Resource { Key = "sonar.com:common" };
             data.CoverageInEditorEnabled = true;
+
+            var localAnalyser = this.mocks.Stub<ISonarLocalAnalyser>();
+            data.LocalAnalyserModule = localAnalyser;
+
+            using (this.mocks.Record())
+            {
+                SetupResult.For(localAnalyser.GetResourceKey(Arg<VsProjectItem>.Is.Anything, Arg<Resource>.Is.Anything, Arg<ConnectionConfiguration>.Is.Anything, Arg<bool>.Is.Equal(true))).Return("Key1");
+                SetupResult.For(localAnalyser.GetResourceKey(Arg<VsProjectItem>.Is.Anything, Arg<Resource>.Is.Anything, Arg<ConnectionConfiguration>.Is.Anything, Arg<bool>.Is.Equal(false))).Return("Key2");
+            }
             
             data.RefreshDataForResource("resource");
             var data1 = data.GetCoverageInEditor("ghfggfgf\r\nghfggfgf\r\nghfggfgf\r\nghfggfgf\r\n");
