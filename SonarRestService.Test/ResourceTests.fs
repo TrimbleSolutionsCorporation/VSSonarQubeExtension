@@ -185,7 +185,7 @@ type ResourceTests() =
         data |> should equal Net.HttpStatusCode.OK
         issueList.[0].Comments.Count |> should equal 1
 
-    [<Test>]
+    //[<Test>]
     member test.``GetTypes`` () =
         let conf = ConnectionConfiguration("http://sonar:80", "jocs1", "jocs1")
 
@@ -194,7 +194,7 @@ type ResourceTests() =
         let data = (jsonHttp :> IHttpSonarConnector).HttpSonarGetRequest(conf, url)
         ()
 
-    [<Test>]
+    //[<Test>]
     member test.``PutTypes`` () =
         let conf = ConnectionConfiguration("http://sonar:80", "jocs1", "jocs1")
 
