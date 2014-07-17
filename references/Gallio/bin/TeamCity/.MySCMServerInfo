@@ -1,7 +1,0 @@
-SCMBranch=Structures
-SCMRepository=Structures/MSBuild/BuildTools/Gallio/bin/TeamCity
-SCMMainlineUUID={a5eb9c95-fdd8-40d3-b610-836f3dffaa1e}
-SCMBranchRepositoryID=28351
-Gallio.TeamCityIntegration.dll;3195922770;1;1384858082;|38855|254454
-Gallio.TeamCityIntegration.plugin;1786253359;1;1384858082;|38856|254455
-Readme.txt;664422139;1;1384858082;|38857|254456

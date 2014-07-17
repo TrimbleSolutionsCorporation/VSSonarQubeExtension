@@ -1,9 +1,0 @@
-SCMBranch=Structures
-SCMRepository=Structures/MSBuild/BuildTools/Gallio/bin/DLR/libs/IronRuby/lib/ruby/1.8/rdoc/parsers
-SCMMainlineUUID={a5eb9c95-fdd8-40d3-b610-836f3dffaa1e}
-SCMBranchRepositoryID=28245
-parse_c.rb;4073947951;1;1384858081;|38186|253785
-parse_f95.rb;3983185695;1;1384858081;|38187|253786
-parse_rb.rb;1237512638;1;1384858081;|38188|253787
-parse_simple.rb;3867439648;1;1384858081;|38189|253788
-parserfactory.rb;4170307039;1;1384858081;|38190|253789

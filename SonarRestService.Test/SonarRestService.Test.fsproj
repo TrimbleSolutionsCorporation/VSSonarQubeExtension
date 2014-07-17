@@ -114,25 +114,25 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Foq">
-      <HintPath>..\references\Foq.dll</HintPath>
+      <HintPath>$(ReferencesFolder)\Foq.dll</HintPath>
     </Reference>
     <Reference Include="FSharp.Core">
-      <HintPath>..\references\FSharp.Core.dll</HintPath>
+      <HintPath>$(ReferencesFolder)\FSharp.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="FSharp.Data">
-      <HintPath>..\references\FSharp.Data.dll</HintPath>
+      <HintPath>$(ReferencesFolder)\FSharp.Data.dll</HintPath>
     </Reference>
     <Reference Include="FsUnit.NUnit">
-      <HintPath>..\references\FsUnit.NUnit.dll</HintPath>
+      <HintPath>$(ReferencesFolder)\FsUnit.NUnit.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="nunit.framework">
-      <HintPath>..\references\nunit.framework.dll</HintPath>
+      <HintPath>$(ReferencesFolder)\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="RestSharp">
-      <HintPath>..\references\RestSharp.dll</HintPath>
+      <HintPath>$(ReferencesFolder)\RestSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />

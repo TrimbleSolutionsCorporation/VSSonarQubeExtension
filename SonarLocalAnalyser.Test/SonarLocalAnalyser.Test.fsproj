@@ -34,20 +34,20 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Executor">
-      <HintPath>..\references\Executor.dll</HintPath>
+      <HintPath>$(ReferencesFolder)\Executor.dll</HintPath>
     </Reference>
     <Reference Include="Foq">
-      <HintPath>..\references\Foq.dll</HintPath>
+      <HintPath>$(ReferencesFolder)\Foq.dll</HintPath>
     </Reference>
     <Reference Include="FsUnit.NUnit">
-      <HintPath>..\references\FsUnit.NUnit.dll</HintPath>
+      <HintPath>$(ReferencesFolder)\FsUnit.NUnit.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <Private>True</Private>
     </Reference>
     <Reference Include="nunit.framework">
-      <HintPath>..\references\nunit.framework.dll</HintPath>
+      <HintPath>$(ReferencesFolder)\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

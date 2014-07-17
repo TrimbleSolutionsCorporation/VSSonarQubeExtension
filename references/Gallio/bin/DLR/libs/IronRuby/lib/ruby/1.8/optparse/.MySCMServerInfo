@@ -1,9 +1,0 @@
-SCMBranch=Structures
-SCMRepository=Structures/MSBuild/BuildTools/Gallio/bin/DLR/libs/IronRuby/lib/ruby/1.8/optparse
-SCMMainlineUUID={a5eb9c95-fdd8-40d3-b610-836f3dffaa1e}
-SCMBranchRepositoryID=28232
-date.rb;674868310;1;1384858081;|38147|253746
-shellwords.rb;1259806813;1;1384858081;|38148|253747
-time.rb;2700289381;1;1384858081;|38149|253748
-uri.rb;1263425236;1;1384858081;|38150|253749
-version.rb;3228574441;1;1384858081;|38151|253750

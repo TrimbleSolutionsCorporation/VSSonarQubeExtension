@@ -1,6 +1,0 @@
-SCMBranch=Structures
-SCMRepository=Structures/MSBuild/BuildTools/Gallio/bin/DLR/libs/IronRuby/lib/ruby/1.8/test/unit/ui
-SCMMainlineUUID={a5eb9c95-fdd8-40d3-b610-836f3dffaa1e}
-SCMBranchRepositoryID=28268
-testrunnermediator.rb;695305938;1;1384858082;|38356|253955
-testrunnerutilities.rb;1777904612;1;1384858082;|38357|253956

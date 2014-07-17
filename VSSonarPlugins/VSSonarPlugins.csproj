@@ -81,5 +81,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <Import Project="$(ReferencesFolder)\AssemblyPatcherTask.targets" />
+  <Import Project="$(MSBuildFolder)\AssemblyPatcherTask.targets" />
 </Project>

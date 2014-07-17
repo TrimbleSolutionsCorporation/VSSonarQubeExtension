@@ -100,7 +100,7 @@
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
     <Reference Include="Xceed.Wpf.Toolkit">
-      <HintPath>..\references\Xceed.Wpf.Toolkit.dll</HintPath>
+      <HintPath>$(ReferencesFolder)\Xceed.Wpf.Toolkit.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -372,5 +372,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <Import Project="$(ReferencesFolder)\AssemblyPatcherTask.targets" />
+  <Import Project="$(MSBuildFolder)\AssemblyPatcherTask.targets" />
 </Project>

@@ -1,9 +1,0 @@
-SCMBranch=Structures
-SCMRepository=Structures/MSBuild/BuildTools/Gallio/bin/DLR/libs/IronRuby/lib/ruby/1.8/bigdecimal
-SCMMainlineUUID={a5eb9c95-fdd8-40d3-b610-836f3dffaa1e}
-SCMBranchRepositoryID=28217
-jacobian.rb;4089977691;1;1384858081;|38069|253668
-ludcmp.rb;1496024460;1;1384858081;|38070|253669
-math.rb;2230319006;1;1384858081;|38071|253670
-newton.rb;1393585359;1;1384858081;|38072|253671
-util.rb;2346060249;1;1384858081;|38073|253672

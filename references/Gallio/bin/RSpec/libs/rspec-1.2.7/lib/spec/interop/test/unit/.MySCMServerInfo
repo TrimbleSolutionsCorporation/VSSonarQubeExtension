@@ -1,8 +1,0 @@
-SCMBranch=Structures
-SCMRepository=Structures/MSBuild/BuildTools/Gallio/bin/RSpec/libs/rspec-1.2.7/lib/spec/interop/test/unit
-SCMMainlineUUID={a5eb9c95-fdd8-40d3-b610-836f3dffaa1e}
-SCMBranchRepositoryID=28336
-autorunner.rb;788736330;1;1384858082;|38772|254371
-testcase.rb;3855351241;1;1384858082;|38773|254372
-testresult.rb;2445201400;1;1384858082;|38774|254373
-testsuite_adapter.rb;1632648682;1;1384858082;|38775|254374

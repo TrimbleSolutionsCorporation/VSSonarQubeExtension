@@ -1,7 +1,0 @@
-SCMBranch=Structures
-SCMRepository=Structures/MSBuild/BuildTools/Gallio/bin/DLR/libs/IronRuby/lib/ruby/1.8/rinda
-SCMMainlineUUID={a5eb9c95-fdd8-40d3-b610-836f3dffaa1e}
-SCMBranchRepositoryID=28254
-rinda.rb;2541328779;1;1384858081;|38261|253860
-ring.rb;3420781047;1;1384858081;|38262|253861
-tuplespace.rb;2431764998;1;1384858081;|38263|253862

@@ -5,8 +5,9 @@
         <!-- Basic settings -->    
         <ExtensionOutputPath     Condition="'$(ExtensionOutputPath)'==''">$(MSBuildThisFileDirectory)BuildDrop</ExtensionOutputPath>
         <ReferencesFolder        Condition="'$(ReferencesFolder)'==''">$(MSBuildThisFileDirectory)references</ReferencesFolder>
-        <GallioPath              Condition="'$(GallioPath)'==''">$(MSBuildThisFileDirectory)references\Gallio</GallioPath>
-        <OpenCoverPath           Condition="'$(OpenCoverPath)'==''">$(MSBuildThisFileDirectory)references\OpenCover</OpenCoverPath>
+        <MSBuildFolder        Condition="'$(MSBuildFolder)'==''">$(MSBuildThisFileDirectory)msbuild</MSBuildFolder>
+        <GallioPath              Condition="'$(GallioPath)'==''">$(MSBuildFolder)\Gallio</GallioPath>
+        <OpenCoverPath           Condition="'$(OpenCoverPath)'==''">$(MSBuildFolder)\OpenCover</OpenCoverPath>
         
         <!-- Version settings -->
         <MajorVersionNumber           Condition="'$(MajorVersionNumber)'==''">1</MajorVersionNumber>

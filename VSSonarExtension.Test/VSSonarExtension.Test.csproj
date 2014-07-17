@@ -52,16 +52,16 @@
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="nunit.framework">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\references\nunit.framework.dll</HintPath>
+      <HintPath>$(ReferencesFolder)\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="RestSharp">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\references\RestSharp.dll</HintPath>
+      <HintPath>$(ReferencesFolder)\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="Rhino.Mocks">
-      <HintPath>..\references\Rhino.Mocks.dll</HintPath>
+      <HintPath>$(ReferencesFolder)\Rhino.Mocks.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -72,10 +72,10 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="WindowsBase" />
     <Reference Include="Xceed.Wpf.DataGrid">
-      <HintPath>..\references\Xceed.Wpf.DataGrid.dll</HintPath>
+      <HintPath>$(ReferencesFolder)\Xceed.Wpf.DataGrid.dll</HintPath>
     </Reference>
     <Reference Include="Xceed.Wpf.Toolkit">
-      <HintPath>..\references\Xceed.Wpf.Toolkit.dll</HintPath>
+      <HintPath>$(ReferencesFolder)\Xceed.Wpf.Toolkit.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

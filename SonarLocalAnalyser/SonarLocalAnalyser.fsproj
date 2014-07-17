@@ -35,10 +35,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Executor">
-      <HintPath>..\references\Executor.dll</HintPath>
+      <HintPath>$(ReferencesFolder)\Executor.dll</HintPath>
     </Reference>
     <Reference Include="Foq">
-      <HintPath>..\references\Foq.dll</HintPath>
+      <HintPath>$(ReferencesFolder)\Foq.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
@@ -47,7 +47,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="nunit.framework">
-      <HintPath>..\references\nunit.framework.dll</HintPath>
+      <HintPath>$(ReferencesFolder)\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -96,12 +96,5 @@
     </Otherwise>
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
-  <Import Project="$(ReferencesFolder)\AssemblyPatcherTask.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  <Import Project="$(MSBuildFolder)\AssemblyPatcherTask.targets" />
 </Project>

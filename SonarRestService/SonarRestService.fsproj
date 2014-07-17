@@ -67,15 +67,15 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <HintPath>..\references\FSharp.Core.dll</HintPath>
+      <HintPath>$(ReferencesFolder)\FSharp.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="FSharp.Data">
-      <HintPath>..\references\FSharp.Data.dll</HintPath>
+      <HintPath>$(ReferencesFolder)\FSharp.Data.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="RestSharp">
-      <HintPath>..\references\RestSharp.dll</HintPath>
+      <HintPath>$(ReferencesFolder)\RestSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -91,5 +91,5 @@
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="$(ReferencesFolder)\AssemblyPatcherTask.targets" />  
+  <Import Project="$(MSBuildFolder)\AssemblyPatcherTask.targets" />  
 </Project>
