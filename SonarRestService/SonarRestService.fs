@@ -355,7 +355,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             rule.ConfigKey <- ruleInServer.ConfigKey
             rule.Description <- ruleInServer.Description
             rule.Key <- ruleInServer.Key
-            rule.Severity <- ruleInServer.Priority
+            rule.Severity <- (EnumHelper.asEnum<Severity>(ruleInServer.Priority)).Value
             rule.Repo <- ruleInServer.Plugin
             rulesToReturn.Add(rule)
 
@@ -395,7 +395,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 let newRule = new Rule()
                 newRule.Key <- eachrule.Key
                 newRule.Repo <- eachrule.Repo
-                newRule.Severity <- GetSeverity(eachrule.Severity)
+                newRule.Severity <- (EnumHelper.asEnum<Severity>(eachrule.Severity)).Value
                 profileRules.Add(newRule)
 
             newProfile.Rules <- profileRules
@@ -517,7 +517,369 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
         status
 
+    let CreateRuleInProfile2(parsedDataRule:JsonRule.DomainTypes.Rule, profile : Profile)=
+        let newRule = new Rule()
+        newRule.Key <-  try parsedDataRule.InternalKey with | ex -> ""
+        newRule.ConfigKey <-  try parsedDataRule.InternalKey with | ex -> ""
+        newRule.Repo <- parsedDataRule.Repo
+        newRule.Name <- parsedDataRule.Name
+        newRule.CreatedAt <- parsedDataRule.CreatedAt
+        newRule.Severity <- try (EnumHelper.asEnum<Severity>(parsedDataRule.Severity)).Value with | ex -> Severity.UNDEFINED
+        newRule.Status <- try (EnumHelper.asEnum<Status>(parsedDataRule.Status)).Value with | ex -> Status.UNDEFINED
+        newRule.InternalKey <- try parsedDataRule.InternalKey with | ex -> ""
+        newRule.IsTemplate <- try parsedDataRule.IsTemplate with | ex -> false
+        for tag in parsedDataRule.Tags do
+            newRule.Tags.Add(tag)
+        for tag in parsedDataRule.SysTags do
+            newRule.SysTags.Add(tag)
+        newRule.Lang <- parsedDataRule.Lang
+        newRule.LangName <- parsedDataRule.LangName
+        newRule.Description <- parsedDataRule.HtmlDesc
+        newRule.DefaultDebtChar <- try (EnumHelper.asEnum<Category>(parsedDataRule.DefaultDebtChar)).Value with | ex -> Category.UNDEFINED
+        newRule.DefaultDebtSubChar <- try (EnumHelper.asEnum<SubCategory>(parsedDataRule.DefaultDebtSubChar)).Value with | ex -> SubCategory.UNDEFINED
+        newRule.Category <- try (EnumHelper.asEnum<Category>(parsedDataRule.DebtChar)).Value with | ex -> Category.UNDEFINED
+        newRule.Subcategory <- try (EnumHelper.asEnum<SubCategory>(parsedDataRule.DebtSubChar)).Value with | ex -> SubCategory.UNDEFINED
+
+        newRule.SubcategoryName <- try parsedDataRule.DebtCharName with | ex -> ""
+        newRule.CategoryName <- try parsedDataRule.DebtSubCharName with | ex -> ""                 
+
+        newRule.DefaultDebtRemFnType <- try (EnumHelper.asEnum<RemediationFunction>(parsedDataRule.DefaultDebtRemFnType)).Value with | ex -> RemediationFunction.UNDEFINED
+        newRule.DefaultDebtRemFnCoeff <- try parsedDataRule.DefaultDebtRemFnCoeff with | ex -> ""
+        newRule.DebtOverloaded <- try parsedDataRule.DebtOverloaded with | ex -> false
+        newRule.RemediationFunction <- try (EnumHelper.asEnum<RemediationFunction>(parsedDataRule.DebtRemFnType)).Value with | ex -> RemediationFunction.UNDEFINED
+        newRule.DebtRemFnCoeff <- try parsedDataRule.DebtRemFnCoeff with | ex -> ""
+        try
+            let value = Regex.Replace(newRule.DebtRemFnCoeff, "[^0-9.]", "")
+            let unit = newRule.DebtRemFnCoeff.Replace(value, "").Replace("min", "MN").Replace("hour", "H").Replace("day", "D")
+            newRule.RemediationFactorVal <- Int32.Parse(value)
+            newRule.RemediationFactorTxt <- try (EnumHelper.asEnum<RemediationUnit>(unit)).Value with | ex -> RemediationUnit.UNDEFINED
+        with
+        | ex ->
+            newRule.RemediationFactorVal <- 0
+            newRule.RemediationFactorTxt <- RemediationUnit.UNDEFINED
+
+        try
+            for param in parsedDataRule.Params do
+                let ruleparam  = new RuleParam()
+                ruleparam.Key <- param.Key
+                newRule.Params.Add(ruleparam)
+        with
+        | ex -> ()
+
+        profile.Rules.Add(newRule)  
+
+    let CreateRuleInProfile(parsedDataRule:JsonRuleSearchResponse.DomainTypes.Rule, profile : Profile, enabledStatus:bool) =
+
+        let IfExists(propertyToSet:string) =
+            match parsedDataRule.JsonValue.TryGetProperty(propertyToSet) with
+            | NotNull ->
+                true
+            | _ -> 
+                false
+
+
+        let newRule = new Rule()
+        if IfExists("key") then
+            newRule.Enabled <- enabledStatus
+            newRule.Key <-  try parsedDataRule.Key with | ex -> ""
+            newRule.ConfigKey <-  try parsedDataRule.Key with | ex -> ""
+
+        if IfExists("repo") then newRule.Repo <- parsedDataRule.Repo
+        if IfExists("name") then newRule.Name <- parsedDataRule.Name
+        if IfExists("createdAt") then newRule.CreatedAt <- parsedDataRule.CreatedAt
+        if IfExists("severity") then newRule.Severity <- try (EnumHelper.asEnum<Severity>(parsedDataRule.Severity)).Value with | ex -> Severity.UNDEFINED
+        if IfExists("status") then newRule.Status <- try (EnumHelper.asEnum<Status>(parsedDataRule.Status)).Value with | ex -> Status.UNDEFINED
+        if IfExists("internalKey") then newRule.InternalKey <- parsedDataRule.InternalKey
+
+        if IfExists("isTemplate") then newRule.IsTemplate <- try parsedDataRule.IsTemplate with | ex -> false
+
+        if IfExists("tags") then
+            for tag in parsedDataRule.Tags do
+                newRule.Tags.Add(tag)
+        if IfExists("sysTags") then
+            for tag in parsedDataRule.SysTags do
+                newRule.SysTags.Add(tag)
+
+        if IfExists("lang") then newRule.Lang <- parsedDataRule.Lang
+        if IfExists("langName") then newRule.LangName <- parsedDataRule.LangName
+        if IfExists("htmlDesc") then newRule.Description <- parsedDataRule.HtmlDesc
+        if IfExists("defaultDebtChar") then newRule.DefaultDebtChar <- try (EnumHelper.asEnum<Category>(parsedDataRule.DefaultDebtChar)).Value with | ex -> Category.UNDEFINED
+        if IfExists("defaultDebtSubChar") then newRule.DefaultDebtSubChar <- try (EnumHelper.asEnum<SubCategory>(parsedDataRule.DefaultDebtSubChar)).Value with | ex -> SubCategory.UNDEFINED
+        if IfExists("debtChar") then newRule.Category <- try (EnumHelper.asEnum<Category>(parsedDataRule.DebtChar)).Value with | ex -> Category.UNDEFINED
+        if IfExists("debtSubChar") then newRule.Subcategory <- try (EnumHelper.asEnum<SubCategory>(parsedDataRule.DebtSubChar)).Value with | ex -> SubCategory.UNDEFINED
+
+        if IfExists("debtCharName") then newRule.SubcategoryName <- try parsedDataRule.DebtCharName with | ex -> ""
+        if IfExists("debtSubCharName") then newRule.CategoryName <- try parsedDataRule.DebtSubCharName with | ex -> ""                 
+
+        if IfExists("defaultDebtRemFnType") then  newRule.DefaultDebtRemFnType <- try (EnumHelper.asEnum<RemediationFunction>(parsedDataRule.DefaultDebtRemFnType)).Value with | ex -> RemediationFunction.UNDEFINED
+        if IfExists("defaultDebtRemFnCoeff") then newRule.DefaultDebtRemFnCoeff <- try parsedDataRule.DefaultDebtRemFnCoeff with | ex -> ""
+        if IfExists("debtOverloaded") then newRule.DebtOverloaded <- try parsedDataRule.DebtOverloaded with | ex -> false
+
+
+
+        if IfExists("debtRemFnType") then 
+            newRule.RemediationFunction <- try (EnumHelper.asEnum<RemediationFunction>(parsedDataRule.DebtRemFnType)).Value with | ex -> RemediationFunction.UNDEFINED
+
+        if IfExists("debtRemFnCoeff") then
+            newRule.DebtRemFnCoeff <- parsedDataRule.DebtRemFnCoeff
+            let value = Regex.Replace(newRule.DebtRemFnCoeff, "[^0-9.]", "")
+            let unit = newRule.DebtRemFnCoeff.Replace(value, "").Replace("min", "MN").Replace("hour", "H").Replace("day", "D")
+            newRule.RemediationFactorVal <- Int32.Parse(value)
+            newRule.RemediationFactorTxt <- try (EnumHelper.asEnum<RemediationUnit>(unit)).Value with | ex -> RemediationUnit.UNDEFINED
+        else
+            newRule.DebtRemFnCoeff <- ""
+            newRule.RemediationFactorVal <- 0
+            newRule.RemediationFactorTxt <- RemediationUnit.UNDEFINED
+
+        if IfExists("params") then
+            try
+                for param in parsedDataRule.Params do
+                    let ruleparam  = new RuleParam()
+                    ruleparam.Key <- param.Key
+                    newRule.Params.Add(ruleparam)
+            with
+            | ex -> ()
+
+        profile.Rules.Add(newRule)  
+
+    let GetRulesFromSearchQuery(rules : JsonRuleSearchResponse.DomainTypes.Rule [], profile : Profile, enabledStatus:bool) =
+        if profile.Rules = null then
+            profile.Rules <- new System.Collections.Generic.List<Rule>() 
+
+        for parsedDataRule in rules do
+            CreateRuleInProfile(parsedDataRule, profile, enabledStatus)
+
+
     interface ISonarRestService with
+        member this.CreateRule(conf:ConnectionConfiguration, rule:Rule, ruleTemplate:Rule) =
+            let errorMessages = new System.Collections.Generic.List<string>()
+            let url ="/api/rules/create"
+
+            let optionalProps = Map.empty.Add("custom_key", rule.Key.Replace( rule.Repo + ":", ""))
+                                         .Add("html_description", rule.Description)
+                                         .Add("name", rule.Name)
+                                         .Add("severity", rule.Severity.ToString())
+                                         .Add("template_key", ruleTemplate.Key)
+
+            let errorMessages = new System.Collections.Generic.List<string>()
+            let response = httpconnector.HttpSonarPostRequest(conf, url, optionalProps)
+            if response.StatusCode <> Net.HttpStatusCode.OK then
+                let errors = JsonErrorMessage.Parse(response.Content)
+                for error in errors.Errors do
+                    errorMessages.Add(error.Msg)
+            
+            errorMessages
+
+        member this.GetTemplateRules(conf:ConnectionConfiguration, profile:Profile) =
+            let rules = new System.Collections.Generic.List<Rule>()
+            let url ="/api/rules/search?is_template=true&qprofile=" + HttpUtility.UrlEncode(profile.Key) + "&languages=" + HttpUtility.UrlEncode(profile.Language)
+            let reply = httpconnector.HttpSonarGetRequest(conf, url)                        
+            let rules = JsonRuleSearchResponse.Parse(reply)
+
+            GetRulesFromSearchQuery(rules.Rules, profile, true)
+
+                        
+        member this.ActivateRule(conf:ConnectionConfiguration, rule:Rule, profilekey:string) =
+            let errorMessages = new System.Collections.Generic.List<string>()
+            let url ="/api/qualityprofiles/activate_rule"
+
+            let optionalProps = Map.empty.Add("profile_key", HttpUtility.UrlEncode(profilekey))
+                                         .Add("rule_key", rule.Key)
+                                         .Add("severity", rule.Severity.ToString())
+
+            let errorMessages = new System.Collections.Generic.List<string>()
+            let response = httpconnector.HttpSonarPostRequest(conf, url, optionalProps)
+            if response.StatusCode <> Net.HttpStatusCode.OK then
+                let errors = JsonErrorMessage.Parse(response.Content)
+                for error in errors.Errors do
+                    errorMessages.Add(error.Msg)
+            
+            errorMessages
+
+        member this.DeleteRule(conf:ConnectionConfiguration, rule:Rule) =
+            let errorMessages = new System.Collections.Generic.List<string>()
+            let url ="/api/rules/delete"
+
+            let optionalProps = Map.empty.Add("key", rule.Key)
+
+            let errorMessages = new System.Collections.Generic.List<string>()
+            let response = httpconnector.HttpSonarPostRequest(conf, url, optionalProps)
+            if response.StatusCode <> Net.HttpStatusCode.OK then
+                let errors = JsonErrorMessage.Parse(response.Content)
+                for error in errors.Errors do
+                    errorMessages.Add(error.Msg)
+            
+            errorMessages
+
+        member this.DisableRule(conf:ConnectionConfiguration, rule:Rule, profilekey:string) =
+            let errorMessages = new System.Collections.Generic.List<string>()
+            let url ="/api/qualityprofiles/deactivate_rule"
+
+            let optionalProps = Map.empty.Add("profile_key", HttpUtility.UrlEncode(profilekey))
+                                         .Add("rule_key", rule.Key)
+
+            let errorMessages = new System.Collections.Generic.List<string>()
+            let response = httpconnector.HttpSonarPostRequest(conf, url, optionalProps)
+            if response.StatusCode <> Net.HttpStatusCode.OK then
+                let errors = JsonErrorMessage.Parse(response.Content)
+                for error in errors.Errors do
+                    errorMessages.Add(error.Msg)
+            
+            errorMessages
+            
+        member this.UpdateTags(conf:ConnectionConfiguration, rule:Rule, tags:System.Collections.Generic.List<string>) =
+            let errorMessages = new System.Collections.Generic.List<string>()
+                    
+            let dic = new System.Collections.Generic.Dictionary<string, string>()
+            let mutable newtags = ""
+            for tag in tags do
+                newtags <- newtags + tag + ","
+
+            newtags <- newtags.Trim(',')
+            dic.Add("tags", newtags)
+
+            (this :> ISonarRestService).UpdateRule(conf, HttpUtility.UrlEncode(rule.Key), dic)
+
+        member this.GetAllTags(conf:ConnectionConfiguration) =
+            let tags = System.Collections.Generic.List<string>()
+            let url ="/api/rules/tags"
+            let response = httpconnector.HttpSonarGetRequest(conf, url)
+            let tagsP = JsonTags.Parse(response)
+
+            for tag in tagsP.Tags do
+                tags.Add(tag)
+
+            tags
+
+        member this.UpdateRule(conf:ConnectionConfiguration, key:string, optionalProps:System.Collections.Generic.Dictionary<string, string>) = 
+            let url ="/api/rules/update?key=" + key
+            let errorMessages = new System.Collections.Generic.List<string>()
+            let response = httpconnector.HttpSonarPostRequestDic(conf, url, optionalProps)
+            if response.StatusCode <> Net.HttpStatusCode.OK then
+                let errors = JsonErrorMessage.Parse(response.Content)
+                for error in errors.Errors do
+                    errorMessages.Add(error.Msg)
+            
+            errorMessages
+
+
+        member this.GetRulesForProfile(conf:ConnectionConfiguration , profile:Profile) = 
+            if profile <> null then
+                profile.Rules <- new System.Collections.Generic.List<Rule>() 
+                let url = "/api/profiles/index?language=" + HttpUtility.UrlEncode(profile.Language) + "&name=" + HttpUtility.UrlEncode(profile.Name)
+                let reply = httpconnector.HttpSonarGetRequest(conf, url)
+                let data = JsonProfileAfter44.Parse(reply)
+                let rules = data.[0].Rules
+                for rule in rules do
+                    let newRule = new Rule()
+                    newRule.Key <- rule.Key
+                    newRule.Repo <- rule.Repo
+                    newRule.Severity <- (EnumHelper.asEnum<Severity>(rule.Severity)).Value
+
+                    profile.Rules.Add(newRule)
+
+
+        member this.GetRulesForProfileUsingRulesApp(conf:ConnectionConfiguration , profile:Profile, active:bool) = 
+            if profile <> null then
+                let getActivation() =
+                    if active then
+                        "&activation=true" 
+                    else
+                        "&activation=false" 
+
+                let url = "/api/rules/search?ps=200&qprofile=" + HttpUtility.UrlEncode(profile.Key) + getActivation() + "&languages=" + HttpUtility.UrlEncode(profile.Language)
+                let reply = httpconnector.HttpSonarGetRequest(conf, url)                        
+                let rules = JsonRuleSearchResponse.Parse(reply)
+                let numberOfPages = rules.Total / rules.Ps + 1
+
+                GetRulesFromSearchQuery(rules.Rules, profile, active)
+                
+
+                for i = 2 to numberOfPages do
+                    let url = "/api/rules/search?ps=200&qprofile=" + HttpUtility.UrlEncode(profile.Key) + getActivation() + "&p=" + Convert.ToString(i)
+                    let reply = httpconnector.HttpSonarGetRequest(conf, url)
+                    let rules = JsonRuleSearchResponse.Parse(reply)
+                    GetRulesFromSearchQuery(rules.Rules, profile, active)
+                 
+                ()
+
+
+
+        member this.GetRulesForProfile(conf:ConnectionConfiguration , profile:Profile, ruleDetails:bool, active:bool) = 
+            if profile <> null then
+
+                let profileFast = (this :> ISonarRestService).GetEnabledRulesInProfile(conf, profile.Language, profile.Name)
+
+                profile.Rules <- new System.Collections.Generic.List<Rule>() 
+
+                let url = "/api/profiles/index?language=" + HttpUtility.UrlEncode(profile.Language) + "&name=" + HttpUtility.UrlEncode(profile.Name)
+                let reply = httpconnector.HttpSonarGetRequest(conf, url)
+                let data = JsonProfileAfter44.Parse(reply)
+                let rules = data.[0].Rules
+                for rule in profileFast.[0].Rules do
+
+                    let url = "/api/rules/show?key=" + HttpUtility.UrlEncode(rule.Key)
+
+                    try
+                        let content = httpconnector.HttpSonarGetRequest(conf, url)
+                        let parsedData = JsonRule.Parse(content)
+                        let parsedDataRule = parsedData.Rule
+
+
+                        let CheckActiveState() =
+                            let mutable ispresent = false
+                            for active in parsedData.Actives do
+                                if active.QProfile.Equals(profile.Name + ":" + profile.Language) then
+                                    ispresent <- true
+
+                            ispresent
+
+                        CreateRuleInProfile2(parsedDataRule, profile)
+
+                    with
+                    | ex -> ()
+
+        member this.GetProfilesUsingRulesApp(conf : ConnectionConfiguration) = 
+            let profiles = new System.Collections.Generic.List<Profile>()
+            let reply = httpconnector.HttpSonarGetRequest(conf, "/api/rules/app")
+            let data = JsonInternalData.Parse(reply)
+            for profile in data.Qualityprofiles do
+                let newprofile = new Profile()
+                newprofile.Key <- profile.Key
+                newprofile.Language <- profile.Lang
+                newprofile.Name <- profile.Name
+                profiles.Add(newprofile)
+
+            profiles            
+
+        member this.GetAvailableProfiles(conf : ConnectionConfiguration) = 
+            let profiles = new System.Collections.Generic.List<Profile>()
+            let reply = httpconnector.HttpSonarGetRequest(conf, "/api/profiles/list")
+            let data = JsonQualityProfiles.Parse(reply)
+            for profile in data do
+                let newprofile = new Profile()
+                newprofile.Language <- profile.Language
+                newprofile.Name <- profile.Name
+                newprofile.Default <- profile.Default
+                profiles.Add(newprofile)
+
+            profiles
+
+        member this.GetProjects(newConf:ConnectionConfiguration) = 
+            let projects = new System.Collections.Generic.List<SonarProject>()
+            let reply = httpconnector.HttpSonarGetRequest(newConf, "/api/projects/index")
+            let serverProjects = JsonProjectIndex.Parse(reply)
+            for project in serverProjects do
+                let projectToAdd = new SonarProject()
+                projectToAdd.Name <- project.Nm
+                projectToAdd.Qualifier <- project.Qu
+                projectToAdd.Scope <- project.Sc
+                projectToAdd.Key <- project.K
+                projectToAdd.Id <- project.Id
+                projects.Add(projectToAdd)
+
+            projects
+
         member this.GetIssues(newConf : ConnectionConfiguration, query : string, project : string) = 
             let url =  "/api/issues/search" + query + "&pageSize=200"
             let oldurlreview = "/api/reviews?projects="+ project
@@ -594,6 +956,10 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             let url = "/api/profiles/list?project=" + resource
             GetQualityProfilesFromContent(httpconnector.HttpSonarGetRequest(conf, url))
                         
+        member this.GetQualityProfilesForProject(conf : ConnectionConfiguration, resource : string, language : string) = 
+            let url = "/api/profiles/list?project=" + resource + "&language=" + HttpUtility.UrlEncode(language)
+            GetQualityProfilesFromContent(httpconnector.HttpSonarGetRequest(conf, url))
+
         member this.GetProjectsList(conf : ConnectionConfiguration) =                   
             let url = "/api/resources"
             getResourcesFromResponseContent(httpconnector.HttpSonarGetRequest(conf, url))

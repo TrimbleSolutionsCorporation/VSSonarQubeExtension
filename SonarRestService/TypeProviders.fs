@@ -16,7 +16,321 @@ namespace SonarRestService
 
 open FSharp.Data
 
-type JsonQualityProfiles = JsonProvider<""" [{"name":"Default Tekla C#","language":"cs","default":true},{"name":"Sonar way","language":"java","default":true},{"name":"Sonar way","language":"js","default":true},{"name":"Sonar way","language":"py","default":true},{"name":"Sonar way","language":"xml","default":true},{"name":"DefaultTeklaC++","language":"c++","default":true},{"name":"TeklaCopXaml","language":"xaml","default":true}]""">
+type JsonTags = JsonProvider<""" {
+  "tags": [
+    "naming",
+    "unused-code",
+    "pitfall",
+    "convention",
+    "security",
+    "size",
+    "error-handling",
+    "multithreading",
+    "bug",
+    "unused",
+    "java8",
+    "brain-overload",
+    "comment",
+    "formatting"
+  ]
+} """>
+type JsonErrorMessage = JsonProvider<""" {"errors":[{"msg":"Linear functions must only have a non empty coefficient"}]} """>
+
+type JsonRuleSearchResponse = JsonProvider<""" {
+  "total": 641,
+  "p": 1,
+  "ps": 10,
+  "rules": [
+    {
+      "key": "cppcheck:unreadVariable",
+      "repo": "cppcheck",
+      "name": "Unused value",
+      "createdAt": "2013-08-19T23:16:28+0300",
+      "severity": "MAJOR",
+      "status": "READY",
+      "internalKey": "unreadVariable",
+      "isTemplate": false,
+      "tags": [
+        "pitfall",
+        "unused"
+      ],
+      "sysTags": [
+        "pitfall",
+        "unused"
+      ],
+      "lang": "c++",
+      "langName": "c++",
+      "htmlDesc": "Variable is assigned a value that is never used.",
+      "defaultDebtChar": "RELIABILITY",
+      "defaultDebtSubChar": "INSTRUCTION_RELIABILITY",
+      "debtChar": "RELIABILITY",
+      "debtSubChar": "INSTRUCTION_RELIABILITY",
+      "debtCharName": "Reliability",
+      "debtSubCharName": "Instruction",
+      "defaultDebtRemFnType": "LINEAR",
+      "defaultDebtRemFnCoeff": "5min",
+      "debtOverloaded": false,
+      "debtRemFnType": "LINEAR",
+      "debtRemFnCoeff": "5min",
+      "params": []
+    },
+    {
+      "key": "cppcheck:arrayIndexOutOfBounds",
+      "repo": "cppcheck",
+      "name": "Array index out of bounds",
+      "createdAt": "2013-08-19T23:16:28+0300",
+      "severity": "MAJOR",
+      "status": "READY",
+      "internalKey": "arrayIndexOutOfBounds",
+      "isTemplate": false,
+      "tags": [],
+      "sysTags": [],
+      "lang": "c++",
+      "langName": "c++",
+      "htmlDesc": "Array index out of bounds.",
+      "defaultDebtChar": "RELIABILITY",
+      "defaultDebtSubChar": "INSTRUCTION_RELIABILITY",
+      "debtChar": "RELIABILITY",
+      "debtSubChar": "INSTRUCTION_RELIABILITY",
+      "debtCharName": "Reliability",
+      "debtSubCharName": "Instruction",
+      "defaultDebtRemFnType": "LINEAR",
+      "defaultDebtRemFnCoeff": "30min",
+      "debtOverloaded": false,
+      "debtRemFnType": "LINEAR",
+      "debtRemFnCoeff": "30min",
+      "params": [
+        {
+          "key": "CheckId",
+          "type": "STRING",
+          "defaultValue": "TE0027"
+        }
+      ]
+      }
+    ]
+} """>
+
+type JsonInternalData = JsonProvider<""" {
+  "canWrite": true,
+  "qualityprofiles": [
+    {
+      "key": "cs-default-tekla-c-84184",
+      "name": "Default Tekla C#",
+      "lang": "cs"
+    },
+    {
+      "key": "c++-defaultc++reinforcement-41625",
+      "name": "DefaultC++Reinforcement",
+      "lang": "c++"
+    }
+  ],
+  "languages": {
+    "py": "Python",
+    "c++": "c++",
+    "xaml": "xaml",
+    "cs": "C#"
+  },
+  "repositories": [
+    {
+      "key": "checkstyle",
+      "name": "Checkstyle",
+      "language": "java"
+    },
+    {
+      "key": "common-c++",
+      "name": "Common SonarQube",
+      "language": "c++"
+    }
+  ],
+  "statuses": {
+    "BETA": "Beta",
+    "DEPRECATED": "Deprecated",
+    "READY": "Ready"
+  },
+  "characteristics": {
+    "INTEGRATION_TESTABILITY": "Testability: Integration level",
+    "UNIT_TESTABILITY": "Testability: Unit level",
+    "REUSABILITY": "Reusability",
+    "COMPILER_RELATED_PORTABILITY": "Portability: Compiler",
+    "PORTABILITY": "Portability",
+    "TRANSPORTABILITY": "Reusability: Transportability",
+    "MODULARITY": "Reusability: Modularity",
+    "SECURITY": "Security",
+    "API_ABUSE": "Security: API abuse",
+    "ERRORS": "Security: Errors",
+    "INPUT_VALIDATION_AND_REPRESENTATION": "Security: Input validation and representation",
+    "SECURITY_FEATURES": "Security: Security features",
+    "EFFICIENCY": "Efficiency",
+    "MEMORY_EFFICIENCY": "Efficiency: Memory use",
+    "NETWORK_USE": "Efficiency: Network use",
+    "HARDWARE_RELATED_PORTABILITY": "Portability: Hardware",
+    "LANGUAGE_RELATED_PORTABILITY": "Portability: Language",
+    "OS_RELATED_PORTABILITY": "Portability: OS",
+    "SOFTWARE_RELATED_PORTABILITY": "Portability: Software",
+    "TIME_ZONE_RELATED_PORTABILITY": "Portability: Time zone",
+    "MAINTAINABILITY": "Maintainability",
+    "READABILITY": "Maintainability: Readability",
+    "UNDERSTANDABILITY": "Maintainability: Understandability",
+    "FAULT_TOLERANCE": "Reliability: Fault tolerance",
+    "EXCEPTION_HANDLING": "Reliability: Exception handling",
+    "LOGIC_RELIABILITY": "Reliability: Logic",
+    "INSTRUCTION_RELIABILITY": "Reliability: Instruction",
+    "SYNCHRONIZATION_RELIABILITY": "Reliability: Synchronization",
+    "RESOURCE_RELIABILITY": "Reliability: Resource",
+    "TESTABILITY": "Testability",
+    "UNIT_TESTS": "Reliability: Unit tests coverage",
+    "CHANGEABILITY": "Changeability",
+    "CPU_EFFICIENCY": "Efficiency: Processor use",
+    "DATA_CHANGEABILITY": "Changeability: Data",
+    "ARCHITECTURE_CHANGEABILITY": "Changeability: Architecture",
+    "RELIABILITY": "Reliability",
+    "LOGIC_CHANGEABILITY": "Changeability: Logic",
+    "DATA_RELIABILITY": "Reliability: Data",
+    "ARCHITECTURE_RELIABILITY": "Reliability: Architecture"
+  }
+}""" >
+
+type JsonRule = JsonProvider<""" {"rule": {
+    "key":"cppcheck:unreadVariable",
+    "repo":"cppcheck",
+    "name":"Unused value",
+    "createdAt":"2013-08-19T23:16:28+0300",
+    "severity":"MAJOR",
+    "status":"READY",
+    "internalKey":"unreadVariable",
+    "isTemplate":false,
+    "tags":[
+      "pitfall",
+      "unused"
+    ],
+    "sysTags":[
+      "pitfall",
+      "unused"
+    ],
+    "lang":"c++",
+    "langName":"c++",
+    "htmlDesc":"Variable is assigned a value that is never used.",
+    "defaultDebtChar":"RELIABILITY",
+    "defaultDebtSubChar":"INSTRUCTION_RELIABILITY",
+    "debtChar":"RELIABILITY",
+    "debtSubChar":"INSTRUCTION_RELIABILITY",
+    "debtCharName":"Reliability",
+    "debtSubCharName":"Instruction",
+    "defaultDebtRemFnType":"LINEAR",
+    "defaultDebtRemFnCoeff":"5min",
+    "debtOverloaded":false,
+    "debtRemFnType":"LINEAR",
+    "debtRemFnCoeff":"5min",
+    "params": [
+        {
+            "key": "max",
+            "desc": "Maximum complexity allowed.",
+            "defaultValue": "200"
+        }
+    ] 
+}, "actives": [
+    {
+        "qProfile": "Sonar way with Findbugs:java",
+        "inherit": "NONE",
+        "severity": "MAJOR",
+        "params": [
+            {
+                "key": "max",
+                "value": "200"
+            }
+        ]
+    },
+    {
+        "qProfile": "Sonar way:java",
+        "inherit": "NONE",
+        "severity": "MAJOR",
+        "params": [
+            {
+                "key": "max",
+                "value": "200"
+            }
+        ]
+    }
+]} """>
+
+type JsonProjectIndex = JsonProvider<""" [
+  {
+    "id": "5035",
+    "k": "org.jenkins-ci.plugins:sonar",
+    "nm": "Jenkins Sonar Plugin",
+    "sc": "PRJ",
+    "qu": "TRK"
+  },
+  {
+    "id": "5146",
+    "k": "org.codehaus.sonar-plugins:sonar-ant-task",
+    "nm": "Sonar Ant Task",
+    "sc": "PRJ",
+    "qu": "TRK"
+  },
+  {
+    "id": "15964",
+    "k": "org.codehaus.sonar-plugins:sonar-build-breaker-plugin",
+    "nm": "Sonar Build Breaker Plugin",
+    "sc": "PRJ",
+    "qu": "TRK"
+  }
+] """>
+
+type JsonQualityProfiles = JsonProvider<""" [
+  {
+    "name": "Sonar way with Findbugs",
+    "language": "java",
+    "default": false
+  },
+  {
+    "name": "Sonar way",
+    "language": "java",
+    "default": false
+  }
+] """>
+
+type JsonProfileAfter44 = JsonProvider<""" [
+  {
+    "name": "Sonar way",
+    "language": "java",
+    "default": true,
+    "rules": [
+      {
+        "key": "DuplicatedBlocks",
+        "repo": "common-java",
+        "severity": "MAJOR"
+      },
+      {
+        "key": "InsufficientBranchCoverage",
+        "repo": "common-java",
+        "severity": "MAJOR",
+        "params": [
+          {
+            "key": "minimumBranchCoverageRatio",
+            "value": "65.0"
+          }
+        ]
+      },
+      {
+        "key": "S00105",
+        "repo": "squid",
+        "severity": "MINOR"
+      },
+      {
+        "key": "MethodCyclomaticComplexity",
+        "repo": "squid",
+        "severity": "MAJOR",
+        "params": [
+          {
+            "key": "max",
+            "value": "10"
+          }
+        ]
+      }
+    ]
+  }
+] """>
 
 type JsonResourceWithMetrics = JsonProvider<""" [{"id":1,"key":"GroupId:ProjectId","name":"Common","scope":"PRJ","qualifier":"TRK","date":"2013-07-03T12:50:52+0300","lname":"Common","lang":"c++","version":"work","description":"","msr":[{"key":"ncloc","val":45499.0,"frmt_val":"45,499"},{"key":"coverage","val":54.7,"frmt_val":"54.7%"},{"key":"profile","val":7.0,"frmt_val":"7.0","data":"DefaultTeklaC++"}]}] """>
 

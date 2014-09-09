@@ -26,6 +26,7 @@ type ISonarRestService =
   abstract member GetIssuesForProjectsCreatedAfterDate : ConnectionConfiguration * string * DateTime -> System.Collections.Generic.List<Issue>
   abstract member GetIssuesInResource : ConnectionConfiguration * string  -> System.Collections.Generic.List<Issue>
   abstract member GetIssues : ConnectionConfiguration * string * string -> System.Collections.Generic.List<Issue>
+  abstract member GetProjects  : ConnectionConfiguration -> System.Collections.Generic.List<SonarProject>
   
   abstract member CommentOnIssues : ConnectionConfiguration * System.Collections.Generic.List<Issue> * comment : string -> System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>
   abstract member ReOpenIssues : ConnectionConfiguration * System.Collections.Generic.List<Issue> * comment : string -> System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>
@@ -47,8 +48,26 @@ type ISonarRestService =
 
   abstract member GetEnabledRulesInProfile : ConnectionConfiguration * string * string -> System.Collections.Generic.List<Profile>
   abstract member GetQualityProfile : ConnectionConfiguration * string -> System.Collections.Generic.List<Resource>
+  abstract member GetRulesForProfile : conf:ConnectionConfiguration * profile:Profile * ruleDetails:bool * active:bool -> unit
+  abstract member GetRulesForProfile : conf:ConnectionConfiguration * profile:Profile -> unit
   abstract member GetQualityProfilesForProject : ConnectionConfiguration * string -> System.Collections.Generic.List<Profile>
+  abstract member GetQualityProfilesForProject : ConnectionConfiguration * projectKey:string * language:string -> System.Collections.Generic.List<Profile>
+  abstract member GetAvailableProfiles : ConnectionConfiguration -> System.Collections.Generic.List<Profile>
   abstract member GetRules : ConnectionConfiguration * string -> System.Collections.Generic.List<Rule>
+  abstract member GetTemplateRules : ConnectionConfiguration * profile:Profile -> unit
+  abstract member UpdateRule : conf:ConnectionConfiguration * key:string * optionalProps:System.Collections.Generic.Dictionary<string, string> -> System.Collections.Generic.List<string>
+  abstract member GetAllTags : ConnectionConfiguration -> System.Collections.Generic.List<string>
+  abstract member UpdateTags : ConnectionConfiguration * rule:Rule * tags:System.Collections.Generic.List<string> -> System.Collections.Generic.List<string>
+
+  abstract member ActivateRule : ConnectionConfiguration * rule:Rule * profilekey:string -> System.Collections.Generic.List<string>
+  abstract member DeleteRule : ConnectionConfiguration * rule:Rule  -> System.Collections.Generic.List<string>
+  abstract member DisableRule : ConnectionConfiguration * rule:Rule * profilekey:string -> System.Collections.Generic.List<string>
+  abstract member CreateRule : ConnectionConfiguration * rule:Rule * templateRule:Rule -> System.Collections.Generic.List<string>
+
+  // might be remove in the future
+  abstract member GetProfilesUsingRulesApp : ConnectionConfiguration -> System.Collections.Generic.List<Profile>
+  abstract member GetRulesForProfileUsingRulesApp : conf:ConnectionConfiguration * profile:Profile * active:bool -> unit
+  
 
   abstract member ParseReportOfIssues : string -> System.Collections.Generic.List<Issue>
   abstract member ParseReportOfIssuesOld : string -> System.Collections.Generic.List<Issue>

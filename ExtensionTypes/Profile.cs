@@ -13,14 +13,24 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace ExtensionTypes
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
+
+    using PropertyChanged;
 
     /// <summary>
     /// The profile.
     /// </summary>
+    [Serializable]
+    [ImplementPropertyChanged]
     public class Profile
     {
+        public Profile()
+        {
+            this.Rules = new List<Rule>();
+        }
+
         /// <summary>
         /// Gets or sets a value indicating whether default.
         /// </summary>
@@ -36,6 +46,8 @@ namespace ExtensionTypes
         /// </summary>
         public string Name { get; set; }
 
+        public string Key { get; set; }
+
         /// <summary>
         /// Gets or sets the alerts.
         /// </summary>
@@ -45,6 +57,11 @@ namespace ExtensionTypes
         /// Gets or sets the rules.
         /// </summary>
         public List<Rule> Rules { get; set; }
+
+        /// <summary>
+        /// Gets or sets the projects.
+        /// </summary>
+        public List<SonarProject> Projects { get; set; }
 
         /// <summary>
         /// The is rule enabled with repo.
@@ -66,6 +83,48 @@ namespace ExtensionTypes
             }
 
             return profile.Rules.FirstOrDefault(rule => (rule.Repo + "." + rule.Key).Equals(idWithRepository));
+        }
+
+        /// <summary>
+        /// The is rule present.
+        /// </summary>
+        /// <param name="key">
+        /// The key.
+        /// </param>
+        /// <returns>
+        /// The <see cref="bool"/>.
+        /// </returns>
+        public bool IsRulePresent(string key)
+        {
+            return this.Rules.Any(rule => rule.Key.Equals(key));
+        }
+
+        /// <summary>
+        /// The get rule.
+        /// </summary>
+        /// <param name="key">
+        /// The key.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Rule"/>.
+        /// </returns>
+        public Rule GetRule(string key)
+        {
+            return this.Rules.FirstOrDefault(rule => rule.Key.Equals(key));
+        }
+
+        /// <summary>
+        /// The create rule.
+        /// </summary>
+        /// <param name="rule">
+        /// The rule.
+        /// </param>
+        public void CreateRule(Rule rule)
+        {
+            if (!this.IsRulePresent(rule.Key))
+            {
+                this.Rules.Add(rule);
+            }
         }
     }
 }

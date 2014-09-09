@@ -53,10 +53,12 @@
   </Choose>
   <Import Project="$(FSharpTargetsPath)" Condition="Exists('$(FSharpTargetsPath)')" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Import Project="$(MSBuildFolder)\AssemblyPatcherTask.targets" />
   <ItemGroup>
     <Compile Include="IHttpSonarConnector.fs" />
     <Compile Include="HttpSonarConnector.fs" />
     <Compile Include="TypeProviders.fs" />
+    <Compile Include="SqaleDefaultModel.fs" />
     <Compile Include="XmlTypeProviders.fs" />
     <Compile Include="ISonarRestService.fs" />
     <Compile Include="SonarRestService.fs" />
@@ -64,6 +66,7 @@
       <SubType>
       </SubType>
     </Compile>
+    <EmbeddedResource Include="default-model.xml" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -84,6 +87,7 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <ProjectReference Include="..\ExtensionTypes\ExtensionTypes.csproj">
       <Name>ExtensionTypes</Name>
@@ -91,5 +95,4 @@
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="$(MSBuildFolder)\AssemblyPatcherTask.targets" />  
 </Project>

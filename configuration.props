@@ -11,10 +11,10 @@
         
         <!-- Version settings -->
         <MajorVersionNumber           Condition="'$(MajorVersionNumber)'==''">1</MajorVersionNumber>
-        <MinorVersionNumber           Condition="'$(MinorVersionNumber)'==''">3</MinorVersionNumber>
-        <BuildNumber                  Condition="'$(BuildNumber)'==''">3</BuildNumber>
+        <MinorVersionNumber           Condition="'$(MinorVersionNumber)'==''">4</MinorVersionNumber>
+        <BuildNumber                  Condition="'$(BuildNumber)'==''">1</BuildNumber>
         <RevisionNumber               Condition="'$(RevisionNumber)'==''">1</RevisionNumber>
-        <AssemblyPatcherTaskOn        Condition="'$(AssemblyPatcherTaskOn)'==''">false</AssemblyPatcherTaskOn>
+        <AssemblyPatcherTaskOn        Condition="'$(AssemblyPatcherTaskOn)'==''">true</AssemblyPatcherTaskOn>
         <UnitTestsDisabled            Condition="'$(UnitTestsDisabled)'==''">false</UnitTestsDisabled>
         
     </PropertyGroup>

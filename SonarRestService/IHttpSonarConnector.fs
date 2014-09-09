@@ -22,5 +22,6 @@ type IHttpSonarConnector =
   abstract member HttpSonarRequest : ConnectionConfiguration * string * Method -> IRestResponse
   abstract member HttpSonarPutRequest : ConnectionConfiguration * string * Map<string, string> -> IRestResponse
   abstract member HttpSonarPostRequest : ConnectionConfiguration * string * Map<string, string> -> IRestResponse
+  abstract member HttpSonarPostRequestDic : ConnectionConfiguration * string * System.Collections.Generic.Dictionary<string, string> -> IRestResponse
 
 
