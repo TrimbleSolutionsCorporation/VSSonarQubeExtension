@@ -1,0 +1,87 @@
+﻿<UserControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:viewModel="clr-namespace:VSSonarExtensionUi.ViewModel"
+    xmlns:view="clr-namespace:VSSonarExtensionUi.View"
+	xmlns:vsfx="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.12.0"
+	xmlns:helpers="clr-namespace:VSSonarExtensionUi.Helpers"
+	mc:Ignorable="d"
+	x:Class="VSSonarExtensionUi.View.SonarQubeUserControl"
+	x:Name="UserControl"
+	d:DesignWidth="640" d:DesignHeight="480">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        	<viewModel:SonarQubeViewModel x:Key="SonarQubeViewModelDataSource" d:IsDataSource="True"/>
+            <SolidColorBrush x:Key="VsBackGround" Color="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}"/>
+            <SolidColorBrush x:Key="VsForeGround" Color="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}"/>
+
+            <DataTemplate DataType="{x:Type viewModel:ServerViewModel}">
+                <view:ServerView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModel:LocalViewModel}">
+                <view:LocalView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModel:IssuesSearchViewModel}">
+                <view:IssueSearchView/>
+            </DataTemplate>
+
+            <DataTemplate x:Key="TabControlHeaderTemplate" >
+				<Grid>					
+					<Grid.RowDefinitions>
+						<RowDefinition Height="25"/>
+						<RowDefinition Height="5"/>
+					</Grid.RowDefinitions>
+					<TextBlock Text="{Binding Header}"/>
+					<ToggleButton Grid.Row="1"/>
+				</Grid>
+                
+            </DataTemplate>
+            
+        </ResourceDictionary>
+    </UserControl.Resources>
+        
+	<UserControl.DataContext>
+		<Binding Source="{StaticResource SonarQubeViewModelDataSource}"/>
+	</UserControl.DataContext>
+    
+	<Grid x:Name="LayoutRoot">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="25"/>
+			<RowDefinition Height="418*"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+		</Grid.RowDefinitions>
+        <Menu x:Name="MainMenuIssues" Grid.ColumnSpan="3" Background="{helpers:FallbackBackgroundBrush FallBackBrush=LightBlue}" Foreground="{helpers:FallbackForegroundBrush FallBackBrush=Black}">
+            <MenuItem x:Name="ToolsMenu" Header="Menu" Width="auto" Background="{helpers:FallbackBackgroundBrush FallBackBrush=LightBlue}" Foreground="{helpers:FallbackForegroundBrush FallBackBrush=Black}" Template="{DynamicResource MenuTemplate}">
+                <MenuItem Background="{helpers:FallbackBackgroundBrush FallBackBrush=LightBlue}" Foreground="{helpers:FallbackForegroundBrush FallBackBrush=Black}" x:Name="OptionsMenu" Header="Properties" Template="{DynamicResource MenuTemplate}" Command="{Binding LaunchExtensionPropertiesCommand}"/>
+			</MenuItem>
+            <MenuItem x:Name="PluginsMenu" Header="Tools" ItemsSource="{Binding ToolsProvidedByPlugins}" Background="{helpers:FallbackBackgroundBrush FallBackBrush=LightBlue}" Foreground="{helpers:FallbackForegroundBrush FallBackBrush=Black}" Template="{DynamicResource MenuTemplate}">
+				<MenuItem.ItemContainerStyle>
+					<Style TargetType="{x:Type MenuItem}">
+						<Setter Property="Command" Value="{Binding ToolSwitchCommand}" />
+						<Setter Property="CommandParameter" Value="{Binding Header, RelativeSource={RelativeSource Self}}" />
+					</Style>
+				</MenuItem.ItemContainerStyle>
+			</MenuItem>
+            <CheckBox Background="{helpers:FallbackBackgroundBrush FallBackBrush=LightBlue}" Foreground="{helpers:FallbackForegroundBrush FallBackBrush=Black}" ToolTip="Disable Tags in Editor, Only Issues Window will be Populated" IsChecked="{Binding DisableEditorTags}"/>
+		</Menu>
+
+        <Border Grid.Column="0" Grid.Row="1" Margin="5" BorderBrush="#FF7F9DB9" BorderThickness="1">
+            <ContentControl Content="{Binding ElementName=ListBoxMenu, Path=SelectedItem}"/>
+        </Border>
+
+
+
+<TabControl Grid.Row="1" ItemsSource="{Binding SonarQubeViews}"
+            ItemTemplate="{StaticResource TabControlHeaderTemplate}"/>
+    </Grid>
+
+</UserControl>

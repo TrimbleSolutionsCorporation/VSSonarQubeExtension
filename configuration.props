@@ -14,8 +14,8 @@
         <MinorVersionNumber           Condition="'$(MinorVersionNumber)'==''">4</MinorVersionNumber>
         <BuildNumber                  Condition="'$(BuildNumber)'==''">1</BuildNumber>
         <RevisionNumber               Condition="'$(RevisionNumber)'==''">1</RevisionNumber>
-        <AssemblyPatcherTaskOn        Condition="'$(AssemblyPatcherTaskOn)'==''">true</AssemblyPatcherTaskOn>
-        <UnitTestsDisabled            Condition="'$(UnitTestsDisabled)'==''">false</UnitTestsDisabled>
+        <AssemblyPatcherTaskOn        Condition="'$(AssemblyPatcherTaskOn)'==''">false</AssemblyPatcherTaskOn>
+        <UnitTestsDisabled            Condition="'$(UnitTestsDisabled)'==''">true</UnitTestsDisabled>
         
     </PropertyGroup>
     

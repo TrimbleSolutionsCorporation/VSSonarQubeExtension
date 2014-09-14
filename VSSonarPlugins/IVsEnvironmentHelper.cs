@@ -235,5 +235,13 @@ namespace VSSonarPlugins
         /// The <see cref="string"/>.
         /// </returns>
         string GetCurrentTextInView();
+
+        /// <summary>
+        /// The are we running in visual studio.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="bool"/>.
+        /// </returns>
+        bool AreWeRunningInVisualStudio();
     }
 }

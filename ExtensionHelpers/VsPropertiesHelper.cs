@@ -55,6 +55,12 @@ namespace ExtensionHelpers
                 System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData) + "\\VSSonarExtension\\settings.cfg";
         }
 
+        public VsPropertiesHelper()
+        {
+            this.ApplicationDataUserSettingsFile =
+                System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData) + "\\VSSonarExtension\\settings.cfg";
+        }
+
         /// <summary>
         /// Gets or sets the erro message.
         /// </summary>
@@ -138,6 +144,11 @@ namespace ExtensionHelpers
             var view = this.GetCurrentView();
 
             return view == null ? string.Empty : view.TextBuffer.CurrentSnapshot.GetText();
+        }
+
+        public bool AreWeRunningInVisualStudio()
+        {
+            return this.environment != null;
         }
 
         /// <summary>
