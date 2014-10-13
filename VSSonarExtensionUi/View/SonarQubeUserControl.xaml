@@ -7,20 +7,34 @@
     xmlns:view="clr-namespace:VSSonarExtensionUi.View"
 	xmlns:vsfx="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.12.0"
 	xmlns:helpers="clr-namespace:VSSonarExtensionUi.Helpers"
+	xmlns:styles="clr-namespace:VSSonarExtensionUi.Styles"
+	xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+	xmlns:avalonDock="http://schemas.xceed.com/wpf/xaml/avalondock"
+	xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2"
 	mc:Ignorable="d"
 	x:Class="VSSonarExtensionUi.View.SonarQubeUserControl"
 	x:Name="UserControl"
-	d:DesignWidth="640" d:DesignHeight="480">
+	d:DesignWidth="640" d:DesignHeight="480" Foreground="{styles:FallbackForegroundBrush FallBackBrush=White}" Background="{styles:FallbackBackgroundBrush FallBackBrush=Transparent}">
 
     <UserControl.Resources>
         <ResourceDictionary>
+
+                       
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Styles.xaml"/>
+                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/Styles.xaml"/>
+                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/MetroWPFTemplate.xaml"/>
+                
+                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/AvalonStyles.xaml"/>
+                
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" /> 
+                
             </ResourceDictionary.MergedDictionaries>
         	<viewModel:SonarQubeViewModel x:Key="SonarQubeViewModelDataSource" d:IsDataSource="True"/>
-            <SolidColorBrush x:Key="VsBackGround" Color="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}"/>
-            <SolidColorBrush x:Key="VsForeGround" Color="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}"/>
-
+                       
             <DataTemplate DataType="{x:Type viewModel:ServerViewModel}">
                 <view:ServerView/>
             </DataTemplate>
@@ -33,18 +47,12 @@
                 <view:IssueSearchView/>
             </DataTemplate>
 
-            <DataTemplate x:Key="TabControlHeaderTemplate" >
-				<Grid>					
-					<Grid.RowDefinitions>
-						<RowDefinition Height="25"/>
-						<RowDefinition Height="5"/>
-					</Grid.RowDefinitions>
-					<TextBlock Text="{Binding Header}"/>
-					<ToggleButton Grid.Row="1"/>
-				</Grid>
-                
-            </DataTemplate>
-            
+        	<DataTemplate x:Key="ProjectSelectionComboBoxDataTemplate">
+        		<StackPanel>
+                    <TextBlock Text="{Binding Name}"></TextBlock>
+                </StackPanel>
+        	</DataTemplate>
+
         </ResourceDictionary>
     </UserControl.Resources>
         
@@ -52,18 +60,19 @@
 		<Binding Source="{StaticResource SonarQubeViewModelDataSource}"/>
 	</UserControl.DataContext>
     
-	<Grid x:Name="LayoutRoot">
+	<Grid x:Name="LayoutRoot" Background="{styles:FallbackBackgroundBrush FallBackBrush=Transparent}">
 		<Grid.RowDefinitions>
-			<RowDefinition Height="25"/>
+			<RowDefinition Height="30"/>
 			<RowDefinition Height="418*"/>
-            <RowDefinition Height="25"/>
-            <RowDefinition Height="25"/>
+			<RowDefinition Height="35"/>
 		</Grid.RowDefinitions>
-        <Menu x:Name="MainMenuIssues" Grid.ColumnSpan="3" Background="{helpers:FallbackBackgroundBrush FallBackBrush=LightBlue}" Foreground="{helpers:FallbackForegroundBrush FallBackBrush=Black}">
-            <MenuItem x:Name="ToolsMenu" Header="Menu" Width="auto" Background="{helpers:FallbackBackgroundBrush FallBackBrush=LightBlue}" Foreground="{helpers:FallbackForegroundBrush FallBackBrush=Black}" Template="{DynamicResource MenuTemplate}">
-                <MenuItem Background="{helpers:FallbackBackgroundBrush FallBackBrush=LightBlue}" Foreground="{helpers:FallbackForegroundBrush FallBackBrush=Black}" x:Name="OptionsMenu" Header="Properties" Template="{DynamicResource MenuTemplate}" Command="{Binding LaunchExtensionPropertiesCommand}"/>
+		<Menu x:Name="MainMenuIssues" Grid.ColumnSpan="3" Background="{styles:FallbackBackgroundBrush FallBackBrush=Transparent}" Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}">
+			<MenuItem x:Name="ToolsMenu" Header="Menu" Width="auto" Background="{styles:FallbackBackgroundBrush FallBackBrush=Transparent}" Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Template="{DynamicResource MenuTemplate}">
+				<MenuItem Background="{styles:FallbackBackgroundBrush FallBackBrush=Transparent}" Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" x:Name="ConnectMenu" Header="Connect To Sonar" Template="{DynamicResource MenuTemplate}" Command="{Binding ConnectedToServerCommand}" CommandParameter="Connect"/>
+				<MenuItem Background="{styles:FallbackBackgroundBrush FallBackBrush=Transparent}" Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" x:Name="DisconnectMenu" Header="Disconnect" Template="{DynamicResource MenuTemplate}" Command="{Binding ConnectedToServerCommand}" CommandParameter="Disconnect"/>
+				<MenuItem Background="{styles:FallbackBackgroundBrush FallBackBrush=Transparent}" Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" x:Name="OptionsMenu" Header="Properties" Template="{DynamicResource MenuTemplate}" Command="{Binding LaunchExtensionPropertiesCommand}"/>
 			</MenuItem>
-            <MenuItem x:Name="PluginsMenu" Header="Tools" ItemsSource="{Binding ToolsProvidedByPlugins}" Background="{helpers:FallbackBackgroundBrush FallBackBrush=LightBlue}" Foreground="{helpers:FallbackForegroundBrush FallBackBrush=Black}" Template="{DynamicResource MenuTemplate}">
+			<MenuItem x:Name="PluginsMenu" Header="Tools" ItemsSource="{Binding ToolsProvidedByPlugins}" Background="{styles:FallbackBackgroundBrush FallBackBrush=Transparent}" Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Template="{DynamicResource MenuTemplate}">
 				<MenuItem.ItemContainerStyle>
 					<Style TargetType="{x:Type MenuItem}">
 						<Setter Property="Command" Value="{Binding ToolSwitchCommand}" />
@@ -71,17 +80,87 @@
 					</Style>
 				</MenuItem.ItemContainerStyle>
 			</MenuItem>
-            <CheckBox Background="{helpers:FallbackBackgroundBrush FallBackBrush=LightBlue}" Foreground="{helpers:FallbackForegroundBrush FallBackBrush=Black}" ToolTip="Disable Tags in Editor, Only Issues Window will be Populated" IsChecked="{Binding DisableEditorTags}"/>
+			<CheckBox Background="{styles:FallbackBackgroundBrush FallBackBrush=Transparent}" Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" ToolTip="Disable Tags in Editor, Only Issues Window will be Populated" IsChecked="{Binding DisableEditorTags}"/>
 		</Menu>
 
-        <Border Grid.Column="0" Grid.Row="1" Margin="5" BorderBrush="#FF7F9DB9" BorderThickness="1">
-            <ContentControl Content="{Binding ElementName=ListBoxMenu, Path=SelectedItem}"/>
-        </Border>
+
+		<avalonDock:DockingManager
+            Background="{styles:FallbackBackgroundBrush FallBackBrush=Transparent}"
+			DocumentPaneControlStyle="{StaticResource MyCustomDocumentPaneControlStyle}"
+			DocumentContextMenu="{x:Null}"
+			Grid.Row="1"
+			x:Name="DManager"
+			DocumentsSource="{Binding SonarQubeViews}"
+			DocumentClosing="DockingManager_DocumentClosing">
+                      
+			<avalonDock:DockingManager.AnchorableContextMenu>
+				<ContextMenu>
+					<MenuItem Header="Auto Hide" Command="{Binding AutoHideCommand}"/>
+				</ContextMenu>
+			</avalonDock:DockingManager.AnchorableContextMenu>
+            
+			<avalonDock:DockingManager.DocumentHeaderTemplate>
+				<DataTemplate>
+					<TextBlock Text="{Binding Content.Header}"/>
+				</DataTemplate>
+			</avalonDock:DockingManager.DocumentHeaderTemplate>
+
+			<avalonDock:DockingManager.DocumentPaneMenuItemHeaderTemplate>
+				<DataTemplate>
+					<TextBlock Text="{Binding Content.Header}"/>
+				</DataTemplate>
+			</avalonDock:DockingManager.DocumentPaneMenuItemHeaderTemplate>
+
+
+			<avalonDock:LayoutRoot >
+				<avalonDock:LayoutPanel Orientation="Horizontal">
+					<avalonDock:LayoutAnchorablePane DockWidth="200">
+						<avalonDock:LayoutAnchorable Title="Project" AutoHideWidth="200" FloatingWidth="200" CanClose="False" CanHide="False" CanFloat="False" >
+							<StackPanel Background="{styles:FallbackBackgroundBrush FallBackBrush=Transparent}">
+								<Grid Background="{styles:FallbackBackgroundBrush FallBackBrush=Transparent}" Height="75" Margin="20,0,0,0">
+									<Grid.RowDefinitions>
+										<RowDefinition Height="25"/>
+										<RowDefinition Height="25"/>
+										<RowDefinition Height="25"/>
+									</Grid.RowDefinitions>
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition Width="60"/>
+										<ColumnDefinition Width="20*"/>
+									</Grid.ColumnDefinitions>
+									<Label Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Content="Project" Style="{DynamicResource StyleOfLabels}"/>
+									<ComboBox Grid.Row="0" Grid.Column="1" SelectedItem="{Binding AssociatedProject, Mode=TwoWay}" ItemsSource="{Binding AvailableProjects}" MaxDropDownHeight="101" IsTextSearchEnabled="True" Background="{styles:FallbackBackgroundBrush FallBackBrush=Transparent}" ItemTemplate="{DynamicResource ProjectSelectionComboBoxDataTemplate}" />
+									<Button Style="{DynamicResource SquareButtonStyle}" Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Content="Associate" Grid.Row="1" Grid.Column="1" Command="{Binding AssignProjectCommand}" />
+									<Button Style="{DynamicResource SquareButtonStyle}" Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Content="Clear Cache" Grid.Row="2" Grid.Column="1" Command="{Binding ClearCacheCommand}" />
+									
+								</Grid>
+							</StackPanel>
+						</avalonDock:LayoutAnchorable>
+					</avalonDock:LayoutAnchorablePane>
+					<avalonDock:LayoutPanel>
+						<avalonDock:LayoutDocumentPane />
+					</avalonDock:LayoutPanel>
+
+				</avalonDock:LayoutPanel>
+
+			</avalonDock:LayoutRoot>
+
+		</avalonDock:DockingManager>
 
 
 
-<TabControl Grid.Row="1" ItemsSource="{Binding SonarQubeViews}"
-            ItemTemplate="{StaticResource TabControlHeaderTemplate}"/>
-    </Grid>
+        
 
+		<StatusBar Grid.Row="2" Background="{styles:FallbackBackgroundBrush FallBackBrush=Transparent}">		
+			<StatusBarItem HorizontalAlignment="Right">
+				<StackPanel Orientation="Horizontal">
+					<StatusBarItem>
+						<Controls:ProgressRing ToolTip="{Binding BusyToolTip}" IsActive="{Binding IsExtensionBusy}" Height="30" Width="30"  />
+					</StatusBarItem>
+					<StatusBarItem Height="30" Width="30">					
+						<Image ToolTip="{Binding ConnectionTooltip}" Source="{Binding ConnectionImage, Converter={StaticResource UrlToImageSourceConverter}}"/>
+					</StatusBarItem>
+				</StackPanel>
+			</StatusBarItem>
+		</StatusBar>
+	</Grid>
 </UserControl>

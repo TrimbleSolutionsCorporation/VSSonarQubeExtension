@@ -18,10 +18,10 @@ open ExtensionTypes
 open RestSharp
 
 type IHttpSonarConnector = 
-  abstract member HttpSonarGetRequest : ConnectionConfiguration * string -> string
-  abstract member HttpSonarRequest : ConnectionConfiguration * string * Method -> IRestResponse
-  abstract member HttpSonarPutRequest : ConnectionConfiguration * string * Map<string, string> -> IRestResponse
-  abstract member HttpSonarPostRequest : ConnectionConfiguration * string * Map<string, string> -> IRestResponse
-  abstract member HttpSonarPostRequestDic : ConnectionConfiguration * string * System.Collections.Generic.Dictionary<string, string> -> IRestResponse
+  abstract member HttpSonarGetRequest : ISonarConfiguration * string -> string
+  abstract member HttpSonarRequest : ISonarConfiguration * string * Method -> IRestResponse
+  abstract member HttpSonarPutRequest : ISonarConfiguration * string * Map<string, string> -> IRestResponse
+  abstract member HttpSonarPostRequest : ISonarConfiguration * string * Map<string, string> -> IRestResponse
+  abstract member HttpSonarPostRequestDic : ISonarConfiguration * string * System.Collections.Generic.Dictionary<string, string> -> IRestResponse
 
 

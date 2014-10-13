@@ -83,8 +83,8 @@ namespace VSSonarExtension.Test.TestViewModel
 
                 using (this.mocks.Record())
                 {
-                    SetupResult.For(this.service.GetServerInfo(Arg<ConnectionConfiguration>.Is.Anything)).Return(3.6);
-                    SetupResult.For(this.service.AuthenticateUser(Arg<ConnectionConfiguration>.Is.Anything)).Return(true);
+                    SetupResult.For(this.service.GetServerInfo(Arg<ISonarConfiguration>.Is.Anything)).Return(3.6);
+                    SetupResult.For(this.service.AuthenticateUser(Arg<ISonarConfiguration>.Is.Anything)).Return(true);
                     SetupResult.For(this.vshelper.ReadSavedOption("Sonar Options", "General", "SonarHost")).Return("serveraddr");
                     SetupResult.For(this.vshelper.ReadSavedOption("Sonar Options", "General", "SonarUserPassword")).Return("password");
                     SetupResult.For(this.vshelper.ReadSavedOption("Sonar Options", "General", "SonarUserName")).Return("login");
@@ -139,15 +139,15 @@ namespace VSSonarExtension.Test.TestViewModel
                     mp => mp.ActiveSolutionPath())
                     .Return("c:\\src");
                 this.service.Expect(
-                    mp => mp.GetSourceForFileResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything))
+                    mp => mp.GetSourceForFileResource(Arg<ISonarConfiguration>.Is.Anything, Arg<string>.Is.Anything))
                     .Return(source);
                 var element = new Resource { Date = new DateTime(2000, 1, 1), Key = "resourceKey"};
                 this.service.Expect(
-                    mp => mp.GetResourcesData(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything))
+                    mp => mp.GetResourcesData(Arg<ISonarConfiguration>.Is.Anything, Arg<string>.Is.Anything))
                     .Return(new List<Resource> { element })
                     .Repeat.Twice();
 
-                this.analysisPlugin.Expect(mp => mp.IsSupported(Arg<ConnectionConfiguration>.Is.Anything, Arg<Resource>.Is.Anything)).Return(true).Repeat.Once();
+                this.analysisPlugin.Expect(mp => mp.IsSupported(Arg<ISonarConfiguration>.Is.Anything, Arg<Resource>.Is.Anything)).Return(true).Repeat.Once();
                 this.analysisPlugin.Expect(
                     mp =>
                     mp.GetResourceKey(
@@ -161,8 +161,8 @@ namespace VSSonarExtension.Test.TestViewModel
 
                 using (this.mocks.Record())
                 {
-                    SetupResult.For(localAnalyser.GetResourceKey(Arg<VsProjectItem>.Is.Anything, Arg<Resource>.Is.Anything, Arg<ConnectionConfiguration>.Is.Anything, Arg<bool>.Is.Equal(true))).Return("Key1");
-                    SetupResult.For(localAnalyser.GetResourceKey(Arg<VsProjectItem>.Is.Anything, Arg<Resource>.Is.Anything, Arg<ConnectionConfiguration>.Is.Anything, Arg<bool>.Is.Equal(false))).Return("Key2");
+                    SetupResult.For(localAnalyser.GetResourceKey(Arg<VsProjectItem>.Is.Anything, Arg<Resource>.Is.Anything, Arg<ISonarConfiguration>.Is.Anything, Arg<bool>.Is.Equal(true))).Return("Key1");
+                    SetupResult.For(localAnalyser.GetResourceKey(Arg<VsProjectItem>.Is.Anything, Arg<Resource>.Is.Anything, Arg<ISonarConfiguration>.Is.Anything, Arg<bool>.Is.Equal(false))).Return("Key2");
                 }
 
                 data.AssociatedProject = new Resource { Key = "KEY"};

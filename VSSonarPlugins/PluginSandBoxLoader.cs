@@ -96,7 +96,7 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="bool"/>.
         /// </returns>
-        public PluginDescription LoadPluginDescription(ConnectionConfiguration conf)
+        public PluginDescription LoadPluginDescription(ISonarConfiguration conf)
         {
             foreach (var assembly in this.trustedAssembly)
             {

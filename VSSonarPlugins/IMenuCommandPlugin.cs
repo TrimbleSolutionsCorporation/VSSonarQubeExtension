@@ -41,7 +41,7 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="UserControl"/>.
         /// </returns>
-        UserControl GetUserControl(ConnectionConfiguration configuration, Resource project, IVsEnvironmentHelper vshelper);
+        UserControl GetUserControl(ISonarConfiguration configuration, Resource project, IVsEnvironmentHelper vshelper);
 
         /// <summary>
         /// The update configuration.
@@ -55,7 +55,7 @@ namespace VSSonarPlugins
         /// <param name="vshelper">
         /// The vshelper.
         /// </param>
-        void UpdateConfiguration(ConnectionConfiguration configuration, Resource project, IVsEnvironmentHelper vshelper);
+        void UpdateConfiguration(ISonarConfiguration configuration, Resource project, IVsEnvironmentHelper vshelper);
 
         /// <summary>
         /// The get plugin descritpion.

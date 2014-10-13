@@ -20,60 +20,60 @@ open System
 open System.Web
 
 type ISonarRestService = 
-  abstract member GetIssuesByAssigneeInProject : ConnectionConfiguration * string *  string -> System.Collections.Generic.List<Issue>
-  abstract member GetAllIssuesByAssignee : ConnectionConfiguration * string -> System.Collections.Generic.List<Issue>
-  abstract member GetIssuesForProjects : ConnectionConfiguration * string -> System.Collections.Generic.List<Issue>
-  abstract member GetIssuesForProjectsCreatedAfterDate : ConnectionConfiguration * string * DateTime -> System.Collections.Generic.List<Issue>
-  abstract member GetIssuesInResource : ConnectionConfiguration * string  -> System.Collections.Generic.List<Issue>
-  abstract member GetIssues : ConnectionConfiguration * string * string -> System.Collections.Generic.List<Issue>
-  abstract member GetProjects  : ConnectionConfiguration -> System.Collections.Generic.List<SonarProject>
+  abstract member GetIssuesByAssigneeInProject : ISonarConfiguration * string *  string -> System.Collections.Generic.List<Issue>
+  abstract member GetAllIssuesByAssignee : ISonarConfiguration * string -> System.Collections.Generic.List<Issue>
+  abstract member GetIssuesForProjects : ISonarConfiguration * string -> System.Collections.Generic.List<Issue>
+  abstract member GetIssuesForProjectsCreatedAfterDate : ISonarConfiguration * string * DateTime -> System.Collections.Generic.List<Issue>
+  abstract member GetIssuesInResource : ISonarConfiguration * string  -> System.Collections.Generic.List<Issue>
+  abstract member GetIssues : ISonarConfiguration * string * string -> System.Collections.Generic.List<Issue>
+  abstract member GetProjects  : ISonarConfiguration -> System.Collections.Generic.List<SonarProject>
   
-  abstract member CommentOnIssues : ConnectionConfiguration * System.Collections.Generic.List<Issue> * comment : string -> System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>
-  abstract member ReOpenIssues : ConnectionConfiguration * System.Collections.Generic.List<Issue> * comment : string -> System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>
-  abstract member ConfirmIssues : ConnectionConfiguration * System.Collections.Generic.List<Issue> * comment : string -> System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>
-  abstract member UnConfirmIssues : ConnectionConfiguration * System.Collections.Generic.List<Issue> * comment : string -> System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>
-  abstract member MarkIssuesAsFalsePositive : ConnectionConfiguration * System.Collections.Generic.List<Issue> * string -> System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>
-  abstract member ResolveIssues : ConnectionConfiguration * System.Collections.Generic.List<Issue> * string -> System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>
-  abstract member AssignIssuesToUser : ConnectionConfiguration * System.Collections.Generic.List<Issue> * User * string -> System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>
+  abstract member CommentOnIssues : ISonarConfiguration * System.Collections.Generic.IList<Issue> * comment : string -> System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>
+  abstract member ReOpenIssues : ISonarConfiguration * System.Collections.Generic.List<Issue> * comment : string -> System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>
+  abstract member ConfirmIssues : ISonarConfiguration * System.Collections.Generic.List<Issue> * comment : string -> System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>
+  abstract member UnConfirmIssues : ISonarConfiguration * System.Collections.Generic.List<Issue> * comment : string -> System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>
+  abstract member MarkIssuesAsFalsePositive : ISonarConfiguration * System.Collections.Generic.IList<Issue> * string -> System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>
+  abstract member ResolveIssues : ISonarConfiguration * System.Collections.Generic.List<Issue> * string -> System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>
+  abstract member AssignIssuesToUser : ISonarConfiguration * System.Collections.Generic.List<Issue> * User * string -> System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>
 
-  abstract member GetUserList : ConnectionConfiguration -> System.Collections.Generic.List<User>
-  abstract member AuthenticateUser : ConnectionConfiguration -> bool
-  abstract member GetResourcesData : ConnectionConfiguration * string -> System.Collections.Generic.List<Resource>
-  abstract member GetProjectsList : ConnectionConfiguration -> System.Collections.Generic.List<Resource>
-  abstract member GetServerInfo : ConnectionConfiguration ->  float
-  abstract member GetCoverageInResource : ConnectionConfiguration * string ->  SourceCoverage
-  abstract member GetSourceForFileResource : ConnectionConfiguration * string ->  Source
+  abstract member GetUserList : ISonarConfiguration -> System.Collections.Generic.List<User>
+  abstract member AuthenticateUser : ISonarConfiguration -> bool
+  abstract member GetResourcesData : ISonarConfiguration * string -> System.Collections.Generic.List<Resource>
+  abstract member GetProjectsList : ISonarConfiguration -> System.Collections.Generic.List<Resource>
+  abstract member GetServerInfo : ISonarConfiguration ->  float
+  abstract member GetCoverageInResource : ISonarConfiguration * string ->  SourceCoverage
+  abstract member GetSourceForFileResource : ISonarConfiguration * string ->  Source
 
-  abstract member GetProperties : ConnectionConfiguration -> System.Collections.Generic.Dictionary<string, string>
+  abstract member GetProperties : ISonarConfiguration -> System.Collections.Generic.Dictionary<string, string>
 
-  abstract member GetEnabledRulesInProfile : ConnectionConfiguration * string * string -> System.Collections.Generic.List<Profile>
-  abstract member GetQualityProfile : ConnectionConfiguration * string -> System.Collections.Generic.List<Resource>
-  abstract member GetRulesForProfile : conf:ConnectionConfiguration * profile:Profile * ruleDetails:bool * active:bool -> unit
-  abstract member GetRulesForProfile : conf:ConnectionConfiguration * profile:Profile -> unit
-  abstract member GetQualityProfilesForProject : ConnectionConfiguration * string -> System.Collections.Generic.List<Profile>
-  abstract member GetQualityProfilesForProject : ConnectionConfiguration * projectKey:string * language:string -> System.Collections.Generic.List<Profile>
-  abstract member GetAvailableProfiles : ConnectionConfiguration -> System.Collections.Generic.List<Profile>
-  abstract member GetRules : ConnectionConfiguration * string -> System.Collections.Generic.List<Rule>
-  abstract member GetTemplateRules : ConnectionConfiguration * profile:Profile -> unit
-  abstract member UpdateRule : conf:ConnectionConfiguration * key:string * optionalProps:System.Collections.Generic.Dictionary<string, string> -> System.Collections.Generic.List<string>
-  abstract member GetAllTags : ConnectionConfiguration -> System.Collections.Generic.List<string>
-  abstract member UpdateTags : ConnectionConfiguration * rule:Rule * tags:System.Collections.Generic.List<string> -> System.Collections.Generic.List<string>
+  abstract member GetEnabledRulesInProfile : ISonarConfiguration * string * string -> System.Collections.Generic.List<Profile>
+  abstract member GetQualityProfile : ISonarConfiguration * string -> System.Collections.Generic.List<Resource>
+  abstract member GetRulesForProfile : conf:ISonarConfiguration * profile:Profile * ruleDetails:bool * active:bool -> unit
+  abstract member GetRulesForProfile : conf:ISonarConfiguration * profile:Profile -> unit
+  abstract member GetQualityProfilesForProject : ISonarConfiguration * string -> System.Collections.Generic.List<Profile>
+  abstract member GetQualityProfilesForProject : ISonarConfiguration * projectKey:string * language:string -> System.Collections.Generic.List<Profile>
+  abstract member GetAvailableProfiles : ISonarConfiguration -> System.Collections.Generic.List<Profile>
+  abstract member GetRules : ISonarConfiguration * string -> System.Collections.Generic.List<Rule>
+  abstract member GetTemplateRules : ISonarConfiguration * profile:Profile -> unit
+  abstract member UpdateRule : conf:ISonarConfiguration * key:string * optionalProps:System.Collections.Generic.Dictionary<string, string> -> System.Collections.Generic.List<string>
+  abstract member GetAllTags : ISonarConfiguration -> System.Collections.Generic.List<string>
+  abstract member UpdateTags : ISonarConfiguration * rule:Rule * tags:System.Collections.Generic.List<string> -> System.Collections.Generic.List<string>
 
-  abstract member ActivateRule : ConnectionConfiguration * rule:Rule * profilekey:string -> System.Collections.Generic.List<string>
-  abstract member DeleteRule : ConnectionConfiguration * rule:Rule  -> System.Collections.Generic.List<string>
-  abstract member DisableRule : ConnectionConfiguration * rule:Rule * profilekey:string -> System.Collections.Generic.List<string>
-  abstract member CreateRule : ConnectionConfiguration * rule:Rule * templateRule:Rule -> System.Collections.Generic.List<string>
+  abstract member ActivateRule : ISonarConfiguration * rule:Rule * profilekey:string -> System.Collections.Generic.List<string>
+  abstract member DeleteRule : ISonarConfiguration * rule:Rule  -> System.Collections.Generic.List<string>
+  abstract member DisableRule : ISonarConfiguration * rule:Rule * profilekey:string -> System.Collections.Generic.List<string>
+  abstract member CreateRule : ISonarConfiguration * rule:Rule * templateRule:Rule -> System.Collections.Generic.List<string>
 
   // might be remove in the future
-  abstract member GetProfilesUsingRulesApp : ConnectionConfiguration -> System.Collections.Generic.List<Profile>
-  abstract member GetRulesForProfileUsingRulesApp : conf:ConnectionConfiguration * profile:Profile * active:bool -> unit
+  abstract member GetProfilesUsingRulesApp : ISonarConfiguration -> System.Collections.Generic.List<Profile>
+  abstract member GetRulesForProfileUsingRulesApp : conf:ISonarConfiguration * profile:Profile * active:bool -> unit
   
 
   abstract member ParseReportOfIssues : string -> System.Collections.Generic.List<Issue>
   abstract member ParseReportOfIssuesOld : string -> System.Collections.Generic.List<Issue>
   abstract member ParseDryRunReportOfIssues : string -> System.Collections.Generic.List<Issue>
 
-  abstract member GetDuplicationsDataInResource : ConnectionConfiguration * string ->  Collections.Generic.List<DuplicationData>
+  abstract member GetDuplicationsDataInResource : ISonarConfiguration * string ->  Collections.Generic.List<DuplicationData>
   
         
 

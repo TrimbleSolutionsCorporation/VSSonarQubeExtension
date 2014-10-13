@@ -76,6 +76,17 @@ namespace VSSonarPlugins
             }
             catch (Exception compositionException)
             {
+                if (compositionException is System.Reflection.ReflectionTypeLoadException)
+                {
+                    var typeLoadException = compositionException as ReflectionTypeLoadException;
+                    var loaderExceptions = typeLoadException.LoaderExceptions;
+                    foreach (var loaderException in loaderExceptions)
+                    {
+                        Debug.WriteLine(loaderException.Message + " " + loaderException.StackTrace);    
+                    }
+                    
+                }
+
                 this.errorData = compositionException.Message + " " + compositionException.StackTrace;
                 Debug.WriteLine(compositionException.ToString());
                 return null;

@@ -31,6 +31,8 @@ namespace ExtensionHelpers
     using Microsoft.VisualStudio.TextManager.Interop;
 
     using VSSonarPlugins;
+    using Microsoft.VisualStudio.Shell.Interop;
+
 
     /// <summary>
     /// The vs properties helper.
@@ -41,6 +43,8 @@ namespace ExtensionHelpers
         /// The environment 2.
         /// </summary>
         private readonly DTE2 environment;
+        private readonly IServiceProvider provider;
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VsPropertiesHelper"/> class.
@@ -48,8 +52,9 @@ namespace ExtensionHelpers
         /// <param name="environment">
         /// The environment 2.
         /// </param>
-        public VsPropertiesHelper(DTE2 environment)
+        public VsPropertiesHelper(DTE2 environment, IServiceProvider service)
         {
+            this.provider = service;
             this.environment = environment;
             this.ApplicationDataUserSettingsFile =
                 System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData) + "\\VSSonarExtension\\settings.cfg";
@@ -698,5 +703,11 @@ namespace ExtensionHelpers
 
         [DllImport("kernel32.dll")]
         private static extern uint GetShortPathName(string longpath, StringBuilder sb, int buffer);
+
+        public void RestartVisualStudio()
+        {
+            var obj = (IVsShell4)this.provider.GetService(typeof(SVsShell));
+            obj.Restart((uint)__VSRESTARTTYPE.RESTART_Normal);
+        }
     }
 }

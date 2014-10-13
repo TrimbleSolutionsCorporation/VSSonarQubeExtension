@@ -22,24 +22,25 @@ namespace VSSonarExtension.PackageImplementation.SmartTags.StatusBar
     using Microsoft.VisualStudio.Shell.Interop;
 
     using Constants = Microsoft.VisualStudio.Shell.Interop.Constants;
+    using IVSSStatusBar = VSSonarPlugins.IVSSStatusBar;
     using Thread = System.Threading.Thread;
 
     /// <summary>
     ///     Class to interact with the VS status bar
     /// </summary>
-    public class VSSStatusBar
+    public class VSSStatusBar : IVSSStatusBar
     {
         #region Fields
 
         /// <summary>
         /// The bar.
         /// </summary>
-        private readonly IVsStatusbar bar;
+        public readonly IVsStatusbar bar;
 
         /// <summary>
         /// The dte.
         /// </summary>
-        private readonly DTE2 dte;
+        public readonly DTE2 dte;
 
         #endregion
 
@@ -69,7 +70,7 @@ namespace VSSonarExtension.PackageImplementation.SmartTags.StatusBar
         ///     Gets the status bar.
         /// </summary>
         /// <value>The status bar.</value>
-        protected IVsStatusbar Bar
+        public IVsStatusbar Bar
         {
             get
             {
@@ -210,4 +211,5 @@ namespace VSSonarExtension.PackageImplementation.SmartTags.StatusBar
 
         #endregion
     }
+
 }

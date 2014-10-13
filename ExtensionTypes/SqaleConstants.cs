@@ -6,384 +6,455 @@
 //   The remediation function.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
 namespace ExtensionTypes
 {
     using System.ComponentModel;
 
     /// <summary>
-    /// The remediation function.
+    /// The resolution.
     /// </summary>
-    public enum Status
+    public enum Resolution
     {
         /// <summary>
-        /// The linear.
+        /// The fals e_ positive.
         /// </summary>
-        [Description("Ready")]
-        READY = 0,
+        [Description("FALSE-POSITIVE")]
+        FALSE_POSITIVE = 0, 
 
         /// <summary>
-        /// The linea r_ offset.
+        /// The fixed.
         /// </summary>
-        [Description("Deprecated")]
-        DEPRECATED = 1,
+        [Description("FIXED")]
+        FIXED = 2, 
 
         /// <summary>
-        /// The constan t_ issue.
+        /// The removed.
         /// </summary>
-        [Description("Beta")]
-        BETA = 2,
+        [Description("REMOVED")]
+        REMOVED = 3, 
 
         /// <summary>
-        /// The linear.
-        /// </summary>
-        [Description("Undefined")]
-        UNDEFINED = 3,
-    }
-
-    /// <summary>
-    /// The remediation function.
-    /// </summary>
-    public enum RemediationFunction
-    {
-        /// <summary>
-        /// The linear.
-        /// </summary>
-        [Description("linear")]
-        LINEAR = 0, 
-
-        /// <summary>
-        /// The linea r_ offset.
-        /// </summary>
-        [Description("linear_offset")]
-        LINEAR_OFFSET = 1, 
-
-        /// <summary>
-        /// The constan t_ issue.
-        /// </summary>
-        [Description("constant_issue")]
-        CONSTANT_ISSUE = 2, 
-
-        /// <summary>
-        /// The undefined.
+        ///     The linear.
         /// </summary>
         [Description("UNDEFINED")]
-        UNDEFINED = 3, 
+        UNDEFINED = 4, 
     }
 
     /// <summary>
-    /// The severity.
+    /// The issue status.
     /// </summary>
-    public enum Severity
+    public enum IssueStatus
     {
         /// <summary>
-        /// The blocker.
+        ///     The linear.
         /// </summary>
-        [Description("BLOCKER")]
-        BLOCKER = 0, 
+        [Description("CLOSED")]
+        CLOSED = 0, 
 
         /// <summary>
-        /// The critical.
+        ///     The linea r_ offset.
         /// </summary>
-        [Description("CRITICAL")]
-        CRITICAL = 1, 
+        [Description("OPEN")]
+        OPEN = 1, 
 
         /// <summary>
-        /// The major.
+        ///     The constan t_ issue.
         /// </summary>
-        [Description("MAJOR")]
-        MAJOR = 2, 
+        [Description("CONFIRMED")]
+        CONFIRMED = 2, 
 
         /// <summary>
-        /// The minor.
+        ///     The linear.
         /// </summary>
-        [Description("MINOR")]
-        MINOR = 3, 
+        [Description("REOPENED")]
+        REOPENED = 3, 
 
         /// <summary>
-        /// The info.
+        ///     The linear.
         /// </summary>
-        [Description("INFO")]
-        INFO = 4, 
+        [Description("RESOLVED")]
+        RESOLVED = 4, 
 
         /// <summary>
-        /// The undefined.
+        ///     The linear.
         /// </summary>
         [Description("UNDEFINED")]
         UNDEFINED = 5, 
     }
 
     /// <summary>
-    /// The remediation unit.
+    ///     The remediation function.
     /// </summary>
-    public enum RemediationUnit
+    public enum Status
     {
         /// <summary>
-        /// The mn.
+        ///     The linear.
         /// </summary>
-        [Description("mn")]
-        MN = 0, 
+        [Description("Ready")]
+        READY = 0, 
 
         /// <summary>
-        /// The h.
+        ///     The linea r_ offset.
         /// </summary>
-        [Description("h")]
-        H = 1, 
+        [Description("Deprecated")]
+        DEPRECATED = 1, 
 
         /// <summary>
-        /// The d.
+        ///     The constan t_ issue.
         /// </summary>
-        [Description("d")]
-        D = 2, 
+        [Description("Beta")]
+        BETA = 2, 
 
         /// <summary>
-        /// The undefined.
+        ///     The linear.
+        /// </summary>
+        [Description("Undefined")]
+        UNDEFINED = 3, 
+    }
+
+    /// <summary>
+    ///     The remediation function.
+    /// </summary>
+    public enum RemediationFunction
+    {
+        /// <summary>
+        ///     The linear.
+        /// </summary>
+        [Description("linear")]
+        LINEAR = 0, 
+
+        /// <summary>
+        ///     The linea r_ offset.
+        /// </summary>
+        [Description("linear_offset")]
+        LINEAR_OFFSET = 1, 
+
+        /// <summary>
+        ///     The constan t_ issue.
+        /// </summary>
+        [Description("constant_issue")]
+        CONSTANT_ISSUE = 2, 
+
+        /// <summary>
+        ///     The undefined.
         /// </summary>
         [Description("UNDEFINED")]
         UNDEFINED = 3, 
     }
 
     /// <summary>
-    /// The category.
+    ///     The severity.
+    /// </summary>
+    public enum Severity
+    {
+        /// <summary>
+        ///     The blocker.
+        /// </summary>
+        [Description("BLOCKER")]
+        BLOCKER = 0, 
+
+        /// <summary>
+        ///     The critical.
+        /// </summary>
+        [Description("CRITICAL")]
+        CRITICAL = 1, 
+
+        /// <summary>
+        ///     The major.
+        /// </summary>
+        [Description("MAJOR")]
+        MAJOR = 2, 
+
+        /// <summary>
+        ///     The minor.
+        /// </summary>
+        [Description("MINOR")]
+        MINOR = 3, 
+
+        /// <summary>
+        ///     The info.
+        /// </summary>
+        [Description("INFO")]
+        INFO = 4, 
+
+        /// <summary>
+        ///     The undefined.
+        /// </summary>
+        [Description("UNDEFINED")]
+        UNDEFINED = 5, 
+    }
+
+    /// <summary>
+    ///     The remediation unit.
+    /// </summary>
+    public enum RemediationUnit
+    {
+        /// <summary>
+        ///     The mn.
+        /// </summary>
+        [Description("mn")]
+        MN = 0, 
+
+        /// <summary>
+        ///     The h.
+        /// </summary>
+        [Description("h")]
+        H = 1, 
+
+        /// <summary>
+        ///     The d.
+        /// </summary>
+        [Description("d")]
+        D = 2, 
+
+        /// <summary>
+        ///     The undefined.
+        /// </summary>
+        [Description("UNDEFINED")]
+        UNDEFINED = 3, 
+    }
+
+    /// <summary>
+    ///     The category.
     /// </summary>
     public enum Category
     {
         /// <summary>
-        /// The portability.
+        ///     The portability.
         /// </summary>
         [Description("PORTABILITY")]
         PORTABILITY = 0, 
 
         /// <summary>
-        /// The maintainability.
+        ///     The maintainability.
         /// </summary>
         [Description("MAINTAINABILITY")]
         MAINTAINABILITY = 1, 
 
         /// <summary>
-        /// The security.
+        ///     The security.
         /// </summary>
         [Description("SECURITY")]
         SECURITY = 2, 
 
         /// <summary>
-        /// The efficiency.
+        ///     The efficiency.
         /// </summary>
         [Description("EFFICIENCY")]
         EFFICIENCY = 3, 
 
         /// <summary>
-        /// The changeability.
+        ///     The changeability.
         /// </summary>
         [Description("CHANGEABILITY")]
         CHANGEABILITY = 4, 
 
         /// <summary>
-        /// The reliability.
+        ///     The reliability.
         /// </summary>
         [Description("RELIABILITY")]
         RELIABILITY = 5, 
 
         /// <summary>
-        /// The testability.
+        ///     The testability.
         /// </summary>
         [Description("TESTABILITY")]
         TESTABILITY = 6, 
 
         /// <summary>
-        /// The reusability.
+        ///     The reusability.
         /// </summary>
         [Description("REUSABILITY")]
         REUSABILITY = 7, 
 
         /// <summary>
-        /// The undefined.
+        ///     The undefined.
         /// </summary>
         [Description("UNDEFINED")]
         UNDEFINED = 8, 
     }
 
     /// <summary>
-    /// The sub category.
+    ///     The sub category.
     /// </summary>
     public enum SubCategory
     {
         /// <summary>
-        /// The modularity.
+        ///     The modularity.
         /// </summary>
         [Description("MODULARITY")]
         MODULARITY = 0, 
 
         /// <summary>
-        /// The transportability.
+        ///     The transportability.
         /// </summary>
         [Description("TRANSPORTABILITY")]
         TRANSPORTABILITY = 1, 
 
         /// <summary>
-        /// The uni t_ testability.
+        ///     The uni t_ testability.
         /// </summary>
         [Description("UNIT_TESTABILITY")]
         UNIT_TESTABILITY = 2, 
 
         /// <summary>
-        /// The uni t_ tests.
+        ///     The uni t_ tests.
         /// </summary>
         [Description("UNIT_TESTS")]
         UNIT_TESTS = 3, 
 
         /// <summary>
-        /// The synchronizatio n_ reliability.
+        ///     The synchronizatio n_ reliability.
         /// </summary>
         [Description("SYNCHRONIZATION_RELIABILITY")]
         SYNCHRONIZATION_RELIABILITY = 4, 
 
         /// <summary>
-        /// The instructio n_ reliability.
+        ///     The instructio n_ reliability.
         /// </summary>
         [Description("INSTRUCTION_RELIABILITY")]
         INSTRUCTION_RELIABILITY = 5, 
 
         /// <summary>
-        /// The faul t_ tolerance.
+        ///     The faul t_ tolerance.
         /// </summary>
         [Description("FAULT_TOLERANCE")]
         FAULT_TOLERANCE = 6, 
 
         /// <summary>
-        /// The exceptio n_ handling.
+        ///     The exceptio n_ handling.
         /// </summary>
         [Description("EXCEPTION_HANDLING")]
         EXCEPTION_HANDLING = 7, 
 
         /// <summary>
-        /// The dat a_ reliability.
+        ///     The dat a_ reliability.
         /// </summary>
         [Description("DATA_RELIABILITY")]
         DATA_RELIABILITY = 8, 
 
         /// <summary>
-        /// The architectur e_ reliability.
+        ///     The architectur e_ reliability.
         /// </summary>
         [Description("ARCHITECTURE_RELIABILITY")]
         ARCHITECTURE_RELIABILITY = 9, 
 
         /// <summary>
-        /// The logi c_ changeability.
+        ///     The logi c_ changeability.
         /// </summary>
         [Description("LOGIC_CHANGEABILITY")]
         LOGIC_CHANGEABILITY = 10, 
 
         /// <summary>
-        /// The dat a_ changeability.
+        ///     The dat a_ changeability.
         /// </summary>
         [Description("DATA_CHANGEABILITY")]
         DATA_CHANGEABILITY = 11, 
 
         /// <summary>
-        /// The architectur e_ changeability.
+        ///     The architectur e_ changeability.
         /// </summary>
         [Description("ARCHITECTURE_CHANGEABILITY")]
         ARCHITECTURE_CHANGEABILITY = 12, 
 
         /// <summary>
-        /// The cp u_ efficiency.
+        ///     The cp u_ efficiency.
         /// </summary>
         [Description("CPU_EFFICIENCY")]
         CPU_EFFICIENCY = 13, 
 
         /// <summary>
-        /// The memor y_ efficiency.
+        ///     The memor y_ efficiency.
         /// </summary>
         [Description("MEMORY_EFFICIENCY")]
         MEMORY_EFFICIENCY = 14, 
 
         /// <summary>
-        /// The securit y_ features.
+        ///     The securit y_ features.
         /// </summary>
         [Description("SECURITY_FEATURES")]
         SECURITY_FEATURES = 15, 
 
         /// <summary>
-        /// The inpu t_ validatio n_ an d_ representation.
+        ///     The inpu t_ validatio n_ an d_ representation.
         /// </summary>
         [Description("INPUT_VALIDATION_AND_REPRESENTATION")]
         INPUT_VALIDATION_AND_REPRESENTATION = 16, 
 
         /// <summary>
-        /// The errors.
+        ///     The errors.
         /// </summary>
         [Description("ERRORS")]
         ERRORS = 17, 
 
         /// <summary>
-        /// The ap i_ abuse.
+        ///     The ap i_ abuse.
         /// </summary>
         [Description("API_ABUSE")]
         API_ABUSE = 18, 
 
         /// <summary>
-        /// The understandability.
+        ///     The understandability.
         /// </summary>
         [Description("UNDERSTANDABILITY")]
         UNDERSTANDABILITY = 19, 
 
         /// <summary>
-        /// The readability.
+        ///     The readability.
         /// </summary>
         [Description("READABILITY")]
         READABILITY = 20, 
 
         /// <summary>
-        /// The tim e_ zon e_ relate d_ portability.
+        ///     The tim e_ zon e_ relate d_ portability.
         /// </summary>
         [Description("TIME_ZONE_RELATED_PORTABILITY")]
         TIME_ZONE_RELATED_PORTABILITY = 21, 
 
         /// <summary>
-        /// The softwar e_ relate d_ portability.
+        ///     The softwar e_ relate d_ portability.
         /// </summary>
         [Description("SOFTWARE_RELATED_PORTABILITY")]
         SOFTWARE_RELATED_PORTABILITY = 22, 
 
         /// <summary>
-        /// The o s_ relate d_ portability.
+        ///     The o s_ relate d_ portability.
         /// </summary>
         [Description("OS_RELATED_PORTABILITY")]
         OS_RELATED_PORTABILITY = 23, 
 
         /// <summary>
-        /// The languag e_ relate d_ portability.
+        ///     The languag e_ relate d_ portability.
         /// </summary>
         [Description("LANGUAGE_RELATED_PORTABILITY")]
         LANGUAGE_RELATED_PORTABILITY = 24, 
 
         /// <summary>
-        /// The hardwar e_ relate d_ portability.
+        ///     The hardwar e_ relate d_ portability.
         /// </summary>
         [Description("HARDWARE_RELATED_PORTABILITY")]
         HARDWARE_RELATED_PORTABILITY = 25, 
 
         /// <summary>
-        /// The compile r_ relate d_ portability.
+        ///     The compile r_ relate d_ portability.
         /// </summary>
         [Description("COMPILER_RELATED_PORTABILITY")]
         COMPILER_RELATED_PORTABILITY = 26, 
 
         /// <summary>
-        /// The logi c_ reliability.
+        ///     The logi c_ reliability.
         /// </summary>
         [Description("LOGIC_RELIABILITY")]
         LOGIC_RELIABILITY = 27, 
 
         /// <summary>
-        /// The integratio n_ testability.
+        ///     The integratio n_ testability.
         /// </summary>
         [Description("INTEGRATION_TESTABILITY")]
         INTEGRATION_TESTABILITY = 28, 
 
         /// <summary>
-        /// The undefined.
+        ///     The undefined.
         /// </summary>
         [Description("UNDEFINED")]
         UNDEFINED = 29

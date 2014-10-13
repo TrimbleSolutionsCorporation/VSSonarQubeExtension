@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IMenuCommandPlugin.cs" />
+    <Compile Include="IVSSStatusBar.cs" />
     <Compile Include="PluginSandBoxLoader.cs" />
     <Compile Include="GlobalIds.cs" />
     <Compile Include="IPlugin.cs" />

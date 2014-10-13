@@ -3,12 +3,207 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	mc:Ignorable="d"
+    xmlns:viewModel="clr-namespace:VSSonarExtensionUi.ViewModel"
+    xmlns:view="clr-namespace:VSSonarExtensionUi.View"
+    xmlns:helpers="clr-namespace:VSSonarExtensionUi.Helpers"
+    xmlns:styles="clr-namespace:VSSonarExtensionUi.Styles"
+    mc:Ignorable="d"
 	x:Class="VSSonarExtensionUi.View.IssueSearchView"
 	x:Name="UserControl"
-	d:DesignWidth="640" d:DesignHeight="480">
+	d:DesignWidth="640" d:DesignHeight="480" Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Background="{styles:FallbackBackgroundBrush FallBackBrush=White}">
 
-	<Grid x:Name="LayoutRoot">
-        <Button Content="Serach" HorizontalAlignment="Left" Height="72" Margin="182,88,0,0" VerticalAlignment="Top" Width="224"/>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/Styles.xaml"/>
+                
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />                
+            </ResourceDictionary.MergedDictionaries>
+        	
+
+            <DataTemplate DataType="{x:Type viewModel:IssueGridViewModel}">
+                <view:IssuesGrid/>
+            </DataTemplate>          
+            
+            
+            <DataTemplate x:Key="UserSelectionComboBoxDataTemplate">
+        		<StackPanel>
+                    <TextBlock Text="{Binding Name}"></TextBlock>
+                </StackPanel>
+        	</DataTemplate>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+
+    <Grid x:Name="LayoutRoot">
+        <Grid.ColumnDefinitions>
+			<ColumnDefinition Width="250"/>
+			<ColumnDefinition Width="400*"/>
+			<ColumnDefinition Width="{Binding CommentsWidth}"/>
+		</Grid.ColumnDefinitions>
+		<ScrollViewer x:Name="ControlPanel">
+			<StackPanel>
+					<Grid Background="{styles:FallbackBackgroundBrush FallBackBrush=Transparent}">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="20*"/>
+							<RowDefinition Height="20*"/>
+							<RowDefinition Height="20*"/>
+							<RowDefinition Height="20*"/>
+							<RowDefinition Height="20*"/>
+							<RowDefinition Height="20*"/>
+							<RowDefinition Height="5"/>
+							<RowDefinition Height="20*"/>
+							<RowDefinition Height="5"/>
+							<RowDefinition Height="20*"/>
+						</Grid.RowDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="20*"/>
+							<ColumnDefinition Width="20*"/>
+						</Grid.ColumnDefinitions>
+						<Expander Header="Users" Grid.Row="5" Grid.ColumnSpan="2" Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" >
+							<Grid Background="{styles:FallbackBackgroundBrush FallBackBrush=Transparent}" Height="50" >
+								<Grid.RowDefinitions>
+									<RowDefinition Height="25"/>
+									<RowDefinition Height="25"/>
+								</Grid.RowDefinitions>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="60"/>
+									<ColumnDefinition Width="20*"/>
+									<ColumnDefinition Width="25"/>
+								</Grid.ColumnDefinitions>
+								<Label Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Content="Reporter"/>
+								<Label Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Grid.Row="1" Grid.Column="0" Content="Assignee"/>
+								<ComboBox Grid.Row="0" Grid.Column="1" IsTextSearchEnabled="True" SelectedItem="{Binding Reporter, Mode=TwoWay}" ItemsSource="{Binding UsersList}" MaxDropDownHeight="101" Background="{styles:FallbackBackgroundBrush FallBackBrush=Transparent}" ItemTemplate="{DynamicResource UserSelectionComboBoxDataTemplate}" />
+								<ComboBox Grid.Row="1" Grid.Column="1" IsTextSearchEnabled="True" SelectedItem="{Binding Assignee, Mode=TwoWay}" ItemsSource="{Binding UsersList}" MaxDropDownHeight="101" Background="{styles:FallbackBackgroundBrush FallBackBrush=Transparent}" ItemTemplate="{DynamicResource UserSelectionComboBoxDataTemplate}" />
+								<CheckBox Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsReporterChecked}"/>
+								<CheckBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsAssigneeChecked}"/>
+							</Grid>
+						</Expander>
+
+						<Expander Header="Status" Grid.Row="4"  Grid.ColumnSpan="2" Grid.Column="0"
+						          Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" >
+							<Grid Background="{styles:FallbackBackgroundBrush FallBackBrush=Transparent}" Height="125" >
+								<Grid.RowDefinitions>
+									<RowDefinition Height="25"/>
+									<RowDefinition Height="25"/>
+									<RowDefinition Height="25"/>
+									<RowDefinition Height="25"/>
+									<RowDefinition Height="25"/>
+								</Grid.RowDefinitions>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="80"/>
+									<ColumnDefinition Width="20*"/>
+									<ColumnDefinition Width="25"/>
+								</Grid.ColumnDefinitions>
+								<Label Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Content="Open"/>
+								<Label Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Grid.Row="1" Grid.Column="0" Content="Closed" />
+								<Label Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Grid.Row="2" Grid.Column="0" Content="Resolved" />
+								<Label Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Grid.Row="3" Grid.Column="0" Content="Confirmed" />
+								<Label Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Grid.Row="4" Grid.Column="0" Content="Reopened" />
+								<CheckBox Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsStatusOpenChecked}"/>
+								<CheckBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsStatusClosedChecked}"/>
+								<CheckBox Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsStatusResolvedChecked}"/>
+								<CheckBox Grid.Row="3" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsStatusConfirmedChecked}"/>
+								<CheckBox  Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsStatusReopenedChecked}"/>
+							</Grid>
+						</Expander>
+
+                    <Expander  Header="Quick Links" Grid.Row="9" Grid.ColumnSpan="2" Grid.Column="0"
+						          Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}"  >
+							<Grid Background="{styles:FallbackBackgroundBrush FallBackBrush=Transparent}" Height="100" >
+								<Grid.RowDefinitions>
+									<RowDefinition Height="25"/>
+									<RowDefinition Height="25"/>
+									<RowDefinition Height="25"/>
+									<RowDefinition Height="25"/>
+								</Grid.RowDefinitions>								
+                                <Button Style="{DynamicResource SquareButtonStyle}" Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Grid.Row="0" Grid.Column="0"  x:Name="AllIssues" Content="All Issues" Command="{Binding GetAllIssuesFromProjectCommand}"/>
+                                <Button Style="{DynamicResource SquareButtonStyle}" Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Grid.Row="1" Grid.Column="0"  x:Name="IssuesSinceLastAnalysis" Content="All Issues Since Last Analysis" Command="{Binding GetAllIssuesSinceLastAnalysisCommand}"/>
+								<Button Style="{DynamicResource SquareButtonStyle}" Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Grid.Row="2" Grid.Column="0"  x:Name="MyIssuesInProject" Content="My Issues In Project" Command="{Binding GetMyIssuesInProjectCommand}"/>
+								<Button Style="{DynamicResource SquareButtonStyle}" Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Grid.Row="3" Grid.Column="0"  x:Name="AllMyIssues" Content="All My Issues" Command="{Binding GetAllMyIssuesCommand}"/>
+							</Grid>
+						</Expander>
+
+						<Expander Header="Severity" Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="0"
+						          Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" >
+							<Grid Background="{styles:FallbackBackgroundBrush FallBackBrush=Transparent}" Height="125" >
+								<Grid.RowDefinitions>
+									<RowDefinition Height="25"/>
+									<RowDefinition Height="25"/>
+									<RowDefinition Height="25"/>
+									<RowDefinition Height="25"/>
+									<RowDefinition Height="25"/>
+								</Grid.RowDefinitions>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="80"/>
+									<ColumnDefinition Width="20*"/>
+									<ColumnDefinition Width="25"/>
+								</Grid.ColumnDefinitions>
+								<Label Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Content="Blocker" />
+								<Label Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Grid.Row="1" Grid.Column="0" Content="Critical" />
+								<Label Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Grid.Row="2" Grid.Column="0" Content="Major" />
+								<Label Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Grid.Row="3" Grid.Column="0" Content="Minor" />
+								<Label Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Grid.Row="4" Grid.Column="0" Content="Info" />
+								<CheckBox Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsBlockerChecked}"/>
+								<CheckBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsCriticalChecked}"/>
+								<CheckBox Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsMajaorChecked}"/>
+								<CheckBox Grid.Row="3" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsMinorChecked}"/>
+								<CheckBox  Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsInfoChecked}"/>
+							</Grid>
+						</Expander>
+
+						<Expander Header="Resolution" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0"
+						          Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" >
+							<Grid Background="{styles:FallbackBackgroundBrush FallBackBrush=Transparent}" Height="75" >
+								<Grid.RowDefinitions>
+									<RowDefinition Height="25"/>
+									<RowDefinition Height="25"/>
+									<RowDefinition Height="25"/>
+								</Grid.RowDefinitions>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="80"/>
+									<ColumnDefinition Width="20*"/>
+									<ColumnDefinition Width="25"/>
+								</Grid.ColumnDefinitions>
+								<Label Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Content="False Positive" />
+								<Label Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Grid.Row="1" Grid.Column="0" Content="Removed" />
+								<Label Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Grid.Row="2" Grid.Column="0" Content="Fixed" />
+								<CheckBox Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsFalsePositiveChecked}"/>
+								<CheckBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsRemovedChecked}"/>
+								<CheckBox Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsFixedChecked}"/>
+							</Grid>
+						</Expander>
+						<Expander Header="Creation Date" Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0"
+						          Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" >
+							<Grid Background="{styles:FallbackBackgroundBrush FallBackBrush=Transparent}" Height="55">
+								<Grid.RowDefinitions>
+									<RowDefinition Height="25"/>
+									<RowDefinition Height="25"/>
+								</Grid.RowDefinitions>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="50"/>
+									<ColumnDefinition Width="60*"/>
+									<ColumnDefinition Width="25"/>
+								</Grid.ColumnDefinitions>
+								<Label Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Content="Since" />
+								<Label Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Grid.Row="1" Grid.Column="0" Content="Before" />
+								<DatePicker SelectedDate="{Binding CreatedSinceDate}"  Grid.Row="0" Grid.Column="1" />
+								<DatePicker SelectedDate="{Binding CreatedBeforeDate}"  Grid.Row="1" Grid.Column="1"/>
+								<CheckBox Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsDateSinceChecked}"/>
+								<CheckBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsDateBeforeChecked}"/>
+							</Grid>
+						</Expander>
+						<Button Style="{DynamicResource SquareButtonStyle}" Grid.Row="7" Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" x:Name="GetFromServer" Content="Get Issues By Filter" Grid.Column="0" Grid.ColumnSpan="2"  Command="{Binding GetIssuesByFilterCommand}" />
+					</Grid>
+			</StackPanel>
+		</ScrollViewer>
+
+        <Border Grid.Column="1" Grid.Row="0" Margin="5" BorderBrush="#FF7F9DB9" BorderThickness="1">
+            <ContentControl Content="{Binding IssuesGridView}"/>
+        </Border>        
     </Grid>
 </UserControl>

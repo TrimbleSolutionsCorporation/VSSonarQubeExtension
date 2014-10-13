@@ -49,7 +49,7 @@ namespace ExtensionHelpers.Test.NonVSTests
         [Test]
         public void TestReadAndWriteOfOptionToANonExistentFile()
         {
-            var vshelper = new VsPropertiesHelper(null) { ApplicationDataUserSettingsFile = FileName };
+            var vshelper = new VsPropertiesHelper(null,null) { ApplicationDataUserSettingsFile = FileName };
             vshelper.WriteOptionInApplicationData("key", "data", "value");
             var value = vshelper.ReadOptionFromApplicationData("key", "data");
             Assert.AreEqual("value", value);
@@ -61,7 +61,7 @@ namespace ExtensionHelpers.Test.NonVSTests
         [Test]
         public void TestReadAndWriteOfComplexOptionToANonExistentFile()
         {
-            var vshelper = new VsPropertiesHelper(null) { ApplicationDataUserSettingsFile = FileName };
+            var vshelper = new VsPropertiesHelper(null,null) { ApplicationDataUserSettingsFile = FileName };
             vshelper.WriteOptionInApplicationData("key", "data", "value=xpto");
             var value = vshelper.ReadOptionFromApplicationData("key", "data");
             Assert.AreEqual("value=xpto", value);
@@ -73,7 +73,7 @@ namespace ExtensionHelpers.Test.NonVSTests
         [Test]
         public void TestReadAndWriteOfOptionToAExistentFile()
         {
-            var vshelper = new VsPropertiesHelper(null) { ApplicationDataUserSettingsFile = FileName };
+            var vshelper = new VsPropertiesHelper(null,null) { ApplicationDataUserSettingsFile = FileName };
             vshelper.WriteOptionInApplicationData("key", "data", "value");
             var value = vshelper.ReadOptionFromApplicationData("key", "data");
             Assert.AreEqual("value", value);
@@ -88,7 +88,7 @@ namespace ExtensionHelpers.Test.NonVSTests
         [Test]
         public void TestReadAndWriteOfOptionReplaceValueInFile()
         {
-            var vshelper = new VsPropertiesHelper(null) { ApplicationDataUserSettingsFile = FileName };
+            var vshelper = new VsPropertiesHelper(null,null) { ApplicationDataUserSettingsFile = FileName };
             vshelper.WriteOptionInApplicationData("key", "data", "value");
             var value = vshelper.ReadOptionFromApplicationData("key", "data");
             Assert.AreEqual("value", value);
@@ -106,7 +106,7 @@ namespace ExtensionHelpers.Test.NonVSTests
         [Test]
         public void TestReadAllOptionsReplaceValueInFile()
         {
-            var vshelper = new VsPropertiesHelper(null) { ApplicationDataUserSettingsFile = FileName };
+            var vshelper = new VsPropertiesHelper(null,null) { ApplicationDataUserSettingsFile = FileName };
             vshelper.WriteOptionInApplicationData("key", "data", "value");
             vshelper.WriteOptionInApplicationData("key", "data1", "value1");
             vshelper.WriteOptionInApplicationData("key", "data2", "value2");
@@ -125,7 +125,7 @@ namespace ExtensionHelpers.Test.NonVSTests
         [Test]
         public void TestSetAllOptions()
         {
-            var vshelper = new VsPropertiesHelper(null) { ApplicationDataUserSettingsFile = FileName };
+            var vshelper = new VsPropertiesHelper(null,null) { ApplicationDataUserSettingsFile = FileName };
             var options = new Dictionary<string, string>
                               {
                                   { "data", "value" },
@@ -148,7 +148,7 @@ namespace ExtensionHelpers.Test.NonVSTests
         [Test]
         public void TestReadAllOptionsWithMultipleDefinedKeysInFile()
         {
-            var vshelper = new VsPropertiesHelper(null) { ApplicationDataUserSettingsFile = FileName };
+            var vshelper = new VsPropertiesHelper(null,null) { ApplicationDataUserSettingsFile = FileName };
 
             using (var writer = new StreamWriter(FileName))
             {

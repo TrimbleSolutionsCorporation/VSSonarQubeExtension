@@ -3,8 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
 	x:Class="VSSonarExtension.MainView.IssuesGridSettingsDialog"
-	x:Name="Window"
-	d:DataContext="{d:DesignData /SampleData/ExtensionDataModelSampleData.xaml}" Height="400" Width="800" Background="#FF2D2D30" Foreground="White">
+	x:Name="Window" Height="400" Width="800" Background="#FF2D2D30" Foreground="White">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

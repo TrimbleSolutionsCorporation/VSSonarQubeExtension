@@ -32,16 +32,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
     let httpconnector = httpconnector
 
     let GetSeverity(value : string) =
-        let mutable sev = "1 : INFO"
-        if value.Equals("MINOR") then
-            sev <- "2 : MINOR"
-        if value.Equals("MAJOR") then
-            sev <- "3 : MAJOR"
-        if value.Equals("CRITICAL") then
-            sev <- "4 : CRITICAL"
-        if value.Equals("BLOCKER") then
-            sev <- "5 : BLOCKER"
-        sev
+        (EnumHelper.asEnum<Severity>(value)).Value
                     
     let (|NotNull|_|) value = 
         if obj.ReferenceEquals(value, null) then None 
@@ -91,7 +82,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
         issue.Project <- data.Project
         issue.UpdateDate <- data.UpdateDate
-        issue.Status <- data.Status
+        issue.Status <- (EnumHelper.asEnum<IssueStatus>(data.Status)).Value
         issue.Severity <- GetSeverity(data.Severity)
         issue.Rule <- data.Rule
         issue.Key <- data.Key
@@ -111,7 +102,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             issue.CloseDate <- data.CloseDate
 
         if not(obj.ReferenceEquals(data.JsonValue.TryGetProperty("resolution"), null)) then
-            issue.Resolution <- data.Resolution
+            issue.Resolution <- (EnumHelper.asEnum<Resolution>(data.Resolution.Replace("-","_"))).Value
 
         issue
                         
@@ -131,7 +122,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
             issue.Project <- elem.Project
             issue.UpdateDate <- elem.UpdateDate
-            issue.Status <- elem.Status
+            issue.Status <- (EnumHelper.asEnum<IssueStatus>(elem.Status)).Value
             issue.Severity <- GetSeverity(elem.Severity)
             issue.Rule <- elem.Rule
             issue.Key <- elem.Key
@@ -146,7 +137,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 issue.CloseDate <- elem.CloseDate.Value
 
             if not(obj.ReferenceEquals(elem.Resolution, null)) then
-                issue.Resolution <- elem.Resolution.Value
+                issue.Resolution <- (EnumHelper.asEnum<Resolution>(elem.Resolution.Value.Replace("-", "_"))).Value
 
             if not(obj.ReferenceEquals(elem.EffortToFix, null)) then
                 let itemValue = elem.JsonValue.Item("effortToFix")
@@ -173,7 +164,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 issue.Line <- 0
 
             issue.Severity <- GetSeverity(elem.Priority)
-            issue.Status <- "OPEN"
+            issue.Status <- IssueStatus.OPEN
 
             // convert violation into review if a review is present
             for review in reviewAsIssues do
@@ -205,7 +196,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             let keyelems = elem.Resource.Split(':')
             issue.Project <-  keyelems.[0] + ":" + keyelems.[1] 
             issue.UpdateDate <- elem.UpdatedAt
-            issue.Status <- elem.Status
+            issue.Status <- (EnumHelper.asEnum<IssueStatus>(elem.Status)).Value
             issue.Severity <- GetSeverity(elem.Severity)
             issue.Id <- elem.Id
             issue.Rule <- ""
@@ -491,18 +482,18 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
         source
 
-    let QuerySonar(userconf : ConnectionConfiguration, urltosue : string, methodin : Method) =
+    let QuerySonar(userconf : ISonarConfiguration, urltosue : string, methodin : Method) =
         let client = new RestClient(userconf.Hostname)
         client.Authenticator <- new HttpBasicAuthenticator(userconf.Username, userconf.Password)
         let request = new RestRequest(urltosue, methodin)
         request.AddHeader(HttpRequestHeader.Accept.ToString(), "text/xml") |> ignore
         client.Execute(request)
 
-    let PerformWorkFlowTransition(userconf : ConnectionConfiguration, issue : Issue, transition : string) =
+    let PerformWorkFlowTransition(userconf : ISonarConfiguration, issue : Issue, transition : string) =
         let parameters = Map.empty.Add("issue", issue.Key.ToString()).Add("transition", transition)
         httpconnector.HttpSonarPostRequest(userconf, "/api/issues/do_transition", parameters)
 
-    let DoStateTransition(userconf : ConnectionConfiguration, issue : Issue, finalState : string, transition : string) = 
+    let DoStateTransition(userconf : ISonarConfiguration, issue : Issue, finalState : string, transition : string) = 
         let mutable status = Net.HttpStatusCode.OK
 
         let response = PerformWorkFlowTransition(userconf, issue, transition)
@@ -651,7 +642,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
 
     interface ISonarRestService with
-        member this.CreateRule(conf:ConnectionConfiguration, rule:Rule, ruleTemplate:Rule) =
+        member this.CreateRule(conf:ISonarConfiguration, rule:Rule, ruleTemplate:Rule) =
             let errorMessages = new System.Collections.Generic.List<string>()
             let url ="/api/rules/create"
 
@@ -670,7 +661,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             
             errorMessages
 
-        member this.GetTemplateRules(conf:ConnectionConfiguration, profile:Profile) =
+        member this.GetTemplateRules(conf:ISonarConfiguration, profile:Profile) =
             let rules = new System.Collections.Generic.List<Rule>()
             let url ="/api/rules/search?is_template=true&qprofile=" + HttpUtility.UrlEncode(profile.Key) + "&languages=" + HttpUtility.UrlEncode(profile.Language)
             let reply = httpconnector.HttpSonarGetRequest(conf, url)                        
@@ -679,7 +670,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             GetRulesFromSearchQuery(rules.Rules, profile, true)
 
                         
-        member this.ActivateRule(conf:ConnectionConfiguration, rule:Rule, profilekey:string) =
+        member this.ActivateRule(conf:ISonarConfiguration, rule:Rule, profilekey:string) =
             let errorMessages = new System.Collections.Generic.List<string>()
             let url ="/api/qualityprofiles/activate_rule"
 
@@ -696,7 +687,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             
             errorMessages
 
-        member this.DeleteRule(conf:ConnectionConfiguration, rule:Rule) =
+        member this.DeleteRule(conf:ISonarConfiguration, rule:Rule) =
             let errorMessages = new System.Collections.Generic.List<string>()
             let url ="/api/rules/delete"
 
@@ -711,7 +702,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             
             errorMessages
 
-        member this.DisableRule(conf:ConnectionConfiguration, rule:Rule, profilekey:string) =
+        member this.DisableRule(conf:ISonarConfiguration, rule:Rule, profilekey:string) =
             let errorMessages = new System.Collections.Generic.List<string>()
             let url ="/api/qualityprofiles/deactivate_rule"
 
@@ -727,7 +718,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             
             errorMessages
             
-        member this.UpdateTags(conf:ConnectionConfiguration, rule:Rule, tags:System.Collections.Generic.List<string>) =
+        member this.UpdateTags(conf:ISonarConfiguration, rule:Rule, tags:System.Collections.Generic.List<string>) =
             let errorMessages = new System.Collections.Generic.List<string>()
                     
             let dic = new System.Collections.Generic.Dictionary<string, string>()
@@ -740,7 +731,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
             (this :> ISonarRestService).UpdateRule(conf, HttpUtility.UrlEncode(rule.Key), dic)
 
-        member this.GetAllTags(conf:ConnectionConfiguration) =
+        member this.GetAllTags(conf:ISonarConfiguration) =
             let tags = System.Collections.Generic.List<string>()
             let url ="/api/rules/tags"
             let response = httpconnector.HttpSonarGetRequest(conf, url)
@@ -751,7 +742,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
             tags
 
-        member this.UpdateRule(conf:ConnectionConfiguration, key:string, optionalProps:System.Collections.Generic.Dictionary<string, string>) = 
+        member this.UpdateRule(conf:ISonarConfiguration, key:string, optionalProps:System.Collections.Generic.Dictionary<string, string>) = 
             let url ="/api/rules/update?key=" + key
             let errorMessages = new System.Collections.Generic.List<string>()
             let response = httpconnector.HttpSonarPostRequestDic(conf, url, optionalProps)
@@ -763,7 +754,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             errorMessages
 
 
-        member this.GetRulesForProfile(conf:ConnectionConfiguration , profile:Profile) = 
+        member this.GetRulesForProfile(conf:ISonarConfiguration , profile:Profile) = 
             if profile <> null then
                 profile.Rules <- new System.Collections.Generic.List<Rule>() 
                 let url = "/api/profiles/index?language=" + HttpUtility.UrlEncode(profile.Language) + "&name=" + HttpUtility.UrlEncode(profile.Name)
@@ -779,7 +770,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                     profile.Rules.Add(newRule)
 
 
-        member this.GetRulesForProfileUsingRulesApp(conf:ConnectionConfiguration , profile:Profile, active:bool) = 
+        member this.GetRulesForProfileUsingRulesApp(conf:ISonarConfiguration , profile:Profile, active:bool) = 
             if profile <> null then
                 let getActivation() =
                     if active then
@@ -805,7 +796,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
 
 
-        member this.GetRulesForProfile(conf:ConnectionConfiguration , profile:Profile, ruleDetails:bool, active:bool) = 
+        member this.GetRulesForProfile(conf:ISonarConfiguration , profile:Profile, ruleDetails:bool, active:bool) = 
             if profile <> null then
 
                 let profileFast = (this :> ISonarRestService).GetEnabledRulesInProfile(conf, profile.Language, profile.Name)
@@ -839,7 +830,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                     with
                     | ex -> ()
 
-        member this.GetProfilesUsingRulesApp(conf : ConnectionConfiguration) = 
+        member this.GetProfilesUsingRulesApp(conf : ISonarConfiguration) = 
             let profiles = new System.Collections.Generic.List<Profile>()
             let reply = httpconnector.HttpSonarGetRequest(conf, "/api/rules/app")
             let data = JsonInternalData.Parse(reply)
@@ -852,7 +843,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
             profiles            
 
-        member this.GetAvailableProfiles(conf : ConnectionConfiguration) = 
+        member this.GetAvailableProfiles(conf : ISonarConfiguration) = 
             let profiles = new System.Collections.Generic.List<Profile>()
             let reply = httpconnector.HttpSonarGetRequest(conf, "/api/profiles/list")
             let data = JsonQualityProfiles.Parse(reply)
@@ -865,7 +856,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
             profiles
 
-        member this.GetProjects(newConf:ConnectionConfiguration) = 
+        member this.GetProjects(newConf:ISonarConfiguration) = 
             let projects = new System.Collections.Generic.List<SonarProject>()
             let reply = httpconnector.HttpSonarGetRequest(newConf, "/api/projects/index")
             let serverProjects = JsonProjectIndex.Parse(reply)
@@ -880,37 +871,37 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
             projects
 
-        member this.GetIssues(newConf : ConnectionConfiguration, query : string, project : string) = 
+        member this.GetIssues(newConf : ISonarConfiguration, query : string, project : string) = 
             let url =  "/api/issues/search" + query + "&pageSize=200"
             let oldurlreview = "/api/reviews?projects="+ project
             let oldurlviolations = "/api/violations?resource="+ project + "&depth=-1"
             getIssuesOldAndNewVersions(newConf, url, oldurlreview, oldurlviolations)
 
-        member this.GetIssuesByAssigneeInProject(newConf : ConnectionConfiguration, project : string, login : string) = 
+        member this.GetIssuesByAssigneeInProject(newConf : ISonarConfiguration, project : string, login : string) = 
             let url =  "/api/issues/search?componentRoots=" + project + "&assignees="+ login
             let oldurl = "/api/reviews?projects=" + project + "&assignees="+ login
             getIssuesOldAndNewVersions(newConf, url, oldurl, "")
    
-        member this.GetAllIssuesByAssignee(newConf : ConnectionConfiguration, login : string) = 
+        member this.GetAllIssuesByAssignee(newConf : ISonarConfiguration, login : string) = 
             let url =  "/api/issues/search?assignees="+ login
             let oldurl = "/api/reviews?assignees="+ login
             getIssuesOldAndNewVersions(newConf, url, oldurl, "")
 
-        member this.GetIssuesForProjectsCreatedAfterDate(newConf : ConnectionConfiguration, project : string, date : DateTime) =
+        member this.GetIssuesForProjectsCreatedAfterDate(newConf : ISonarConfiguration, project : string, date : DateTime) =
             let url =  "/api/issues/search?componentRoots=" + project + "&pageSize=200&createdAfter=" + Convert.ToString(date.Year) + "-" + Convert.ToString(date.Month) + "-"  + Convert.ToString(date.Day)
             let oldurl = "/api/reviews?projects="+ project
             getIssuesOldAndNewVersions(newConf, url, oldurl, "")
 
-        member this.GetIssuesForProjects(newConf : ConnectionConfiguration, project : string) =
+        member this.GetIssuesForProjects(newConf : ISonarConfiguration, project : string) =
             let url =  "/api/issues/search?componentRoots=" + project + "&pageSize=200"
             let oldurlreview = "/api/reviews?projects="+ project
             let oldurlviolations = "/api/violations?resource="+ project + "&depth=-1"
             getIssuesOldAndNewVersions(newConf, url, oldurlreview, oldurlviolations)
 
-        member this.GetIssuesInResource(conf : ConnectionConfiguration, resource : string) =
+        member this.GetIssuesInResource(conf : ISonarConfiguration, resource : string) =
             getViolationsOldAndNewFormat(conf, resource)
         
-        member this.GetUserList(newConf : ConnectionConfiguration) =
+        member this.GetUserList(newConf : ISonarConfiguration) =
             let url = "/api/users/search"           
             try
                 let responsecontent = httpconnector.HttpSonarGetRequest(newConf, url)
@@ -918,7 +909,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             with
              | ex -> new System.Collections.Generic.List<User>()
 
-        member this.GetProperties(newConf : ConnectionConfiguration) =
+        member this.GetProperties(newConf : ISonarConfiguration) =
             let url = "/api/properties"           
 
             let responsecontent = httpconnector.HttpSonarGetRequest(newConf, url)
@@ -932,7 +923,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
             dic                                
 
-        member this.AuthenticateUser(newConf : ConnectionConfiguration) =
+        member this.AuthenticateUser(newConf : ISonarConfiguration) =
             let url = "/api/authentication/validate"
 
             if newConf.Username = "" && newConf.Password = "" then
@@ -944,31 +935,31 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 with
                     | ex -> false
 
-        member this.GetResourcesData(conf : ConnectionConfiguration, resource : string) =
+        member this.GetResourcesData(conf : ISonarConfiguration, resource : string) =
             let url = "/api/resources?resource=" + resource
             getResourcesFromResponseContent(httpconnector.HttpSonarGetRequest(conf, url))
 
-        member this.GetQualityProfile(conf : ConnectionConfiguration, resource : string) =
+        member this.GetQualityProfile(conf : ISonarConfiguration, resource : string) =
             let url = "/api/resources?resource=" + resource + "&metrics=profile"
             getResourcesFromResponseContent(httpconnector.HttpSonarGetRequest(conf, url))
 
-        member this.GetQualityProfilesForProject(conf : ConnectionConfiguration, resource : string) = 
+        member this.GetQualityProfilesForProject(conf : ISonarConfiguration, resource : string) = 
             let url = "/api/profiles/list?project=" + resource
             GetQualityProfilesFromContent(httpconnector.HttpSonarGetRequest(conf, url))
                         
-        member this.GetQualityProfilesForProject(conf : ConnectionConfiguration, resource : string, language : string) = 
+        member this.GetQualityProfilesForProject(conf : ISonarConfiguration, resource : string, language : string) = 
             let url = "/api/profiles/list?project=" + resource + "&language=" + HttpUtility.UrlEncode(language)
             GetQualityProfilesFromContent(httpconnector.HttpSonarGetRequest(conf, url))
 
-        member this.GetProjectsList(conf : ConnectionConfiguration) =                   
+        member this.GetProjectsList(conf : ISonarConfiguration) =                   
             let url = "/api/resources"
             getResourcesFromResponseContent(httpconnector.HttpSonarGetRequest(conf, url))
 
-        member this.GetEnabledRulesInProfile(conf : ConnectionConfiguration, language : string, profile : string) =
+        member this.GetEnabledRulesInProfile(conf : ISonarConfiguration, language : string, profile : string) =
             let url = "/api/profiles?language=" + HttpUtility.UrlEncode(language) + "&name=" + HttpUtility.UrlEncode(profile)
             GetProfileFromContent(httpconnector.HttpSonarGetRequest(conf, url))
 
-        member this.GetRules(conf : ConnectionConfiguration, language : string) = 
+        member this.GetRules(conf : ISonarConfiguration, language : string) = 
             let GetLanguageUrl =
                 if language = "" then
                     ""
@@ -978,26 +969,26 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             let url = "/api/rules" + GetLanguageUrl
             getRulesFromResponseContent(httpconnector.HttpSonarGetRequest(conf, url))
 
-        member this.GetServerInfo(conf : ConnectionConfiguration) = 
+        member this.GetServerInfo(conf : ISonarConfiguration) = 
             let url = "/api/server"
             let responsecontent = httpconnector.HttpSonarGetRequest(conf, url)
             let versionstr = JSonServerInfo.Parse(responsecontent).Version.Replace(",", ".")
             let elems = versionstr.Split('.')
             float (elems.[0] + "." + Regex.Replace(elems.[1], @"[^\d]", ""))
             
-        member this.GetSourceForFileResource(conf : ConnectionConfiguration, resource : string) =
+        member this.GetSourceForFileResource(conf : ISonarConfiguration, resource : string) =
             let url = "/api/sources?resource=" + resource
             GetSourceFromContent(httpconnector.HttpSonarGetRequest(conf, url))
 
-        member this.GetCoverageInResource(conf : ConnectionConfiguration, resource : string) =
+        member this.GetCoverageInResource(conf : ISonarConfiguration, resource : string) =
             let url = "/api/resources?resource=" + resource + "&metrics=coverage_line_hits_data,conditions_by_line,covered_conditions_by_line";
             GetCoverageFromContent(httpconnector.HttpSonarGetRequest(conf, url))
 
-        member this.GetDuplicationsDataInResource(conf : ConnectionConfiguration, resource : string) =
+        member this.GetDuplicationsDataInResource(conf : ISonarConfiguration, resource : string) =
             let url = "/api/resources?resource=" + resource + "&metrics=duplications_data&depth=-1";
             GetDuplicationsFromContent(httpconnector.HttpSonarGetRequest(conf, url))
 
-        member this.CommentOnIssues(newConf : ConnectionConfiguration, issues : System.Collections.Generic.List<Issue>, comment : string) =
+        member this.CommentOnIssues(newConf : ISonarConfiguration, issues : System.Collections.Generic.IList<Issue>, comment : string) =
             let responseMap = new System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>()
 
             for issue in issues do
@@ -1040,11 +1031,11 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
             responseMap
 
-        member this.MarkIssuesAsFalsePositive(newConf : ConnectionConfiguration, issues : System.Collections.Generic.List<Issue>, comment : string) =
+        member this.MarkIssuesAsFalsePositive(newConf : ISonarConfiguration, issues : System.Collections.Generic.IList<Issue>, comment : string) =
             let responseMap = new System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>()
 
             for issue in issues do
-                if issue.Status <> "RESOLVED" then
+                if issue.Status <> IssueStatus.RESOLVED then
                     let mutable idstr = issue.Key.ToString()
                     let mutable status = DoStateTransition(newConf, issue, "RESOLVED", "falsepositive")
                     if status = Net.HttpStatusCode.OK then
@@ -1058,7 +1049,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                                     let reviews = getReviewsFromString(response.Content)
                                     issue.Id <- reviews.[0].Id
                                     issue.Status <- reviews.[0].Status
-                                    issue.Resolution <- "FALSE-POSITIVE"
+                                    issue.Resolution <- Resolution.FALSE_POSITIVE
                                     let newComment = new Comment()
                                     newComment.CreatedAt <- DateTime.Now
                                     newComment.HtmlText <- comment
@@ -1080,11 +1071,11 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
             responseMap
 
-        member this.ResolveIssues(newConf : ConnectionConfiguration, issues : System.Collections.Generic.List<Issue>, comment : string) =
+        member this.ResolveIssues(newConf : ISonarConfiguration, issues : System.Collections.Generic.List<Issue>, comment : string) =
             let responseMap = new System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>()
 
             for issue in issues do
-                if issue.Status <> "RESOLVED" then
+                if issue.Status <> IssueStatus.RESOLVED then
                     let mutable idstr = issue.Key.ToString()
                     let mutable status = Net.HttpStatusCode.OK
                     status <- DoStateTransition(newConf, issue, "RESOLVED", "resolve")
@@ -1099,7 +1090,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                                 let reviews = getReviewsFromString(response.Content)
                                 issue.Id <- reviews.[0].Id
                                 issue.Status <- reviews.[0].Status
-                                issue.Resolution <- "FIXED"
+                                issue.Resolution <- Resolution.FIXED
                                 let newComment = new Comment()
                                 newComment.CreatedAt <- DateTime.Now
                                 newComment.HtmlText <- comment
@@ -1121,10 +1112,10 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
             responseMap
 
-        member this.ReOpenIssues(newConf : ConnectionConfiguration, issues : System.Collections.Generic.List<Issue>, comment : string) =
+        member this.ReOpenIssues(newConf : ISonarConfiguration, issues : System.Collections.Generic.List<Issue>, comment : string) =
             let responseMap = new System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>()
             for issue in issues do
-                if issue.Status <> "REOPENED" || issue.Status <> "OPEN" then
+                if issue.Status <> IssueStatus.REOPENED || issue.Status <> IssueStatus.OPEN then
                     let mutable idstr = issue.Key.ToString()
                     let mutable status = Net.HttpStatusCode.OK
                     status <- DoStateTransition(newConf, issue, "REOPENED", "reopen")
@@ -1152,7 +1143,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                     responseMap.Add(idstr, status)
             responseMap
 
-        member this.UnConfirmIssues(newConf : ConnectionConfiguration, issues : System.Collections.Generic.List<Issue>, comment : string) =
+        member this.UnConfirmIssues(newConf : ISonarConfiguration, issues : System.Collections.Generic.List<Issue>, comment : string) =
             let responseMap = new System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>()
             for issue in issues do
                 responseMap.Add(issue.Key.ToString(), DoStateTransition(newConf, issue, "REOPENED", "unconfirm"))
@@ -1160,7 +1151,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 (this :> ISonarRestService).CommentOnIssues(newConf, issues, comment) |> ignore                                
             responseMap
 
-        member this.ConfirmIssues(newConf : ConnectionConfiguration, issues : System.Collections.Generic.List<Issue>, comment : string) =
+        member this.ConfirmIssues(newConf : ISonarConfiguration, issues : System.Collections.Generic.List<Issue>, comment : string) =
             let responseMap = new System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>()
             for issue in issues do
                 responseMap.Add(issue.Key.ToString(), DoStateTransition(newConf, issue, "CONFIRMED", "confirm"))                
@@ -1169,7 +1160,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 (this :> ISonarRestService).CommentOnIssues(newConf, issues, comment) |> ignore
             responseMap
 
-        member this.AssignIssuesToUser(newConf : ConnectionConfiguration, issues : System.Collections.Generic.List<Issue>, user : User, comment : string) =
+        member this.AssignIssuesToUser(newConf : ISonarConfiguration, issues : System.Collections.Generic.List<Issue>, user : User, comment : string) =
             let responseMap = new System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>()
             for issue in issues do
                 if not(String.IsNullOrEmpty(user.Login)) then
@@ -1208,7 +1199,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 issue.Line <- 0
                 issue.Message <- message.AsString()
                 issue.Rule <- rule_key.AsString()
-                issue.Severity <- severity.AsString()
+                issue.Severity <- (EnumHelper.asEnum<Severity>(severity.AsString())).Value
                 currentListOfIssues.Add(issue)
 
             let ProcessViolation(str : string, elem : JsonValue) =
@@ -1248,7 +1239,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 issue.Line <- 0
                 issue.Message <- message.AsString()
                 issue.Rule <- rule_key.AsString()
-                issue.Severity <- severity.AsString()
+                issue.Severity <- (EnumHelper.asEnum<Severity>(severity.AsString())).Value
                 issue.CreationDate <- created_at.AsDateTime()
                 currentListOfIssues.Add(issue)
 
@@ -1289,7 +1280,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 if not(obj.ReferenceEquals(elem.Rule, null)) then
                     issue.Rule <- elem.Rule
                 if not(obj.ReferenceEquals(elem.Severity, null)) then
-                    issue.Severity <- elem.Severity.Value
+                    issue.Severity <- (EnumHelper.asEnum<Severity>(elem.Severity.Value)).Value
                 if not(obj.ReferenceEquals(elem.UpdateDate, null)) then
                     issue.UpdateDate <- elem.UpdateDate.Value
                 if not(obj.ReferenceEquals(elem.IsNew, null)) then

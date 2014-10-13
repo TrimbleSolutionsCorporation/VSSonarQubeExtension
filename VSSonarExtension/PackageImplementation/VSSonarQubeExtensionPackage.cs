@@ -175,7 +175,7 @@ namespace VSSonarExtension.PackageImplementation
                     return;
                 }
 
-                this.visualStudioInterface = new VsPropertiesHelper(this.dte2);
+                this.visualStudioInterface = new VsPropertiesHelper(this.dte2, this);
                 this.restService = new SonarRestService(new JsonSonarConnector());
                 this.VsEvents = new VsEvents(ExtensionModelData, this.visualStudioInterface, this.dte2);
 
@@ -315,7 +315,7 @@ namespace VSSonarExtension.PackageImplementation
             var win = window as IssuesToolWindow;
             var bar = GetService(typeof(SVsStatusbar)) as IVsStatusbar;
             this.StatusBar = new VSSStatusBar(bar, this.dte2);
-            modelToUse.ExtensionDataModelUpdate(new SonarRestService(new JsonSonarConnector()), new VsPropertiesHelper(this.dte2), null, this.StatusBar, this);
+            modelToUse.ExtensionDataModelUpdate(new SonarRestService(new JsonSonarConnector()), new VsPropertiesHelper(this.dte2, this), null, this.StatusBar, this);
             win.UpdateModel(modelToUse);
         }
 

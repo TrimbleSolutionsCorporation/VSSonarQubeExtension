@@ -65,8 +65,8 @@ namespace VSSonarExtension.Test.TestViewModel
 
             using (this.mocks.Record())
             {
-                SetupResult.For(this.service.GetServerInfo(Arg<ConnectionConfiguration>.Is.Anything)).Return(3.6);
-                SetupResult.For(this.service.AuthenticateUser(Arg<ConnectionConfiguration>.Is.Anything)).Return(true);
+                SetupResult.For(this.service.GetServerInfo(Arg<ISonarConfiguration>.Is.Anything)).Return(3.6);
+                SetupResult.For(this.service.AuthenticateUser(Arg<ISonarConfiguration>.Is.Anything)).Return(true);
                 SetupResult.For(this.vshelper.ReadSavedOption("Sonar Options", "General", "SonarHost")).Return("serveraddr");
                 SetupResult.For(this.vshelper.ReadSavedOption("Sonar Options", "General", "SonarUserPassword")).Return("password");
                 SetupResult.For(this.vshelper.ReadSavedOption("Sonar Options", "General", "SonarUserName")).Return("login");
@@ -85,8 +85,8 @@ namespace VSSonarExtension.Test.TestViewModel
                                SelectedIssuesInView =
                                    new List<Issue>
                                        {
-                                           new Issue { Status = "OPEN" },
-                                           new Issue { Status = "REOPENED" }
+                                           new Issue { Status = IssueStatus.OPEN },
+                                           new Issue { Status = IssueStatus.REOPENED }
                                        }
                            };
 
@@ -112,7 +112,7 @@ namespace VSSonarExtension.Test.TestViewModel
                 SelectedIssuesInView =
                     new List<Issue>
                                        {
-                                           new Issue { Status = "CONFIRMED" }
+                                           new Issue { Status = IssueStatus.CONFIRMED }
                                        }
             };
 
@@ -138,7 +138,7 @@ namespace VSSonarExtension.Test.TestViewModel
                 SelectedIssuesInView =
                     new List<Issue>
                                        {
-                                           new Issue { Status = "RESOLVED" }
+                                           new Issue { Status = IssueStatus.RESOLVED }
                                        }
             };
 
@@ -164,9 +164,9 @@ namespace VSSonarExtension.Test.TestViewModel
                 SelectedIssuesInView =
                     new List<Issue>
                                        {
-                                           new Issue { Status = "REOPENED" },
-                                           new Issue { Status = "CONFIRMED" },
-                                           new Issue { Status = "RESOLVED" }
+                                           new Issue { Status = IssueStatus.REOPENED },
+                                           new Issue { Status = IssueStatus.CONFIRMED },
+                                           new Issue { Status = IssueStatus.RESOLVED }
                                        }
             };
 

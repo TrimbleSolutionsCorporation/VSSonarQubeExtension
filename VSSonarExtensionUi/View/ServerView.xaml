@@ -3,12 +3,24 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:ViewModel="clr-namespace:VSSonarExtensionUi.ViewModel"
+	xmlns:helpers="clr-namespace:VSSonarExtensionUi.Helpers"
+	xmlns:styles="clr-namespace:VSSonarExtensionUi.Styles"
 	mc:Ignorable="d"
 	x:Class="VSSonarExtensionUi.View.ServerView"
 	x:Name="UserControl"
 	d:DesignWidth="640" d:DesignHeight="480">
 
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary>
+        </UserControl.Resources>
+    
 	<Grid x:Name="LayoutRoot">
-        <Button Content="Server View" HorizontalAlignment="Left" Height="101" Margin="201,133,0,0" VerticalAlignment="Top" Width="256"/>
-    </Grid>
+		<Button Content="Server View" HorizontalAlignment="Left" Height="101" Margin="201,133,0,0" VerticalAlignment="Top" Width="256"/>
+        <TextBlock Text="{Binding Header}" Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Background="{styles:FallbackBackgroundBrush FallBackBrush=Transparent}" Margin="91,75,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="395"/>
+	</Grid>
 </UserControl>

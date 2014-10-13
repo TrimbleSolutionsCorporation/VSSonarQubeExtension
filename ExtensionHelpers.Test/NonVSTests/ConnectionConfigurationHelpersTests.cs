@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ConnectionConfigurationHelpersTests.cs" company="Copyright © 2013 Tekla Corporation. Tekla is a Trimble Company">
+// <copyright file="ISonarConfigurationHelpersTests.cs" company="Copyright © 2013 Tekla Corporation. Tekla is a Trimble Company">
 //     Copyright (C) 2013 [Jorge Costa, Jorge.Costa@tekla.com]
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ namespace ExtensionHelpers.Test.NonVSTests
     /// The comment on issue command test.
     /// </summary>
     [TestFixture]
-    public class ConnectionConfigurationHelpersTests
+    public class ISonarConfigurationHelpersTests
     {
         /// <summary>
         /// The test window.
@@ -46,7 +46,7 @@ namespace ExtensionHelpers.Test.NonVSTests
                 SetupResult.For(mockPropertiesHelper.ReadSavedOption("Sonar Options", "General", "SonarUserName")).Return("userlogin");
                 SetupResult.For(mockPropertiesHelper.ReadSavedOption("Sonar Options", "General", "SonarUserPassword")).Return("userpassword");
                 SetupResult.For(mockPropertiesHelper.ReadSavedOption("Sonar Options", "General", "SonarHost")).Return("host");
-                SetupResult.For(mockHttpReq.AuthenticateUser(Arg<ConnectionConfiguration>.Matches(y => y.Username.Equals("userlogin")))).Return(true);
+                SetupResult.For(mockHttpReq.AuthenticateUser(Arg<ISonarConfiguration>.Matches(y => y.Username.Equals("userlogin")))).Return(true);
             }
 
             var authconf = ConnectionConfigurationHelpers.GetConnectionConfiguration(mockPropertiesHelper, mockHttpReq);
@@ -70,7 +70,7 @@ namespace ExtensionHelpers.Test.NonVSTests
                 SetupResult.For(mockPropertiesHelper.ReadSavedOption("Sonar Options", "General", "SonarUserName")).Return(string.Empty);
                 SetupResult.For(mockPropertiesHelper.ReadSavedOption("Sonar Options", "General", "SonarUserPassword")).Return("userpassword");
                 SetupResult.For(mockPropertiesHelper.ReadSavedOption("Sonar Options", "General", "SonarHost")).Return("host");
-                SetupResult.For(mockHttpReq.AuthenticateUser(Arg<ConnectionConfiguration>.Matches(y => y.Username.Equals("userlogin")))).Return(true);
+                SetupResult.For(mockHttpReq.AuthenticateUser(Arg<ISonarConfiguration>.Matches(y => y.Username.Equals("userlogin")))).Return(true);
             }
 
             var authconf = ConnectionConfigurationHelpers.GetConnectionConfiguration(mockPropertiesHelper, mockHttpReq);
@@ -93,7 +93,7 @@ namespace ExtensionHelpers.Test.NonVSTests
                 SetupResult.For(mockPropertiesHelper.ReadSavedOption("Sonar Options", "General", "SonarUserName")).Return("asdasdas");
                 SetupResult.For(mockPropertiesHelper.ReadSavedOption("Sonar Options", "General", "SonarUserPassword")).Return(string.Empty);
                 SetupResult.For(mockPropertiesHelper.ReadSavedOption("Sonar Options", "General", "SonarHost")).Return("host");
-                SetupResult.For(mockHttpReq.AuthenticateUser(Arg<ConnectionConfiguration>.Matches(y => y.Username.Equals("userlogin")))).Return(true);
+                SetupResult.For(mockHttpReq.AuthenticateUser(Arg<ISonarConfiguration>.Matches(y => y.Username.Equals("userlogin")))).Return(true);
             }
 
             var authconf = ConnectionConfigurationHelpers.GetConnectionConfiguration(mockPropertiesHelper, mockHttpReq);
@@ -116,7 +116,7 @@ namespace ExtensionHelpers.Test.NonVSTests
                 SetupResult.For(mockPropertiesHelper.ReadSavedOption("Sonar Options", "General", "SonarUserName")).Return("asdasdas");
                 SetupResult.For(mockPropertiesHelper.ReadSavedOption("Sonar Options", "General", "SonarUserPassword")).Return("sadasdsa");
                 SetupResult.For(mockPropertiesHelper.ReadSavedOption("Sonar Options", "General", "SonarHost")).Return(string.Empty);
-                SetupResult.For(mockHttpReq.AuthenticateUser(Arg<ConnectionConfiguration>.Matches(y => y.Username.Equals("userlogin")))).Return(true);
+                SetupResult.For(mockHttpReq.AuthenticateUser(Arg<ISonarConfiguration>.Matches(y => y.Username.Equals("userlogin")))).Return(true);
             }
 
             var authconf = ConnectionConfigurationHelpers.GetConnectionConfiguration(mockPropertiesHelper, mockHttpReq);
@@ -139,7 +139,7 @@ namespace ExtensionHelpers.Test.NonVSTests
                 SetupResult.For(mockPropertiesHelper.ReadSavedOption("Sonar Options", "General", "SonarUserName")).Return("userlogin");
                 SetupResult.For(mockPropertiesHelper.ReadSavedOption("Sonar Options", "General", "SonarUserPassword")).Return("userpassword");
                 SetupResult.For(mockPropertiesHelper.ReadSavedOption("Sonar Options", "General", "SonarHost")).Return("host");
-                SetupResult.For(mockHttpReq.AuthenticateUser(Arg<ConnectionConfiguration>.Matches(y => y.Username.Equals("userlogin")))).Return(false);
+                SetupResult.For(mockHttpReq.AuthenticateUser(Arg<ISonarConfiguration>.Matches(y => y.Username.Equals("userlogin")))).Return(false);
             }
 
             var authconf = ConnectionConfigurationHelpers.GetConnectionConfiguration(mockPropertiesHelper, mockHttpReq);

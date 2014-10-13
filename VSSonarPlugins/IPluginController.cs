@@ -69,7 +69,7 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="PluginDescription"/>.
         /// </returns>
-        PluginDescription IstallNewPlugin(string fileName, ConnectionConfiguration conf);
+        PluginDescription IstallNewPlugin(string fileName, ISonarConfiguration conf);
 
         /// <summary>
         /// The pick plugin from multiple supported plugins.
@@ -94,7 +94,7 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="bool"/>.
         /// </returns>
-        bool RemovePlugin(ConnectionConfiguration conf, PluginDescription selectedPlugin);
+        bool RemovePlugin(ISonarConfiguration conf, PluginDescription selectedPlugin);
 
         #endregion
     }

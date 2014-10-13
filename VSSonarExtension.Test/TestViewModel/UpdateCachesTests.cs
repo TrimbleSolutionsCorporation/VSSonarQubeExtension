@@ -70,8 +70,8 @@ namespace VSSonarExtension.Test.TestViewModel
 
             using (this.mocks.Record())
             {
-                SetupResult.For(this.service.GetServerInfo(Arg<ConnectionConfiguration>.Is.Anything)).Return(3.6);
-                SetupResult.For(this.service.AuthenticateUser(Arg<ConnectionConfiguration>.Is.Anything)).Return(true);
+                SetupResult.For(this.service.GetServerInfo(Arg<ISonarConfiguration>.Is.Anything)).Return(3.6);
+                SetupResult.For(this.service.AuthenticateUser(Arg<ISonarConfiguration>.Is.Anything)).Return(true);
                 SetupResult.For(this.vshelper.ReadSavedOption("Sonar Options", "General", "SonarHost")).Return("serveraddr");
                 SetupResult.For(this.vshelper.ReadSavedOption("Sonar Options", "General", "SonarUserPassword")).Return("password");
                 SetupResult.For(this.vshelper.ReadSavedOption("Sonar Options", "General", "SonarUserName")).Return("login");
@@ -93,21 +93,21 @@ namespace VSSonarExtension.Test.TestViewModel
             source1.SetBranchCoverageData("1=0;2=3;3=3", "1=0;2=3;3=3");
 
             this.service.Expect(
-                mp => mp.GetResourcesData(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything))
+                mp => mp.GetResourcesData(Arg<ISonarConfiguration>.Is.Anything, Arg<string>.Is.Anything))
                 .Return(new List<Resource> { newResource });
 
             this.service.Expect(
-                mp => mp.GetSourceForFileResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything))
+                mp => mp.GetSourceForFileResource(Arg<ISonarConfiguration>.Is.Anything, Arg<string>.Is.Anything))
                 .Return(fileSource)
                 .Repeat.Once();
 
             this.service.Expect(
-                mp => mp.GetIssuesInResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything))
-                .Return(new List<Issue> { new Issue { Severity = "CRITICAL", Line = 1 } })
+                mp => mp.GetIssuesInResource(Arg<ISonarConfiguration>.Is.Anything, Arg<string>.Is.Anything))
+                .Return(new List<Issue> { new Issue { Severity = Severity.CRITICAL, Line = 1 } })
                 .Repeat.Once();
 
             this.service.Expect(
-                mp => mp.GetCoverageInResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything))
+                mp => mp.GetCoverageInResource(Arg<ISonarConfiguration>.Is.Anything, Arg<string>.Is.Anything))
                 .Return(source1)
                 .Repeat.Once();
 
@@ -123,8 +123,8 @@ namespace VSSonarExtension.Test.TestViewModel
 
             using (this.mocks.Record())
             {
-                SetupResult.For(localAnalyser.GetResourceKey(Arg<VsProjectItem>.Is.Anything, Arg<Resource>.Is.Anything, Arg<ConnectionConfiguration>.Is.Anything, Arg<bool>.Is.Equal(true))).Return("Key1");
-                SetupResult.For(localAnalyser.GetResourceKey(Arg<VsProjectItem>.Is.Anything, Arg<Resource>.Is.Anything, Arg<ConnectionConfiguration>.Is.Anything, Arg<bool>.Is.Equal(false))).Return("Key2");
+                SetupResult.For(localAnalyser.GetResourceKey(Arg<VsProjectItem>.Is.Anything, Arg<Resource>.Is.Anything, Arg<ISonarConfiguration>.Is.Anything, Arg<bool>.Is.Equal(true))).Return("Key1");
+                SetupResult.For(localAnalyser.GetResourceKey(Arg<VsProjectItem>.Is.Anything, Arg<Resource>.Is.Anything, Arg<ISonarConfiguration>.Is.Anything, Arg<bool>.Is.Equal(false))).Return("Key2");
             }
 
             data.RefreshDataForResource("resource");
@@ -144,21 +144,21 @@ namespace VSSonarExtension.Test.TestViewModel
             source1.SetBranchCoverageData("1=0;2=3;3=3", "1=0;2=3;3=3");
 
             this.service.Expect(
-                mp => mp.GetResourcesData(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything))
+                mp => mp.GetResourcesData(Arg<ISonarConfiguration>.Is.Anything, Arg<string>.Is.Anything))
                 .Return(new List<Resource> { newResource });
 
             this.service.Expect(
-                mp => mp.GetSourceForFileResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything))
+                mp => mp.GetSourceForFileResource(Arg<ISonarConfiguration>.Is.Anything, Arg<string>.Is.Anything))
                 .Return(new Source { Lines = new[] { "line1", "line2", "line3", "line4" } })
                 .Repeat.Once();
 
             this.service.Expect(
-                mp => mp.GetIssuesInResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything))
+                mp => mp.GetIssuesInResource(Arg<ISonarConfiguration>.Is.Anything, Arg<string>.Is.Anything))
                 .Return(new List<Issue>())
                 .Repeat.Once();
 
             this.service.Expect(
-                mp => mp.GetCoverageInResource(Arg<ConnectionConfiguration>.Is.Anything, Arg<string>.Is.Anything))
+                mp => mp.GetCoverageInResource(Arg<ISonarConfiguration>.Is.Anything, Arg<string>.Is.Anything))
                 .Return(source1)
                 .Repeat.Once();
 
@@ -175,8 +175,8 @@ namespace VSSonarExtension.Test.TestViewModel
 
             using (this.mocks.Record())
             {
-                SetupResult.For(localAnalyser.GetResourceKey(Arg<VsProjectItem>.Is.Anything, Arg<Resource>.Is.Anything, Arg<ConnectionConfiguration>.Is.Anything, Arg<bool>.Is.Equal(true))).Return("Key1");
-                SetupResult.For(localAnalyser.GetResourceKey(Arg<VsProjectItem>.Is.Anything, Arg<Resource>.Is.Anything, Arg<ConnectionConfiguration>.Is.Anything, Arg<bool>.Is.Equal(false))).Return("Key2");
+                SetupResult.For(localAnalyser.GetResourceKey(Arg<VsProjectItem>.Is.Anything, Arg<Resource>.Is.Anything, Arg<ISonarConfiguration>.Is.Anything, Arg<bool>.Is.Equal(true))).Return("Key1");
+                SetupResult.For(localAnalyser.GetResourceKey(Arg<VsProjectItem>.Is.Anything, Arg<Resource>.Is.Anything, Arg<ISonarConfiguration>.Is.Anything, Arg<bool>.Is.Equal(false))).Return("Key2");
             }
             
             data.RefreshDataForResource("resource");

@@ -1,0 +1,42 @@
+﻿<Controls:MetroWindow
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:styles="clr-namespace:VSSonarExtensionUi.Styles"
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             mc:Ignorable="d" 
+             x:Class="VSSonarExtensionUi.View.UserExceptionMessageBox"
+             Title="PluginOptionsWindow" MouseDown="MouseButtonEventHandler" Height="300" Width="800" Background="{styles:FallbackBackgroundBrush FallBackBrush=Black}" Foreground="{styles:FallbackForegroundBrush FallBackBrush=White}" BorderThickness="2" Visibility="Visible" Opacity="0.95" WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" >
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary>
+        </Window.Resources>
+            
+            <Grid>
+		<StackPanel>
+            <Grid Background="Transparent">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="25"/>
+                </Grid.RowDefinitions>
+                <TextBox x:Name="ErrorMessage" TextWrapping="Wrap" Height="50" Foreground="{styles:FallbackForegroundBrush FallBackBrush=White}" Background="Transparent" />
+                <Button Grid.Row="1" Foreground="{styles:FallbackForegroundBrush FallBackBrush=White}" Background="Transparent" Content="Close" Click="ButtonBase_OnClick"  />
+            </Grid>
+            <Expander Header="Exception StackTrace" Foreground="{styles:FallbackForegroundBrush FallBackBrush=White}">
+				<Grid Background="Transparent">
+					<Grid.RowDefinitions>
+						<RowDefinition Height="150"/>
+					</Grid.RowDefinitions>
+					<ScrollViewer>
+                        <TextBox x:Name="StackTrace" TextWrapping="Wrap"  Foreground="{styles:FallbackForegroundBrush FallBackBrush=White}" Background="Transparent" />					
+					</ScrollViewer>
+				</Grid>
+			</Expander>               
+		</StackPanel>
+	</Grid>
+</Controls:MetroWindow>

@@ -54,6 +54,7 @@
     <Compile Include="Alert.cs" />
     <Compile Include="BranchCoverage.cs" />
     <Compile Include="Comment.cs" />
+    <Compile Include="ISonarConfiguration.cs" />
     <Compile Include="ConnectionConfiguration.cs" />
     <Compile Include="DuplicatedBlock.cs" />
     <Compile Include="DuplicatedGroup.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="LineCoverage.cs" />
     <Compile Include="Metric.cs" />
     <Compile Include="Profile.cs" />
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="RuleParam.cs" />
     <Compile Include="SonarProject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

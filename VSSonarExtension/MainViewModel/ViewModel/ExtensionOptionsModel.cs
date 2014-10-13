@@ -83,7 +83,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// <param name="plugins">
         /// The plugins.
         /// </param>
-        public ExtensionOptionsModel(PluginController plugincontroller, ExtensionDataModel model, IServiceProvider provider, ConnectionConfiguration conf)
+        public ExtensionOptionsModel(PluginController plugincontroller, ExtensionDataModel model, IServiceProvider provider, ISonarConfiguration conf)
         {
             this.model = model;
             this.plugincontroller = plugincontroller;

@@ -90,7 +90,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// <param name="conf">
         /// The conf.
         /// </param>
-        public PluginManagerModel(IPluginController controller, IServiceProvider provider, ConnectionConfiguration conf)
+        public PluginManagerModel(IPluginController controller, IServiceProvider provider, ISonarConfiguration conf)
         {
             this.Conf = conf;
             this.provider = provider;
@@ -144,7 +144,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// <summary>
         /// Gets or sets the conf.
         /// </summary>
-        public ConnectionConfiguration Conf { get; set; }
+        public ISonarConfiguration Conf { get; set; }
 
         /// <summary>
         ///     Gets or sets the excluded plugins.

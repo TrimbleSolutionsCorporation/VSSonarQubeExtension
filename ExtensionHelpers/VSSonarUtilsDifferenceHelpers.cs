@@ -120,7 +120,7 @@ namespace ExtensionHelpers
                         continue;
                     }
 
-                    if (issue.Status != "OPEN" && issue.Status != "REOPENED" && !string.IsNullOrEmpty(issue.Status))
+                    if (issue.Status != IssueStatus.OPEN && issue.Status != IssueStatus.REOPENED && issue.Status != IssueStatus.UNDEFINED)
                     {
                         continue;
                     }

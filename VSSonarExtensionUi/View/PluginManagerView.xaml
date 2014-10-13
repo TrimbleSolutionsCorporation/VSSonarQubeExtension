@@ -1,0 +1,56 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:viewModel="clr-namespace:VSSonarExtensionUi.ViewModel"
+             xmlns:styles="clr-namespace:VSSonarExtensionUi.Styles"
+             x:Class="VSSonarExtensionUi.View.PluginManagerView" 
+             mc:Ignorable="d" d:DesignHeight="400" d:DesignWidth="800" Foreground="{styles:FallbackForegroundBrush FallBackBrush=White}" Background="{styles:FallbackBackgroundBrush FallBackBrush=Black}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/Styles.xaml"/>
+                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/DataGridStyles.xaml"/>                
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />    
+            </ResourceDictionary.MergedDictionaries>        	
+        </ResourceDictionary>
+    </UserControl.Resources>
+	<Grid>
+		<ScrollViewer>
+			<Grid Height="auto" >
+				<Grid.RowDefinitions>
+					<RowDefinition Height="25*"/>
+					<RowDefinition Height="30"/>
+
+				</Grid.RowDefinitions>							
+                <DataGrid 
+                      Background="Transparent"
+                      ColumnHeaderStyle="{DynamicResource DefaultDataGridColumnHeaderStyle}"          
+                      RowStyle="{DynamicResource DefaultDatagridRowHeaderStyle}"
+                    
+                    Grid.Row="0" SelectedItem="{Binding SelectedPlugin}" ItemsSource="{Binding PluginList}" AutoGenerateColumns="False" VerticalScrollBarVisibility="Visible" CanUserAddRows="False" CanUserDeleteRows="False" GridLinesVisibility="None" BorderBrush="Transparent" BorderThickness="1" ColumnHeaderHeight="20" HeadersVisibility="Column" RowHeaderWidth="0" >									
+					<DataGrid.Columns>
+						<DataGridTextColumn Binding="{Binding Name}" Header="Name   " IsReadOnly="True"/>
+						<DataGridTextColumn Binding="{Binding SupportedExtensions}" Header="Supported Extensions   " IsReadOnly="True"/>
+						<DataGridTextColumn Binding="{Binding Description}" Header="Description   " IsReadOnly="True"/>
+						<DataGridCheckBoxColumn Binding="{Binding Enabled}" Header="Enabled   " IsReadOnly="False" />
+						<DataGridTextColumn Binding="{Binding Version}" Header="Version   " IsReadOnly="True" />
+						<DataGridTextColumn Binding="{Binding Status}" Header="Status   " IsReadOnly="True" />
+					</DataGrid.Columns>											
+				</DataGrid>
+				<StackPanel Grid.Row="1" Orientation="Horizontal">
+	                <Button Style="{DynamicResource SquareButtonStyle}" Content="Install New" Command="{Binding InstallNewPlugin}" />
+					<Button Style="{DynamicResource SquareButtonStyle}" Content="Plugin Settings" Command="{Binding PluginSettingsCommand}" />
+		            <Button Style="{DynamicResource SquareButtonStyle}" Content="Restart Visual Studio" Command="{Binding RestartVs}" />
+				    <Button Style="{DynamicResource SquareButtonStyle}" Content="Remove Plugin" Command="{Binding RemovePlugin}" />
+					
+				</StackPanel>
+			</Grid>
+		</ScrollViewer>
+	</Grid>
+</UserControl>

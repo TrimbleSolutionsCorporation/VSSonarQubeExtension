@@ -15,11 +15,19 @@ namespace ExtensionTypes
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Runtime.CompilerServices;
+
+    using ExtensionTypes.Annotations;
+
+    using PropertyChanged;
 
     /// <summary>
     /// The issue.
     /// </summary>
-    public class Issue
+    [ImplementPropertyChanged]
+    [Serializable]
+    public class Issue : INotifyPropertyChanged
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Issue"/> class.
@@ -27,6 +35,29 @@ namespace ExtensionTypes
         public Issue()
         {
             this.Comments = new List<Comment>();
+            this.Message = "";
+            this.CreationDate = DateTime.Now;
+            this.CloseDate = DateTime.Now;
+            this.Component = string.Empty;
+            this.ComponentSafe = string.Empty;
+
+
+            this.EffortToFix = -1;
+            this.Line = -1;
+            this.Project = string.Empty;
+            this.UpdateDate = DateTime.Now;
+            this.Status = IssueStatus.UNDEFINED;
+            this.Severity = Severity.UNDEFINED;
+            this.Rule = string.Empty;
+
+
+            this.Resolution = Resolution.UNDEFINED;
+            this.Assignee = string.Empty;
+            this.IsNew = false;
+            this.Key = new Guid();
+
+            this.Id = 0;
+            this.ViolationId = 0;
         }
 
         /// <summary>
@@ -77,12 +108,12 @@ namespace ExtensionTypes
         /// <summary>
         /// Gets or sets the status.
         /// </summary>
-        public string Status { get; set; }
+        public IssueStatus Status { get; set; }
 
         /// <summary>
         /// Gets or sets the severity.
         /// </summary>
-        public string Severity { get; set; }
+        public Severity Severity { get; set; }
 
         /// <summary>
         /// Gets or sets the rule.
@@ -92,7 +123,7 @@ namespace ExtensionTypes
         /// <summary>
         /// Gets or sets the resolution.
         /// </summary>
-        public string Resolution { get; set; }
+        public Resolution Resolution { get; set; }
 
         /// <summary>
         /// Gets or sets the assignee.
@@ -167,6 +198,18 @@ namespace ExtensionTypes
             }
 
             return copyIssue;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
     }
 }

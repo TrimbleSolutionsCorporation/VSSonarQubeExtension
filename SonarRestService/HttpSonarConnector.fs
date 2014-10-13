@@ -27,7 +27,7 @@ type JsonSonarConnector() =
     let userRoamingFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "VSSonarExtension\\restCalls.log");
 
     interface IHttpSonarConnector with
-        member this.HttpSonarPutRequest(userConf : ConnectionConfiguration, url : string, data : Map<string, string>) =
+        member this.HttpSonarPutRequest(userConf : ISonarConfiguration, url : string, data : Map<string, string>) =
 
             let client = new RestClient(userConf.Hostname)
             client.Authenticator <- new HttpBasicAuthenticator(userConf.Username, userConf.Password)
@@ -41,7 +41,7 @@ type JsonSonarConnector() =
 
             client.Execute(request)
 
-        member this.HttpSonarPostRequest(userConf : ConnectionConfiguration, url : string, data : Map<string, string>) =
+        member this.HttpSonarPostRequest(userConf : ISonarConfiguration, url : string, data : Map<string, string>) =
 
             let client = new RestClient(userConf.Hostname)
             client.Authenticator <- new HttpBasicAuthenticator(userConf.Username, userConf.Password)
@@ -55,7 +55,7 @@ type JsonSonarConnector() =
 
             client.Execute(request)
 
-        member this.HttpSonarPostRequestDic(userConf : ConnectionConfiguration, url : string, data : System.Collections.Generic.Dictionary<string, string>) =
+        member this.HttpSonarPostRequestDic(userConf : ISonarConfiguration, url : string, data : System.Collections.Generic.Dictionary<string, string>) =
 
             let client = new RestClient(userConf.Hostname)
             client.Authenticator <- new HttpBasicAuthenticator(userConf.Username, userConf.Password)
@@ -69,7 +69,7 @@ type JsonSonarConnector() =
 
             client.Execute(request)
 
-        member this.HttpSonarGetRequest(userConf : ConnectionConfiguration, url : string) =
+        member this.HttpSonarGetRequest(userConf : ISonarConfiguration, url : string) =
             if obj.ReferenceEquals(userConf, null) then
                 ""
             else
@@ -104,7 +104,7 @@ type JsonSonarConnector() =
                     addLine (sprintf """        StackTrace: %s""" ex.StackTrace)
                     raise ex
 
-        member this.HttpSonarRequest(userconf : ConnectionConfiguration, urltosue : string, methodin : Method) =
+        member this.HttpSonarRequest(userconf : ISonarConfiguration, urltosue : string, methodin : Method) =
             let client = new RestClient(userconf.Hostname)
             client.Authenticator <- new HttpBasicAuthenticator(userconf.Username, userconf.Password)
             let request = new RestRequest(urltosue, methodin)

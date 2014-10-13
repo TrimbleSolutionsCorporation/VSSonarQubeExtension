@@ -64,8 +64,8 @@ namespace ExtensionViewModel.Test
             this.vshelper = this.mocks.Stub<IVsEnvironmentHelper>();
             using (this.mocks.Record())
             {
-                SetupResult.For(this.service.GetServerInfo(Arg<ConnectionConfiguration>.Is.Anything)).Return(3.5);
-                SetupResult.For(this.service.AuthenticateUser(Arg<ConnectionConfiguration>.Is.Anything)).Return(true);
+                SetupResult.For(this.service.GetServerInfo(Arg<ISonarConfiguration>.Is.Anything)).Return(3.5);
+                SetupResult.For(this.service.AuthenticateUser(Arg<ISonarConfiguration>.Is.Anything)).Return(true);
                 SetupResult.For(this.vshelper.ReadSavedOption("Sonar Options", "General", "SonarHost")).Return("serveraddr");
                 SetupResult.For(this.vshelper.ReadSavedOption("Sonar Options", "General", "SonarUserPassword")).Return("password");
                 SetupResult.For(this.vshelper.ReadSavedOption("Sonar Options", "General", "SonarUserName")).Return("login");
@@ -84,8 +84,8 @@ namespace ExtensionViewModel.Test
                                SelectedIssuesInView =
                                    new List<Issue>
                                        {
-                                           new Issue { Status = "OPEN" },
-                                           new Issue { Status = "REOPENED" }
+                                           new Issue { Status = IssueStatus.OPEN },
+                                           new Issue { Status = IssueStatus.REOPENED }
                                        }
                            };
 
@@ -111,9 +111,9 @@ namespace ExtensionViewModel.Test
                 SelectedIssuesInView =
                     new List<Issue>
                                        {
-                                           new Issue { Status = "OPEN" },
-                                           new Issue { Status = "REOPENED" },
-                                           new Issue { Status = "RESOLVED" }
+                                           new Issue { Status = IssueStatus.OPEN },
+                                           new Issue { Status = IssueStatus.REOPENED },
+                                           new Issue { Status = IssueStatus.RESOLVED }
                                        }
             };
 
@@ -143,7 +143,7 @@ namespace ExtensionViewModel.Test
                 SelectedIssuesInView =
                     new List<Issue>
                                        {
-                                           new Issue { Status = "CLOSED" }
+                                           new Issue { Status = IssueStatus.CLOSED }
                                        }
             };
 
@@ -169,7 +169,7 @@ namespace ExtensionViewModel.Test
                 SelectedIssuesInView =
                     new List<Issue>
                                        {
-                                           new Issue { Status = "RESOLVED" }
+                                           new Issue { Status = IssueStatus.RESOLVED }
                                        }
             };
 
@@ -199,7 +199,7 @@ namespace ExtensionViewModel.Test
                 SelectedIssuesInView =
                     new List<Issue>
                                        {
-                                           new Issue { Status = null }
+                                           new Issue { Status = IssueStatus.UNDEFINED }
                                        }
             };
 

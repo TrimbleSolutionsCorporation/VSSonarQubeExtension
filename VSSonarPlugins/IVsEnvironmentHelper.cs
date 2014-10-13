@@ -205,6 +205,8 @@ namespace VSSonarPlugins
         /// The value.
         /// </param>
         void WriteOption(string category, string page, string item, string value);
+        void RestartVisualStudio();
+
 
         /// <summary>
         /// The get vs project item.

@@ -16,15 +16,15 @@ open Microsoft.Build.Utilities
 type ISonarLocalAnalyser =     
   abstract member StopAllExecution : unit -> unit
   abstract member IsExecuting : unit -> bool
-  abstract member GetResourceKey : VsProjectItem * Resource * ConnectionConfiguration * safeIsOn:bool -> string                               
+  abstract member GetResourceKey : VsProjectItem * Resource * ISonarConfiguration * safeIsOn:bool -> string                               
 
-  abstract member AnalyseFile : VsProjectItem * Resource * onModifiedLinesOnly:bool *  version:double * ConnectionConfiguration -> unit
-  abstract member RunIncrementalAnalysis : string * Resource * version:double * ConnectionConfiguration -> unit
-  abstract member RunPreviewAnalysis : string * Resource * version:double * ConnectionConfiguration -> unit
-  abstract member RunFullAnalysis : string * Resource * version:double * ConnectionConfiguration -> unit
+  abstract member AnalyseFile : VsProjectItem * Resource * onModifiedLinesOnly:bool *  version:double * ISonarConfiguration -> unit
+  abstract member RunIncrementalAnalysis : string * Resource * version:double * ISonarConfiguration -> unit
+  abstract member RunPreviewAnalysis : string * Resource * version:double * ISonarConfiguration -> unit
+  abstract member RunFullAnalysis : string * Resource * version:double * ISonarConfiguration -> unit
 
-  abstract member GetIssues : config:ConnectionConfiguration * project:Resource -> System.Collections.Generic.List<Issue>
-  abstract member GetIssuesInFile : config:ConnectionConfiguration * file:VsProjectItem -> System.Collections.Generic.List<Issue>
+  abstract member GetIssues : config:ISonarConfiguration * project:Resource -> System.Collections.Generic.List<Issue>
+  abstract member GetIssuesInFile : config:ISonarConfiguration * file:VsProjectItem -> System.Collections.Generic.List<Issue>
  
   [<CLIEvent>]
   abstract member LocalAnalysisCompleted : IDelegateEvent<System.EventHandler>

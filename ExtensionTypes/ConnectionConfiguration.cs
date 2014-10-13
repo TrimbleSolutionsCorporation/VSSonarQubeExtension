@@ -19,7 +19,7 @@ namespace ExtensionTypes
     /// The connection configuration.
     /// </summary>
     [Serializable]
-    public class ConnectionConfiguration
+    public class ConnectionConfiguration : ISonarConfiguration
     {
         /// <summary>
         /// The hostname.

@@ -163,7 +163,7 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="IMenuCommandPlugin"/>.
         /// </returns>
-        public IMenuCommandPlugin GetMenuCommandPluginToRunCommand(ConnectionConfiguration configuration, string key)
+        public IMenuCommandPlugin GetMenuCommandPluginToRunCommand(ISonarConfiguration configuration, string key)
         {
             if (this.menuCommandPlugins == null)
             {
@@ -215,7 +215,7 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="bool"/>.
         /// </returns>
-        public PluginDescription IstallNewPlugin(string fileName, ConnectionConfiguration conf)
+        public PluginDescription IstallNewPlugin(string fileName, ISonarConfiguration conf)
         {
             var assembliesInFile = this.UnzipFiles(fileName);
             var assembliesToTempFolder = this.GetAssembliesInTempFolder();
@@ -248,7 +248,7 @@ namespace VSSonarPlugins
             string[] assemblies,
             List<string> refAssemblies, 
             string basePath, 
-            ConnectionConfiguration conf)
+            ISonarConfiguration conf)
         {
             PluginDescription pluginDesc = null;
             IEnumerable<string> refAssembliesInDropFolder = this.DropRefAssembliesIntoBasePath(refAssemblies);
@@ -337,7 +337,7 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="bool"/>.
         /// </returns>
-        public bool RemovePlugin(ConnectionConfiguration configuration, PluginDescription selectedPlugin)
+        public bool RemovePlugin(ISonarConfiguration configuration, PluginDescription selectedPlugin)
         {
             foreach (var plugin in this.loadedPlugins)
             {

@@ -1,13 +1,12 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright company="" file="FallbackBrush.cs">
+// <copyright file="FallbackMenuBackgroundBrush.cs" company="">
 //   
 // </copyright>
 // <summary>
 //   The fallback brush.
 // </summary>
-// 
 // --------------------------------------------------------------------------------------------------------------------
-namespace VSSonarExtensionUi.Helpers
+namespace VSSonarExtensionUi.Styles
 {
     using System;
     using System.Globalization;
@@ -24,34 +23,38 @@ namespace VSSonarExtensionUi.Helpers
     ///     The fallback brush.
     /// </summary>
     [MarkupExtensionReturnType(typeof(object))]
-    public class FallbackBackgroundBrush : MarkupExtension
+    public class FallbackMenuBackgroundBrush : MarkupExtension
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FallbackBackgroundBrush"/> class.
-        /// </summary>
-        public FallbackBackgroundBrush()
-        {
-            this.FallBackBrush = Brushes.Aqua;
-        }
-
         #region Fields
 
         /// <summary>
-        /// The _base object.
+        ///     The _base object.
         /// </summary>
-        private DependencyObject _baseObject;
+        private DependencyObject baseObject;
 
         /// <summary>
-        /// The _base property.
+        ///     The _base property.
         /// </summary>
-        private DependencyProperty _baseProperty;
+        private DependencyProperty baseProperty;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FallbackMenuBackgroundBrush"/> class.
+        /// </summary>
+        public FallbackMenuBackgroundBrush()
+        {
+            this.FallBackBrush = Brushes.Black;
+        }
 
         #endregion
 
         #region Public Properties
 
         /// <summary>
-        /// Gets or sets the secondary brush.
+        ///     Gets or sets the secondary brush.
         /// </summary>
         public Brush FallBackBrush { get; set; }
 
@@ -73,8 +76,8 @@ namespace VSSonarExtensionUi.Helpers
             var valueProvider = serviceProvider.GetService(typeof(IProvideValueTarget)) as IProvideValueTarget;
             if (valueProvider != null)
             {
-                this._baseProperty = valueProvider.TargetProperty as DependencyProperty;
-                this._baseObject = valueProvider.TargetObject as DependencyObject;
+                this.baseProperty = valueProvider.TargetProperty as DependencyProperty;
+                this.baseObject = valueProvider.TargetObject as DependencyObject;
             }
 
             var brushBinding = new Binding { Converter = new FallbackBrushConverter(this) };
@@ -90,9 +93,9 @@ namespace VSSonarExtensionUi.Helpers
         /// </summary>
         protected void RefreshValue()
         {
-            if (this._baseObject != null && this._baseProperty != null)
+            if (this.baseObject != null && this.baseProperty != null)
             {
-                BindingExpressionBase bindingExpression = BindingOperations.GetBindingExpressionBase(this._baseObject, this._baseProperty);
+                BindingExpressionBase bindingExpression = BindingOperations.GetBindingExpressionBase(this.baseObject, this.baseProperty);
                 if (bindingExpression != null)
                 {
                     bindingExpression.UpdateTarget();
@@ -103,16 +106,16 @@ namespace VSSonarExtensionUi.Helpers
         #endregion
 
         /// <summary>
-        /// The fallback brush converter.
+        ///     The fallback brush converter.
         /// </summary>
         internal class FallbackBrushConverter : IValueConverter
         {
             #region Fields
 
             /// <summary>
-            /// The _fallback brush.
+            ///     The _fallback brush.
             /// </summary>
-            private readonly FallbackBackgroundBrush _fallbackBrush;
+            private readonly FallbackMenuBackgroundBrush fallbackBrush;
 
             #endregion
 
@@ -124,9 +127,9 @@ namespace VSSonarExtensionUi.Helpers
             /// <param name="extension">
             /// The extension.
             /// </param>
-            public FallbackBrushConverter(FallbackBackgroundBrush extension)
+            public FallbackBrushConverter(FallbackMenuBackgroundBrush extension)
             {
-                this._fallbackBrush = extension;
+                this.fallbackBrush = extension;
             }
 
             #endregion
@@ -157,12 +160,10 @@ namespace VSSonarExtensionUi.Helpers
 
                 if (model != null)
                 {
-                    return model.IsRunningInVisualStudio() ? VsBrushes.ToolWindowBackgroundKey : this._fallbackBrush.FallBackBrush;
+                    return model.IsRunningInVisualStudio() ? VsBrushes.ToolWindowBackgroundKey : this.fallbackBrush.FallBackBrush;
                 }
-                else
-                {
-                    return this._fallbackBrush.FallBackBrush;
-                }               
+
+                return this.fallbackBrush.FallBackBrush;
             }
 
             /// <summary>

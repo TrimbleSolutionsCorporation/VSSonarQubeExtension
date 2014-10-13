@@ -151,7 +151,7 @@ namespace VSSonarExtension.Test.TestView
             /// <returns>
             /// The <see cref="string"/>.
             /// </returns>
-            public string GenerateTokenId(ConnectionConfiguration configuration)
+            public string GenerateTokenId(ISonarConfiguration configuration)
             {
                 return string.Empty;
             }
@@ -180,7 +180,7 @@ namespace VSSonarExtension.Test.TestView
             /// <returns>
             /// The <see cref="string"/>.
             /// </returns>
-            public string GetKey(ConnectionConfiguration configuration)
+            public string GetKey(ISonarConfiguration configuration)
             {
                 return string.Empty;
             }
@@ -190,7 +190,7 @@ namespace VSSonarExtension.Test.TestView
                 throw new System.NotImplementedException();
             }
 
-            public IPluginsOptions GetPluginControlOptions(ConnectionConfiguration configuration)
+            public IPluginsOptions GetPluginControlOptions(ISonarConfiguration configuration)
             {
                 throw new System.NotImplementedException();
             }
@@ -210,7 +210,7 @@ namespace VSSonarExtension.Test.TestView
                 throw new System.NotImplementedException();
             }
 
-            public ILocalAnalyserExtension GetLocalAnalysisExtension(ConnectionConfiguration configuration)
+            public ILocalAnalyserExtension GetLocalAnalysisExtension(ISonarConfiguration configuration)
             {
                 throw new System.NotImplementedException();
             }
@@ -227,7 +227,7 @@ namespace VSSonarExtension.Test.TestView
             ///     </see>
             ///     .
             /// </returns>
-            public Dictionary<string, VsLicense> GetLicenses(ConnectionConfiguration configuration)
+            public Dictionary<string, VsLicense> GetLicenses(ISonarConfiguration configuration)
             {
                 return null;
             }
@@ -247,7 +247,7 @@ namespace VSSonarExtension.Test.TestView
             /// <returns>
             /// The <see cref="ILocalAnalyserExtension"/>.
             /// </returns>
-            public ILocalAnalyserExtension GetLocalAnalysisExtension(ConnectionConfiguration configuration, Resource project, double sonarVersion)
+            public ILocalAnalyserExtension GetLocalAnalysisExtension(ISonarConfiguration configuration, Resource project, double sonarVersion)
             {
                 return null;
             }
@@ -264,7 +264,7 @@ namespace VSSonarExtension.Test.TestView
             /// <returns>
             /// The <see cref="IPluginsOptions"/>.
             /// </returns>
-            public IPluginsOptions GetPluginControlOptions(ConnectionConfiguration configuration, Resource project)
+            public IPluginsOptions GetPluginControlOptions(ISonarConfiguration configuration, Resource project)
             {
                 return null;
             }
@@ -308,7 +308,7 @@ namespace VSSonarExtension.Test.TestView
             /// <returns>
             /// The <see cref="bool"/>.
             /// </returns>
-            public bool IsSupported(ConnectionConfiguration configuration, Resource project)
+            public bool IsSupported(ISonarConfiguration configuration, Resource project)
             {
                 return true;
             }

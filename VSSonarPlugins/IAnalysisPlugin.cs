@@ -34,7 +34,7 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="string"/>.
         /// </returns>
-        string GetKey(ConnectionConfiguration configuration);
+        string GetKey(ISonarConfiguration configuration);
 
         /// <summary>
         /// The get language.
@@ -53,7 +53,7 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="UserControl"/>.
         /// </returns>
-        IPluginsOptions GetPluginControlOptions(ConnectionConfiguration configuration);
+        IPluginsOptions GetPluginControlOptions(ISonarConfiguration configuration);
 
         /// <summary>
         /// The is supported.
@@ -67,7 +67,7 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="bool"/>.
         /// </returns>
-        bool IsSupported(ConnectionConfiguration configuration, Resource project);
+        bool IsSupported(ISonarConfiguration configuration, Resource project);
 
         /// <summary>
         /// The is supported.
@@ -104,7 +104,7 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="ILocalAnalyserExtension"/>.
         /// </returns>
-        ILocalAnalyserExtension GetLocalAnalysisExtension(ConnectionConfiguration configuration);
+        ILocalAnalyserExtension GetLocalAnalysisExtension(ISonarConfiguration configuration);
 
         /// <summary>
         /// The get licenses.
@@ -115,7 +115,7 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="List"/>.
         /// </returns>
-        Dictionary<string, VsLicense> GetLicenses(ConnectionConfiguration configuration);
+        Dictionary<string, VsLicense> GetLicenses(ISonarConfiguration configuration);
 
         /// <summary>
         /// The generate token id.
@@ -126,7 +126,7 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="string"/>.
         /// </returns>
-        string GenerateTokenId(ConnectionConfiguration configuration);
+        string GenerateTokenId(ISonarConfiguration configuration);
 
         /// <summary>
         /// The get plugin descritpion.
