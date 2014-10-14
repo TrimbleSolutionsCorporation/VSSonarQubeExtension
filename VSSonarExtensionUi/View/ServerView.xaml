@@ -6,21 +6,52 @@
 	xmlns:ViewModel="clr-namespace:VSSonarExtensionUi.ViewModel"
 	xmlns:helpers="clr-namespace:VSSonarExtensionUi.Helpers"
 	xmlns:styles="clr-namespace:VSSonarExtensionUi.Styles"
+	    xmlns:viewModel="clr-namespace:VSSonarExtensionUi.ViewModel"
+    xmlns:view="clr-namespace:VSSonarExtensionUi.View"
 	mc:Ignorable="d"
 	x:Class="VSSonarExtensionUi.View.ServerView"
 	x:Name="UserControl"
 	d:DesignWidth="640" d:DesignHeight="480">
 
+
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/Styles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />                  
             </ResourceDictionary.MergedDictionaries>
+
+      
+
+            <DataTemplate DataType="{x:Type viewModel:IssueGridViewModel}">
+                <view:IssuesGrid/>
+            </DataTemplate>          
+
+			<Image x:Key="CoverageButton" Source="/VSSonarExtensionUi;component/Icons/appbar.cell.align.png"/>
+            <Image x:Key="SourceDiffButton" Source="/VSSonarExtensionUi;component/Icons/appbar.book.list.png"/>
+            
             </ResourceDictionary>
         </UserControl.Resources>
     
+
+
 	<Grid x:Name="LayoutRoot">
-		<Button Content="Server View" HorizontalAlignment="Left" Height="101" Margin="201,133,0,0" VerticalAlignment="Top" Width="256"/>
-        <TextBlock Text="{Binding Header}" Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Background="{styles:FallbackBackgroundBrush FallBackBrush=Transparent}" Margin="91,75,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="395"/>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="30"/>
+            <RowDefinition Height="3*"/>
+        </Grid.RowDefinitions>
+				
+				<StackPanel Grid.Row="0" Orientation="Horizontal">
+					<Button Style="{DynamicResource SquareButtonStyle}" ToolTip="Enable Coverage" Content="{DynamicResource CoverageButton}" Command="{Binding EnableCoverageInEditorCommand}"/>
+                    <Button Style="{DynamicResource SquareButtonStyle}" ToolTip="Show Source Diff" Content="{DynamicResource SourceDiffButton}" Command="{Binding DisplaySourceDiffCommand}"/>
+				</StackPanel>
+        <Border Grid.Row="1" Margin="5" BorderBrush="#FF7F9DB9" BorderThickness="1">
+            <ContentControl Content="{Binding IssuesGridView}"/>
+        </Border>     
+
 	</Grid>
 </UserControl>

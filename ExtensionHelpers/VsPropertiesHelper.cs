@@ -709,5 +709,16 @@ namespace ExtensionHelpers
             var obj = (IVsShell4)this.provider.GetService(typeof(SVsShell));
             obj.Restart((uint)__VSRESTARTTYPE.RESTART_Normal);
         }
+
+        public IVsOutputWindowPane CustomPane { get; set; }
+
+        public void WriteToVisualStudioOutput(string errorMessage)
+        {
+            if (this.CustomPane != null)
+            {
+                this.CustomPane.OutputString(errorMessage + "\r\n");
+                this.CustomPane.FlushToTaskList();
+            }
+        }
     }
 }

@@ -201,6 +201,9 @@ namespace VSSonarExtension.PackageImplementation
                             outWindow.GetPane(ref customGuid, out customPane);
                             ExtensionModelData.CustomPane = customPane;
                             ExtensionModelData.CustomPane.Activate();
+
+                            ((VsPropertiesHelper)this.visualStudioInterface).CustomPane = customPane;
+                            ((VsPropertiesHelper)this.visualStudioInterface).CustomPane.Activate();
                         }
                     }
                     catch (Exception ex)

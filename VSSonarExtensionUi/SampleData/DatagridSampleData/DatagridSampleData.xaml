@@ -4,16 +4,16 @@
       changes to this file can cause errors.
 -->
 <SampleData:DatagridSampleData xmlns:SampleData="clr-namespace:Expression.Blend.SampleData.DatagridSampleData">
-	<SampleData:DatagridSampleData.Collection>
-		<SampleData:Item Message="Aliquam maecenas" Line="4448"/>
-		<SampleData:Item Message="Class cras" Line="8841"/>
-		<SampleData:Item Message="Curae nam aenean donec" Line="6948"/>
-		<SampleData:Item Message="Integer mauris etiam" Line="1470"/>
-		<SampleData:Item Message="Sed quisque dis" Line="4297"/>
-		<SampleData:Item Message="Duis nunc" Line="7085"/>
-		<SampleData:Item Message="Amet ante" Line="1381"/>
-		<SampleData:Item Message="Nullam aptent arcu fusce" Line="9585"/>
-		<SampleData:Item Message="Praesent accumsan auctor lorem" Line="8592"/>
-		<SampleData:Item Message="Diam congue morbi" Line="8694"/>
-	</SampleData:DatagridSampleData.Collection>
+	<SampleData:DatagridSampleData.IssuesInView>
+		<SampleData:IssuesInViewItem Message="Aliquam maecenas" Line="4448"/>
+		<SampleData:IssuesInViewItem Message="Class cras" Line="8841"/>
+		<SampleData:IssuesInViewItem Message="Curae nam aenean donec" Line="6948"/>
+		<SampleData:IssuesInViewItem Message="Integer mauris etiam" Line="1470"/>
+		<SampleData:IssuesInViewItem Message="Sed quisque dis" Line="4297"/>
+		<SampleData:IssuesInViewItem Message="Duis nunc" Line="7085"/>
+		<SampleData:IssuesInViewItem Message="Amet ante" Line="1381"/>
+		<SampleData:IssuesInViewItem Message="Nullam aptent arcu fusce" Line="9585"/>
+		<SampleData:IssuesInViewItem Message="Praesent accumsan auctor lorem" Line="8592"/>
+		<SampleData:IssuesInViewItem Message="Diam congue morbi" Line="8694"/>
+	</SampleData:DatagridSampleData.IssuesInView>
 </SampleData:DatagridSampleData>

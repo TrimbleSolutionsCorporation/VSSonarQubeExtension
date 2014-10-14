@@ -7,33 +7,38 @@
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              mc:Ignorable="d" 
              x:Class="VSSonarExtensionUi.View.UserExceptionMessageBox"
-             Title="PluginOptionsWindow" MouseDown="MouseButtonEventHandler" Height="300" Width="800" Background="{styles:FallbackBackgroundBrush FallBackBrush=Black}" Foreground="{styles:FallbackForegroundBrush FallBackBrush=White}" BorderThickness="2" Visibility="Visible" Opacity="0.95" WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" >
+             Title="Exception Found" Height="300" Width="800" Background="{styles:FallbackBackgroundBrush FallBackBrush=White}" Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}">
 
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/Styles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />                 
             </ResourceDictionary.MergedDictionaries>
             </ResourceDictionary>
         </Window.Resources>
             
             <Grid>
 		<StackPanel>
-            <Grid Background="Transparent">
+            <Grid >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="50"/>
-                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="30"/>
                 </Grid.RowDefinitions>
-                <TextBox x:Name="ErrorMessage" TextWrapping="Wrap" Height="50" Foreground="{styles:FallbackForegroundBrush FallBackBrush=White}" Background="Transparent" />
-                <Button Grid.Row="1" Foreground="{styles:FallbackForegroundBrush FallBackBrush=White}" Background="Transparent" Content="Close" Click="ButtonBase_OnClick"  />
+                <TextBox x:Name="ErrorMessage" TextWrapping="Wrap" Height="50" />
+                <Button Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="Close" Click="ButtonBase_OnClick"  />
             </Grid>
-            <Expander Header="Exception StackTrace" Foreground="{styles:FallbackForegroundBrush FallBackBrush=White}">
-				<Grid Background="Transparent">
+            <Expander Header="Exception StackTrace">
+				<Grid>
 					<Grid.RowDefinitions>
 						<RowDefinition Height="150"/>
 					</Grid.RowDefinitions>
 					<ScrollViewer>
-                        <TextBox x:Name="StackTrace" TextWrapping="Wrap"  Foreground="{styles:FallbackForegroundBrush FallBackBrush=White}" Background="Transparent" />					
+                        <TextBox x:Name="StackTrace" TextWrapping="Wrap"/>					
 					</ScrollViewer>
 				</Grid>
 			</Expander>               

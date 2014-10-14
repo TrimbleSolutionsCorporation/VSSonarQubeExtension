@@ -43,7 +43,6 @@
         <Grid.ColumnDefinitions>
 			<ColumnDefinition Width="250"/>
 			<ColumnDefinition Width="400*"/>
-			<ColumnDefinition Width="{Binding CommentsWidth}"/>
 		</Grid.ColumnDefinitions>
 		<ScrollViewer x:Name="ControlPanel">
 			<StackPanel>

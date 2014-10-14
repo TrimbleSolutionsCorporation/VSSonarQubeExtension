@@ -6,7 +6,7 @@
              xmlns:viewModel="clr-namespace:VSSonarExtensionUi.ViewModel"
              xmlns:styles="clr-namespace:VSSonarExtensionUi.Styles"
              x:Class="VSSonarExtensionUi.View.PluginManagerView" 
-             mc:Ignorable="d" d:DesignHeight="400" d:DesignWidth="800" Foreground="{styles:FallbackForegroundBrush FallBackBrush=White}" Background="{styles:FallbackBackgroundBrush FallBackBrush=Black}">
+             mc:Ignorable="d" d:DesignHeight="400" d:DesignWidth="800" Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Background="{styles:FallbackBackgroundBrush FallBackBrush=White}">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

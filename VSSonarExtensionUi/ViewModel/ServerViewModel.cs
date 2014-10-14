@@ -20,25 +20,52 @@ using System.Threading.Tasks;
 namespace VSSonarExtensionUi.ViewModel
 {
     using GalaSoft.MvvmLight;
-
+    using GalaSoft.MvvmLight.Command;
     using PropertyChanged;
+    using VSSonarExtensionUi.Cache;
 
     [ImplementPropertyChanged]
     public class ServerViewModel : IViewModelBase
     {
         private readonly SonarQubeViewModel sonarQubeViewModel;
-
+        private readonly ModelEditorCache localEditorCache = new ModelEditorCache();
 
         public ServerViewModel()
         {
+            this.IssuesGridView = new IssueGridViewModel();
+
+            this.InitCommanding();
+        }
+
+        private void InitCommanding()
+        {
+            this.EnableCoverageInEditorCommand = new RelayCommand(this.OnEnableCoverageInEditorCommand, () => this.IsRunningInVisualStudio);
+            this.DisplaySourceDiffCommand = new RelayCommand(this.OnEnableCoverageInEditorCommand, () => this.IsRunningInVisualStudio);
+        }
+
+        private void OnEnableCoverageInEditorCommand()
+        {
+            
         }
 
         public ServerViewModel(SonarQubeViewModel sonarQubeViewModel)
         {
             this.sonarQubeViewModel = sonarQubeViewModel;
             this.Header = "Server Analysis";
+            this.IssuesGridView = new IssueGridViewModel(sonarQubeViewModel, this, true);
+            this.InitCommanding();
         }
 
         public string Header { get; set; }
+        public IssueGridViewModel IssuesGridView { get; private set; }
+        public RelayCommand EnableCoverageInEditorCommand { get; private set; }
+        public bool IsRunningInVisualStudio { get; private set; }
+        public RelayCommand DisplaySourceDiffCommand { get; private set; }
+        public bool CoverageInEditorEnabled { get; set; }
+
+        public Dictionary<int, CoverageElement> GetCoverageInEditor(string v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

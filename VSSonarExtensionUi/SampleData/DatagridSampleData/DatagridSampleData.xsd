@@ -8,15 +8,15 @@
   <xs:element name="DatagridSampleData" type="tns:DatagridSampleData" />
   <xs:complexType name="DatagridSampleData">
     <xs:sequence>
-      <xs:element name="Collection" type="tns:ItemCollection" />
+      <xs:element name="IssuesInView" type="tns:IssuesInView" />
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="ItemCollection">
+  <xs:complexType name="IssuesInView">
     <xs:sequence>
-      <xs:element maxOccurs="unbounded" name="Item" type="tns:Item" />
+      <xs:element maxOccurs="unbounded" name="IssuesInViewItem" type="tns:IssuesInViewItem" />
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="Item">
+  <xs:complexType name="IssuesInViewItem">
     <xs:attribute name="Message" type="xs:string" />
     <xs:attribute blend:FormatParameters="4" name="Line" type="xs:double" />
   </xs:complexType>

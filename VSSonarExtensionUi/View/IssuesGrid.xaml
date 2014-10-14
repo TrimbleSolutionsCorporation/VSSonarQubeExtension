@@ -70,7 +70,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
         
-	<Grid>
+	<Grid d:DataContext="{Binding Source={StaticResource DatagridSampleData}}">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="25"/>
 			<RowDefinition Height="3*"/>
@@ -83,7 +83,6 @@
           IsReadOnly="True"
           GridLinesVisibility="None"
           BorderThickness="1"
-                  Background="Transparent"
           ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}"          
           RowStyle="{DynamicResource IssuesGridRowStyle}"
           HeadersVisibility="Column"
@@ -93,8 +92,7 @@
           SelectedItem="{Binding SelectedIssue}"
           IsSynchronizedWithCurrentItem="True" 
           ItemsSource="{Binding IssuesInView}"
-
-            AlternationCount="2" AutoGenerateColumns="False" AlternatingRowBackground="Salmon"
+          AlternationCount="2" AutoGenerateColumns="False" AlternatingRowBackground="#FF41B1E1"
           CanUserAddRows="False"
           CanUserDeleteRows="False"
           CanUserResizeRows="True"
@@ -123,7 +121,7 @@
                     <!--NAME COLUMN-->
                     <DataGridTemplateColumn.HeaderTemplate>
                         <DataTemplate>
-                            <Grid IsHitTestVisible="True">
+                            <Grid IsHitTestVisible="True" Width="{Binding Path=Width, ElementName=MessageTemplateCol}">
                                 <!--FILTER EXPANDER-->
                                 <Expander   Header="{TemplateBinding Content}" IsHitTestVisible="True" VerticalAlignment="Top" Margin="0 0 0 0" ToolTip="RuleFilter">
                                     <Border IsHitTestVisible="True" BorderThickness="1" Margin="0 0 0 0" >
@@ -418,6 +416,8 @@
                 <DataGridTextColumn MinWidth="100" x:Name="IdTemplateCol" Header="Id" CanUserSort="True" SortMemberPath="Id" DisplayIndex="{Binding Data.IdIndex, FallbackValue=15, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.IdVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
 
                 <DataGridTextColumn MinWidth="100" x:Name="ViolationIdTemplateCol" Header="ViolationId" CanUserSort="true" SortMemberPath="ViolationId" DisplayIndex="{Binding Data.ViolationIdIndex, FallbackValue=16, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.ViolationIdVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
+                <DataGridTextColumn Binding="{Binding Line}" Header="Line"/>
+                <DataGridTextColumn Binding="{Binding Message}" Header="Message"/>
                 
 
             </DataGrid.Columns>

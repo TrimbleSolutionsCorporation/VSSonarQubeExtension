@@ -322,13 +322,13 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
             localissues.Clear()
             let executable = vsinter.ReadOptionFromApplicationData(GlobalIds.GlobalPropsId, GlobalIds.RunnerExecutableKey)
 
-            let GetArgs = 
+            let GetArgs() = 
                 if x.RunningLanguageMethod = LanguageType.SingleLang then
                     x.generateCommandArgsForSingleLangProject(AnalysisMode.Full, x.Version, x.Conf, x.Project)
                 else
                     x.generateCommandArgsForMultiLangProject(AnalysisMode.Full, x.Version, x.Conf, x.Project)
 
-            let incrementalArgs = GetArgs
+            let incrementalArgs = GetArgs()
 
             if not(String.IsNullOrEmpty(x.Conf.Password)) then
                 let message = sprintf "[%s] %s %s" x.ProjectRoot executable (incrementalArgs.Replace(x.Conf.Password, "xxxxx"))
@@ -546,6 +546,9 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
             x.Conf <- conf
             x.Version <- version
             x.Abort <- false
+
+            if project.Lang = null then
+                x.RunningLanguageMethod <- LanguageType.MultiLang
 
             localissues.Clear()
             x.AnalysisIsRunning <- true

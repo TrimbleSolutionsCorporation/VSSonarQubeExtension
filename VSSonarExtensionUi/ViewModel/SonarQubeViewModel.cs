@@ -44,6 +44,8 @@ namespace VSSonarExtensionUi.ViewModel
     using VSSonarExtensionUi.Cache;
     using System.Windows.Controls;
     using System.Windows.Media.Imaging;
+    using System.ComponentModel;
+
 
 
 
@@ -62,9 +64,7 @@ namespace VSSonarExtensionUi.ViewModel
         private readonly Dictionary<int, IMenuCommandPlugin> menuItemPlugins = new Dictionary<int, IMenuCommandPlugin>();
 
         private object sonarQubeView;
-
-        private Resource associatedProject;
-
+       
         #region Constructors and Destructors
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace VSSonarExtensionUi.ViewModel
             this.VsHelper = new VsPropertiesHelper();
             this.SonarRestConnector = new SonarRestService(new JsonSonarConnector());
 
-            this.IsExtensionBusy = true;
+            this.IsExtensionBusy = false;
             this.IsConnected = false;
 
             this.InitOptionsModel();
@@ -139,7 +139,28 @@ namespace VSSonarExtensionUi.ViewModel
             }
         }
 
+        public void StartupModelData()
+        {
+            throw new NotImplementedException();
+        }
+
+
+        /// <summary>
+        ///     The property changed.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void RefreshDataForResource(string fullName)
+        {
+            throw new NotImplementedException();
+        }
+
         public ExtensionOptionsModel ExtensionOptionsData { get; set; }
+
+        public void ClearProjectAssociation()
+        {
+            throw new NotImplementedException();
+        }
 
         public IServiceProvider ServiceProvider { get; set; }
 
@@ -149,17 +170,63 @@ namespace VSSonarExtensionUi.ViewModel
         {
             this.ToolsProvidedByPlugins = new ObservableCollection<MenuItem>();
             this.AvailableProjects = new ObservableCollection<Resource>();
+
+            this.SonarVersion = 4.5;
         }
 
         private void InitConnection()
         {
-            this.ConnectedToServerCommand = new RelayCommand<string>(this.ConnectToSonar);
+            this.ConnectedToServerCommand = new RelayCommand(this.OnConnectToSonar, () => !this.IsConnected);
+            this.DisconnectToServerCommand = new RelayCommand(this.OnDisconnectToSonar, () => this.IsConnected);
+        }
+
+        /// <summary>
+        /// The connect to sonar.
+        /// </summary>
+        public void OnConnectToSonar()
+        {
+            bool userCancel = true;
+            bool resetServer = false;
+            while (userCancel && !this.CreateSonarConnection(resetServer))
+            {
+                DialogResult result = MessageBox.Show("Cannot Connect, try again?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                userCancel = result == DialogResult.Yes;
+                resetServer = true;
+            }
+
+            if (userCancel)
+            {
+                this.IsConnected = false;
+                this.IsConnectedButNotAssociated = true;
+
+                this.SetConnectionIcon("pack://application:,,,/VSSonarExtensionUi;component/Icons/medium_connection.ico");
+                this.ConnectionTooltip = "Authenticated, but no associated";
+
+                List<Resource> projects = this.SonarRestConnector.GetProjectsList(this.SonarCubeConfiguration);
+                if (projects != null && projects.Count > 0)
+                {
+                    this.OnRefreshProjectList(projects);
+                }
+            }
+        }
+
+        private void OnDisconnectToSonar()
+        {
+            this.SonarCubeConfiguration = null;
+            this.IsConnected = false;
+            this.IssuesSearchViewModel.AssociatedProject = null;
+            this.LocalViewModel.ClearAssociation();
+            this.SetConnectionIcon("pack://application:,,,/VSSonarExtensionUi;component/Icons/no_connection.ico");
+            this.ConnectionTooltip = "Not Connected";
+            this.AssociatedProject = null;
+            return;
         }
 
         private void InitViews()
         {
             this.ServerViewModel = new ServerViewModel(this);
-            this.LocalViewModel = new LocalViewModel(this, this.SonarRestConnector, this.VsHelper, this.PluginControl.GetPlugins());
+            this.LocalViewModel = new LocalViewModel(this, this.PluginControl.GetPlugins(), this.SonarRestConnector, this.VsHelper);
             this.IssuesSearchViewModel = new IssuesSearchViewModel(this, this.VsHelper, this.SonarRestConnector);
 
             this.SonarQubeViews = new ObservableCollection<IViewModelBase>();
@@ -171,6 +238,11 @@ namespace VSSonarExtensionUi.ViewModel
         public IssuesSearchViewModel IssuesSearchViewModel { get; set; }
 
         public LocalViewModel LocalViewModel { get; set; }
+
+        public List<Issue> GetIssuesInEditor(string v)
+        {
+            throw new NotImplementedException();
+        }
 
         public ServerViewModel ServerViewModel { get; set; }
 
@@ -221,94 +293,64 @@ namespace VSSonarExtensionUi.ViewModel
         }
 
 
-        /// <summary>
-        /// The perform solution not open association.
-        /// </summary>
-        /// <param name="resource">
-        /// The resource.
-        /// </param>
-        public void PerformSolutionNotOpenAssociation(Resource resource)
-        {
-            if (resource != null)
-            {
-                this.AssociatedProjectKey = resource.Key;
-            }
-            else
-            {
-                this.AssociatedProjectKey = string.Empty;
-            }
-
-            this.associatedProject = resource;
-
-            this.IssuesSearchViewModel.InitDataAssociation(this.associatedProject, this.SonarCubeConfiguration);
-
-
-            this.SetConnectionIcon("pack://application:,,,/VSSonarExtensionUi;component/Icons/high_connection.ico");
-            this.ConnectionTooltip = "Connected and Associated";
-        }
-
         public bool IsExtensionBusy { get; set; }
-
-
-        public string AssociatedProjectKey { get; set; }
 
         private void OnAssignProjectCommand()
         {
-            var solutionName = this.VsHelper.ActiveSolutionName();
-            var selectedProjectInFilter = this.AssociatedProject;
-            if (selectedProjectInFilter == null && string.IsNullOrEmpty(solutionName))
+            if (this.SelectedProject == null)
             {
                 return;
             }
 
+            var solutionName = this.VsHelper.ActiveSolutionName();
             if (string.IsNullOrEmpty(solutionName))
             {
-                this.PerformSolutionNotOpenAssociation(selectedProjectInFilter);
+                this.AssociatedProject = this.SelectedProject;
+                this.IssuesSearchViewModel.InitDataAssociation(this.AssociatedProject, this.SonarCubeConfiguration);
+                this.LocalViewModel.InitDataAssociation(this.AssociatedProject, this.SonarCubeConfiguration);
+                this.SetConnectionIcon("pack://application:,,,/VSSonarExtensionUi;component/Icons/high_connection.ico");
+                this.ConnectionTooltip = "Connected and Associated";
                 return;
             }
 
-            if (this.AssociatedProjectKey == null)
+            var dialogResult = MessageBox.Show("Do you want to save this option to environment, so it will reuse this association when Visual Studio Restart?", "Save Association to Disk", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dialogResult == DialogResult.Yes)
             {
-                this.VsHelper.WriteOptionInApplicationData(solutionName, "PROJECTKEY", selectedProjectInFilter.Key);
-            }
-            else
-            {
-                var dialogResult = MessageBox.Show("Do you want to save this option to environment, so it will reuse this association when Visual Studio Restart?", "Save Association to Disk", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (dialogResult == DialogResult.Yes)
-                {
-                    this.VsHelper.WriteOptionInApplicationData(solutionName, "PROJECTKEY", selectedProjectInFilter.Key);
-                }
+                this.VsHelper.WriteOptionInApplicationData(solutionName, "PROJECTKEY", this.SelectedProject.Key);
             }
 
-            this.AssociateProjectToSolution();
+            this.AssociateProjectToModel();
         }
 
-        private void AssociateProjectToSolution()
+        private void AssociateProjectToModel()
         {
-            Resource newProject = this.AssociateSolutionWithSonarProject();
-            if (newProject == null)
-            {
-                return;
-            }
-
-            // startup data
-            this.TempDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\VSSonarExtension\\" + newProject.Name;
-
-            if (Directory.Exists(this.TempDataFolder))
-            {
-                Directory.Delete(this.TempDataFolder, true);
-            }
-
-            this.ExtensionOptionsData.Project = newProject;
+            this.ExtensionOptionsData.Project = this.SelectedProject;
             this.ExtensionOptionsData.RefreshGeneralProperties();
             this.ExtensionOptionsData.RefreshPropertiesInPlugins();
             this.ExtensionOptionsData.SyncOptionsToFile();
-            this.AssociatedProject = newProject;
+            this.AssociatedProject = this.SelectedProject;
+        }
+
+        public void AssociateProjectToSolution()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ExtensionDataModelUpdate(
+            ISonarRestService restServiceIn,
+            IVsEnvironmentHelper vsenvironmenthelperIn,
+            Resource associatedProj,
+            IVSSStatusBar statusBar,
+            IServiceProvider provider)
+        {
+            this.ServiceProvider = provider;
+            this.SonarRestConnector = restServiceIn;
+            this.VsHelper = vsenvironmenthelperIn;
+            this.AssociatedProject = AssociatedProject;
+            this.StatusBar = statusBar;
         }
 
         public Resource AssociatedProject { get; set; }
-
-        public string TempDataFolder { get; set; }
 
         private Resource AssociateSolutionWithSonarProject()
         {
@@ -401,47 +443,6 @@ namespace VSSonarExtensionUi.ViewModel
         #region Methods
 
 
-        /// <summary>
-        /// The connect to sonar.
-        /// </summary>
-        public void ConnectToSonar(string connectionCommand)
-        {
-            if (connectionCommand.Equals("Disconnect"))
-            {
-                this.SonarCubeConfiguration = null;
-                this.IsConnected = false;
-                this.SetConnectionIcon("pack://application:,,,/VSSonarExtensionUi;component/Icons/no_connection.ico");
-                this.ConnectionTooltip = "Not Connected";
-                this.AssociatedProject = null;
-                return;
-            }
-
-            bool userCancel = true;
-            bool resetServer = false;
-            while (userCancel && !this.CreateSonarConnection(resetServer))
-            {
-                DialogResult result = MessageBox.Show("Cannot Connect, try again?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-                userCancel = result == DialogResult.Yes;
-                resetServer = true;
-            }
-
-            if (userCancel)
-            {
-                this.IsConnected = false;
-                this.IsConnectedButNotAssociated = true;
-
-                this.SetConnectionIcon("pack://application:,,,/VSSonarExtensionUi;component/Icons/medium_connection.ico");
-                this.ConnectionTooltip = "Authenticated, but no associated";
-
-                List<Resource> projects = this.SonarRestConnector.GetProjectsList(this.SonarCubeConfiguration);
-                if (projects != null && projects.Count > 0)
-                {
-                    this.OnRefreshProjectList(projects);
-                }
-            }
-        }
-
         private void SetConnectionIcon(string uri)
         {
             this.ConnectionImage = uri;
@@ -515,11 +516,27 @@ namespace VSSonarExtensionUi.ViewModel
 
         public string ServerAddress { get; set; }
 
-        public RelayCommand<string> ConnectedToServerCommand { get; set; }
+        public RelayCommand ConnectedToServerCommand { get; set; }
 
         public bool IsConnected { get; set; }
 
         public string ConnectionTooltip { get; set; }
+        public string BusyToolTip { get; set; }
+        public string DocumentInView { get; set; }
+        public bool AnalysisChangeLines { get; internal set; }
+        public double SonarVersion { get; internal set; }
+        public Resource SelectedProject { get; set; }
+        public RelayCommand DisconnectToServerCommand { get; set; }
+        public string DiagnosticMessage { get; set; }
+        public Resource ResourceInEditor { get; set; }
+
+
+
+
+
+
+
+
 
 
         /// <summary>

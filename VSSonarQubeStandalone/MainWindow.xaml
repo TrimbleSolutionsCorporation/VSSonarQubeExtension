@@ -4,7 +4,7 @@
         xmlns:viewModel="clr-namespace:VSSonarExtensionUi.ViewModel;assembly=VSSonarExtensionUi"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:view="clr-namespace:VSSonarExtensionUi.View;assembly=VSSonarExtensionUi"
-        Title="MainWindow" Height="600" Width="800" Foreground="Black" Background="White">
+        Title="VSSonarQube Standalone" Height="600" Width="800" Foreground="Black" Background="White">
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewModel:SonarQubeViewModel}" x:Key="DefaultView">
             <view:SonarQubeUserControl DataContext="{Binding}"/>

@@ -7,8 +7,8 @@
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:view="clr-namespace:VSSonarExtensionUi.View"
         xmlns:styles="clr-namespace:VSSonarExtensionUi.Styles"
-        Title="PluginOptionsWindow"
-        Height="472" Width="1040" Foreground="{styles:FallbackForegroundBrush FallBackBrush=White}" Background="{styles:FallbackBackgroundBrush FallBackBrush=Transparent}">
+        Title="VSSonarQube Options"
+        Height="472" Width="1040" Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Background="{styles:FallbackBackgroundBrush FallBackBrush=White}">
 	<Window.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
@@ -17,8 +17,8 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />                                
-			</ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+            </ResourceDictionary.MergedDictionaries>
             <viewModel:ExtensionOptionsModel x:Key="PluginsOptionsModelDataSource" d:IsDataSource="True"/>
             
             <DataTemplate DataType="{x:Type viewModel:LicenseViewerViewModel}">
@@ -58,7 +58,7 @@
         </ListBox>
         
         <Border Grid.Column="1" Grid.Row="0" >
-            <ContentControl Content="{Binding ElementName=OptionsListBox, Path=SelectedItem}" Foreground="{styles:FallbackForegroundBrush FallBackBrush=White}" Background="{styles:FallbackBackgroundBrush FallBackBrush=Transparent}"/>
+            <ContentControl Content="{Binding ElementName=OptionsListBox, Path=SelectedItem}" Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Background="{styles:FallbackBackgroundBrush FallBackBrush=White}"/>
         </Border>
         
 		<Grid Grid.Column="1" Grid.Row="1">

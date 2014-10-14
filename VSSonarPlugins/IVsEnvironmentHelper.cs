@@ -87,6 +87,8 @@ namespace VSSonarPlugins
         /// The <see cref="string"/>.
         /// </returns>
         string UserAppDataConfigurationFile();
+        void WriteToVisualStudioOutput(string errorMessage);
+
 
         /// <summary>
         /// The navigate to resource.

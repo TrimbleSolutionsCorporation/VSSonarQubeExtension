@@ -40,11 +40,6 @@ namespace VSSonarExtensionUi.ViewModel
 
         private readonly ModelEditorCache localEditorCache = new ModelEditorCache();
 
-        /// <summary>
-        /// The comments width default.
-        /// </summary>
-        private static readonly GridLength CommentsWidthDefault = new GridLength(250);
-
         #endregion
 
         #region Fields

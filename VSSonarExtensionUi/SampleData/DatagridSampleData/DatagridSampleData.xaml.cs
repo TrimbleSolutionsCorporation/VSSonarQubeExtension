@@ -36,18 +36,18 @@ namespace Expression.Blend.SampleData.DatagridSampleData
 			}
 		}
 
-		private ItemCollection _Collection = new ItemCollection();
+		private IssuesInView _IssuesInView = new IssuesInView();
 
-		public ItemCollection Collection
+		public IssuesInView IssuesInView
 		{
 			get
 			{
-				return this._Collection;
+				return this._IssuesInView;
 			}
 		}
 	}
 
-	public class Item : INotifyPropertyChanged
+	public class IssuesInViewItem : INotifyPropertyChanged
 	{
 		public event PropertyChangedEventHandler PropertyChanged;
 
@@ -98,7 +98,7 @@ namespace Expression.Blend.SampleData.DatagridSampleData
 		}
 	}
 
-	public class ItemCollection : System.Collections.ObjectModel.ObservableCollection<Item>
+	public class IssuesInView : System.Collections.ObjectModel.ObservableCollection<IssuesInViewItem>
 	{ 
 	}
 #endif

@@ -13,8 +13,10 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarExtensionUi.View
 {
+    using System;
+    using System.Diagnostics;
     using System.Windows.Controls;
-
+    using VSSonarExtensionUi.ViewModel;
     using Xceed.Wpf.AvalonDock;
 
     /// <summary>
@@ -22,14 +24,38 @@ namespace VSSonarExtensionUi.View
 	/// </summary>
 	public partial class SonarQubeUserControl : UserControl
 	{
+        private SonarQubeViewModel dataModel;
+
         public SonarQubeUserControl()
 		{
-			this.InitializeComponent();
+            try
+            {
+                this.InitializeComponent();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+            
 		}
 
         private void DockingManager_DocumentClosing(object sender, DocumentClosingEventArgs e)
         {
             e.Cancel = !false;
         }
-	}
+
+        /// <summary>
+        /// The update data context.
+        /// </summary>
+        /// <param name="dataModelIn">
+        /// The data model in.
+        /// </param>
+        public void UpdateDataContext(SonarQubeViewModel dataModelIn)
+        {
+            // bind data with view model
+            this.dataModel = dataModelIn;
+            this.DataContext = null;
+            this.DataContext = dataModelIn;
+        }
+    }
 }

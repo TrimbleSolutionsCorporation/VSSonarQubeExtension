@@ -87,14 +87,14 @@
                 <Setter Property="Background" Value="Green"></Setter>
             </DataTrigger>
             <DataTrigger Binding="{Binding AlternationIndex, RelativeSource={RelativeSource AncestorType=DataGridRow}}" Value="1">
-                <Setter Property="Background" Value="Red"></Setter>
+                <Setter Property="Background" Value="Gray"></Setter>
             </DataTrigger>
                   
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="Black"/>
             </Trigger>
             <Trigger Property="IsSelected" Value="True">
-                <Setter Property="Background" Value="Red" />
+                <Setter Property="Background" Value="Gray" />
             </Trigger>
             <Trigger Property="Validation.HasError" Value="True" >
                 <Setter Property="Effect">

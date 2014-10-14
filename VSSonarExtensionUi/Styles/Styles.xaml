@@ -565,7 +565,7 @@
                     <Border 
     							x:Name="SubmenuBorder"
     							SnapsToDevicePixels="True"
-    							Background="{styles:FallbackBackgroundBrush FallBackBrush=LightBlue}" Opacity="0.8">
+    							Background="{styles:FallbackBackgroundBrush FallBackBrush=White}" Opacity="1">
                         <StackPanel  
     								IsItemsHost="True" 
     								KeyboardNavigation.DirectionalNavigation="Cycle" />
@@ -578,8 +578,8 @@
                 <Setter TargetName="Popup" Property="PopupAnimation" Value="None"/>
             </Trigger>
             <Trigger Property="IsHighlighted" Value="true">
-                <Setter TargetName="Border" Property="Background" Value="{styles:FallbackBackgroundBrush FallBackBrush=LightBlue}"/>
-                <Setter TargetName="Border" Property="Opacity" Value="0.5"/>
+                <Setter TargetName="Border" Property="Background" Value="{styles:FallbackBackgroundBrush FallBackBrush=Gray}"/>
+                <Setter TargetName="Border" Property="Opacity" Value="1"/>
             </Trigger>
             <Trigger SourceName="Popup" Property="AllowsTransparency" Value="True">
                 <Setter TargetName="SubmenuBorder" Property="CornerRadius" Value="0,0,4,4"/>

@@ -1,11 +1,75 @@
 ﻿<UserControl
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:ViewModel="clr-namespace:VSSonarExtensionUi.ViewModel"
+	xmlns:helpers="clr-namespace:VSSonarExtensionUi.Helpers"
+	xmlns:styles="clr-namespace:VSSonarExtensionUi.Styles"
+    xmlns:viewModel="clr-namespace:VSSonarExtensionUi.ViewModel"
+    xmlns:view="clr-namespace:VSSonarExtensionUi.View"    
+	mc:Ignorable="d"
 	x:Class="VSSonarExtensionUi.View.LocalView"
-	x:Name="Window"
-	Width="640" Height="480">
+	x:Name="UserControl"
+	d:DesignWidth="640" d:DesignHeight="480">
+
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/Styles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />                  
+            </ResourceDictionary.MergedDictionaries>
+
+      
+
+            <DataTemplate DataType="{x:Type viewModel:IssueGridViewModel}">
+                <view:IssuesGrid/>
+            </DataTemplate>          
+
+            <Image x:Key="FileImage" Source="/VSSonarExtensionUi;component/Icons/appbar.cell.align.png"/>
+			<Image x:Key="IncrementalImage" Source="/VSSonarExtensionUi;component/Icons/appbar.cell.align.png"/>
+            <Image x:Key="AnalysisImage" Source="/VSSonarExtensionUi;component/Icons/appbar.book.list.png"/>
+            <Image x:Key="PreviewImage" Source="/VSSonarExtensionUi;component/Icons/appbar.book.list.png"/>
+            <Image x:Key="OpenSourceDirImage" Source="/VSSonarExtensionUi;component/Icons/appbar.book.list.png"/>
+            <Image x:Key="CancelImage" Source="/VSSonarExtensionUi;component/Icons/appbar.book.list.png"/>
+            
+            </ResourceDictionary>
+        </UserControl.Resources>
+    
+
 
 	<Grid x:Name="LayoutRoot">
-        <Button Content="Local" HorizontalAlignment="Left" Height="85" Margin="169,79,0,0" VerticalAlignment="Top" Width="256"/>
-    </Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="30"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="60"/>
+        </Grid.RowDefinitions>
+				
+				<StackPanel Grid.Row="0" Orientation="Horizontal">
+					<Button Style="{DynamicResource SquareButtonStyle}" ToolTip="Select Source Folder" Content="{DynamicResource OpenSourceDirImage}" Command="{Binding OpenSourceDirCommand}"/>
+                    <Button Style="{DynamicResource SquareButtonStyle}" ToolTip="Run File Analysis" Content="{DynamicResource FileImage}" Command="{Binding FileCommand}"/>
+                    <Button Style="{DynamicResource SquareButtonStyle}" ToolTip="Run Incremental Analysis" Content="{DynamicResource IncrementalImage}" Command="{Binding IncrementalCommand}"/>
+					<Button Style="{DynamicResource SquareButtonStyle}" ToolTip="Run Preview Analysis" Content="{DynamicResource PreviewImage}" Command="{Binding PreviewCommand}"/>
+                    <Button Style="{DynamicResource SquareButtonStyle}" ToolTip="Run Full Analysis" Content="{DynamicResource AnalysisImage}" Command="{Binding AnalysisCommand}"/>
+                    <Button Style="{DynamicResource SquareButtonStyle}" ToolTip="Cancel Analysis" Content="{DynamicResource CancelImage}" Command="{Binding StopLocalAnalysisCommand}"/>
+                    
+                    
+                </StackPanel>
+        
+        <Border Grid.Row="1" Margin="5" BorderBrush="#FF7F9DB9" BorderThickness="1">
+            <ContentControl Content="{Binding IssuesGridView}"/>
+        </Border>     
+        
+        <ScrollViewer Grid.Row="2" >
+            <TextBox  helpers:TextBoxBehaviour.ScrollOnTextChanged="True" IsReadOnly="True" TextAlignment="Justify" TextWrapping="Wrap" Text="{Binding OutputLog}" Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Background="{styles:FallbackBackgroundBrush FallBackBrush=White}"></TextBox>
+        </ScrollViewer>
+        
+        
+
+	</Grid>
 </UserControl>
