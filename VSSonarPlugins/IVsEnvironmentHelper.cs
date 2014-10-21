@@ -247,5 +247,7 @@ namespace VSSonarPlugins
         /// The <see cref="bool"/>.
         /// </returns>
         bool AreWeRunningInVisualStudio();
+
+        void ShowSourceDiff(string resourceInEditorTxt, string documentInViewPath);
     }
 }

@@ -14,18 +14,21 @@
 namespace VSSonarQubeExtension.SmartTags.BufferUpdate
 {
     using System;
+    using System.Drawing;
     using System.Linq;
 
     using EnvDTE;
 
     using EnvDTE80;
 
+    using ExtensionHelpers;
+
+    using Microsoft.VisualStudio.PlatformUI;
     using Microsoft.VisualStudio.Text;
     using VSSonarQubeExtension;
 
     using VSSonarPlugins;
     using VSSonarExtensionUi.ViewModel;
-
 
     /// <summary>
     ///     The vs events.
@@ -49,11 +52,6 @@ namespace VSSonarQubeExtension.SmartTags.BufferUpdate
         /// </summary>
         private readonly IVsEnvironmentHelper environment;
 
-        /// <summary>
-        ///     The model.
-        /// </summary>
-        private readonly SonarQubeViewModel model;
-
         #endregion
 
         #region Constructors and Destructors
@@ -70,9 +68,8 @@ namespace VSSonarQubeExtension.SmartTags.BufferUpdate
         /// <param name="dte2">
         /// The dte 2.
         /// </param>
-        public VsEvents(SonarQubeViewModel model, IVsEnvironmentHelper environment, DTE2 dte2)
+        public VsEvents(IVsEnvironmentHelper environment, DTE2 dte2)
         {
-            this.model = model;
             this.environment = environment;
             this.SolutionEvents = dte2.Events;
             this.DocumentsEvents = this.SolutionEvents.DocumentEvents;
@@ -81,6 +78,17 @@ namespace VSSonarQubeExtension.SmartTags.BufferUpdate
             this.SolutionEvents.SolutionEvents.AfterClosing += this.SolutionClosed;
             this.SolutionEvents.WindowEvents.WindowActivated += this.WindowActivated;
             this.DocumentsEvents.DocumentSaved += this.DoumentSaved;
+
+            VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
+        }
+
+        private void VSColorTheme_ThemeChanged(ThemeChangedEventArgs e)
+        {
+            Color defaultBackground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBackgroundColorKey);
+            Color defaultForeground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowTextColorKey);
+
+            VsSonarExtensionPackage.SonarQubeModel.UpdateTheme(VsSonarExtensionPackage.ToMediaColor(defaultBackground), VsSonarExtensionPackage.ToMediaColor(defaultForeground));
+
         }
 
         #endregion
@@ -120,8 +128,8 @@ namespace VSSonarQubeExtension.SmartTags.BufferUpdate
             }
             catch (Exception ex)
             {
-                VsSonarExtensionPackage.ExtensionModelData.ErrorMessage = "Something Terrible Happen";
-                VsSonarExtensionPackage.ExtensionModelData.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
+                VsSonarExtensionPackage.SonarQubeModel.ErrorMessage = "Something Terrible Happen";
+                VsSonarExtensionPackage.SonarQubeModel.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
             }
 
             return default(T);
@@ -152,12 +160,12 @@ namespace VSSonarQubeExtension.SmartTags.BufferUpdate
 
             try
             {
-                this.model.RefreshDataForResource(document.FullName);
+                VsSonarExtensionPackage.SonarQubeModel.RefreshDataForResource(document.FullName);
             }
             catch (Exception ex)
             {
-                VsSonarExtensionPackage.ExtensionModelData.ErrorMessage = "Something Terrible Happen";
-                VsSonarExtensionPackage.ExtensionModelData.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
+                VsSonarExtensionPackage.SonarQubeModel.ErrorMessage = "Something Terrible Happen";
+                VsSonarExtensionPackage.SonarQubeModel.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
             }
         }
 
@@ -166,7 +174,7 @@ namespace VSSonarQubeExtension.SmartTags.BufferUpdate
         /// </summary>
         private void SolutionClosed()
         {
-            this.model.ClearProjectAssociation();
+            VsSonarExtensionPackage.SonarQubeModel.ClearProjectAssociation();
         }
 
         /// <summary>
@@ -174,7 +182,10 @@ namespace VSSonarQubeExtension.SmartTags.BufferUpdate
         /// </summary>
         private void SolutionOpened()
         {
-            this.model.AssociateProjectToSolution();
+            var solutionName = this.environment.ActiveSolutionName();
+            var solutionPath = this.environment.ActiveSolutionPath();
+
+            VsSonarExtensionPackage.SonarQubeModel.AssociateProjectToSolution(solutionName, solutionPath);
 
             string text = this.environment.GetCurrentTextInView();
             if (string.IsNullOrEmpty(text))
@@ -183,7 +194,7 @@ namespace VSSonarQubeExtension.SmartTags.BufferUpdate
             }
 
             string fileName = this.environment.ActiveFileFullPath();
-            this.model.RefreshDataForResource(fileName);
+            VsSonarExtensionPackage.SonarQubeModel.RefreshDataForResource(fileName);
         }
 
         /// <summary>
@@ -216,12 +227,12 @@ namespace VSSonarQubeExtension.SmartTags.BufferUpdate
             try
             {
                 this.LastDocumentWindowWithFocus = gotFocus;
-                this.model.RefreshDataForResource(gotFocus.Document.FullName);
+                VsSonarExtensionPackage.SonarQubeModel.RefreshDataForResource(gotFocus.Document.FullName);
             }
             catch (Exception ex)
             {
-                this.model.ErrorMessage = "Something Terrible Happen";
-                this.model.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
+                VsSonarExtensionPackage.SonarQubeModel.ErrorMessage = "Something Terrible Happen";
+                VsSonarExtensionPackage.SonarQubeModel.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
             }
         }
 

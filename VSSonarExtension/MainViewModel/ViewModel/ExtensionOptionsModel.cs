@@ -1,17 +1,11 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ExtensionOptionsModel.cs" company="Copyright © 2013 Tekla Corporation. Tekla is a Trimble Company">
-//     Copyright (C) 2013 [Jorge Costa, Jorge.Costa@tekla.com]
+// <copyright file="ExtensionOptionsModel.cs" company="">
+//   
 // </copyright>
+// <summary>
+//   The plugins options model.
+// </summary>
 // --------------------------------------------------------------------------------------------------------------------
-// This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
-// as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
-// of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. 
-// You should have received a copy of the GNU Lesser General Public License along with this program; if not, write to the Free
-// Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// --------------------------------------------------------------------------------------------------------------------
-
 namespace VSSonarExtension.MainViewModel.ViewModel
 {
     using System;
@@ -29,7 +23,6 @@ namespace VSSonarExtension.MainViewModel.ViewModel
     using ExtensionTypes;
 
     using VSSonarExtension.MainView;
-    using VSSonarExtension.PackageImplementation.PckResources;
 
     using VSSonarPlugins;
 
@@ -38,32 +31,59 @@ namespace VSSonarExtension.MainViewModel.ViewModel
     /// </summary>
     public partial class ExtensionOptionsModel : INotifyPropertyChanged
     {
+        #region Fields
+
+        /// <summary>
+        ///     Gets or sets the general options.
+        /// </summary>
+        public readonly GeneralOptionsModel GeneralOptions;
+
+        /// <summary>
+        ///     The plugin manager.
+        /// </summary>
+        public readonly PluginManagerModel PluginManager;
+
+        /// <summary>
+        ///     The general options frame.
+        /// </summary>
+        private readonly UserControl GeneralOptionsFrame;
+
+        /// <summary>
+        /// The model.
+        /// </summary>
+        private readonly ExtensionDataModel model;
+
+        /// <summary>
+        /// The plugincontroller.
+        /// </summary>
+        private readonly PluginController plugincontroller;
+
+        /// <summary>
+        ///     The plugins.
+        /// </summary>
+        private readonly List<IAnalysisPlugin> plugins;
+
         /// <summary>
         ///     The options in view.
         /// </summary>
         private UserControl optionsInView;
 
         /// <summary>
-        ///     The plugins.
+        ///     The project.
         /// </summary>
-        private List<IAnalysisPlugin> plugins;
+        private Resource project;
 
         /// <summary>
         ///     The selected analysisPlugin item.
         /// </summary>
         private string selectedPluginItem;
 
-        /// <summary>
-        /// The project.
-        /// </summary>
-        private Resource project;
+        #endregion
 
-        private ExtensionDataModel model;
-
-        private PluginController plugincontroller;
+        #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ExtensionOptionsModel"/> class.
+        ///     Initializes a new instance of the <see cref="ExtensionOptionsModel" /> class.
         /// </summary>
         public ExtensionOptionsModel()
         {
@@ -72,6 +92,9 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// <summary>
         /// Initializes a new instance of the <see cref="ExtensionOptionsModel"/> class.
         /// </summary>
+        /// <param name="model">
+        /// The model.
+        /// </param>
         public ExtensionOptionsModel(ExtensionDataModel model)
         {
             this.model = model;
@@ -80,8 +103,17 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// <summary>
         /// Initializes a new instance of the <see cref="ExtensionOptionsModel"/> class.
         /// </summary>
-        /// <param name="plugins">
-        /// The plugins.
+        /// <param name="plugincontroller">
+        /// The plugincontroller.
+        /// </param>
+        /// <param name="model">
+        /// The model.
+        /// </param>
+        /// <param name="provider">
+        /// The provider.
+        /// </param>
+        /// <param name="conf">
+        /// The conf.
         /// </param>
         public ExtensionOptionsModel(PluginController plugincontroller, ExtensionDataModel model, IServiceProvider provider, ISonarConfiguration conf)
         {
@@ -93,10 +125,11 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             this.GeneralOptionsFrame = this.GeneralOptions.GetUserControlOptions();
             this.PluginManager = new PluginManagerModel(plugincontroller, provider, conf);
             this.PluginsManagerOptionsFrame = this.PluginManager.GetUserControlOptions();
-            
         }
 
-        public UserControl PluginsManagerOptionsFrame { get; set; }
+        #endregion
+
+        #region Public Events
 
         /// <summary>
         ///     The property changed.
@@ -104,24 +137,49 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
-        /// The request close.
+        ///     The request close.
         /// </summary>
         public event Action<object, object> RequestClose;
 
-        /// <summary>
-        /// Gets or sets the general options.
-        /// </summary>
-        public readonly GeneralOptionsModel GeneralOptions;
+        #endregion
+
+        #region Public Properties
 
         /// <summary>
-        /// The plugin manager.
+        ///     Gets or sets the analysisPlugin in view.
         /// </summary>
-        public readonly PluginManagerModel PluginManager;
+        public IAnalysisPlugin AnalysisPluginInView { get; set; }
 
         /// <summary>
-        /// The general options frame.
+        ///     Gets the available plugins collection.
         /// </summary>
-        private UserControl GeneralOptionsFrame;
+        public ObservableCollection<string> AvailablePluginsCollection
+        {
+            get
+            {
+                var options = new ObservableCollection<string>();
+                options.Add("General Settings");
+                options.Add("Apperance Settings");
+                options.Add("Plugin Manager");
+                options.Add("Licenses");
+                if (this.plugins == null)
+                {
+                    return options;
+                }
+
+                foreach (IAnalysisPlugin plugin in this.plugins)
+                {
+                    options.Add(plugin.GetKey(null));
+                }
+
+                return options;
+            }
+        }
+
+        /// <summary>
+        ///     Gets or sets the control command.
+        /// </summary>
+        public UserSelectControl ControlCommand { get; set; }
 
         /// <summary>
         ///     Gets or sets the options in view.
@@ -143,28 +201,24 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         }
 
         /// <summary>
-        ///     Gets the available plugins collection.
+        /// Gets or sets the plugins manager options frame.
         /// </summary>
-        public ObservableCollection<string> AvailablePluginsCollection
+        public UserControl PluginsManagerOptionsFrame { get; set; }
+
+        /// <summary>
+        ///     The project.
+        /// </summary>
+        public Resource Project
         {
             get
             {
-                var options = new ObservableCollection<string>();
-                options.Add("General Settings");
-                options.Add("Apperance Settings");
-                options.Add("Plugin Manager");
-                options.Add("Licenses");
-                if (this.plugins == null)
-                {
-                    return options;
-                }
-                
-                foreach (var plugin in this.plugins)
-                {
-                    options.Add(plugin.GetKey(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper)));
-                }
+                return this.project;
+            }
 
-                return options;
+            set
+            {
+                this.project = value;
+                this.GeneralOptions.Project = value;
             }
         }
 
@@ -211,12 +265,12 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                     if (value.Equals("Plugin Manager"))
                     {
                         this.PluginManager.PluginList.Clear();
-                        foreach (var plugin in this.plugincontroller.GetPlugins())
+                        foreach (IAnalysisPlugin plugin in this.plugincontroller.GetPlugins())
                         {
                             this.PluginManager.PluginList.Add(plugin.GetPluginDescription(this.Vsenvironmenthelper));
                         }
 
-                        foreach (var plugin in this.plugincontroller.GetMenuItemPlugins())
+                        foreach (IMenuCommandPlugin plugin in this.plugincontroller.GetMenuItemPlugins())
                         {
                             this.PluginManager.PluginList.Add(plugin.GetPluginDescription(this.Vsenvironmenthelper));
                         }
@@ -238,46 +292,16 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         }
 
         /// <summary>
-        /// Gets or sets the control command.
-        /// </summary>
-        public UserSelectControl ControlCommand { get; set; }
-
-        /// <summary>
-        /// Gets or sets the analysisPlugin in view.
-        /// </summary>
-        public IAnalysisPlugin AnalysisPluginInView { get; set; }
-
-        /// <summary>
-        /// Gets or sets the vsenvironmenthelper.
+        ///     Gets or sets the vsenvironmenthelper.
         /// </summary>
         public IVsEnvironmentHelper Vsenvironmenthelper { get; set; }
 
-        /// <summary>
-        /// The project.
-        /// </summary>
-        public Resource Project
-        {
-            get
-            {
-                return this.project;
-            }
-            set
-            {
-                this.project = value;
-                this.GeneralOptions.Project = value;
-            }
-        }
+        #endregion
+
+        #region Public Methods and Operators
 
         /// <summary>
-        /// The refresh properties in plugins.
-        /// </summary>
-        public void RefreshPropertiesInPlugins()
-        {
-            this.UpdatePluginOptions(string.Empty);
-        }
-
-        /// <summary>
-        /// The refresh general properties.
+        ///     The refresh general properties.
         /// </summary>
         public void RefreshGeneralProperties()
         {
@@ -285,68 +309,92 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         }
 
         /// <summary>
-        /// The reset user data.
+        ///     The refresh properties in plugins.
+        /// </summary>
+        public void RefreshPropertiesInPlugins()
+        {
+            this.UpdatePluginOptions(string.Empty);
+        }
+
+        /// <summary>
+        ///     The reset user data.
         /// </summary>
         public void ResetUserData()
         {
-            var fileIsMissing = File.Exists(this.Vsenvironmenthelper.UserAppDataConfigurationFile());
+            bool fileIsMissing = File.Exists(this.Vsenvironmenthelper.UserAppDataConfigurationFile());
             if (this.plugins == null)
             {
                 return;
             }
 
-            foreach (var plugin in this.plugins)
+            foreach (IAnalysisPlugin plugin in this.plugins)
             {
-                if (plugin.GetPluginControlOptions(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper)) == null)
+                if (plugin.GetPluginControlOptions(null) == null)
                 {
                     continue;
                 }
 
-                if (!fileIsMissing 
-                    || this.Vsenvironmenthelper.ReadAllAvailableOptionsInSettings(plugin.GetKey(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper))).Count == 0)
+                if (!fileIsMissing || this.Vsenvironmenthelper.ReadAllAvailableOptionsInSettings(plugin.GetKey(null)).Count == 0)
                 {
-                    var configuration = ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper);
+                    ISonarConfiguration configuration = null;
                     plugin.GetPluginControlOptions(configuration).ResetDefaults();
 
-                    var pluginKey = plugin.GetKey(configuration);
-                    var optionsToSave = plugin.GetPluginControlOptions(configuration).GetOptions();
-                    this.Vsenvironmenthelper.WriteAllOptionsForPluginOptionInApplicationData(pluginKey, null, optionsToSave);                    
+                    string pluginKey = plugin.GetKey(configuration);
+                    Dictionary<string, string> optionsToSave = plugin.GetPluginControlOptions(configuration).GetOptions();
+                    this.Vsenvironmenthelper.WriteAllOptionsForPluginOptionInApplicationData(pluginKey, null, optionsToSave);
                 }
             }
         }
 
-
         /// <summary>
-        /// The sync options to file.
+        ///     The sync options to file.
         /// </summary>
         public void SyncOptionsToFile()
         {
-            this.model.Vsenvironmenthelper.WriteOptionInApplicationData(GlobalIds.GlobalPropsId, GlobalIds.RunnerExecutableKey, this.GeneralOptions.SonarQubeBinary);
-            this.model.Vsenvironmenthelper.WriteOptionInApplicationData(GlobalIds.GlobalPropsId, GlobalIds.JavaExecutableKey, this.GeneralOptions.JavaBinary);
-            this.model.Vsenvironmenthelper.WriteOptionInApplicationData(GlobalIds.GlobalPropsId, GlobalIds.LocalAnalysisTimeoutKey, this.GeneralOptions.TimeoutValue.ToString(CultureInfo.InvariantCulture));
-            this.model.Vsenvironmenthelper.WriteOptionInApplicationData(GlobalIds.GlobalPropsId, GlobalIds.IsDebugAnalysisOnKey, this.GeneralOptions.DebugIsChecked.ToString());
-            this.model.Vsenvironmenthelper.WriteOptionInApplicationData(GlobalIds.GlobalPropsId, GlobalIds.ExcludedPluginsKey, this.GeneralOptions.ExcludedPlugins);
+            this.model.Vsenvironmenthelper.WriteOptionInApplicationData(
+                GlobalIds.GlobalPropsId, 
+                GlobalIds.RunnerExecutableKey, 
+                this.GeneralOptions.SonarQubeBinary);
+            this.model.Vsenvironmenthelper.WriteOptionInApplicationData(
+                GlobalIds.GlobalPropsId, 
+                GlobalIds.JavaExecutableKey, 
+                this.GeneralOptions.JavaBinary);
+            this.model.Vsenvironmenthelper.WriteOptionInApplicationData(
+                GlobalIds.GlobalPropsId, 
+                GlobalIds.LocalAnalysisTimeoutKey, 
+                this.GeneralOptions.TimeoutValue.ToString(CultureInfo.InvariantCulture));
+            this.model.Vsenvironmenthelper.WriteOptionInApplicationData(
+                GlobalIds.GlobalPropsId, 
+                GlobalIds.IsDebugAnalysisOnKey, 
+                this.GeneralOptions.DebugIsChecked.ToString());
+            this.model.Vsenvironmenthelper.WriteOptionInApplicationData(
+                GlobalIds.GlobalPropsId, 
+                GlobalIds.ExcludedPluginsKey, 
+                this.GeneralOptions.ExcludedPlugins);
 
-            foreach (var plugin in this.PluginManager.PluginList)
+            foreach (PluginDescription plugin in this.PluginManager.PluginList)
             {
-                this.model.Vsenvironmenthelper.WriteOptionInApplicationData(GlobalIds.PluginEnabledControlId, plugin.Name, plugin.Enabled.ToString());                
+                this.model.Vsenvironmenthelper.WriteOptionInApplicationData(GlobalIds.PluginEnabledControlId, plugin.Name, plugin.Enabled.ToString());
             }
 
             if (this.Project != null)
             {
-                var solId = VsSonarUtils.SolutionGlobPropKey(this.Project.Key);
+                string solId = VsSonarUtils.SolutionGlobPropKey(this.Project.Key);
                 this.model.Vsenvironmenthelper.WriteOptionInApplicationData(solId, GlobalIds.SonarSourceKey, this.GeneralOptions.SourceDir);
                 this.model.Vsenvironmenthelper.WriteOptionInApplicationData(solId, GlobalIds.SourceEncodingKey, this.GeneralOptions.SourceEncoding);
             }
 
-
             if (this.AnalysisPluginInView != null)
             {
-                var options = this.AnalysisPluginInView.GetPluginControlOptions(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.model.Vsenvironmenthelper)).GetOptions();
-                var key = this.AnalysisPluginInView.GetKey(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.model.Vsenvironmenthelper));
+                Dictionary<string, string> options = this.AnalysisPluginInView.GetPluginControlOptions(null).GetOptions();
+                string key = this.AnalysisPluginInView.GetKey(null);
                 this.model.Vsenvironmenthelper.WriteAllOptionsForPluginOptionInApplicationData(key, this.Project, options);
             }
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// The on property changed.
@@ -356,7 +404,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// </param>
         protected void OnPropertyChanged(string name)
         {
-            var handler = this.PropertyChanged;
+            PropertyChangedEventHandler handler = this.PropertyChanged;
             if (handler != null)
             {
                 handler(this, new PropertyChangedEventArgs(name));
@@ -374,7 +422,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// </param>
         protected void OnRequestClose(object arg1, object arg2)
         {
-            var handler = this.RequestClose;
+            Action<object, object> handler = this.RequestClose;
             if (handler != null)
             {
                 handler(arg1, arg2);
@@ -382,11 +430,11 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         }
 
         /// <summary>
-        /// The reset general options for project.
+        ///     The reset general options for project.
         /// </summary>
         private void ResetGeneralOptionsForProject()
         {
-            var generalOptionsInDsk = this.Vsenvironmenthelper.ReadAllAvailableOptionsInSettings(GlobalIds.GlobalPropsId);
+            Dictionary<string, string> generalOptionsInDsk = this.Vsenvironmenthelper.ReadAllAvailableOptionsInSettings(GlobalIds.GlobalPropsId);
 
             if (generalOptionsInDsk != null)
             {
@@ -395,8 +443,8 @@ namespace VSSonarExtension.MainViewModel.ViewModel
 
             if (this.Project == null)
             {
-                var solId = VsSonarUtils.SolutionGlobPropKey(this.Project.Key);
-                var projectOptionsInDsk = this.Vsenvironmenthelper.ReadAllAvailableOptionsInSettings(solId);
+                string solId = VsSonarUtils.SolutionGlobPropKey(this.Project.Key);
+                Dictionary<string, string> projectOptionsInDsk = this.Vsenvironmenthelper.ReadAllAvailableOptionsInSettings(solId);
                 this.GeneralOptions.SetProjectOptions(projectOptionsInDsk);
             }
         }
@@ -409,11 +457,11 @@ namespace VSSonarExtension.MainViewModel.ViewModel
         /// </param>
         private void UpdatePluginOptions(string selectedPlugin)
         {
-            foreach (var plugin in this.plugins)
+            foreach (IAnalysisPlugin plugin in this.plugins)
             {
-                var configuration = ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper);
-                var pluginOptionsController = plugin.GetPluginControlOptions(configuration);
-                var pluginKey = plugin.GetKey(configuration);
+                ISonarConfiguration configuration = null;
+                IPluginsOptions pluginOptionsController = plugin.GetPluginControlOptions(configuration);
+                string pluginKey = plugin.GetKey(configuration);
 
                 if (pluginOptionsController == null)
                 {
@@ -428,34 +476,42 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                     }
                 }
 
-                var optionsInDsk = this.Vsenvironmenthelper.ReadAllAvailableOptionsInSettings(pluginKey);
+                Dictionary<string, string> optionsInDsk = this.Vsenvironmenthelper.ReadAllAvailableOptionsInSettings(pluginKey);
                 this.OptionsInView = pluginOptionsController.GetUserControlOptions(this.Project);
                 this.AnalysisPluginInView = plugin;
-                pluginOptionsController.SetOptions(optionsInDsk);                
+                pluginOptionsController.SetOptions(optionsInDsk);
             }
         }
 
+        #endregion
+
         /// <summary>
-        /// The ok and exit.
+        ///     The ok and exit.
         /// </summary>
         public class UserSelectControl : ICommand
         {
+            #region Fields
+
             /// <summary>
-            /// The model.
+            ///     The model.
             /// </summary>
             private readonly ExtensionOptionsModel model;
 
             /// <summary>
-            /// The plugins.
+            ///     The plugins.
             /// </summary>
-            private List<IAnalysisPlugin> plugins;
+            private readonly List<IAnalysisPlugin> plugins;
+
+            #endregion
+
+            #region Constructors and Destructors
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="UserSelectControl"/> class.
+            ///     Initializes a new instance of the <see cref="UserSelectControl" /> class.
             /// </summary>
             public UserSelectControl()
             {
-                var handler = this.CanExecuteChanged;
+                EventHandler handler = this.CanExecuteChanged;
                 if (handler != null)
                 {
                     handler(this, null);
@@ -468,16 +524,27 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             /// <param name="model">
             /// The model.
             /// </param>
-            public UserSelectControl(ExtensionOptionsModel model, List<IAnalysisPlugin> plugins )
+            /// <param name="plugins">
+            /// The plugins.
+            /// </param>
+            public UserSelectControl(ExtensionOptionsModel model, List<IAnalysisPlugin> plugins)
             {
                 this.plugins = plugins;
                 this.model = model;
             }
 
+            #endregion
+
+            #region Public Events
+
             /// <summary>
-            /// The can execute changed.
+            ///     The can execute changed.
             /// </summary>
             public event EventHandler CanExecuteChanged;
+
+            #endregion
+
+            #region Public Methods and Operators
 
             /// <summary>
             /// The can execute.
@@ -517,14 +584,15 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                 {
                     this.model.SyncOptionsToFile();
                     this.model.SelectedPluginItem = null;
-                }                
+                }
 
                 if (header.Equals("Cancel and Exit"))
                 {
-                    var pluginInView = this.model.AnalysisPluginInView;
+                    IAnalysisPlugin pluginInView = this.model.AnalysisPluginInView;
                     if (pluginInView != null)
                     {
-                        pluginInView.GetPluginControlOptions(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.model.Vsenvironmenthelper)).SetOptions(this.model.Vsenvironmenthelper.ReadAllAvailableOptionsInSettings(pluginInView.GetKey(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.model.Vsenvironmenthelper))));
+                        pluginInView.GetPluginControlOptions(null)
+                            .SetOptions(this.model.Vsenvironmenthelper.ReadAllAvailableOptionsInSettings(pluginInView.GetKey(null)));
                     }
 
                     this.model.SelectedPluginItem = null;
@@ -538,20 +606,22 @@ namespace VSSonarExtension.MainViewModel.ViewModel
                         return;
                     }
 
-                    foreach (var plugin in this.plugins)
+                    foreach (IAnalysisPlugin plugin in this.plugins)
                     {
-                        var key = plugin.GetKey(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.model.Vsenvironmenthelper));
+                        string key = plugin.GetKey(null);
                         if (this.model.SelectedLicense.ProductId.Contains(key))
                         {
-                            this.model.GeneratedToken = plugin.GenerateTokenId(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.model.Vsenvironmenthelper));
+                            this.model.GeneratedToken = plugin.GenerateTokenId(null);
                         }
                     }
 
                     return;
                 }
-                
+
                 this.model.OnRequestClose(this, "Exit");
             }
+
+            #endregion
         }
     }
 }

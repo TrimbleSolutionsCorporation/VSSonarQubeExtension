@@ -13,11 +13,27 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarExtensionUi.ViewModel
 {
+    using System;
+    using System.Windows.Documents;
+    using System.Windows.Media;
+
+    using ExtensionTypes;
+
+    using SonarRestService;
+
+    using VSSonarPlugins;
+
     /// <summary>
     /// The ViewModelBase interface.
     /// </summary>
     public interface IViewModelBase
     {
         string Header { get; set; }
+
+        void UpdateColours(Color background, Color foreground);
+
+        Color ForeGroundColor { get; set; }
+
+        Color BackGroundColor { get; set; }
     }
 }

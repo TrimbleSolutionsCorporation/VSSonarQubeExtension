@@ -15,13 +15,13 @@ namespace VSSonarExtensionUi.ViewModel
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Globalization;
-    using System.Reflection;
+    using System.Linq;
     using System.Windows.Data;
     using System.Windows.Input;
+    using System.Windows.Media;
 
     using ExtensionTypes;
 
-    using GalaSoft.MvvmLight;
     using GalaSoft.MvvmLight.Command;
 
     using PropertyChanged;
@@ -37,16 +37,23 @@ namespace VSSonarExtensionUi.ViewModel
     ///     The issue grid view model.
     /// </summary>
     [ImplementPropertyChanged]
-    public class IssueGridViewModel : ViewModelBase, IViewModelBase, IDataModel, IFilterCommand, IFilterOption 
+    public class IssueGridViewModel : IViewModelBase, IDataModel, IFilterCommand, IFilterOption
     {
         #region Constants
 
-        private static object _lock = new object();
-        
         /// <summary>
         ///     The data grid options key.
         /// </summary>
         private const string DataGridOptionsKey = "DataGridOptions";
+
+        #endregion
+
+        #region Static Fields
+
+        /// <summary>
+        /// The _lock.
+        /// </summary>
+        private static readonly object Lock = new object();
 
         #endregion
 
@@ -58,16 +65,14 @@ namespace VSSonarExtensionUi.ViewModel
         private readonly IFilter filter;
 
         /// <summary>
-        ///     The model base.
+        /// The model.
         /// </summary>
-        private readonly IViewModelBase modelBase;
+        private readonly SonarQubeViewModel model;
 
         /// <summary>
         ///     The vsenvironmenthelper.
         /// </summary>
         private readonly IVsEnvironmentHelper vsenvironmenthelper;
-
-        private readonly SonarQubeViewModel model;
 
         #endregion
 
@@ -81,7 +86,10 @@ namespace VSSonarExtensionUi.ViewModel
             this.Issues = new ItemsChangeObservableCollection<Issue>(this);
             this.IssuesInView = new CollectionViewSource { Source = this.Issues }.View;
 
-            BindingOperations.EnableCollectionSynchronization(this.IssuesInView, _lock);
+            BindingOperations.EnableCollectionSynchronization(this.IssuesInView, Lock);
+
+            this.ForeGroundColor = Colors.White;
+            this.ForeGroundColor = Colors.Black;
         }
 
         /// <summary>
@@ -90,22 +98,16 @@ namespace VSSonarExtensionUi.ViewModel
         /// <param name="model">
         /// The model.
         /// </param>
-        /// <param name="modelBase">
-        /// The model Base.
-        /// </param>
         /// <param name="rowContextMenu">
         /// The row Context Menu.
         /// </param>
-        public IssueGridViewModel(SonarQubeViewModel model, IViewModelBase modelBase, bool rowContextMenu)
+        public IssueGridViewModel(SonarQubeViewModel model, bool rowContextMenu)
         {
             this.model = model;
-            this.modelBase = modelBase;
             this.vsenvironmenthelper = model.VsHelper;
             this.Issues = new ItemsChangeObservableCollection<Issue>(this);
             this.IssuesInView = new CollectionViewSource { Source = this.Issues }.View;
-            BindingOperations.EnableCollectionSynchronization(this.IssuesInView, _lock);
-            this.Issues.Add(new Issue { Message = "component", Component = "message" });
-            this.Issues.Add(new Issue { Message = "message", Component = "component" });
+            BindingOperations.EnableCollectionSynchronization(this.IssuesInView, Lock);
 
             this.MouseEventCommand = new RelayCommand(this.OnMouseEventCommand);
 
@@ -121,6 +123,7 @@ namespace VSSonarExtensionUi.ViewModel
                         // this.ContextMenuItems,
                         // this.SelectedItems.Count == 1 && this.mainModel.ConnectedToServer);
                     });
+
             this.ColumnHeaderChangedCommand = new RelayCommand(this.OnColumnHeaderChangedCommand);
             this.RestoreUserSettingsInIssuesDataGrid();
 
@@ -131,12 +134,9 @@ namespace VSSonarExtensionUi.ViewModel
 
             this.filter = new IssueFilter(this);
             this.InitFilterCommanding();
-        }
 
-        public void UpdateIssues(List<Issue> listOfIssues)
-        {
-            this.IssuesInView = new CollectionViewSource { Source = null }.View;
-            this.IssuesInView = new CollectionViewSource { Source = listOfIssues }.View;
+            this.ForeGroundColor = Colors.White;
+            this.ForeGroundColor = Colors.Black;
         }
 
         #endregion
@@ -152,6 +152,11 @@ namespace VSSonarExtensionUi.ViewModel
         ///     Gets or sets a value indicating whether assignee visible.
         /// </summary>
         public bool AssigneeVisible { get; set; }
+
+        /// <summary>
+        /// Gets or sets the back ground color.
+        /// </summary>
+        public Color BackGroundColor { get; set; }
 
         /// <summary>
         ///     Gets or sets the busy indicator tooltip.
@@ -322,6 +327,11 @@ namespace VSSonarExtensionUi.ViewModel
         ///     Gets or sets the filter term status.
         /// </summary>
         public IssueStatus? FilterTermStatus { get; set; }
+
+        /// <summary>
+        /// Gets or sets the fore ground color.
+        /// </summary>
+        public Color ForeGroundColor { get; set; }
 
         /// <summary>
         ///     Gets or sets the header.
@@ -499,7 +509,6 @@ namespace VSSonarExtensionUi.ViewModel
         /// </summary>
         public bool ViolationIdVisible { get; set; }
 
-
         #endregion
 
         #region Public Methods and Operators
@@ -515,6 +524,20 @@ namespace VSSonarExtensionUi.ViewModel
         /// </param>
         public void ProcessChanges(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
+        }
+
+        /// <summary>
+        /// The is not filtered.
+        /// </summary>
+        /// <param name="issue">
+        /// The issue.
+        /// </param>
+        /// <returns>
+        /// The <see cref="bool"/>.
+        /// </returns>
+        public bool IsNotFiltered(Issue issue)
+        {
+            return this.filter.FilterFunction(issue);
         }
 
         /// <summary>
@@ -537,6 +560,39 @@ namespace VSSonarExtensionUi.ViewModel
             {
                 this.WriteWindowOptions();
             }
+        }
+
+        /// <summary>
+        /// The update colours.
+        /// </summary>
+        /// <param name="background">
+        /// The background.
+        /// </param>
+        /// <param name="foreground">
+        /// The foreground.
+        /// </param>
+        public void UpdateColours(Color background, Color foreground)
+        {
+            this.BackGroundColor = background;
+            this.ForeGroundColor = foreground;
+        }
+
+        /// <summary>
+        /// The update issues.
+        /// </summary>
+        /// <param name="listOfIssues">
+        /// The list of issues.
+        /// </param>
+        public void UpdateIssues(List<Issue> listOfIssues)
+        {
+            this.Issues.Clear();
+            foreach (var listOfIssue in listOfIssues)
+            {
+                this.Issues.Add(listOfIssue);                
+            }
+
+            this.IssuesInView = new CollectionViewSource { Source = null }.View;
+            this.IssuesInView = new CollectionViewSource { Source = this.Issues }.View;
         }
 
         #endregion
@@ -563,12 +619,8 @@ namespace VSSonarExtensionUi.ViewModel
         /// </returns>
         private ObservableCollection<IMenuItem> CreateColumnVisibiltyMenu()
         {
-            PropertyInfo[] props = typeof(Issue).GetProperties();
-            var submenus = new List<string>();
-            foreach (PropertyInfo propertyInfo in props)
-            {
-                submenus.Add(propertyInfo.Name);
-            }
+            var props = typeof(Issue).GetProperties();
+            var submenus = props.Select(propertyInfo => propertyInfo.Name).ToList();
 
             var menu = new ObservableCollection<IMenuItem> { ShowHideIssueColumn.MakeMenu(this, this.vsenvironmenthelper, submenus) };
 
@@ -576,17 +628,24 @@ namespace VSSonarExtensionUi.ViewModel
         }
 
         /// <summary>
-        /// The create row context menu.
+        ///     The create row context menu.
         /// </summary>
         /// <returns>
-        /// The <see>
+        ///     The
+        ///     <see>
         ///         <cref>ObservableCollection</cref>
         ///     </see>
         ///     .
         /// </returns>
         private ObservableCollection<IMenuItem> CreateRowContextMenu()
         {
-            var menu = new ObservableCollection<IMenuItem> { ChangeStatusHandler.MakeMenu(this.model.SonarCubeConfiguration, this.model.SonarRestConnector, this) };
+            var menu = new ObservableCollection<IMenuItem>
+                           {
+                               ChangeStatusHandler.MakeMenu(
+                                   this.model.ExtensionOptionsData.SonarConfigurationViewModel.UserConnectionConfig, 
+                                   this.model.SonarRestConnector, 
+                                   this)
+                           };
 
             return menu;
         }
@@ -956,26 +1015,12 @@ namespace VSSonarExtensionUi.ViewModel
         }
 
         /// <summary>
-        ///     The set filter active.
-        /// </summary>
-        /// <returns>
-        ///     The <see cref="bool" />.
-        /// </returns>
-        private bool SetFilterActive()
-        {
-            return !this.FilterTermMessage.Equals(string.Empty) || !this.FilterTermComponent.Equals(string.Empty)
-                   || !this.FilterTermProject.Equals(string.Empty) || !this.FilterTermRule.Equals(string.Empty)
-                   || !this.FilterTermAssignee.Equals(string.Empty) || this.FilterTermStatus != null || this.FilterTermSeverity != null
-                   || this.FilterTermResolution != null || this.FilterTermIsNew != null;
-        }
-
-        /// <summary>
         ///     The write window options.
         /// </summary>
         private void WriteWindowOptions()
         {
-            int i = 0;
-            foreach (PropertyInfo propertyInfo in typeof(Issue).GetProperties())
+            var i = 0;
+            foreach (var propertyInfo in typeof(Issue).GetProperties())
             {
                 this.vsenvironmenthelper.WriteOptionInApplicationData(
                     DataGridOptionsKey, 

@@ -11,7 +11,7 @@ namespace VSSonarExtensionUi.View
 {
     using System.Windows.Input;
     using VSSonarExtensionUi.ViewModel;
-
+    using VSSonarExtensionUi.ViewModel.Configuration;
 
     /// <summary>
     /// Interaction logic for PluginOptionsWindow.xaml

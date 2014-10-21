@@ -3,12 +3,11 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	xmlns:ViewModel="clr-namespace:VSSonarExtensionUi.ViewModel"
 	xmlns:helpers="clr-namespace:VSSonarExtensionUi.Helpers"
-	xmlns:styles="clr-namespace:VSSonarExtensionUi.Styles"
-    xmlns:viewModel="clr-namespace:VSSonarExtensionUi.ViewModel"
-    xmlns:view="clr-namespace:VSSonarExtensionUi.View"    
-	mc:Ignorable="d"
+	xmlns:viewModel="clr-namespace:VSSonarExtensionUi.ViewModel"
+    xmlns:view="clr-namespace:VSSonarExtensionUi.View"
+    xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+    mc:Ignorable="d"
 	x:Class="VSSonarExtensionUi.View.LocalView"
 	x:Name="UserControl"
 	d:DesignWidth="640" d:DesignHeight="480">
@@ -19,10 +18,13 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/Styles.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
-            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
-            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
-            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
-            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />                  
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />             
+                
+				<ResourceDictionary Source="pack://application:,,,/VSSonarExtensionUi;component/Resources/Icons.xaml" />
+                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/ButtonStyles.xaml"/>                
             </ResourceDictionary.MergedDictionaries>
 
       
@@ -30,46 +32,184 @@
             <DataTemplate DataType="{x:Type viewModel:IssueGridViewModel}">
                 <view:IssuesGrid/>
             </DataTemplate>          
-
-            <Image x:Key="FileImage" Source="/VSSonarExtensionUi;component/Icons/appbar.cell.align.png"/>
-			<Image x:Key="IncrementalImage" Source="/VSSonarExtensionUi;component/Icons/appbar.cell.align.png"/>
-            <Image x:Key="AnalysisImage" Source="/VSSonarExtensionUi;component/Icons/appbar.book.list.png"/>
-            <Image x:Key="PreviewImage" Source="/VSSonarExtensionUi;component/Icons/appbar.book.list.png"/>
-            <Image x:Key="OpenSourceDirImage" Source="/VSSonarExtensionUi;component/Icons/appbar.book.list.png"/>
-            <Image x:Key="CancelImage" Source="/VSSonarExtensionUi;component/Icons/appbar.book.list.png"/>
             
             </ResourceDictionary>
         </UserControl.Resources>
+
+ <UserControl.Background>
+   <SolidColorBrush Color="{Binding BackGroundColor}"/>
+</UserControl.Background>
+
+    <UserControl.Foreground>
+   <SolidColorBrush Color="{Binding ForeGroundColor}"/>
+</UserControl.Foreground>  
     
+    <DockPanel>    
+        <controls:FlyoutsControl Foreground="{Binding ForeGround, Converter={StaticResource ColorToBrushConverter}}" Background="{Binding BackGround, Converter={StaticResource ColorToBrushConverter}}"  Height="{Binding SizeOfFlyout}" DockPanel.Dock="Top">
+            <controls:Flyout Foreground="{Binding ForeGround, Converter={StaticResource ColorToBrushConverter}}" Background="{Binding BackGround, Converter={StaticResource ColorToBrushConverter}}" IsOpen="{Binding ShowFlyouts}" Height="{Binding SizeOfFlyout}" Header="" Position="Top">
+                <ScrollViewer>
+                    <TextBox  helpers:TextBoxBehaviour.ScrollOnTextChanged="True" IsReadOnly="True" TextAlignment="Justify" TextWrapping="Wrap" Text="{Binding OutputLog}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"></TextBox>
+                </ScrollViewer>
+            </controls:Flyout>
+        </controls:FlyoutsControl>
+        
+            <Grid DockPanel.Dock="Top">
+		        <Grid.RowDefinitions>
+                    <RowDefinition Height="37"/>
+                    <RowDefinition Height="400*"/>
+                <RowDefinition Height="3*"/>
+                </Grid.RowDefinitions>
+                
+                <StatusBar Visibility="{Binding ShowFlyouts, Converter={StaticResource BoolToVis}, ConverterParameter=Inverted}"
+				           Grid.Row="0" Grid.ColumnSpan="2" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}">
+                    <StatusBarItem HorizontalAlignment="Right">
+						<StackPanel Orientation="Horizontal">
+                            <StatusBarItem>
+                                <Button Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" x:Name="ShowFlyoutButton" Width="30"
+								        Height="30"
+								        Margin="0, -8, 0, 0"
+                                        ToolTip="Show Log"
+								        Style="{DynamicResource MetroCircleButtonStyle}" Command="{Binding CloseFlyoutLogViewerCommand}">
+                                    <Rectangle  Width="15"
+									           Height="15"
+									           Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Stretch="Fill"
+											             Visual="{StaticResource appbar_arrow_down}" />
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                </Button>
+                            </StatusBarItem>
+                        </StackPanel>
+					</StatusBarItem>
+				</StatusBar>
+            
+                <StatusBar DockPanel.Dock="Bottom" Visibility="{Binding ShowFlyouts, Converter={StaticResource BoolToVis}}"
+				           Grid.Row="0" Grid.ColumnSpan="2" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}">
+                    <StatusBarItem HorizontalAlignment="Right">
+                        <StackPanel Orientation="Horizontal">
+                            <StatusBarItem>
+                                <Button Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" x:Name="HideFlyoutButton" Width="30"
+								        Height="30"
+								        Margin="0, -8, 0, 0"
+                                        ToolTip="Show Log"
+								        Style="{DynamicResource MetroCircleButtonStyle}" Command="{Binding FlyoutLogViewerCommand}">
+                                    <Rectangle Width="15"
+									           Height="15"
+									           Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Stretch="Fill"
+											             Visual="{StaticResource appbar_arrow_up}" />
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                </Button>
+                            </StatusBarItem>
+                            <StatusBarItem>
 
+                            </StatusBarItem>
+                        </StackPanel>
+                    </StatusBarItem>
+                </StatusBar>
+                
+				    <StackPanel Grid.Row="0" Orientation="Horizontal">
+                                <Button Width="30" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+								        Height="30"
+								        Margin="0, 0, 0, 0"
+                                        ToolTip="Select Source Folder"
+								        Style="{DynamicResource SquareButtonStyle}" Command="{Binding OpenSourceDirCommand}" IsEnabled="{Binding IsAssociatedWithProject}">
+                                    <Rectangle Width="15"
+									           Height="15"
+									           Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}">
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Stretch="Fill"
+											             Visual="{StaticResource appbar_book_open_text_image}" />
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                </Button>  
+                                <ToggleButton Width="30" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+								        Height="30"
+								        Margin="0, 0, 0, 0"
+                                        ToolTip="Run File Analysis"
+								        IsChecked="{Binding FileAnalysisIsEnabled}" IsEnabled="{Binding CanRunAnalysis}">
+                                    <Rectangle Width="15"
+									           Height="15"
+									           Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}">
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Stretch="Fill"
+											             Visual="{StaticResource appbar_card_1}" />
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                </ToggleButton>                          
+                        
+                                <Button Width="30" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+								        Height="30"
+								        Margin="0, 0, 0, 0"
+                                        ToolTip="Run Incremental Analysis"
+								        Style="{DynamicResource SquareButtonStyle}" Command="{Binding IncrementalCommand}" IsEnabled="{Binding CanRunAnalysis}">
+                                    <Rectangle Width="15"
+									           Height="15"
+									           Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}">
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Stretch="Fill"
+											             Visual="{StaticResource appbar_card_2}" />
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                </Button>               
+                        
+                                <Button Width="30" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+								        Height="30"
+								        Margin="0, 0, 0, 0"
+                                        ToolTip="Run Preview Analysis"
+								        Style="{DynamicResource SquareButtonStyle}" Command="{Binding PreviewCommand}" IsEnabled="{Binding CanRunAnalysis}">
+                                    <Rectangle Width="15"
+									           Height="15"
+									           Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}">
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Stretch="Fill"
+											             Visual="{StaticResource appbar_card_3}" />
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                </Button>                           
+                        
+                                <Button Width="30" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+								        Height="30"
+								        Margin="0, 0, 0, 0"
+                                        ToolTip="Run Full Analysis"
+								        Style="{DynamicResource SquareButtonStyle}" Command="{Binding AnalysisCommand}" IsEnabled="{Binding CanRunAnalysis}">
+                                    <Rectangle Width="15"
+									           Height="15"
+									           Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}">
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Stretch="Fill"
+											             Visual="{StaticResource appbar_card_4}" />
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                </Button>                           
 
-	<Grid x:Name="LayoutRoot">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="30"/>
-            <RowDefinition Height="3*"/>
-            <RowDefinition Height="60"/>
-        </Grid.RowDefinitions>
-				
-				<StackPanel Grid.Row="0" Orientation="Horizontal">
-					<Button Style="{DynamicResource SquareButtonStyle}" ToolTip="Select Source Folder" Content="{DynamicResource OpenSourceDirImage}" Command="{Binding OpenSourceDirCommand}"/>
-                    <Button Style="{DynamicResource SquareButtonStyle}" ToolTip="Run File Analysis" Content="{DynamicResource FileImage}" Command="{Binding FileCommand}"/>
-                    <Button Style="{DynamicResource SquareButtonStyle}" ToolTip="Run Incremental Analysis" Content="{DynamicResource IncrementalImage}" Command="{Binding IncrementalCommand}"/>
-					<Button Style="{DynamicResource SquareButtonStyle}" ToolTip="Run Preview Analysis" Content="{DynamicResource PreviewImage}" Command="{Binding PreviewCommand}"/>
-                    <Button Style="{DynamicResource SquareButtonStyle}" ToolTip="Run Full Analysis" Content="{DynamicResource AnalysisImage}" Command="{Binding AnalysisCommand}"/>
-                    <Button Style="{DynamicResource SquareButtonStyle}" ToolTip="Cancel Analysis" Content="{DynamicResource CancelImage}" Command="{Binding StopLocalAnalysisCommand}"/>
-                    
-                    
-                </StackPanel>
+                                <Button Width="30" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+								        Height="30"
+								        Margin="0, 0, 0, 0"
+                                        ToolTip="Cancel Analysis"
+								        Style="{DynamicResource SquareButtonStyle}" Command="{Binding StopLocalAnalysisCommand}" IsEnabled="{Binding CanRunAnalysis, Converter={StaticResource BooleanInverter}}">
+                                    <Rectangle Width="15"
+									           Height="15"
+									           Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}">
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Stretch="Fill"
+											             Visual="{StaticResource appbar_cancel}" />
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                </Button>                           
+                        
+                        </StackPanel>
+                
         
-        <Border Grid.Row="1" Margin="5" BorderBrush="#FF7F9DB9" BorderThickness="1">
-            <ContentControl Content="{Binding IssuesGridView}"/>
-        </Border>     
+                <Border Grid.Row="1" BorderBrush="#FF7F9DB9" BorderThickness="1">
+                    <ContentControl Content="{Binding IssuesGridView}"/>
+                </Border>     
         
-        <ScrollViewer Grid.Row="2" >
-            <TextBox  helpers:TextBoxBehaviour.ScrollOnTextChanged="True" IsReadOnly="True" TextAlignment="Justify" TextWrapping="Wrap" Text="{Binding OutputLog}" Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Background="{styles:FallbackBackgroundBrush FallBackBrush=White}"></TextBox>
-        </ScrollViewer>
-        
-        
+    	</Grid>
 
-	</Grid>
+    </DockPanel>
+
 </UserControl>

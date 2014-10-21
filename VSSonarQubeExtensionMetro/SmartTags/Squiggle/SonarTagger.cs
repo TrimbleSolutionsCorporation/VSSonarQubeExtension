@@ -1,15 +1,10 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="SonarTagger.cs" company="Copyright © 2013 Tekla Corporation. Tekla is a Trimble Company">
-//     Copyright (C) 2013 [Jorge Costa, Jorge.Costa@tekla.com]
+// <copyright file="SonarTagger.cs" company="">
+//   
 // </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-// This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
-// as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
-// of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. 
-// You should have received a copy of the GNU Lesser General Public License along with this program; if not, write to the Free
-// Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+// <summary>
+//   The sonar tagger.
+// </summary>
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarQubeExtension.SmartTags.Squiggle
 {
@@ -26,7 +21,6 @@ namespace VSSonarQubeExtension.SmartTags.Squiggle
     using Microsoft.VisualStudio.Text;
     using Microsoft.VisualStudio.Text.Tagging;
 
-    using VSSonarQubeExtension;
     using VSSonarQubeExtension.SmartTags.BufferUpdate;
 
     /// <summary>
@@ -37,16 +31,9 @@ namespace VSSonarQubeExtension.SmartTags.Squiggle
         #region Fields
 
         /// <summary>
-        /// The dispatcher.
+        ///     The dispatcher.
         /// </summary>
         private readonly Dispatcher dispatcher;
-
-        /// <summary>
-        /// The dirty spans var.
-        /// </summary>
-        private List<SnapshotSpan> dirtySpansVar;
-
-        // ITagAggregator<IErrorTag> _naturalTextTagger;
 
         /// <summary>
         ///     The m disposed.
@@ -59,12 +46,12 @@ namespace VSSonarQubeExtension.SmartTags.Squiggle
         private volatile List<SonarTag> sonarTags = new List<SonarTag>();
 
         /// <summary>
-        /// The timer.
+        ///     The timer.
         /// </summary>
         private DispatcherTimer timer;
 
         /// <summary>
-        /// The update thread.
+        ///     The update thread.
         /// </summary>
         private Thread updateThread;
 
@@ -89,10 +76,14 @@ namespace VSSonarQubeExtension.SmartTags.Squiggle
             }
 
             this.SourceBuffer = sourceBuffer;
-            VsSonarExtensionPackage.ExtensionModelData.PropertyChanged += this.IssuesListChanged;
+            VsSonarExtensionPackage.SonarQubeModel.PropertyChanged += this.IssuesListChanged;
+            VsSonarExtensionPackage.SonarQubeModel.ServerViewModel.PropertyChanged += this.IssuesListChanged;
+            VsSonarExtensionPackage.SonarQubeModel.LocalViewModel.PropertyChanged += this.IssuesListChanged;
+            VsSonarExtensionPackage.SonarQubeModel.IssuesSearchViewModel.PropertyChanged += this.IssuesListChanged;
+            VsSonarExtensionPackage.SonarQubeModel.ExtensionOptionsData.SonarConfigurationViewModel.PropertyChanged += this.IssuesListChanged;
+
 
             this.dispatcher = Dispatcher.CurrentDispatcher;
-            this.dirtySpansVar = new List<SnapshotSpan>();
 
             try
             {
@@ -125,6 +116,48 @@ namespace VSSonarQubeExtension.SmartTags.Squiggle
         #endregion
 
         #region Public Methods and Operators
+
+        /// <summary>
+        /// The get leading whitespace length.
+        /// </summary>
+        /// <param name="s">
+        /// The s.
+        /// </param>
+        /// <param name="tabLength">
+        /// The tab length.
+        /// </param>
+        /// <param name="trimToLowerTab">
+        /// The trim to lower tab.
+        /// </param>
+        /// <returns>
+        /// The <see cref="int"/>.
+        /// </returns>
+        public static int GetLeadingWhitespaceLength(string s, int tabLength = 4, bool trimToLowerTab = true)
+        {
+            if (s.Length < tabLength)
+            {
+                return 0;
+            }
+
+            int whiteSpaceCount = 0;
+
+            while (char.IsWhiteSpace(s[whiteSpaceCount]))
+            {
+                whiteSpaceCount++;
+            }
+
+            if (whiteSpaceCount < tabLength)
+            {
+                return 0;
+            }
+
+            if (trimToLowerTab)
+            {
+                whiteSpaceCount -= whiteSpaceCount % tabLength;
+            }
+
+            return whiteSpaceCount;
+        }
 
         /// <summary>
         ///     The dispose.
@@ -165,16 +198,16 @@ namespace VSSonarQubeExtension.SmartTags.Squiggle
                 yield break;
             }
 
-            var snapshot = spans[0].Snapshot;
+            ITextSnapshot snapshot = spans[0].Snapshot;
 
-            foreach (var tag in this.sonarTags)
+            foreach (SonarTag tag in this.sonarTags)
             {
-                var tagSpan = tag.ToTagSpan(snapshot);
+                ITagSpan<SonarTag> tagSpan = tag.ToTagSpan(snapshot);
                 if (tagSpan.Span.Length == 0)
                 {
                     continue;
                 }
-                
+
                 yield return tagSpan;
             }
         }
@@ -195,7 +228,12 @@ namespace VSSonarQubeExtension.SmartTags.Squiggle
             {
                 if (disposing)
                 {
-                    VsSonarExtensionPackage.ExtensionModelData.PropertyChanged -= this.IssuesListChanged;
+                    VsSonarExtensionPackage.SonarQubeModel.PropertyChanged -= this.IssuesListChanged;
+                    VsSonarExtensionPackage.SonarQubeModel.ServerViewModel.PropertyChanged -= this.IssuesListChanged;
+                    VsSonarExtensionPackage.SonarQubeModel.LocalViewModel.PropertyChanged -= this.IssuesListChanged;
+                    VsSonarExtensionPackage.SonarQubeModel.IssuesSearchViewModel.PropertyChanged -= this.IssuesListChanged;
+                    VsSonarExtensionPackage.SonarQubeModel.ExtensionOptionsData.SonarConfigurationViewModel.PropertyChanged -= this.IssuesListChanged;
+
                     this.SourceBuffer = null;
                 }
 
@@ -213,9 +251,10 @@ namespace VSSonarQubeExtension.SmartTags.Squiggle
         /// The line.
         /// </param>
         /// <returns>
-        /// The <see>
-        ///     <cref>IEnumerable</cref>
-        /// </see>
+        /// The
+        ///     <see>
+        ///         <cref>IEnumerable</cref>
+        ///     </see>
         ///     .
         /// </returns>
         private IEnumerable<SonarTag> GetSonarTagsInSpanForLine(List<Issue> issuesInEditor, int line)
@@ -225,9 +264,9 @@ namespace VSSonarQubeExtension.SmartTags.Squiggle
                 yield break;
             }
 
-            var currentIssuesPerLine = issuesInEditor.Where(issue => issue.Line == line).ToList();
+            List<Issue> currentIssuesPerLine = issuesInEditor.Where(issue => issue.Line == line).ToList();
 
-            var lineToUseinVs = line - 1;
+            int lineToUseinVs = line - 1;
             if (lineToUseinVs < 0)
             {
                 lineToUseinVs = 0;
@@ -244,28 +283,10 @@ namespace VSSonarQubeExtension.SmartTags.Squiggle
                 yield break;
             }
 
-            var lineStart = GetLeadingWhitespaceLength(textsnapshot.GetText());
+            int lineStart = GetLeadingWhitespaceLength(textsnapshot.GetText());
 
             var mappedSpan = new SnapshotSpan(this.SourceBuffer.CurrentSnapshot, textsnapshot.Start + lineStart, textsnapshot.Length - lineStart);
             yield return new SonarTag(currentIssuesPerLine, mappedSpan);
-        }
-
-        public static int GetLeadingWhitespaceLength(string s, int tabLength = 4, bool trimToLowerTab = true)
-        {
-            if (s.Length < tabLength) return 0;
-
-            int whiteSpaceCount = 0;
-
-            while (Char.IsWhiteSpace(s[whiteSpaceCount])) whiteSpaceCount++;
-
-            if (whiteSpaceCount < tabLength) return 0;
-
-            if (trimToLowerTab)
-            {
-                whiteSpaceCount -= whiteSpaceCount % tabLength;
-            }
-
-            return whiteSpaceCount;
         }
 
         /// <summary>
@@ -286,13 +307,20 @@ namespace VSSonarQubeExtension.SmartTags.Squiggle
                     return;
                 }
 
-                if (!e.PropertyName.Equals("IssuesInEditor"))
+                if (!e.PropertyName.Equals("ServerIssuesUpdated") &&
+                    !e.PropertyName.Equals("CanQUeryIssues") &&
+                    !e.PropertyName.Equals("IssuesSearchEnded") &&                    
+                    !e.PropertyName.Equals("LocalIssuesUpdated") &&
+                    !e.PropertyName.Equals("DataUpdatedFromConstructor") &&                    
+                    !e.PropertyName.Equals("DisableEditorTags") &&
+                    !e.PropertyName.Equals("FileAnalysisIsEnabled") && 
+                    !e.PropertyName.Equals("SelectedView"))
                 {
                     return;
                 }
 
                 var document = VsEvents.GetPropertyFromBuffer<ITextDocument>(this.SourceBuffer);
-                var resource = VsSonarExtensionPackage.ExtensionModelData.ResourceInEditor;
+                Resource resource = VsSonarExtensionPackage.SonarQubeModel.ResourceInEditor;
 
                 if (resource == null || document == null)
                 {
@@ -304,17 +332,34 @@ namespace VSSonarQubeExtension.SmartTags.Squiggle
                     return;
                 }
 
-                var issuesInEditor = VsSonarExtensionPackage.ExtensionModelData.GetIssuesInEditor(this.SourceBuffer.CurrentSnapshot.GetText());
-                this.sonarTags.Clear();
+                if (e.PropertyName.Equals("SelectedView") || e.PropertyName.Equals("FileAnalysisIsEnabled"))
+                {
+                    try
+                    {
+                        VsSonarExtensionPackage.SonarQubeModel.RefreshDataForResource(document.FilePath);
+                    }
+                    catch (Exception ex)
+                    {
+                        VsSonarExtensionPackage.SonarQubeModel.ErrorMessage = "Something Terrible Happen";
+                        VsSonarExtensionPackage.SonarQubeModel.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
+                    }
 
-                if (issuesInEditor.Count == 0)
+                    return;
+                }
+
+                this.sonarTags.Clear();
+                List<Issue> issuesInEditor = VsSonarExtensionPackage.SonarQubeModel.GetIssuesInEditor(
+                    resource, 
+                    this.SourceBuffer.CurrentSnapshot.GetText());
+
+                if (issuesInEditor == null || issuesInEditor.Count == 0)
                 {
                     this.RefreshTags();
                     return;
                 }
 
                 var alreadyAddLine = new Dictionary<int, string>();
-                foreach (var issue in issuesInEditor)
+                foreach (Issue issue in issuesInEditor)
                 {
                     if (alreadyAddLine.ContainsKey(issue.Line))
                     {
@@ -334,26 +379,26 @@ namespace VSSonarQubeExtension.SmartTags.Squiggle
         }
 
         /// <summary>
-        /// The refresh tags.
+        ///     The refresh tags.
         /// </summary>
         private void RefreshTags()
         {
             this.dispatcher.Invoke(
-            () =>
-            {
-                var tempEvent = this.TagsChanged;
-                if (tempEvent != null)
-                {
-                    tempEvent(
-                        this,
-                        new SnapshotSpanEventArgs(
-                            new SnapshotSpan(this.SourceBuffer.CurrentSnapshot, 0, this.SourceBuffer.CurrentSnapshot.Length)));
-                }
-            });
+                () =>
+                    {
+                        EventHandler<SnapshotSpanEventArgs> tempEvent = this.TagsChanged;
+                        if (tempEvent != null)
+                        {
+                            tempEvent(
+                                this, 
+                                new SnapshotSpanEventArgs(
+                                    new SnapshotSpan(this.SourceBuffer.CurrentSnapshot, 0, this.SourceBuffer.CurrentSnapshot.Length)));
+                        }
+                    });
         }
 
         /// <summary>
-        /// The schedule update.
+        ///     The schedule update.
         /// </summary>
         private void ScheduleUpdate()
         {
@@ -393,7 +438,7 @@ namespace VSSonarQubeExtension.SmartTags.Squiggle
         /// </param>
         private void UpdateDataAfterConstructor(object obj)
         {
-            this.IssuesListChanged(obj, new PropertyChangedEventArgs("IssuesInEditor"));
+            this.IssuesListChanged(obj, new PropertyChangedEventArgs("DataUpdatedFromConstructor"));
         }
 
         #endregion

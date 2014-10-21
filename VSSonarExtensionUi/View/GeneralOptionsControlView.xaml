@@ -5,10 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:viewModel="clr-namespace:VSSonarExtensionUi.ViewModel"
-             xmlns:styles="clr-namespace:VSSonarExtensionUi.Styles"
-    
-    x:Class="VSSonarExtensionUi.View.GeneralOptionsControlView" 
-             mc:Ignorable="d" Height="400" Width="800" Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Background="{styles:FallbackBackgroundBrush FallBackBrush=White}">
+
+	x:Class="VSSonarExtensionUi.View.GeneralOptionsControlView" 
+             mc:Ignorable="d" Height="400" Width="800" Foreground="{Binding ForeGroundColor, FallbackValue=White}" Background="{Binding BackGroundColor}">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -21,9 +20,9 @@
         </ResourceDictionary>
     </UserControl.Resources>
 	<Grid>
-		<ScrollViewer >
+		<ScrollViewer VerticalScrollBarVisibility="Visible">
 			<StackPanel >
-				<Grid Height="235" >
+				<Grid>
 					<Grid.RowDefinitions>
 						<RowDefinition Height="30"/>
 						<RowDefinition Height="30"/>
@@ -41,28 +40,28 @@
 						<ColumnDefinition Width="249*"/>
 						<ColumnDefinition Width="54*"/>
 					</Grid.ColumnDefinitions>
-					<Label Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Background="{styles:FallbackBackgroundBrush FallBackBrush=White}" Grid.Column="0" Content="Java Executable Path"/>
-					<TextBox   Controls:TextboxHelper.ClearTextButton="True"   Grid.Column="1" IsReadOnly="true"  TextWrapping="Wrap" Text="{Binding JavaBinary}"  />
-					<Button       Style="{DynamicResource SquareButtonStyle}" Grid.Column="2" Command="{Binding BrowseForJavaTrigger}" Content="Browse"  />
-					<Label Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Background="{styles:FallbackBackgroundBrush FallBackBrush=White}"         Grid.Column="0" Grid.Row="1" Content="SonarQube Runner Path" Height="25" VerticalAlignment="Bottom"/>
-					<TextBox   Controls:TextboxHelper.ClearTextButton="True"   Grid.Column="1" Grid.Row="1" IsReadOnly="true"  TextWrapping="Wrap" Text="{Binding SonarQubeBinary}"  />
-					<Button       Style="{DynamicResource SquareButtonStyle}" Grid.Column="2" Grid.Row="1" Command="{Binding BrowseForSonarRunnerQubeTrigger}" Content="Browse"  />
-					<CheckBox Grid.Column="0" Grid.Row="2" Content="Enable Debug" IsChecked="{Binding DebugIsChecked}"  VerticalAlignment="Center" />
+					<Label Foreground="{Binding ForeGroundColor, FallbackValue=White}" Background="{Binding BackGroundColor}" Grid.Column="0" Content="Java Executable Path"/>
+					<TextBox   Grid.Column="1" IsReadOnly="true"  TextWrapping="Wrap" Text="{Binding JavaBinary}"  />
+					<Button    Style="{DynamicResource SquareButtonStyle}" Grid.Column="2" Command="{Binding BrowseForJavaTrigger}" Content="Browse"  />
+					<Label Foreground="{Binding ForeGroundColor, FallbackValue=White}" Background="{Binding BackGroundColor}"         Grid.Column="0" Grid.Row="1" Content="SonarQube Runner Path" Height="25" VerticalAlignment="Bottom"/>
+					<TextBox   Grid.Column="1" Grid.Row="1" IsReadOnly="true"  TextWrapping="Wrap" Text="{Binding SonarQubeBinary}"  />
+					<Button    Style="{DynamicResource SquareButtonStyle}" Grid.Column="2" Grid.Row="1" Command="{Binding BrowseForSonarRunnerQubeTrigger}" Content="Browse"  />
+                    <CheckBox Foreground="{Binding ForeGroundColor, FallbackValue=White}" Background="{Binding BackGroundColor}" Grid.Column="0" Grid.Row="2" Content="Enable Debug" IsChecked="{Binding DebugIsChecked}"  VerticalAlignment="Center" />
 					<Slider ToolTip="Timeout of Analysis in Minutes" Grid.Column="1" Grid.Row="2" Maximum="60" TickFrequency="10" Value="{Binding TimeoutValue}" />
-					<Label Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Background="{styles:FallbackBackgroundBrush FallBackBrush=White}"         Grid.Column="2" Grid.Row="2" Content="{Binding TimeoutValueString}" Height="25" VerticalAlignment="Bottom"/>
+					<Label Foreground="{Binding ForeGroundColor, FallbackValue=White}" Background="{Binding BackGroundColor}"         Grid.Column="2" Grid.Row="2" Content="{Binding TimeoutValueString}" Height="25" VerticalAlignment="Bottom"/>
 
-					<Label Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Background="{styles:FallbackBackgroundBrush FallBackBrush=White}"  Grid.Row="3" Grid.Column="0" Content="Excluded Plugins:" Grid.ColumnSpan="2"/>
-					<TextBox Controls:TextboxHelper.ClearTextButton="True" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"   Text="{Binding ExcludedPlugins}"/>
+					<Label Foreground="{Binding ForeGroundColor, FallbackValue=White}" Background="{Binding BackGroundColor}"  Grid.Row="3" Grid.Column="0" Content="Excluded Plugins:" Grid.ColumnSpan="2"/>
+					<TextBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"   Text="{Binding ExcludedPlugins}"/>
                         
-					<Label Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Background="{styles:FallbackBackgroundBrush FallBackBrush=White}"  Grid.Row="5" Grid.Column="0" Content="Project Id:" Grid.ColumnSpan="2"/>
-					<Label Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Background="{styles:FallbackBackgroundBrush FallBackBrush=White}"  Grid.Row="6" Grid.Column="0" Content="Language:" Grid.ColumnSpan="2"/>                        
-					<Label Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Background="{styles:FallbackBackgroundBrush FallBackBrush=White}"  Grid.Row="7" Grid.Column="0" Content="Project Version:" Grid.ColumnSpan="2"/>
-					<Label Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Background="{styles:FallbackBackgroundBrush FallBackBrush=White}"  Grid.Row="8" Grid.Column="0" Content="Source Dir:" Grid.ColumnSpan="2"/>						
-					<Label Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Background="{styles:FallbackBackgroundBrush FallBackBrush=White}"  Grid.Row="9" Grid.Column="0" Content="Source Encoding:" Grid.ColumnSpan="2"/>
+					<Label Foreground="{Binding ForeGroundColor, FallbackValue=White}" Background="{Binding BackGroundColor}"  Grid.Row="5" Grid.Column="0" Content="Project Id:" Grid.ColumnSpan="2"/>
+					<Label Foreground="{Binding ForeGroundColor, FallbackValue=White}" Background="{Binding BackGroundColor}"  Grid.Row="6" Grid.Column="0" Content="Language:" Grid.ColumnSpan="2"/>                        
+					<Label Foreground="{Binding ForeGroundColor, FallbackValue=White}" Background="{Binding BackGroundColor}"  Grid.Row="7" Grid.Column="0" Content="Project Version:" Grid.ColumnSpan="2"/>
+					<Label Foreground="{Binding ForeGroundColor, FallbackValue=White}" Background="{Binding BackGroundColor}"  Grid.Row="8" Grid.Column="0" Content="Source Dir:" Grid.ColumnSpan="2"/>						
+					<Label Foreground="{Binding ForeGroundColor, FallbackValue=White}" Background="{Binding BackGroundColor}"  Grid.Row="9" Grid.Column="0" Content="Source Encoding:" Grid.ColumnSpan="2"/>
 
-					<Label Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Background="{styles:FallbackBackgroundBrush FallBackBrush=White}"  Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Content="{Binding ProjectId}" IsEnabled="{Binding IsSolutionOpen}" />
-					<Label Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Background="{styles:FallbackBackgroundBrush FallBackBrush=White}"  Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Content="{Binding Language}" IsEnabled="{Binding IsSolutionOpen}"/>                        
-					<Label Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Background="{styles:FallbackBackgroundBrush FallBackBrush=White}"  Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" Content="{Binding ProjectVersion}"  />
+					<Label Foreground="{Binding ForeGroundColor, FallbackValue=White}" Background="{Binding BackGroundColor}"  Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Content="{Binding ProjectId}" IsEnabled="{Binding IsSolutionOpen}" />
+					<Label Foreground="{Binding ForeGroundColor, FallbackValue=White}" Background="{Binding BackGroundColor}"  Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Content="{Binding Language}" IsEnabled="{Binding IsSolutionOpen}"/>                        
+					<Label Foreground="{Binding ForeGroundColor, FallbackValue=White}" Background="{Binding BackGroundColor}"  Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" Content="{Binding ProjectVersion}"  />
 					<TextBox Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding SourceDir}"  TextWrapping="Wrap" IsEnabled="{Binding IsSolutionOpen}"/>                        
 					<TextBox Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding SourceEncoding}"  TextWrapping="Wrap" IsEnabled="{Binding IsSolutionOpen}"/>
 

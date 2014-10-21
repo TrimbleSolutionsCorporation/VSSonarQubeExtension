@@ -54,11 +54,14 @@ namespace ExtensionHelpers
         /// </param>
         public VsPropertiesHelper(DTE2 environment, IServiceProvider service)
         {
+            this.TempDataFolder = Path.GetTempPath();
             this.provider = service;
             this.environment = environment;
             this.ApplicationDataUserSettingsFile =
                 System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData) + "\\VSSonarExtension\\settings.cfg";
         }
+
+        public string TempDataFolder { get; set; }
 
         public VsPropertiesHelper()
         {
@@ -154,6 +157,21 @@ namespace ExtensionHelpers
         public bool AreWeRunningInVisualStudio()
         {
             return this.environment != null;
+        }
+
+        public void ShowSourceDiff(string resourceInEditor, string documentInViewPath)
+        {
+            var diff = (IVsDifferenceService)this.provider.GetService(typeof(SVsDifferenceService));
+            if (!Directory.Exists(this.TempDataFolder))
+            {
+                Directory.CreateDirectory(this.TempDataFolder);
+            }
+
+            string tempfile = Path.Combine(this.TempDataFolder, "server." + Path.GetFileName(documentInViewPath));
+
+            File.WriteAllText(tempfile, resourceInEditor);
+
+            diff.OpenComparisonWindow(tempfile, documentInViewPath);
         }
 
         /// <summary>

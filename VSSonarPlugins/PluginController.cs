@@ -75,7 +75,14 @@ namespace VSSonarPlugins
 
             var pluginLoader = new PluginLoader();
 
-            foreach (IPlugin plugin in pluginLoader.LoadPluginsFromFolder(this.ExtensionFolder))
+            var plugins = pluginLoader.LoadPluginsFromFolder(this.ExtensionFolder);
+
+            if (plugins == null)
+            {
+                return;
+            }
+
+            foreach (IPlugin plugin in plugins)
             {
                 try
                 {

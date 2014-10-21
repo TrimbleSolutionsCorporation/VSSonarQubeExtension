@@ -4,9 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:VSSonarExtensionUi.View"
-             xmlns:styles="clr-namespace:VSSonarExtensionUi.Styles"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="600" Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Background="{styles:FallbackBackgroundBrush FallBackBrush=White}">
+             d:DesignHeight="300" d:DesignWidth="600" Foreground="{Binding ForeGroundColor, FallbackValue=White}" Background="{Binding BackGroundColor}">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -50,7 +49,7 @@
 						<DataGridTextColumn Binding="{Binding ServerId}" Header="Server ID   "/>
 					</DataGrid.Columns>
 				</DataGrid>
-				<Label Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Grid.Column="2" Grid.Row="2" Grid.ColumnSpan="3" Content="{Binding ErrorMessage}" />
+				<Label Foreground="{Binding ForeGroundColor, FallbackValue=White}" Grid.Column="2" Grid.Row="2" Grid.ColumnSpan="3" Content="{Binding ErrorMessage}" />
 				<Button Style="{DynamicResource SquareButtonStyle}"  Grid.Column="1" Grid.Row="1" x:Name="GenerateTokenButton" Content="Generate Token" Command="{Binding GenerateTokenCommand}" CommandParameter="{Binding Content, ElementName=GenerateTokenButton}" ToolTip="Copy Past Token and Fill the user property in the SonarQube server"/>				
 				<TextBox Grid.Column="0" Grid.Row="1"  TextWrapping="Wrap" Text="{Binding GeneratedToken}" />
 			</Grid>

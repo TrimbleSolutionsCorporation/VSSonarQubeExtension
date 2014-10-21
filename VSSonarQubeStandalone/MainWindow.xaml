@@ -4,11 +4,18 @@
         xmlns:viewModel="clr-namespace:VSSonarExtensionUi.ViewModel;assembly=VSSonarExtensionUi"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:view="clr-namespace:VSSonarExtensionUi.View;assembly=VSSonarExtensionUi"
-        Title="VSSonarQube Standalone" Height="600" Width="800" Foreground="Black" Background="White">
+        Title="VSSonarQube Standalone" Height="600" Width="800">
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewModel:SonarQubeViewModel}" x:Key="DefaultView">
-            <view:SonarQubeUserControl DataContext="{Binding}"/>
+            <view:SonarQubeUserControlVS DataContext="{Binding}"/>
         </DataTemplate>
+        <ResourceDictionary x:Key="someKey">
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/VSSonarExtensionUi;component/Resources/Icons.xaml"/>
+                
+            </ResourceDictionary.MergedDictionaries>
+                                   
+            </ResourceDictionary>
     </Window.Resources>
     <Grid>
         <ContentControl ContentTemplate="{StaticResource DefaultView}"/>

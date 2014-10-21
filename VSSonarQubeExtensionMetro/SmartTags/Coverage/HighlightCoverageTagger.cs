@@ -74,7 +74,8 @@ namespace VSSonarQubeExtension.SmartTags.Coverage
             {
 
                 this.SourceBuffer = sourceBuffer;
-                VsSonarExtensionPackage.ExtensionModelData.PropertyChanged += this.CoverageDataChanged;
+                VsSonarExtensionPackage.SonarQubeModel.PropertyChanged += this.CoverageDataChanged;
+                VsSonarExtensionPackage.SonarQubeModel.ServerViewModel.PropertyChanged += this.CoverageDataChanged;
 
                 this.dispatcher = Dispatcher.CurrentDispatcher;
                 new List<SnapshotSpan>();
@@ -135,7 +136,7 @@ namespace VSSonarQubeExtension.SmartTags.Coverage
                 yield break;
             }
 
-            if (!VsSonarExtensionPackage.ExtensionModelData.ServerViewModel.CoverageInEditorEnabled)
+            if (!VsSonarExtensionPackage.SonarQubeModel.ServerViewModel.CoverageInEditorEnabled)
             {
                 yield break;
             }
@@ -181,13 +182,15 @@ namespace VSSonarQubeExtension.SmartTags.Coverage
                     return;
                 }
 
-                if (!e.PropertyName.Equals("CoverageInEditor"))
+                if (!e.PropertyName.Equals("CoverageInEditor")
+                    && !e.PropertyName.Equals("CoverageInEditorEnabled")
+                    && !e.PropertyName.Equals("SelectedView"))
                 {
                     return;
                 }
 
                 var document = VsEvents.GetPropertyFromBuffer<ITextDocument>(this.SourceBuffer);
-                Resource resource = VsSonarExtensionPackage.ExtensionModelData.ResourceInEditor;
+                Resource resource = VsSonarExtensionPackage.SonarQubeModel.ResourceInEditor;
 
                 if (resource == null || document == null)
                 {
@@ -199,8 +202,7 @@ namespace VSSonarQubeExtension.SmartTags.Coverage
                     return;
                 }
 
-                Dictionary<int, CoverageElement> coverageLine =
-                    VsSonarExtensionPackage.ExtensionModelData.ServerViewModel.GetCoverageInEditor(this.SourceBuffer.CurrentSnapshot.GetText());
+                Dictionary<int, CoverageElement> coverageLine = VsSonarExtensionPackage.SonarQubeModel.ServerViewModel.GetCoverageInEditor(this.SourceBuffer.CurrentSnapshot.GetText());
                 this.coverageTags.Clear();
 
                 if (coverageLine.Count == 0)
@@ -237,7 +239,8 @@ namespace VSSonarQubeExtension.SmartTags.Coverage
 
             if (disposing)
             {
-                VsSonarExtensionPackage.ExtensionModelData.PropertyChanged -= this.CoverageDataChanged;
+                VsSonarExtensionPackage.SonarQubeModel.PropertyChanged -= this.CoverageDataChanged;
+                VsSonarExtensionPackage.SonarQubeModel.ServerViewModel.PropertyChanged -= this.CoverageDataChanged;
 
                 this.SourceBuffer = null;
             }

@@ -17,6 +17,7 @@ namespace VSSonarQubeExtension
     using System;
     using System.ComponentModel.Design;
     using System.Diagnostics;
+    using System.Drawing;
     using System.Globalization;
     using System.Runtime.InteropServices;
     using System.Windows.Controls;
@@ -28,6 +29,7 @@ namespace VSSonarQubeExtension
     using ExtensionHelpers;
 
     using Microsoft.VisualStudio;
+    using Microsoft.VisualStudio.PlatformUI;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
 
@@ -35,11 +37,12 @@ namespace VSSonarQubeExtension
     using VSSonarQubeExtension.SmartTags.BufferUpdate;
     using VSSonarQubeExtension.SmartTags.StatusBar;
     using VSSonarQubeExtension.VSControls;
-    using VSSonarQubeExtension.VSControls.DialogOptions;
+
     using VSSonarExtensionUi.ViewModel;
     using VSSonarExtensionUi.View;
 
-
+    using MColor = System.Windows.Media.Color;
+    using DColor = System.Drawing.Color;
 
     /// <summary>
     ///     The vs sonar extension package.
@@ -47,8 +50,6 @@ namespace VSSonarQubeExtension
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    [ProvideOptionPage(typeof(SonarGeneralOptionsPage), "Sonar Options", "General", 1000, 1001, true)]
-    [ProvideProfile(typeof(SonarGeneralOptionsPage), "Sonar Options", "General", 1002, 1003, true)]
     [ProvideAutoLoad("{05ca2046-1eb1-4813-a91f-a69df9b27698}")]
     [ProvideAutoLoad(UIContextGuids80.SolutionExists)]
     [ProvideToolWindow(typeof(IssuesToolWindow), Style = VsDockStyle.Tabbed, Window = "ac305e7a-a44b-4541-8ece-3c88d5425338")]
@@ -61,7 +62,7 @@ namespace VSSonarQubeExtension
         /// <summary>
         ///     The issue model.
         /// </summary>
-        public static readonly SonarQubeViewModel ExtensionModelData = new SonarQubeViewModel();
+        public static readonly SonarQubeViewModel SonarQubeModel = new SonarQubeViewModel();
 
         #endregion
 
@@ -117,6 +118,26 @@ namespace VSSonarQubeExtension
         }
 
         /// <summary>
+        /// The update model in tool window.
+        /// </summary>
+        /// <param name="modelToUse">
+        /// The model to use.
+        /// </param>
+        private void UpdateModelInToolWindow(SonarQubeViewModel modelToUse)
+        {
+            // init basic model without project association
+            ToolWindowPane window = this.FindToolWindow(typeof(IssuesToolWindow), 0, true) as IssuesToolWindow;
+
+            if (null == window || modelToUse == null)
+            {
+                return;
+            }
+
+            var win = window as IssuesToolWindow;
+            win.UpdateModel(modelToUse);
+        }
+
+        /// <summary>
         /// The show tool window.
         /// </summary>
         /// <param name="control">
@@ -154,6 +175,11 @@ namespace VSSonarQubeExtension
             ErrorHandler.ThrowOnFailure(windowFrame.Show());
         }
 
+        public static MColor ToMediaColor(DColor color)
+        {
+            return MColor.FromArgb(color.A, color.R, color.G, color.B);
+        }
+
         /// <summary>
         ///     The initialize.
         /// </summary>
@@ -172,19 +198,22 @@ namespace VSSonarQubeExtension
                     return;
                 }
 
-                this.visualStudioInterface = new VsPropertiesHelper(this.dte2, this);
-                this.restService = new SonarRestService(new JsonSonarConnector());
-                this.VsEvents = new VsEvents(ExtensionModelData, this.visualStudioInterface, this.dte2);
 
-                // int configuration options
-                this.InitOptions();
 
                 try
                 {
-                    ExtensionModelData.VsHelper = this.visualStudioInterface;
-                    ExtensionModelData.SonarRestConnector = this.restService;
+                    this.visualStudioInterface = new VsPropertiesHelper(this.dte2, this);
+                    this.restService = new SonarRestService(new JsonSonarConnector());
+                    this.VsEvents = new VsEvents(this.visualStudioInterface, this.dte2);
+                    var bar = GetService(typeof(SVsStatusbar)) as IVsStatusbar;
+                    this.StatusBar = new VSSStatusBar(bar, this.dte2);
 
-                    this.UpdateModelInToolWindow(ExtensionModelData);
+                    SonarQubeModel.ExtensionDataModelUpdate(this.restService, this.visualStudioInterface, this.StatusBar, this);
+
+                    Color defaultBackground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBackgroundColorKey);
+                    Color defaultForeground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowTextColorKey);
+
+                    SonarQubeModel.UpdateTheme(ToMediaColor(defaultBackground), ToMediaColor(defaultForeground));
 
                     try
                     {
@@ -198,6 +227,8 @@ namespace VSSonarQubeExtension
                             ((VsPropertiesHelper)this.visualStudioInterface).CustomPane = customPane;
                             ((VsPropertiesHelper)this.visualStudioInterface).CustomPane.Activate();
                         }
+
+                        //this.UpdateModelInToolWindow(SonarQubeModel);
                     }
                     catch (Exception ex)
                     {
@@ -214,23 +245,6 @@ namespace VSSonarQubeExtension
                 UserExceptionMessageBox.ShowException("Extension Failed to Start", ex);
                 throw;
             }
-        }
-
-        /// <summary>
-        ///     The init general options.
-        /// </summary>
-        private void InitGeneralOptions()
-        {
-            this.visualStudioInterface.WriteDefaultOption(
-                "Sonar Options", "General", "SonarHost", "http://localhost:9000");
-        }
-
-        /// <summary>
-        ///     The init options.
-        /// </summary>
-        private void InitOptions()
-        {
-            this.InitGeneralOptions();
         }
 
         /// <summary>
@@ -292,29 +306,6 @@ namespace VSSonarQubeExtension
             ErrorHandler.ThrowOnFailure(windowFrame.Show());
         }
 
-        /// <summary>
-        /// The update model in tool window.
-        /// </summary>
-        /// <param name="modelToUse">
-        /// The model to use.
-        /// </param>
-        private void UpdateModelInToolWindow(SonarQubeViewModel modelToUse)
-        {
-            // init basic model without project association
-            ToolWindowPane window = this.FindToolWindow(typeof(IssuesToolWindow), 0, true) as IssuesToolWindow;
-
-            if (null == window || modelToUse == null)
-            {
-                return;
-            }
-
-            var win = window as IssuesToolWindow;
-            var bar = GetService(typeof(SVsStatusbar)) as IVsStatusbar;
-            this.StatusBar = new VSSStatusBar(bar, this.dte2);
-            modelToUse.ExtensionDataModelUpdate(new SonarRestService(new JsonSonarConnector()), new VsPropertiesHelper(this.dte2, this), null, this.StatusBar, this);
-            win.UpdateModel(modelToUse);
-        }
-
         public VSSStatusBar StatusBar { get; set; }
 
         /// <summary>
@@ -328,7 +319,7 @@ namespace VSSonarQubeExtension
         /// </param>
         private void AnalyseSolutionCmd(object sender, EventArgs e)
         {
-            ExtensionModelData.LocalViewModel.OnPreviewCommand();
+            SonarQubeModel.LocalViewModel.OnPreviewCommand();
         }
 
         #endregion

@@ -4,9 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewModel="clr-namespace:VSSonarExtensionUi.ViewModel"
-             xmlns:styles="clr-namespace:VSSonarExtensionUi.Styles"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:command="http://www.galasoft.ch/mvvmlight"
              x:Class="VSSonarExtensionUi.View.PluginManagerView" 
-             mc:Ignorable="d" d:DesignHeight="400" d:DesignWidth="800" Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Background="{styles:FallbackBackgroundBrush FallBackBrush=White}">
+             mc:Ignorable="d" d:DesignHeight="400" d:DesignWidth="800" Foreground="{Binding ForeGroundColor, FallbackValue=White}" Background="{Binding BackGroundColor}">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -25,16 +26,30 @@
 			<Grid Height="auto" >
 				<Grid.RowDefinitions>
 					<RowDefinition Height="25*"/>
+                    <RowDefinition Height="200"/>
 					<RowDefinition Height="30"/>
 
 				</Grid.RowDefinitions>							
-                <DataGrid 
-                      Background="Transparent"
-                      ColumnHeaderStyle="{DynamicResource DefaultDataGridColumnHeaderStyle}"          
-                      RowStyle="{DynamicResource DefaultDatagridRowHeaderStyle}"
-                    
-                    Grid.Row="0" SelectedItem="{Binding SelectedPlugin}" ItemsSource="{Binding PluginList}" AutoGenerateColumns="False" VerticalScrollBarVisibility="Visible" CanUserAddRows="False" CanUserDeleteRows="False" GridLinesVisibility="None" BorderBrush="Transparent" BorderThickness="1" ColumnHeaderHeight="20" HeadersVisibility="Column" RowHeaderWidth="0" >									
-					<DataGrid.Columns>
+                <DataGrid Background="Transparent"
+                          Grid.Row="0"
+                          SelectedItem="{Binding SelectedPlugin}"
+                          ItemsSource="{Binding PluginList}"
+                          AutoGenerateColumns="False"
+                          VerticalScrollBarVisibility="Visible"
+                          CanUserAddRows="False"
+                          CanUserDeleteRows="False"
+                          GridLinesVisibility="None"
+                          BorderBrush="Transparent"
+                          BorderThickness="1"
+                          ColumnHeaderHeight="20"
+                          HeadersVisibility="Column"
+                          RowHeaderWidth="0" >
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                        <command:EventToCommand Command="{Binding SelectionChangedCommand}" />
+                    </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    <DataGrid.Columns>
 						<DataGridTextColumn Binding="{Binding Name}" Header="Name   " IsReadOnly="True"/>
 						<DataGridTextColumn Binding="{Binding SupportedExtensions}" Header="Supported Extensions   " IsReadOnly="True"/>
 						<DataGridTextColumn Binding="{Binding Description}" Header="Description   " IsReadOnly="True"/>
@@ -43,12 +58,11 @@
 						<DataGridTextColumn Binding="{Binding Status}" Header="Status   " IsReadOnly="True" />
 					</DataGrid.Columns>											
 				</DataGrid>
-				<StackPanel Grid.Row="1" Orientation="Horizontal">
-	                <Button Style="{DynamicResource SquareButtonStyle}" Content="Install New" Command="{Binding InstallNewPlugin}" />
-					<Button Style="{DynamicResource SquareButtonStyle}" Content="Plugin Settings" Command="{Binding PluginSettingsCommand}" />
-		            <Button Style="{DynamicResource SquareButtonStyle}" Content="Restart Visual Studio" Command="{Binding RestartVs}" />
-				    <Button Style="{DynamicResource SquareButtonStyle}" Content="Remove Plugin" Command="{Binding RemovePlugin}" />
-					
+                <ScrollViewer IsEnabled="{Binding CanModifyPluginProps}" Grid.Column="0" Grid.Row="1" BorderBrush="Black"  Content="{Binding OptionsInView}"></ScrollViewer>
+				<StackPanel Grid.Row="2" Orientation="Horizontal">
+	                <Button Style="{DynamicResource SquareButtonStyle}" Content="New" Command="{Binding InstallNewPlugin}" />
+                    <Button IsEnabled="{Binding ChangesAreRequired}" Style="{DynamicResource SquareButtonStyle}" Content="Restart" Command="{Binding RestartVs}" />
+                    <Button IsEnabled="{Binding PluginIsSelected}" Style="{DynamicResource SquareButtonStyle}" Content="Remove" Command="{Binding RemovePlugin}" />					
 				</StackPanel>
 			</Grid>
 		</ScrollViewer>

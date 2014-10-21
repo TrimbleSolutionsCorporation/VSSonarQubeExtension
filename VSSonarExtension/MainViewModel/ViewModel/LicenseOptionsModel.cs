@@ -164,7 +164,7 @@ namespace VSSonarExtension.MainViewModel.ViewModel
             {
                 foreach (var plugin in this.plugins)
                 {
-                    var lics = plugin.GetLicenses(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper));
+                    var lics = plugin.GetLicenses(null);
                     if (lics != null)
                     {
                         foreach (var license in lics)

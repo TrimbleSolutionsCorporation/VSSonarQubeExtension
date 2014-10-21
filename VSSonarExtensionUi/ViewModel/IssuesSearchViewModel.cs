@@ -8,10 +8,15 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarExtensionUi.ViewModel
 {
+    using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Globalization;
+    using System.Linq;
     using System.Windows;
     using System.Windows.Input;
+    using System.Windows.Media;
 
     using ExtensionTypes;
 
@@ -24,41 +29,43 @@ namespace VSSonarExtensionUi.ViewModel
     using VSSonarExtensionUi.Cache;
 
     using VSSonarPlugins;
-    using System;
-    using System.Linq;
-    using System.Collections.ObjectModel;
-    using System.Globalization;
-
 
     /// <summary>
-    /// The issues search view model.
+    ///     The issues search view model.
     /// </summary>
     [ImplementPropertyChanged]
-    public class IssuesSearchViewModel : IViewModelBase
+    public class IssuesSearchViewModel : IViewModelBase, IAnalysisViewModelBase, INotifyPropertyChanged
     {
-        #region Static Fields
+        #region Constants
 
-        private readonly ModelEditorCache localEditorCache = new ModelEditorCache();
+        /// <summary>
+        ///     The issues filter view model key.
+        /// </summary>
+        private const string IssuesFilterViewModelKey = "IssuesFilterViewModel";
 
         #endregion
 
         #region Fields
 
         /// <summary>
-        /// The sonar qube view model.
+        ///     The sonar qube view model.
         /// </summary>
         private readonly SonarQubeViewModel sonarQubeViewModel;
 
         /// <summary>
-        /// The comments.
+        ///     The rest service.
         /// </summary>
-        private List<Comment> comments;
+        private ISonarRestService restService;
 
-        public ISonarConfiguration Configuration { get; set; }
+        /// <summary>
+        ///     The show flyouts.
+        /// </summary>
+        private bool showFlyouts;
 
-        private readonly ISonarRestService restService;
-
-        private readonly IVsEnvironmentHelper vsHelper;
+        /// <summary>
+        ///     The vs helper.
+        /// </summary>
+        private IVsEnvironmentHelper visualStudioHelper;
 
         #endregion
 
@@ -67,139 +74,342 @@ namespace VSSonarExtensionUi.ViewModel
         /// <summary>
         /// Initializes a new instance of the <see cref="IssuesSearchViewModel"/> class.
         /// </summary>
-        public IssuesSearchViewModel()
-        {
-            this.Header = "Issues";
-            this.SonarVersion = 4.5;
-            this.UsersList = new ObservableCollection<User>();
-            this.IssuesGridView = new IssueGridViewModel();
-
-            this.InitCommanding();
-        }
-
-        private void InitCommanding()
-        {
-            this.CanQUeryIssues = false;
-            this.GetIssuesByFilterCommand = new RelayCommand(this.OnGetIssuesByFilterCommand, () => this.CanQUeryIssues);
-            this.GetAllIssuesFromProjectCommand = new RelayCommand(this.OnGetAllIssuesInProject, () => this.CanQUeryIssues);
-            this.GetAllIssuesSinceLastAnalysisCommand = new RelayCommand(this.OnGetAllIssuesSinceLastAnalysisCommand, () => this.CanQUeryIssues);
-            this.GetMyIssuesInProjectCommand = new RelayCommand(this.OnGetMyIssuesInProjectCommand, () => this.CanQUeryIssues);
-            this.GetAllMyIssuesCommand = new RelayCommand(this.OnGetAllMyIssuesCommand, () => this.CanQUeryIssues);
-    }
-
-
-
-
-
-
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="IssuesSearchViewModel"/> class.
-        /// </summary>
         /// <param name="sonarQubeViewModel">
-        ///     The sonar qube view model.
+        /// The sonar qube view model.
         /// </param>
-        /// <param name="vsHelper"></param>
-        /// <param name="restService"></param>
-        public IssuesSearchViewModel(SonarQubeViewModel sonarQubeViewModel, IVsEnvironmentHelper vsHelper, ISonarRestService restService)
+        /// <param name="visualStudioHelper">
+        /// The visual studio helper.
+        /// </param>
+        /// <param name="restService">
+        /// The rest service.
+        /// </param>
+        public IssuesSearchViewModel(SonarQubeViewModel sonarQubeViewModel, IVsEnvironmentHelper visualStudioHelper, ISonarRestService restService)
         {
-            this.vsHelper = vsHelper;
+            this.visualStudioHelper = visualStudioHelper;
             this.restService = restService;
             this.sonarQubeViewModel = sonarQubeViewModel;
             this.Header = "Issues";
             this.SonarVersion = 4.5;
             this.UsersList = new ObservableCollection<User>();
-            this.IssuesGridView = new IssueGridViewModel(sonarQubeViewModel, this, true);
+            this.IssuesGridView = new IssueGridViewModel(sonarQubeViewModel, true);
 
             this.InitCommanding();
+
+            this.ForeGroundColor = Colors.White;
+            this.ForeGroundColor = Colors.Black;
         }
 
         #endregion
 
+
         #region Public Properties
 
         /// <summary>
-        /// Gets or sets the header.
+        ///     Gets or sets the assignee in filter.
+        /// </summary>
+        public User Assignee { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the associated project.
+        /// </summary>
+        public Resource AssociatedProject { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the back ground color.
+        /// </summary>
+        public Color BackGroundColor { get; set; }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether can q uery issues.
+        /// </summary>
+        public bool CanQUeryIssues { get; set; }
+
+        /// <summary>
+        ///     Gets the close flyout issue search command.
+        /// </summary>
+        public RelayCommand CloseFlyoutIssueSearchCommand { get; private set; }
+
+        /// <summary>
+        ///     Gets or sets the configuration.
+        /// </summary>
+        public ISonarConfiguration Configuration { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the created before date.
+        /// </summary>
+        public DateTime CreatedBeforeDate { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the created since date.
+        /// </summary>
+        public DateTime CreatedSinceDate { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the document in view.
+        /// </summary>
+        public string DocumentInView { get; set; }
+
+        /// <summary>
+        ///     Gets the flyout issue search command.
+        /// </summary>
+        public RelayCommand FlyoutIssueSearchCommand { get; private set; }
+
+        /// <summary>
+        ///     Gets or sets the fore ground color.
+        /// </summary>
+        public Color ForeGroundColor { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the get all issues from project command.
+        /// </summary>
+        public ICommand GetAllIssuesFromProjectCommand { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the get all issues since last analysis command.
+        /// </summary>
+        public ICommand GetAllIssuesSinceLastAnalysisCommand { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the get all my issues command.
+        /// </summary>
+        public ICommand GetAllMyIssuesCommand { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the get issues by filter command.
+        /// </summary>
+        public ICommand GetIssuesByFilterCommand { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the get my issues in project command.
+        /// </summary>
+        public ICommand GetMyIssuesInProjectCommand { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the header.
         /// </summary>
         public string Header { get; set; }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether is assignee checked.
+        /// </summary>
+        public bool IsAssigneeChecked { get; set; }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether is blocker checked.
+        /// </summary>
+        public bool IsBlockerChecked { get; set; }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether is critical checked.
+        /// </summary>
+        public bool IsCriticalChecked { get; set; }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether is date before checked.
+        /// </summary>
+        public bool IsDateBeforeChecked { get; set; }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether is date since checked.
+        /// </summary>
+        public bool IsDateSinceChecked { get; set; }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether is false positive checked.
+        /// </summary>
+        public bool IsFalsePositiveChecked { get; set; }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether is fixed checked.
+        /// </summary>
+        public bool IsFixedChecked { get; set; }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether is info checked.
+        /// </summary>
+        public bool IsInfoChecked { get; set; }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether is majaor checked.
+        /// </summary>
+        public bool IsMajaorChecked { get; set; }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether is minor checked.
+        /// </summary>
+        public bool IsMinorChecked { get; set; }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether is removed checked.
+        /// </summary>
+        public bool IsRemovedChecked { get; set; }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether is reporter checked.
+        /// </summary>
+        public bool IsReporterChecked { get; set; }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether is status closed checked.
+        /// </summary>
+        public bool IsStatusClosedChecked { get; set; }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether is status confirmed checked.
+        /// </summary>
+        public bool IsStatusConfirmedChecked { get; set; }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether is status open checked.
+        /// </summary>
+        public bool IsStatusOpenChecked { get; set; }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether is status reopened checked.
+        /// </summary>
+        public bool IsStatusReopenedChecked { get; set; }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether is status resolved checked.
+        /// </summary>
+        public bool IsStatusResolvedChecked { get; set; }
 
         /// <summary>
         ///     Gets or sets the issues grid view.
         /// </summary>
         public IssueGridViewModel IssuesGridView { get; set; }
 
-        public Resource AssociatedProject { get; set; }
+        /// <summary>
+        ///     Gets or sets a value indicating whether issues in editor.
+        /// </summary>
+        public bool IssuesSearchEnded { get; set; }
 
-        public ICommand GetAllIssuesFromProjectCommand { get; set; }
-        public ICommand GetIssuesByFilterCommand { get; set; }
+        /// <summary>
+        ///     Gets or sets the reporter in filter.
+        /// </summary>
+        public User Reporter { get; set; }
 
-        
+        /// <summary>
+        ///     Gets or sets the resource in editor.
+        /// </summary>
+        public Resource ResourceInEditor { get; set; }
 
-        public ICommand GetAllIssuesSinceLastAnalysisCommand { get; set; }
+        /// <summary>
+        ///     Gets or sets the service provier.
+        /// </summary>
+        public IServiceProvider ServiceProvier { get; set; }
 
-        public ICommand GetMyIssuesInProjectCommand { get; set; }
-
-        public ICommand GetAllMyIssuesCommand { get; set; }
-
-
-        private void OnGetAllMyIssuesCommand()
+        /// <summary>
+        ///     Gets or sets a value indicating whether show flyouts.
+        /// </summary>
+        public bool ShowFlyouts
         {
-            this.CanQUeryIssues = false;this.sonarQubeViewModel.IsExtensionBusy = true;
-            var bw = new BackgroundWorker { WorkerReportsProgress = true };
-            bw.RunWorkerCompleted += delegate
+            get
             {
-                this.CanQUeryIssues = true;this.sonarQubeViewModel.IsExtensionBusy = false;
-                this.IssuesGridView.UpdateIssues(this.localEditorCache.GetIssues());
-            };
+                return this.showFlyouts;
+            }
 
-            bw.DoWork +=
-                delegate
-                {
-                    this.ReplaceAllIssuesInCache(
-                        this.restService.GetAllIssuesByAssignee(
-                            this.Configuration,
-                            this.Configuration.Username));
-                };
-
-            bw.RunWorkerAsync();
+            set
+            {
+                this.showFlyouts = value;
+                this.SizeOfFlyout = value ? 150 : 0;
+            }
         }
 
-        private void OnGetMyIssuesInProjectCommand()
+        /// <summary>
+        ///     Gets the size of flyout.
+        /// </summary>
+        public int SizeOfFlyout { get; private set; }
+
+        /// <summary>
+        ///     Gets the sonar version.
+        /// </summary>
+        public double SonarVersion { get; private set; }
+
+        /// <summary>
+        ///     Gets or sets the status bar.
+        /// </summary>
+        public IVSSStatusBar StatusBar { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the users list.
+        /// </summary>
+        public ObservableCollection<User> UsersList { get; set; }
+
+        /// <summary>
+        /// The property changed.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        #endregion
+
+        #region Public Methods and Operators
+
+        /// <summary>
+        /// The get issues for resource.
+        /// </summary>
+        /// <param name="file">
+        /// The file.
+        /// </param>
+        /// <param name="fileContent">
+        /// The file content.
+        /// </param>
+        /// <returns>
+        /// The <see>
+        ///         <cref>List</cref>
+        ///     </see>
+        ///     .
+        /// </returns>
+        public List<Issue> GetIssuesForResource(Resource file, string fileContent)
         {
-            this.CanQUeryIssues = false;this.sonarQubeViewModel.IsExtensionBusy = true;
-            var bw = new BackgroundWorker { WorkerReportsProgress = true };
-            bw.RunWorkerCompleted += delegate
+            if (this.CanQUeryIssues)
             {
-                this.CanQUeryIssues = true;this.sonarQubeViewModel.IsExtensionBusy = false;
-                this.IssuesGridView.UpdateIssues(this.localEditorCache.GetIssues());
-            };
-
-            bw.DoWork +=
-                delegate
-                {
-                    this.ReplaceAllIssuesInCache(
-                        this.restService.GetIssuesByAssigneeInProject(
-                            this.Configuration,
-                            this.AssociatedProject.Key,
-                            this.Configuration.Username));
-                };
-
-            bw.RunWorkerAsync();
+                return this.IssuesGridView.Issues.Where(issue => this.IssuesGridView.IsNotFiltered(issue)).ToList();
+            }
+            
+            return new List<Issue>();
         }
 
-        private void OnGetIssuesByFilterCommand()
+        /// <summary>
+        /// The init data association.
+        /// </summary>
+        /// <param name="associatedProject">
+        /// The associated project.
+        /// </param>
+        /// <param name="sonarCubeConfiguration">
+        /// The sonar cube configuration.
+        /// </param>
+        /// <param name="workingDir">
+        /// The working dir.
+        /// </param>
+        public void InitDataAssociation(Resource associatedProject, ISonarConfiguration sonarCubeConfiguration, string workingDir)
         {
-            this.CanQUeryIssues = false;this.sonarQubeViewModel.IsExtensionBusy = true;
-            var bw = new BackgroundWorker { WorkerReportsProgress = true };
-            bw.RunWorkerCompleted += delegate
-                {
-                    this.IssuesGridView.UpdateIssues(this.localEditorCache.GetIssues());
-                    this.CanQUeryIssues = true;this.sonarQubeViewModel.IsExtensionBusy = false;                    
-                };
+            this.AssociatedProject = associatedProject;
+            this.Configuration = sonarCubeConfiguration;
+            this.CanQUeryIssues = true;
+            this.sonarQubeViewModel.IsExtensionBusy = false;
 
-            bw.DoWork += delegate { this.RetrieveIssuesUsingCurrentFilter(); };
+            List<User> usortedList = this.restService.GetUserList(sonarCubeConfiguration);
+            if (usortedList != null && usortedList.Count > 0)
+            {
+                this.UsersList = new ObservableCollection<User>(usortedList.OrderBy(i => i.Login));
+            }
+        }
 
-            bw.RunWorkerAsync();
+        /// <summary>
+        /// The refresh data for resource.
+        /// </summary>
+        /// <param name="fullName">
+        /// The full name.
+        /// </param>
+        /// <param name="documentInView">
+        /// The document in view.
+        /// </param>
+        public void RefreshDataForResource(Resource fullName, string documentInView)
+        {
+            this.DocumentInView = documentInView;
+            this.ResourceInEditor = fullName;
+            this.IssuesSearchEnded = true;
         }
 
         /// <summary>
@@ -211,7 +421,7 @@ namespace VSSonarExtensionUi.ViewModel
 
             if (this.SonarVersion < 3.6)
             {
-                this.ReplaceAllIssuesInCache(this.restService.GetIssuesForProjects(this.Configuration, this.AssociatedProject.Key));
+                this.IssuesGridView.UpdateIssues(this.restService.GetIssuesForProjects(this.Configuration, this.AssociatedProject.Key));
                 return;
             }
 
@@ -243,23 +453,116 @@ namespace VSSonarExtensionUi.ViewModel
             request += this.FilterStatus();
             request += this.FilterResolutions();
 
-            this.ReplaceAllIssuesInCache(this.restService.GetIssues(this.Configuration, request, this.AssociatedProject.Key));
+            this.IssuesGridView.UpdateIssues(this.restService.GetIssues(this.Configuration, request, this.AssociatedProject.Key));
         }
 
-        internal void InitDataAssociation(Resource associatedProject, ISonarConfiguration sonarCubeConfiguration)
+        /// <summary>
+        ///     The save filter to disk.
+        /// </summary>
+        public void SaveFilterToDisk()
         {
-            this.AssociatedProject = associatedProject;
-            this.Configuration = sonarCubeConfiguration;
-            this.CanQUeryIssues = true;this.sonarQubeViewModel.IsExtensionBusy = false;
-
-            List<User> usortedList = restService.GetUserList(sonarCubeConfiguration);
-            if (usortedList != null && usortedList.Count > 0)
+            if (this.visualStudioHelper != null)
             {
-                this.UsersList = new ObservableCollection<User>(usortedList.OrderBy(i => i.Login));
+                this.visualStudioHelper.WriteOptionInApplicationData(
+                    IssuesFilterViewModelKey, 
+                    "IsStatusOpenChecked", 
+                    this.IsStatusOpenChecked.ToString(CultureInfo.InvariantCulture));
+                this.visualStudioHelper.WriteOptionInApplicationData(
+                    IssuesFilterViewModelKey, 
+                    "IsStatusClosedChecked", 
+                    this.IsStatusClosedChecked.ToString(CultureInfo.InvariantCulture));
+                this.visualStudioHelper.WriteOptionInApplicationData(
+                    IssuesFilterViewModelKey, 
+                    "IsStatusResolvedChecked", 
+                    this.IsStatusResolvedChecked.ToString(CultureInfo.InvariantCulture));
+                this.visualStudioHelper.WriteOptionInApplicationData(
+                    IssuesFilterViewModelKey, 
+                    "IsStatusConfirmedChecked", 
+                    this.IsStatusConfirmedChecked.ToString(CultureInfo.InvariantCulture));
+                this.visualStudioHelper.WriteOptionInApplicationData(
+                    IssuesFilterViewModelKey, 
+                    "IsStatusReopenedChecked", 
+                    this.IsStatusReopenedChecked.ToString(CultureInfo.InvariantCulture));
+                this.visualStudioHelper.WriteOptionInApplicationData(
+                    IssuesFilterViewModelKey, 
+                    "IsBlockerChecked", 
+                    this.IsBlockerChecked.ToString(CultureInfo.InvariantCulture));
+                this.visualStudioHelper.WriteOptionInApplicationData(
+                    IssuesFilterViewModelKey, 
+                    "IsCriticalChecked", 
+                    this.IsCriticalChecked.ToString(CultureInfo.InvariantCulture));
+                this.visualStudioHelper.WriteOptionInApplicationData(
+                    IssuesFilterViewModelKey, 
+                    "IsMajaorChecked", 
+                    this.IsMajaorChecked.ToString(CultureInfo.InvariantCulture));
+                this.visualStudioHelper.WriteOptionInApplicationData(
+                    IssuesFilterViewModelKey, 
+                    "IsMinorChecked", 
+                    this.IsMinorChecked.ToString(CultureInfo.InvariantCulture));
+                this.visualStudioHelper.WriteOptionInApplicationData(
+                    IssuesFilterViewModelKey, 
+                    "IsInfoChecked", 
+                    this.IsInfoChecked.ToString(CultureInfo.InvariantCulture));
+                this.visualStudioHelper.WriteOptionInApplicationData(
+                    IssuesFilterViewModelKey, 
+                    "IsFalsePositiveChecked", 
+                    this.IsFalsePositiveChecked.ToString(CultureInfo.InvariantCulture));
+                this.visualStudioHelper.WriteOptionInApplicationData(
+                    IssuesFilterViewModelKey, 
+                    "IsRemovedChecked", 
+                    this.IsRemovedChecked.ToString(CultureInfo.InvariantCulture));
+                this.visualStudioHelper.WriteOptionInApplicationData(
+                    IssuesFilterViewModelKey, 
+                    "IsFixedChecked", 
+                    this.IsFixedChecked.ToString(CultureInfo.InvariantCulture));
             }
         }
 
+        /// <summary>
+        /// The update colours.
+        /// </summary>
+        /// <param name="background">
+        /// The background.
+        /// </param>
+        /// <param name="foreground">
+        /// The foreground.
+        /// </param>
+        public void UpdateColours(Color background, Color foreground)
+        {
+            this.BackGroundColor = background;
+            this.ForeGroundColor = foreground;
+        }
 
+        /// <summary>
+        /// The update services.
+        /// </summary>
+        /// <param name="restServiceIn">
+        /// The rest service in.
+        /// </param>
+        /// <param name="vsenvironmenthelperIn">
+        /// The vsenvironmenthelper in.
+        /// </param>
+        /// <param name="statusBar">
+        /// The status bar.
+        /// </param>
+        /// <param name="provider">
+        /// The provider.
+        /// </param>
+        public void UpdateServices(
+            ISonarRestService restServiceIn, 
+            IVsEnvironmentHelper vsenvironmenthelperIn, 
+            IVSSStatusBar statusBar, 
+            IServiceProvider provider)
+        {
+            this.restService = restServiceIn;
+            this.visualStudioHelper = vsenvironmenthelperIn;
+            this.StatusBar = statusBar;
+            this.ServiceProvier = provider;
+        }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         ///     The get filter resolutions.
@@ -292,50 +595,6 @@ namespace VSSonarExtensionUi.ViewModel
             }
 
             return "&resolutions=" + str.Substring(0, str.Length - 1);
-        }
-
-
-        /// <summary>
-        ///     The get filter status.
-        /// </summary>
-        /// <returns>
-        ///     The <see cref="string" />.
-        /// </returns>
-        private string FilterStatus()
-        {
-            string str = string.Empty;
-
-            if (this.IsStatusClosedChecked)
-            {
-                str += "CLOSED,";
-            }
-
-            if (this.IsStatusConfirmedChecked)
-            {
-                str += "CONFIRMED,";
-            }
-
-            if (this.IsStatusOpenChecked)
-            {
-                str += "OPEN,";
-            }
-
-            if (this.IsStatusReopenedChecked)
-            {
-                str += "REOPENED,";
-            }
-
-            if (this.IsStatusResolvedChecked)
-            {
-                str += "RESOLVED,";
-            }
-
-            if (string.IsNullOrEmpty(str))
-            {
-                return string.Empty;
-            }
-
-            return "&statuses=" + str.Substring(0, str.Length - 1);
         }
 
         /// <summary>
@@ -381,303 +640,204 @@ namespace VSSonarExtensionUi.ViewModel
             return "&severities=" + str.Substring(0, str.Length - 1);
         }
 
-        private void OnGetAllIssuesSinceLastAnalysisCommand()
+        /// <summary>
+        ///     The get filter status.
+        /// </summary>
+        /// <returns>
+        ///     The <see cref="string" />.
+        /// </returns>
+        private string FilterStatus()
         {
-            this.CanQUeryIssues = false;this.sonarQubeViewModel.IsExtensionBusy = true;
-            var bw = new BackgroundWorker { WorkerReportsProgress = true };
-            bw.RunWorkerCompleted += delegate
+            string str = string.Empty;
+
+            if (this.IsStatusClosedChecked)
             {
-                this.CanQUeryIssues = true;this.sonarQubeViewModel.IsExtensionBusy = false;
-                this.IssuesGridView.UpdateIssues(this.localEditorCache.GetIssues());
-            };
+                str += "CLOSED,";
+            }
 
-            bw.DoWork +=
-                delegate
-                {
-                    this.ReplaceAllIssuesInCache(
-                        this.restService.GetIssuesForProjectsCreatedAfterDate(
-                            this.Configuration,
-                            this.AssociatedProject.Key,
-                            this.AssociatedProject.Date));
-                };
+            if (this.IsStatusConfirmedChecked)
+            {
+                str += "CONFIRMED,";
+            }
 
-            bw.RunWorkerAsync();
+            if (this.IsStatusOpenChecked)
+            {
+                str += "OPEN,";
+            }
+
+            if (this.IsStatusReopenedChecked)
+            {
+                str += "REOPENED,";
+            }
+
+            if (this.IsStatusResolvedChecked)
+            {
+                str += "RESOLVED,";
+            }
+
+            if (string.IsNullOrEmpty(str))
+            {
+                return string.Empty;
+            }
+
+            return "&statuses=" + str.Substring(0, str.Length - 1);
         }
 
         /// <summary>
-        /// The get all issues in project.
+        ///     The init commanding.
+        /// </summary>
+        private void InitCommanding()
+        {
+            this.CanQUeryIssues = false;
+            this.GetIssuesByFilterCommand = new RelayCommand(this.OnGetIssuesByFilterCommand, () => this.CanQUeryIssues);
+            this.GetAllIssuesFromProjectCommand = new RelayCommand(this.OnGetAllIssuesInProject, () => this.CanQUeryIssues);
+            this.GetAllIssuesSinceLastAnalysisCommand = new RelayCommand(this.OnGetAllIssuesSinceLastAnalysisCommand, () => this.CanQUeryIssues);
+            this.GetMyIssuesInProjectCommand = new RelayCommand(this.OnGetMyIssuesInProjectCommand, () => this.CanQUeryIssues);
+            this.GetAllMyIssuesCommand = new RelayCommand(this.OnGetAllMyIssuesCommand, () => this.CanQUeryIssues);
+
+            this.FlyoutIssueSearchCommand = new RelayCommand(this.OnFlyoutIssueSearchCommand);
+            this.CloseFlyoutIssueSearchCommand = new RelayCommand(this.OnCloseFlyoutIssueSearchCommand);
+        }
+
+        /// <summary>
+        ///     The on close flyout issue search command.
+        /// </summary>
+        private void OnCloseFlyoutIssueSearchCommand()
+        {
+            this.ShowFlyouts = false;
+            this.SizeOfFlyout = 0;
+        }
+
+        /// <summary>
+        ///     The on flyout issue search command.
+        /// </summary>
+        private void OnFlyoutIssueSearchCommand()
+        {
+            this.ShowFlyouts = true;
+            this.SizeOfFlyout = 150;
+        }
+
+        /// <summary>
+        ///     The get all issues in project.
         /// </summary>
         private void OnGetAllIssuesInProject()
         {
-            this.CanQUeryIssues = false;this.sonarQubeViewModel.IsExtensionBusy = true;
+            this.CanQUeryIssues = false;
+            this.sonarQubeViewModel.IsExtensionBusy = true;
+
             var bw = new BackgroundWorker { WorkerReportsProgress = true };
+
+
+
             bw.RunWorkerCompleted += delegate
                 {
-                    this.CanQUeryIssues = true;this.sonarQubeViewModel.IsExtensionBusy = false;
-                    this.IssuesGridView.UpdateIssues(this.localEditorCache.GetIssues());
+                    Application.Current.Dispatcher.Invoke(delegate
+                    {
+                        this.IssuesSearchEnded = true;
+                        this.CanQUeryIssues = true;
+                        this.sonarQubeViewModel.IsExtensionBusy = false;
+                    });
                 };
 
             bw.DoWork +=
-                delegate
-                {
-                    this.ReplaceAllIssuesInCache(
-                        this.restService.GetIssuesForProjects(
-                            this.Configuration,
-                            this.AssociatedProject.Key));
-                };
+                delegate { this.IssuesGridView.UpdateIssues(this.restService.GetIssuesForProjects(this.Configuration, this.AssociatedProject.Key)); };
 
             bw.RunWorkerAsync();
         }
 
-        public bool CanQUeryIssues { get; set; }
-
         /// <summary>
-        /// The replace all issues in cache.
+        ///     The on get all issues since last analysis command.
         /// </summary>
-        /// <param name="getAllIssuesByAssignee">
-        /// The get all issues by assignee.
-        /// </param>
-        public void ReplaceAllIssuesInCache(List<Issue> getAllIssuesByAssignee)
+        private void OnGetAllIssuesSinceLastAnalysisCommand()
         {
-            this.localEditorCache.UpdateIssues(getAllIssuesByAssignee);
-            this.RefreshIssuesInViews();
+            this.CanQUeryIssues = false;
+            this.sonarQubeViewModel.IsExtensionBusy = true;
+            var bw = new BackgroundWorker { WorkerReportsProgress = true };
+            bw.RunWorkerCompleted += delegate
+                {
+                    this.CanQUeryIssues = true;
+                    this.sonarQubeViewModel.IsExtensionBusy = false;
+                    this.IssuesSearchEnded = true;
+                };
+
+            bw.DoWork +=
+                delegate
+                    {
+                        this.IssuesGridView.UpdateIssues(
+                            this.restService.GetIssuesForProjectsCreatedAfterDate(
+                                this.Configuration, 
+                                this.AssociatedProject.Key, 
+                                this.AssociatedProject.Date));
+                    };
+
+            bw.RunWorkerAsync();
         }
 
         /// <summary>
-        ///     The refresh issues.
+        ///     The on get all my issues command.
         /// </summary>
-        public void RefreshIssuesInViews()
+        private void OnGetAllMyIssuesCommand()
         {
-//            this.OnPropertyChanged("Issues");
-//            this.OnPropertyChanged("IssuesInEditor");
-        }
+            this.CanQUeryIssues = false;
+            this.sonarQubeViewModel.IsExtensionBusy = true;
+            var bw = new BackgroundWorker { WorkerReportsProgress = true };
+            bw.RunWorkerCompleted += delegate
+                {
+                    this.CanQUeryIssues = true;
+                    this.sonarQubeViewModel.IsExtensionBusy = false;
+                    this.IssuesSearchEnded = true;
+                };
 
+            bw.DoWork +=
+                delegate { this.IssuesGridView.UpdateIssues(this.restService.GetAllIssuesByAssignee(this.Configuration, this.Configuration.Username)); };
 
-        #region Fields
-
-        /// <summary>
-        /// The issues filter view model key.
-        /// </summary>
-        private const string IssuesFilterViewModelKey = "IssuesFilterViewModel";
-
-        #endregion
-
-        #region Public Properties
-
-        /// <summary>
-        ///     Gets or sets the created before date.
-        /// </summary>
-        public DateTime CreatedBeforeDate { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the created since date.
-        /// </summary>
-        public DateTime CreatedSinceDate { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether is assignee checked.
-        /// </summary>
-        public bool IsAssigneeChecked { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether is blocker checked.
-        /// </summary>
-        public bool IsBlockerChecked { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether is critical checked.
-        /// </summary>
-        public bool IsCriticalChecked { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether is false positive checked.
-        /// </summary>
-        public bool IsFalsePositiveChecked { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether is fixed checked.
-        /// </summary>
-        public bool IsFixedChecked { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether is info checked.
-        /// </summary>
-        public bool IsInfoChecked { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether is majaor checked.
-        /// </summary>
-        public bool IsMajaorChecked { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether is minor checked.
-        /// </summary>
-        public bool IsMinorChecked { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether is removed checked.
-        /// </summary>
-        public bool IsRemovedChecked { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether is reporter checked.
-        /// </summary>
-        public bool IsReporterChecked { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether is status closed checked.
-        /// </summary>
-        public bool IsStatusClosedChecked { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether is status confirmed checked.
-        /// </summary>
-        public bool IsStatusConfirmedChecked { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether is status open checked.
-        /// </summary>
-        public bool IsStatusOpenChecked { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether is status reopened checked.
-        /// </summary>
-        public bool IsStatusReopenedChecked { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether is status resolved checked.
-        /// </summary>
-        public bool IsStatusResolvedChecked { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether is date before checked.
-        /// </summary>
-        public bool IsDateBeforeChecked { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether is date since checked.
-        /// </summary>
-        public bool IsDateSinceChecked { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the users list.
-        /// </summary>
-        public ObservableCollection<User> UsersList { get; set; }
-
-        /// <summary>
-        /// Gets or sets the reporter in filter.
-        /// </summary>
-        public User Reporter { get; set; }
-
-        /// <summary>
-        /// Gets or sets the assignee in filter.
-        /// </summary>
-        public User Assignee { get; set; }
-        public double SonarVersion { get; private set; }
-
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// The save filter to disk.
-        /// </summary>
-        public void SaveFilterToDisk()
-        {
-            if (this.vsHelper != null)
-            {
-                this.vsHelper.WriteOptionInApplicationData(IssuesFilterViewModelKey, "IsStatusOpenChecked", this.IsStatusOpenChecked.ToString(CultureInfo.InvariantCulture));
-                this.vsHelper.WriteOptionInApplicationData(IssuesFilterViewModelKey, "IsStatusClosedChecked", this.IsStatusClosedChecked.ToString(CultureInfo.InvariantCulture));
-                this.vsHelper.WriteOptionInApplicationData(IssuesFilterViewModelKey, "IsStatusResolvedChecked", this.IsStatusResolvedChecked.ToString(CultureInfo.InvariantCulture));
-                this.vsHelper.WriteOptionInApplicationData(IssuesFilterViewModelKey, "IsStatusConfirmedChecked", this.IsStatusConfirmedChecked.ToString(CultureInfo.InvariantCulture));
-                this.vsHelper.WriteOptionInApplicationData(IssuesFilterViewModelKey, "IsStatusReopenedChecked", this.IsStatusReopenedChecked.ToString(CultureInfo.InvariantCulture));
-                this.vsHelper.WriteOptionInApplicationData(IssuesFilterViewModelKey, "IsBlockerChecked", this.IsBlockerChecked.ToString(CultureInfo.InvariantCulture));
-                this.vsHelper.WriteOptionInApplicationData(IssuesFilterViewModelKey, "IsCriticalChecked", this.IsCriticalChecked.ToString(CultureInfo.InvariantCulture));
-                this.vsHelper.WriteOptionInApplicationData(IssuesFilterViewModelKey, "IsMajaorChecked", this.IsMajaorChecked.ToString(CultureInfo.InvariantCulture));
-                this.vsHelper.WriteOptionInApplicationData(IssuesFilterViewModelKey, "IsMinorChecked", this.IsMinorChecked.ToString(CultureInfo.InvariantCulture));
-                this.vsHelper.WriteOptionInApplicationData(IssuesFilterViewModelKey, "IsInfoChecked", this.IsInfoChecked.ToString(CultureInfo.InvariantCulture));
-                this.vsHelper.WriteOptionInApplicationData(IssuesFilterViewModelKey, "IsFalsePositiveChecked", this.IsFalsePositiveChecked.ToString(CultureInfo.InvariantCulture));
-                this.vsHelper.WriteOptionInApplicationData(IssuesFilterViewModelKey, "IsRemovedChecked", this.IsRemovedChecked.ToString(CultureInfo.InvariantCulture));
-                this.vsHelper.WriteOptionInApplicationData(IssuesFilterViewModelKey, "IsFixedChecked", this.IsFixedChecked.ToString(CultureInfo.InvariantCulture));
-            }
+            bw.RunWorkerAsync();
         }
 
         /// <summary>
-        ///     The restore user filtering options.
+        ///     The on get issues by filter command.
         /// </summary>
-        private void RestoreUserFilteringOptions()
+        private void OnGetIssuesByFilterCommand()
         {
-            this.CreatedBeforeDate = DateTime.Now;
-            this.CreatedSinceDate = DateTime.Now;
-            if (this.vsHelper == null)
-            {
-                this.IsStatusOpenChecked = true;
-                this.IsStatusClosedChecked = true;
-                this.IsStatusResolvedChecked = true;
-                this.IsStatusConfirmedChecked = true;
-                this.IsStatusReopenedChecked = true;
-                this.IsBlockerChecked = true;
-                this.IsCriticalChecked = true;
-                this.IsMajaorChecked = true;
-                this.IsMinorChecked = true;
-                this.IsInfoChecked = true;
-                this.IsFalsePositiveChecked = true;
-                this.IsRemovedChecked = true;
-                this.IsFixedChecked = true;
+            this.CanQUeryIssues = false;
+            this.sonarQubeViewModel.IsExtensionBusy = true;
+            var bw = new BackgroundWorker { WorkerReportsProgress = true };
+            bw.RunWorkerCompleted += delegate
+                {
+                    this.CanQUeryIssues = true;
+                    this.sonarQubeViewModel.IsExtensionBusy = false;
+                    this.IssuesSearchEnded = true;
+                };
 
-                return;
-            }
+            bw.DoWork += delegate { this.RetrieveIssuesUsingCurrentFilter(); };
 
-            Dictionary<string, string> options =
-                this.vsHelper.ReadAllAvailableOptionsInSettings(IssuesFilterViewModelKey);
-            if (options != null && options.Count > 0)
-            {
-                this.IsStatusOpenChecked = bool.Parse(options["IsStatusOpenChecked"]);
-                this.IsStatusClosedChecked = bool.Parse(options["IsStatusClosedChecked"]);
-                this.IsStatusResolvedChecked = bool.Parse(options["IsStatusResolvedChecked"]);
-                this.IsStatusConfirmedChecked = bool.Parse(options["IsStatusConfirmedChecked"]);
-                this.IsStatusReopenedChecked = bool.Parse(options["IsStatusReopenedChecked"]);
-                this.IsBlockerChecked = bool.Parse(options["IsBlockerChecked"]);
-                this.IsCriticalChecked = bool.Parse(options["IsCriticalChecked"]);
-                this.IsMajaorChecked = bool.Parse(options["IsMajaorChecked"]);
-                this.IsMinorChecked = bool.Parse(options["IsMinorChecked"]);
-                this.IsInfoChecked = bool.Parse(options["IsInfoChecked"]);
-                this.IsFalsePositiveChecked = bool.Parse(options["IsFalsePositiveChecked"]);
-                this.IsRemovedChecked = bool.Parse(options["IsRemovedChecked"]);
-                this.IsFixedChecked = bool.Parse(options["IsFixedChecked"]);
-            }
-            else
-            {
-                this.IsStatusOpenChecked = true;
-                this.vsHelper.WriteOptionInApplicationData(IssuesFilterViewModelKey, "IsStatusOpenChecked", "true");
-                this.IsStatusClosedChecked = true;
-                this.vsHelper.WriteOptionInApplicationData(IssuesFilterViewModelKey, "IsStatusClosedChecked", "true");
-                this.IsStatusResolvedChecked = true;
-                this.vsHelper.WriteOptionInApplicationData(IssuesFilterViewModelKey, "IsStatusResolvedChecked", "true");
-                this.IsStatusConfirmedChecked = true;
-                this.vsHelper.WriteOptionInApplicationData(IssuesFilterViewModelKey, "IsStatusConfirmedChecked", "true");
-                this.IsStatusReopenedChecked = true;
-                this.vsHelper.WriteOptionInApplicationData(IssuesFilterViewModelKey, "IsStatusReopenedChecked", "true");
-                this.IsBlockerChecked = true;
-                this.vsHelper.WriteOptionInApplicationData(IssuesFilterViewModelKey, "IsBlockerChecked", "true");
-                this.IsCriticalChecked = true;
-                this.vsHelper.WriteOptionInApplicationData(IssuesFilterViewModelKey, "IsCriticalChecked", "true");
-                this.IsMajaorChecked = true;
-                this.vsHelper.WriteOptionInApplicationData(IssuesFilterViewModelKey, "IsMajaorChecked", "true");
-                this.IsMinorChecked = true;
-                this.vsHelper.WriteOptionInApplicationData(IssuesFilterViewModelKey, "IsMinorChecked", "true");
-                this.IsInfoChecked = true;
-                this.vsHelper.WriteOptionInApplicationData(IssuesFilterViewModelKey, "IsInfoChecked", "true");
-                this.IsFalsePositiveChecked = true;
-                this.vsHelper.WriteOptionInApplicationData(IssuesFilterViewModelKey, "IsFalsePositiveChecked", "true");
-                this.IsRemovedChecked = true;
-                this.vsHelper.WriteOptionInApplicationData(IssuesFilterViewModelKey, "IsRemovedChecked", "true");
-                this.IsFixedChecked = true;
-                this.vsHelper.WriteOptionInApplicationData(IssuesFilterViewModelKey, "IsFixedChecked", "true");
-            }
+            bw.RunWorkerAsync();
         }
 
-        #endregion
+        /// <summary>
+        ///     The on get my issues in project command.
+        /// </summary>
+        private void OnGetMyIssuesInProjectCommand()
+        {
+            this.CanQUeryIssues = false;
+            this.sonarQubeViewModel.IsExtensionBusy = true;
+            var bw = new BackgroundWorker { WorkerReportsProgress = true };
+            bw.RunWorkerCompleted += delegate
+                {
+                    this.CanQUeryIssues = true;
+                    this.sonarQubeViewModel.IsExtensionBusy = false;
+                    this.IssuesSearchEnded = true;
+                };
+
+            bw.DoWork +=
+                delegate
+                    {
+                        this.IssuesGridView.UpdateIssues(
+                            this.restService.GetIssuesByAssigneeInProject(this.Configuration, this.AssociatedProject.Key, this.Configuration.Username));
+                    };
+
+            bw.RunWorkerAsync();
+        }
 
         #endregion
     }

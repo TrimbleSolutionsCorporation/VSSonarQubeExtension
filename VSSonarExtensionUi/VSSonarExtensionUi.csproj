@@ -35,22 +35,29 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CredentialManagement">
+      <HintPath>..\packages\CredentialManagement.1.0.1\lib\net35\CredentialManagement.dll</HintPath>
+    </Reference>
     <Reference Include="envdte, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="EnvDTE80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
-    <Reference Include="GalaSoft.MvvmLight">
-      <HintPath>..\packages\MvvmLightLibs.5.0.0.1\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
+    <Reference Include="GalaSoft.MvvmLight, Version=5.0.1.31549, Culture=neutral, PublicKeyToken=e7570ab207bcb616, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\MvvmLightLibs.5.0.1.0\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
     </Reference>
-    <Reference Include="GalaSoft.MvvmLight.Extras">
-      <HintPath>..\packages\MvvmLightLibs.5.0.0.1\lib\net45\GalaSoft.MvvmLight.Extras.dll</HintPath>
+    <Reference Include="GalaSoft.MvvmLight.Extras, Version=5.0.1.31553, Culture=neutral, PublicKeyToken=669f0b5e8f868abf, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\MvvmLightLibs.5.0.1.0\lib\net45\GalaSoft.MvvmLight.Extras.dll</HintPath>
     </Reference>
-    <Reference Include="GalaSoft.MvvmLight.Platform">
-      <HintPath>..\packages\MvvmLightLibs.5.0.0.1\lib\net45\GalaSoft.MvvmLight.Platform.dll</HintPath>
+    <Reference Include="GalaSoft.MvvmLight.Platform, Version=5.0.1.31551, Culture=neutral, PublicKeyToken=5f873c45e98af8a1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\MvvmLightLibs.5.0.1.0\lib\net45\GalaSoft.MvvmLight.Platform.dll</HintPath>
     </Reference>
-    <Reference Include="MahApps.Metro">
+    <Reference Include="MahApps.Metro, Version=0.14.0.0, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\MahApps.Metro.0.14.0.0\lib\net45\MahApps.Metro.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -63,7 +70,7 @@
     <Reference Include="PresentationFramework.Aero" />
     <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="PropertyChanged">
-      <HintPath>..\packages\PropertyChanged.Fody.1.48.4\Lib\portable-net4+sl4+wp8+win8+wpa81+MonoAndroid16+MonoTouch40\PropertyChanged.dll</HintPath>
+      <HintPath>..\packages\PropertyChanged.Fody.1.48.5\Lib\portable-net4+sl4+wp8+win8+wpa81+MonoAndroid16+MonoTouch40\PropertyChanged.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SonarLocalAnalyser">
@@ -76,9 +83,10 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\MvvmLightLibs.5.0.0.1\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <HintPath>..\packages\MahApps.Metro.0.14.0.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
     <Reference Include="System.Xaml">
       <Private>True</Private>
@@ -96,17 +104,17 @@
   <ItemGroup>
     <Compile Include="Cache\EditorData.cs" />
     <Compile Include="Cache\ModelEditorCache.cs" />
+    <Compile Include="Converters\ColorToBrushConverter.cs" />
+    <Compile Include="Converters\InverseBooleanConverter.cs" />
     <Compile Include="Converters\ConfigurableBooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\UrlToImageSourceConverter.cs" />
+    <Compile Include="Helpers\PasswordHelper.cs" />
     <Compile Include="Helpers\TextBoxBehaviour.cs" />
     <Compile Include="SampleData\DatagridSampleData\DatagridSampleData.xaml.cs">
       <DependentUpon>DatagridSampleData.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Styles\ActivityToBrushConverter.cs" />
+    <Compile Include="Converters\ActivityToBrushConverter.cs" />
     <Compile Include="Helpers\BindingProxy.cs" />
-    <Compile Include="Styles\FallbackMenuBackgroundBrush.cs" />
-    <Compile Include="Styles\FallbackForegroundBrush.cs" />
-    <Compile Include="Styles\FallbackBackgroundBrush.cs" />
     <Compile Include="Helpers\IDataModel.cs" />
     <Compile Include="Helpers\IFilter.cs" />
     <Compile Include="Helpers\IFilterCommand.cs" />
@@ -120,19 +128,19 @@
     <Compile Include="Templates\UserControl1.xaml.cs">
       <DependentUpon>UserControl1.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModel\ExtensionOptionsModelLicense.cs" />
-    <Compile Include="ViewModel\ExtensionOptionsModel.cs" />
-    <Compile Include="ViewModel\GeneralOptionsModel.cs" />
+    <Compile Include="ViewModel\Configuration\ExtensionOptionsModel.cs" />
+    <Compile Include="ViewModel\Configuration\GeneralOptionsModel.cs" />
+    <Compile Include="ViewModel\Configuration\IOptionsViewModelBase.cs" />
+    <Compile Include="ViewModel\IAnalysisViewModelBase.cs" />
     <Compile Include="ViewModel\IssueGridViewModel.cs" />
     <Compile Include="ViewModel\IssuesSearchViewModel.cs" />
     <Compile Include="ViewModel\IViewModelBase.cs" />
-    <Compile Include="ViewModel\LicenseViewerViewModel.cs" />
-    <Compile Include="ViewModel\MainViewModel.cs" />
-    <Compile Include="ViewModel\PluginManagerModel.cs" />
+    <Compile Include="ViewModel\Configuration\LicenseViewerViewModel.cs" />
+    <Compile Include="ViewModel\Configuration\PluginManagerModel.cs" />
     <Compile Include="ViewModel\ServerViewModel.cs" />
     <Compile Include="ViewModel\LocalViewModel.cs" />
+    <Compile Include="ViewModel\Configuration\SonarConfigurationViewModel.cs" />
     <Compile Include="ViewModel\SonarQubeViewModel.cs" />
-    <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\ExtensionOptionsWindow.xaml.cs">
       <DependentUpon>ExtensionOptionsWindow.xaml</DependentUpon>
     </Compile>
@@ -160,8 +168,11 @@
     <Compile Include="View\ServerView.xaml.cs">
       <DependentUpon>ServerView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\SonarQubeUserControl.xaml.cs">
-      <DependentUpon>SonarQubeUserControl.xaml</DependentUpon>
+    <Compile Include="View\SonarConfigurationView.xaml.cs">
+      <DependentUpon>SonarConfigurationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SonarQubeUserControlVS.xaml.cs">
+      <DependentUpon>SonarQubeUserControlVS.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\TabControlEx.cs" />
     <Compile Include="View\UserExceptionMessageBox.xaml.cs">
@@ -174,7 +185,23 @@
       <SubType>Designer</SubType>
       <ContainsDataSources>True</ContainsDataSources>
     </Page>
+    <Page Include="Resources\Icons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="SampleData\DatagridSampleData\DatagridSampleData.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\ButtonStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\mahapps\Controls.AnimatedTabControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\mahapps\Controls.TabControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -191,10 +218,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Styles\ScrollBarStyles.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Styles\AvalonStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -246,7 +269,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\SonarQubeUserControl.xaml">
+    <Page Include="View\SonarConfigurationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SonarQubeUserControlVS.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -257,20 +284,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="FodyWeavers.xml" />
+    <Content Include="Resources\Entypo-license.txt" />
+    <Content Include="Resources\WindowsIcons-license.txt" />
     <Resource Include="Icons\appbar.cell.align.png" />
     <Resource Include="Icons\appbar.book.list.png" />
-    <Resource Include="Icons\medium_connection.ico" />
-    <Resource Include="Icons\high_connection.ico" />
-    <Resource Include="Icons\no_connection.ico" />
     <DesignTimeOnly Include="SampleData\DatagridSampleData\DatagridSampleData.xsd" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Resources\Entypo.ttf" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\AvalonDock\Xceed.Wpf.AvalonDock\Xceed.Wpf.AvalonDock.csproj">
       <Project>{db81988f-e0f2-45a0-a1fd-8c37f3d35244}</Project>

@@ -246,14 +246,14 @@ namespace VSSonarExtension.MainViewModel.ViewModel
 
                 foreach (IAnalysisPlugin plugin in plugins)
                 {
-                    ISonarConfiguration configuration = ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper);
+                    ISonarConfiguration configuration = null;
                     IPluginsOptions controloption = plugin.GetPluginControlOptions(configuration);
                     if (controloption == null)
                     {
                         continue;
                     }
 
-                    string pluginKey = plugin.GetKey(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper));
+                    string pluginKey = plugin.GetKey(null);
                     Dictionary<string, string> options = this.Vsenvironmenthelper.ReadAllAvailableOptionsInSettings(pluginKey);
                     controloption.SetOptions(options);
                 }
@@ -1203,14 +1203,14 @@ namespace VSSonarExtension.MainViewModel.ViewModel
 
                 foreach (IAnalysisPlugin plugin in plugins)
                 {
-                    ISonarConfiguration configuration = ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper);
+                    ISonarConfiguration configuration = null;
                     IPluginsOptions controloption = plugin.GetPluginControlOptions(configuration);
                     if (controloption == null)
                     {
                         continue;
                     }
 
-                    string pluginKey = plugin.GetKey(ConnectionConfigurationHelpers.GetConnectionConfiguration(this.Vsenvironmenthelper));
+                    string pluginKey = plugin.GetKey(null);
                     Dictionary<string, string> options = this.Vsenvironmenthelper.ReadAllAvailableOptionsInSettings(pluginKey);
                     controloption.SetOptions(options);
                 }

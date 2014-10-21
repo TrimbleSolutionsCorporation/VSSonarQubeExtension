@@ -6,11 +6,10 @@
              xmlns:command="http://www.galasoft.ch/mvvmlight"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
-             xmlns:styles="clr-namespace:VSSonarExtensionUi.Styles"
-             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+	xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              x:Class="VSSonarExtensionUi.View.IssuesGrid"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="2000" Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Background="{styles:FallbackBackgroundBrush FallBackBrush=White}">
+             d:DesignHeight="300" d:DesignWidth="2000">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -28,25 +27,46 @@
 
             </ResourceDictionary.MergedDictionaries>
 
-            <ContextMenu Style="{StaticResource ContextMenuStyle}" x:Key="DatagridContextMenu" Visibility="{Binding PlacementTarget.Tag.ShowContextMenu, RelativeSource={RelativeSource Self}, Converter={StaticResource BoolToVis}}" ItemsSource="{Binding PlacementTarget.Tag.ContextMenuItems, RelativeSource={RelativeSource Self}}" >
+            
+            <ContextMenu Style="{StaticResource ContextMenuStyle}"
+                         Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"
+                         Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"                          
+                         x:Key="DatagridContextMenu"
+                         Visibility="{Binding PlacementTarget.Tag.ShowContextMenu, RelativeSource={RelativeSource Self}, Converter={StaticResource BoolToVis}}" ItemsSource="{Binding PlacementTarget.Tag.ContextMenuItems, RelativeSource={RelativeSource Self}}" >
                 <ContextMenu.ItemTemplate>
                     <HierarchicalDataTemplate ItemsSource="{Binding SubItems}">
-                        <MenuItem Header="{Binding CommandText}" Command="{Binding AssociatedCommand}" IsEnabled="{Binding IsEnabled}"/>
+                        <MenuItem 
+                         Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"
+                         Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"                            
+                            Header="{Binding CommandText}" Command="{Binding AssociatedCommand}" IsEnabled="{Binding IsEnabled}"/>
                         <HierarchicalDataTemplate.ItemContainerStyle>
                             <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource MenuItemStyle}">
                                 <Setter Property="Command" Value="{Binding AssociatedCommand}"/>
+                                <Setter Property="Foreground" Value="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"/>
+                                <Setter Property="Background" Value="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"/>
                             </Style>
                         </HierarchicalDataTemplate.ItemContainerStyle>
                     </HierarchicalDataTemplate>
                 </ContextMenu.ItemTemplate>
             </ContextMenu>
 
-            <ContextMenu Style="{StaticResource ContextMenuStyle}" x:Key="HeaderContextMenu" Visibility="{Binding PlacementTarget.Tag.ShowHeaderContextMenu, RelativeSource={RelativeSource Self}, Converter={StaticResource BoolToVis}}"  ItemsSource="{Binding PlacementTarget.Tag.ContextVisibilityMenuItems, RelativeSource={RelativeSource Self}}" >
+            <ContextMenu 
+                Style="{StaticResource ContextMenuStyle}" 
+                x:Key="HeaderContextMenu"
+                Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"
+                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}" 
+                Visibility="{Binding PlacementTarget.Tag.ShowHeaderContextMenu, RelativeSource={RelativeSource Self}, Converter={StaticResource BoolToVis}}"  
+                ItemsSource="{Binding PlacementTarget.Tag.ContextVisibilityMenuItems, RelativeSource={RelativeSource Self}}" >
                 <ContextMenu.ItemTemplate>
                     <HierarchicalDataTemplate ItemsSource="{Binding SubItems}">
-                        <MenuItem Header="{Binding CommandText}" Command="{Binding AssociatedCommand}" IsEnabled="{Binding IsEnabled}"/>
+                        <MenuItem 
+                            Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"
+                            Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"                             
+                            Header="{Binding CommandText}" Command="{Binding AssociatedCommand}" IsEnabled="{Binding IsEnabled}"/>
                         <HierarchicalDataTemplate.ItemContainerStyle>
                             <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource MenuItemStyle}">
+                                <Setter Property="Foreground" Value="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"/>
+                                <Setter Property="Background" Value="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"/>
                                 <Setter Property="Command" Value="{Binding AssociatedCommand}"/>
                             </Style>
                         </HierarchicalDataTemplate.ItemContainerStyle>
@@ -58,10 +78,6 @@
                 <Setter Property="ContextMenu" Value="{StaticResource DatagridContextMenu}" />
             </Style>
 
-            <Style x:Key="DataGridRowHeaderStyle" TargetType="{x:Type DataGridRowHeader}" BasedOn="{StaticResource DefaultDatagridRowHeaderStyle}">
-                <Setter Property="ContextMenu" Value="{StaticResource DatagridContextMenu}" />
-            </Style>
-
             <Style x:Key="DataGridColumnHeaderStyle" TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource DefaultDataGridColumnHeaderStyle}" >
                 <Setter Property="ContextMenu" Value="{StaticResource HeaderContextMenu}" />
             </Style>
@@ -70,16 +86,23 @@
         </ResourceDictionary>
     </UserControl.Resources>
         
+ <UserControl.Background>
+   <SolidColorBrush Color="{Binding BackGroundColor}"/>
+</UserControl.Background>
+
+    <UserControl.Foreground>
+   <SolidColorBrush Color="{Binding ForeGroundColor}"/>
+</UserControl.Foreground> 
+    
 	<Grid d:DataContext="{Binding Source={StaticResource DatagridSampleData}}">
 		<Grid.RowDefinitions>
-			<RowDefinition Height="25"/>
 			<RowDefinition Height="3*"/>
 			<RowDefinition Height="25"/>
 		</Grid.RowDefinitions>
-        <TextBlock Grid.Row="2" Margin="2"><Hyperlink Command="{Binding DataContext.FilterClearAllCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"><Run Text="Clear All Filters"/></Hyperlink></TextBlock>
+        <TextBlock Grid.Row="1" Margin="2"><Hyperlink Command="{Binding DataContext.FilterClearAllCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"><Run Text="Clear All Filters"/></Hyperlink></TextBlock>
         <DataGrid Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type UserControl}, Mode=FindAncestor}}" 
           x:Name="Datagrid"
-          Grid.Row="1"
+          Grid.Row="0"
           IsReadOnly="True"
           GridLinesVisibility="None"
           BorderThickness="1"
@@ -92,7 +115,7 @@
           SelectedItem="{Binding SelectedIssue}"
           IsSynchronizedWithCurrentItem="True" 
           ItemsSource="{Binding IssuesInView}"
-          AlternationCount="2" AutoGenerateColumns="False" AlternatingRowBackground="#FF41B1E1"
+          AlternationCount="2" AutoGenerateColumns="False" AlternatingRowBackground="#CCD1E0E6"
           CanUserAddRows="False"
           CanUserDeleteRows="False"
           CanUserResizeRows="True"
@@ -143,24 +166,9 @@
                     </DataGridTemplateColumn.HeaderTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn MinWidth="100" x:Name="CreationDateTemplateCol" Header="CreationDate" CanUserSort="True" SortMemberPath="CreationDate" DisplayIndex="{Binding Data.CreationDateIndex, FallbackValue=1, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.CreationDateVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding CreationDate, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"   />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                    <DataGridTemplateColumn.HeaderTemplate>
-                        <DataTemplate>
-                            <Grid IsHitTestVisible="True">
-                                <TextBlock  Text="{TemplateBinding Content}" IsHitTestVisible="True" VerticalAlignment="Top" Margin="0 0 0 0" ToolTip="RuleFilter">
-                                </TextBlock>
-                            </Grid>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.HeaderTemplate>
-                </DataGridTemplateColumn>
-
-                <DataGridTextColumn MinWidth="100" x:Name="CloseDateTemplateCol" Header="CloseDate" CanUserSort="True" SortMemberPath="CloseDate" DisplayIndex="{Binding Data.CloseDateIndex, FallbackValue=2, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.CloseDateVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
-                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding CreationDate}" MinWidth="100" x:Name="CreationDateTemplateCol" Header="CreationDate" CanUserSort="True" SortMemberPath="CreationDate" DisplayIndex="{Binding CreationDate, FallbackValue=1, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.CreationDateVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
+                
+                <DataGridTextColumn Binding="{Binding CloseDate}" MinWidth="100" x:Name="CloseDateTemplateCol" Header="CloseDate" CanUserSort="True" SortMemberPath="CloseDate" DisplayIndex="{Binding CloseDateIndex, FallbackValue=2, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.CloseDateVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
 
                 <DataGridTemplateColumn MinWidth="100" x:Name="ComponentTemplateCol" Header="Component" CanUserSort="True" SortMemberPath="Component" DisplayIndex="{Binding Data.ComponentIndex, FallbackValue=3, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.ComponentVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
                     <DataGridTemplateColumn.CellTemplate>
@@ -193,11 +201,9 @@
                     </DataGridTemplateColumn.HeaderTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTextColumn MinWidth="100" x:Name="EffortToFixTemplateCol" Header="EffortToFix" CanUserSort="True" SortMemberPath="EffortToFix" DisplayIndex="{Binding Data.EffortToFixIndex, FallbackValue=4, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.EffortToFixVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
-                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding EffortToFix}" MinWidth="100" x:Name="EffortToFixTemplateCol" Header="EffortToFix" CanUserSort="True" SortMemberPath="EffortToFix" DisplayIndex="{Binding EffortToFixIndex, FallbackValue=4, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.EffortToFixVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
 
-                <DataGridTextColumn MinWidth="100" x:Name="LineTemplateCol" Header="Line" CanUserSort="True" SortMemberPath="Line" DisplayIndex="{Binding Data.LineIndex, FallbackValue=5, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.LineVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
-                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Line}" MinWidth="100" x:Name="LineTemplateCol" Header="Line" CanUserSort="True" SortMemberPath="Line" DisplayIndex="{Binding LineIndex, FallbackValue=5, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.LineVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
 
                 <DataGridTemplateColumn MinWidth="100" x:Name="ProjectTemplateCol" Header="Project" CanUserSort="True" SortMemberPath="Project" DisplayIndex="{Binding Data.ProjectIndex, FallbackValue=6, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.ProjectVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
                     <DataGridTemplateColumn.CellTemplate>
@@ -230,8 +236,7 @@
                     </DataGridTemplateColumn.HeaderTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTextColumn MinWidth="100" x:Name="UpdateDateTemplateCol" Header="UpdateDate" CanUserSort="True" SortMemberPath="UpdateDate" DisplayIndex="{Binding Data.UpdateDateIndex, FallbackValue=7, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.UpdateDateVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
-                </DataGridTextColumn>
+                <DataGridTextColumn MinWidth="100" x:Name="UpdateDateTemplateCol" Header="UpdateDate" CanUserSort="True" SortMemberPath="UpdateDate" DisplayIndex="{Binding Data.UpdateDateIndex, FallbackValue=7, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.UpdateDateVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
 
                 <DataGridTemplateColumn MinWidth="100" x:Name="StatusTemplateCol" Header="Status" CanUserSort="True" SortMemberPath="Status" DisplayIndex="{Binding Data.StatusIndex, FallbackValue=8, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.StatusVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
                     <DataGridTemplateColumn.CellTemplate>
@@ -411,15 +416,12 @@
                     </DataGridTemplateColumn.HeaderTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTextColumn MinWidth="100" x:Name="KeyTemplateCol" Header="Key" CanUserSort="True" SortMemberPath="Key" DisplayIndex="{Binding Data.KeyIndex, FallbackValue=14, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.KeyVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
+                <DataGridTextColumn Binding="{Binding Key}" MinWidth="100" x:Name="KeyTemplateCol" Header="Key" CanUserSort="True" SortMemberPath="Key" DisplayIndex="{Binding KeyIndex, FallbackValue=14, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.KeyVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
 
-                <DataGridTextColumn MinWidth="100" x:Name="IdTemplateCol" Header="Id" CanUserSort="True" SortMemberPath="Id" DisplayIndex="{Binding Data.IdIndex, FallbackValue=15, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.IdVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
+                <DataGridTextColumn Binding="{Binding Id}" MinWidth="100" x:Name="IdTemplateCol" Header="Id" CanUserSort="True" SortMemberPath="Id" DisplayIndex="{Binding IdIndex, FallbackValue=15, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.IdVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
 
-                <DataGridTextColumn MinWidth="100" x:Name="ViolationIdTemplateCol" Header="ViolationId" CanUserSort="true" SortMemberPath="ViolationId" DisplayIndex="{Binding Data.ViolationIdIndex, FallbackValue=16, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.ViolationIdVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
-                <DataGridTextColumn Binding="{Binding Line}" Header="Line"/>
-                <DataGridTextColumn Binding="{Binding Message}" Header="Message"/>
-                
-
+                <DataGridTextColumn Binding="{Binding ViolationId}" MinWidth="100" x:Name="ViolationIdTemplateCol" Header="ViolationId" CanUserSort="true" SortMemberPath="ViolationId" DisplayIndex="{Binding ViolationIdIndex, FallbackValue=16, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.ViolationIdVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
+               
             </DataGrid.Columns>
             
             

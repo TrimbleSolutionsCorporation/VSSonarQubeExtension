@@ -5,16 +5,17 @@
     xmlns:system="clr-namespace:System;assembly=mscorlib"
 	xmlns:extensionTypes="clr-namespace:ExtensionTypes;assembly=ExtensionTypes"
 	xmlns:themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
-	xmlns:converters="clr-namespace:VSSonarExtensionUi.Converters"
-	xmlns:styles="clr-namespace:VSSonarExtensionUi.Styles">
+	xmlns:converters="clr-namespace:VSSonarExtensionUi.Converters">
 
     <helpers:BindingProxy x:Key="Proxy" Data="{Binding}" />
-    <styles:ActivityToBrushConverter x:Key="BrushConverter"/>
+    <converters:ActivityToBrushConverter x:Key="BrushConverter"/>
     <converters:UrlToImageSourceConverter x:Key="UrlToImageSourceConverter"/>
-    
+    <converters:InverseBooleanConverter x:Key="BooleanInverter"/>
+    <converters:ColorToBrushConverter x:Key="ColorToBrushConverter"/>
+    <converters:ConfigurableBooleanToVisibilityConverter x:Key="BoolToVis" />
     <BorderGapMaskConverter x:Key="BorderGapMaskConverter"/>
 
-    <converters:ConfigurableBooleanToVisibilityConverter x:Key="BoolToVis" />
+    
 
     <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type system:Enum}" x:Key="GetStatusEnumValues">
         <ObjectDataProvider.MethodParameters>
@@ -69,16 +70,13 @@
         			</Setter.Value>
         		</Setter>
         	</Style>
-            <SolidColorBrush x:Key="ComboBoxItem.ItemsviewHover.Background" Color="{styles:FallbackBackgroundBrush FallBackBrush=Yellow}"/>
         	<SolidColorBrush x:Key="ComboBoxItem.ItemsviewHover.Border" Color="#A826A0DA"/>
         	<SolidColorBrush x:Key="ComboBoxItem.ItemsviewSelected.Background" Color="#3D26A0DA"/>
         	<SolidColorBrush x:Key="ComboBoxItem.ItemsviewSelected.Border" Color="#FF26A0DA"/>
-            <SolidColorBrush x:Key="ComboBoxItem.ItemsviewSelectedHover.Background" Color="{styles:FallbackBackgroundBrush FallBackBrush=Black}"/>
+            <SolidColorBrush x:Key="ComboBoxItem.ItemsviewSelectedHover.Background" Color="{Binding BackGroundColor}"/>
         	<SolidColorBrush x:Key="ComboBoxItem.ItemsviewSelectedHover.Border" Color="#99006CD9"/>
-            <SolidColorBrush x:Key="ComboBoxItem.ItemsviewSelectedNoFocus.Background" Color="{styles:FallbackBackgroundBrush FallBackBrush=Red}"/>
         	<SolidColorBrush x:Key="ComboBoxItem.ItemsviewSelectedNoFocus.Border" Color="#FFDADADA"/>
         	<SolidColorBrush x:Key="ComboBoxItem.ItemsviewFocus.Border" Color="#FF26A0DA"/>
-            <SolidColorBrush x:Key="ComboBoxItem.ItemsviewHoverFocus.Background" Color="{styles:FallbackBackgroundBrush FallBackBrush=Blue}"/>
         	<SolidColorBrush x:Key="ComboBoxItem.ItemsviewHoverFocus.Border" Color="#FF26A0DA"/>
         	<Style x:Key="DefaultDarkComboBoxItemStyle" TargetType="{x:Type ComboBoxItem}">
         		<Setter Property="SnapsToDevicePixels" Value="True"/>
@@ -148,7 +146,7 @@
         								<Condition Property="IsMouseOver" Value="True"/>
         								<Condition Property="IsKeyboardFocused" Value="True"/>
         							</MultiTrigger.Conditions>
-        							<Setter Property="Background" TargetName="Bd" Value="{StaticResource ComboBoxItem.ItemsviewHoverFocus.Background}"/>
+        							<Setter Property="Background" TargetName="Bd" Value="{StaticResource ComboBoxItem.ItemsviewSelectedHover.Background}"/>
         							<Setter Property="BorderBrush" TargetName="Bd" Value="{StaticResource ComboBoxItem.ItemsviewHoverFocus.Border}"/>
         						</MultiTrigger>
         					</ControlTemplate.Triggers>
@@ -565,7 +563,7 @@
                     <Border 
     							x:Name="SubmenuBorder"
     							SnapsToDevicePixels="True"
-    							Background="{styles:FallbackBackgroundBrush FallBackBrush=White}" Opacity="1">
+    							Background="White" Opacity="1">
                         <StackPanel  
     								IsItemsHost="True" 
     								KeyboardNavigation.DirectionalNavigation="Cycle" />
@@ -578,7 +576,7 @@
                 <Setter TargetName="Popup" Property="PopupAnimation" Value="None"/>
             </Trigger>
             <Trigger Property="IsHighlighted" Value="true">
-                <Setter TargetName="Border" Property="Background" Value="{styles:FallbackBackgroundBrush FallBackBrush=Gray}"/>
+                <Setter TargetName="Border" Property="Background" Value="Gray"/>
                 <Setter TargetName="Border" Property="Opacity" Value="1"/>
             </Trigger>
             <Trigger SourceName="Popup" Property="AllowsTransparency" Value="True">
@@ -586,7 +584,7 @@
                 <Setter TargetName="SubmenuBorder" Property="Padding" Value="0,0,0,3"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Foreground" Value="{styles:FallbackForegroundBrush FallBackBrush=Black}"/>
+                <Setter Property="Foreground" Value="Black"/>
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>

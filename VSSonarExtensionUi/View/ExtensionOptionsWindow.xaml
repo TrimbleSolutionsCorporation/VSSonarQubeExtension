@@ -6,9 +6,9 @@
         mc:Ignorable="d" x:Class="VSSonarExtensionUi.View.ExtensionOptionsWindow"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:view="clr-namespace:VSSonarExtensionUi.View"
-        xmlns:styles="clr-namespace:VSSonarExtensionUi.Styles"
+        xmlns:configuration="clr-namespace:VSSonarExtensionUi.ViewModel.Configuration"
         Title="VSSonarQube Options"
-        Height="472" Width="1040" Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Background="{styles:FallbackBackgroundBrush FallBackBrush=White}">
+        Height="472" Width="1040" Foreground="{Binding ForeGroundColor, FallbackValue=White}" Background="{Binding BackGroundColor}">
 	<Window.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
@@ -19,20 +19,24 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <viewModel:ExtensionOptionsModel x:Key="PluginsOptionsModelDataSource" d:IsDataSource="True"/>
+            <configuration:ExtensionOptionsModel x:Key="PluginsOptionsModelDataSource" d:IsDataSource="True"/>
             
-            <DataTemplate DataType="{x:Type viewModel:LicenseViewerViewModel}">
+            <DataTemplate DataType="{x:Type configuration:LicenseViewerViewModel}">
                 <view:LicenseViewerView/>
             </DataTemplate>
             
-            <DataTemplate DataType="{x:Type viewModel:GeneralOptionsModel}">
+            <DataTemplate DataType="{x:Type configuration:GeneralOptionsModel}">
                 <view:GeneralOptionsControlView/>
             </DataTemplate>
             
-            <DataTemplate DataType="{x:Type viewModel:PluginManagerModel}">
+            <DataTemplate DataType="{x:Type configuration:PluginManagerModel}">
                 <view:PluginManagerView/>
             </DataTemplate>
-            
+
+            <DataTemplate DataType="{x:Type configuration:SonarConfigurationViewModel}">
+                <view:SonarConfigurationView/>
+            </DataTemplate>
+
         </ResourceDictionary>
 	</Window.Resources>
 	<Grid>
@@ -48,7 +52,7 @@
         <ListBox Style="{Binding MetroListBox}" x:Name="OptionsListBox"                    
                  Grid.Column="0" Grid.Row="0" Margin="5"
                  ItemsSource="{Binding AvailableOptions}"
-				 SelectedItem="{Binding SelectedPluginItem}"
+				 SelectedItem="{Binding SelectedOption}"
                  SelectedIndex="0">			
 				<ListBox.ItemTemplate>
 					<DataTemplate>
@@ -58,7 +62,7 @@
         </ListBox>
         
         <Border Grid.Column="1" Grid.Row="0" >
-            <ContentControl Content="{Binding ElementName=OptionsListBox, Path=SelectedItem}" Foreground="{styles:FallbackForegroundBrush FallBackBrush=Black}" Background="{styles:FallbackBackgroundBrush FallBackBrush=White}"/>
+            <ContentControl Content="{Binding ElementName=OptionsListBox, Path=SelectedItem}" Foreground="{Binding ForeGroundColor, FallbackValue=White}" Background="{Binding BackGroundColor}"/>
         </Border>
         
 		<Grid Grid.Column="1" Grid.Row="1">
@@ -68,9 +72,9 @@
 				<ColumnDefinition Width="263*"/>
 				<ColumnDefinition Width="120"/>
 			</Grid.ColumnDefinitions>
-			<Button Style="{DynamicResource SquareButtonStyle}" Content="Save and Exit" Command="{Binding ControlCommand}" CommandParameter="{Binding Content, ElementName=OkButton}" />
-			<Button Style="{DynamicResource SquareButtonStyle}" x:Name="ApplyButton" Content="Apply" Grid.Column="1" Command="{Binding ControlCommand}" CommandParameter="{Binding Content, ElementName=ApplyButton}" />
-			<Button Style="{DynamicResource SquareButtonStyle}" Content="Cancel and Exit" Grid.Column="3" Command="{Binding ControlCommand}" CommandParameter="{Binding Content, ElementName=CancelButton}"/>			
+			<Button Style="{DynamicResource SquareButtonStyle}" Content="Save and Exit" Command="{Binding SaveAndExitCommand}"/>
+			<Button Style="{DynamicResource SquareButtonStyle}" x:Name="ApplyButton" Content="Apply" Grid.Column="1" Command="{Binding ApplyCommand}"/>
+			<Button Style="{DynamicResource SquareButtonStyle}" Content="Cancel and Exit" Grid.Column="3" Command="{Binding CancelAndExitCommand}"/>			
 		</Grid>
 	</Grid>
 </Controls:MetroWindow>
