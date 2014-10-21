@@ -10,7 +10,6 @@ namespace VSSonarExtensionUi.ViewModel
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Linq;
     using System.Windows.Media;
 
@@ -32,7 +31,7 @@ namespace VSSonarExtensionUi.ViewModel
     ///     The server view model.
     /// </summary>
     [ImplementPropertyChanged]
-    public class ServerViewModel : IViewModelBase, IAnalysisViewModelBase, INotifyPropertyChanged
+    public class ServerViewModel : IViewModelBase, IAnalysisViewModelBase
     {
         #region Fields
 
@@ -98,15 +97,6 @@ namespace VSSonarExtensionUi.ViewModel
             this.ForeGroundColor = Colors.White;
             this.ForeGroundColor = Colors.Black;
         }
-
-        #endregion
-
-        #region Public Events
-
-        /// <summary>
-        ///     The property changed.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
 
         #endregion
 
@@ -324,6 +314,15 @@ namespace VSSonarExtensionUi.ViewModel
             this.vsenvironmenthelper = vsenvironmenthelperIn;
             this.StatusBar = statusBar;
             this.ServiceProvier = provider;
+        }
+
+        /// <summary>
+        /// The end data association.
+        /// </summary>
+        public void EndDataAssociation()
+        {
+            this.IsRunningInVisualStudio = false;
+            this.AssociatedProject = null;
         }
 
         #endregion

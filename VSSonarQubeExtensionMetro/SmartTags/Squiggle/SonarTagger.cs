@@ -80,7 +80,7 @@ namespace VSSonarQubeExtension.SmartTags.Squiggle
             VsSonarExtensionPackage.SonarQubeModel.ServerViewModel.PropertyChanged += this.IssuesListChanged;
             VsSonarExtensionPackage.SonarQubeModel.LocalViewModel.PropertyChanged += this.IssuesListChanged;
             VsSonarExtensionPackage.SonarQubeModel.IssuesSearchViewModel.PropertyChanged += this.IssuesListChanged;
-            VsSonarExtensionPackage.SonarQubeModel.ExtensionOptionsData.SonarConfigurationViewModel.PropertyChanged += this.IssuesListChanged;
+            VsSonarExtensionPackage.SonarQubeModel.VSonarQubeOptionsViewData.SonarConfigurationViewModel.PropertyChanged += this.IssuesListChanged;
 
 
             this.dispatcher = Dispatcher.CurrentDispatcher;
@@ -232,7 +232,7 @@ namespace VSSonarQubeExtension.SmartTags.Squiggle
                     VsSonarExtensionPackage.SonarQubeModel.ServerViewModel.PropertyChanged -= this.IssuesListChanged;
                     VsSonarExtensionPackage.SonarQubeModel.LocalViewModel.PropertyChanged -= this.IssuesListChanged;
                     VsSonarExtensionPackage.SonarQubeModel.IssuesSearchViewModel.PropertyChanged -= this.IssuesListChanged;
-                    VsSonarExtensionPackage.SonarQubeModel.ExtensionOptionsData.SonarConfigurationViewModel.PropertyChanged -= this.IssuesListChanged;
+                    VsSonarExtensionPackage.SonarQubeModel.VSonarQubeOptionsViewData.SonarConfigurationViewModel.PropertyChanged -= this.IssuesListChanged;
 
                     this.SourceBuffer = null;
                 }
@@ -311,7 +311,6 @@ namespace VSSonarQubeExtension.SmartTags.Squiggle
                     !e.PropertyName.Equals("CanQUeryIssues") &&
                     !e.PropertyName.Equals("IssuesSearchEnded") &&                    
                     !e.PropertyName.Equals("LocalIssuesUpdated") &&
-                    !e.PropertyName.Equals("DataUpdatedFromConstructor") &&                    
                     !e.PropertyName.Equals("DisableEditorTags") &&
                     !e.PropertyName.Equals("FileAnalysisIsEnabled") && 
                     !e.PropertyName.Equals("SelectedView"))
@@ -438,7 +437,7 @@ namespace VSSonarQubeExtension.SmartTags.Squiggle
         /// </param>
         private void UpdateDataAfterConstructor(object obj)
         {
-            this.IssuesListChanged(obj, new PropertyChangedEventArgs("DataUpdatedFromConstructor"));
+            //this.IssuesListChanged(obj, new PropertyChangedEventArgs("DataUpdatedFromConstructor"));
         }
 
         #endregion

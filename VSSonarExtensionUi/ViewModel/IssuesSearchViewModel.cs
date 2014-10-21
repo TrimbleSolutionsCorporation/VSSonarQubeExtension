@@ -26,15 +26,13 @@ namespace VSSonarExtensionUi.ViewModel
 
     using SonarRestService;
 
-    using VSSonarExtensionUi.Cache;
-
     using VSSonarPlugins;
 
     /// <summary>
     ///     The issues search view model.
     /// </summary>
     [ImplementPropertyChanged]
-    public class IssuesSearchViewModel : IViewModelBase, IAnalysisViewModelBase, INotifyPropertyChanged
+    public class IssuesSearchViewModel : IViewModelBase, IAnalysisViewModelBase
     {
         #region Constants
 
@@ -336,11 +334,6 @@ namespace VSSonarExtensionUi.ViewModel
         /// </summary>
         public ObservableCollection<User> UsersList { get; set; }
 
-        /// <summary>
-        /// The property changed.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
         #endregion
 
         #region Public Methods and Operators
@@ -364,7 +357,7 @@ namespace VSSonarExtensionUi.ViewModel
         {
             if (this.CanQUeryIssues)
             {
-                return this.IssuesGridView.Issues.Where(issue => this.IssuesGridView.IsNotFiltered(issue)).ToList();
+                return this.IssuesGridView.Issues.Where(issue => this.IssuesGridView.IsNotFiltered(issue) && (file.Key.Equals(issue.Component) || file.Key.Equals(issue.ComponentSafe))).ToList();
             }
             
             return new List<Issue>();
@@ -560,6 +553,16 @@ namespace VSSonarExtensionUi.ViewModel
             this.ServiceProvier = provider;
         }
 
+        /// <summary>
+        /// The end data association.
+        /// </summary>
+        public void EndDataAssociation()
+        {
+            this.IssuesGridView.Issues.Clear();
+            this.AssociatedProject = null;
+            this.CanQUeryIssues = false;
+        }
+
         #endregion
 
         #region Methods
@@ -689,11 +692,11 @@ namespace VSSonarExtensionUi.ViewModel
         private void InitCommanding()
         {
             this.CanQUeryIssues = false;
-            this.GetIssuesByFilterCommand = new RelayCommand(this.OnGetIssuesByFilterCommand, () => this.CanQUeryIssues);
-            this.GetAllIssuesFromProjectCommand = new RelayCommand(this.OnGetAllIssuesInProject, () => this.CanQUeryIssues);
-            this.GetAllIssuesSinceLastAnalysisCommand = new RelayCommand(this.OnGetAllIssuesSinceLastAnalysisCommand, () => this.CanQUeryIssues);
-            this.GetMyIssuesInProjectCommand = new RelayCommand(this.OnGetMyIssuesInProjectCommand, () => this.CanQUeryIssues);
-            this.GetAllMyIssuesCommand = new RelayCommand(this.OnGetAllMyIssuesCommand, () => this.CanQUeryIssues);
+            this.GetIssuesByFilterCommand = new RelayCommand(this.OnGetIssuesByFilterCommand);
+            this.GetAllIssuesFromProjectCommand = new RelayCommand(this.OnGetAllIssuesInProject);
+            this.GetAllIssuesSinceLastAnalysisCommand = new RelayCommand(this.OnGetAllIssuesSinceLastAnalysisCommand);
+            this.GetMyIssuesInProjectCommand = new RelayCommand(this.OnGetMyIssuesInProjectCommand);
+            this.GetAllMyIssuesCommand = new RelayCommand(this.OnGetAllMyIssuesCommand);
 
             this.FlyoutIssueSearchCommand = new RelayCommand(this.OnFlyoutIssueSearchCommand);
             this.CloseFlyoutIssueSearchCommand = new RelayCommand(this.OnCloseFlyoutIssueSearchCommand);

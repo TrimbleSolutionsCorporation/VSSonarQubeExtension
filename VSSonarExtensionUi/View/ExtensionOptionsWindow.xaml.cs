@@ -9,8 +9,6 @@
 
 namespace VSSonarExtensionUi.View
 {
-    using System.Windows.Input;
-    using VSSonarExtensionUi.ViewModel;
     using VSSonarExtensionUi.ViewModel.Configuration;
 
     /// <summary>
@@ -27,28 +25,28 @@ namespace VSSonarExtensionUi.View
         /// <summary>
         /// Initializes a new instance of the <see cref="PluginOptionsWindow"/> class.
         /// </summary>
-        /// <param name="dataModel">
-        /// The data model.
+        /// <param name="dataViewModel">
+        /// The data viewModel.
         /// </param>
-        public ExtensionOptionsWindow(ExtensionOptionsModel dataModel)
+        public ExtensionOptionsWindow(VSonarQubeOptionsViewModel dataViewModel)
         {
             this.InitializeComponent();
-            if (dataModel != null)
+            if (dataViewModel != null)
             {
-                dataModel.RequestClose += (s, e) => this.Close();
+                dataViewModel.RequestClose += (s, e) => this.Close();
             }            
-            this.DataContext = dataModel;
+            this.DataContext = dataViewModel;
         }
 
-        public void RefreshDataContext(ExtensionOptionsModel extensionOptionsData)
+        public void RefreshDataContext(VSonarQubeOptionsViewModel vSonarQubeOptionsViewData)
         {
-            if (extensionOptionsData != null)
+            if (vSonarQubeOptionsViewData != null)
             {
-                extensionOptionsData.RequestClose += (s, e) => this.Close();
+                vSonarQubeOptionsViewData.RequestClose += (s, e) => this.Close();
             }
 
             this.DataContext = null;
-            this.DataContext = extensionOptionsData;
+            this.DataContext = vSonarQubeOptionsViewData;
         }
     }
 }

@@ -44,9 +44,9 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         private readonly IPluginController controller;
 
         /// <summary>
-        ///     The model.
+        ///     The viewModel.
         /// </summary>
-        private readonly ExtensionOptionsModel model;
+        private readonly VSonarQubeOptionsViewModel viewModel;
 
         /// <summary>
         ///     The plugin list.
@@ -87,17 +87,17 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="visualStudioHelper">
         /// The visual Studio Helper.
         /// </param>
-        /// <param name="model">
-        /// The model.
+        /// <param name="viewModel">
+        /// The viewModel.
         /// </param>
         public PluginManagerModel(
             IPluginController controller, 
             ISonarConfiguration conf, 
             IVsEnvironmentHelper visualStudioHelper, 
-            ExtensionOptionsModel model)
+            VSonarQubeOptionsViewModel viewModel)
         {
             this.visualStudioHelper = visualStudioHelper;
-            this.model = model;
+            this.viewModel = viewModel;
             this.Header = "Plugin Manager";
             this.Conf = conf;
             this.controller = controller;
@@ -210,6 +210,11 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         public ICommand SelectionChangedCommand { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether can modify plugin props.
+        /// </summary>
+        public bool CanModifyPluginProps { get; set; }
+
         #endregion
 
         #region Public Methods and Operators
@@ -228,20 +233,23 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                         plugin.GetPluginDescription(this.visualStudioHelper).Name,
                         plugin.GetPluginDescription(this.visualStudioHelper).Enabled.ToString());
 
-                    if (this.model.Project != null)
+                    if (this.viewModel.Project != null)
                     {
                         Dictionary<string, string> options = plugin.GetPluginControlOptions(this.Conf).GetOptions();
                         string key = plugin.GetKey(this.Conf);
-                        this.visualStudioHelper.WriteAllOptionsForPluginOptionInApplicationData(key, this.model.Project, options);
+                        this.visualStudioHelper.WriteAllOptionsForPluginOptionInApplicationData(key, this.viewModel.Project, options);
                     }
                 }
             }
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether can modify plugin props.
+        /// The end data association.
         /// </summary>
-        public bool CanModifyPluginProps { get; set; }
+        public void EndDataAssociation()
+        {
+            this.CanModifyPluginProps = false;
+        }
 
         /// <summary>
         ///     The exit.
@@ -409,19 +417,10 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 {
                     if (plugin.GetPluginDescription(this.visualStudioHelper).Name.Equals(this.SelectedPlugin.Name))
                     {
-                        // window.Content = plugin.GetPluginControlOptions(this.Conf).GetUserControlOptions(this.model.Project);
-                        // window.SizeToContent = SizeToContent.WidthAndHeight;
-                        // window.ShowDialog();
-                        this.OptionsInView = plugin.GetPluginControlOptions(this.Conf).GetUserControlOptions(this.model.Project);
+                        this.OptionsInView = plugin.GetPluginControlOptions(this.Conf).GetUserControlOptions(this.viewModel.Project);
 
-                        if (this.model.Project != null)
-                        {
-                            this.CanModifyPluginProps = true;
-                        }
-                        else
-                        {
-                            this.CanModifyPluginProps = false;
-                        }
+                        this.CanModifyPluginProps = this.viewModel.Project != null;
+
                         return;
                     }
                 }

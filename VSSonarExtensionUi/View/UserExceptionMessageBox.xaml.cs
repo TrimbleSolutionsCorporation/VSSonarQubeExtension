@@ -13,10 +13,8 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarExtensionUi.View
 {
-    using MahApps.Metro.Controls;
     using System;
     using System.Windows;
-    using System.Windows.Input;
 
     /// <summary>
     /// Interaction logic for UserControl1.xaml

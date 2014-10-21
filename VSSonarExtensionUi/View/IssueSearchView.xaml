@@ -238,70 +238,9 @@
 			<Grid.RowDefinitions>
 				<RowDefinition Height="37" />
                 <RowDefinition Height="35*" />
-			</Grid.RowDefinitions>            
+			</Grid.RowDefinitions>
 
-			<Grid Grid.Row="0" Grid.ColumnSpan="2">
-				<StatusBar Visibility="{Binding ShowFlyouts, Converter={StaticResource BoolToVis}, ConverterParameter=Normal}"
-				           Grid.Row="0" Grid.ColumnSpan="2" Foreground="{Binding ForeGround, Converter={StaticResource ColorToBrushConverter}}" Background="{Binding BackGround, Converter={StaticResource ColorToBrushConverter}}">
-                    <StatusBarItem HorizontalAlignment="Left">
-                        <StackPanel Orientation="Horizontal">
-                            <StatusBarItem>
-                                <Button Style="{DynamicResource MyMetroButton}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-									        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-									        Content="All Issues" Command="{Binding GetAllIssuesFromProjectCommand}" />
-                                </StatusBarItem>
-                            <StatusBarItem>
-									<Button Style="{DynamicResource MyMetroButton}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-									        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-									        Content="All Issues Since Last Analysis"
-									        Command="{Binding GetAllIssuesSinceLastAnalysisCommand}" />
-                                </StatusBarItem>
-                            <StatusBarItem>
-									<Button Style="{DynamicResource MyMetroButton}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-									        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-									        Content="My Issues In Project"
-									        Command="{Binding GetMyIssuesInProjectCommand}" />
-                                </StatusBarItem>
-                            <StatusBarItem>
-									<Button Style="{DynamicResource MyMetroButton}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-									        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-									        Content="All My Issues" Command="{Binding GetAllMyIssuesCommand}" />                                                            
-                                </StatusBarItem>
-                        </StackPanel>
-                    </StatusBarItem>                    
-					<StatusBarItem HorizontalAlignment="Right">
-						<StackPanel Orientation="Horizontal">
-                            <StatusBarItem>
-							    <Button Style="{DynamicResource SquareButtonStyle}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-							            Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-							        Content="Get Issues By Filter"
-							            Command="{Binding GetIssuesByFilterCommand}" />                                
-                                
-                            </StatusBarItem>                            
-							<StatusBarItem>
-								<Button x:Name="HideFlyoutButton" Width="30" Foreground="{Binding ForeGround, Converter={StaticResource ColorToBrushConverter}}" Background="{Binding BackGround, Converter={StaticResource ColorToBrushConverter}}"
-								        Height="30"
-								        Margin="0, -8, 0, 0"
-								        Style="{DynamicResource MetroCircleButtonStyle}" Command="{Binding CloseFlyoutIssueSearchCommand}">
-									<Rectangle Width="15"
-									           Height="15"
-									           Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
-										<Rectangle.OpacityMask>
-											<VisualBrush Stretch="Fill"
-											             Visual="{StaticResource appbar_arrow_up}" />
-										</Rectangle.OpacityMask>
-									</Rectangle>
-								</Button>
-							</StatusBarItem>
-                            <StatusBarItem>
-                                
-                                </StatusBarItem>
-						</StackPanel>
-					</StatusBarItem>
-                    
-
-				</StatusBar>
-
+            <Grid Grid.Row="0" Grid.ColumnSpan="2">
                 <StatusBar Visibility="{Binding ShowFlyouts, Converter={StaticResource BoolToVis}, ConverterParameter=Inverted}"
 				           Grid.Row="0" Grid.ColumnSpan="2" Foreground="{Binding ForeGround, Converter={StaticResource ColorToBrushConverter}}" Background="{Binding BackGround, Converter={StaticResource ColorToBrushConverter}}">
                     <StatusBarItem HorizontalAlignment="Left">
@@ -312,35 +251,94 @@
                                     Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}" 
                                         Style="{DynamicResource MyMetroButton}"
 									    
-									        x:Name="AllIssues" Content="All Issues" Command="{Binding GetAllIssuesFromProjectCommand}" />
-                                </StatusBarItem>
+									        Content="All Issues" Command="{Binding GetAllIssuesFromProjectCommand}" IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}" />
+                            </StatusBarItem>
                             <StatusBarItem>
-									<Button Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Style="{DynamicResource MyMetroButton}"
+                                <Button Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Style="{DynamicResource MyMetroButton}"
 									        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
 									        Content="All Issues Since Last Analysis"
-									        Command="{Binding GetAllIssuesSinceLastAnalysisCommand}" />
-                                </StatusBarItem>
+									        Command="{Binding GetAllIssuesSinceLastAnalysisCommand}" IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}"/>
+                            </StatusBarItem>
                             <StatusBarItem>
-									<Button Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Style="{DynamicResource MyMetroButton}"
+                                <Button Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Style="{DynamicResource MyMetroButton}"
 									        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
 									        Content="My Issues In Project"
-									        Command="{Binding GetMyIssuesInProjectCommand}" />
-                                </StatusBarItem>
+									        Command="{Binding GetMyIssuesInProjectCommand}" IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}" />
+                            </StatusBarItem>
                             <StatusBarItem>
-									<Button Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Style="{DynamicResource MyMetroButton}"
+                                <Button Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Style="{DynamicResource MyMetroButton}"
 									        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-									        Content="All My Issues" Command="{Binding GetAllMyIssuesCommand}" />                                                            
-                                </StatusBarItem>
+									        Content="All My Issues" Command="{Binding GetAllMyIssuesCommand}" IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}" />
+                            </StatusBarItem>
                         </StackPanel>
                     </StatusBarItem>
                     <StatusBarItem HorizontalAlignment="Right">
-						<StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal">
                             <StatusBarItem>
-							    <Button Style="{DynamicResource MyMetroButton}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                <Button Style="{DynamicResource MyMetroButton}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+							        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" 
+							        Content="Get Issues By Filter"
+							        Command="{Binding GetIssuesByFilterCommand}" IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}"/>
+
+                            </StatusBarItem>
+                            <StatusBarItem>
+                                <Button Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Width="30"
+								        Height="30"
+								        Margin="0, -8, 0, 0"
+                                        ToolTip="Show Log"
+								        Style="{DynamicResource MetroCircleButtonStyle}" Command="{Binding FlyoutIssueSearchCommand}">
+                                    <Rectangle  Width="15"
+									           Height="15"
+									           Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Stretch="Fill"
+											             Visual="{StaticResource appbar_arrow_up}" />
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                </Button>
+                            </StatusBarItem>
+                        </StackPanel>
+                    </StatusBarItem>
+                </StatusBar>
+                <StatusBar Visibility="{Binding ShowFlyouts, Converter={StaticResource BoolToVis}, ConverterParameter=Inverted}"
+				           Grid.Row="0" Grid.ColumnSpan="2" Foreground="{Binding ForeGround, Converter={StaticResource ColorToBrushConverter}}" Background="{Binding BackGround, Converter={StaticResource ColorToBrushConverter}}">
+                    <StatusBarItem HorizontalAlignment="Left">
+                        <StackPanel Orientation="Horizontal">
+                            <StatusBarItem>
+                                <Button 
+                                    Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"
+                                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}" 
+                                        Style="{DynamicResource MyMetroButton}"
+									    
+									        x:Name="AllIssues" Content="All Issues" Command="{Binding GetAllIssuesFromProjectCommand}" IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}" />
+                            </StatusBarItem>
+                            <StatusBarItem>
+                                <Button Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Style="{DynamicResource MyMetroButton}"
+									        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+									        Content="All Issues Since Last Analysis"
+									        Command="{Binding GetAllIssuesSinceLastAnalysisCommand}" IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}"/>
+                            </StatusBarItem>
+                            <StatusBarItem>
+                                <Button Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Style="{DynamicResource MyMetroButton}"
+									        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+									        Content="My Issues In Project"
+									        Command="{Binding GetMyIssuesInProjectCommand}" IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}" />
+                            </StatusBarItem>
+                            <StatusBarItem>
+                                <Button Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Style="{DynamicResource MyMetroButton}"
+									        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+									        Content="All My Issues" Command="{Binding GetAllMyIssuesCommand}" IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}" />
+                            </StatusBarItem>
+                        </StackPanel>
+                    </StatusBarItem>
+                    <StatusBarItem HorizontalAlignment="Right">
+                        <StackPanel Orientation="Horizontal">
+                            <StatusBarItem>
+                                <Button Style="{DynamicResource MyMetroButton}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
 							        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" x:Name="GetFromServer"
 							        Content="Get Issues By Filter"
-							        Command="{Binding GetIssuesByFilterCommand}" />                                
-                                
+							        Command="{Binding GetIssuesByFilterCommand}" IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}"/>
+
                             </StatusBarItem>
                             <StatusBarItem>
                                 <Button Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" x:Name="ShowFlyoutButton" Width="30"
@@ -359,13 +357,10 @@
                                 </Button>
                             </StatusBarItem>
                         </StackPanel>
-					</StatusBarItem>
-				</StatusBar>
-
-			</Grid>
-
-      
-		</Grid>
+                    </StatusBarItem>
+                </StatusBar>
+            </Grid>
+        </Grid>
         <Border Margin="5" BorderBrush="#FF7F9DB9" BorderThickness="1">
 		    <ContentControl Content="{Binding IssuesGridView}" />
 		</Border>      

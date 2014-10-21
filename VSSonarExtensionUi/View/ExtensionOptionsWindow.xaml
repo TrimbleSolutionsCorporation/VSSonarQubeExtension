@@ -19,7 +19,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <configuration:ExtensionOptionsModel x:Key="PluginsOptionsModelDataSource" d:IsDataSource="True"/>
+            <configuration:VSonarQubeOptionsViewModel x:Key="PluginsOptionsModelDataSource" d:IsDataSource="True"/>
             
             <DataTemplate DataType="{x:Type configuration:LicenseViewerViewModel}">
                 <view:LicenseViewerView/>

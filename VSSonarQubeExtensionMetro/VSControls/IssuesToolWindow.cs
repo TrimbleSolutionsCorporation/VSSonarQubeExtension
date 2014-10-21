@@ -31,7 +31,7 @@ namespace VSSonarQubeExtension.VSControls
         /// <summary>
         /// The window to use.
         /// </summary>
-        private readonly SonarQubeUserControlVS windowToUse;
+        private readonly SonarQubeUserControlVs windowToUse;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="IssuesToolWindow"/> class.
@@ -41,7 +41,7 @@ namespace VSSonarQubeExtension.VSControls
             this.Caption = "Issues Window";
             this.BitmapResourceID = 301;
             this.BitmapIndex = 1;
-            this.windowToUse = new SonarQubeUserControlVS(VsSonarExtensionPackage.SonarQubeModel);
+            this.windowToUse = new SonarQubeUserControlVs(VsSonarExtensionPackage.SonarQubeModel);
             this.Content = this.windowToUse;
         }
 

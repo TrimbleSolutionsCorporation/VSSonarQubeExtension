@@ -13,7 +13,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarExtensionUi.View
 {
-    using System.Windows;
     using System.Windows.Controls;
 
     /// <summary>

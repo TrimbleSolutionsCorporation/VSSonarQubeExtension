@@ -13,15 +13,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarExtensionUi.ViewModel
 {
-    using System;
-    using System.Windows.Documents;
     using System.Windows.Media;
-
-    using ExtensionTypes;
-
-    using SonarRestService;
-
-    using VSSonarPlugins;
 
     /// <summary>
     /// The ViewModelBase interface.

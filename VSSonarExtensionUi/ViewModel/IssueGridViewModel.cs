@@ -34,7 +34,7 @@ namespace VSSonarExtensionUi.ViewModel
     using VSSonarPlugins;
 
     /// <summary>
-    ///     The issue grid view model.
+    ///     The issue grid view viewModel.
     /// </summary>
     [ImplementPropertyChanged]
     public class IssueGridViewModel : IViewModelBase, IDataModel, IFilterCommand, IFilterOption
@@ -65,7 +65,7 @@ namespace VSSonarExtensionUi.ViewModel
         private readonly IFilter filter;
 
         /// <summary>
-        /// The model.
+        /// The viewModel.
         /// </summary>
         private readonly SonarQubeViewModel model;
 
@@ -96,7 +96,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// Initializes a new instance of the <see cref="IssueGridViewModel"/> class.
         /// </summary>
         /// <param name="model">
-        /// The model.
+        /// The viewModel.
         /// </param>
         /// <param name="rowContextMenu">
         /// The row Context Menu.
@@ -642,7 +642,7 @@ namespace VSSonarExtensionUi.ViewModel
             var menu = new ObservableCollection<IMenuItem>
                            {
                                ChangeStatusHandler.MakeMenu(
-                                   this.model.ExtensionOptionsData.SonarConfigurationViewModel.UserConnectionConfig, 
+                                   this.model.VSonarQubeOptionsViewData.SonarConfigurationViewModel.UserConnectionConfig, 
                                    this.model.SonarRestConnector, 
                                    this)
                            };

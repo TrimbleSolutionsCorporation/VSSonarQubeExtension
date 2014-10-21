@@ -1,6 +1,5 @@
 ﻿namespace VSSonarExtensionUi.ViewModel.Configuration
 {
-    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Windows.Media;
@@ -10,8 +9,6 @@
     using GalaSoft.MvvmLight.Command;
 
     using PropertyChanged;
-
-    using SonarRestService;
 
     using VSSonarPlugins;
 
@@ -145,6 +142,10 @@
         public void Apply()
         {
             ;
+        }
+
+        public void EndDataAssociation()
+        {
         }
     }
 }

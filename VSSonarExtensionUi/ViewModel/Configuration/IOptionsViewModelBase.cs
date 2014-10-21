@@ -7,5 +7,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         void Exit();
 
         void Apply();
+
+        void EndDataAssociation();
     }
 }

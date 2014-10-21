@@ -39,7 +39,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     {
         private readonly IVsEnvironmentHelper Vsenvironmenthelper;
 
-        private readonly ExtensionOptionsModel model;
+        private readonly VSonarQubeOptionsViewModel viewModel;
 
         #region Static Fields
 
@@ -73,10 +73,10 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="vsenvironmenthelper">
         /// The Vsenvironmenthelper.
         /// </param>
-        public GeneralOptionsModel(IVsEnvironmentHelper vsenvironmenthelper, ExtensionOptionsModel model)
+        public GeneralOptionsModel(IVsEnvironmentHelper vsenvironmenthelper, VSonarQubeOptionsViewModel viewModel)
         {
             this.Vsenvironmenthelper = vsenvironmenthelper;
-            this.model = model;
+            this.viewModel = viewModel;
             this.TimeoutValue = 10;
             this.Header = "General Options";
             this.ForeGroundColor = Colors.White;
@@ -230,12 +230,19 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.Vsenvironmenthelper.WriteOptionInApplicationData(GlobalIds.GlobalPropsId, GlobalIds.IsDebugAnalysisOnKey, this.DebugIsChecked.ToString());
             this.Vsenvironmenthelper.WriteOptionInApplicationData(GlobalIds.GlobalPropsId, GlobalIds.ExcludedPluginsKey, this.ExcludedPlugins);
 
-            if (this.model.Project != null)
+            if (this.viewModel.Project != null)
             {
-                var solId = VsSonarUtils.SolutionGlobPropKey(this.model.Project.Key);
+                var solId = VsSonarUtils.SolutionGlobPropKey(this.viewModel.Project.Key);
                 this.Vsenvironmenthelper.WriteOptionInApplicationData(solId, GlobalIds.SonarSourceKey, this.SourceDir);
                 this.Vsenvironmenthelper.WriteOptionInApplicationData(solId, GlobalIds.SourceEncodingKey, this.SourceEncoding);
             }
+        }
+
+        /// <summary>
+        /// The end data association.
+        /// </summary>
+        public void EndDataAssociation()
+        {
         }
 
         /// <summary>
@@ -250,9 +257,9 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 this.SetGeneralOptions(generalOptionsInDsk);
             }
 
-            if (this.model.Project != null)
+            if (this.viewModel.Project != null)
             {
-                var solId = VsSonarUtils.SolutionGlobPropKey(this.model.Project.Key);
+                var solId = VsSonarUtils.SolutionGlobPropKey(this.viewModel.Project.Key);
                 var projectOptionsInDsk = this.Vsenvironmenthelper.ReadAllAvailableOptionsInSettings(solId);
                 this.SetProjectOptions(projectOptionsInDsk);
             }
@@ -369,13 +376,13 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public void SetProjectOptions(Dictionary<string, string> options)
         {
             // set solution general properties
-            if (this.model.Project != null)
+            if (this.viewModel.Project != null)
             {
                 this.SourceDir = this.GetGeneralProjectOptionFromDictionary(options, GlobalIds.SonarSourceKey);
                 this.SourceEncoding = this.GetGeneralProjectOptionFromDictionary(options, GlobalIds.SourceEncodingKey);
-                this.Language = this.model.Project.Lang;
-                this.ProjectId = this.model.Project.Key;
-                this.ProjectVersion = this.model.Project.Version;
+                this.Language = this.viewModel.Project.Lang;
+                this.ProjectId = this.viewModel.Project.Key;
+                this.ProjectVersion = this.viewModel.Project.Version;
             }
 
             this.EnsureProjectMandatoryPropertiesAreSet();
@@ -426,7 +433,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         private void EnsureProjectMandatoryPropertiesAreSet()
         {
-            if (this.model.Project == null)
+            if (this.viewModel.Project == null)
             {
                 return;
             }

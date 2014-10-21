@@ -7,7 +7,7 @@
     xmlns:view="clr-namespace:VSSonarExtensionUi.View"
 	xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
 	mc:Ignorable="d"
-	x:Class="VSSonarExtensionUi.View.SonarQubeUserControlVS"
+	x:Class="VSSonarExtensionUi.View.SonarQubeUserControlVs"
 	x:Name="UserControl"
 	d:DesignWidth="640" d:DesignHeight="480">
 

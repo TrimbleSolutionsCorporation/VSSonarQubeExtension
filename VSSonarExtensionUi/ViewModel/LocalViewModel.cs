@@ -10,7 +10,6 @@ namespace VSSonarExtensionUi.ViewModel
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.IO;
     using System.Linq;
     using System.Windows.Forms;
@@ -30,6 +29,8 @@ namespace VSSonarExtensionUi.ViewModel
     using VSSonarExtensionUi.View;
 
     using VSSonarPlugins;
+
+    using Application = System.Windows.Application;
 
     /// <summary>
     ///     The analysis types.
@@ -63,10 +64,10 @@ namespace VSSonarExtensionUi.ViewModel
     }
 
     /// <summary>
-    ///     The local view model.
+    ///     The local view viewModel.
     /// </summary>
     [ImplementPropertyChanged]
-    public class LocalViewModel : IViewModelBase, IAnalysisViewModelBase, INotifyPropertyChanged
+    public class LocalViewModel : IViewModelBase, IAnalysisViewModelBase
     {
         #region Constants
 
@@ -80,7 +81,7 @@ namespace VSSonarExtensionUi.ViewModel
         #region Fields
 
         /// <summary>
-        ///     The sonar qube view model.
+        ///     The sonar qube view viewModel.
         /// </summary>
         private readonly SonarQubeViewModel sonarQubeViewModel;
 
@@ -114,7 +115,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// Initializes a new instance of the <see cref="LocalViewModel"/> class.
         /// </summary>
         /// <param name="sonarQubeViewModel">
-        /// The sonar qube view model.
+        /// The sonar qube view viewModel.
         /// </param>
         /// <param name="plugins">
         /// The plugins.
@@ -153,15 +154,6 @@ namespace VSSonarExtensionUi.ViewModel
 
         #endregion
 
-        #region Public Events
-
-        /// <summary>
-        ///     The property changed.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        #endregion
-
         #region Public Properties
 
         /// <summary>
@@ -180,7 +172,7 @@ namespace VSSonarExtensionUi.ViewModel
         public Color BackGroundColor { get; set; }
 
         /// <summary>
-        ///     Gets or sets the issues in editor.
+        /// Gets or sets a value indicating whether local issues updated.
         /// </summary>
         public bool LocalIssuesUpdated { get; set; }
 
@@ -482,6 +474,16 @@ namespace VSSonarExtensionUi.ViewModel
             this.ServiceProvier = provider;
         }
 
+        /// <summary>
+        /// The end data association.
+        /// </summary>
+        public void EndDataAssociation()
+        {
+            this.AssociatedProject = null;
+            this.CanRunAnalysis = false;
+            this.IsAssociatedWithProject = false;
+        }
+
         #endregion
 
         #region Methods
@@ -598,28 +600,28 @@ namespace VSSonarExtensionUi.ViewModel
                             this.AssociatedProject, 
                             this.sonarQubeViewModel.AnalysisChangeLines, 
                             this.sonarQubeViewModel.SonarVersion, 
-                            this.sonarQubeViewModel.ExtensionOptionsData.SonarConfigurationViewModel.UserConnectionConfig);
+                            this.sonarQubeViewModel.VSonarQubeOptionsViewData.SonarConfigurationViewModel.UserConnectionConfig);
                         break;
                     case AnalysisTypes.ANALYSIS:
                         this.LocalAnalyserModule.RunFullAnalysis(
                             this.SourceWorkingDir, 
                             this.AssociatedProject, 
                             this.sonarQubeViewModel.SonarVersion, 
-                            this.sonarQubeViewModel.ExtensionOptionsData.SonarConfigurationViewModel.UserConnectionConfig);
+                            this.sonarQubeViewModel.VSonarQubeOptionsViewData.SonarConfigurationViewModel.UserConnectionConfig);
                         break;
                     case AnalysisTypes.INCREMENTAL:
                         this.LocalAnalyserModule.RunIncrementalAnalysis(
                             this.SourceWorkingDir, 
                             this.AssociatedProject, 
                             this.sonarQubeViewModel.SonarVersion, 
-                            this.sonarQubeViewModel.ExtensionOptionsData.SonarConfigurationViewModel.UserConnectionConfig);
+                            this.sonarQubeViewModel.VSonarQubeOptionsViewData.SonarConfigurationViewModel.UserConnectionConfig);
                         break;
                     case AnalysisTypes.PREVIEW:
                         this.LocalAnalyserModule.RunPreviewAnalysis(
                             this.SourceWorkingDir, 
                             this.AssociatedProject, 
                             this.sonarQubeViewModel.SonarVersion, 
-                            this.sonarQubeViewModel.ExtensionOptionsData.SonarConfigurationViewModel.UserConnectionConfig);
+                            this.sonarQubeViewModel.VSonarQubeOptionsViewData.SonarConfigurationViewModel.UserConnectionConfig);
                         break;
                 }
             }
@@ -671,10 +673,20 @@ namespace VSSonarExtensionUi.ViewModel
 
             try
             {
-                this.LocalIssuesUpdated = true;
-                this.IssuesGridView.UpdateIssues(this.LocalAnalyserModule.GetIssues(
-                        this.sonarQubeViewModel.ExtensionOptionsData.SonarConfigurationViewModel.UserConnectionConfig, 
-                        this.AssociatedProject));
+                
+                if (Application.Current != null)
+                {
+                    Application.Current.Dispatcher.Invoke(
+                        () =>
+                            {
+                                this.IssuesGridView.UpdateIssues(
+                                    this.LocalAnalyserModule.GetIssues(
+                                        this.sonarQubeViewModel.VSonarQubeOptionsViewData.SonarConfigurationViewModel.UserConnectionConfig,
+                                        this.AssociatedProject));
+                                this.LocalIssuesUpdated = true;
+                            });
+
+                }
             }
             catch (Exception ex)
             {

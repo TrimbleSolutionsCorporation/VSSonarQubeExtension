@@ -14,7 +14,7 @@
 namespace VSSonarExtensionUi.View
 {
     using System.Windows.Controls;
-    using VSSonarExtensionUi.ViewModel;
+
     using VSSonarExtensionUi.ViewModel.Configuration;
 
     /// <summary>
