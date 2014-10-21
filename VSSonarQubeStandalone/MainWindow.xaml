@@ -11,7 +11,7 @@
         </DataTemplate>
         <ResourceDictionary x:Key="someKey">
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/VSSonarExtensionUi;component/Resources/Icons.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/VSSonarExtensionUi;component/Icons.xaml"/>
                 
             </ResourceDictionary.MergedDictionaries>
                                    
