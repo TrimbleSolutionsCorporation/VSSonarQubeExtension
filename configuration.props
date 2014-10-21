@@ -3,7 +3,7 @@
 
     <PropertyGroup>
         <!-- Basic settings -->    
-        <ExtensionOutputPath     Condition="'$(ExtensionOutputPath)'==''">$(MSBuildThisFileDirectory)BuildDrop</ExtensionOutputPath>
+        <ExtensionOutputPath     Condition="'$(ExtensionOutputPath)'==''">$(MSBuildThisFileDirectory)BuildDrop\</ExtensionOutputPath>
         <ReferencesFolder        Condition="'$(ReferencesFolder)'==''">$(MSBuildThisFileDirectory)references</ReferencesFolder>
         <MSBuildFolder        Condition="'$(MSBuildFolder)'==''">$(MSBuildThisFileDirectory)msbuild</MSBuildFolder>
         <GallioPath              Condition="'$(GallioPath)'==''">$(MSBuildFolder)\Gallio</GallioPath>

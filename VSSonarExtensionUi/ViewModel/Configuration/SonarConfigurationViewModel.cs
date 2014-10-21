@@ -18,6 +18,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
     using GalaSoft.MvvmLight.Command;
 
+    using PropertyChanged;
+
     using SonarRestService;
 
     using VSSonarExtensionUi.View;
@@ -27,6 +29,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     /// <summary>
     ///     The sonar configuration view viewModel.
     /// </summary>
+    [ImplementPropertyChanged]
     public class SonarConfigurationViewModel : IViewModelBase, IOptionsViewModelBase
     {
         #region Fields
