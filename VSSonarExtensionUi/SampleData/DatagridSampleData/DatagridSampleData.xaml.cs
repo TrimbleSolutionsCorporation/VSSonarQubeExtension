@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="DatagridSampleData.xaml.cs" company="Copyright © 2014 Tekla Corporation. Tekla is a Trimble Company">
-//     Copyright (C) 2013 [Jorge Costa, Jorge.Costa@tekla.com]
+//     Copyright (C) 2014 [Jorge Costa, Jorge.Costa@tekla.com]
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 // This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License

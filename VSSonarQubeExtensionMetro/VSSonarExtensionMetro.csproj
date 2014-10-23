@@ -181,6 +181,7 @@
     <Content Include="SonarRunner\conf\sonar-runner.properties">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <None Include="VSSonarQubeExtensionMetro.licenseheader" />
   </ItemGroup>
   <ItemGroup>
     <VSCTCompile Include="VSControls\VSSonarExtension.vsct">

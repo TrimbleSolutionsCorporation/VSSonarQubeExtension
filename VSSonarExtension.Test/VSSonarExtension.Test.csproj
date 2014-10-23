@@ -106,6 +106,7 @@
       <LastGenOutput>settings.Designer.cs</LastGenOutput>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="VSSonarExtension.Test.licenseheader" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DifferenceEngine\DifferenceEngine.csproj">

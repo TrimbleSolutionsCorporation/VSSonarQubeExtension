@@ -279,6 +279,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="VSSonarExtensionUi.licenseheader" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DifferenceEngine\DifferenceEngine.csproj">

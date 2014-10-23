@@ -80,6 +80,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="ExtensionHelpers.Test.licenseheader" />
     <None Include="NonVSTests\TestData\sonar-runner\sonar-project.properties">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
