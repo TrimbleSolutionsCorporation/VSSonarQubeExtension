@@ -138,7 +138,7 @@ namespace VSSonarExtension.MainViewModel.Commands
                 }
 
                 this.model.PreventUpdateOfIssuesList = true;
-                this.vsenvironmenthelper.OpenResourceInVisualStudio(filename, issue.Line);
+                this.vsenvironmenthelper.OpenResourceInVisualStudio("", filename, issue.Line);
             }
         }
     }

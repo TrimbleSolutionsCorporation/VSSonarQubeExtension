@@ -4,8 +4,9 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:viewModel="clr-namespace:VSSonarExtensionUi.ViewModel"
-    xmlns:view="clr-namespace:VSSonarExtensionUi.View"
-	xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+    xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+	xmlns:analysis="clr-namespace:VSSonarExtensionUi.ViewModel.Analysis"
+	xmlns:analysisView="clr-namespace:VSSonarExtensionUi.View.Analysis"
 	mc:Ignorable="d"
 	x:Class="VSSonarExtensionUi.View.SonarQubeUserControlVs"
 	x:Name="UserControl"
@@ -27,17 +28,18 @@
 				<ResourceDictionary Source="pack://application:,,,/VSSonarExtensionUi;component/Resources/Icons.xaml" />
                 <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/ButtonStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+        	<viewModel:SonarQubeViewModel x:Key="SonarQubeViewModelDataSource" d:IsDataSource="True"/>
                                    
-            <DataTemplate DataType="{x:Type viewModel:ServerViewModel}">
-                <view:ServerView/>
+            <DataTemplate DataType="{x:Type analysis:ServerViewModel}">
+                <analysisView:ServerView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type viewModel:LocalViewModel}">
-                <view:LocalView/>
+            <DataTemplate DataType="{x:Type analysis:LocalViewModel}">
+                <analysisView:LocalView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type viewModel:IssuesSearchViewModel}">
-                <view:IssueSearchView/>
+            <DataTemplate DataType="{x:Type analysis:IssuesSearchViewModel}">
+                <analysisView:IssueSearchView/>
             </DataTemplate>
 
         	<DataTemplate x:Key="ProjectSelectionComboBoxDataTemplate">
@@ -48,6 +50,9 @@
             
         </ResourceDictionary>
     </UserControl.Resources>
+	<UserControl.DataContext>
+		<Binding Source="{StaticResource SonarQubeViewModelDataSource}"/>
+	</UserControl.DataContext>
             
     <UserControl.Background>
    <SolidColorBrush Color="{Binding BackGroundColor}"/>

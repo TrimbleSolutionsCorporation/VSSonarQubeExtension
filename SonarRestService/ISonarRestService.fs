@@ -28,12 +28,12 @@ type ISonarRestService =
   abstract member GetIssues : ISonarConfiguration * string * string -> System.Collections.Generic.List<Issue>
   abstract member GetProjects  : ISonarConfiguration -> System.Collections.Generic.List<SonarProject>
   
-  abstract member CommentOnIssues : ISonarConfiguration * System.Collections.Generic.IList<Issue> * comment : string -> System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>
+  abstract member CommentOnIssues : ISonarConfiguration * System.Collections.IList * comment : string -> System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>
   abstract member ReOpenIssues : ISonarConfiguration * System.Collections.Generic.List<Issue> * comment : string -> System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>
-  abstract member ConfirmIssues : ISonarConfiguration * System.Collections.Generic.List<Issue> * comment : string -> System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>
-  abstract member UnConfirmIssues : ISonarConfiguration * System.Collections.Generic.List<Issue> * comment : string -> System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>
-  abstract member MarkIssuesAsFalsePositive : ISonarConfiguration * System.Collections.Generic.IList<Issue> * string -> System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>
-  abstract member ResolveIssues : ISonarConfiguration * System.Collections.Generic.List<Issue> * string -> System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>
+  abstract member ConfirmIssues : ISonarConfiguration * System.Collections.IList * comment : string -> System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>
+  abstract member UnConfirmIssues : ISonarConfiguration * System.Collections.IList * comment : string -> System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>
+  abstract member MarkIssuesAsFalsePositive : ISonarConfiguration * System.Collections.IList * string -> System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>
+  abstract member ResolveIssues : ISonarConfiguration * System.Collections.IList * string -> System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>
   abstract member AssignIssuesToUser : ISonarConfiguration * System.Collections.Generic.List<Issue> * User * string -> System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>
 
   abstract member GetUserList : ISonarConfiguration -> System.Collections.Generic.List<User>

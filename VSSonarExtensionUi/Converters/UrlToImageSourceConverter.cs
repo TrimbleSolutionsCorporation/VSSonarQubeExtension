@@ -1,19 +1,72 @@
-﻿using System;
-using System.Windows.Data;
-using System.Windows.Media.Imaging;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="UrlToImageSourceConverter.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The url to image source converter.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace VSSonarExtensionUi.Converters
 {
+    using System;
+    using System.Globalization;
+    using System.Windows.Data;
+    using System.Windows.Media.Imaging;
+
+    /// <summary>
+    /// The url to image source converter.
+    /// </summary>
     public class UrlToImageSourceConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        #region Public Methods and Operators
+
+        /// <summary>
+        /// The convert.
+        /// </summary>
+        /// <param name="value">
+        /// The value.
+        /// </param>
+        /// <param name="targetType">
+        /// The target type.
+        /// </param>
+        /// <param name="parameter">
+        /// The parameter.
+        /// </param>
+        /// <param name="culture">
+        /// The culture.
+        /// </param>
+        /// <returns>
+        /// The <see cref="object"/>.
+        /// </returns>
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return new BitmapImage(new Uri(value.ToString()));
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        /// <summary>
+        /// The convert back.
+        /// </summary>
+        /// <param name="value">
+        /// The value.
+        /// </param>
+        /// <param name="targetType">
+        /// The target type.
+        /// </param>
+        /// <param name="parameter">
+        /// The parameter.
+        /// </param>
+        /// <param name="culture">
+        /// The culture.
+        /// </param>
+        /// <returns>
+        /// The <see cref="object"/>.
+        /// </returns>
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            return null;
         }
+
+        #endregion
     }
 }

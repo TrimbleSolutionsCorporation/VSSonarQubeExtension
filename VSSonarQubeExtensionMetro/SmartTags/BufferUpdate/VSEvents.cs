@@ -80,6 +80,15 @@ namespace VSSonarQubeExtension.SmartTags.BufferUpdate
             this.DocumentsEvents.DocumentSaved += this.DoumentSaved;
 
             VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
+
+
+            VsSonarExtensionPackage.SonarQubeModel.AnalysisModeHasChange += this.AnalysisModeHasChange;
+            VsSonarExtensionPackage.SonarQubeModel.VSonarQubeOptionsViewData.SonarConfigurationViewModel.ConfigurationHasChanged += this.AnalysisModeHasChange;
+        }
+
+        private void AnalysisModeHasChange(object sender, EventArgs e)
+        {
+            VsSonarExtensionPackage.SonarQubeModel.RefreshDataForResource(this.LastDocumentWindowWithFocus.Document.FullName);            
         }
 
         private void VSColorTheme_ThemeChanged(ThemeChangedEventArgs e)

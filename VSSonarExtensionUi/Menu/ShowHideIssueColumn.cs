@@ -15,6 +15,7 @@ namespace VSSonarExtensionUi.Menu
     using GalaSoft.MvvmLight.Command;
 
     using VSSonarExtensionUi.ViewModel;
+    using VSSonarExtensionUi.ViewModel.Helpers;
 
     using VSSonarPlugins;
 

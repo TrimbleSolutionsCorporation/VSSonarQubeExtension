@@ -1,17 +1,11 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="VSSonarQubeExtensionPackage.cs" company="Copyright © 2013 Tekla Corporation. Tekla is a Trimble Company">
-//     Copyright (C) 2013 [Jorge Costa, Jorge.Costa@tekla.com]
+// <copyright file="VSSonarQubeExtensionPackage.cs" company="">
+//   
 // </copyright>
+// <summary>
+//   The vs sonar extension package.
+// </summary>
 // --------------------------------------------------------------------------------------------------------------------
-// This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
-// as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
-// of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. 
-// You should have received a copy of the GNU Lesser General Public License along with this program; if not, write to the Free
-// Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// --------------------------------------------------------------------------------------------------------------------
-
 namespace VSSonarQubeExtension
 {
     using System;
@@ -34,15 +28,16 @@ namespace VSSonarQubeExtension
     using Microsoft.VisualStudio.Shell.Interop;
 
     using SonarRestService;
+
+    using VSSonarExtensionUi.View.Helpers;
+    using VSSonarExtensionUi.ViewModel;
+
     using VSSonarQubeExtension.SmartTags.BufferUpdate;
     using VSSonarQubeExtension.SmartTags.StatusBar;
     using VSSonarQubeExtension.VSControls;
 
-    using VSSonarExtensionUi.ViewModel;
-    using VSSonarExtensionUi.View;
-
-    using MColor = System.Windows.Media.Color;
     using DColor = System.Drawing.Color;
+    using MColor = System.Windows.Media.Color;
 
     /// <summary>
     ///     The vs sonar extension package.
@@ -78,23 +73,34 @@ namespace VSSonarQubeExtension
 
         #endregion
 
-        #region Methods
+        #region Public Properties
 
         /// <summary>
-        /// The show tool window.
+        /// Gets or sets the status bar.
         /// </summary>
-        /// <param name="control">
-        /// The control.
+        public VSSStatusBar StatusBar { get; set; }
+
+        #endregion
+
+        #region Public Methods and Operators
+
+        /// <summary>
+        /// The to media color.
+        /// </summary>
+        /// <param name="color">
+        /// The color.
         /// </param>
-        /// <param name="id">
-        /// The id.
-        /// </param>
-        /// <param name="name">
-        /// The name.
-        /// </param>
-        /// <exception>
-        ///     <cref>NotSupportedException</cref>
-        /// </exception>
+        /// <returns>
+        /// The <see cref="Color"/>.
+        /// </returns>
+        public static MColor ToMediaColor(DColor color)
+        {
+            return MColor.FromArgb(color.A, color.R, color.G, color.B);
+        }
+
+        /// <summary>
+        ///     The show tool window.
+        /// </summary>
         public void CloseToolWindow()
         {
             for (int i = 0; i < 100; i++)
@@ -102,7 +108,7 @@ namespace VSSonarQubeExtension
                 try
                 {
                     // Find existing windows. 
-                    var currentWindow = this.FindToolWindow(typeof(PluginToolWindow), i, false);
+                    ToolWindowPane currentWindow = this.FindToolWindow(typeof(PluginToolWindow), i, false);
                     if (currentWindow == null)
                     {
                         continue;
@@ -111,30 +117,11 @@ namespace VSSonarQubeExtension
                     var windowFrame = (IVsWindowFrame)currentWindow.Frame;
                     ErrorHandler.ThrowOnFailure(windowFrame.Hide());
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    Debug.WriteLine(ex.Message);
                 }
             }
-        }
-
-        /// <summary>
-        /// The update model in tool window.
-        /// </summary>
-        /// <param name="modelToUse">
-        /// The model to use.
-        /// </param>
-        private void UpdateModelInToolWindow(SonarQubeViewModel modelToUse)
-        {
-            // init basic model without project association
-            ToolWindowPane window = this.FindToolWindow(typeof(IssuesToolWindow), 0, true) as IssuesToolWindow;
-
-            if (null == window || modelToUse == null)
-            {
-                return;
-            }
-
-            var win = window as IssuesToolWindow;
-            win.UpdateModel(modelToUse);
         }
 
         /// <summary>
@@ -150,12 +137,12 @@ namespace VSSonarQubeExtension
         /// The name.
         /// </param>
         /// <exception>
-        ///     <cref>NotSupportedException</cref>
+        /// <cref>NotSupportedException</cref>
         /// </exception>
         public void ShowToolWindow(UserControl control, int id, string name)
         {
             // Find existing windows. 
-            var currentWindow = this.FindToolWindow(typeof(PluginToolWindow), id, false);
+            ToolWindowPane currentWindow = this.FindToolWindow(typeof(PluginToolWindow), id, false);
             if (currentWindow != null)
             {
                 return;
@@ -175,10 +162,9 @@ namespace VSSonarQubeExtension
             ErrorHandler.ThrowOnFailure(windowFrame.Show());
         }
 
-        public static MColor ToMediaColor(DColor color)
-        {
-            return MColor.FromArgb(color.A, color.R, color.G, color.B);
-        }
+        #endregion
+
+        #region Methods
 
         /// <summary>
         ///     The initialize.
@@ -198,26 +184,24 @@ namespace VSSonarQubeExtension
                     return;
                 }
 
-
-
                 try
                 {
                     this.visualStudioInterface = new VsPropertiesHelper(this.dte2, this);
                     this.restService = new SonarRestService(new JsonSonarConnector());
                     this.VsEvents = new VsEvents(this.visualStudioInterface, this.dte2);
-                    var bar = GetService(typeof(SVsStatusbar)) as IVsStatusbar;
+                    var bar = this.GetService(typeof(SVsStatusbar)) as IVsStatusbar;
                     this.StatusBar = new VSSStatusBar(bar, this.dte2);
 
                     SonarQubeModel.ExtensionDataModelUpdate(this.restService, this.visualStudioInterface, this.StatusBar, this);
 
-                    Color defaultBackground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBackgroundColorKey);
-                    Color defaultForeground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowTextColorKey);
+                    DColor defaultBackground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBackgroundColorKey);
+                    DColor defaultForeground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowTextColorKey);
 
                     SonarQubeModel.UpdateTheme(ToMediaColor(defaultBackground), ToMediaColor(defaultForeground));
 
                     try
                     {
-                        var outWindow = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
+                        var outWindow = GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
                         var customGuid = new Guid("CDA8E85D-C469-4855-878B-0E778CD0DD53");
                         if (outWindow != null)
                         {
@@ -228,7 +212,7 @@ namespace VSSonarQubeExtension
                             ((VsPropertiesHelper)this.visualStudioInterface).CustomPane.Activate();
                         }
 
-                        //this.UpdateModelInToolWindow(SonarQubeModel);
+                        // this.UpdateModelInToolWindow(SonarQubeModel);
                     }
                     catch (Exception ex)
                     {
@@ -245,6 +229,20 @@ namespace VSSonarQubeExtension
                 UserExceptionMessageBox.ShowException("Extension Failed to Start", ex);
                 throw;
             }
+        }
+
+        /// <summary>
+        /// The analyse solution cmd.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void AnalyseSolutionCmd(object sender, EventArgs e)
+        {
+            SonarQubeModel.LocalViewModel.OnPreviewCommand();
         }
 
         /// <summary>
@@ -293,7 +291,7 @@ namespace VSSonarQubeExtension
         {
             IVsWindowFrame windowFrame;
 
-            using (var window = this.FindToolWindow(typeof(IssuesToolWindow), 0, true))
+            using (ToolWindowPane window = this.FindToolWindow(typeof(IssuesToolWindow), 0, true))
             {
                 if ((null == window) || (null == window.Frame))
                 {
@@ -306,24 +304,26 @@ namespace VSSonarQubeExtension
             ErrorHandler.ThrowOnFailure(windowFrame.Show());
         }
 
-        public VSSStatusBar StatusBar { get; set; }
-
         /// <summary>
-        /// The analyse solution cmd.
+        /// The update model in tool window.
         /// </summary>
-        /// <param name="sender">
-        /// The sender.
+        /// <param name="modelToUse">
+        /// The model to use.
         /// </param>
-        /// <param name="e">
-        /// The e.
-        /// </param>
-        private void AnalyseSolutionCmd(object sender, EventArgs e)
+        private void UpdateModelInToolWindow(SonarQubeViewModel modelToUse)
         {
-            SonarQubeModel.LocalViewModel.OnPreviewCommand();
+            // init basic model without project association
+            ToolWindowPane window = this.FindToolWindow(typeof(IssuesToolWindow), 0, true) as IssuesToolWindow;
+
+            if (null == window || modelToUse == null)
+            {
+                return;
+            }
+
+            var win = window as IssuesToolWindow;
+            win.UpdateModel(modelToUse);
         }
 
         #endregion
     }
-
-
 }

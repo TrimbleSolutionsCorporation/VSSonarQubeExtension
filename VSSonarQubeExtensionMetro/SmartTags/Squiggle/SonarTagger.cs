@@ -76,11 +76,10 @@ namespace VSSonarQubeExtension.SmartTags.Squiggle
             }
 
             this.SourceBuffer = sourceBuffer;
-            VsSonarExtensionPackage.SonarQubeModel.PropertyChanged += this.IssuesListChanged;
-            VsSonarExtensionPackage.SonarQubeModel.ServerViewModel.PropertyChanged += this.IssuesListChanged;
-            VsSonarExtensionPackage.SonarQubeModel.LocalViewModel.PropertyChanged += this.IssuesListChanged;
-            VsSonarExtensionPackage.SonarQubeModel.IssuesSearchViewModel.PropertyChanged += this.IssuesListChanged;
-            VsSonarExtensionPackage.SonarQubeModel.VSonarQubeOptionsViewData.SonarConfigurationViewModel.PropertyChanged += this.IssuesListChanged;
+
+            VsSonarExtensionPackage.SonarQubeModel.ServerViewModel.IssuesReadyForCollecting += this.IssuesListChanged;
+            VsSonarExtensionPackage.SonarQubeModel.LocalViewModel.IssuesReadyForCollecting += this.IssuesListChanged;
+            VsSonarExtensionPackage.SonarQubeModel.IssuesSearchViewModel.IssuesReadyForCollecting += this.IssuesListChanged;
 
 
             this.dispatcher = Dispatcher.CurrentDispatcher;
@@ -228,11 +227,9 @@ namespace VSSonarQubeExtension.SmartTags.Squiggle
             {
                 if (disposing)
                 {
-                    VsSonarExtensionPackage.SonarQubeModel.PropertyChanged -= this.IssuesListChanged;
-                    VsSonarExtensionPackage.SonarQubeModel.ServerViewModel.PropertyChanged -= this.IssuesListChanged;
-                    VsSonarExtensionPackage.SonarQubeModel.LocalViewModel.PropertyChanged -= this.IssuesListChanged;
-                    VsSonarExtensionPackage.SonarQubeModel.IssuesSearchViewModel.PropertyChanged -= this.IssuesListChanged;
-                    VsSonarExtensionPackage.SonarQubeModel.VSonarQubeOptionsViewData.SonarConfigurationViewModel.PropertyChanged -= this.IssuesListChanged;
+                    VsSonarExtensionPackage.SonarQubeModel.ServerViewModel.IssuesReadyForCollecting -= this.IssuesListChanged;
+                    VsSonarExtensionPackage.SonarQubeModel.LocalViewModel.IssuesReadyForCollecting -= this.IssuesListChanged;
+                    VsSonarExtensionPackage.SonarQubeModel.IssuesSearchViewModel.IssuesReadyForCollecting -= this.IssuesListChanged;
 
                     this.SourceBuffer = null;
                 }
@@ -298,26 +295,10 @@ namespace VSSonarQubeExtension.SmartTags.Squiggle
         /// <param name="e">
         /// The e.
         /// </param>
-        private void IssuesListChanged(object sender, PropertyChangedEventArgs e)
+        private void IssuesListChanged(object sender, EventArgs e)
         {
             try
             {
-                if (e.PropertyName == null)
-                {
-                    return;
-                }
-
-                if (!e.PropertyName.Equals("ServerIssuesUpdated") &&
-                    !e.PropertyName.Equals("CanQUeryIssues") &&
-                    !e.PropertyName.Equals("IssuesSearchEnded") &&                    
-                    !e.PropertyName.Equals("LocalIssuesUpdated") &&
-                    !e.PropertyName.Equals("DisableEditorTags") &&
-                    !e.PropertyName.Equals("FileAnalysisIsEnabled") && 
-                    !e.PropertyName.Equals("SelectedView"))
-                {
-                    return;
-                }
-
                 var document = VsEvents.GetPropertyFromBuffer<ITextDocument>(this.SourceBuffer);
                 Resource resource = VsSonarExtensionPackage.SonarQubeModel.ResourceInEditor;
 
@@ -328,21 +309,6 @@ namespace VSSonarQubeExtension.SmartTags.Squiggle
 
                 if (!document.FilePath.Replace('\\', '/').EndsWith(resource.Lname, StringComparison.OrdinalIgnoreCase))
                 {
-                    return;
-                }
-
-                if (e.PropertyName.Equals("SelectedView") || e.PropertyName.Equals("FileAnalysisIsEnabled"))
-                {
-                    try
-                    {
-                        VsSonarExtensionPackage.SonarQubeModel.RefreshDataForResource(document.FilePath);
-                    }
-                    catch (Exception ex)
-                    {
-                        VsSonarExtensionPackage.SonarQubeModel.ErrorMessage = "Something Terrible Happen";
-                        VsSonarExtensionPackage.SonarQubeModel.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
-                    }
-
                     return;
                 }
 
@@ -437,7 +403,7 @@ namespace VSSonarQubeExtension.SmartTags.Squiggle
         /// </param>
         private void UpdateDataAfterConstructor(object obj)
         {
-            //this.IssuesListChanged(obj, new PropertyChangedEventArgs("DataUpdatedFromConstructor"));
+            this.IssuesListChanged(obj, EventArgs.Empty);
         }
 
         #endregion

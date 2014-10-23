@@ -493,7 +493,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
         let parameters = Map.empty.Add("issue", issue.Key.ToString()).Add("transition", transition)
         httpconnector.HttpSonarPostRequest(userconf, "/api/issues/do_transition", parameters)
 
-    let DoStateTransition(userconf : ISonarConfiguration, issue : Issue, finalState : string, transition : string) = 
+    let DoStateTransition(userconf : ISonarConfiguration, issue : Issue, finalState : IssueStatus, transition : string) = 
         let mutable status = Net.HttpStatusCode.OK
 
         let response = PerformWorkFlowTransition(userconf, issue, transition)
@@ -988,10 +988,11 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             let url = "/api/resources?resource=" + resource + "&metrics=duplications_data&depth=-1";
             GetDuplicationsFromContent(httpconnector.HttpSonarGetRequest(conf, url))
 
-        member this.CommentOnIssues(newConf : ISonarConfiguration, issues : System.Collections.Generic.IList<Issue>, comment : string) =
+        member this.CommentOnIssues(newConf : ISonarConfiguration, issues : System.Collections.IList, comment : string) =
             let responseMap = new System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>()
 
-            for issue in issues do
+            for issueobj in issues do
+                let issue = issueobj :?> Issue
                 let mutable idstr = Convert.ToString(issue.Key)
                 let parameters = Map.empty.Add("issue", idstr).Add("text", comment)
 
@@ -1031,13 +1032,14 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
             responseMap
 
-        member this.MarkIssuesAsFalsePositive(newConf : ISonarConfiguration, issues : System.Collections.Generic.IList<Issue>, comment : string) =
+        member this.MarkIssuesAsFalsePositive(newConf : ISonarConfiguration, issues : System.Collections.IList, comment : string) =
             let responseMap = new System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>()
 
-            for issue in issues do
+            for issueobj in issues do
+                let issue = issueobj :?> Issue
                 if issue.Status <> IssueStatus.RESOLVED then
                     let mutable idstr = issue.Key.ToString()
-                    let mutable status = DoStateTransition(newConf, issue, "RESOLVED", "falsepositive")
+                    let mutable status = DoStateTransition(newConf, issue, IssueStatus.RESOLVED, "falsepositive")
                     if status = Net.HttpStatusCode.OK then
                         if not(String.IsNullOrEmpty(comment)) then
                             (this :> ISonarRestService).CommentOnIssues(newConf, issues, comment) |> ignore
@@ -1071,14 +1073,15 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
             responseMap
 
-        member this.ResolveIssues(newConf : ISonarConfiguration, issues : System.Collections.Generic.List<Issue>, comment : string) =
+        member this.ResolveIssues(newConf : ISonarConfiguration, issues : System.Collections.IList, comment : string) =
             let responseMap = new System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>()
 
-            for issue in issues do
+            for issueobj in issues do
+                let issue = issueobj :?> Issue
                 if issue.Status <> IssueStatus.RESOLVED then
                     let mutable idstr = issue.Key.ToString()
                     let mutable status = Net.HttpStatusCode.OK
-                    status <- DoStateTransition(newConf, issue, "RESOLVED", "resolve")
+                    status <- DoStateTransition(newConf, issue, IssueStatus.RESOLVED, "resolve")
 
                     if status = Net.HttpStatusCode.OK then
                         if not(String.IsNullOrEmpty(comment)) then
@@ -1118,7 +1121,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 if issue.Status <> IssueStatus.REOPENED || issue.Status <> IssueStatus.OPEN then
                     let mutable idstr = issue.Key.ToString()
                     let mutable status = Net.HttpStatusCode.OK
-                    status <- DoStateTransition(newConf, issue, "REOPENED", "reopen")
+                    status <- DoStateTransition(newConf, issue, IssueStatus.REOPENED, "reopen")
                     if status = Net.HttpStatusCode.OK then
                         if not(String.IsNullOrEmpty(comment)) then
                             (this :> ISonarRestService).CommentOnIssues(newConf, issues, comment) |> ignore
@@ -1143,18 +1146,23 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                     responseMap.Add(idstr, status)
             responseMap
 
-        member this.UnConfirmIssues(newConf : ISonarConfiguration, issues : System.Collections.Generic.List<Issue>, comment : string) =
+        member this.UnConfirmIssues(newConf : ISonarConfiguration, issues : System.Collections.IList, comment : string) =
             let responseMap = new System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>()
-            for issue in issues do
-                responseMap.Add(issue.Key.ToString(), DoStateTransition(newConf, issue, "REOPENED", "unconfirm"))
+            for issueobj in issues do
+                let issue = issueobj :?> Issue
+                responseMap.Add(issue.Key.ToString(), DoStateTransition(newConf, issue, IssueStatus.REOPENED, "unconfirm"))
             if not(String.IsNullOrEmpty(comment)) then
                 (this :> ISonarRestService).CommentOnIssues(newConf, issues, comment) |> ignore                                
             responseMap
 
-        member this.ConfirmIssues(newConf : ISonarConfiguration, issues : System.Collections.Generic.List<Issue>, comment : string) =
+        member this.ConfirmIssues(newConf : ISonarConfiguration, issues : System.Collections.IList, comment : string) =
             let responseMap = new System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>()
-            for issue in issues do
-                responseMap.Add(issue.Key.ToString(), DoStateTransition(newConf, issue, "CONFIRMED", "confirm"))                
+            for issueobj in issues do
+                let issue = issueobj :?> Issue
+                if issue.Status.Equals(IssueStatus.RESOLVED) then
+                    DoStateTransition(newConf, issue, IssueStatus.REOPENED, "reopen") |> ignore
+
+                responseMap.Add(issue.Key.ToString(), DoStateTransition(newConf, issue, IssueStatus.CONFIRMED, "confirm"))                
 
             if not(String.IsNullOrEmpty(comment)) then
                 (this :> ISonarRestService).CommentOnIssues(newConf, issues, comment) |> ignore

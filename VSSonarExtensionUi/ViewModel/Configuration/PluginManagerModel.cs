@@ -23,7 +23,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
     using PropertyChanged;
 
-    using VSSonarExtensionUi.View;
+    using VSSonarExtensionUi.View.Helpers;
+    using VSSonarExtensionUi.ViewModel.Helpers;
 
     using VSSonarPlugins;
 
@@ -249,6 +250,22 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public void EndDataAssociation()
         {
             this.CanModifyPluginProps = false;
+        }
+
+        /// <summary>
+        /// The init data association.
+        /// </summary>
+        /// <param name="associatedProject">
+        /// The associated project.
+        /// </param>
+        /// <param name="userConnectionConfig">
+        /// The user connection config.
+        /// </param>
+        /// <param name="workingDir">
+        /// The working dir.
+        /// </param>
+        public void InitDataAssociation(Resource associatedProject, ISonarConfiguration userConnectionConfig, string workingDir)
+        {
         }
 
         /// <summary>

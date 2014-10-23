@@ -9,7 +9,9 @@
 namespace VSSonarExtensionUi.ViewModel.Configuration
 {
     using System;
+    using System.Diagnostics;
     using System.Windows.Controls;
+    using System.Windows.Input;
     using System.Windows.Media;
 
     using CredentialManagement;
@@ -22,7 +24,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
     using SonarRestService;
 
-    using VSSonarExtensionUi.View;
+    using VSSonarExtensionUi.View.Helpers;
+    using VSSonarExtensionUi.ViewModel.Helpers;
 
     using VSSonarPlugins;
 
@@ -35,17 +38,22 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         #region Fields
 
         /// <summary>
-        ///     The viewModel.
-        /// </summary>
-        private readonly VSonarQubeOptionsViewModel viewModel;
-
-        /// <summary>
         ///     The rest service.
         /// </summary>
         private readonly ISonarRestService restService;
 
         /// <summary>
-        /// The visual studio helper.
+        /// The sq view model.
+        /// </summary>
+        private readonly SonarQubeViewModel sonarQubeViewModel;
+
+        /// <summary>
+        ///     The viewModel.
+        /// </summary>
+        private readonly VSonarQubeOptionsViewModel viewModel;
+
+        /// <summary>
+        ///     The visual studio helper.
         /// </summary>
         private readonly IVsEnvironmentHelper visualStudioHelper;
 
@@ -57,21 +65,30 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// Initializes a new instance of the <see cref="SonarConfigurationViewModel"/> class.
         /// </summary>
         /// <param name="viewModel">
-        /// The viewModel.
+        /// The view model.
         /// </param>
         /// <param name="restService">
         /// The rest service.
         /// </param>
         /// <param name="helper">
-        /// The vs Helper.
+        /// The helper.
         /// </param>
-        public SonarConfigurationViewModel(VSonarQubeOptionsViewModel viewModel, ISonarRestService restService, IVsEnvironmentHelper helper)
+        /// <param name="sonarQubeViewModel">
+        /// The sonar qube view model.
+        /// </param>
+        public SonarConfigurationViewModel(
+            VSonarQubeOptionsViewModel viewModel, 
+            ISonarRestService restService, 
+            IVsEnvironmentHelper helper, 
+            SonarQubeViewModel sonarQubeViewModel)
         {
-            this.Header = "Connection";
+            this.Header = "General Settings";
             this.viewModel = viewModel;
             this.restService = restService;
             this.visualStudioHelper = helper;
+            this.sonarQubeViewModel = sonarQubeViewModel;
 
+            this.ClearCacheCommand = new RelayCommand(this.OnClearCacheCommand);
             this.TestConnectionCommand = new RelayCommand<object>(this.OnTestAndSavePassword);
 
             this.BackGroundColor = Colors.Black;
@@ -83,12 +100,26 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
         #endregion
 
+        #region Public Events
+
+        /// <summary>
+        ///     The analysis mode has change.
+        /// </summary>
+        public event ChangedEventHandler ConfigurationHasChanged;
+
+        #endregion
+
         #region Public Properties
 
         /// <summary>
         ///     Gets or sets the back ground color.
         /// </summary>
         public Color BackGroundColor { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the on clear cache command.
+        /// </summary>
+        public ICommand ClearCacheCommand { get; set; }
 
         /// <summary>
         ///     Gets or sets a value indicating whether disable editor tags.
@@ -136,6 +167,11 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public ISonarConfiguration UserConnectionConfig { get; set; }
 
         /// <summary>
+        /// Gets or sets the user defined editor.
+        /// </summary>
+        public string UserDefinedEditor { get; set; }
+
+        /// <summary>
         ///     Gets or sets the user name.
         /// </summary>
         public string UserName { get; set; }
@@ -149,18 +185,17 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         public void Apply()
         {
-            if (this.IsConnectAtStartOn)
-            {
-                this.viewModel.Vsenvironmenthelper.WriteOptionInApplicationData("VSSonarQubeConfig", "AutoConnectAtStart", "true");
-            }
-            else
-            {
-                this.viewModel.Vsenvironmenthelper.WriteOptionInApplicationData("VSSonarQubeConfig", "AutoConnectAtStart", "false");
-            }
+            this.visualStudioHelper.WriteOptionInApplicationData("VSSonarQubeConfig", "UserDefinedEditor", this.UserDefinedEditor);
+            this.visualStudioHelper.WriteOptionInApplicationData("VSSonarQubeConfig", "DisableEditorTags", this.DisableEditorTags ? "TRUE" : "FALSE");
+
+            this.viewModel.Vsenvironmenthelper.WriteOptionInApplicationData(
+                "VSSonarQubeConfig",
+                "AutoConnectAtStart",
+                this.IsConnectAtStartOn ? "true" : "false");
         }
 
         /// <summary>
-        /// The end data association.
+        ///     The end data association.
         /// </summary>
         public void EndDataAssociation()
         {
@@ -176,11 +211,28 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         }
 
         /// <summary>
-        /// The on disable editor tags changed.
+        /// The init data association.
         /// </summary>
-        public void OnDisableEditorTagsChanged()
+        /// <param name="associatedProject">
+        /// The associated project.
+        /// </param>
+        /// <param name="userConnectionConfig">
+        /// The user connection config.
+        /// </param>
+        /// <param name="workingDir">
+        /// The working dir.
+        /// </param>
+        public void InitDataAssociation(Resource associatedProject, ISonarConfiguration userConnectionConfig, string workingDir)
         {
-            this.visualStudioHelper.WriteOptionInApplicationData("SonarOptionsGeneral", "DisableEditorTags", this.DisableEditorTags ? "TRUE" : "FALSE");
+        }
+
+        /// <summary>
+        ///     The on selected view changed.
+        /// </summary>
+        public void OnSelectedViewChanged()
+        {
+            this.OnAnalysisModeHasChange(EventArgs.Empty);
+            Debug.WriteLine("Name Changed");
         }
 
         /// <summary>
@@ -211,6 +263,20 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         #region Methods
 
         /// <summary>
+        /// The on changed.
+        /// </summary>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        protected virtual void OnAnalysisModeHasChange(EventArgs e)
+        {
+            if (this.ConfigurationHasChanged != null)
+            {
+                this.ConfigurationHasChanged(this, e);
+            }
+        }
+
+        /// <summary>
         ///     The get credentials.
         /// </summary>
         private void GetCredentials()
@@ -238,6 +304,14 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.UserName = cm.Username;
             this.ServerAddress = address;
             this.Password = ConnectionConfiguration.ConvertToUnsecureString(cm.SecurePassword);
+        }
+
+        /// <summary>
+        ///     The on clear cache command.
+        /// </summary>
+        private void OnClearCacheCommand()
+        {
+            this.sonarQubeViewModel.ServerViewModel.ClearCache();
         }
 
         /// <summary>
@@ -288,6 +362,15 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             }
 
             this.IsConnectAtStartOn = isConnectAuto.Equals("true");
+
+            var editor = this.viewModel.Vsenvironmenthelper.ReadOptionFromApplicationData("VSSonarQubeConfig", "UserDefinedEditor");
+            this.UserDefinedEditor = !string.IsNullOrEmpty(editor) ? editor : "notepad";
+
+            var editorTags = this.visualStudioHelper.ReadOptionFromApplicationData("VSSonarQubeConfig", "DisableEditorTags");
+            if (!string.IsNullOrEmpty(editorTags))
+            {
+                this.DisableEditorTags = editorTags.ToLower().Equals("true");
+            }
         }
 
         /// <summary>

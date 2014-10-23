@@ -1,50 +1,58 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="VsPropertiesHelper.cs" company="Copyright © 2013 Tekla Corporation. Tekla is a Trimble Company">
-//     Copyright (C) 2013 [Jorge Costa, Jorge.Costa@tekla.com]
+// <copyright file="VsPropertiesHelper.cs" company="">
+//   
 // </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-// This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
-// as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
-// of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. 
-// You should have received a copy of the GNU Lesser General Public License along with this program; if not, write to the Free
-// Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+// <summary>
+//   The vs properties helper.
+// </summary>
 // --------------------------------------------------------------------------------------------------------------------
 namespace ExtensionHelpers
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Runtime.InteropServices;
     using System.Text;
 
     using EnvDTE;
+
     using EnvDTE80;
 
     using ExtensionTypes;
 
     using Microsoft.VisualStudio.Editor;
     using Microsoft.VisualStudio.Shell;
+    using Microsoft.VisualStudio.Shell.Interop;
     using Microsoft.VisualStudio.Text.Editor;
     using Microsoft.VisualStudio.TextManager.Interop;
 
     using VSSonarPlugins;
-    using Microsoft.VisualStudio.Shell.Interop;
 
+    using Process = System.Diagnostics.Process;
+    using Thread = System.Threading.Thread;
 
     /// <summary>
-    /// The vs properties helper.
+    ///     The vs properties helper.
     /// </summary>
     public class VsPropertiesHelper : IVsEnvironmentHelper
     {
+        #region Fields
+
         /// <summary>
-        /// The environment 2.
+        ///     The environment 2.
         /// </summary>
         private readonly DTE2 environment;
+
+        /// <summary>
+        /// The provider.
+        /// </summary>
         private readonly IServiceProvider provider;
 
+        #endregion
+
+        #region Constructors and Destructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VsPropertiesHelper"/> class.
@@ -52,32 +60,54 @@ namespace ExtensionHelpers
         /// <param name="environment">
         /// The environment 2.
         /// </param>
+        /// <param name="service">
+        /// The service.
+        /// </param>
         public VsPropertiesHelper(DTE2 environment, IServiceProvider service)
         {
             this.TempDataFolder = Path.GetTempPath();
             this.provider = service;
             this.environment = environment;
-            this.ApplicationDataUserSettingsFile =
-                System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData) + "\\VSSonarExtension\\settings.cfg";
-        }
-
-        public string TempDataFolder { get; set; }
-
-        public VsPropertiesHelper()
-        {
-            this.ApplicationDataUserSettingsFile =
-                System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData) + "\\VSSonarExtension\\settings.cfg";
+            this.ApplicationDataUserSettingsFile = System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData)
+                                                   + "\\VSSonarExtension\\settings.cfg";
         }
 
         /// <summary>
-        /// Gets or sets the erro message.
+        /// Initializes a new instance of the <see cref="VsPropertiesHelper"/> class.
+        /// </summary>
+        public VsPropertiesHelper()
+        {
+            this.ApplicationDataUserSettingsFile = System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData)
+                                                   + "\\VSSonarExtension\\settings.cfg";
+        }
+
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>
+        ///     Gets or sets the application data user settings file.
+        /// </summary>
+        public string ApplicationDataUserSettingsFile { get; set; }
+
+        /// <summary>
+        /// Gets or sets the custom pane.
+        /// </summary>
+        public IVsOutputWindowPane CustomPane { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the erro message.
         /// </summary>
         public string ErroMessage { get; set; }
 
         /// <summary>
-        /// Gets or sets the application data user settings file.
+        /// Gets or sets the temp data folder.
         /// </summary>
-        public string ApplicationDataUserSettingsFile { get; set; }
+        public string TempDataFolder { get; set; }
+
+        #endregion
+
+        #region Public Methods and Operators
 
         /// <summary>
         /// The get windows physical path.
@@ -98,7 +128,7 @@ namespace ExtensionHelpers
 
             path = builder.ToString();
 
-            var result = GetLongPathName(path, builder, builder.Capacity);
+            uint result = GetLongPathName(path, builder, builder.Capacity);
 
             if (result > 0 && result < builder.Capacity)
             {
@@ -118,129 +148,133 @@ namespace ExtensionHelpers
         }
 
         /// <summary>
-        /// The get current view.
+        ///     The get active file full path 1.
         /// </summary>
         /// <returns>
-        /// The <see cref="IWpfTextView"/>.
+        ///     The <see cref="string" />.
         /// </returns>
-        public IWpfTextView GetCurrentView()
+        public string ActiveFileFullPath()
         {
-            var textManager = (IVsTextManager)Package.GetGlobalService(typeof(SVsTextManager));
-            IVsTextView textView;
-            textManager.GetActiveView(1, null, out textView);
-
-            var userData = (IVsUserData)textView;
-            if (userData == null)
+            try
             {
-                return null;
+                Document doc = this.environment.ActiveDocument;
+                return doc != null ? GetProperFilePathCapitalization(doc.FullName) : string.Empty;
             }
-
-            var guidWpfViewHost = DefGuidList.guidIWpfTextViewHost;
-            object host;
-            userData.GetData(ref guidWpfViewHost, out host);
-            return ((IWpfTextViewHost)host).TextView;
+            catch (Exception)
+            {
+                return string.Empty;
+            }
         }
 
         /// <summary>
-        /// The get current text in view.
+        ///     The get active project from solution full name.
         /// </summary>
         /// <returns>
-        /// The <see cref="string"/>.
+        ///     The <see cref="string" />.
         /// </returns>
-        public string GetCurrentTextInView()
+        public string ActiveProjectFileFullPath()
         {
-            var view = this.GetCurrentView();
+            if (this.environment == null)
+            {
+                return string.Empty;
+            }
 
-            return view == null ? string.Empty : view.TextBuffer.CurrentSnapshot.GetText();
+            var projects = (Array)this.environment.ActiveSolutionProjects;
+            return GetProperFilePathCapitalization(((Project)projects.GetValue(0)).FullName);
         }
 
+        /// <summary>
+        ///     The get active project from solution name.
+        /// </summary>
+        /// <returns>
+        ///     The <see cref="string" />.
+        /// </returns>
+        public string ActiveProjectName()
+        {
+            if (this.environment == null)
+            {
+                return string.Empty;
+            }
+
+            var projects = (Array)this.environment.ActiveSolutionProjects;
+            return ((Project)projects.GetValue(0)).Name;
+        }
+
+        /// <summary>
+        ///     The get solution path.
+        /// </summary>
+        /// <returns>
+        ///     The <see cref="string" />.
+        /// </returns>
+        public string ActiveSolutionName()
+        {
+            if (this.environment == null)
+            {
+                return string.Empty;
+            }
+
+            if (string.IsNullOrEmpty(this.environment.Solution.FullName))
+            {
+                return string.Empty;
+            }
+
+            return (this.environment.Solution != null) ? Path.GetFileNameWithoutExtension(this.environment.Solution.FullName) : string.Empty;
+        }
+
+        /// <summary>
+        ///     The get solution path.
+        /// </summary>
+        /// <returns>
+        ///     The <see cref="string" />.
+        /// </returns>
+        public string ActiveSolutionPath()
+        {
+            if (this.environment == null)
+            {
+                return string.Empty;
+            }
+
+            if (string.IsNullOrEmpty(this.environment.Solution.FullName))
+            {
+                return string.Empty;
+            }
+
+            return Path.GetDirectoryName(GetProperFilePathCapitalization(this.environment.Solution.FullName));
+        }
+
+        /// <summary>
+        /// The are we running in visual studio.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="bool"/>.
+        /// </returns>
         public bool AreWeRunningInVisualStudio()
         {
             return this.environment != null;
         }
 
-        public void ShowSourceDiff(string resourceInEditor, string documentInViewPath)
-        {
-            var diff = (IVsDifferenceService)this.provider.GetService(typeof(SVsDifferenceService));
-            if (!Directory.Exists(this.TempDataFolder))
-            {
-                Directory.CreateDirectory(this.TempDataFolder);
-            }
-
-            string tempfile = Path.Combine(this.TempDataFolder, "server." + Path.GetFileName(documentInViewPath));
-
-            File.WriteAllText(tempfile, resourceInEditor);
-
-            diff.OpenComparisonWindow(tempfile, documentInViewPath);
-        }
-
         /// <summary>
-        /// The get environment.
+        ///     The get document language.
         /// </summary>
         /// <returns>
-        /// The <see cref="DTE2"/>.
+        ///     The <see cref="string" />.
         /// </returns>
-        public DTE2 Environment()
+        public string CurrentSelectedDocumentLanguage()
         {
-            return this.environment;
-        }
-
-        /// <summary>
-        /// The get file real path for solution.
-        /// </summary>
-        /// <param name="fileInView">
-        /// The file in view.
-        /// </param>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
-        public string GetFileRealPathForSolution(string fileInView)
-        {
-            var solutionPath = this.ActiveSolutionPath();
-            var driveLetter = solutionPath.Substring(0, 1);
-            return driveLetter + fileInView.Substring(1);
-        }
-
-        /// <summary>
-        /// The set option in application data.
-        /// </summary>
-        /// <param name="pluginKey">
-        /// The plugin key.
-        /// </param>
-        /// <param name="key">
-        /// The key.
-        /// </param>
-        /// <param name="value">
-        /// The value.
-        /// </param>
-        public void WriteOptionInApplicationData(string pluginKey, string key, string value)
-        {
-            if (string.IsNullOrEmpty(pluginKey) || string.IsNullOrEmpty(key))
+            if (this.environment == null)
             {
-                return;
+                return string.Empty;
             }
 
-            IEnumerable<string> content = new List<string>();
-            var contentWrite = string.Empty;
-            if (File.Exists(this.ApplicationDataUserSettingsFile))
+            Document doc = this.environment.ActiveDocument;
+
+            if (doc == null)
             {
-                content = File.ReadLines(this.ApplicationDataUserSettingsFile);
-            }
-            else
-            {
-                Directory.CreateDirectory(Directory.GetParent(this.ApplicationDataUserSettingsFile).ToString());
-                using (File.Create(this.ApplicationDataUserSettingsFile))
-                {
-                }
+                return string.Empty;
             }
 
-            contentWrite += pluginKey + "=" + key + "," + value + "\r\n";
-            contentWrite = content.Where(line => !line.Contains(pluginKey + "=" + key + ",")).Aggregate(contentWrite, (current, line) => current + (line + "\r\n"));
-
-            using (var writer = new StreamWriter(this.ApplicationDataUserSettingsFile))
-            {
-                writer.Write(contentWrite);
-            }
+            var textDoc = doc.Object("TextDocument") as TextDocument;
+            return textDoc == null ? string.Empty : textDoc.Language.ToLower();
         }
 
         /// <summary>
@@ -260,7 +294,7 @@ namespace ExtensionHelpers
             }
 
             IEnumerable<string> content = new List<string>();
-            var contentWrite = string.Empty;
+            string contentWrite = string.Empty;
             if (File.Exists(this.ApplicationDataUserSettingsFile))
             {
                 content = File.ReadLines(this.ApplicationDataUserSettingsFile);
@@ -273,7 +307,8 @@ namespace ExtensionHelpers
                 }
             }
 
-            contentWrite = content.Where(line => !line.StartsWith(pluginKey + "=" + project.Key + ".")).Aggregate(contentWrite, (current, line) => current + (line + "\r\n"));
+            contentWrite = content.Where(line => !line.StartsWith(pluginKey + "=" + project.Key + "."))
+                .Aggregate(contentWrite, (current, line) => current + (line + "\r\n"));
 
             using (var writer = new StreamWriter(this.ApplicationDataUserSettingsFile))
             {
@@ -282,143 +317,241 @@ namespace ExtensionHelpers
         }
 
         /// <summary>
-        /// The set all options for plugin option in application data.
+        ///     The get environment.
+        /// </summary>
+        /// <returns>
+        ///     The <see cref="DTE2" />.
+        /// </returns>
+        public DTE2 Environment()
+        {
+            return this.environment;
+        }
+
+        /// <summary>
+        ///     The get current text in view.
+        /// </summary>
+        /// <returns>
+        ///     The <see cref="string" />.
+        /// </returns>
+        public string GetCurrentTextInView()
+        {
+            IWpfTextView view = this.GetCurrentView();
+
+            return view == null ? string.Empty : view.TextBuffer.CurrentSnapshot.GetText();
+        }
+
+        /// <summary>
+        ///     The get current view.
+        /// </summary>
+        /// <returns>
+        ///     The <see cref="IWpfTextView" />.
+        /// </returns>
+        public IWpfTextView GetCurrentView()
+        {
+            var textManager = (IVsTextManager)Package.GetGlobalService(typeof(SVsTextManager));
+            IVsTextView textView;
+            textManager.GetActiveView(1, null, out textView);
+
+            var userData = (IVsUserData)textView;
+            if (userData == null)
+            {
+                return null;
+            }
+
+            Guid guidWpfViewHost = DefGuidList.guidIWpfTextViewHost;
+            object host;
+            userData.GetData(ref guidWpfViewHost, out host);
+            return ((IWpfTextViewHost)host).TextView;
+        }
+
+        /// <summary>
+        /// The get file real path for solution.
+        /// </summary>
+        /// <param name="fileInView">
+        /// The file in view.
+        /// </param>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
+        public string GetFileRealPathForSolution(string fileInView)
+        {
+            string solutionPath = this.ActiveSolutionPath();
+            string driveLetter = solutionPath.Substring(0, 1);
+            return driveLetter + fileInView.Substring(1);
+        }
+
+        /// <summary>
+        /// The navigate to resource.
+        /// </summary>
+        /// <param name="url">
+        /// The url.
+        /// </param>
+        public void NavigateToResource(string url)
+        {
+            if (this.environment == null)
+            {
+                Process.Start(url);
+                return;
+            }
+
+            (new Thread(() => this.environment.ItemOperations.Navigate(url, vsNavigateOptions.vsNavigateOptionsNewWindow))).Start();
+        }
+
+        /// <summary>
+        /// The open resource in visual studio.
+        /// </summary>
+        /// <param name="workfolder">
+        /// The workfolder.
+        /// </param>
+        /// <param name="filename">
+        /// The filename.
+        /// </param>
+        /// <param name="line">
+        /// The line.
+        /// </param>
+        /// <param name="editorCommandExec">
+        /// The editor Command Exec.
+        /// </param>
+        public void OpenResourceInVisualStudio(string workfolder, string filename, int line, string editorCommandExec = "notepad")
+        {
+            if (this.environment == null)
+            {
+                if (!string.IsNullOrEmpty(workfolder) && !Path.IsPathRooted(filename))
+                {
+                    if (!File.Exists(Path.Combine(workfolder, filename)))
+                    {
+                        var filesData = new List<string>();
+                        this.RecursePath(filename, workfolder, filesData);
+
+                        foreach (var file in filesData)
+                        {
+                            var file1 = file;
+                            (new Thread(() => Process.Start(editorCommandExec, file1))).Start();
+                        }
+                    }
+                    else
+                    {
+                        (new Thread(() => Process.Start(editorCommandExec, Path.Combine(workfolder, filename)))).Start();
+                    }
+                }
+
+                return;
+            }
+
+            ProjectItem files = this.environment.Solution.FindProjectItem(filename);
+            if (files != null)
+            {
+                (new Thread(
+                    () =>
+                        {
+                            try
+                            {
+                                object masterPath = files.Properties.Item("FullPath").Value;
+                                this.environment.ItemOperations.OpenFile(masterPath.ToString());
+                                var textSelection = (TextSelection)this.environment.ActiveDocument.Selection;
+                                textSelection.GotoLine(line < 1 ? 1 : line);
+                                textSelection.SelectLine();
+                            }
+                            catch
+                            {
+                                try
+                                {
+                                    if (File.Exists(filename))
+                                    {
+                                        this.environment.ItemOperations.OpenFile(filename);
+                                        var textSelection = (TextSelection)this.environment.ActiveDocument.Selection;
+                                        textSelection.GotoLine(line < 1 ? 1 : line);
+                                        textSelection.SelectLine();
+                                    }
+                                    else
+                                    {
+                                        this.ErroMessage = "Cannot Open File: " + filename;
+                                    }
+                                }
+                                catch (Exception ex1)
+                                {
+                                    this.ErroMessage = "Exception Occured: " + filename + " : " + Convert.ToString(line) + " ex: " + ex1.Message;
+                                }
+                            }
+                        })).Start();
+            }
+            else
+            {
+                try
+                {
+                    this.environment.ItemOperations.OpenFile(filename);
+                }
+                catch (Exception ex)
+                {
+                    this.ErroMessage = "Exception Occured: " + filename + " : " + Convert.ToString(line) + " ex: " + ex.Message;
+                }
+            }
+        }
+
+        /// <summary>
+        /// The get all options for plugin option in application data.
         /// </summary>
         /// <param name="pluginKey">
         /// The plugin key.
         /// </param>
-        /// <param name="project">
-        /// The project.
+        /// <returns>
+        /// The
+        ///     <see>
+        ///         <cref>Dictionary</cref>
+        ///     </see>
+        ///     .
+        /// </returns>
+        public Dictionary<string, string> ReadAllAvailableOptionsInSettings(string pluginKey)
+        {
+            var options = new Dictionary<string, string>();
+            if (!File.Exists(this.ApplicationDataUserSettingsFile))
+            {
+                return options;
+            }
+
+            string[] data = File.ReadAllLines(this.ApplicationDataUserSettingsFile);
+            foreach (string s in data.Where(s => s.Contains(pluginKey + "=")))
+            {
+                try
+                {
+                    options.Add(s.Split('=')[1].Trim().Split(',')[0], s.Substring(s.IndexOf(',') + 1));
+                }
+                catch (ArgumentException)
+                {
+                }
+            }
+
+            return options;
+        }
+
+        /// <summary>
+        /// The get option from application data.
+        /// </summary>
+        /// <param name="pluginKey">
+        /// The plugin Key.
         /// </param>
-        /// <param name="options">
-        /// The options.
+        /// <param name="key">
+        /// The key.
         /// </param>
-        public void WriteAllOptionsForPluginOptionInApplicationData(string pluginKey, Resource project, Dictionary<string, string> options)
-        {
-            this.DeleteOptionsForPlugin(pluginKey, project);
-            foreach (var option in options)
-            {
-                this.WriteOptionInApplicationData(pluginKey, option.Key, option.Value);
-            }
-        }
-
-        /// <summary>
-        /// The get active project from solution name.
-        /// </summary>
         /// <returns>
         /// The <see cref="string"/>.
         /// </returns>
-        public string ActiveProjectName()
+        public string ReadOptionFromApplicationData(string pluginKey, string key)
         {
-            if (this.environment == null)
+            string outstring = string.Empty;
+
+            if (!File.Exists(this.ApplicationDataUserSettingsFile) || string.IsNullOrEmpty(pluginKey))
             {
                 return string.Empty;
             }
 
-            var projects = (Array)this.environment.ActiveSolutionProjects;
-            return ((Project)projects.GetValue(0)).Name;
-        }
-
-        /// <summary>
-        /// The get active project from solution full name.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
-        public string ActiveProjectFileFullPath()
-        {
-            if (this.environment == null)
+            string[] data = File.ReadAllLines(this.ApplicationDataUserSettingsFile);
+            foreach (string s in data.Where(s => s.Contains(pluginKey + "=" + key + ",")))
             {
-                return string.Empty;
+                outstring = s.Substring(s.IndexOf(',') + 1);
             }
 
-            var projects = (Array)this.environment.ActiveSolutionProjects;
-            return GetProperFilePathCapitalization(((Project)projects.GetValue(0)).FullName);
-        }
-
-        /// <summary>
-        /// The get active file full path 1.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
-        public string ActiveFileFullPath()
-        {
-            try
-            {
-                var doc = this.environment.ActiveDocument;
-                return doc != null ? GetProperFilePathCapitalization(doc.FullName) : string.Empty;
-            }
-            catch (Exception)
-            {
-                return string.Empty;
-            }
-        }
-
-        /// <summary>
-        /// The get document language.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
-        public string CurrentSelectedDocumentLanguage()
-        {
-            if (this.environment == null)
-            {
-                return string.Empty;
-            }
-
-            var doc = this.environment.ActiveDocument;
-
-            if (doc == null)
-            {
-                return string.Empty;
-            }
-
-            var textDoc = doc.Object("TextDocument") as TextDocument;
-            return textDoc == null ? string.Empty : textDoc.Language.ToLower();
-        }
-
-        /// <summary>
-        /// The get solution path.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
-        public string ActiveSolutionPath()
-        {
-            if (this.environment == null)
-            {
-                return string.Empty;
-            }
-
-            if (string.IsNullOrEmpty(this.environment.Solution.FullName))
-            {
-                return string.Empty;
-            }
-
-            return Path.GetDirectoryName(GetProperFilePathCapitalization(this.environment.Solution.FullName));
-        }
-
-        /// <summary>
-        /// The get solution path.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
-        public string ActiveSolutionName()
-        {
-            if (this.environment == null)
-            {
-                return string.Empty;
-            }
-
-            if (string.IsNullOrEmpty(this.environment.Solution.FullName))
-            {
-                return string.Empty;
-            }
-
-            return (this.environment.Solution != null) ? Path.GetFileNameWithoutExtension(this.environment.Solution.FullName) : string.Empty;
+            return outstring;
         }
 
         /// <summary>
@@ -443,7 +576,7 @@ namespace ExtensionHelpers
                 return string.Empty;
             }
 
-            var props = this.environment.Properties[category, page];
+            Properties props = this.environment.Properties[category, page];
             try
             {
                 var data = props.Item(item).Value as string;
@@ -456,75 +589,43 @@ namespace ExtensionHelpers
         }
 
         /// <summary>
-        /// The get option from application data.
+        /// The restart visual studio.
         /// </summary>
-        /// <param name="pluginKey">
-        /// The plugin Key.
-        /// </param>
-        /// <param name="key">
-        /// The key.
-        /// </param>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
-        public string ReadOptionFromApplicationData(string pluginKey, string key)
+        public void RestartVisualStudio()
         {
-            var outstring = string.Empty;
-
-            if (!File.Exists(this.ApplicationDataUserSettingsFile) || string.IsNullOrEmpty(pluginKey))
-            {
-                return string.Empty;
-            }
-
-            var data = File.ReadAllLines(this.ApplicationDataUserSettingsFile);
-            foreach (var s in data.Where(s => s.Contains(pluginKey + "=" + key + ",")))
-            {
-                outstring = s.Substring(s.IndexOf(',') + 1);
-            }
-
-            return outstring;
+            var obj = (IVsShell4)this.provider.GetService(typeof(SVsShell));
+            obj.Restart((uint)__VSRESTARTTYPE.RESTART_Normal);
         }
 
         /// <summary>
-        /// The get all options for plugin option in application data.
+        /// The show source diff.
         /// </summary>
-        /// <param name="pluginKey">
-        /// The plugin key.
+        /// <param name="resourceInEditor">
+        /// The resource in editor.
         /// </param>
-        /// <returns>
-        /// The <see>
-        ///     <cref>Dictionary</cref>
-        /// </see>
-        ///     .
-        /// </returns>
-        public Dictionary<string, string> ReadAllAvailableOptionsInSettings(string pluginKey)
+        /// <param name="documentInViewPath">
+        /// The document in view path.
+        /// </param>
+        public void ShowSourceDiff(string resourceInEditor, string documentInViewPath)
         {
-            var options = new Dictionary<string, string>();
-            if (!File.Exists(this.ApplicationDataUserSettingsFile))
+            var diff = (IVsDifferenceService)this.provider.GetService(typeof(SVsDifferenceService));
+            if (!Directory.Exists(this.TempDataFolder))
             {
-                return options;
+                Directory.CreateDirectory(this.TempDataFolder);
             }
 
-            var data = File.ReadAllLines(this.ApplicationDataUserSettingsFile);
-            foreach (var s in data.Where(s => s.Contains(pluginKey + "=")))
-            {
-                try
-                {
-                    options.Add(s.Split('=')[1].Trim().Split(',')[0], s.Substring(s.IndexOf(',') + 1));
-                }
-                catch (ArgumentException)
-                {
-                }                
-            }
+            string tempfile = Path.Combine(this.TempDataFolder, "server." + Path.GetFileName(documentInViewPath));
 
-            return options;
+            File.WriteAllText(tempfile, resourceInEditor);
+
+            diff.OpenComparisonWindow(tempfile, documentInViewPath);
         }
 
         /// <summary>
-        /// The get user app data configuration file.
+        ///     The get user app data configuration file.
         /// </summary>
         /// <returns>
-        /// The <see cref="string"/>.
+        ///     The <see cref="string" />.
         /// </returns>
         public string UserAppDataConfigurationFile()
         {
@@ -532,29 +633,57 @@ namespace ExtensionHelpers
         }
 
         /// <summary>
-        /// The set option.
+        /// The get vs project item.
         /// </summary>
-        /// <param name="category">
-        /// The category.
+        /// <param name="filename">
+        /// The filename.
         /// </param>
-        /// <param name="page">
-        /// The page.
-        /// </param>
-        /// <param name="item">
-        /// The item.
-        /// </param>
-        /// <param name="value">
-        /// The value.
-        /// </param>
-        public void WriteOption(string category, string page, string item, string value)
+        /// <returns>
+        /// The <see cref="VSSonarPlugins.VsProjectItem"/>.
+        /// </returns>
+        public VsProjectItem VsProjectItem(string filename)
         {
-            if (this.environment == null)
+            if (string.IsNullOrEmpty(filename))
             {
-                return;
+                return null;
             }
 
-            var props = this.environment.Properties[category, page];
-            props.Item(item).Value = value;
+            string driveLetter = filename.Substring(0, 1);
+            ProjectItem item = this.environment.Solution.FindProjectItem(filename);
+
+            if (item == null)
+            {
+                return null;
+            }
+
+            string documentName = item.Document.Name;
+            string documentPath = driveLetter + GetProperFilePathCapitalization(item.Document.FullName).Substring(1);
+            string projectName = item.ContainingProject.Name;
+            string projectPath = driveLetter + GetProperFilePathCapitalization(item.ContainingProject.FullName).Substring(1);
+            string solutionName = this.ActiveSolutionName();
+            string solutionPath = driveLetter + this.ActiveSolutionPath().Substring(1);
+            return new VsProjectItem(documentName, documentPath, projectName, projectPath, solutionName, solutionPath);
+        }
+
+        /// <summary>
+        /// The set all options for plugin option in application data.
+        /// </summary>
+        /// <param name="pluginKey">
+        /// The plugin key.
+        /// </param>
+        /// <param name="project">
+        /// The project.
+        /// </param>
+        /// <param name="options">
+        /// The options.
+        /// </param>
+        public void WriteAllOptionsForPluginOptionInApplicationData(string pluginKey, Resource project, Dictionary<string, string> options)
+        {
+            this.DeleteOptionsForPlugin(pluginKey, project);
+            foreach (var option in options)
+            {
+                this.WriteOptionInApplicationData(pluginKey, option.Key, option.Value);
+            }
         }
 
         /// <summary>
@@ -579,14 +708,14 @@ namespace ExtensionHelpers
                 return;
             }
 
-            var props = this.environment.Properties[category, page];
+            Properties props = this.environment.Properties[category, page];
             if (props.Item(item) == null)
             {
                 this.WriteOption(category, page, item, value);
             }
             else
             {
-                var data = this.ReadSavedOption(category, page, item);
+                string data = this.ReadSavedOption(category, page, item);
                 if (string.IsNullOrEmpty(data))
                 {
                     this.WriteOption(category, page, item, value);
@@ -600,90 +729,110 @@ namespace ExtensionHelpers
         }
 
         /// <summary>
-        /// The navigate to resource.
+        /// The set option.
         /// </summary>
-        /// <param name="url">
-        /// The url.
+        /// <param name="category">
+        /// The category.
         /// </param>
-        public void NavigateToResource(string url)
+        /// <param name="page">
+        /// The page.
+        /// </param>
+        /// <param name="item">
+        /// The item.
+        /// </param>
+        /// <param name="value">
+        /// The value.
+        /// </param>
+        public void WriteOption(string category, string page, string item, string value)
         {
             if (this.environment == null)
             {
                 return;
             }
 
-            (new System.Threading.Thread(() => this.environment.ItemOperations.Navigate(url, vsNavigateOptions.vsNavigateOptionsNewWindow))).Start();
+            Properties props = this.environment.Properties[category, page];
+            props.Item(item).Value = value;
         }
 
         /// <summary>
-        /// The open resource in visual studio.
+        /// The set option in application data.
         /// </summary>
-        /// <param name="filename">
-        /// The filename.
+        /// <param name="pluginKey">
+        /// The plugin key.
         /// </param>
-        /// <param name="line">
-        /// The line.
+        /// <param name="key">
+        /// The key.
         /// </param>
-        public void OpenResourceInVisualStudio(string filename, int line)
+        /// <param name="value">
+        /// The value.
+        /// </param>
+        public void WriteOptionInApplicationData(string pluginKey, string key, string value)
         {
-            if (this.environment == null)
+            if (string.IsNullOrEmpty(pluginKey) || string.IsNullOrEmpty(key))
             {
                 return;
             }
 
-            var files = this.environment.Solution.FindProjectItem(filename);
-            if (files != null)
+            IEnumerable<string> content = new List<string>();
+            string contentWrite = string.Empty;
+            if (File.Exists(this.ApplicationDataUserSettingsFile))
             {
-                (new System.Threading.Thread(() =>
+                content = File.ReadLines(this.ApplicationDataUserSettingsFile);
+            }
+            else
+            {
+                Directory.CreateDirectory(Directory.GetParent(this.ApplicationDataUserSettingsFile).ToString());
+                using (File.Create(this.ApplicationDataUserSettingsFile))
                 {
-                    try
-                    {
-                        var masterPath = files.Properties.Item("FullPath").Value;
-                        this.environment.ItemOperations.OpenFile(masterPath.ToString());
-                        var textSelection = (TextSelection)this.environment.ActiveDocument.Selection;
-                        textSelection.GotoLine(line < 1 ? 1 : line);
-                        textSelection.SelectLine();
-                    }
-                    catch (Exception ex)
-                    {
-                        this.ErroMessage = "Exception Occured: " + filename + " : " + Convert.ToString(line) + " ex: " + ex.Message;
-                    }
-                })).Start();
+                }
+            }
+
+            contentWrite += pluginKey + "=" + key + "," + value + "\r\n";
+            contentWrite = content.Where(line => !line.Contains(pluginKey + "=" + key + ","))
+                .Aggregate(contentWrite, (current, line) => current + (line + "\r\n"));
+
+            using (var writer = new StreamWriter(this.ApplicationDataUserSettingsFile))
+            {
+                writer.Write(contentWrite);
             }
         }
 
         /// <summary>
-        /// The get vs project item.
+        /// The write to visual studio output.
         /// </summary>
-        /// <param name="filename">
-        /// The filename.
+        /// <param name="errorMessage">
+        /// The error message.
+        /// </param>
+        public void WriteToVisualStudioOutput(string errorMessage)
+        {
+            if (this.CustomPane != null)
+            {
+                this.CustomPane.OutputString(errorMessage + "\r\n");
+                this.CustomPane.FlushToTaskList();
+            }
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// The get long path name.
+        /// </summary>
+        /// <param name="shortPath">
+        /// The short path.
+        /// </param>
+        /// <param name="sb">
+        /// The sb.
+        /// </param>
+        /// <param name="buffer">
+        /// The buffer.
         /// </param>
         /// <returns>
-        /// The <see cref="VSSonarPlugins.VsProjectItem"/>.
+        /// The <see cref="uint"/>.
         /// </returns>
-        public VsProjectItem VsProjectItem(string filename)
-        {
-            if (string.IsNullOrEmpty(filename))
-            {
-                return null;
-            }
-
-            var driveLetter = filename.Substring(0, 1);
-            var item = this.environment.Solution.FindProjectItem(filename);
-
-            if (item == null)
-            {
-                return null;
-            }
-
-            var documentName = item.Document.Name;
-            var documentPath = driveLetter + GetProperFilePathCapitalization(item.Document.FullName).Substring(1);
-            var projectName = item.ContainingProject.Name;
-            var projectPath = driveLetter + GetProperFilePathCapitalization(item.ContainingProject.FullName).Substring(1);
-            var solutionName = this.ActiveSolutionName();
-            var solutionPath = driveLetter + this.ActiveSolutionPath().Substring(1);
-            return new VsProjectItem(documentName, documentPath, projectName, projectPath, solutionName, solutionPath);
-        }
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        private static extern uint GetLongPathName(string shortPath, StringBuilder sb, int buffer);
 
         /// <summary>
         /// The get proper directory capitalization.
@@ -696,8 +845,10 @@ namespace ExtensionHelpers
         /// </returns>
         private static string GetProperDirectoryCapitalization(DirectoryInfo dirInfo)
         {
-            var parentDirInfo = dirInfo.Parent;
-            return null == parentDirInfo ? dirInfo.Name : Path.Combine(GetProperDirectoryCapitalization(parentDirInfo), parentDirInfo.GetDirectories(dirInfo.Name)[0].Name);
+            DirectoryInfo parentDirInfo = dirInfo.Parent;
+            return null == parentDirInfo
+                       ? dirInfo.Name
+                       : Path.Combine(GetProperDirectoryCapitalization(parentDirInfo), parentDirInfo.GetDirectories(dirInfo.Name)[0].Name);
         }
 
         /// <summary>
@@ -712,31 +863,58 @@ namespace ExtensionHelpers
         private static string GetProperFilePathCapitalization(string filename)
         {
             var fileInfo = new FileInfo(filename);
-            var dirInfo = fileInfo.Directory;
+            DirectoryInfo dirInfo = fileInfo.Directory;
             return dirInfo != null ? Path.Combine(GetProperDirectoryCapitalization(dirInfo), dirInfo.GetFiles(fileInfo.Name)[0].Name) : string.Empty;
         }
 
-        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        private static extern uint GetLongPathName(string shortPath, StringBuilder sb, int buffer);
-
+        /// <summary>
+        /// The get short path name.
+        /// </summary>
+        /// <param name="longpath">
+        /// The longpath.
+        /// </param>
+        /// <param name="sb">
+        /// The sb.
+        /// </param>
+        /// <param name="buffer">
+        /// The buffer.
+        /// </param>
+        /// <returns>
+        /// The <see cref="uint"/>.
+        /// </returns>
         [DllImport("kernel32.dll")]
         private static extern uint GetShortPathName(string longpath, StringBuilder sb, int buffer);
 
-        public void RestartVisualStudio()
+        /// <summary>
+        /// The recurse path.
+        /// </summary>
+        /// <param name="fileName">
+        /// The file name.
+        /// </param>
+        /// <param name="path">
+        /// The path.
+        /// </param>
+        /// <param name="paths">
+        /// The paths.
+        /// </param>
+        private void RecursePath(string fileName, string path, List<string> paths)
         {
-            var obj = (IVsShell4)this.provider.GetService(typeof(SVsShell));
-            obj.Restart((uint)__VSRESTARTTYPE.RESTART_Normal);
-        }
-
-        public IVsOutputWindowPane CustomPane { get; set; }
-
-        public void WriteToVisualStudioOutput(string errorMessage)
-        {
-            if (this.CustomPane != null)
+            try
             {
-                this.CustomPane.OutputString(errorMessage + "\r\n");
-                this.CustomPane.FlushToTaskList();
+                var dir = new DirectoryInfo(path);
+                paths.AddRange(from info in dir.GetFiles() where info.FullName.EndsWith(fileName) select info.FullName);
+
+                foreach (var info in dir.GetDirectories().Where(info => !info.Name.StartsWith(".")))
+                {
+                    this.RecursePath(fileName, info.FullName, paths);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
             }
         }
+
+        #endregion
     }
 }

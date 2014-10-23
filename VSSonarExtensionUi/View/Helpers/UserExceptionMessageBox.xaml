@@ -1,0 +1,46 @@
+﻿<Controls:MetroWindow
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             mc:Ignorable="d" 
+             x:Class="VSSonarExtensionUi.View.Helpers.UserExceptionMessageBox"
+             Title="Exception Found" Height="300" Width="800" Background="{Binding BackGroundColor}" Foreground="{Binding ForeGroundColor, FallbackValue=White}">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/Styles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />                 
+            </ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary>
+        </Window.Resources>
+            
+            <Grid>
+		<StackPanel>
+            <Grid >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="30"/>
+                </Grid.RowDefinitions>
+                <TextBox x:Name="ErrorMessage" TextWrapping="Wrap" Height="50" />
+                <Button Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="Close" Click="ButtonBase_OnClick"  />
+            </Grid>
+            <Expander Header="Exception StackTrace">
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="150"/>
+					</Grid.RowDefinitions>
+					<ScrollViewer>
+                        <TextBox x:Name="StackTrace" TextWrapping="Wrap"/>					
+					</ScrollViewer>
+				</Grid>
+			</Expander>               
+		</StackPanel>
+	</Grid>
+</Controls:MetroWindow>

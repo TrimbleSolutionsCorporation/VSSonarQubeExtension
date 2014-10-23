@@ -101,13 +101,14 @@ namespace VSSonarPlugins
         /// <summary>
         /// The open resource in visual studio.
         /// </summary>
+        /// <param name="workfolder"></param>
         /// <param name="filename">
         /// The filename.
         /// </param>
         /// <param name="line">
         /// The line.
         /// </param>
-        void OpenResourceInVisualStudio(string filename, int line);
+        void OpenResourceInVisualStudio(string workfolder, string filename, int line, string editorCommandExec = "notepad");
 
         /// <summary>
         /// The get active project from solution name.

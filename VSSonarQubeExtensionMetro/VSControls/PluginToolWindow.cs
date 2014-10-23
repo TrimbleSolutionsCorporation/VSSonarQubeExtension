@@ -15,10 +15,7 @@
 namespace VSSonarQubeExtension.VSControls
 {
     using System;
-    using System.Runtime.InteropServices;
     using System.Windows.Controls;
-
-    using ExtensionTypes;
 
     using Microsoft.VisualStudio.Shell;
 
@@ -46,7 +43,7 @@ namespace VSSonarQubeExtension.VSControls
             this.BitmapIndex = 1;
             if (CurrentPluginName == null)
             {
-                throw new NotImplementedException("No Plugin Defined");
+                throw new NotSupportedException("No Plugin Defined");
             }
 
             this.Caption = CurrentPluginName;

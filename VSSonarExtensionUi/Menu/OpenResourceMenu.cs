@@ -22,10 +22,12 @@ namespace VSSonarExtensionUi.Menu
     using VSSonarExtensionUi.ViewModel;
     using VSSonarExtensionUi.ViewModel.Helpers;
 
+    using VSSonarPlugins;
+
     /// <summary>
     ///     The issue handler menu.
     /// </summary>
-    internal class ChangeStatusHandler : IMenuItem
+    internal class OpenResourceMenu : IMenuItem
     {
         #region Fields
 
@@ -44,11 +46,17 @@ namespace VSSonarExtensionUi.Menu
         /// </summary>
         private readonly ISonarRestService rest;
 
+        /// <summary>
+        /// The vs helper.
+        /// </summary>
+        private readonly IVsEnvironmentHelper visualStudioHelper;
+
         #endregion
 
         #region Constructors and Destructors
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="OpenResourceMenu"/> class. 
         /// Initializes a new instance of the <see cref="ChangeStatusHandler"/> class.
         /// </summary>
         /// <param name="config">
@@ -57,13 +65,17 @@ namespace VSSonarExtensionUi.Menu
         /// <param name="rest">
         /// The rest.
         /// </param>
+        /// <param name="visualStudioHelper">
+        /// The visual Studio Helper.
+        /// </param>
         /// <param name="model">
         /// The model.
         /// </param>
-        private ChangeStatusHandler(ISonarConfiguration config, ISonarRestService rest, IssueGridViewModel model)
+        private OpenResourceMenu(ISonarConfiguration config, ISonarRestService rest, IVsEnvironmentHelper visualStudioHelper, IssueGridViewModel model)
         {
             this.model = model;
             this.rest = rest;
+            this.visualStudioHelper = visualStudioHelper;
             this.config = config;
             this.AssociatedCommand = new RelayCommand(this.OnAssociateCommand);
             this.SubItems = new ObservableCollection<IMenuItem>();
@@ -106,19 +118,21 @@ namespace VSSonarExtensionUi.Menu
         /// <param name="rest">
         /// The rest.
         /// </param>
+        /// <param name="helper">
+        /// The helper.
+        /// </param>
         /// <param name="model">
         /// The model.
         /// </param>
         /// <returns>
         /// The <see cref="IMenuItem"/>.
         /// </returns>
-        public static IMenuItem MakeMenu(ISonarConfiguration config, ISonarRestService rest, IssueGridViewModel model)
+        public static IMenuItem MakeMenu(ISonarConfiguration config, ISonarRestService rest, IVsEnvironmentHelper helper, IssueGridViewModel model)
         {
-            var topLel = new ChangeStatusHandler(config, rest, model) { CommandText = "Status", IsEnabled = false };
+            var topLel = new OpenResourceMenu(config, rest, helper, model) { CommandText = "Open", IsEnabled = false };
 
-            topLel.SubItems.Add(new ChangeStatusHandler(config, rest, model) { CommandText = "Confirm", IsEnabled = true });
-            topLel.SubItems.Add(new ChangeStatusHandler(config, rest, model) { CommandText = "Fix", IsEnabled = true });
-            topLel.SubItems.Add(new ChangeStatusHandler(config, rest, model) { CommandText = "False Positive", IsEnabled = true });
+            topLel.SubItems.Add(new OpenResourceMenu(config, rest, helper, model) { CommandText = "Visual Studio", IsEnabled = true });
+            topLel.SubItems.Add(new OpenResourceMenu(config, rest, helper, model) { CommandText = "Browser", IsEnabled = true });
             return topLel;
         }
 
@@ -133,22 +147,24 @@ namespace VSSonarExtensionUi.Menu
         {
             try
             {
-                if (this.CommandText.Equals("False Positive"))
+                if (this.CommandText.Equals("Browser"))
                 {
-                    this.rest.MarkIssuesAsFalsePositive(this.config, this.model.SelectedItems, string.Empty);
-                    this.model.RefreshView();
+                    foreach (var issueobj in this.model.SelectedItems)
+                    {
+                        var issue = issueobj as Issue;
+                        if (issue == null)
+                        {
+                            continue;
+                        }
+
+                        var resources = this.rest.GetResourcesData(this.config, issue.Component);
+                        this.visualStudioHelper.NavigateToResource(this.config.Hostname + "/resource/index/" + resources[0].Id);
+                    }
                 }
 
-                if (this.CommandText.Equals("Confirm"))
+                if (this.CommandText.Equals("Visual Studio"))
                 {
-                    this.rest.ConfirmIssues(this.config, this.model.SelectedItems, string.Empty);
-                    this.model.RefreshView();
-                }
-
-                if (this.CommandText.Equals("Fix"))
-                {
-                    this.rest.ResolveIssues(this.config, this.model.SelectedItems, string.Empty);
-                    this.model.RefreshView();
+                    this.model.OnOpenInVsCommand(this.model.SelectedItems);
                 }
             }
             catch (Exception ex)

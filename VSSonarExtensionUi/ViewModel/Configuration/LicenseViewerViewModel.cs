@@ -10,6 +10,8 @@
 
     using PropertyChanged;
 
+    using VSSonarExtensionUi.ViewModel.Helpers;
+
     using VSSonarPlugins;
 
     [ImplementPropertyChanged]
@@ -145,6 +147,10 @@
         }
 
         public void EndDataAssociation()
+        {
+        }
+
+        public void InitDataAssociation(Resource associatedProject, ISonarConfiguration userConnectionConfig, string workingDir)
         {
         }
     }

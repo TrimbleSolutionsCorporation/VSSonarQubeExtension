@@ -36,7 +36,7 @@ namespace ExtensionHelpers.Test.VSTests
             Assert.IsNullOrEmpty(vshelper.CurrentSelectedDocumentLanguage());
             Assert.IsNullOrEmpty(vshelper.ReadSavedOption("sdsa", "sds", "dss"));
             vshelper.NavigateToResource("sdsds");
-            vshelper.OpenResourceInVisualStudio("sdsds", 1);
+            vshelper.OpenResourceInVisualStudio("", "sdsds", 1);
             vshelper.WriteDefaultOption("sdsds", "sdsas", "sdasd", "sdss");
             vshelper.WriteOption("sds", "sds", "sds", "sds");
         }

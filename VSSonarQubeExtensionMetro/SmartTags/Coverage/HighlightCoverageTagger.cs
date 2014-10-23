@@ -20,10 +20,10 @@ namespace VSSonarQubeExtension.SmartTags.Coverage
 
     using Microsoft.VisualStudio.Text;
     using Microsoft.VisualStudio.Text.Tagging;
-    using VSSonarQubeExtension;
-    using BufferUpdate;
+
     using VSSonarExtensionUi.Cache;
 
+    using VSSonarQubeExtension.SmartTags.BufferUpdate;
 
     /// <summary>
     ///     This tagger will provide tags for every word in the buffer that
@@ -72,10 +72,9 @@ namespace VSSonarQubeExtension.SmartTags.Coverage
         {
             try
             {
-
                 this.SourceBuffer = sourceBuffer;
-                VsSonarExtensionPackage.SonarQubeModel.PropertyChanged += this.CoverageDataChanged;
-                VsSonarExtensionPackage.SonarQubeModel.ServerViewModel.PropertyChanged += this.CoverageDataChanged;
+                VsSonarExtensionPackage.SonarQubeModel.AnalysisModeHasChange += this.CoverageDataChanged;
+                VsSonarExtensionPackage.SonarQubeModel.ServerViewModel.CoverageWasModified += this.CoverageDataChanged;
 
                 this.dispatcher = Dispatcher.CurrentDispatcher;
                 new List<SnapshotSpan>();
@@ -173,22 +172,10 @@ namespace VSSonarQubeExtension.SmartTags.Coverage
         /// <param name="e">
         /// The e.
         /// </param>
-        private void CoverageDataChanged(object sender, PropertyChangedEventArgs e)
+        private void CoverageDataChanged(object sender, EventArgs e)
         {
             try
             {
-                if (e.PropertyName == null)
-                {
-                    return;
-                }
-
-                if (!e.PropertyName.Equals("CoverageInEditor")
-                    && !e.PropertyName.Equals("CoverageInEditorEnabled")
-                    && !e.PropertyName.Equals("SelectedView"))
-                {
-                    return;
-                }
-
                 var document = VsEvents.GetPropertyFromBuffer<ITextDocument>(this.SourceBuffer);
                 Resource resource = VsSonarExtensionPackage.SonarQubeModel.ResourceInEditor;
 
@@ -202,7 +189,8 @@ namespace VSSonarQubeExtension.SmartTags.Coverage
                     return;
                 }
 
-                Dictionary<int, CoverageElement> coverageLine = VsSonarExtensionPackage.SonarQubeModel.ServerViewModel.GetCoverageInEditor(this.SourceBuffer.CurrentSnapshot.GetText());
+                Dictionary<int, CoverageElement> coverageLine =
+                    VsSonarExtensionPackage.SonarQubeModel.ServerViewModel.GetCoverageInEditor(this.SourceBuffer.CurrentSnapshot.GetText());
                 this.coverageTags.Clear();
 
                 if (coverageLine.Count == 0)
@@ -239,8 +227,8 @@ namespace VSSonarQubeExtension.SmartTags.Coverage
 
             if (disposing)
             {
-                VsSonarExtensionPackage.SonarQubeModel.PropertyChanged -= this.CoverageDataChanged;
-                VsSonarExtensionPackage.SonarQubeModel.ServerViewModel.PropertyChanged -= this.CoverageDataChanged;
+                VsSonarExtensionPackage.SonarQubeModel.AnalysisModeHasChange -= this.CoverageDataChanged;
+                VsSonarExtensionPackage.SonarQubeModel.ServerViewModel.CoverageWasModified -= this.CoverageDataChanged;
 
                 this.SourceBuffer = null;
             }
@@ -258,7 +246,10 @@ namespace VSSonarQubeExtension.SmartTags.Coverage
         /// The line.
         /// </param>
         /// <returns>
-        /// The <see cref="IEnumerable"/>.
+        /// The <see>
+        ///         <cref>IEnumerable</cref>
+        ///     </see>
+        ///     .
         /// </returns>
         private IEnumerable<CoverageTag> GetCoverageTagsInSpanForLine(Dictionary<int, CoverageElement> data, int line)
         {
@@ -353,7 +344,7 @@ namespace VSSonarQubeExtension.SmartTags.Coverage
         /// </param>
         private void UpdateDataAfterConstructor(object obj)
         {
-            this.CoverageDataChanged(obj, new PropertyChangedEventArgs("CoverageInEditor"));
+            this.CoverageDataChanged(obj, EventArgs.Empty);
         }
 
         #endregion
