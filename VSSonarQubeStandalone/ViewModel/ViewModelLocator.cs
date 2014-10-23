@@ -12,12 +12,12 @@
   See http://www.galasoft.ch/mvvm
 */
 
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Ioc;
-using Microsoft.Practices.ServiceLocation;
-
 namespace VSSonarQubeStandalone.ViewModel
 {
+    using GalaSoft.MvvmLight.Ioc;
+
+    using Microsoft.Practices.ServiceLocation;
+
     /// <summary>
     /// This class contains static references to all the view models in the
     /// application and provides an entry point for the bindings.
@@ -30,21 +30,12 @@ namespace VSSonarQubeStandalone.ViewModel
         public ViewModelLocator()
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
-
-            ////if (ViewModelBase.IsInDesignModeStatic)
-            ////{
-            ////    // Create design time view services and models
-            ////    SimpleIoc.Default.Register<IDataService, DesignDataService>();
-            ////}
-            ////else
-            ////{
-            ////    // Create run time view services and models
-            ////    SimpleIoc.Default.Register<IDataService, DataService>();
-            ////}
-
             SimpleIoc.Default.Register<MainViewModel>();
         }
 
+        /// <summary>
+        /// Gets the main.
+        /// </summary>
         public MainViewModel Main
         {
             get
@@ -52,7 +43,10 @@ namespace VSSonarQubeStandalone.ViewModel
                 return ServiceLocator.Current.GetInstance<MainViewModel>();
             }
         }
-        
+
+        /// <summary>
+        /// The cleanup.
+        /// </summary>
         public static void Cleanup()
         {
             // TODO Clear the ViewModels
