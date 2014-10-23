@@ -28,7 +28,6 @@
 				<ResourceDictionary Source="pack://application:,,,/VSSonarExtensionUi;component/Resources/Icons.xaml" />
                 <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/ButtonStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-        	<viewModel:SonarQubeViewModel x:Key="SonarQubeViewModelDataSource" d:IsDataSource="True"/>
                                    
             <DataTemplate DataType="{x:Type analysis:ServerViewModel}">
                 <analysisView:ServerView/>
@@ -50,9 +49,6 @@
             
         </ResourceDictionary>
     </UserControl.Resources>
-	<UserControl.DataContext>
-		<Binding Source="{StaticResource SonarQubeViewModelDataSource}"/>
-	</UserControl.DataContext>
             
     <UserControl.Background>
    <SolidColorBrush Color="{Binding BackGroundColor}"/>

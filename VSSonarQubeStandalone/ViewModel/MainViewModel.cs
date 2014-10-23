@@ -1,7 +1,27 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="MainViewModel.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   This class contains properties that the main View can data bind to.
+//   <para>
+//   Use the <strong>mvvminpc</strong> snippet to add bindable properties to this ViewModel.
+//   </para>
+//   <para>
+//   You can also use Blend to data bind with the tool's support.
+//   </para>
+//   <para>
+//   See http://www.galasoft.ch/mvvm
+//   </para>
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
 using GalaSoft.MvvmLight;
 
 namespace VSSonarQubeStandalone.ViewModel
 {
+    using VSSonarExtensionUi.ViewModel;
+
     /// <summary>
     /// This class contains properties that the main View can data bind to.
     /// <para>
@@ -21,14 +41,12 @@ namespace VSSonarQubeStandalone.ViewModel
         /// </summary>
         public MainViewModel()
         {
-            ////if (IsInDesignMode)
-            ////{
-            ////    // Code runs in Blend --> create design time data.
-            ////}
-            ////else
-            ////{
-            ////    // Code runs "for real"
-            ////}
+            this.SonarQubeView = new SonarQubeViewModel();
         }
+
+        /// <summary>
+        /// Gets or sets the sonar qube view.
+        /// </summary>
+        public SonarQubeViewModel SonarQubeView { get; set; }
     }
 }
