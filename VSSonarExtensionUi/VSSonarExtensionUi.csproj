@@ -293,10 +293,6 @@
       <Project>{75a39a9b-06b2-4249-9d3c-c2319951bc53}</Project>
       <Name>ExtensionTypes</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VSSonarExtension\VSSonarExtension.csproj">
-      <Project>{7D094D65-9165-4FFC-A6E4-CAEE27A64FAD}</Project>
-      <Name>VSSonarExtension</Name>
-    </ProjectReference>
     <ProjectReference Include="..\VSSonarPlugins\VSSonarPlugins.csproj">
       <Project>{3311C918-B662-436D-8BC8-F38B447B1414}</Project>
       <Name>VSSonarPlugins</Name>

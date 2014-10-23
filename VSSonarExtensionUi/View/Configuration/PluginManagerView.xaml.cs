@@ -8,8 +8,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarExtensionUi.View.Configuration
 {
-    using VSSonarExtension.MainView;
-
     using VSSonarExtensionUi.ViewModel.Configuration;
 
     /// <summary>
@@ -21,7 +19,6 @@ namespace VSSonarExtensionUi.View.Configuration
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PluginManagerView"/> class. 
-        ///     Initializes a new instance of the <see cref="GeneralOptionsControl"/> class.
         /// </summary>
         public PluginManagerView()
         {
@@ -30,7 +27,6 @@ namespace VSSonarExtensionUi.View.Configuration
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PluginManagerView"/> class. 
-        /// Initializes a new instance of the <see cref="GeneralOptionsControl"/> class.
         /// </summary>
         /// <param name="controller">
         /// The controller.

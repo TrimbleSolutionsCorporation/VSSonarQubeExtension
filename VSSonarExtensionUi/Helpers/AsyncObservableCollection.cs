@@ -25,6 +25,9 @@ namespace VSSonarExtensionUi.Helpers
     /// </typeparam>
     public class AsyncObservableCollection<T> : ObservableCollection<T>
     {
+        /// <summary>
+        /// The model.
+        /// </summary>
         private readonly IDataModel model;
 
         #region Fields
@@ -170,7 +173,7 @@ namespace VSSonarExtensionUi.Helpers
             {
                 if (item != null)
                 {
-                    item.PropertyChanged += this.item_PropertyChanged;
+                    item.PropertyChanged += this.ItemPropertyChanged;
                 }
             }
         }
@@ -187,13 +190,13 @@ namespace VSSonarExtensionUi.Helpers
             {
                 if (item != null)
                 {
-                    item.PropertyChanged -= this.item_PropertyChanged;
+                    item.PropertyChanged -= this.ItemPropertyChanged;
                 }
             }
         }
 
         /// <summary>
-        /// The item_ property changed.
+        /// The item property changed.
         /// </summary>
         /// <param name="sender">
         /// The sender.
@@ -201,7 +204,7 @@ namespace VSSonarExtensionUi.Helpers
         /// <param name="e">
         /// The e.
         /// </param>
-        private void item_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {          
             this.model.ProcessChanges(sender, e);
         }

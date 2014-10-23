@@ -76,9 +76,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GeneralOptionsDialogsTest.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="GeneralOptionsDialogsTest.cs" />
     <Compile Include="PackageTest.cs" />
     <!---->
     <Compile Include="TestUtils.cs" />
@@ -133,10 +131,6 @@
     <ProjectReference Include="..\VSSonarPlugins\VSSonarPlugins.csproj">
       <Project>{3311c918-b662-436d-8bc8-f38b447b1414}</Project>
       <Name>VSSonarPlugins</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\VSSonarExtension\VSSonarExtension.csproj">
-      <Project>{7D094D65-9165-4FFC-A6E4-CAEE27A64FAD}</Project>
-      <Name>VSSonarExtension</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
