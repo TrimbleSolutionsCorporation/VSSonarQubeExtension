@@ -664,26 +664,28 @@ namespace VSSonarExtensionUi.ViewModel
         /// </returns>
         private Resource CreateAResourceForFileInEditor(string fullName)
         {
-            var toReturn = new Resource();
+            var keyTypes = new string[3];
 
             try
             {
-                string resourceKeySafe = this.LocalViewModel.LocalAnalyserModule.GetResourceKey(
+
+
+                keyTypes[1] = this.LocalViewModel.LocalAnalyserModule.GetResourceKey(
                     this.VsHelper.VsProjectItem(fullName), 
                     this.AssociatedProject, 
                     this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, 
                     true);
-                string resourceKeyNonSafe = this.LocalViewModel.LocalAnalyserModule.GetResourceKey(
+                keyTypes[2] = this.LocalViewModel.LocalAnalyserModule.GetResourceKey(
                     this.VsHelper.VsProjectItem(fullName), 
                     this.AssociatedProject, 
                     this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, 
                     false);
 
-                string fileName = Path.GetFileName(fullName);
-                toReturn.Name = fileName;
-                toReturn.Lname = fileName;
-                toReturn.Key = resourceKeySafe;
-                toReturn.NonSafeKey = resourceKeyNonSafe;
+                var tounix = fullName.Replace("\\", "/");
+                var fromBaseDir = tounix.Replace(this.OpenSolutionPath.Replace("\\", "/") + "/", string.Empty);
+
+                keyTypes[0] = this.AssociatedProject.Key + ":" + fromBaseDir;
+
             }
             catch (Exception ex)
             {
@@ -692,31 +694,26 @@ namespace VSSonarExtensionUi.ViewModel
                 return null;
             }
 
-            try
+            foreach (var key in keyTypes)
             {
-                toReturn =
-                    this.SonarRestConnector.GetResourcesData(
-                        this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, 
-                        toReturn.Key)[0];
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
                 try
                 {
-                    toReturn =
-                        this.SonarRestConnector.GetResourcesData(
-                            this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, 
-                            toReturn.NonSafeKey)[0];
+                    var toReturn = this.SonarRestConnector.GetResourcesData(this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, key)[0];
+                    var fileName = Path.GetFileName(fullName);
+                    toReturn.Name = fileName;
+                    toReturn.Lname = fileName;
+                    this.ErrorMessage = "Resource Found";
+                    return toReturn;
                 }
-                catch (Exception ex1)
+                catch (Exception ex)
                 {
-                    this.ErrorMessage = "Resource not found in Server";
-                    this.DiagnosticMessage = ex1.Message;
+                    Debug.WriteLine(ex.Message);
                 }
             }
 
-            return toReturn;
+            this.ErrorMessage = "Resource not found in Server";
+
+            return null;
         }
 
         /// <summary>
@@ -914,6 +911,7 @@ namespace VSSonarExtensionUi.ViewModel
             if (!string.IsNullOrEmpty(this.OpenSolutionName))
             {
                 this.VsHelper.WriteOptionInApplicationData(this.OpenSolutionName, "PROJECTKEY", this.SelectedProject.Key);
+                this.VsHelper.WriteOptionInApplicationData(this.OpenSolutionName, "PROJECTLOCATION", this.OpenSolutionPath);
             }
 
             this.VSonarQubeOptionsViewData.Project = this.SelectedProject;
@@ -922,7 +920,10 @@ namespace VSSonarExtensionUi.ViewModel
             this.VSonarQubeOptionsViewData.SyncOptionsToFile();
             this.AssociatedProject = this.SelectedProject;
 
-            this.OpenSolutionPath = this.VsHelper.ReadOptionFromApplicationData(this.AssociatedProject.Key, "PROJECTLOCATION");
+            if (string.IsNullOrEmpty(this.OpenSolutionPath))
+            {
+                this.OpenSolutionPath = this.VsHelper.ReadOptionFromApplicationData(this.AssociatedProject.Key, "PROJECTLOCATION");
+            }            
 
             foreach (
                 IAnalysisViewModelBase analyser in

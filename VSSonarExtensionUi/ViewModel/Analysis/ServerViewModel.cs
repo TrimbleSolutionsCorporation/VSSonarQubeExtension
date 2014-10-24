@@ -384,6 +384,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.vsenvironmenthelper = vsenvironmenthelperIn;
             this.StatusBar = statusBar;
             this.ServiceProvier = provider;
+            this.IssuesGridView.Vsenvironmenthelper = vsenvironmenthelperIn;
         }
 
         #endregion
