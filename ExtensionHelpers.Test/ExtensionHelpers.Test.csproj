@@ -52,7 +52,6 @@
   <ItemGroup>
     <Compile Include="NonVSTests\ConnectionConfigurationHelpersTests.cs" />
     <Compile Include="NonVSTests\ReadWriteToApplicationDataTests.cs" />
-    <Compile Include="VSTests\VsEnvironmentHelperTests.cs" />
     <Compile Include="NonVSTests\VSSonarUtilsCallbacksTest.cs" />
     <Compile Include="NonVSTests\VSSonarUtilsDifferenceHelpersTest.cs" />
     <Compile Include="NonVSTests\VSSonarUtilsTest.cs" />
@@ -104,6 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
+    <Folder Include="VSTests\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildFolder)\NunitRunnerTask.Targets" />
