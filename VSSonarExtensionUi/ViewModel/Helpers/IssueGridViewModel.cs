@@ -84,7 +84,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// </summary>
         public IssueGridViewModel()
         {
-            this.Issues = new AsyncObservableCollection<Issue>(this);
+            this.Issues = new AsyncObservableCollection<Issue>();
             this.IssuesInView = new CollectionViewSource { Source = this.Issues }.View;
 
             BindingOperations.EnableCollectionSynchronization(this.IssuesInView, Lock);
@@ -106,7 +106,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         {
             this.model = model;
             this.Vsenvironmenthelper = model.VsHelper;
-            this.Issues = new AsyncObservableCollection<Issue>(this);
+            this.Issues = new AsyncObservableCollection<Issue>();
             this.IssuesInView = new CollectionViewSource { Source = this.Issues }.View;
             BindingOperations.EnableCollectionSynchronization(this.IssuesInView, Lock);
 
@@ -673,8 +673,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                         }
                     });
 
-            this.IssuesInView = new CollectionViewSource { Source = null }.View;
-            this.IssuesInView = new CollectionViewSource { Source = this.Issues }.View;
+            this.RefreshView();
         }
 
         #endregion

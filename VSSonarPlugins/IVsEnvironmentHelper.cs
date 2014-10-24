@@ -86,8 +86,8 @@ namespace VSSonarPlugins
         /// The <see cref="string"/>.
         /// </returns>
         string UserAppDataConfigurationFile();
-        void WriteToVisualStudioOutput(string errorMessage);
 
+        void WriteToVisualStudioOutput(string errorMessage);
 
         /// <summary>
         /// The navigate to resource.
@@ -108,6 +108,9 @@ namespace VSSonarPlugins
         /// The line.
         /// </param>
         void OpenResourceInVisualStudio(string workfolder, string filename, int line, string editorCommandExec = "notepad");
+
+
+        string GetProperFilePathCapitalization(string filename);
 
         /// <summary>
         /// The get active project from solution name.

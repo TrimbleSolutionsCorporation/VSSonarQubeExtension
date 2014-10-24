@@ -865,7 +865,7 @@ namespace ExtensionHelpers
         /// <returns>
         /// The <see cref="string"/>.
         /// </returns>
-        private static string GetProperFilePathCapitalization(string filename)
+        public string GetProperFilePathCapitalization(string filename)
         {
             var fileInfo = new FileInfo(filename);
             DirectoryInfo dirInfo = fileInfo.Directory;

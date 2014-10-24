@@ -681,11 +681,11 @@ namespace VSSonarExtensionUi.ViewModel
                     this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, 
                     false);
 
-                var tounix = fullName.Replace("\\", "/");
-                var fromBaseDir = tounix.Replace(this.OpenSolutionPath.Replace("\\", "/") + "/", string.Empty);
-
+                var tounix = this.VsHelper.GetProperFilePathCapitalization(fullName).Replace("\\", "/");
+                string driveLetter = tounix.Substring(0, 1);
+                var solutionCan = driveLetter + this.OpenSolutionPath.Replace("\\", "/").Substring(1);
+                var fromBaseDir = tounix.Replace(solutionCan + "/", string.Empty);
                 keyTypes[0] = this.AssociatedProject.Key + ":" + fromBaseDir;
-
             }
             catch (Exception ex)
             {
