@@ -83,7 +83,7 @@ namespace VSSonarQubeExtension.SmartTags.BufferUpdate
 
 
             VsSonarExtensionPackage.SonarQubeModel.AnalysisModeHasChange += this.AnalysisModeHasChange;
-            VsSonarExtensionPackage.SonarQubeModel.VSonarQubeOptionsViewData.SonarConfigurationViewModel.ConfigurationHasChanged += this.AnalysisModeHasChange;
+            VsSonarExtensionPackage.SonarQubeModel.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.ConfigurationHasChanged += this.AnalysisModeHasChange;
         }
 
         private void AnalysisModeHasChange(object sender, EventArgs e)

@@ -3,11 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-             xmlns:viewModel="clr-namespace:VSSonarExtensionUi.ViewModel"
 
-	x:Class="VSSonarExtensionUi.View.Configuration.GeneralOptionsControlView" 
-             mc:Ignorable="d" Height="400" Width="800" Foreground="{Binding ForeGroundColor, FallbackValue=White}" Background="{Binding BackGroundColor}">
+    x:Class="VSSonarExtensionUi.View.Configuration.AnalysisOptionsView" 
+             mc:Ignorable="d" Height="400" Width="800" >
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -19,7 +17,14 @@
             </ResourceDictionary.MergedDictionaries>        	
         </ResourceDictionary>
     </UserControl.Resources>
-	<Grid>
+    <UserControl.Background>
+        <SolidColorBrush Color="{Binding BackGroundColor, FallbackValue=Black}"/>
+    </UserControl.Background>
+
+    <UserControl.Foreground>
+        <SolidColorBrush Color="{Binding ForeGroundColor, FallbackValue=White}"/>
+    </UserControl.Foreground>
+    <Grid>
 		<ScrollViewer VerticalScrollBarVisibility="Visible">
 			<StackPanel >
 				<Grid>
@@ -41,8 +46,8 @@
 						<ColumnDefinition Width="54*"/>
 					</Grid.ColumnDefinitions>
 					<Label Foreground="{Binding ForeGroundColor, FallbackValue=White}" Background="{Binding BackGroundColor}" Grid.Column="0" Content="Java Executable Path"/>
-					<TextBox   Grid.Column="1" IsReadOnly="true"  TextWrapping="Wrap" Text="{Binding JavaBinary}"  />
-					<Button    Style="{DynamicResource SquareButtonStyle}" Grid.Column="2" Command="{Binding BrowseForJavaTrigger}" Content="Browse"  />
+					<TextBox Grid.Row="0" Grid.Column="1" IsReadOnly="true"  TextWrapping="Wrap" Text="{Binding JavaBinary}"  />
+					<Button    Style="{DynamicResource SquareButtonStyle}" Grid.Row="0" Grid.Column="2" Command="{Binding BrowseForJavaTrigger}" Content="Browse"  />
 					<Label Foreground="{Binding ForeGroundColor, FallbackValue=White}" Background="{Binding BackGroundColor}"         Grid.Column="0" Grid.Row="1" Content="SonarQube Runner Path" Height="25" VerticalAlignment="Bottom"/>
 					<TextBox   Grid.Column="1" Grid.Row="1" IsReadOnly="true"  TextWrapping="Wrap" Text="{Binding SonarQubeBinary}"  />
 					<Button    Style="{DynamicResource SquareButtonStyle}" Grid.Column="2" Grid.Row="1" Command="{Binding BrowseForSonarRunnerQubeTrigger}" Content="Browse"  />

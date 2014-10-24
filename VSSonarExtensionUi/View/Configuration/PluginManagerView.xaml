@@ -7,7 +7,7 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:command="http://www.galasoft.ch/mvvmlight"
              x:Class="VSSonarExtensionUi.View.Configuration.PluginManagerView" 
-             mc:Ignorable="d" d:DesignHeight="400" d:DesignWidth="800" Foreground="{Binding ForeGroundColor, FallbackValue=White}" Background="{Binding BackGroundColor}">
+             mc:Ignorable="d" d:DesignHeight="400" d:DesignWidth="800">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -21,7 +21,14 @@
             </ResourceDictionary.MergedDictionaries>        	
         </ResourceDictionary>
     </UserControl.Resources>
-	<Grid>
+    <UserControl.Background>
+        <SolidColorBrush Color="{Binding BackGroundColor, FallbackValue=Black}"/>
+    </UserControl.Background>
+
+    <UserControl.Foreground>
+        <SolidColorBrush Color="{Binding ForeGroundColor, FallbackValue=White}"/>
+    </UserControl.Foreground>
+    <Grid>
 		<ScrollViewer>
 			<Grid Height="auto" >
 				<Grid.RowDefinitions>

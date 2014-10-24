@@ -38,17 +38,8 @@
     <Reference Include="CredentialManagement">
       <HintPath>..\packages\CredentialManagement.1.0.1\lib\net35\CredentialManagement.dll</HintPath>
     </Reference>
-    <Reference Include="envdte, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="EnvDTE80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
     <Reference Include="GalaSoft.MvvmLight">
       <HintPath>..\packages\MvvmLightLibs.5.0.2.0\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
-    </Reference>
-    <Reference Include="GalaSoft.MvvmLight.Extras">
-      <HintPath>..\packages\MvvmLightLibs.5.0.2.0\lib\net45\GalaSoft.MvvmLight.Extras.dll</HintPath>
     </Reference>
     <Reference Include="GalaSoft.MvvmLight.Platform">
       <HintPath>..\packages\MvvmLightLibs.5.0.2.0\lib\net45\GalaSoft.MvvmLight.Platform.dll</HintPath>
@@ -56,14 +47,9 @@
     <Reference Include="MahApps.Metro">
       <HintPath>..\packages\MahApps.Metro.0.14.0.0\lib\net45\MahApps.Metro.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.ServiceLocation">
-      <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.Shell.12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="PresentationFramework.Aero" />
-    <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="PropertyChanged">
       <HintPath>..\packages\PropertyChanged.Fody.1.48.5\Lib\portable-net4+sl4+wp8+win8+wpa81+MonoAndroid16+MonoTouch40\PropertyChanged.dll</HintPath>
       <Private>False</Private>
@@ -77,8 +63,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Security" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmLightLibs.5.0.2.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
@@ -86,14 +70,7 @@
     <Reference Include="System.Xaml">
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="UserCredentialsDialog">
-      <HintPath>..\references\UserCredentialsDialog.dll</HintPath>
-    </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -124,7 +101,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Helpers\AsyncObservableCollection.cs" />
     <Compile Include="ViewModel\Configuration\VSonarQubeOptionsViewModel.cs" />
-    <Compile Include="ViewModel\Configuration\AnalysisOptions.cs" />
+    <Compile Include="ViewModel\Configuration\AnalysisOptionsViewModel.cs" />
     <Compile Include="ViewModel\Helpers\IOptionsViewModelBase.cs" />
     <Compile Include="ViewModel\Helpers\IAnalysisViewModelBase.cs" />
     <Compile Include="ViewModel\Helpers\IssueGridViewModel.cs" />
@@ -134,13 +111,13 @@
     <Compile Include="ViewModel\Configuration\PluginManagerModel.cs" />
     <Compile Include="ViewModel\Analysis\ServerViewModel.cs" />
     <Compile Include="ViewModel\Analysis\LocalViewModel.cs" />
-    <Compile Include="ViewModel\Configuration\SonarConfigurationViewModel.cs" />
+    <Compile Include="ViewModel\Configuration\GeneralConfigurationViewModel.cs" />
     <Compile Include="ViewModel\SonarQubeViewModel.cs" />
     <Compile Include="View\Configuration\ExtensionOptionsWindow.xaml.cs">
       <DependentUpon>ExtensionOptionsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Configuration\GeneralOptionsControlView.xaml.cs">
-      <DependentUpon>GeneralOptionsControlView.xaml</DependentUpon>
+    <Compile Include="View\Configuration\AnalysisOptionsView.xaml.cs">
+      <DependentUpon>AnalysisOptionsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Analysis\IssueSearchView.xaml.cs">
       <DependentUpon>IssueSearchView.xaml</DependentUpon>
@@ -163,8 +140,8 @@
     <Compile Include="View\Analysis\ServerView.xaml.cs">
       <DependentUpon>ServerView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Configuration\SonarConfigurationView.xaml.cs">
-      <DependentUpon>SonarConfigurationView.xaml</DependentUpon>
+    <Compile Include="View\Configuration\GeneralConfigurationView.xaml.cs">
+      <DependentUpon>GeneralConfigurationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SonarQubeUserControlVS.xaml.cs">
       <DependentUpon>SonarQubeUserControlVS.xaml</DependentUpon>
@@ -222,7 +199,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\Configuration\GeneralOptionsControlView.xaml">
+    <Page Include="View\Configuration\AnalysisOptionsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -258,7 +235,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\Configuration\SonarConfigurationView.xaml">
+    <Page Include="View\Configuration\GeneralConfigurationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

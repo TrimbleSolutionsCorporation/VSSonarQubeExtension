@@ -7,7 +7,7 @@
         xmlns:viewconfiguration="clr-namespace:VSSonarExtensionUi.View.Configuration"
         xmlns:configuration="clr-namespace:VSSonarExtensionUi.ViewModel.Configuration"
         Title="VSSonarQube Options"
-        Height="472" Width="1040" Foreground="{Binding ForeGroundColor, FallbackValue=White}" Background="{Binding BackGroundColor}">
+        Height="472" Width="1040">
 	<Window.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
@@ -23,21 +23,30 @@
                 <viewconfiguration:LicenseViewerView/>
             </DataTemplate>
             
-            <DataTemplate DataType="{x:Type configuration:AnalysisOptions}">
-                <viewconfiguration:GeneralOptionsControlView/>
+            <DataTemplate DataType="{x:Type configuration:AnalysisOptionsViewModel}">
+                <viewconfiguration:AnalysisOptionsView/>
             </DataTemplate>
             
             <DataTemplate DataType="{x:Type configuration:PluginManagerModel}">
                 <viewconfiguration:PluginManagerView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type configuration:SonarConfigurationViewModel}">
-                <viewconfiguration:SonarConfigurationView/>
+            <DataTemplate DataType="{x:Type configuration:GeneralConfigurationViewModel}">
+                <viewconfiguration:GeneralConfigurationView/>
             </DataTemplate>
 
         </ResourceDictionary>
 	</Window.Resources>
-	<Grid>
+
+    <Window.Background>
+        <SolidColorBrush Color="{Binding BackGroundColor, FallbackValue=Black}"/>
+    </Window.Background>
+
+    <Window.Foreground>
+        <SolidColorBrush Color="{Binding ForeGroundColor, FallbackValue=White}"/>
+    </Window.Foreground>
+    
+    <Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="34*"/>
 			<RowDefinition Height="30"/>

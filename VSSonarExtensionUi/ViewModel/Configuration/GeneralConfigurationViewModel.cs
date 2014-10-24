@@ -1,17 +1,11 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="SonarConfigurationViewModel.cs" company="Copyright © 2014 Tekla Corporation. Tekla is a Trimble Company">
-//     Copyright (C) 2014 [Jorge Costa, Jorge.Costa@tekla.com]
+// <copyright file="GeneralConfigurationViewModel.cs" company="">
+//   
 // </copyright>
+// <summary>
+//   The sonar configuration view viewModel.
+// </summary>
 // --------------------------------------------------------------------------------------------------------------------
-// This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
-// as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
-// of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. 
-// You should have received a copy of the GNU Lesser General Public License along with this program; if not, write to the Free
-// Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// --------------------------------------------------------------------------------------------------------------------
-
 namespace VSSonarExtensionUi.ViewModel.Configuration
 {
     using System;
@@ -39,7 +33,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     ///     The sonar configuration view viewModel.
     /// </summary>
     [ImplementPropertyChanged]
-    public class SonarConfigurationViewModel : IViewModelBase, IOptionsViewModelBase
+    public class GeneralConfigurationViewModel : IViewModelBase, IOptionsViewModelBase
     {
         #region Fields
 
@@ -49,7 +43,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         private readonly ISonarRestService restService;
 
         /// <summary>
-        /// The sq view model.
+        ///     The sq view model.
         /// </summary>
         private readonly SonarQubeViewModel sonarQubeViewModel;
 
@@ -68,7 +62,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SonarConfigurationViewModel"/> class.
+        /// Initializes a new instance of the <see cref="GeneralConfigurationViewModel"/> class.
         /// </summary>
         /// <param name="viewModel">
         /// The view model.
@@ -82,7 +76,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="sonarQubeViewModel">
         /// The sonar qube view model.
         /// </param>
-        public SonarConfigurationViewModel(
+        public GeneralConfigurationViewModel(
             VSonarQubeOptionsViewModel viewModel, 
             ISonarRestService restService, 
             IVsEnvironmentHelper helper, 
@@ -96,6 +90,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
             this.ClearCacheCommand = new RelayCommand(this.OnClearCacheCommand);
             this.TestConnectionCommand = new RelayCommand<object>(this.OnTestAndSavePassword);
+            this.ClearCredentials = new RelayCommand(this.OnClearCredentials);
 
             this.BackGroundColor = Colors.Black;
             this.ForeGroundColor = Colors.White;
@@ -126,6 +121,11 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         ///     Gets or sets the on clear cache command.
         /// </summary>
         public ICommand ClearCacheCommand { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the clear credentials.
+        /// </summary>
+        public ICommand ClearCredentials { get; set; }
 
         /// <summary>
         ///     Gets or sets a value indicating whether disable editor tags.
@@ -173,7 +173,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public ISonarConfiguration UserConnectionConfig { get; set; }
 
         /// <summary>
-        /// Gets or sets the user defined editor.
+        ///     Gets or sets the user defined editor.
         /// </summary>
         public string UserDefinedEditor { get; set; }
 
@@ -195,8 +195,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.visualStudioHelper.WriteOptionInApplicationData("VSSonarQubeConfig", "DisableEditorTags", this.DisableEditorTags ? "TRUE" : "FALSE");
 
             this.viewModel.Vsenvironmenthelper.WriteOptionInApplicationData(
-                "VSSonarQubeConfig",
-                "AutoConnectAtStart",
+                "VSSonarQubeConfig", 
+                "AutoConnectAtStart", 
                 this.IsConnectAtStartOn ? "true" : "false");
         }
 
@@ -321,6 +321,18 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         }
 
         /// <summary>
+        ///     The on clear credentials.
+        /// </summary>
+        private void OnClearCredentials()
+        {
+            var cm = new Credential { Target = "VSSonarQubeExtension", };
+            cm.Delete();
+            this.ServerAddress = string.Empty;
+            this.Password = string.Empty;
+            this.UserName = string.Empty;
+        }
+
+        /// <summary>
         /// The on test and save password.
         /// </summary>
         /// <param name="obj">
@@ -344,7 +356,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                     }
                     else
                     {
-                        UserExceptionMessageBox.ShowException("Cannot Authenticate", null);
+                        this.StatusMessage = "Wrong Credentials";
                     }
                 }
                 catch (Exception ex)
@@ -369,10 +381,10 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
             this.IsConnectAtStartOn = isConnectAuto.Equals("true");
 
-            var editor = this.viewModel.Vsenvironmenthelper.ReadOptionFromApplicationData("VSSonarQubeConfig", "UserDefinedEditor");
+            string editor = this.viewModel.Vsenvironmenthelper.ReadOptionFromApplicationData("VSSonarQubeConfig", "UserDefinedEditor");
             this.UserDefinedEditor = !string.IsNullOrEmpty(editor) ? editor : "notepad";
 
-            var editorTags = this.visualStudioHelper.ReadOptionFromApplicationData("VSSonarQubeConfig", "DisableEditorTags");
+            string editorTags = this.visualStudioHelper.ReadOptionFromApplicationData("VSSonarQubeConfig", "DisableEditorTags");
             if (!string.IsNullOrEmpty(editorTags))
             {
                 this.DisableEditorTags = editorTags.ToLower().Equals("true");

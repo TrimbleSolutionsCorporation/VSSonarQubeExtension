@@ -3,10 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:viewModel="clr-namespace:VSSonarExtensionUi.ViewModel"
-             xmlns:helpers="clr-namespace:VSSonarExtensionUi.Helpers"
-             x:Class="VSSonarExtensionUi.View.Configuration.SonarConfigurationView" 
-             mc:Ignorable="d" d:DesignHeight="400" d:DesignWidth="600" Foreground="{Binding ForeGroundColor, FallbackValue=White}" Background="{Binding BackGroundColor}">
+    xmlns:helpers="clr-namespace:VSSonarExtensionUi.Helpers"
+             x:Class="VSSonarExtensionUi.View.Configuration.GeneralConfigurationView" 
+             mc:Ignorable="d" d:DesignHeight="400" d:DesignWidth="600">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -23,6 +22,13 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
+    <UserControl.Background>
+        <SolidColorBrush Color="{Binding BackGroundColor, FallbackValue=Black}"/>
+    </UserControl.Background>
+
+    <UserControl.Foreground>
+        <SolidColorBrush Color="{Binding ForeGroundColor, FallbackValue=White}"/>
+    </UserControl.Foreground>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"></RowDefinition>
@@ -41,17 +47,27 @@
 
         </Grid.ColumnDefinitions>
         <Label                 Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"
-                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Back}"  Grid.Row="0" Content="Server Address"></Label>
+                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"  Grid.Row="0" Content="Server Address"></Label>
         <Label                 Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"
-                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Back}"  Grid.Row="1" Grid.Column="0"
+                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"  Grid.Row="1" Grid.Column="0"
                Content="UserName"></Label>
         <Label                 Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"
-                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Back}"  Grid.Row="2" Grid.Column="0" Content="Password"></Label>
+                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"  Grid.Row="2" Grid.Column="0" Content="Password"></Label>
         <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding ServerAddress}"></TextBox>
         <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding UserName}"></TextBox>
-        <PasswordBox helpers:PasswordHelper.Attach="True" helpers:PasswordHelper.Password="{Binding Password, Mode=TwoWay}" x:Name="PasswordBox" Grid.Column="2" Grid.Row="2"></PasswordBox>
-        
-        <Button Grid.Column="1" Grid.Row="3"
+        <PasswordBox helpers:PasswordHelper.Attach="True" helpers:PasswordHelper.Password="{Binding Password, Mode=TwoWay}" x:Name="PasswordBox" Grid.Column="1" Grid.Row="2"></PasswordBox>
+
+        <DockPanel  Grid.Column="1" Grid.Row="3" >
+
+            <Button Width="100"
+                Style="{StaticResource MyMetroButton}"
+                Foreground="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
+                Background="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}" 
+                Content="Clear Data" 
+                Command="{Binding ClearCredentials}" 
+                />
+            
+            <Button Width="200"
                 Style="{StaticResource MyMetroButton}"
                 Foreground="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
                 Background="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}" 
@@ -59,6 +75,10 @@
                 Command="{Binding TestConnectionCommand}" 
                 CommandParameter="{Binding ElementName=PasswordBox}"
                 />
+            
+            <Label Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"
+                   Content="{Binding StatusMessage, FallbackValue=Autheticated}" HorizontalAlignment="Center"></Label>
+        </DockPanel>
 
         <Button Grid.Column="1" Grid.Row="5"
                 Style="{StaticResource MyMetroButton}"
@@ -68,13 +88,13 @@
                 Command="{Binding ClearCacheCommand}" 
                 />
         <Label 
-            Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Back}" 
+            Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}" 
             Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}" 
             Grid.Row="5" Grid.Column="0" Content="Server Cache"/>
-        <CheckBox IsChecked="{Binding IsConnectAtStartOn}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Back}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}" Grid.Column="0" Grid.Row="3" Content="Connect at start"></CheckBox>
-        <Label Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Back}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}" Grid.Row="4" Grid.Column="2" Content="{Binding StatusMessage}" VerticalAlignment="Center" HorizontalAlignment="Center"></Label>
-
-        <GroupBox Header="Editor Options"  Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3">
+        
+        <CheckBox IsChecked="{Binding IsConnectAtStartOn}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}" Grid.Column="0" Grid.Row="3" Content="Connect at start"></CheckBox>
+       
+        <GroupBox Header="Editor Options"  Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="30"></RowDefinition>
@@ -92,14 +112,10 @@
                   Content="Disable Editor Tags"
                   IsChecked="{Binding DisableEditorTags}" />
                 <Label
-                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Back}"
+                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
                     Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"
                     Grid.Row="1" Grid.Column="0" Content="External Editor" VerticalAlignment="Center" HorizontalAlignment="Center"></Label>
-                <TextBox Grid.Row="1" Grid.Column="1"
-                      Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                      Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"
-                      IsReadOnly="False"
-                      Text="{Binding UserDefinedEditor}" />
+                <TextBox Grid.Row="1" Grid.Column="1" IsReadOnly="False" Text="{Binding UserDefinedEditor}" />
             </Grid>
 
 

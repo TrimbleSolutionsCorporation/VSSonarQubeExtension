@@ -627,28 +627,28 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                             this.AssociatedProject, 
                             this.sonarQubeViewModel.AnalysisChangeLines, 
                             this.sonarQubeViewModel.SonarVersion, 
-                            this.sonarQubeViewModel.VSonarQubeOptionsViewData.SonarConfigurationViewModel.UserConnectionConfig);
+                            this.sonarQubeViewModel.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig);
                         break;
                     case AnalysisTypes.ANALYSIS:
                         this.LocalAnalyserModule.RunFullAnalysis(
                             this.SourceWorkingDir, 
                             this.AssociatedProject, 
                             this.sonarQubeViewModel.SonarVersion, 
-                            this.sonarQubeViewModel.VSonarQubeOptionsViewData.SonarConfigurationViewModel.UserConnectionConfig);
+                            this.sonarQubeViewModel.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig);
                         break;
                     case AnalysisTypes.INCREMENTAL:
                         this.LocalAnalyserModule.RunIncrementalAnalysis(
                             this.SourceWorkingDir, 
                             this.AssociatedProject, 
                             this.sonarQubeViewModel.SonarVersion, 
-                            this.sonarQubeViewModel.VSonarQubeOptionsViewData.SonarConfigurationViewModel.UserConnectionConfig);
+                            this.sonarQubeViewModel.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig);
                         break;
                     case AnalysisTypes.PREVIEW:
                         this.LocalAnalyserModule.RunPreviewAnalysis(
                             this.SourceWorkingDir, 
                             this.AssociatedProject, 
                             this.sonarQubeViewModel.SonarVersion, 
-                            this.sonarQubeViewModel.VSonarQubeOptionsViewData.SonarConfigurationViewModel.UserConnectionConfig);
+                            this.sonarQubeViewModel.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig);
                         break;
                 }
             }
@@ -707,7 +707,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                             {
                                 this.IssuesGridView.UpdateIssues(
                                     this.LocalAnalyserModule.GetIssues(
-                                        this.sonarQubeViewModel.VSonarQubeOptionsViewData.SonarConfigurationViewModel.UserConnectionConfig, 
+                                        this.sonarQubeViewModel.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, 
                                         this.AssociatedProject));
                                 this.OnSelectedViewChanged();
                             });

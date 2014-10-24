@@ -217,6 +217,7 @@ namespace VSSonarQubeExtension
                             ((VsPropertiesHelper)this.visualStudioInterface).CustomPane.Activate();
                         }
 
+                        SonarQubeModel.PluginRequest += this.LoadPluginIntoNewToolWindow;
                         // this.UpdateModelInToolWindow(SonarQubeModel);
                     }
                     catch (Exception ex)
@@ -278,6 +279,27 @@ namespace VSSonarQubeExtension
             menuCommandId = new CommandID(GuidList.GuidStartAnalysisSolutionCTXCmdSet, PkgCmdIdList.CmdidRunAnalysisInProject);
             this.runAnalysisInProjectCmd = new OleMenuCommand(this.ShowIssuesToolWindow, menuCommandId);
             mcs.AddCommand(this.runAnalysisInProjectCmd);
+        }
+
+        /// <summary>
+        /// The load plugin into new tool window.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="eventArgs">
+        /// The event args.
+        /// </param>
+        private void LoadPluginIntoNewToolWindow(object sender, EventArgs eventArgs)
+        {
+            var plugin = SonarQubeModel.InUsePlugin;
+            this.ShowToolWindow(
+                plugin.Value.GetUserControl(
+                SonarQubeModel.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig,
+                SonarQubeModel.AssociatedProject,
+                SonarQubeModel.VsHelper),
+                plugin.Key,
+                plugin.Value.GetHeader());
         }
 
         /// <summary>

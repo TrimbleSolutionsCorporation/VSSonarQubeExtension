@@ -17,14 +17,14 @@ namespace VSSonarExtensionUi.View.Configuration
     /// <summary>
     ///     Interaction logic for SonarConfigurationView.xaml
     /// </summary>
-    public partial class SonarConfigurationView
+    public partial class GeneralConfigurationView
     {
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SonarConfigurationView"/> class.
+        /// Initializes a new instance of the <see cref="GeneralConfigurationView"/> class.
         /// </summary>
-        public SonarConfigurationView()
+        public GeneralConfigurationView()
         {
             this.InitializeComponent();
         }

@@ -562,7 +562,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 {
                     List<Resource> resources =
                         this.model.SonarRestConnector.GetResourcesData(
-                            this.model.VSonarQubeOptionsViewData.SonarConfigurationViewModel.UserConnectionConfig, 
+                            this.model.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, 
                             issue.Component);
                     filename = resources[0].Name;
                 }
@@ -573,7 +573,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                     {
                         List<Resource> resources =
                             this.model.SonarRestConnector.GetResourcesData(
-                                this.model.VSonarQubeOptionsViewData.SonarConfigurationViewModel.UserConnectionConfig, 
+                                this.model.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, 
                                 issue.ComponentSafe);
                         filename = resources[0].Name;
                     }
@@ -725,12 +725,12 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             var menu = new ObservableCollection<IMenuItem>
                            {
                                ChangeStatusHandler.MakeMenu(
-                                   this.model.VSonarQubeOptionsViewData.SonarConfigurationViewModel
+                                   this.model.VSonarQubeOptionsViewData.GeneralConfigurationViewModel
                                    .UserConnectionConfig, 
                                    this.model.SonarRestConnector, 
                                    this), 
                                OpenResourceMenu.MakeMenu(
-                                   this.model.VSonarQubeOptionsViewData.SonarConfigurationViewModel
+                                   this.model.VSonarQubeOptionsViewData.GeneralConfigurationViewModel
                                    .UserConnectionConfig, 
                                    this.model.SonarRestConnector, 
                                    this.vsenvironmenthelper, 

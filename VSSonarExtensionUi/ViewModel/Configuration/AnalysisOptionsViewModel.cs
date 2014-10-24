@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AnalysisOptions.cs" company="Copyright © 2014 Tekla Corporation. Tekla is a Trimble Company">
+// <copyright file="AnalysisOptionsViewModel.cs" company="Copyright © 2014 Tekla Corporation. Tekla is a Trimble Company">
 //     Copyright (C) 2014 [Jorge Costa, Jorge.Costa@tekla.com]
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -40,7 +40,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     ///     The dummy options controller.
     /// </summary>
     [ImplementPropertyChanged]
-    public class AnalysisOptions : IViewModelBase, IOptionsViewModelBase
+    public class AnalysisOptionsViewModel : IViewModelBase, IOptionsViewModelBase
     {
         #region Static Fields
 
@@ -73,7 +73,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AnalysisOptions"/> class.
+        /// Initializes a new instance of the <see cref="AnalysisOptionsViewModel"/> class.
         /// </summary>
         /// <param name="vsenvironmenthelper">
         /// The Vsenvironmenthelper.
@@ -81,7 +81,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="viewModel">
         /// The view Model.
         /// </param>
-        public AnalysisOptions(IVsEnvironmentHelper vsenvironmenthelper, VSonarQubeOptionsViewModel viewModel)
+        public AnalysisOptionsViewModel(IVsEnvironmentHelper vsenvironmenthelper, VSonarQubeOptionsViewModel viewModel)
         {
             this.vsenvironmenthelper = vsenvironmenthelper;
             this.viewModel = viewModel;

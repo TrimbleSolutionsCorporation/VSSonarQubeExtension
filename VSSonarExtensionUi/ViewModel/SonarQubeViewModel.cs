@@ -104,6 +104,8 @@ namespace VSSonarExtensionUi.ViewModel
         /// </summary>
         public event ChangedEventHandler AnalysisModeHasChange;
 
+        public event ChangedEventHandler PluginRequest;
+
         #endregion
 
         #region Public Properties
@@ -319,6 +321,11 @@ namespace VSSonarExtensionUi.ViewModel
         /// </summary>
         public IVsEnvironmentHelper VsHelper { get; set; }
 
+        /// <summary>
+        /// Gets or sets the in use plugin.
+        /// </summary>
+        public KeyValuePair<int, IMenuCommandPlugin> InUsePlugin { get; set; }
+
         #endregion
 
         #region Public Methods and Operators
@@ -431,7 +438,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// </returns>
         public List<Issue> GetIssuesInEditor(Resource fileResource, string fileContent)
         {
-            if (this.VSonarQubeOptionsViewData.SonarConfigurationViewModel.DisableEditorTags)
+            if (this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.DisableEditorTags)
             {
                 return new List<Issue>();
             }
@@ -507,7 +514,17 @@ namespace VSSonarExtensionUi.ViewModel
         {
             if (string.IsNullOrEmpty(fullName) || this.AssociatedProject == null)
             {
-                this.ErrorMessage = "Extension Not Ready";
+                if (this.IsConnected)
+                {
+                    this.ErrorMessage = "Not Connected";
+                }
+                else
+                {
+                    this.ErrorMessage = "Not Associated";
+                }
+
+                this.DiagnosticMessage = string.Empty;
+
                 return;
             }
 
@@ -583,6 +600,14 @@ namespace VSSonarExtensionUi.ViewModel
             }
         }
 
+        protected virtual void OnPluginRequest(EventArgs e)
+        {
+            if (this.PluginRequest != null)
+            {
+                this.PluginRequest(this, e);
+            }
+        }
+
         /// <summary>
         /// The associate solution with sonar project.
         /// </summary>
@@ -597,7 +622,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// </returns>
         private Resource AssociateSolutionWithSonarProject(string solutionName, string solutionPath)
         {
-            if (this.VSonarQubeOptionsViewData.SonarConfigurationViewModel.UserConnectionConfig == null)
+            if (this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig == null)
             {
                 this.ErrorMessage = "User Not Logged In, Extension is Unusable. Configure User Settions in Tools > Options > Sonar";
                 return null;
@@ -610,7 +635,7 @@ namespace VSSonarExtensionUi.ViewModel
                 {
                     return
                         this.SonarRestConnector.GetResourcesData(
-                            this.VSonarQubeOptionsViewData.SonarConfigurationViewModel.UserConnectionConfig, 
+                            this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, 
                             sourceKey)[0];
                 }
                 catch (Exception ex)
@@ -624,7 +649,7 @@ namespace VSSonarExtensionUi.ViewModel
             return string.IsNullOrEmpty(sourceKey)
                        ? null
                        : this.SonarRestConnector.GetResourcesData(
-                           this.VSonarQubeOptionsViewData.SonarConfigurationViewModel.UserConnectionConfig, 
+                           this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, 
                            sourceKey)[0];
         }
 
@@ -646,12 +671,12 @@ namespace VSSonarExtensionUi.ViewModel
                 string resourceKeySafe = this.LocalViewModel.LocalAnalyserModule.GetResourceKey(
                     this.VsHelper.VsProjectItem(fullName), 
                     this.AssociatedProject, 
-                    this.VSonarQubeOptionsViewData.SonarConfigurationViewModel.UserConnectionConfig, 
+                    this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, 
                     true);
                 string resourceKeyNonSafe = this.LocalViewModel.LocalAnalyserModule.GetResourceKey(
                     this.VsHelper.VsProjectItem(fullName), 
                     this.AssociatedProject, 
-                    this.VSonarQubeOptionsViewData.SonarConfigurationViewModel.UserConnectionConfig, 
+                    this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, 
                     false);
 
                 string fileName = Path.GetFileName(fullName);
@@ -671,7 +696,7 @@ namespace VSSonarExtensionUi.ViewModel
             {
                 toReturn =
                     this.SonarRestConnector.GetResourcesData(
-                        this.VSonarQubeOptionsViewData.SonarConfigurationViewModel.UserConnectionConfig, 
+                        this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, 
                         toReturn.Key)[0];
             }
             catch (Exception ex)
@@ -681,7 +706,7 @@ namespace VSSonarExtensionUi.ViewModel
                 {
                     toReturn =
                         this.SonarRestConnector.GetResourcesData(
-                            this.VSonarQubeOptionsViewData.SonarConfigurationViewModel.UserConnectionConfig, 
+                            this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, 
                             toReturn.NonSafeKey)[0];
                 }
                 catch (Exception ex1)
@@ -695,22 +720,58 @@ namespace VSSonarExtensionUi.ViewModel
         }
 
         /// <summary>
-        /// The execute tool window.
+        /// The execute plugin.
         /// </summary>
-        /// <param name="obj">
-        /// The obj.
+        /// <param name="header">
+        /// The data.
         /// </param>
-        private void ExecuteToolWindow(string obj)
+        public void ExecutePlugin(string header)
         {
-        }
+            foreach (var plugin in this.menuItemPlugins)
+            {
+                if (plugin.Value.GetHeader().Equals(header))
+                {
+                    var isEnabled =
+                        this.VsHelper.ReadOptionFromApplicationData(
+                            GlobalIds.PluginEnabledControlId,
+                            plugin.Value.GetPluginDescription(this.VsHelper).Name);
 
+                    if (string.IsNullOrEmpty(isEnabled)
+                        || isEnabled.Equals("true", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        if (this.IsRunningInVisualStudio())
+                        {
+                            this.InUsePlugin = plugin;
+                            this.OnPluginRequest(EventArgs.Empty);
+                        }
+                        else
+                        {
+                            var window = new Window();
+                            window.Content =
+                                plugin.Value.GetUserControl(
+                                    this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig,
+                                    this.AssociatedProject,
+                                    this.VsHelper);
+
+                            window.ShowDialog();
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show(
+                            plugin.Value.GetPluginDescription(this.VsHelper).Name + " is disabled");
+                    }
+                }
+            }
+        }
+    
         /// <summary>
         ///     The init commands.
         /// </summary>
         private void InitCommands()
         {
             this.LaunchExtensionPropertiesCommand = new RelayCommand(this.LaunchExtensionProperties);
-            this.ToolSwitchCommand = new RelayCommand<string>(this.ExecuteToolWindow);
+            this.ToolSwitchCommand = new RelayCommand<string>(this.ExecutePlugin);
 
             this.AssignProjectCommand = new RelayCommand(this.OnAssignProjectCommand);
             this.ClearCacheCommand = new RelayCommand(this.OnClearCacheCommand);
@@ -725,7 +786,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// </summary>
         private void InitConnection()
         {
-            if (this.VSonarQubeOptionsViewData.SonarConfigurationViewModel.IsConnectAtStartOn)
+            if (this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.IsConnectAtStartOn)
             {
                 this.OnConnectToSonar();
             }
@@ -787,14 +848,14 @@ namespace VSSonarExtensionUi.ViewModel
             {
                 foreach (IAnalysisPlugin plugin in plugins)
                 {
-                    ISonarConfiguration configuration = this.VSonarQubeOptionsViewData.SonarConfigurationViewModel.UserConnectionConfig;
+                    ISonarConfiguration configuration = this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig;
                     IPluginsOptions controloption = plugin.GetPluginControlOptions(configuration);
                     if (controloption == null)
                     {
                         continue;
                     }
 
-                    string pluginKey = plugin.GetKey(this.VSonarQubeOptionsViewData.SonarConfigurationViewModel.UserConnectionConfig);
+                    string pluginKey = plugin.GetKey(this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig);
                     Dictionary<string, string> options = this.VsHelper.ReadAllAvailableOptionsInSettings(pluginKey);
                     controloption.SetOptions(options);
                 }
@@ -810,7 +871,7 @@ namespace VSSonarExtensionUi.ViewModel
                 this, 
                 this.VsHelper, 
                 this.SonarRestConnector, 
-                this.VSonarQubeOptionsViewData.SonarConfigurationViewModel.UserConnectionConfig);
+                this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig);
             this.LocalViewModel = new LocalViewModel(this, this.PluginControl.GetPlugins(), this.SonarRestConnector, this.VsHelper);
             this.IssuesSearchViewModel = new IssuesSearchViewModel(this, this.VsHelper, this.SonarRestConnector);
 
@@ -869,7 +930,7 @@ namespace VSSonarExtensionUi.ViewModel
             {
                 analyser.InitDataAssociation(
                     this.AssociatedProject, 
-                    this.VSonarQubeOptionsViewData.SonarConfigurationViewModel.UserConnectionConfig, 
+                    this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, 
                     this.OpenSolutionPath);
             }
 
@@ -880,7 +941,7 @@ namespace VSSonarExtensionUi.ViewModel
             {
                 option.InitDataAssociation(
                     this.AssociatedProject, 
-                    this.VSonarQubeOptionsViewData.SonarConfigurationViewModel.UserConnectionConfig, 
+                    this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, 
                     this.OpenSolutionPath);
             }
 
@@ -953,14 +1014,14 @@ namespace VSSonarExtensionUi.ViewModel
         {
             try
             {
-                if (this.VSonarQubeOptionsViewData.SonarConfigurationViewModel.UserConnectionConfig == null)
+                if (this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig == null)
                 {
                     var window = new ExtensionOptionsWindow(this.VSonarQubeOptionsViewData);
-                    this.VSonarQubeOptionsViewData.SelectedOption = this.VSonarQubeOptionsViewData.SonarConfigurationViewModel;
+                    this.VSonarQubeOptionsViewData.SelectedOption = this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel;
                     window.ShowDialog();
                 }
 
-                if (this.VSonarQubeOptionsViewData.SonarConfigurationViewModel.UserConnectionConfig == null)
+                if (this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig == null)
                 {
                     this.IsConnected = false;
                     return;
@@ -972,21 +1033,21 @@ namespace VSSonarExtensionUi.ViewModel
                 this.ConnectionTooltip = "Authenticated, but no associated";
 
                 List<Resource> projects =
-                    this.SonarRestConnector.GetProjectsList(this.VSonarQubeOptionsViewData.SonarConfigurationViewModel.UserConnectionConfig);
+                    this.SonarRestConnector.GetProjectsList(this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig);
                 if (projects != null && projects.Count > 0)
                 {
                     this.OnRefreshProjectList(projects);
                 }
 
                 this.SonarVersion =
-                    this.SonarRestConnector.GetServerInfo(this.VSonarQubeOptionsViewData.SonarConfigurationViewModel.UserConnectionConfig);
+                    this.SonarRestConnector.GetServerInfo(this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig);
                 this.ErrorMessage = "Online";
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                this.ErrorMessage = "Cannot Connect: " + ex.Message;
-                this.DiagnosticMessage = "Cannot Connect: " + ex.StackTrace;
+                this.ErrorMessage = "Cannot Connect: Check Credentials";
+                this.DiagnosticMessage = "Cannot Connect: " + ex.Message + " \n " + ex.StackTrace;
                 this.ConnectionTooltip = "No Connection";
                 this.IsConnected = false;
                 this.IsConnectedButNotAssociated = false;
