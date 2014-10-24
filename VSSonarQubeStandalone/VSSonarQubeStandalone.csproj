@@ -138,6 +138,31 @@
       <Name>VSSonarPlugins</Name>
     </ProjectReference>
   </ItemGroup>
+  <PropertyGroup>
+    <PackageFiles>
+        $(OutputPath)\CredentialManagement.dll;
+        $(OutputPath)\DifferenceEngine.dll;
+        $(OutputPath)\Executor.dll;
+        $(OutputPath)\ExtensionHelpers.dll;
+        $(OutputPath)\ExtensionTypes.dll;
+        $(OutputPath)\FSharp.Data.dll;
+        $(OutputPath)\GalaSoft.MvvmLight.dll;
+        $(OutputPath)\GalaSoft.MvvmLight.Extras.dll;
+        $(OutputPath)\GalaSoft.MvvmLight.Platform.dll;
+        $(OutputPath)\log4net.dll;
+        $(OutputPath)\MahApps.Metro.dll;
+        $(OutputPath)\Microsoft.Practices.ServiceLocation.dll;
+        $(OutputPath)\RestSharp.dll;
+        $(OutputPath)\Rhino.Licensing.dll;
+        $(OutputPath)\SonarLocalAnalyser.dll;
+        $(OutputPath)\SonarRestService.dll;
+        $(OutputPath)\System.Windows.Interactivity.dll;
+        $(OutputPath)\VSSonarExtensionUi.dll;
+        $(OutputPath)\VSSonarPlugins.dll;
+        $(OutputPath)\VSSonarQubeStandalone.exe;
+    </PackageFiles>
+  </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildFolder)\CreatePackage.targets" />   
   <Import Project="$(MSBuildFolder)\AssemblyPatcherTask.targets" />
 </Project>

@@ -1,0 +1,11 @@
+﻿<Project DefaultTargets="RestoreNugetPackages" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <NugetRestoreTaskIncluded>yes</NugetRestoreTaskIncluded>
+    </PropertyGroup>
+    
+  <UsingTask TaskName="NugetRestoreTask" AssemblyFile="NugetRestoreTask.dll" />  
+  <Target Name="RestoreNugetPackages">
+    <Message Text="============= Restore $(Projects) =============" Importance="High" />
+    <NugetRestoreTask SolutionFile="$(Projects)"/>
+  </Target>
+</Project>

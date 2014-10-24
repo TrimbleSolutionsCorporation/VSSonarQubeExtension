@@ -1,0 +1,7 @@
+﻿<Project DefaultTargets="AfterBuild" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="MSBuild.ExtensionPack.tasks"/>
+  <Target Name="AfterBuild" AfterTargets="AfterBuild">
+    <Message Text="Package Files: $(PackageFiles)" Importance="High" />
+    <MSBuild.ExtensionPack.Compression.Zip RemoveRoot="$(OutputPath)" TaskAction="Create" CompressFiles="$(PackageFiles)" ZipFileName="$(OutputPath)\$(AssemblyName).ZIP"/>
+  </Target>
+</Project>
