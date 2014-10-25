@@ -1,22 +1,17 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="PluginManagerModel.cs" company="Copyright © 2014 Tekla Corporation. Tekla is a Trimble Company">
-//     Copyright (C) 2014 [Jorge Costa, Jorge.Costa@tekla.com]
+// <copyright file="PluginManagerModel.cs" company="">
+//   
 // </copyright>
+// <summary>
+//   The dummy options controller.
+// </summary>
 // --------------------------------------------------------------------------------------------------------------------
-// This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
-// as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
-// of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. 
-// You should have received a copy of the GNU Lesser General Public License along with this program; if not, write to the Free
-// Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// --------------------------------------------------------------------------------------------------------------------
-
 namespace VSSonarExtensionUi.ViewModel.Configuration
 {
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Diagnostics;
     using System.IO;
     using System.Reflection;
     using System.Windows.Forms;
@@ -29,6 +24,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
     using PropertyChanged;
 
+    using SonarRestService;
+
     using VSSonarExtensionUi.View.Helpers;
     using VSSonarExtensionUi.ViewModel.Helpers;
 
@@ -36,7 +33,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
     using Application = System.Windows.Application;
     using UserControl = System.Windows.Controls.UserControl;
-    using System.Diagnostics;
 
     /// <summary>
     ///     The dummy options controller.
@@ -52,19 +48,19 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         private readonly IPluginController controller;
 
         /// <summary>
-        ///     The viewModel.
-        /// </summary>
-        private readonly VSonarQubeOptionsViewModel viewModel;
-
-        /// <summary>
         ///     The plugin list.
         /// </summary>
         private readonly ObservableCollection<PluginDescription> pluginList = new ObservableCollection<PluginDescription>();
 
         /// <summary>
+        ///     The viewModel.
+        /// </summary>
+        private readonly VSonarQubeOptionsViewModel viewModel;
+
+        /// <summary>
         ///     The visual studio helper.
         /// </summary>
-        private readonly IVsEnvironmentHelper visualStudioHelper;
+        private IVsEnvironmentHelper visualStudioHelper;
 
         #endregion
 
@@ -143,6 +139,11 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public Color BackGroundColor { get; set; }
 
         /// <summary>
+        ///     Gets or sets a value indicating whether can modify plugin props.
+        /// </summary>
+        public bool CanModifyPluginProps { get; set; }
+
+        /// <summary>
         ///     Gets or sets a value indicating whether changes are required.
         /// </summary>
         public bool ChangesAreRequired { get; set; }
@@ -178,7 +179,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public List<IMenuCommandPlugin> MenuPlugins { get; private set; }
 
         /// <summary>
-        /// Gets or sets the options in view.
+        ///     Gets or sets the options in view.
         /// </summary>
         public UserControl OptionsInView { get; set; }
 
@@ -218,11 +219,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         public ICommand SelectionChangedCommand { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether can modify plugin props.
-        /// </summary>
-        public bool CanModifyPluginProps { get; set; }
-
         #endregion
 
         #region Public Methods and Operators
@@ -237,8 +233,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 foreach (IAnalysisPlugin plugin in this.AnalysisPlugins)
                 {
                     this.visualStudioHelper.WriteOptionInApplicationData(
-                        GlobalIds.PluginEnabledControlId,
-                        plugin.GetPluginDescription(this.visualStudioHelper).Name,
+                        GlobalIds.PluginEnabledControlId, 
+                        plugin.GetPluginDescription(this.visualStudioHelper).Name, 
                         plugin.GetPluginDescription(this.visualStudioHelper).Enabled.ToString());
 
                     if (this.viewModel.Project != null)
@@ -259,27 +255,11 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         }
 
         /// <summary>
-        /// The end data association.
+        ///     The end data association.
         /// </summary>
         public void EndDataAssociation()
         {
             this.CanModifyPluginProps = false;
-        }
-
-        /// <summary>
-        /// The init data association.
-        /// </summary>
-        /// <param name="associatedProject">
-        /// The associated project.
-        /// </param>
-        /// <param name="userConnectionConfig">
-        /// The user connection config.
-        /// </param>
-        /// <param name="workingDir">
-        /// The working dir.
-        /// </param>
-        public void InitDataAssociation(Resource associatedProject, ISonarConfiguration userConnectionConfig, string workingDir)
-        {
         }
 
         /// <summary>
@@ -310,6 +290,22 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                     this.visualStudioHelper.WriteAllOptionsForPluginOptionInApplicationData(pluginKey, null, optionsToSave);
                 }
             }
+        }
+
+        /// <summary>
+        /// The init data association.
+        /// </summary>
+        /// <param name="associatedProject">
+        /// The associated project.
+        /// </param>
+        /// <param name="userConnectionConfig">
+        /// The user connection config.
+        /// </param>
+        /// <param name="workingDir">
+        /// The working dir.
+        /// </param>
+        public void InitDataAssociation(Resource associatedProject, ISonarConfiguration userConnectionConfig, string workingDir)
+        {
         }
 
         /// <summary>
@@ -398,6 +394,30 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         {
             this.BackGroundColor = background;
             this.ForeGroundColor = foreground;
+        }
+
+        /// <summary>
+        /// The update services.
+        /// </summary>
+        /// <param name="restServiceIn">
+        /// The rest service in.
+        /// </param>
+        /// <param name="vsenvironmenthelperIn">
+        /// The vsenvironmenthelper in.
+        /// </param>
+        /// <param name="statusBar">
+        /// The status bar.
+        /// </param>
+        /// <param name="provider">
+        /// The provider.
+        /// </param>
+        public void UpdateServices(
+            ISonarRestService restServiceIn, 
+            IVsEnvironmentHelper vsenvironmenthelperIn, 
+            IVSSStatusBar statusBar, 
+            IServiceProvider provider)
+        {
+            this.visualStudioHelper = vsenvironmenthelperIn;
         }
 
         #endregion

@@ -461,8 +461,13 @@ namespace VSSonarExtensionUi.ViewModel
 
             foreach (IAnalysisViewModelBase view in this.SonarQubeViews)
             {
-                IAnalysisViewModelBase md = view;
-                md.UpdateServices(restServiceIn, vsenvironmenthelperIn, statusBar, provider);
+                view.UpdateServices(restServiceIn, vsenvironmenthelperIn, statusBar, provider);
+            }
+
+            this.VSonarQubeOptionsViewData.UpdateServices(restServiceIn, vsenvironmenthelperIn, statusBar, provider);
+            foreach (IOptionsViewModelBase view in this.VSonarQubeOptionsViewData.AvailableOptions)
+            {
+                view.UpdateServices(restServiceIn, vsenvironmenthelperIn, statusBar, provider);
             }
         }
 

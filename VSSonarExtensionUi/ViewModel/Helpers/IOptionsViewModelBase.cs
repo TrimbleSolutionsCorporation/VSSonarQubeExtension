@@ -14,7 +14,13 @@
 
 namespace VSSonarExtensionUi.ViewModel.Helpers
 {
+    using System;
+
     using ExtensionTypes;
+
+    using SonarRestService;
+
+    using VSSonarPlugins;
 
     /// <summary>
     /// The OptionsViewModelBase interface.
@@ -56,6 +62,27 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// The save and close.
         /// </summary>
         void SaveAndClose();
+
+        /// <summary>
+        /// The update services.
+        /// </summary>
+        /// <param name="restServiceIn">
+        /// The rest service in.
+        /// </param>
+        /// <param name="vsenvironmenthelperIn">
+        /// The vsenvironmenthelper in.
+        /// </param>
+        /// <param name="statusBar">
+        /// The status bar.
+        /// </param>
+        /// <param name="provider">
+        /// The provider.
+        /// </param>
+        void UpdateServices(
+            ISonarRestService restServiceIn,
+            IVsEnvironmentHelper vsenvironmenthelperIn,
+            IVSSStatusBar statusBar,
+            IServiceProvider provider);
 
         #endregion
     }

@@ -1,19 +1,14 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="LicenseViewerViewModel.cs" company="Copyright © 2014 Tekla Corporation. Tekla is a Trimble Company">
-//     Copyright (C) 2014 [Jorge Costa, Jorge.Costa@tekla.com]
+// <copyright file="LicenseViewerViewModel.cs" company="">
+//   
 // </copyright>
+// <summary>
+//   The license viewer view model.
+// </summary>
 // --------------------------------------------------------------------------------------------------------------------
-// This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
-// as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
-// of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. 
-// You should have received a copy of the GNU Lesser General Public License along with this program; if not, write to the Free
-// Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// --------------------------------------------------------------------------------------------------------------------
-
 namespace VSSonarExtensionUi.ViewModel.Configuration
 {
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Windows.Media;
@@ -24,33 +19,32 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
     using PropertyChanged;
 
+    using SonarRestService;
+
     using VSSonarExtensionUi.ViewModel.Helpers;
 
     using VSSonarPlugins;
 
+    /// <summary>
+    /// The license viewer view model.
+    /// </summary>
     [ImplementPropertyChanged]
     public class LicenseViewerViewModel : IViewModelBase, IOptionsViewModelBase
     {
+        #region Fields
 
-        public void UpdateColours(Color background, Color foreground)
-        {
-            this.BackGroundColor = background;
-            this.ForeGroundColor = foreground;
-        }
+        /// <summary>
+        /// The plugins.
+        /// </summary>
+        private readonly List<IAnalysisPlugin> plugins;
 
-        public Color ForeGroundColor { get; set; }
+        #endregion
 
-        public Color BackGroundColor { get; set; }
+        #region Constructors and Destructors
 
-        public void RefreshDataForResource(Resource fullName)
-        {
-            ;
-        }
-
-        private List<IAnalysisPlugin> plugins;
-
- 
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LicenseViewerViewModel"/> class.
+        /// </summary>
         public LicenseViewerViewModel()
         {
             this.Header = "License Manager";
@@ -61,6 +55,15 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.ForeGroundColor = Colors.Black;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LicenseViewerViewModel"/> class.
+        /// </summary>
+        /// <param name="plugincontroller">
+        /// The plugincontroller.
+        /// </param>
+        /// <param name="configuration">
+        /// The configuration.
+        /// </param>
         public LicenseViewerViewModel(PluginController plugincontroller, ISonarConfiguration configuration)
         {
             this.Header = "License Manager";
@@ -69,44 +72,110 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.plugins = plugincontroller.GetPlugins();
             this.ConnectionConfiguration = configuration;
 
-            this.GenerateTokenCommand = new RelayCommand(this.OnGenerateTokenCommand, () => !(this.SelectedLicense == null));
+            this.GenerateTokenCommand = new RelayCommand(this.OnGenerateTokenCommand, () => this.SelectedLicense != null);
 
             this.ForeGroundColor = Colors.Black;
             this.ForeGroundColor = Colors.Black;
         }
 
-        private void OnGenerateTokenCommand()
-        {
-            foreach (var plugin in this.plugins)
-            {
-                var key = plugin.GetKey(this.ConnectionConfiguration);
-                if (this.SelectedLicense.ProductId.Contains(key))
-                {
-                    this.GeneratedToken = plugin.GenerateTokenId(this.ConnectionConfiguration);
-                }
-            }
-        }
+        #endregion
 
+        #region Public Properties
 
         /// <summary>
-        /// Gets or sets the available licenses.
+        ///     Gets or sets the available licenses.
         /// </summary>
         public ObservableCollection<VsLicense> AvailableLicenses { get; set; }
-        public ISonarConfiguration ConnectionConfiguration { get; set; }
-        public string Header { get; set; }
-
-        public RelayCommand GenerateTokenCommand { get; set; }
-        public VsLicense SelectedLicense { get; set; }
-        public string GeneratedToken { get; set; }
-
-
-
 
         /// <summary>
-        /// The refresh licenses.
+        /// Gets or sets the back ground color.
+        /// </summary>
+        public Color BackGroundColor { get; set; }
+
+        /// <summary>
+        /// Gets or sets the connection configuration.
+        /// </summary>
+        public ISonarConfiguration ConnectionConfiguration { get; set; }
+
+        /// <summary>
+        /// Gets or sets the fore ground color.
+        /// </summary>
+        public Color ForeGroundColor { get; set; }
+
+        /// <summary>
+        /// Gets or sets the generate token command.
+        /// </summary>
+        public RelayCommand GenerateTokenCommand { get; set; }
+
+        /// <summary>
+        /// Gets or sets the generated token.
+        /// </summary>
+        public string GeneratedToken { get; set; }
+
+        /// <summary>
+        /// Gets or sets the header.
+        /// </summary>
+        public string Header { get; set; }
+
+        /// <summary>
+        /// Gets or sets the selected license.
+        /// </summary>
+        public VsLicense SelectedLicense { get; set; }
+
+        #endregion
+
+        #region Public Methods and Operators
+
+        /// <summary>
+        /// The update services.
+        /// </summary>
+        /// <param name="restServiceIn">
+        /// The rest service in.
+        /// </param>
+        /// <param name="vsenvironmenthelperIn">
+        /// The vsenvironmenthelper in.
+        /// </param>
+        /// <param name="statusBar">
+        /// The status bar.
+        /// </param>
+        /// <param name="provider">
+        /// The provider.
+        /// </param>
+        public void UpdateServices(
+            ISonarRestService restServiceIn,
+            IVsEnvironmentHelper vsenvironmenthelperIn,
+            IVSSStatusBar statusBar,
+            IServiceProvider provider)
+        {
+        }
+
+        /// <summary>
+        /// The apply.
+        /// </summary>
+        public void Apply()
+        {
+        }
+
+        /// <summary>
+        /// The end data association.
+        /// </summary>
+        public void EndDataAssociation()
+        {
+        }
+
+        /// <summary>
+        /// The exit.
+        /// </summary>
+        public void Exit()
+        {
+        }
+
+        /// <summary>
+        ///     The refresh licenses.
         /// </summary>
         /// <returns>
-        /// The <see>
+        ///     The
+        ///     <see>
         ///         <cref>ObservableCollection</cref>
         ///     </see>
         ///     .
@@ -117,15 +186,15 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
             if (this.plugins != null)
             {
-                foreach (var plugin in this.plugins)
+                foreach (IAnalysisPlugin plugin in this.plugins)
                 {
-                    var lics = plugin.GetLicenses(this.ConnectionConfiguration);
+                    Dictionary<string, VsLicense> lics = plugin.GetLicenses(this.ConnectionConfiguration);
                     if (lics != null)
                     {
                         foreach (var license in lics)
                         {
                             bool existsAlready = false;
-                            foreach (var existinglicense in licenses)
+                            foreach (VsLicense existinglicense in licenses)
                             {
                                 if (existinglicense.LicenseTxt.Equals(license.Value.LicenseTxt))
                                 {
@@ -145,27 +214,73 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             return licenses;
         }
 
-        public void SaveAndClose()
-        {
-            ;
-        }
-
-        public void Exit()
-        {
-            ;
-        }
-
-        public void Apply()
-        {
-            ;
-        }
-
-        public void EndDataAssociation()
-        {
-        }
-
+        /// <summary>
+        /// The init data association.
+        /// </summary>
+        /// <param name="associatedProject">
+        /// The associated project.
+        /// </param>
+        /// <param name="userConnectionConfig">
+        /// The user connection config.
+        /// </param>
+        /// <param name="workingDir">
+        /// The working dir.
+        /// </param>
         public void InitDataAssociation(Resource associatedProject, ISonarConfiguration userConnectionConfig, string workingDir)
         {
         }
+
+        /// <summary>
+        /// The refresh data for resource.
+        /// </summary>
+        /// <param name="fullName">
+        /// The full name.
+        /// </param>
+        public void RefreshDataForResource(Resource fullName)
+        {
+        }
+
+        /// <summary>
+        /// The save and close.
+        /// </summary>
+        public void SaveAndClose()
+        {
+        }
+
+        /// <summary>
+        /// The update colours.
+        /// </summary>
+        /// <param name="background">
+        /// The background.
+        /// </param>
+        /// <param name="foreground">
+        /// The foreground.
+        /// </param>
+        public void UpdateColours(Color background, Color foreground)
+        {
+            this.BackGroundColor = background;
+            this.ForeGroundColor = foreground;
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// The on generate token command.
+        /// </summary>
+        private void OnGenerateTokenCommand()
+        {
+            foreach (IAnalysisPlugin plugin in this.plugins)
+            {
+                string key = plugin.GetKey(this.ConnectionConfiguration);
+                if (this.SelectedLicense.ProductId.Contains(key))
+                {
+                    this.GeneratedToken = plugin.GenerateTokenId(this.ConnectionConfiguration);
+                }
+            }
+        }
+
+        #endregion
     }
 }

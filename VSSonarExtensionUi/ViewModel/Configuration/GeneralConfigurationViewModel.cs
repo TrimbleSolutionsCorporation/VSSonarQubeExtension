@@ -40,7 +40,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         ///     The rest service.
         /// </summary>
-        private readonly ISonarRestService restService;
+        private ISonarRestService restService;
 
         /// <summary>
         ///     The sq view model.
@@ -55,7 +55,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         ///     The visual studio helper.
         /// </summary>
-        private readonly IVsEnvironmentHelper visualStudioHelper;
+        private IVsEnvironmentHelper visualStudioHelper;
 
         #endregion
 
@@ -185,6 +185,31 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         #endregion
 
         #region Public Methods and Operators
+
+        /// <summary>
+        /// The update services.
+        /// </summary>
+        /// <param name="restServiceIn">
+        /// The rest service in.
+        /// </param>
+        /// <param name="vsenvironmenthelperIn">
+        /// The vsenvironmenthelper in.
+        /// </param>
+        /// <param name="statusBar">
+        /// The status bar.
+        /// </param>
+        /// <param name="provider">
+        /// The provider.
+        /// </param>
+        public void UpdateServices(
+            ISonarRestService restServiceIn,
+            IVsEnvironmentHelper vsenvironmenthelperIn,
+            IVSSStatusBar statusBar,
+            IServiceProvider provider)
+        {
+            this.restService = restServiceIn;
+            this.visualStudioHelper = vsenvironmenthelperIn;
+        }
 
         /// <summary>
         ///     The apply.

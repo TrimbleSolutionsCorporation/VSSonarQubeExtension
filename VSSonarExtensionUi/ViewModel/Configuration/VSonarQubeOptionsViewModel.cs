@@ -31,6 +31,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
     using PropertyChanged;
 
+    using SonarRestService;
+
     using VSSonarExtensionUi.ViewModel.Helpers;
 
     using VSSonarPlugins;
@@ -215,6 +217,30 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         #endregion
 
         #region Public Methods and Operators
+
+        /// <summary>
+        /// The update services.
+        /// </summary>
+        /// <param name="restServiceIn">
+        /// The rest service in.
+        /// </param>
+        /// <param name="vsenvironmenthelperIn">
+        /// The vsenvironmenthelper in.
+        /// </param>
+        /// <param name="statusBar">
+        /// The status bar.
+        /// </param>
+        /// <param name="provider">
+        /// The provider.
+        /// </param>
+        public void UpdateServices(
+            ISonarRestService restServiceIn,
+            IVsEnvironmentHelper vsenvironmenthelperIn,
+            IVSSStatusBar statusBar,
+            IServiceProvider provider)
+        {
+            this.Vsenvironmenthelper = vsenvironmenthelperIn;
+        }
 
         /// <summary>
         ///     The refresh general properties.
@@ -522,6 +548,9 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
         #endregion
 
+        /// <summary>
+        /// The end data association.
+        /// </summary>
         public void EndDataAssociation()
         {
             this.Project = null;
