@@ -17,17 +17,18 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/ButtonStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
 
         </ResourceDictionary>
     </UserControl.Resources>
     <UserControl.Background>
-        <SolidColorBrush Color="{Binding BackGroundColor, FallbackValue=Black}"/>
+        <SolidColorBrush Color="{Binding BackGroundColor, FallbackValue=White}"/>
     </UserControl.Background>
 
     <UserControl.Foreground>
-        <SolidColorBrush Color="{Binding ForeGroundColor, FallbackValue=White}"/>
+        <SolidColorBrush Color="{Binding ForeGroundColor, FallbackValue=Black}"/>
     </UserControl.Foreground>
     <Grid>
 				<Grid.RowDefinitions>
@@ -55,8 +56,12 @@
 						<DataGridTextColumn Binding="{Binding ServerId}" Header="Server ID   "/>
 					</DataGrid.Columns>
 				</DataGrid>
-				<Label Foreground="{Binding ForeGroundColor, FallbackValue=White}" Grid.Column="2" Grid.Row="2" Grid.ColumnSpan="3" Content="{Binding ErrorMessage}" />
-				<Button Style="{DynamicResource SquareButtonStyle}"  Grid.Column="1" Grid.Row="1" x:Name="GenerateTokenButton" Content="Generate Token" Command="{Binding GenerateTokenCommand}" CommandParameter="{Binding Content, ElementName=GenerateTokenButton}" ToolTip="Copy Past Token and Fill the user property in the SonarQube server"/>				
+				<Label Foreground="{Binding ForeGroundColor, FallbackValue=Black}" Grid.Column="2" Grid.Row="2" Grid.ColumnSpan="3" Content="{Binding ErrorMessage}" />
+				<Button
+                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+				Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"                    
+                Style="{StaticResource MyMetroButton}"
+                    Grid.Column="1" Grid.Row="1" x:Name="GenerateTokenButton" Content="Generate Token" Command="{Binding GenerateTokenCommand}" CommandParameter="{Binding Content, ElementName=GenerateTokenButton}" ToolTip="Copy Past Token and Fill the user property in the SonarQube server"/>				
 				<TextBox Grid.Column="0" Grid.Row="1"  TextWrapping="Wrap" Text="{Binding GeneratedToken}" />
 			</Grid>
 

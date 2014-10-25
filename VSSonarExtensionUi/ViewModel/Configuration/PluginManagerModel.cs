@@ -79,7 +79,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
             this.InitCommanding();
 
-            this.ForeGroundColor = Colors.White;
+            this.ForeGroundColor = Colors.Black;
             this.ForeGroundColor = Colors.Black;
         }
 

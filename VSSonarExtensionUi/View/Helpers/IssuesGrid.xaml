@@ -5,9 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:command="http://www.galasoft.ch/mvvmlight"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-             xmlns:themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
-	xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-             x:Class="VSSonarExtensionUi.View.Helpers.IssuesGrid"
+    x:Class="VSSonarExtensionUi.View.Helpers.IssuesGrid"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="2000">
 
@@ -29,21 +27,21 @@
 
             
             <ContextMenu Style="{StaticResource ContextMenuStyle}"
-                         Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"
-                         Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"                          
+                         Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
+                         Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"                          
                          x:Key="DatagridContextMenu"
                          Visibility="{Binding PlacementTarget.Tag.ShowContextMenu, RelativeSource={RelativeSource Self}, Converter={StaticResource BoolToVis}}" ItemsSource="{Binding PlacementTarget.Tag.ContextMenuItems, RelativeSource={RelativeSource Self}}" >
                 <ContextMenu.ItemTemplate>
                     <HierarchicalDataTemplate ItemsSource="{Binding SubItems}">
                         <MenuItem 
-                         Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"
-                         Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"                            
+                         Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
+                         Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"                            
                             Header="{Binding CommandText}" Command="{Binding AssociatedCommand}" IsEnabled="{Binding IsEnabled}"/>
                         <HierarchicalDataTemplate.ItemContainerStyle>
                             <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource MenuItemStyle}">
                                 <Setter Property="Command" Value="{Binding AssociatedCommand}"/>
-                                <Setter Property="Foreground" Value="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"/>
-                                <Setter Property="Background" Value="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"/>
+                                <Setter Property="Foreground" Value="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"/>
+                                <Setter Property="Background" Value="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"/>
                             </Style>
                         </HierarchicalDataTemplate.ItemContainerStyle>
                     </HierarchicalDataTemplate>
@@ -53,20 +51,20 @@
             <ContextMenu 
                 Style="{StaticResource ContextMenuStyle}" 
                 x:Key="HeaderContextMenu"
-                Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"
-                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}" 
+                Foreground="Black"
+                Background="White" 
                 Visibility="{Binding PlacementTarget.Tag.ShowHeaderContextMenu, RelativeSource={RelativeSource Self}, Converter={StaticResource BoolToVis}}"  
                 ItemsSource="{Binding PlacementTarget.Tag.ContextVisibilityMenuItems, RelativeSource={RelativeSource Self}}" >
                 <ContextMenu.ItemTemplate>
                     <HierarchicalDataTemplate ItemsSource="{Binding SubItems}">
                         <MenuItem 
-                            Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"
-                            Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"                             
+                            Foreground="Black"
+                            Background="White"                             
                             Header="{Binding CommandText}" Command="{Binding AssociatedCommand}" IsEnabled="{Binding IsEnabled}"/>
                         <HierarchicalDataTemplate.ItemContainerStyle>
                             <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource MenuItemStyle}">
-                                <Setter Property="Foreground" Value="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"/>
-                                <Setter Property="Background" Value="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"/>
+                                <Setter Property="Foreground" Value="Black"/>
+                                <Setter Property="Background" Value="White"/>
                                 <Setter Property="Command" Value="{Binding AssociatedCommand}"/>
                             </Style>
                         </HierarchicalDataTemplate.ItemContainerStyle>

@@ -357,6 +357,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             this.BackGroundColor = background;
             this.ForeGroundColor = foreground;
+
+            this.IssuesGridView.UpdateColours(background, foreground);
         }
 
         /// <summary>

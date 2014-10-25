@@ -89,7 +89,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
 
             BindingOperations.EnableCollectionSynchronization(this.IssuesInView, Lock);
 
-            this.ForeGroundColor = Colors.White;
+            this.ForeGroundColor = Colors.Black;
             this.BackGroundColor = Colors.Red;
         }
 

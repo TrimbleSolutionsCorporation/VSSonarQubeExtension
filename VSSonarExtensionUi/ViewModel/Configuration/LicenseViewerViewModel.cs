@@ -57,7 +57,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.AvailableLicenses = new ObservableCollection<VsLicense>();
             this.AvailableLicenses = this.GetLicensesFromServer();
 
-            this.ForeGroundColor = Colors.White;
+            this.ForeGroundColor = Colors.Black;
             this.ForeGroundColor = Colors.Black;
         }
 
@@ -71,7 +71,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
             this.GenerateTokenCommand = new RelayCommand(this.OnGenerateTokenCommand, () => !(this.SelectedLicense == null));
 
-            this.ForeGroundColor = Colors.White;
+            this.ForeGroundColor = Colors.Black;
             this.ForeGroundColor = Colors.Black;
         }
 

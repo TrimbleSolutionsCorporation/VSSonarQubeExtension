@@ -3,8 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:viewModel="clr-namespace:VSSonarExtensionUi.ViewModel"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:command="http://www.galasoft.ch/mvvmlight"
              x:Class="VSSonarExtensionUi.View.Configuration.PluginManagerView" 
              mc:Ignorable="d" d:DesignHeight="400" d:DesignWidth="800">
@@ -17,16 +16,17 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />    
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/ButtonStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>        	
         </ResourceDictionary>
     </UserControl.Resources>
     <UserControl.Background>
-        <SolidColorBrush Color="{Binding BackGroundColor, FallbackValue=Black}"/>
+        <SolidColorBrush Color="{Binding BackGroundColor, FallbackValue=White}"/>
     </UserControl.Background>
 
     <UserControl.Foreground>
-        <SolidColorBrush Color="{Binding ForeGroundColor, FallbackValue=White}"/>
+        <SolidColorBrush Color="{Binding ForeGroundColor, FallbackValue=Black}"/>
     </UserControl.Foreground>
     <Grid>
 		<ScrollViewer>
@@ -67,9 +67,22 @@
 				</DataGrid>
                 <ScrollViewer IsEnabled="{Binding CanModifyPluginProps}" Grid.Column="0" Grid.Row="1" BorderBrush="Black"  Content="{Binding OptionsInView}"></ScrollViewer>
 				<StackPanel Grid.Row="2" Orientation="Horizontal">
-	                <Button Style="{DynamicResource SquareButtonStyle}" Content="New" Command="{Binding InstallNewPlugin}" />
-                    <Button IsEnabled="{Binding ChangesAreRequired}" Style="{DynamicResource SquareButtonStyle}" Content="Restart" Command="{Binding RestartVs}" />
-                    <Button IsEnabled="{Binding PluginIsSelected}" Style="{DynamicResource SquareButtonStyle}" Content="Remove" Command="{Binding RemovePlugin}" />					
+	                <Button 
+                            Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+				            Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"                    
+                            Style="{StaticResource MyMetroButton}"
+                            Content="New" Command="{Binding InstallNewPlugin}" />
+                    <Button 
+                        Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+				        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"                    
+                        Style="{StaticResource MyMetroButton}"
+                        Content="Restart" Command="{Binding RestartVs}" />
+                    <Button 
+                        IsEnabled="{Binding PluginIsSelected}"
+                        Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+				        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"                    
+                        Style="{StaticResource MyMetroButton}"
+                        Content="Remove" Command="{Binding RemovePlugin}" />					
 				</StackPanel>
 			</Grid>
 		</ScrollViewer>

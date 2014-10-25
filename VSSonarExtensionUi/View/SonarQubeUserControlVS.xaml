@@ -78,7 +78,17 @@
                     </Style>
                 </MenuItem.ItemContainerStyle>
             </MenuItem>
-            <ComboBox SelectedItem="{Binding SelectedProject, Mode=TwoWay}" ItemsSource="{Binding AvailableProjects}" MaxDropDownHeight="101" IsTextSearchEnabled="True" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" ItemTemplate="{DynamicResource ProjectSelectionComboBoxDataTemplate}" Width="136" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <ComboBox
+                SelectedItem="{Binding SelectedProject, Mode=TwoWay}"
+                ItemsSource="{Binding AvailableProjects}"
+                MaxDropDownHeight="101"
+                IsTextSearchEnabled="True"
+                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                ItemTemplate="{DynamicResource ProjectSelectionComboBoxDataTemplate}"
+                Width="136"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center" />
 			<Button Style="{StaticResource MyMetroButton}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Content="Associate" Command="{Binding AssignProjectCommand}" HorizontalAlignment="Center" VerticalAlignment="Center" />
 		</Menu>
        

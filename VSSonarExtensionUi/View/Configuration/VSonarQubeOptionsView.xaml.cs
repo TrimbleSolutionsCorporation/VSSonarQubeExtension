@@ -19,14 +19,14 @@ namespace VSSonarExtensionUi.View.Configuration
     /// <summary>
     ///     Interaction logic for PluginOptionsWindow.xaml
     /// </summary>
-    public partial class ExtensionOptionsWindow
+    public partial class VSonarQubeOptionsView
     {
         #region Constructors and Destructors
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ExtensionOptionsWindow" /> class.
         /// </summary>
-        public ExtensionOptionsWindow()
+        public VSonarQubeOptionsView()
         {
             this.InitializeComponent();
         }
@@ -37,7 +37,7 @@ namespace VSSonarExtensionUi.View.Configuration
         /// <param name="dataViewModel">
         /// The data view model.
         /// </param>
-        public ExtensionOptionsWindow(VSonarQubeOptionsViewModel dataViewModel)
+        public VSonarQubeOptionsView(VSonarQubeOptionsViewModel dataViewModel)
         {
             this.InitializeComponent();
             if (dataViewModel != null)

@@ -6,7 +6,7 @@
 	xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              mc:Ignorable="d" 
              x:Class="VSSonarExtensionUi.View.Helpers.UserExceptionMessageBox"
-             Title="Exception Found" Height="300" Width="800" Background="{Binding BackGroundColor}" Foreground="{Binding ForeGroundColor, FallbackValue=White}">
+             Title="Exception Found" Height="300" Width="800" Background="{Binding BackGroundColor}" Foreground="{Binding ForeGroundColor, FallbackValue=Black}">
 
     <Window.Resources>
         <ResourceDictionary>

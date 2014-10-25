@@ -113,8 +113,8 @@
     <Compile Include="ViewModel\Analysis\LocalViewModel.cs" />
     <Compile Include="ViewModel\Configuration\GeneralConfigurationViewModel.cs" />
     <Compile Include="ViewModel\SonarQubeViewModel.cs" />
-    <Compile Include="View\Configuration\ExtensionOptionsWindow.xaml.cs">
-      <DependentUpon>ExtensionOptionsWindow.xaml</DependentUpon>
+    <Compile Include="View\Configuration\VSonarQubeOptionsView.xaml.cs">
+      <DependentUpon>VSonarQubeOptionsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Configuration\AnalysisOptionsView.xaml.cs">
       <DependentUpon>AnalysisOptionsView.xaml</DependentUpon>
@@ -195,7 +195,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\Configuration\ExtensionOptionsWindow.xaml">
+    <Page Include="View\Configuration\VSonarQubeOptionsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

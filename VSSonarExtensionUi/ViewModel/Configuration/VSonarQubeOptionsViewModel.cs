@@ -67,8 +67,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         public VSonarQubeOptionsViewModel()
         {
-            this.ForeGroundColor = Colors.White;
-            this.BackGroundColor = Colors.Black;
+            this.ForeGroundColor = Colors.Black;
+            this.BackGroundColor = Colors.White;
 
             this.InitModels();
             this.InitCommanding();
@@ -87,8 +87,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.InitModels();
             this.InitCommanding();
 
-            this.ForeGroundColor = Colors.White;
-            this.BackGroundColor = Colors.Black;
+            this.ForeGroundColor = Colors.Black;
+            this.BackGroundColor = Colors.White;
         }
 
         /// <summary>

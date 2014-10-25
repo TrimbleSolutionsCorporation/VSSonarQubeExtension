@@ -92,8 +92,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.TestConnectionCommand = new RelayCommand<object>(this.OnTestAndSavePassword);
             this.ClearCredentials = new RelayCommand(this.OnClearCredentials);
 
-            this.BackGroundColor = Colors.Black;
-            this.ForeGroundColor = Colors.White;
+            this.BackGroundColor = Colors.White;
+            this.ForeGroundColor = Colors.Black;
 
             this.GetCredentials();
             this.ResetDefaults();

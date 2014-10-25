@@ -87,7 +87,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.viewModel = viewModel;
             this.TimeoutValue = 10;
             this.Header = "Analysis Options";
-            this.ForeGroundColor = Colors.White;
+            this.ForeGroundColor = Colors.Black;
             this.ForeGroundColor = Colors.Black;
 
             if (string.IsNullOrEmpty(this.SonarQubeBinary))
