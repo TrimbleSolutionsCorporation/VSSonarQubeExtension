@@ -36,6 +36,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
     using Application = System.Windows.Application;
     using UserControl = System.Windows.Controls.UserControl;
+    using System.Diagnostics;
 
     /// <summary>
     ///     The dummy options controller.
@@ -242,9 +243,16 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
                     if (this.viewModel.Project != null)
                     {
-                        Dictionary<string, string> options = plugin.GetPluginControlOptions(this.Conf).GetOptions();
-                        string key = plugin.GetKey(this.Conf);
-                        this.visualStudioHelper.WriteAllOptionsForPluginOptionInApplicationData(key, this.viewModel.Project, options);
+                        try
+                        {
+                            Dictionary<string, string> options = plugin.GetPluginControlOptions(this.Conf).GetOptions();
+                            string key = plugin.GetKey(this.Conf);
+                            this.visualStudioHelper.WriteAllOptionsForPluginOptionInApplicationData(key, this.viewModel.Project, options);
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine(ex.Message);
+                        }
                     }
                 }
             }
@@ -440,7 +448,14 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 {
                     if (plugin.GetPluginDescription(this.visualStudioHelper).Name.Equals(this.SelectedPlugin.Name))
                     {
-                        this.OptionsInView = plugin.GetPluginControlOptions(this.Conf).GetUserControlOptions(this.viewModel.Project);
+                        try
+                        {
+                            this.OptionsInView = plugin.GetPluginControlOptions(this.Conf).GetUserControlOptions(this.viewModel.Project);
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine(ex.Message);
+                        }
 
                         this.CanModifyPluginProps = this.viewModel.Project != null;
 

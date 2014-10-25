@@ -346,7 +346,11 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </returns>
         public List<Issue> GetIssuesForResource(Resource file, string fileContent)
         {
-            return this.IssuesGridView.Issues.Where(issue => this.IssuesGridView.IsNotFiltered(issue)).ToList();
+            return
+                this.IssuesGridView.Issues.Where(
+                    issue =>
+                    this.IssuesGridView.IsNotFiltered(issue) && (file.Key.Equals(issue.Component) || file.Key.Equals(issue.ComponentSafe)))
+                    .ToList();
         }
 
         /// <summary>
@@ -444,7 +448,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public void OnSelectedViewChanged()
         {
             this.OnAnalysisModeHasChange(EventArgs.Empty);
-            Debug.WriteLine("Name Changed");
         }
 
         /// <summary>
@@ -466,6 +469,10 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 this.sonarQubeViewModel.IsExtensionBusy = true;
                 this.sonarQubeViewModel.BusyToolTip = "Running File Analysis";
                 this.RunLocalAnalysis(AnalysisTypes.FILE);
+            }
+            else
+            {
+                this.OnSelectedViewChanged();
             }
         }
 
