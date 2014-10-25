@@ -108,8 +108,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.ShowFlyouts = true;
             this.SizeOfFlyout = 150;
 
-            this.ForeGroundColor = Colors.White;
             this.ForeGroundColor = Colors.Black;
+            this.BackGroundColor = Colors.White;
         }
 
         /// <summary>
@@ -150,8 +150,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.ShowFlyouts = false;
             this.SizeOfFlyout = 0;
 
-            this.ForeGroundColor = Colors.White;
             this.ForeGroundColor = Colors.Black;
+            this.BackGroundColor = Colors.White;
         }
 
         #endregion

@@ -90,7 +90,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             BindingOperations.EnableCollectionSynchronization(this.IssuesInView, Lock);
 
             this.ForeGroundColor = Colors.White;
-            this.ForeGroundColor = Colors.Black;
+            this.BackGroundColor = Colors.Red;
         }
 
         /// <summary>
@@ -137,8 +137,8 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.filter = new IssueFilter(this);
             this.InitFilterCommanding();
 
-            this.ForeGroundColor = Colors.White;
             this.ForeGroundColor = Colors.Black;
+            this.BackGroundColor = Colors.White;
         }
 
         #endregion

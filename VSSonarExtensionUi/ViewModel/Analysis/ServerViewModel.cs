@@ -102,8 +102,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.IssuesGridView = new IssueGridViewModel(sonarQubeViewModel, true);
             this.InitCommanding();
 
-            this.ForeGroundColor = Colors.White;
             this.ForeGroundColor = Colors.Black;
+            this.BackGroundColor = Colors.White;
         }
 
         #endregion
