@@ -14,8 +14,8 @@ All information on configuration and usage will be found in the wiki pages. [Hom
 **When using VS2010 or VS2012, you will need to install http://www.microsoft.com/en-us/download/details.aspx?id=40764** Also IE 10 or above is required before installing the shell integrated environment
 
 
-Use the Visual Studio Extension Manager
-![Image](../master/wiki/installation.png?raw=true)
+Use the Visual Studio Extension Manager and search for VSSonarExtension
+
 
 
 # License
@@ -30,6 +30,11 @@ Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 ### Changelog
+#### Version 1.4.1.3
+     Metro style
+     Standalone Mode
+     
+
 #### Version 1.1
      Local analysis, incremental, full and preview analysis
      Duplication plugin
