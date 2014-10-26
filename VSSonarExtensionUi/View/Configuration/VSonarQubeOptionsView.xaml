@@ -47,7 +47,7 @@
     <Window.Foreground>
         <SolidColorBrush Color="{Binding ForeGroundColor, FallbackValue=Black}"/>
     </Window.Foreground>
-    
+    <Border BorderBrush="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}" BorderThickness="1">
     <Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="34*"/>
@@ -99,4 +99,5 @@
                 Content="Cancel and Exit" Grid.Column="3" Command="{Binding CancelAndExitCommand}"/>			
 		</Grid>
 	</Grid>
+    </Border>
 </controls:MetroWindow>
