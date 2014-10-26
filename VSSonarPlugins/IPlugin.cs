@@ -35,16 +35,5 @@ namespace VSSonarPlugins
         /// The <see cref="string"/>.
         /// </returns>
         string GetAssemblyPath();
-
-        /// <summary>
-        /// The update theme.
-        /// </summary>
-        /// <param name="backgroundColor">
-        /// The background color.
-        /// </param>
-        /// <param name="foregroundColor">
-        /// The foreground coler.
-        /// </param>
-        void UpdateTheme(Color backgroundColor, Color foregroundColor);
     }
 }
