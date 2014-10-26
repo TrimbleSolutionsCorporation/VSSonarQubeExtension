@@ -14,6 +14,7 @@
 namespace VSSonarPlugins
 {
     using System.Windows.Controls;
+    using System.Windows.Media;
 
     using ExtensionTypes;
 
@@ -64,6 +65,9 @@ namespace VSSonarPlugins
         /// <summary>
         /// The get plugin descritpion.
         /// </summary>
+        /// <param name="vsinter">
+        /// The vsinter.
+        /// </param>
         /// <returns>
         /// The <see cref="PluginDescription"/>.
         /// </returns>

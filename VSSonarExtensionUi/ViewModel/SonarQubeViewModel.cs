@@ -357,12 +357,15 @@ namespace VSSonarExtensionUi.ViewModel
                         this.SelectedProject = availableProject;
                         this.OnAssignProjectCommand();
                         this.IsConnectedButNotAssociated = false;
+                        this.IsAssociated = true;
                         this.VsHelper.WriteOptionInApplicationData(solutionName, "PROJECTKEY", this.SelectedProject.Key);
                         return;
                     }
                 }
             }
         }
+
+        public bool IsAssociated { get; set; }
 
         /// <summary>
         ///     The clear project association.
@@ -372,6 +375,7 @@ namespace VSSonarExtensionUi.ViewModel
             this.OpenSolutionName = null;
             this.OpenSolutionPath = null;
             this.IsConnectedButNotAssociated = this.IsConnected;
+            this.IsAssociated = !this.IsConnected;
 
             foreach (var sonarQubeView in this.SonarQubeViews)
             {
@@ -406,14 +410,14 @@ namespace VSSonarExtensionUi.ViewModel
                     plugin.Value.GetPluginDescription(this.VsHelper).Name);
 
                 if (string.IsNullOrEmpty(isEnabled) || isEnabled.Equals("true", StringComparison.CurrentCultureIgnoreCase))
-                {
+                {                    
                     if (this.IsRunningInVisualStudio())
                     {
                         this.InUsePlugin = plugin;
                         this.OnPluginRequest(EventArgs.Empty);
                     }
                     else
-                    {
+                    {                        
                         var window = new Window
                                          {
                                              Content =
@@ -423,8 +427,11 @@ namespace VSSonarExtensionUi.ViewModel
                                                      this.VsHelper)
                                          };
 
+                        plugin.Value.UpdateTheme(this.BackGroundColor, this.ForeGroundColor);
                         window.ShowDialog();
                     }
+
+
                 }
                 else
                 {
@@ -624,6 +631,23 @@ namespace VSSonarExtensionUi.ViewModel
             this.VSonarQubeOptionsViewData.UpdateTheme(background, foreground);
 
             this.RefreshTheme = true;
+
+            if (this.PluginControl == null)
+            {
+                return;
+            }
+
+            List<IMenuCommandPlugin> plugins = this.PluginControl.GetMenuItemPlugins();
+
+            if (plugins == null)
+            {
+                return;
+            }
+
+            foreach (IMenuCommandPlugin plugin in plugins)
+            {
+                plugin.UpdateTheme(background, foreground);
+            }
         }
 
         #endregion
@@ -952,6 +976,7 @@ namespace VSSonarExtensionUi.ViewModel
             }
 
             this.ErrorMessage = string.Empty;
+            this.IsAssociated = true;
         }
 
         /// <summary>
@@ -1001,6 +1026,7 @@ namespace VSSonarExtensionUi.ViewModel
         {
             this.IsConnected = true;
             this.IsConnectedButNotAssociated = false;
+            this.IsAssociated = false;
 
             Application.Current.Dispatcher.Invoke(
                 delegate
@@ -1035,6 +1061,7 @@ namespace VSSonarExtensionUi.ViewModel
 
                 this.IsConnected = true;
                 this.IsConnectedButNotAssociated = true;
+                this.IsAssociated = false;
 
                 this.ConnectionTooltip = "Authenticated, but no associated";
 
@@ -1057,6 +1084,7 @@ namespace VSSonarExtensionUi.ViewModel
                 this.ConnectionTooltip = "No Connection";
                 this.IsConnected = false;
                 this.IsConnectedButNotAssociated = false;
+                this.IsAssociated = false;
             }
         }
 

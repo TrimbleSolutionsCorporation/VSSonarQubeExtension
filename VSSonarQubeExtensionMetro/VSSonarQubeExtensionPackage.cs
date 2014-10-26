@@ -218,7 +218,6 @@ namespace VSSonarQubeExtension
                         }
 
                         SonarQubeModel.PluginRequest += this.LoadPluginIntoNewToolWindow;
-                        // this.UpdateModelInToolWindow(SonarQubeModel);
                     }
                     catch (Exception ex)
                     {
@@ -300,6 +299,11 @@ namespace VSSonarQubeExtension
                 SonarQubeModel.VsHelper),
                 plugin.Key,
                 plugin.Value.GetHeader());
+
+            DColor defaultBackground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBackgroundColorKey);
+            DColor defaultForeground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowTextColorKey);
+
+            plugin.Value.UpdateTheme(ToMediaColor(defaultBackground), ToMediaColor(defaultForeground));
         }
 
         /// <summary>
@@ -329,26 +333,6 @@ namespace VSSonarQubeExtension
             }
 
             ErrorHandler.ThrowOnFailure(windowFrame.Show());
-        }
-
-        /// <summary>
-        /// The update model in tool window.
-        /// </summary>
-        /// <param name="modelToUse">
-        /// The model to use.
-        /// </param>
-        private void UpdateModelInToolWindow(SonarQubeViewModel modelToUse)
-        {
-            // init basic model without project association
-            ToolWindowPane window = this.FindToolWindow(typeof(IssuesToolWindow), 0, true) as IssuesToolWindow;
-
-            if (null == window || modelToUse == null)
-            {
-                return;
-            }
-
-            var win = window as IssuesToolWindow;
-            win.UpdateModel(modelToUse);
         }
 
         #endregion

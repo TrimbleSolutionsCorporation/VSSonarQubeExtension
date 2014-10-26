@@ -73,7 +73,8 @@
                     <Style TargetType="{x:Type MenuItem}">
                         <Setter Property="Foreground" Value="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"/>
                         <Setter Property="Background" Value="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"/>
-                        <Setter Property="Command" Value="{Binding ToolSwitchCommand}" />
+                        <Setter Property="Command" Value="{Binding ToolSwitchCommand}"  />
+                        <Setter Property="IsEnabled" Value="{Binding IsAssociated}"  />
                         <Setter Property="CommandParameter" Value="{Binding Header, RelativeSource={RelativeSource Self}}" />
                     </Style>
                 </MenuItem.ItemContainerStyle>

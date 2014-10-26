@@ -13,13 +13,38 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarPlugins
 {
+    using System.Windows.Media;
+
     /// <summary>
     /// The Plugin interface.
     /// </summary>
     public interface IPlugin
     {
+        /// <summary>
+        /// The get version.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
         string GetVersion();
 
+        /// <summary>
+        /// The get assembly path.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
         string GetAssemblyPath();
+
+        /// <summary>
+        /// The update theme.
+        /// </summary>
+        /// <param name="backgroundColor">
+        /// The background color.
+        /// </param>
+        /// <param name="foregroundColor">
+        /// The foreground coler.
+        /// </param>
+        void UpdateTheme(Color backgroundColor, Color foregroundColor);
     }
 }

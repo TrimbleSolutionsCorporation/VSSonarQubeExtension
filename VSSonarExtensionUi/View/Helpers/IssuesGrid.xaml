@@ -147,7 +147,7 @@
                         <DataTemplate>
                             <Grid IsHitTestVisible="True" Width="{Binding Path=Width, ElementName=MessageTemplateCol}">
                                 <!--FILTER EXPANDER-->
-                                <Expander   Header="{TemplateBinding Content}" IsHitTestVisible="True" VerticalAlignment="Top" Margin="0 0 0 0" ToolTip="RuleFilter">
+                                <Expander Header="{TemplateBinding Content}" IsHitTestVisible="True" VerticalAlignment="Top" Margin="0 0 0 0" ToolTip="RuleFilter">
                                     <Border IsHitTestVisible="True" BorderThickness="1" Margin="0 0 0 0" >
                                         <StackPanel Margin="0 2 0 0">
                                             <!--FILTER TEXTBOX-->

@@ -16,10 +16,8 @@ namespace VSSonarQubeExtension.VSControls
     using System.Runtime.InteropServices;
 
     using Microsoft.VisualStudio.Shell;
-    using VSSonarExtensionUi.ViewModel;
+
     using VSSonarExtensionUi.View;
-
-
 
     /// <summary>
     /// The issues tool window.
@@ -28,31 +26,14 @@ namespace VSSonarQubeExtension.VSControls
     public sealed class IssuesToolWindow : ToolWindowPane
     {
         /// <summary>
-        /// The window to use.
-        /// </summary>
-        private readonly SonarQubeUserControlVs windowToUse;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="IssuesToolWindow"/> class.
         /// </summary>
         public IssuesToolWindow() : base(null)
         {
-            this.Caption = "Issues Window";
+            this.Caption = "SonarQube";
             this.BitmapResourceID = 301;
             this.BitmapIndex = 1;
-            this.windowToUse = new SonarQubeUserControlVs(VsSonarExtensionPackage.SonarQubeModel);
-            this.Content = this.windowToUse;
-        }
-
-        /// <summary>
-        /// The update model.
-        /// </summary>
-        /// <param name="myModel">
-        /// The my model.
-        /// </param>
-        public void UpdateModel(SonarQubeViewModel myModel)
-        {
-            this.windowToUse.UpdateDataContext(myModel);
+            this.Content = new SonarQubeUserControlVs(VsSonarExtensionPackage.SonarQubeModel);
         }
     }
 }
