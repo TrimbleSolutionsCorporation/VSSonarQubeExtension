@@ -370,7 +370,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             {
                 string password = passwordBox.Password;
 
-                this.UserConnectionConfig = new ConnectionConfiguration(this.ServerAddress, this.UserName, password);
+                this.UserConnectionConfig = new ConnectionConfiguration(this.ServerAddress.TrimEnd('/'), this.UserName, password);
 
                 try
                 {
