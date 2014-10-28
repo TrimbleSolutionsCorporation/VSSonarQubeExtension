@@ -80,20 +80,6 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         #region Constructors and Destructors
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="IssueGridViewModel" /> class.
-        /// </summary>
-        public IssueGridViewModel()
-        {
-            this.Issues = new AsyncObservableCollection<Issue>();
-            this.IssuesInView = new CollectionViewSource { Source = this.Issues }.View;
-
-            BindingOperations.EnableCollectionSynchronization(this.IssuesInView, Lock);
-
-            this.ForeGroundColor = Colors.Black;
-            this.BackGroundColor = Colors.Red;
-        }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="IssueGridViewModel"/> class.
         /// </summary>
         /// <param name="model">

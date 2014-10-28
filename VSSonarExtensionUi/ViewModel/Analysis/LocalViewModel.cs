@@ -95,24 +95,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         #region Constructors and Destructors
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="LocalViewModel" /> class.
-        /// </summary>
-        public LocalViewModel()
-        {
-            this.IssuesGridView = new IssueGridViewModel();
-            this.OuputLogLines = new PaginatedObservableCollection<string>(100);
-            this.Header = "Local Analysis";
-            this.InitCommanding();
-            this.InitFileAnalysis();
-
-            this.ShowFlyouts = true;
-            this.SizeOfFlyout = 150;
-
-            this.ForeGroundColor = Colors.Black;
-            this.BackGroundColor = Colors.White;
-        }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="LocalViewModel"/> class.
         /// </summary>
         /// <param name="sonarQubeViewModel">
@@ -594,9 +576,16 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             {
                 if (File.Exists(filedialog.FileName))
                 {
-                    this.sonarQubeViewModel.AssociateProjectToSolution(
-                        Path.GetFileName(filedialog.FileName), 
-                        Directory.GetParent(filedialog.FileName).ToString());
+                    try
+                    {
+                        this.sonarQubeViewModel.AssociateProjectToSolution(
+                            Path.GetFileName(filedialog.FileName),
+                            Directory.GetParent(filedialog.FileName).ToString());
+                    }
+                    catch (Exception ex)
+                    {
+                        UserExceptionMessageBox.ShowException(@"Could Not Associate Solution With: " + ex.Message, ex);
+                    }
                 }
                 else
                 {
