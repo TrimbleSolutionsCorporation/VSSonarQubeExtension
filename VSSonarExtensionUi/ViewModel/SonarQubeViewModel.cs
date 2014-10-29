@@ -340,6 +340,11 @@ namespace VSSonarExtensionUi.ViewModel
         /// </param>
         public void AssociateProjectToSolution(string solutionName, string solutionPath)
         {
+            if (!solutionName.ToLower().EndsWith(".sln"))
+            {
+                solutionName += ".sln";
+            }
+
             this.OpenSolutionName = solutionName;
             this.OpenSolutionPath = solutionPath;
             if (!this.IsConnected)
@@ -358,7 +363,6 @@ namespace VSSonarExtensionUi.ViewModel
                         this.OnAssignProjectCommand();
                         this.IsConnectedButNotAssociated = false;
                         this.IsAssociated = true;
-                        this.VsHelper.WriteOptionInApplicationData(solutionName, "PROJECTKEY", this.SelectedProject.Key);
                         return;
                     }
                 }
@@ -539,6 +543,10 @@ namespace VSSonarExtensionUi.ViewModel
                     this.CanConnectEnabled = false;
                     this.IsExtensionBusy = true;
                     this.TryToConnect();
+                    if (!string.IsNullOrEmpty(this.OpenSolutionName))
+                    {
+                        this.AssociateProjectToSolution(this.OpenSolutionName, this.OpenSolutionPath);
+                    }                    
                 };
 
             bw.RunWorkerAsync();
@@ -702,7 +710,7 @@ namespace VSSonarExtensionUi.ViewModel
                 return null;
             }
 
-            string sourceKey = this.VsHelper.ReadOptionFromApplicationData(solutionName, "PROJECTKEY");
+            string sourceKey = this.VsHelper.ReadOptionFromApplicationData(Path.Combine(solutionPath, solutionName), "PROJECTKEY");
             if (!string.IsNullOrEmpty(sourceKey))
             {
                 try
@@ -941,8 +949,10 @@ namespace VSSonarExtensionUi.ViewModel
 
             if (!string.IsNullOrEmpty(this.OpenSolutionName))
             {
-                this.VsHelper.WriteOptionInApplicationData(this.OpenSolutionName, "PROJECTKEY", this.SelectedProject.Key);
-                this.VsHelper.WriteOptionInApplicationData(this.OpenSolutionName, "PROJECTLOCATION", this.OpenSolutionPath);
+                this.VsHelper.WriteOptionInApplicationData(Path.Combine(this.OpenSolutionPath, this.OpenSolutionName), "PROJECTKEY", this.SelectedProject.Key);
+                this.VsHelper.WriteOptionInApplicationData(this.SelectedProject.Key, "PROJECTKEY", this.SelectedProject.Key);
+                this.VsHelper.WriteOptionInApplicationData(this.SelectedProject.Key, "PROJECTLOCATION", this.OpenSolutionPath);
+                this.VsHelper.WriteOptionInApplicationData(this.SelectedProject.Key, "PROJECTNAME", this.OpenSolutionName);
             }
 
             this.VSonarQubeOptionsViewData.Project = this.SelectedProject;
@@ -953,7 +963,8 @@ namespace VSSonarExtensionUi.ViewModel
 
             if (string.IsNullOrEmpty(this.OpenSolutionPath))
             {
-                this.OpenSolutionPath = this.VsHelper.ReadOptionFromApplicationData(this.AssociatedProject.Key, "PROJECTLOCATION");
+                this.OpenSolutionPath = this.VsHelper.ReadOptionFromApplicationData(this.SelectedProject.Key, "PROJECTLOCATION");
+                this.OpenSolutionName = this.VsHelper.ReadOptionFromApplicationData(this.SelectedProject.Key, "PROJECTNAME");
             }
 
             foreach (IAnalysisViewModelBase analyser in
@@ -1010,8 +1021,20 @@ namespace VSSonarExtensionUi.ViewModel
         private void OnDisconnectToSonar()
         {
             this.IsConnected = false;
-            this.IssuesSearchViewModel.AssociatedProject = null;
-            this.LocalViewModel.ClearAssociation();
+            foreach (var view in this.SonarQubeViews)
+            {
+                view.EndDataAssociation();
+            }
+
+            if (!this.VsHelper.AreWeRunningInVisualStudio())
+            {
+                this.OpenSolutionPath = string.Empty;
+                this.OpenSolutionName = string.Empty;
+            }
+
+            this.AvailableProjects.Clear();
+            this.SelectedProject = null;
+
             this.ConnectionTooltip = "Not Connected";
             this.AssociatedProject = null;
         }

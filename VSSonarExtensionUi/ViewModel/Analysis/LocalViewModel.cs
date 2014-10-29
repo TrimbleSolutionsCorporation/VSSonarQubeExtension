@@ -508,15 +508,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         #region Methods
 
         /// <summary>
-        ///     The clear association.
-        /// </summary>
-        internal void ClearAssociation()
-        {
-            this.AssociatedProject = null;
-            this.CanRunAnalysis = false;
-        }
-
-        /// <summary>
         ///     The init commanding.
         /// </summary>
         private void InitCommanding()
