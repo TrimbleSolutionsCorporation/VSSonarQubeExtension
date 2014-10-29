@@ -915,6 +915,11 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.FilterTermAssignee = string.Empty;
             this.FilterTermRule = string.Empty;
 
+            if (this.Issues == null || this.Issues.Count == 0)
+            {
+                return;
+            }
+
             try
             {
                 this.ClearFilter();
@@ -923,7 +928,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             {
                 this.model.ErrorMessage = "Cannot Clear Filter: " + ex.Message;
                 this.model.DiagnosticMessage = ex.StackTrace;
-            }            
+            } 
         }
 
         /// <summary>
