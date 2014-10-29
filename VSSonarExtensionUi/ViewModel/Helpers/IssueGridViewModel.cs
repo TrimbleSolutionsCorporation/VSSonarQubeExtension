@@ -68,7 +68,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// <summary>
         ///     The filter.
         /// </summary>
-        private readonly IFilter filter;
+        private IFilter filter;
 
         /// <summary>
         ///     The viewModel.
@@ -671,6 +671,21 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// </summary>
         private void ClearFilter()
         {
+            if (this.IssuesInView == null)
+            {
+                if (this.Issues == null)
+                {
+                    this.Issues = new AsyncObservableCollection<Issue>();
+                }
+
+                this.IssuesInView = new CollectionViewSource { Source = this.Issues }.View;
+            }
+
+            if (this.filter == null)
+            {
+                this.filter = new IssueFilter(this);
+            }
+
             this.IssuesInView.Filter = this.filter.FilterFunction;
             this.model.OnIssuesChangeEvent();
         }
@@ -900,7 +915,15 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.FilterTermAssignee = string.Empty;
             this.FilterTermRule = string.Empty;
 
-            this.ClearFilter();
+            try
+            {
+                this.ClearFilter();
+            }
+            catch (Exception ex)
+            {
+                this.model.ErrorMessage = "Cannot Clear Filter: " + ex.Message;
+                this.model.DiagnosticMessage = ex.StackTrace;
+            }            
         }
 
         /// <summary>

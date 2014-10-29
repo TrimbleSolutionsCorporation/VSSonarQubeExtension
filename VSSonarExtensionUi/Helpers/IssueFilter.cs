@@ -15,6 +15,7 @@
 namespace VSSonarExtensionUi.Helpers
 {
     using System;
+    using System.Diagnostics;
 
     using ExtensionTypes;
 
@@ -61,24 +62,32 @@ namespace VSSonarExtensionUi.Helpers
         /// </returns>
         public bool FilterFunction(object value)
         {
-            var parameter = value as Issue;
-            if (parameter == null)
+            try
             {
+                var parameter = value as Issue;
+                if (parameter == null)
+                {
+                    return true;
+                }
+
+                bool issuesStatus = this.FilterByIssueStatus(parameter);
+                bool issuesSeverity = this.FilterBySeverity(parameter);
+                bool issuesResolution = this.FilterByResolution(parameter);
+                bool issuesIsNew = this.FilterByIsNew(parameter);
+
+                bool include = (parameter.Message == null || parameter.Message.IndexOf(this.filterOption.FilterTermMessage, StringComparison.InvariantCultureIgnoreCase) >= 0)
+                               && (parameter.Component == null || parameter.Component.IndexOf(this.filterOption.FilterTermComponent, StringComparison.InvariantCultureIgnoreCase) >= 0)
+                               && (parameter.Project == null || parameter.Project.IndexOf(this.filterOption.FilterTermProject, StringComparison.InvariantCultureIgnoreCase) >= 0)
+                               && (parameter.Rule == null || parameter.Rule.IndexOf(this.filterOption.FilterTermRule, StringComparison.InvariantCultureIgnoreCase) >= 0)
+                               && (parameter.Assignee == null || parameter.Assignee.IndexOf(this.filterOption.FilterTermAssignee, StringComparison.InvariantCultureIgnoreCase) >= 0);
+
+                return include && issuesStatus && issuesSeverity && issuesResolution && issuesIsNew;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
                 return true;
             }
-
-            bool issuesStatus = this.FilterByIssueStatus(parameter);
-            bool issuesSeverity = this.FilterBySeverity(parameter);
-            bool issuesResolution = this.FilterByResolution(parameter);
-            bool issuesIsNew = this.FilterByIsNew(parameter);
-
-            bool include = (parameter.Message == null || parameter.Message.IndexOf(this.filterOption.FilterTermMessage, StringComparison.InvariantCultureIgnoreCase) >= 0)
-                           && (parameter.Component == null || parameter.Component.IndexOf(this.filterOption.FilterTermComponent, StringComparison.InvariantCultureIgnoreCase) >= 0)
-                           && (parameter.Project == null || parameter.Project.IndexOf(this.filterOption.FilterTermProject, StringComparison.InvariantCultureIgnoreCase) >= 0)
-                           && (parameter.Rule == null || parameter.Rule.IndexOf(this.filterOption.FilterTermRule, StringComparison.InvariantCultureIgnoreCase) >= 0)
-                           && (parameter.Assignee == null || parameter.Assignee.IndexOf(this.filterOption.FilterTermAssignee, StringComparison.InvariantCultureIgnoreCase) >= 0);
-
-            return include && issuesStatus && issuesSeverity && issuesResolution && issuesIsNew;
         }
 
         #endregion
