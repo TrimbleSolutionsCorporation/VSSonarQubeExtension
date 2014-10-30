@@ -77,6 +77,7 @@ namespace VSSonarExtensionUi.ViewModel
         {
             this.VsHelper = new VsPropertiesHelper();
             this.SonarRestConnector = new SonarRestService(new JsonSonarConnector());
+            this.Logger = new VsSonarExtensionLogger(this);
 
             this.IsExtensionBusy = false;
             this.IsConnected = false;
@@ -90,6 +91,8 @@ namespace VSSonarExtensionUi.ViewModel
 
             this.UpdateTheme(Colors.Black, Colors.White);
         }
+
+        public VsSonarExtensionLogger Logger { get; set; }
 
         #endregion
 

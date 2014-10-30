@@ -38,11 +38,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         #region Fields
 
         /// <summary>
-        ///     The rest service.
-        /// </summary>
-        private ISonarRestService restService;
-
-        /// <summary>
         ///     The sq view model.
         /// </summary>
         private readonly SonarQubeViewModel sonarQubeViewModel;
@@ -51,6 +46,11 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         ///     The viewModel.
         /// </summary>
         private readonly VSonarQubeOptionsViewModel viewModel;
+
+        /// <summary>
+        ///     The rest service.
+        /// </summary>
+        private ISonarRestService restService;
 
         /// <summary>
         ///     The visual studio helper.
@@ -133,6 +133,11 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public bool DisableEditorTags { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether extension debug mode enabled.
+        /// </summary>
+        public bool ExtensionDebugModeEnabled { get; set; }
+
+        /// <summary>
         ///     Gets or sets the fore ground color.
         /// </summary>
         public Color ForeGroundColor { get; set; }
@@ -187,31 +192,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         #region Public Methods and Operators
 
         /// <summary>
-        /// The update services.
-        /// </summary>
-        /// <param name="restServiceIn">
-        /// The rest service in.
-        /// </param>
-        /// <param name="vsenvironmenthelperIn">
-        /// The vsenvironmenthelper in.
-        /// </param>
-        /// <param name="statusBar">
-        /// The status bar.
-        /// </param>
-        /// <param name="provider">
-        /// The provider.
-        /// </param>
-        public void UpdateServices(
-            ISonarRestService restServiceIn,
-            IVsEnvironmentHelper vsenvironmenthelperIn,
-            IVSSStatusBar statusBar,
-            IServiceProvider provider)
-        {
-            this.restService = restServiceIn;
-            this.visualStudioHelper = vsenvironmenthelperIn;
-        }
-
-        /// <summary>
         ///     The apply.
         /// </summary>
         public void Apply()
@@ -258,6 +238,17 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         }
 
         /// <summary>
+        /// The on extension debug mode enabled changed.
+        /// </summary>
+        public void OnExtensionDebugModeEnabledChanged()
+        {
+            this.visualStudioHelper.WriteOptionInApplicationData(
+                "VSSonarQubeConfig", 
+                "ExtensionDebugModeEnabled", 
+                this.ExtensionDebugModeEnabled ? "TRUE" : "FALSE");
+        }
+
+        /// <summary>
         ///     The on selected view changed.
         /// </summary>
         public void OnSelectedViewChanged()
@@ -287,6 +278,31 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         {
             this.BackGroundColor = background;
             this.ForeGroundColor = foreground;
+        }
+
+        /// <summary>
+        /// The update services.
+        /// </summary>
+        /// <param name="restServiceIn">
+        /// The rest service in.
+        /// </param>
+        /// <param name="vsenvironmenthelperIn">
+        /// The vsenvironmenthelper in.
+        /// </param>
+        /// <param name="statusBar">
+        /// The status bar.
+        /// </param>
+        /// <param name="provider">
+        /// The provider.
+        /// </param>
+        public void UpdateServices(
+            ISonarRestService restServiceIn, 
+            IVsEnvironmentHelper vsenvironmenthelperIn, 
+            IVSSStatusBar statusBar, 
+            IServiceProvider provider)
+        {
+            this.restService = restServiceIn;
+            this.visualStudioHelper = vsenvironmenthelperIn;
         }
 
         #endregion
@@ -413,6 +429,12 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             if (!string.IsNullOrEmpty(editorTags))
             {
                 this.DisableEditorTags = editorTags.ToLower().Equals("true");
+            }
+
+            string debugmode = this.visualStudioHelper.ReadOptionFromApplicationData("VSSonarQubeConfig", "ExtensionDebugModeEnabled");
+            if (!string.IsNullOrEmpty(debugmode))
+            {
+                this.ExtensionDebugModeEnabled = debugmode.ToLower().Equals("true");
             }
         }
 

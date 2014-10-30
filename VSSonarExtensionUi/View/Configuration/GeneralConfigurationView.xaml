@@ -94,32 +94,54 @@
         
         <CheckBox IsChecked="{Binding IsConnectAtStartOn}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}" Grid.Column="0" Grid.Row="3" Content="Connect at start"></CheckBox>
        
-        <GroupBox Header="Editor Options"  Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="30"></RowDefinition>
-                    <RowDefinition Height="30"></RowDefinition>
-                    <RowDefinition Height="30*"></RowDefinition>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="150"></ColumnDefinition>
-                    <ColumnDefinition Width="30*"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <CheckBox Grid.Column="1"
+        <StackPanel Grid.Row="7" Grid.ColumnSpan="2" Grid.Column="0">
+            <GroupBox Header="Editor Options">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"></RowDefinition>
+                        <RowDefinition Height="30"></RowDefinition>
+                        <RowDefinition Height="30*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150"></ColumnDefinition>
+                        <ColumnDefinition Width="30*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <CheckBox Grid.Column="1"
                   Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
                   Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
                   ToolTip="Disable Tags in Editor, Only Issues Window will be Populated"
                   Content="Disable Editor Tags"
                   IsChecked="{Binding DisableEditorTags}" />
-                <Label
+                    <Label
                     Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"
                     Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
                     Grid.Row="1" Grid.Column="0" Content="External Editor" VerticalAlignment="Center" HorizontalAlignment="Center"></Label>
-                <TextBox Grid.Row="1" Grid.Column="1" IsReadOnly="False" Text="{Binding UserDefinedEditor}" />
-            </Grid>
+                    <TextBox Grid.Row="1" Grid.Column="1" IsReadOnly="False" Text="{Binding UserDefinedEditor}" />
+                </Grid>
 
 
-        </GroupBox>
+            </GroupBox>
+            <GroupBox Header="Other Options"  Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150"></ColumnDefinition>
+                        <ColumnDefinition Width="30*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <CheckBox Grid.Column="1"
+                  Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                  Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
+                  ToolTip="Enables development mode, very verbose logging"
+                  Content="Enable Extension Debug Mode "
+                  IsChecked="{Binding ExtensionDebugModeEnabled}" />
+
+                </Grid>
+
+
+            </GroupBox>
+        </StackPanel>
 
     </Grid>
 </UserControl>

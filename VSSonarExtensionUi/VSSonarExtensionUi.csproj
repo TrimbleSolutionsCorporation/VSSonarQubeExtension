@@ -112,6 +112,7 @@
     <Compile Include="ViewModel\Analysis\ServerViewModel.cs" />
     <Compile Include="ViewModel\Analysis\LocalViewModel.cs" />
     <Compile Include="ViewModel\Configuration\GeneralConfigurationViewModel.cs" />
+    <Compile Include="ViewModel\Helpers\VsSonarExtensionLogger.cs" />
     <Compile Include="ViewModel\SonarQubeViewModel.cs" />
     <Compile Include="View\Configuration\VSonarQubeOptionsView.xaml.cs">
       <DependentUpon>VSonarQubeOptionsView.xaml</DependentUpon>
