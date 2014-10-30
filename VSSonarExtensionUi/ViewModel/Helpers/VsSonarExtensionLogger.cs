@@ -43,6 +43,11 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         public VsSonarExtensionLogger(SonarQubeViewModel model)
         {
             this.model = model;
+
+            if (File.Exists(this.userRoamingFile))
+            {
+                File.Delete(this.userRoamingFile);
+            }
         }
 
         #endregion
@@ -64,7 +69,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
 
             using (var writer = new StreamWriter(this.userRoamingFile, true))
             {
-                writer.Write(ex.Message + " : " + ex.StackTrace);
+                writer.WriteLineAsync(ex.Message + " : " + ex.StackTrace);
             }
         }
 
@@ -83,7 +88,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
 
             using (var writer = new StreamWriter(this.userRoamingFile, true))
             {
-                writer.Write(msg);
+                writer.WriteLineAsync(msg);
             }
         }
 

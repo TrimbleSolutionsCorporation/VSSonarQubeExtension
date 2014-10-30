@@ -1,15 +1,10 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="VSEvents.cs" company="Copyright © 2014 Tekla Corporation. Tekla is a Trimble Company">
-//     Copyright (C) 2013 [Jorge Costa, Jorge.Costa@tekla.com]
+// <copyright file="VSEvents.cs" company="">
+//   
 // </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-// This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
-// as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
-// of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. 
-// You should have received a copy of the GNU Lesser General Public License along with this program; if not, write to the Free
-// Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+// <summary>
+//   The vs events.
+// </summary>
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarQubeExtension.SmartTags.BufferUpdate
 {
@@ -21,14 +16,10 @@ namespace VSSonarQubeExtension.SmartTags.BufferUpdate
 
     using EnvDTE80;
 
-    using ExtensionHelpers;
-
     using Microsoft.VisualStudio.PlatformUI;
     using Microsoft.VisualStudio.Text;
-    using VSSonarQubeExtension;
 
     using VSSonarPlugins;
-    using VSSonarExtensionUi.ViewModel;
 
     /// <summary>
     ///     The vs events.
@@ -59,9 +50,6 @@ namespace VSSonarQubeExtension.SmartTags.BufferUpdate
         /// <summary>
         /// Initializes a new instance of the <see cref="VsEvents"/> class.
         /// </summary>
-        /// <param name="model">
-        /// The model.
-        /// </param>
         /// <param name="environment">
         /// The environment.
         /// </param>
@@ -79,25 +67,11 @@ namespace VSSonarQubeExtension.SmartTags.BufferUpdate
             this.SolutionEvents.WindowEvents.WindowActivated += this.WindowActivated;
             this.DocumentsEvents.DocumentSaved += this.DoumentSaved;
 
-            VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
-
+            VSColorTheme.ThemeChanged += this.VSColorTheme_ThemeChanged;
 
             VsSonarExtensionPackage.SonarQubeModel.AnalysisModeHasChange += this.AnalysisModeHasChange;
-            VsSonarExtensionPackage.SonarQubeModel.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.ConfigurationHasChanged += this.AnalysisModeHasChange;
-        }
-
-        private void AnalysisModeHasChange(object sender, EventArgs e)
-        {
-            VsSonarExtensionPackage.SonarQubeModel.RefreshDataForResource(this.LastDocumentWindowWithFocus.Document.FullName);            
-        }
-
-        private void VSColorTheme_ThemeChanged(ThemeChangedEventArgs e)
-        {
-            Color defaultBackground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBackgroundColorKey);
-            Color defaultForeground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowTextColorKey);
-
-            VsSonarExtensionPackage.SonarQubeModel.UpdateTheme(VsSonarExtensionPackage.ToMediaColor(defaultBackground), VsSonarExtensionPackage.ToMediaColor(defaultForeground));
-
+            VsSonarExtensionPackage.SonarQubeModel.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.ConfigurationHasChanged +=
+                this.AnalysisModeHasChange;
         }
 
         #endregion
@@ -116,16 +90,18 @@ namespace VSSonarQubeExtension.SmartTags.BufferUpdate
         /// <summary>
         /// The get property from buffer.
         /// </summary>
-        /// <param>
-        /// The buffer.
-        ///     <name>buffer</name>
-        /// </param>
         /// <param name="buffer">
         /// The buffer.
         /// </param>
         /// <typeparam>
-        /// <name>T</name>
+        ///     <name>T</name>
         /// </typeparam>
+        /// <returns>
+        /// The <see>
+        ///         <cref>T</cref>
+        ///     </see>
+        ///     .
+        /// </returns>
         public static T GetPropertyFromBuffer<T>(ITextBuffer buffer)
         {
             try
@@ -149,6 +125,20 @@ namespace VSSonarQubeExtension.SmartTags.BufferUpdate
         #region Methods
 
         /// <summary>
+        /// The analysis mode has change.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void AnalysisModeHasChange(object sender, EventArgs e)
+        {
+            VsSonarExtensionPackage.SonarQubeModel.RefreshDataForResource(this.LastDocumentWindowWithFocus.Document.FullName);
+        }
+
+        /// <summary>
         /// The doument saved.
         /// </summary>
         /// <param name="document">
@@ -156,6 +146,7 @@ namespace VSSonarQubeExtension.SmartTags.BufferUpdate
         /// </param>
         private void DoumentSaved(Document document)
         {
+            VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("DoumentSaved : " + document);
             if (document == null)
             {
                 return;
@@ -183,7 +174,8 @@ namespace VSSonarQubeExtension.SmartTags.BufferUpdate
         /// </summary>
         private void SolutionClosed()
         {
-            VsSonarExtensionPackage.SonarQubeModel.ClearProjectAssociation();
+            VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("Solution Closed");
+            VsSonarExtensionPackage.SonarQubeModel.ClearProjectAssociation();            
         }
 
         /// <summary>
@@ -191,9 +183,11 @@ namespace VSSonarQubeExtension.SmartTags.BufferUpdate
         /// </summary>
         private void SolutionOpened()
         {
-            var solutionName = this.environment.ActiveSolutionName();
-            var solutionPath = this.environment.ActiveSolutionPath();
+            
+            string solutionName = this.environment.ActiveSolutionName();
+            string solutionPath = this.environment.ActiveSolutionPath();
 
+            VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("Solution Opened: " + solutionName + " : " + solutionPath);
             VsSonarExtensionPackage.SonarQubeModel.AssociateProjectToSolution(solutionName, solutionPath);
 
             string text = this.environment.GetCurrentTextInView();
@@ -204,6 +198,22 @@ namespace VSSonarQubeExtension.SmartTags.BufferUpdate
 
             string fileName = this.environment.ActiveFileFullPath();
             VsSonarExtensionPackage.SonarQubeModel.RefreshDataForResource(fileName);
+        }
+
+        /// <summary>
+        /// The vs color theme_ theme changed.
+        /// </summary>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void VSColorTheme_ThemeChanged(ThemeChangedEventArgs e)
+        {
+            Color defaultBackground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBackgroundColorKey);
+            Color defaultForeground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowTextColorKey);
+
+            VsSonarExtensionPackage.SonarQubeModel.UpdateTheme(
+                VsSonarExtensionPackage.ToMediaColor(defaultBackground), 
+                VsSonarExtensionPackage.ToMediaColor(defaultForeground));
         }
 
         /// <summary>
@@ -222,6 +232,8 @@ namespace VSSonarQubeExtension.SmartTags.BufferUpdate
                 return;
             }
 
+
+
             string text = this.environment.GetCurrentTextInView();
             if (string.IsNullOrEmpty(text))
             {
@@ -232,6 +244,8 @@ namespace VSSonarQubeExtension.SmartTags.BufferUpdate
             {
                 return;
             }
+
+            VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("New Document Open: " + gotFocus.Document.FullName);
 
             try
             {

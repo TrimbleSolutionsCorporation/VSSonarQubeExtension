@@ -503,8 +503,10 @@ namespace VSSonarExtensionUi.ViewModel
         /// </returns>
         public List<Issue> GetIssuesInEditor(Resource fileResource, string fileContent)
         {
+            this.Logger.WriteMessage("Return issues for resource: " + fileResource);
             if (this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.DisableEditorTags)
             {
+                this.Logger.WriteMessage("Return issues for resource, tags disabled");
                 return new List<Issue>();
             }
 
@@ -514,6 +516,7 @@ namespace VSSonarExtensionUi.ViewModel
             {
                 return null;
             }
+
 
             return view.GetIssuesForResource(fileResource, fileContent);
         }
@@ -581,6 +584,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// </param>
         public void RefreshDataForResource(string fullName)
         {
+            this.Logger.WriteMessage("Refresh Data For File: " + fullName);
             if (string.IsNullOrEmpty(fullName) || this.AssociatedProject == null)
             {
                 this.ErrorMessage = this.IsConnected ? "Not Connected" : "Not Associated";
@@ -595,6 +599,7 @@ namespace VSSonarExtensionUi.ViewModel
 
             if (this.ResourceInEditor == null)
             {
+                this.Logger.WriteMessage("Cannot See File In Sonar Server: " + fullName);
                 return;
             }
 
@@ -793,6 +798,7 @@ namespace VSSonarExtensionUi.ViewModel
                 }
                 catch (Exception ex)
                 {
+                    this.Logger.WriteException(ex);
                     Debug.WriteLine(ex.Message);
                 }
             }
