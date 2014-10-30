@@ -50,7 +50,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// <summary>
         ///     The data grid options key.
         /// </summary>
-        private const string DataGridOptionsKey = "DataGridOptions";
+        private static string DataGridOptionsKey = "DataGridOptions";
 
         #endregion
 
@@ -88,8 +88,12 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// <param name="rowContextMenu">
         /// The row Context Menu.
         /// </param>
-        public IssueGridViewModel(SonarQubeViewModel model, bool rowContextMenu)
+        /// <param name="gridId">
+        /// The grid Id.
+        /// </param>
+        public IssueGridViewModel(SonarQubeViewModel model, bool rowContextMenu, string gridId)
         {
+            DataGridOptionsKey += gridId;
             this.model = model;
             this.Vsenvironmenthelper = model.VsHelper;
             this.Issues = new AsyncObservableCollection<Issue>();
@@ -104,12 +108,6 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                     {
                         this.SelectedItems = items;
                         this.IssuesCounter = this.Issues.Count.ToString(CultureInfo.InvariantCulture);
-
-                        // SendItemToWorkAreaMenu.RefreshMenuItemsStatus(this.ContextMenuItems, items != null);
-                        // SelectKeyMenuItem.RefreshMenuItemsStatus(this.ContextMenuItems, this.SelectedItems.Count == 1);
-                        // CreateTagMenuItem.RefreshMenuItemsStatus(
-                        // this.ContextMenuItems,
-                        // this.SelectedItems.Count == 1 && this.mainModel.ConnectedToServer);
                     });
 
             this.ColumnHeaderChangedCommand = new RelayCommand(this.OnColumnHeaderChangedCommand);
@@ -1033,6 +1031,13 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// </summary>
         private void SaveWindowOptions()
         {
+            if (this.ComponentIndex < 0 || this.LineIndex < 0 || this.AssigneeIndex < 0 || this.MessageIndex < 0 || this.StatusIndex < 0
+                || this.RuleIndex < 0 || this.CreationDateIndex < 0 || this.ProjectIndex < 0 || this.ResolutionIndex < 0 || this.EffortToFixIndex < 0
+                || this.UpdateDateIndex < 0 || this.CloseDateIndex < 0 || this.KeyIndex < 0 || this.IsNewIndex < 0 || this.ViolationIdIndex < 0)
+            {
+                return;
+            }
+
             this.Vsenvironmenthelper.WriteOptionInApplicationData(
                 DataGridOptionsKey, 
                 "ComponentIndex", 

@@ -119,7 +119,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.Vsenvironmenthelper = helper;
             this.sonarQubeViewModel = sonarQubeViewModel;
             this.Header = "Local Analysis";
-            this.IssuesGridView = new IssueGridViewModel(sonarQubeViewModel, false);
+            this.IssuesGridView = new IssueGridViewModel(sonarQubeViewModel, false, "LocalView");
             this.OuputLogLines = new PaginatedObservableCollection<string>(300);
 
             this.InitCommanding();

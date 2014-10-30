@@ -99,7 +99,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.config = config;
 
             this.Header = "Server Analysis";
-            this.IssuesGridView = new IssueGridViewModel(sonarQubeViewModel, true);
+            this.IssuesGridView = new IssueGridViewModel(sonarQubeViewModel, true, "ServerView");
             this.InitCommanding();
 
             this.ForeGroundColor = Colors.Black;
