@@ -684,6 +684,11 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 this.filter = new IssueFilter(this);
             }
 
+            if (this.Issues.Count == 0)
+            {
+                return;
+            }
+
             this.IssuesInView.Filter = this.filter.FilterFunction;
             this.model.OnIssuesChangeEvent();
         }
@@ -890,6 +895,11 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// </param>
         private void OnFilterApplyCommand(object obj)
         {
+            if (this.Issues == null || !this.Issues.Any())
+            {
+                return;
+            }
+
             this.IssuesInView.Filter = this.filter.FilterFunction;
             this.model.OnIssuesChangeEvent();
         }
