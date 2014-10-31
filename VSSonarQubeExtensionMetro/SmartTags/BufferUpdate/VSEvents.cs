@@ -227,21 +227,23 @@ namespace VSSonarQubeExtension.SmartTags.BufferUpdate
         /// </param>
         private void WindowActivated(Window gotFocus, Window lostFocus)
         {
+            VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("Window Activated: Kind: " + gotFocus.Kind);
+
             if (gotFocus.Kind != "Document")
             {
                 return;
             }
 
-
-
             string text = this.environment.GetCurrentTextInView();
             if (string.IsNullOrEmpty(text))
             {
+                VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("Text In Window Is Empty");
                 return;
             }
 
             if (this.LastDocumentWindowWithFocus == gotFocus)
             {
+                VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("Last and Current Window are the same");
                 return;
             }
 
