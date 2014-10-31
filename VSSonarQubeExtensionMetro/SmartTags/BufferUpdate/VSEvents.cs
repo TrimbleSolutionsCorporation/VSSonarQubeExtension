@@ -234,28 +234,30 @@ namespace VSSonarQubeExtension.SmartTags.BufferUpdate
                 return;
             }
 
-            string text = this.environment.GetCurrentTextInView();
-            if (string.IsNullOrEmpty(text))
-            {
-                VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("Text In Window Is Empty");
-                return;
-            }
-
-            if (this.LastDocumentWindowWithFocus == gotFocus)
-            {
-                VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("Last and Current Window are the same");
-                return;
-            }
-
-            VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("New Document Open: " + gotFocus.Document.FullName);
 
             try
             {
+                string text = this.environment.GetCurrentTextInView();
+                if (string.IsNullOrEmpty(text))
+                {
+                    VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("Text In Window Is Empty");
+                    return;
+                }
+
+                if (this.LastDocumentWindowWithFocus == gotFocus)
+                {
+                    VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("Last and Current Window are the same");
+                    return;
+                }
+
+                VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("New Document Open: " + gotFocus.Document.FullName);
+
                 this.LastDocumentWindowWithFocus = gotFocus;
                 VsSonarExtensionPackage.SonarQubeModel.RefreshDataForResource(gotFocus.Document.FullName);
             }
             catch (Exception ex)
             {
+                VsSonarExtensionPackage.SonarQubeModel.Logger.WriteException(ex);
                 VsSonarExtensionPackage.SonarQubeModel.ErrorMessage = "Something Terrible Happen";
                 VsSonarExtensionPackage.SonarQubeModel.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
             }
