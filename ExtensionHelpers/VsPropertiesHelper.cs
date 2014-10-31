@@ -55,6 +55,8 @@ namespace ExtensionHelpers
         /// </summary>
         private readonly IServiceProvider provider;
 
+        private IWpfTextViewHost textViewHost;
+
         #endregion
 
         #region Constructors and Destructors
@@ -353,20 +355,41 @@ namespace ExtensionHelpers
         /// </returns>
         public IWpfTextView GetCurrentView()
         {
-            var textManager = (IVsTextManager)Package.GetGlobalService(typeof(SVsTextManager));
-            IVsTextView textView;
-            textManager.GetActiveView(1, null, out textView);
-
-            var userData = (IVsUserData)textView;
-            if (userData == null)
+            var viewHost = this.TextViewHost;
+            if (viewHost != null)
             {
-                return null;
+                return this.TextViewHost.TextView;
             }
 
-            Guid guidWpfViewHost = DefGuidList.guidIWpfTextViewHost;
-            object host;
-            userData.GetData(ref guidWpfViewHost, out host);
-            return ((IWpfTextViewHost)host).TextView;
+            return null;
+        }
+
+        public IWpfTextViewHost TextViewHost
+        {
+            get
+            {
+                if (this.textViewHost == null)
+                {
+                    var textManager = (IVsTextManager)Package.GetGlobalService(typeof(SVsTextManager));
+                    IVsTextView textView;
+                    textManager.GetActiveView(1, null, out textView);
+
+                    var data = textView as IVsUserData;
+                    if (data != null)
+                    {
+                        var guid = DefGuidList.guidIWpfTextViewHost;
+                        object obj;
+                        var hr = data.GetData(ref guid, out obj);
+                        if ((hr == Microsoft.VisualStudio.VSConstants.S_OK) &&
+                          obj != null && obj is IWpfTextViewHost)
+                        {
+                            this.textViewHost = obj as IWpfTextViewHost;
+                        }
+                    }
+                }
+
+                return this.textViewHost;
+            }
         }
 
         /// <summary>
