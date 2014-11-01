@@ -1,17 +1,11 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IssueGridViewModel.cs" company="Copyright © 2014 Tekla Corporation. Tekla is a Trimble Company">
-//     Copyright (C) 2014 [Jorge Costa, Jorge.Costa@tekla.com]
+// <copyright file="IssueGridViewModel.cs" company="">
+//   
 // </copyright>
+// <summary>
+//   The issue grid view viewModel.
+// </summary>
 // --------------------------------------------------------------------------------------------------------------------
-// This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
-// as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
-// of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. 
-// You should have received a copy of the GNU Lesser General Public License along with this program; if not, write to the Free
-// Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// --------------------------------------------------------------------------------------------------------------------
-
 namespace VSSonarExtensionUi.ViewModel.Helpers
 {
     using System;
@@ -24,7 +18,6 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
     using System.Linq;
     using System.Reflection;
     using System.Windows;
-    using System.Windows.Data;
     using System.Windows.Input;
     using System.Windows.Media;
 
@@ -45,30 +38,17 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
     [ImplementPropertyChanged]
     public class IssueGridViewModel : IViewModelBase, IDataModel, IFilterCommand, IFilterOption
     {
-        #region Constants
+        #region Fields
 
         /// <summary>
         ///     The data grid options key.
         /// </summary>
-        private static string DataGridOptionsKey = "DataGridOptions";
-
-        #endregion
-
-        #region Static Fields
-
-        /// <summary>
-        ///     The _lock.
-        /// </summary>
-        private static readonly object Lock = new object();
-
-        #endregion
-
-        #region Fields
+        private readonly string dataGridOptionsKey = "DataGridOptions";
 
         /// <summary>
         ///     The filter.
         /// </summary>
-        private IFilter filter;
+        private readonly IFilter filter;
 
         /// <summary>
         ///     The viewModel.
@@ -93,12 +73,11 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// </param>
         public IssueGridViewModel(SonarQubeViewModel model, bool rowContextMenu, string gridId)
         {
-            DataGridOptionsKey += gridId;
+            this.dataGridOptionsKey += gridId;
             this.model = model;
             this.Vsenvironmenthelper = model.VsHelper;
+            this.AllIssues = new AsyncObservableCollection<Issue>();
             this.Issues = new AsyncObservableCollection<Issue>();
-            this.IssuesInView = new CollectionViewSource { Source = this.Issues }.View;
-            BindingOperations.EnableCollectionSynchronization(this.IssuesInView, Lock);
 
             this.OpenInVsCommand = new RelayCommand<IList>(this.OnOpenInVsCommand);
             this.MouseEventCommand = new RelayCommand(this.OnMouseEventCommand);
@@ -128,6 +107,11 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         #endregion
 
         #region Public Properties
+
+        /// <summary>
+        /// Gets or sets the all issues.
+        /// </summary>
+        public AsyncObservableCollection<Issue> AllIssues { get; set; }
 
         /// <summary>
         ///     Gets or sets the assignee index.
@@ -356,11 +340,6 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         public string IssuesCounter { get; set; }
 
         /// <summary>
-        ///     Gets or sets the issues in view.
-        /// </summary>
-        public ICollectionView IssuesInView { get; set; }
-
-        /// <summary>
         ///     Gets or sets the key index.
         /// </summary>
         public int KeyIndex { get; set; }
@@ -501,7 +480,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         public bool ViolationIdVisible { get; set; }
 
         /// <summary>
-        /// Gets or sets the vsenvironmenthelper.
+        ///     Gets or sets the vsenvironmenthelper.
         /// </summary>
         public IVsEnvironmentHelper Vsenvironmenthelper { get; set; }
 
@@ -590,8 +569,6 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// </summary>
         public void RefreshView()
         {
-            this.IssuesInView = new CollectionViewSource { Source = null }.View;
-            this.IssuesInView = new CollectionViewSource { Source = this.Issues }.View;
         }
 
         /// <summary>
@@ -605,7 +582,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 return;
             }
 
-            Dictionary<string, string> options = this.Vsenvironmenthelper.ReadAllAvailableOptionsInSettings(DataGridOptionsKey);
+            Dictionary<string, string> options = this.Vsenvironmenthelper.ReadAllAvailableOptionsInSettings(this.dataGridOptionsKey);
             if (options != null && options.Count > 0)
             {
                 this.ReadWindowOptions(options);
@@ -653,6 +630,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
 
                         foreach (Issue listOfIssue in listOfIssues)
                         {
+                            this.AllIssues.Add(listOfIssue);
                             this.Issues.Add(listOfIssue);
                         }
                     });
@@ -669,27 +647,23 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// </summary>
         private void ClearFilter()
         {
-            if (this.IssuesInView == null)
+            this.Issues.Clear();
+            foreach (Issue issue in this.AllIssues)
             {
-                if (this.Issues == null)
+                try
                 {
-                    this.Issues = new AsyncObservableCollection<Issue>();
+                    if (this.filter.FilterFunction(issue))
+                    {
+                        this.Issues.Add(issue);
+                    }
                 }
-
-                this.IssuesInView = new CollectionViewSource { Source = this.Issues }.View;
+                catch (Exception ex)
+                {
+                    this.model.Logger.WriteMessage("Filter Failed: " + ex.Message);
+                    this.Issues.Add(issue);
+                }
             }
 
-            if (this.filter == null)
-            {
-                this.filter = new IssueFilter(this);
-            }
-
-            if (this.Issues.Count == 0)
-            {
-                return;
-            }
-
-            this.IssuesInView.Filter = this.filter.FilterFunction;
             this.model.OnIssuesChangeEvent();
         }
 
@@ -900,7 +874,29 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 return;
             }
 
-            this.IssuesInView.Filter = this.filter.FilterFunction;
+            var issuesToRemove = new List<Issue>();
+
+            foreach (Issue issue in this.Issues)
+            {
+                try
+                {
+                    if (!this.filter.FilterFunction(issue))
+                    {
+                        issuesToRemove.Add(issue);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    this.model.Logger.WriteMessage("Cannot filter");
+                    this.model.Logger.WriteException(ex);
+                }
+            }
+
+            foreach (Issue issue in issuesToRemove)
+            {
+                this.Issues.Remove(issue);
+            }
+
             this.model.OnIssuesChangeEvent();
         }
 
@@ -936,7 +932,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             {
                 this.model.ErrorMessage = "Cannot Clear Filter: " + ex.Message;
                 this.model.DiagnosticMessage = ex.StackTrace;
-            } 
+            }
         }
 
         /// <summary>
@@ -1049,88 +1045,91 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             }
 
             this.Vsenvironmenthelper.WriteOptionInApplicationData(
-                DataGridOptionsKey, 
+                this.dataGridOptionsKey, 
                 "ComponentIndex", 
                 this.ComponentIndex.ToString(CultureInfo.InvariantCulture));
             this.Vsenvironmenthelper.WriteOptionInApplicationData(
-                DataGridOptionsKey, 
+                this.dataGridOptionsKey, 
                 "LineIndex", 
                 this.LineIndex.ToString(CultureInfo.InvariantCulture));
             this.Vsenvironmenthelper.WriteOptionInApplicationData(
-                DataGridOptionsKey, 
+                this.dataGridOptionsKey, 
                 "AssigneeIndex", 
                 this.AssigneeIndex.ToString(CultureInfo.InvariantCulture));
             this.Vsenvironmenthelper.WriteOptionInApplicationData(
-                DataGridOptionsKey, 
+                this.dataGridOptionsKey, 
                 "MessageIndex", 
                 this.MessageIndex.ToString(CultureInfo.InvariantCulture));
             this.Vsenvironmenthelper.WriteOptionInApplicationData(
-                DataGridOptionsKey, 
+                this.dataGridOptionsKey, 
                 "StatusIndex", 
                 this.StatusIndex.ToString(CultureInfo.InvariantCulture));
             this.Vsenvironmenthelper.WriteOptionInApplicationData(
-                DataGridOptionsKey, 
+                this.dataGridOptionsKey, 
                 "SeverityIndex", 
                 this.SeverityIndex.ToString(CultureInfo.InvariantCulture));
             this.Vsenvironmenthelper.WriteOptionInApplicationData(
-                DataGridOptionsKey, 
+                this.dataGridOptionsKey, 
                 "RuleIndex", 
                 this.RuleIndex.ToString(CultureInfo.InvariantCulture));
             this.Vsenvironmenthelper.WriteOptionInApplicationData(
-                DataGridOptionsKey, 
+                this.dataGridOptionsKey, 
                 "CreationDateIndex", 
                 this.CreationDateIndex.ToString(CultureInfo.InvariantCulture));
             this.Vsenvironmenthelper.WriteOptionInApplicationData(
-                DataGridOptionsKey, 
+                this.dataGridOptionsKey, 
                 "ProjectIndex", 
                 this.ProjectIndex.ToString(CultureInfo.InvariantCulture));
             this.Vsenvironmenthelper.WriteOptionInApplicationData(
-                DataGridOptionsKey, 
+                this.dataGridOptionsKey, 
                 "ResolutionIndex", 
                 this.ResolutionIndex.ToString(CultureInfo.InvariantCulture));
             this.Vsenvironmenthelper.WriteOptionInApplicationData(
-                DataGridOptionsKey, 
+                this.dataGridOptionsKey, 
                 "EffortToFixIndex", 
                 this.EffortToFixIndex.ToString(CultureInfo.InvariantCulture));
             this.Vsenvironmenthelper.WriteOptionInApplicationData(
-                DataGridOptionsKey, 
+                this.dataGridOptionsKey, 
                 "UpdateDateIndex", 
                 this.UpdateDateIndex.ToString(CultureInfo.InvariantCulture));
             this.Vsenvironmenthelper.WriteOptionInApplicationData(
-                DataGridOptionsKey, 
+                this.dataGridOptionsKey, 
                 "CloseDateIndex", 
                 this.CloseDateIndex.ToString(CultureInfo.InvariantCulture));
             this.Vsenvironmenthelper.WriteOptionInApplicationData(
-                DataGridOptionsKey, 
+                this.dataGridOptionsKey, 
                 "KeyIndex", 
                 this.KeyIndex.ToString(CultureInfo.InvariantCulture));
-            this.Vsenvironmenthelper.WriteOptionInApplicationData(DataGridOptionsKey, "IdIndex", this.IdIndex.ToString(CultureInfo.InvariantCulture));
             this.Vsenvironmenthelper.WriteOptionInApplicationData(
-                DataGridOptionsKey, 
+                this.dataGridOptionsKey, 
+                "IdIndex", 
+                this.IdIndex.ToString(CultureInfo.InvariantCulture));
+            this.Vsenvironmenthelper.WriteOptionInApplicationData(
+                this.dataGridOptionsKey, 
                 "IsNewIndex", 
                 this.IsNewIndex.ToString(CultureInfo.InvariantCulture));
             this.Vsenvironmenthelper.WriteOptionInApplicationData(
-                DataGridOptionsKey, 
+                this.dataGridOptionsKey, 
                 "ViolationIdIndex", 
                 this.ViolationIdIndex.ToString(CultureInfo.InvariantCulture));
 
-            this.Vsenvironmenthelper.WriteOptionInApplicationData(DataGridOptionsKey, "MessageVisible", this.MessageVisible.ToString());
-            this.Vsenvironmenthelper.WriteOptionInApplicationData(DataGridOptionsKey, "CreationDateVisible", this.CreationDateVisible.ToString());
-            this.Vsenvironmenthelper.WriteOptionInApplicationData(DataGridOptionsKey, "CloseDateVisible", this.CloseDateVisible.ToString());
-            this.Vsenvironmenthelper.WriteOptionInApplicationData(DataGridOptionsKey, "ComponentVisible", this.ComponentVisible.ToString());
-            this.Vsenvironmenthelper.WriteOptionInApplicationData(DataGridOptionsKey, "EffortToFixVisible", this.EffortToFixVisible.ToString());
-            this.Vsenvironmenthelper.WriteOptionInApplicationData(DataGridOptionsKey, "LineVisible", this.LineVisible.ToString());
-            this.Vsenvironmenthelper.WriteOptionInApplicationData(DataGridOptionsKey, "ProjectVisible", this.ProjectVisible.ToString());
-            this.Vsenvironmenthelper.WriteOptionInApplicationData(DataGridOptionsKey, "UpdateDateVisible", this.UpdateDateVisible.ToString());
-            this.Vsenvironmenthelper.WriteOptionInApplicationData(DataGridOptionsKey, "StatusVisible", this.StatusVisible.ToString());
-            this.Vsenvironmenthelper.WriteOptionInApplicationData(DataGridOptionsKey, "SeverityVisible", this.SeverityVisible.ToString());
-            this.Vsenvironmenthelper.WriteOptionInApplicationData(DataGridOptionsKey, "RuleVisible", this.RuleVisible.ToString());
-            this.Vsenvironmenthelper.WriteOptionInApplicationData(DataGridOptionsKey, "ResolutionVisible", this.ResolutionVisible.ToString());
-            this.Vsenvironmenthelper.WriteOptionInApplicationData(DataGridOptionsKey, "AssigneeVisible", this.AssigneeVisible.ToString());
-            this.Vsenvironmenthelper.WriteOptionInApplicationData(DataGridOptionsKey, "IsNewVisible", this.IsNewVisible.ToString());
-            this.Vsenvironmenthelper.WriteOptionInApplicationData(DataGridOptionsKey, "KeyVisible", this.KeyVisible.ToString());
-            this.Vsenvironmenthelper.WriteOptionInApplicationData(DataGridOptionsKey, "IdVisible", this.IdVisible.ToString());
-            this.Vsenvironmenthelper.WriteOptionInApplicationData(DataGridOptionsKey, "ViolationIdVisible", this.ViolationIdVisible.ToString());
+            this.Vsenvironmenthelper.WriteOptionInApplicationData(this.dataGridOptionsKey, "MessageVisible", this.MessageVisible.ToString());
+            this.Vsenvironmenthelper.WriteOptionInApplicationData(this.dataGridOptionsKey, "CreationDateVisible", this.CreationDateVisible.ToString());
+            this.Vsenvironmenthelper.WriteOptionInApplicationData(this.dataGridOptionsKey, "CloseDateVisible", this.CloseDateVisible.ToString());
+            this.Vsenvironmenthelper.WriteOptionInApplicationData(this.dataGridOptionsKey, "ComponentVisible", this.ComponentVisible.ToString());
+            this.Vsenvironmenthelper.WriteOptionInApplicationData(this.dataGridOptionsKey, "EffortToFixVisible", this.EffortToFixVisible.ToString());
+            this.Vsenvironmenthelper.WriteOptionInApplicationData(this.dataGridOptionsKey, "LineVisible", this.LineVisible.ToString());
+            this.Vsenvironmenthelper.WriteOptionInApplicationData(this.dataGridOptionsKey, "ProjectVisible", this.ProjectVisible.ToString());
+            this.Vsenvironmenthelper.WriteOptionInApplicationData(this.dataGridOptionsKey, "UpdateDateVisible", this.UpdateDateVisible.ToString());
+            this.Vsenvironmenthelper.WriteOptionInApplicationData(this.dataGridOptionsKey, "StatusVisible", this.StatusVisible.ToString());
+            this.Vsenvironmenthelper.WriteOptionInApplicationData(this.dataGridOptionsKey, "SeverityVisible", this.SeverityVisible.ToString());
+            this.Vsenvironmenthelper.WriteOptionInApplicationData(this.dataGridOptionsKey, "RuleVisible", this.RuleVisible.ToString());
+            this.Vsenvironmenthelper.WriteOptionInApplicationData(this.dataGridOptionsKey, "ResolutionVisible", this.ResolutionVisible.ToString());
+            this.Vsenvironmenthelper.WriteOptionInApplicationData(this.dataGridOptionsKey, "AssigneeVisible", this.AssigneeVisible.ToString());
+            this.Vsenvironmenthelper.WriteOptionInApplicationData(this.dataGridOptionsKey, "IsNewVisible", this.IsNewVisible.ToString());
+            this.Vsenvironmenthelper.WriteOptionInApplicationData(this.dataGridOptionsKey, "KeyVisible", this.KeyVisible.ToString());
+            this.Vsenvironmenthelper.WriteOptionInApplicationData(this.dataGridOptionsKey, "IdVisible", this.IdVisible.ToString());
+            this.Vsenvironmenthelper.WriteOptionInApplicationData(this.dataGridOptionsKey, "ViolationIdVisible", this.ViolationIdVisible.ToString());
         }
 
         /// <summary>
@@ -1142,14 +1141,14 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             foreach (PropertyInfo propertyInfo in typeof(Issue).GetProperties())
             {
                 this.Vsenvironmenthelper.WriteOptionInApplicationData(
-                    DataGridOptionsKey, 
+                    this.dataGridOptionsKey, 
                     propertyInfo.Name + "Index", 
                     i.ToString(CultureInfo.InvariantCulture));
-                this.Vsenvironmenthelper.WriteOptionInApplicationData(DataGridOptionsKey, propertyInfo.Name + "Visible", "true");
+                this.Vsenvironmenthelper.WriteOptionInApplicationData(this.dataGridOptionsKey, propertyInfo.Name + "Visible", "true");
                 i++;
             }
 
-            Dictionary<string, string> options = this.Vsenvironmenthelper.ReadAllAvailableOptionsInSettings(DataGridOptionsKey);
+            Dictionary<string, string> options = this.Vsenvironmenthelper.ReadAllAvailableOptionsInSettings(this.dataGridOptionsKey);
             if (options != null && options.Count > 0)
             {
                 this.ReadWindowOptions(options);

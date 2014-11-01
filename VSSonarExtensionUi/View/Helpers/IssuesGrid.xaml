@@ -112,7 +112,7 @@
           HorizontalScrollBarVisibility="Visible"
           SelectedItem="{Binding SelectedIssue}"
           IsSynchronizedWithCurrentItem="True" 
-          ItemsSource="{Binding IssuesInView}"
+          ItemsSource="{Binding Issues}"
           AlternationCount="2" AutoGenerateColumns="False" AlternatingRowBackground="#CCD1E0E6"
           CanUserAddRows="False"
           CanUserDeleteRows="False"
