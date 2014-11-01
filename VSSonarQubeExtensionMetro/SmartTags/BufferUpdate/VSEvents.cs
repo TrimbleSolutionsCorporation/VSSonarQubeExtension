@@ -237,13 +237,6 @@ namespace VSSonarQubeExtension.SmartTags.BufferUpdate
 
             try
             {
-                string text = this.environment.GetCurrentTextInView();
-                if (string.IsNullOrEmpty(text))
-                {
-                    VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("Text In Window Is Empty");
-                    return;
-                }
-
                 if (this.LastDocumentWindowWithFocus == gotFocus)
                 {
                     VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("Last and Current Window are the same");
