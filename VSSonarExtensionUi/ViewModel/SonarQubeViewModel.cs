@@ -588,7 +588,6 @@ namespace VSSonarExtensionUi.ViewModel
             if (string.IsNullOrEmpty(fullName) || this.AssociatedProject == null)
             {
                 this.ErrorMessage = this.IsConnected ? "Not Connected" : "Not Associated";
-
                 this.DiagnosticMessage = string.Empty;
 
                 return;
@@ -599,6 +598,7 @@ namespace VSSonarExtensionUi.ViewModel
 
             if (this.ResourceInEditor == null)
             {
+                this.ErrorMessage = "Cannot Find File in Server";
                 this.Logger.WriteMessage("Cannot See File In Sonar Server: " + fullName);
                 return;
             }
@@ -606,7 +606,18 @@ namespace VSSonarExtensionUi.ViewModel
             IAnalysisViewModelBase analyser = this.SelectedView;
             if (analyser != null)
             {
-                analyser.RefreshDataForResource(this.ResourceInEditor, this.DocumentInView);
+                try
+                {
+                    this.Logger.WriteMessage("RefreshDataForResource: Doc in View: " + this.DocumentInView);
+                    analyser.RefreshDataForResource(this.ResourceInEditor, this.DocumentInView);
+                }
+                catch (Exception ex)
+                {
+                    this.Logger.WriteMessage("Cannot find file in server: " + ex.Message);
+                    this.Logger.WriteException(ex);
+                    this.ErrorMessage = "Cannot Find File in Server";
+                }
+                
             }
         }
 
@@ -777,6 +788,7 @@ namespace VSSonarExtensionUi.ViewModel
             }
             catch (Exception ex)
             {
+                this.Logger.WriteException(ex);
                 this.ErrorMessage = "No Plugin installed that supports this resource";
                 this.DiagnosticMessage = ex.Message + " " + ex.StackTrace;
                 return null;
@@ -786,6 +798,7 @@ namespace VSSonarExtensionUi.ViewModel
             {
                 try
                 {
+                    this.Logger.WriteMessage("try key: " + key);
                     Resource toReturn =
                         this.SonarRestConnector.GetResourcesData(
                             this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, 
@@ -794,15 +807,16 @@ namespace VSSonarExtensionUi.ViewModel
                     toReturn.Name = fileName;
                     toReturn.Lname = fileName;
                     this.ErrorMessage = "Resource Found";
+                    this.Logger.WriteMessage("Resource found: " + toReturn.Key);
                     return toReturn;
                 }
                 catch (Exception ex)
                 {
                     this.Logger.WriteException(ex);
-                    Debug.WriteLine(ex.Message);
                 }
             }
 
+            this.Logger.WriteMessage("Resource not found in Server");
             this.ErrorMessage = "Resource not found in Server";
 
             return null;
