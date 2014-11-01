@@ -606,6 +606,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </param>
         private void RunLocalAnalysis(AnalysisTypes analysis)
         {
+            this.OuputLogLines.Clear();
             this.OutputLog = string.Empty;
             try
             {
