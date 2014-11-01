@@ -180,6 +180,8 @@ namespace VSSonarQubeExtension.SmartTags.Coverage
         {
             try
             {
+                VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("Coverage Changed Event Correctly Triggered");
+
                 var document = VsEvents.GetPropertyFromBuffer<ITextDocument>(this.SourceBuffer);
                 Resource resource = VsSonarExtensionPackage.SonarQubeModel.ResourceInEditor;
 
@@ -193,8 +195,11 @@ namespace VSSonarQubeExtension.SmartTags.Coverage
                     return;
                 }
 
+                VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("Getting Coverage");
                 Dictionary<int, CoverageElement> coverageLine =
                     VsSonarExtensionPackage.SonarQubeModel.ServerViewModel.GetCoverageInEditor(this.SourceBuffer.CurrentSnapshot.GetText());
+
+                VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("Got Cov Measures: " + coverageLine.Count);
                 this.coverageTags.Clear();
 
                 if (coverageLine.Count == 0)

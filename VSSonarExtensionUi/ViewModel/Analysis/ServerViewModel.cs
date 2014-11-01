@@ -227,6 +227,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             if (this.CoverageInEditorEnabled)
             {
+                this.sonarQubeViewModel.Logger.WriteMessage("Requested Coverage - Coverge enabled");
                 return this.localEditorCache.GetCoverageDataForResource(this.ResourceInEditor, currentSourceBuffer);
             }
 
@@ -289,9 +290,11 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             if (this.IssuesReadyForCollecting != null)
             {
+                this.sonarQubeViewModel.Logger.WriteMessage("Trigger issues update");
                 this.IssuesReadyForCollecting(this, e);
                 if (this.CoverageWasModified != null)
                 {
+                    this.sonarQubeViewModel.Logger.WriteMessage("Trigger Coverage Update");
                     this.CoverageWasModified(this, e);
                 }
             }
@@ -303,7 +306,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public void OnCoverageInEditorEnabledChanged()
         {
             this.OnCoverageWasModified(EventArgs.Empty);
-            Debug.WriteLine("CoverageInEditorEnabled Changed");
+            this.sonarQubeViewModel.Logger.WriteMessage("CoverageInEditorEnabled Changed");
         }
 
         /// <summary>
@@ -312,7 +315,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public void OnSelectedViewChanged()
         {
             this.OnAnalysisModeHasChange(EventArgs.Empty);
-            Debug.WriteLine("Name Changed");
+            this.sonarQubeViewModel.Logger.WriteMessage("OnSelectedViewChanged Changed");
         }
 
         /// <summary>
