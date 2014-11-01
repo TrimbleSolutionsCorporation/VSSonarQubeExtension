@@ -417,6 +417,18 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         public void OnPreviewCommand()
         {
+            if (!this.sonarQubeViewModel.IsConnected)
+            {
+                this.sonarQubeViewModel.ErrorMessage = "Cannot Run Analysis if not Connected to Sonar Server";
+                return;
+            }
+
+            if (!this.sonarQubeViewModel.IsAssociated)
+            {
+                this.sonarQubeViewModel.ErrorMessage = "Cannot Run Analysis if not associated with a projct in SonarQube Server";
+                return;
+            }
+
             this.FileAnalysisIsEnabled = false;
             this.sonarQubeViewModel.IsExtensionBusy = true;
             this.CanRunAnalysis = false;
@@ -651,7 +663,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             }
             catch (Exception ex)
             {
-                UserExceptionMessageBox.ShowException("Critical Error: Please Report This Error: ", ex);
+                UserExceptionMessageBox.ShowException("Critical Error: Please Report This Error: cwd: " + this.SourceWorkingDir + " AssociatedProject: " + this.AssociatedProject, ex);
                 this.CanRunAnalysis = true;
                 this.sonarQubeViewModel.IsExtensionBusy = false;
             }
