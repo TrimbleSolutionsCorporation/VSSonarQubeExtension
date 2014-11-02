@@ -17,10 +17,7 @@ namespace VSSonarPlugins
 
     using ExtensionTypes;
 
-    /// <summary>
-    /// The VsPropertiesHelper interface.
-    /// </summary>
-    public interface IVsEnvironmentHelper
+    public interface IConfigurationHelper
     {
         /// <summary>
         /// The read option from application data.
@@ -79,6 +76,8 @@ namespace VSSonarPlugins
         /// </param>
         void WriteAllOptionsForPluginOptionInApplicationData(string pluginKey, Resource project, Dictionary<string, string> options);
 
+
+
         /// <summary>
         /// The get user app data configuration file.
         /// </summary>
@@ -86,6 +85,53 @@ namespace VSSonarPlugins
         /// The <see cref="string"/>.
         /// </returns>
         string UserAppDataConfigurationFile();
+
+
+
+
+
+
+    }
+
+    /// <summary>
+    /// The VsPropertiesHelper interface.
+    /// </summary>
+    public interface IVsEnvironmentHelper
+    {
+
+        /// <summary>
+        /// The set default option.
+        /// </summary>
+        /// <param name="sonarOptions">
+        /// The sonar options.
+        /// </param>
+        /// <param name="communityOptions">
+        /// The community Options.
+        /// </param>
+        /// <param name="item">
+        /// The item.
+        /// </param>
+        /// <param name="value">
+        /// The value.
+        /// </param>
+        void WriteDefaultOption(string sonarOptions, string communityOptions, string item, string value);
+
+        /// <summary>
+        /// The set option.
+        /// </summary>
+        /// <param name="category">
+        /// The category.
+        /// </param>
+        /// <param name="page">
+        /// The page.
+        /// </param>
+        /// <param name="item">
+        /// The item.
+        /// </param>
+        /// <param name="value">
+        /// The value.
+        /// </param>
+        void WriteOption(string category, string page, string item, string value);
 
         void WriteToVisualStudioOutput(string errorMessage);
 
@@ -160,56 +206,9 @@ namespace VSSonarPlugins
         /// </returns>
         string ActiveSolutionName();
 
-        /// <summary>
-        /// The get saved option.
-        /// </summary>
-        /// <param name="category">
-        /// The category.
-        /// </param>
-        /// <param name="page">
-        /// The page.
-        /// </param>
-        /// <param name="item">
-        /// The item.
-        /// </param>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
-        string ReadSavedOption(string category, string page, string item);
 
-        /// <summary>
-        /// The set default option.
-        /// </summary>
-        /// <param name="sonarOptions">
-        /// The sonar options.
-        /// </param>
-        /// <param name="communityOptions">
-        /// The community Options.
-        /// </param>
-        /// <param name="item">
-        /// The item.
-        /// </param>
-        /// <param name="value">
-        /// The value.
-        /// </param>
-        void WriteDefaultOption(string sonarOptions, string communityOptions, string item, string value);
 
-        /// <summary>
-        /// The set option.
-        /// </summary>
-        /// <param name="category">
-        /// The category.
-        /// </param>
-        /// <param name="page">
-        /// The page.
-        /// </param>
-        /// <param name="item">
-        /// The item.
-        /// </param>
-        /// <param name="value">
-        /// The value.
-        /// </param>
-        void WriteOption(string category, string page, string item, string value);
+
         void RestartVisualStudio();
 
 
@@ -252,5 +251,22 @@ namespace VSSonarPlugins
         bool AreWeRunningInVisualStudio();
 
         void ShowSourceDiff(string resourceInEditorTxt, string documentInViewPath);
+
+        /// <summary>
+        /// The get saved option.
+        /// </summary>
+        /// <param name="category">
+        /// The category.
+        /// </param>
+        /// <param name="page">
+        /// The page.
+        /// </param>
+        /// <param name="item">
+        /// The item.
+        /// </param>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
+        string ReadSavedOption(string category, string page, string item);
     }
 }

@@ -9,7 +9,7 @@
     <Target Name="RestoreExtensionNuget"><NugetRestoreTask NugetExe="$(MSBuildFolder)\Nuget.exe" SolutionFile="VSSonarQubeExtension.sln"/></Target>
 
     <Target Name="BuildExtension" DependsOnTargets="RestoreExtensionNuget">
-        <MSBuild Projects="@(VSSonarQubeExtension)" Properties="Configuration=Release" BuildInParallel="true" StopOnFirstFailure="true" />
+        <MSBuild Projects="@(VSSonarQubeExtension)" Properties="Configuration=Debug" BuildInParallel="true" StopOnFirstFailure="true" />
     </Target>
     
     <Target Name="Build" DependsOnTargets="BuildExtension">

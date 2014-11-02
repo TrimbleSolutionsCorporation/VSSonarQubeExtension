@@ -27,19 +27,19 @@ type RunAnalysisTests() =
 
     [<Test>]
     member test.``If Thread is Null then analysis is not running`` () =
-        let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), Mock<IVsEnvironmentHelper>().Create())
+        let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create())
         ((analyser :> ISonarLocalAnalyser).IsExecuting()) |> should be False
 
     [<Test>]
     [<ExpectedException>]
     member test.``Should throw exception when no plugin is found`` () =
-        let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), Mock<IVsEnvironmentHelper>().Create())
+        let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create())
         ((analyser :> ISonarLocalAnalyser).GetResourceKey(new VsProjectItem("fileName", "filePath", "projectName", "projectFilePath", "solutionName", "solutionPath"), new Resource(), new ConnectionConfiguration(), true)) |> should throw typeof<ResourceNotSupportedException>
 
     [<Test>]
     [<ExpectedException>]
     member test.``Should throw exception if No plugins are loaded and we give a good resource`` () =
-        let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), Mock<IVsEnvironmentHelper>().Create())
+        let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create())
         let project = new Resource()
         project.Lang <- "c++"
         ((analyser :> ISonarLocalAnalyser).GetResourceKey(new VsProjectItem("fileName", "filePath", "projectName", "projectFilePath", "solutionName", "solutionPath"), new Resource(), new ConnectionConfiguration(), true)) |> should throw typeof<ResourceNotSupportedException>
@@ -52,7 +52,7 @@ type RunAnalysisTests() =
         pluginDescription.Name <- "TestPlugin"
 
         let mockAVsinterface =
-            Mock<IVsEnvironmentHelper>()
+            Mock<IConfigurationHelper>()
                 .Setup(fun x -> <@ x.ReadOptionFromApplicationData(VSSonarPlugins.GlobalIds.PluginEnabledControlId, "TestPlugin") @>).Returns("True")
                 .Create()
 

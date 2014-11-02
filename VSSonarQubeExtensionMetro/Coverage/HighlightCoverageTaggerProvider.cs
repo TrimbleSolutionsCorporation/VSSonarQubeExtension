@@ -66,24 +66,20 @@ namespace VSSonarQubeExtension.Coverage
         /// </returns>
         public ITagger<T> CreateTagger<T>(ITextView textView, ITextBuffer buffer) where T : ITag
         {
-            VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("CreateTagger Called For");
             if (textView.TextBuffer != buffer)
             {
                 return null;
             }
 
+            if (buffer == null)
+            {
+                throw new ArgumentNullException("buffer");
+            }
 
-                if (buffer == null)
-                {
-                    VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("CreateTagger:  Buffer Null");
-                    throw new ArgumentNullException("buffer");
-                }
-
-                if (this.ServiceProvider == null)
-                {
-                    VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("ServiceProvider has not been set.");
-                    throw new InvalidOperationException("ServiceProvider has not been set.");
-                }
+            if (this.ServiceProvider == null)
+            {
+                throw new InvalidOperationException("ServiceProvider has not been set.");
+            }
 
             return buffer.Properties.GetOrCreateSingletonProperty(() => new HighlightCoverageTagger(buffer) as ITagger<T>);
         }

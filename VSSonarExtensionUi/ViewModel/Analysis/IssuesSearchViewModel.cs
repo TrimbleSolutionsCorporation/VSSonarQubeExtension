@@ -74,6 +74,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         private IVsEnvironmentHelper visualStudioHelper;
 
+        private IConfigurationHelper configurationHelper;
+
         #endregion
 
         #region Constructors and Destructors
@@ -90,8 +92,9 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <param name="restService">
         /// The rest service.
         /// </param>
-        public IssuesSearchViewModel(SonarQubeViewModel sonarQubeViewModel, IVsEnvironmentHelper visualStudioHelper, ISonarRestService restService)
+        public IssuesSearchViewModel(SonarQubeViewModel sonarQubeViewModel, IVsEnvironmentHelper visualStudioHelper, ISonarRestService restService, IConfigurationHelper configurationHelper)
         {
+            this.configurationHelper = configurationHelper;
             this.visualStudioHelper = visualStudioHelper;
             this.restService = restService;
             this.sonarQubeViewModel = sonarQubeViewModel;
@@ -506,55 +509,55 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             if (this.visualStudioHelper != null)
             {
-                this.visualStudioHelper.WriteOptionInApplicationData(
+                this.configurationHelper.WriteOptionInApplicationData(
                     IssuesFilterViewModelKey, 
                     "IsStatusOpenChecked", 
                     this.IsStatusOpenChecked.ToString(CultureInfo.InvariantCulture));
-                this.visualStudioHelper.WriteOptionInApplicationData(
+                this.configurationHelper.WriteOptionInApplicationData(
                     IssuesFilterViewModelKey, 
                     "IsStatusClosedChecked", 
                     this.IsStatusClosedChecked.ToString(CultureInfo.InvariantCulture));
-                this.visualStudioHelper.WriteOptionInApplicationData(
+                this.configurationHelper.WriteOptionInApplicationData(
                     IssuesFilterViewModelKey, 
                     "IsStatusResolvedChecked", 
                     this.IsStatusResolvedChecked.ToString(CultureInfo.InvariantCulture));
-                this.visualStudioHelper.WriteOptionInApplicationData(
+                this.configurationHelper.WriteOptionInApplicationData(
                     IssuesFilterViewModelKey, 
                     "IsStatusConfirmedChecked", 
                     this.IsStatusConfirmedChecked.ToString(CultureInfo.InvariantCulture));
-                this.visualStudioHelper.WriteOptionInApplicationData(
+                this.configurationHelper.WriteOptionInApplicationData(
                     IssuesFilterViewModelKey, 
                     "IsStatusReopenedChecked", 
                     this.IsStatusReopenedChecked.ToString(CultureInfo.InvariantCulture));
-                this.visualStudioHelper.WriteOptionInApplicationData(
+                this.configurationHelper.WriteOptionInApplicationData(
                     IssuesFilterViewModelKey, 
                     "IsBlockerChecked", 
                     this.IsBlockerChecked.ToString(CultureInfo.InvariantCulture));
-                this.visualStudioHelper.WriteOptionInApplicationData(
+                this.configurationHelper.WriteOptionInApplicationData(
                     IssuesFilterViewModelKey, 
                     "IsCriticalChecked", 
                     this.IsCriticalChecked.ToString(CultureInfo.InvariantCulture));
-                this.visualStudioHelper.WriteOptionInApplicationData(
+                this.configurationHelper.WriteOptionInApplicationData(
                     IssuesFilterViewModelKey, 
                     "IsMajaorChecked", 
                     this.IsMajaorChecked.ToString(CultureInfo.InvariantCulture));
-                this.visualStudioHelper.WriteOptionInApplicationData(
+                this.configurationHelper.WriteOptionInApplicationData(
                     IssuesFilterViewModelKey, 
                     "IsMinorChecked", 
                     this.IsMinorChecked.ToString(CultureInfo.InvariantCulture));
-                this.visualStudioHelper.WriteOptionInApplicationData(
+                this.configurationHelper.WriteOptionInApplicationData(
                     IssuesFilterViewModelKey, 
                     "IsInfoChecked", 
                     this.IsInfoChecked.ToString(CultureInfo.InvariantCulture));
-                this.visualStudioHelper.WriteOptionInApplicationData(
+                this.configurationHelper.WriteOptionInApplicationData(
                     IssuesFilterViewModelKey, 
                     "IsFalsePositiveChecked", 
                     this.IsFalsePositiveChecked.ToString(CultureInfo.InvariantCulture));
-                this.visualStudioHelper.WriteOptionInApplicationData(
+                this.configurationHelper.WriteOptionInApplicationData(
                     IssuesFilterViewModelKey, 
                     "IsRemovedChecked", 
                     this.IsRemovedChecked.ToString(CultureInfo.InvariantCulture));
-                this.visualStudioHelper.WriteOptionInApplicationData(
+                this.configurationHelper.WriteOptionInApplicationData(
                     IssuesFilterViewModelKey, 
                     "IsFixedChecked", 
                     this.IsFixedChecked.ToString(CultureInfo.InvariantCulture));
@@ -595,12 +598,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </param>
         public void UpdateServices(
             ISonarRestService restServiceIn, 
-            IVsEnvironmentHelper vsenvironmenthelperIn, 
+            IVsEnvironmentHelper vsenvironmenthelperIn,
+            IConfigurationHelper configurationHelper,
             IVSSStatusBar statusBar, 
             IServiceProvider provider)
         {
             this.restService = restServiceIn;
             this.visualStudioHelper = vsenvironmenthelperIn;
+            this.configurationHelper = configurationHelper;
             this.StatusBar = statusBar;
             this.ServiceProvier = provider;
 

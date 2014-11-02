@@ -57,6 +57,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         private IVsEnvironmentHelper visualStudioHelper;
 
+        private IConfigurationHelper configurationHelper;
+
         #endregion
 
         #region Constructors and Destructors
@@ -80,11 +82,13 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             VSonarQubeOptionsViewModel viewModel, 
             ISonarRestService restService, 
             IVsEnvironmentHelper helper, 
-            SonarQubeViewModel sonarQubeViewModel)
+            SonarQubeViewModel sonarQubeViewModel,
+            IConfigurationHelper configurationHelper)
         {
             this.Header = "General Settings";
             this.viewModel = viewModel;
             this.restService = restService;
+            this.configurationHelper = configurationHelper;
             this.visualStudioHelper = helper;
             this.sonarQubeViewModel = sonarQubeViewModel;
 
@@ -196,10 +200,10 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         public void Apply()
         {
-            this.visualStudioHelper.WriteOptionInApplicationData("VSSonarQubeConfig", "UserDefinedEditor", this.UserDefinedEditor);
-            this.visualStudioHelper.WriteOptionInApplicationData("VSSonarQubeConfig", "DisableEditorTags", this.DisableEditorTags ? "TRUE" : "FALSE");
+            this.configurationHelper.WriteOptionInApplicationData("VSSonarQubeConfig", "UserDefinedEditor", this.UserDefinedEditor);
+            this.configurationHelper.WriteOptionInApplicationData("VSSonarQubeConfig", "DisableEditorTags", this.DisableEditorTags ? "TRUE" : "FALSE");
 
-            this.viewModel.Vsenvironmenthelper.WriteOptionInApplicationData(
+            this.configurationHelper.WriteOptionInApplicationData(
                 "VSSonarQubeConfig", 
                 "AutoConnectAtStart", 
                 this.IsConnectAtStartOn ? "true" : "false");
@@ -242,7 +246,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         public void OnExtensionDebugModeEnabledChanged()
         {
-            this.visualStudioHelper.WriteOptionInApplicationData(
+            this.configurationHelper.WriteOptionInApplicationData(
                 "VSSonarQubeConfig", 
                 "ExtensionDebugModeEnabled", 
                 this.ExtensionDebugModeEnabled ? "TRUE" : "FALSE");
@@ -298,11 +302,13 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public void UpdateServices(
             ISonarRestService restServiceIn, 
             IVsEnvironmentHelper vsenvironmenthelperIn, 
+            IConfigurationHelper  configurationHelper,
             IVSSStatusBar statusBar, 
             IServiceProvider provider)
         {
             this.restService = restServiceIn;
             this.visualStudioHelper = vsenvironmenthelperIn;
+            this.configurationHelper = configurationHelper;
         }
 
         #endregion
@@ -337,7 +343,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
             cm.Load();
 
-            string address = this.viewModel.Vsenvironmenthelper.ReadOptionFromApplicationData("VSSonarQubeConfig", "ServerAddress");
+            string address = this.configurationHelper.ReadOptionFromApplicationData("VSSonarQubeConfig", "ServerAddress");
 
             if (string.IsNullOrEmpty(address))
             {
@@ -412,7 +418,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         private void ResetDefaults()
         {
-            string isConnectAuto = this.viewModel.Vsenvironmenthelper.ReadOptionFromApplicationData("VSSonarQubeConfig", "AutoConnectAtStart");
+            string isConnectAuto = this.configurationHelper.ReadOptionFromApplicationData("VSSonarQubeConfig", "AutoConnectAtStart");
 
             if (string.IsNullOrEmpty(isConnectAuto))
             {
@@ -422,16 +428,16 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
             this.IsConnectAtStartOn = isConnectAuto.Equals("true");
 
-            string editor = this.viewModel.Vsenvironmenthelper.ReadOptionFromApplicationData("VSSonarQubeConfig", "UserDefinedEditor");
+            string editor = this.configurationHelper.ReadOptionFromApplicationData("VSSonarQubeConfig", "UserDefinedEditor");
             this.UserDefinedEditor = !string.IsNullOrEmpty(editor) ? editor : "notepad";
 
-            string editorTags = this.visualStudioHelper.ReadOptionFromApplicationData("VSSonarQubeConfig", "DisableEditorTags");
+            string editorTags = this.configurationHelper.ReadOptionFromApplicationData("VSSonarQubeConfig", "DisableEditorTags");
             if (!string.IsNullOrEmpty(editorTags))
             {
                 this.DisableEditorTags = editorTags.ToLower().Equals("true");
             }
 
-            string debugmode = this.visualStudioHelper.ReadOptionFromApplicationData("VSSonarQubeConfig", "ExtensionDebugModeEnabled");
+            string debugmode = this.configurationHelper.ReadOptionFromApplicationData("VSSonarQubeConfig", "ExtensionDebugModeEnabled");
             if (!string.IsNullOrEmpty(debugmode))
             {
                 this.ExtensionDebugModeEnabled = debugmode.ToLower().Equals("true");
@@ -449,7 +455,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </param>
         private void SetCredentials(string userName, string password)
         {
-            this.viewModel.Vsenvironmenthelper.WriteOptionInApplicationData("VSSonarQubeConfig", "ServerAddress", this.ServerAddress);
+            this.configurationHelper.WriteOptionInApplicationData("VSSonarQubeConfig", "ServerAddress", this.ServerAddress);
             var cm = new Credential
                          {
                              Target = "VSSonarQubeExtension", 

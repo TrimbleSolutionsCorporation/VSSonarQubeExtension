@@ -105,12 +105,13 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="vsHelper">
         /// The vs helper.
         /// </param>
-        public VSonarQubeOptionsViewModel(PluginController plugincontroller, SonarQubeViewModel model, IVsEnvironmentHelper vsHelper)
+        public VSonarQubeOptionsViewModel(PluginController plugincontroller, SonarQubeViewModel model, IVsEnvironmentHelper vsHelper, IConfigurationHelper configurationHelper)
         {
             this.model = model;
             this.plugincontroller = plugincontroller;
             this.plugins = plugincontroller.GetPlugins();
             this.Vsenvironmenthelper = vsHelper;
+            this.ConfigurationHelper = configurationHelper;
 
             this.InitModels();
             this.InitCommanding();
@@ -214,6 +215,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         public IVsEnvironmentHelper Vsenvironmenthelper { get; set; }
 
+        public IConfigurationHelper ConfigurationHelper { get; set; }
+
         #endregion
 
         #region Public Methods and Operators
@@ -263,7 +266,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         public void ResetUserData()
         {
-            bool fileIsMissing = File.Exists(this.Vsenvironmenthelper.UserAppDataConfigurationFile());
+            bool fileIsMissing = File.Exists(this.ConfigurationHelper.UserAppDataConfigurationFile());
             if (this.plugins == null)
             {
                 return;
@@ -277,7 +280,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 }
 
                 if (!fileIsMissing
-                    || this.Vsenvironmenthelper.ReadAllAvailableOptionsInSettings(
+                    || this.ConfigurationHelper.ReadAllAvailableOptionsInSettings(
                         plugin.GetKey(this.GeneralConfigurationViewModel.UserConnectionConfig)).Count == 0)
                 {
                     plugin.GetPluginControlOptions(this.GeneralConfigurationViewModel.UserConnectionConfig).ResetDefaults();
@@ -285,7 +288,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                     string pluginKey = plugin.GetKey(this.GeneralConfigurationViewModel.UserConnectionConfig);
                     Dictionary<string, string> optionsToSave =
                         plugin.GetPluginControlOptions(this.GeneralConfigurationViewModel.UserConnectionConfig).GetOptions();
-                    this.Vsenvironmenthelper.WriteAllOptionsForPluginOptionInApplicationData(pluginKey, null, optionsToSave);
+                    this.ConfigurationHelper.WriteAllOptionsForPluginOptionInApplicationData(pluginKey, null, optionsToSave);
                 }
             }
         }
@@ -295,34 +298,34 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         public void SyncOptionsToFile()
         {
-            this.model.VsHelper.WriteOptionInApplicationData(
+            this.ConfigurationHelper.WriteOptionInApplicationData(
                 GlobalIds.GlobalPropsId, 
                 GlobalIds.RunnerExecutableKey, 
                 this.AnalysisOptionsViewModel.SonarQubeBinary);
-            this.model.VsHelper.WriteOptionInApplicationData(GlobalIds.GlobalPropsId, GlobalIds.JavaExecutableKey, this.AnalysisOptionsViewModel.JavaBinary);
-            this.model.VsHelper.WriteOptionInApplicationData(
+            this.ConfigurationHelper.WriteOptionInApplicationData(GlobalIds.GlobalPropsId, GlobalIds.JavaExecutableKey, this.AnalysisOptionsViewModel.JavaBinary);
+            this.ConfigurationHelper.WriteOptionInApplicationData(
                 GlobalIds.GlobalPropsId, 
                 GlobalIds.LocalAnalysisTimeoutKey, 
                 this.AnalysisOptionsViewModel.TimeoutValue.ToString(CultureInfo.InvariantCulture));
-            this.model.VsHelper.WriteOptionInApplicationData(
+            this.ConfigurationHelper.WriteOptionInApplicationData(
                 GlobalIds.GlobalPropsId, 
                 GlobalIds.IsDebugAnalysisOnKey, 
                 this.AnalysisOptionsViewModel.DebugIsChecked.ToString());
-            this.model.VsHelper.WriteOptionInApplicationData(
+            this.ConfigurationHelper.WriteOptionInApplicationData(
                 GlobalIds.GlobalPropsId, 
                 GlobalIds.ExcludedPluginsKey, 
                 this.AnalysisOptionsViewModel.ExcludedPlugins);
 
             foreach (PluginDescription plugin in this.PluginManager.PluginList)
             {
-                this.model.VsHelper.WriteOptionInApplicationData(GlobalIds.PluginEnabledControlId, plugin.Name, plugin.Enabled.ToString());
+                this.ConfigurationHelper.WriteOptionInApplicationData(GlobalIds.PluginEnabledControlId, plugin.Name, plugin.Enabled.ToString());
             }
 
             if (this.Project != null)
             {
                 string solId = VsSonarUtils.SolutionGlobPropKey(this.Project.Key);
-                this.model.VsHelper.WriteOptionInApplicationData(solId, GlobalIds.SonarSourceKey, this.AnalysisOptionsViewModel.SourceDir);
-                this.model.VsHelper.WriteOptionInApplicationData(solId, GlobalIds.SourceEncodingKey, this.AnalysisOptionsViewModel.SourceEncoding);
+                this.ConfigurationHelper.WriteOptionInApplicationData(solId, GlobalIds.SonarSourceKey, this.AnalysisOptionsViewModel.SourceDir);
+                this.ConfigurationHelper.WriteOptionInApplicationData(solId, GlobalIds.SourceEncodingKey, this.AnalysisOptionsViewModel.SourceEncoding);
             }
 
             if (this.AnalysisPluginInView != null)
@@ -330,7 +333,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 Dictionary<string, string> options =
                     this.AnalysisPluginInView.GetPluginControlOptions(this.GeneralConfigurationViewModel.UserConnectionConfig).GetOptions();
                 string key = this.AnalysisPluginInView.GetKey(this.GeneralConfigurationViewModel.UserConnectionConfig);
-                this.model.VsHelper.WriteAllOptionsForPluginOptionInApplicationData(key, this.Project, options);
+                this.ConfigurationHelper.WriteAllOptionsForPluginOptionInApplicationData(key, this.Project, options);
             }
         }
 
@@ -410,12 +413,12 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         {
             this.AvailableOptions = new ObservableCollection<IOptionsViewModelBase>();
 
-            this.GeneralConfigurationViewModel = new GeneralConfigurationViewModel(this, this.model.SonarRestConnector, this.Vsenvironmenthelper, this.model);
-            this.AnalysisOptionsViewModel = new AnalysisOptionsViewModel(this.Vsenvironmenthelper, this);
+            this.GeneralConfigurationViewModel = new GeneralConfigurationViewModel(this, this.model.SonarRestConnector, this.Vsenvironmenthelper, this.model, this.ConfigurationHelper);
+            this.AnalysisOptionsViewModel = new AnalysisOptionsViewModel(this.Vsenvironmenthelper, this, this.ConfigurationHelper);
             this.PluginManager = new PluginManagerModel(
                 this.plugincontroller, 
                 this.GeneralConfigurationViewModel.UserConnectionConfig, 
-                this.Vsenvironmenthelper, 
+                this.Vsenvironmenthelper, this.ConfigurationHelper, 
                 this);
             this.LicenseManager = new LicenseViewerViewModel();
 
@@ -493,7 +496,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         private void ResetGeneralOptionsForProject()
         {
-            Dictionary<string, string> generalOptionsInDsk = this.Vsenvironmenthelper.ReadAllAvailableOptionsInSettings(GlobalIds.GlobalPropsId);
+            Dictionary<string, string> generalOptionsInDsk = this.ConfigurationHelper.ReadAllAvailableOptionsInSettings(GlobalIds.GlobalPropsId);
 
             if (generalOptionsInDsk != null)
             {
@@ -503,7 +506,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             if (this.Project != null)
             {
                 string solId = VsSonarUtils.SolutionGlobPropKey(this.Project.Key);
-                Dictionary<string, string> projectOptionsInDsk = this.Vsenvironmenthelper.ReadAllAvailableOptionsInSettings(solId);
+                Dictionary<string, string> projectOptionsInDsk = this.ConfigurationHelper.ReadAllAvailableOptionsInSettings(solId);
                 this.AnalysisOptionsViewModel.SetProjectOptions(projectOptionsInDsk);
             }
         }
@@ -539,7 +542,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                     }
                 }
 
-                Dictionary<string, string> optionsInDsk = this.Vsenvironmenthelper.ReadAllAvailableOptionsInSettings(pluginKey);
+                Dictionary<string, string> optionsInDsk = this.ConfigurationHelper.ReadAllAvailableOptionsInSettings(pluginKey);
                 this.OptionsInView = pluginOptionsController.GetUserControlOptions(this.Project);
                 this.AnalysisPluginInView = plugin;
                 pluginOptionsController.SetOptions(optionsInDsk);

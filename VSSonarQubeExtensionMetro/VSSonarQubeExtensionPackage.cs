@@ -55,15 +55,6 @@ namespace VSSonarQubeExtension
     [Guid(GuidList.GuidVSSonarExtensionPkgString)]
     public sealed partial class VsSonarExtensionPackage : Package
     {
-        #region Static Fields
-
-        /// <summary>
-        ///     The issue model.
-        /// </summary>
-        public static readonly SonarQubeViewModel SonarQubeModel = new SonarQubeViewModel();
-
-        #endregion
-
         #region Constructors and Destructors
 
         /// <summary>
@@ -195,12 +186,12 @@ namespace VSSonarQubeExtension
                     var bar = this.GetService(typeof(SVsStatusbar)) as IVsStatusbar;
                     this.StatusBar = new VSSStatusBar(bar, this.dte2);
 
-                    SonarQubeModel.ExtensionDataModelUpdate(this.restService, this.visualStudioInterface, this.StatusBar, this);
+                    SonarQubeViewModelFactory.SQViewModel.ExtensionDataModelUpdate(this.restService, this.visualStudioInterface, this.StatusBar, this);
 
                     DColor defaultBackground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBackgroundColorKey);
                     DColor defaultForeground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowTextColorKey);
 
-                    SonarQubeModel.UpdateTheme(ToMediaColor(defaultBackground), ToMediaColor(defaultForeground));
+                    SonarQubeViewModelFactory.SQViewModel.UpdateTheme(ToMediaColor(defaultBackground), ToMediaColor(defaultForeground));
 
                     try
                     {
@@ -215,7 +206,7 @@ namespace VSSonarQubeExtension
                             ((VsPropertiesHelper)this.visualStudioInterface).CustomPane.Activate();
                         }
 
-                        SonarQubeModel.PluginRequest += this.LoadPluginIntoNewToolWindow;
+                        SonarQubeViewModelFactory.SQViewModel.PluginRequest += this.LoadPluginIntoNewToolWindow;
                     }
                     catch (Exception ex)
                     {
@@ -245,7 +236,7 @@ namespace VSSonarQubeExtension
         /// </param>
         private void AnalyseSolutionCmd(object sender, EventArgs e)
         {
-            SonarQubeModel.LocalViewModel.OnPreviewCommand();
+            SonarQubeViewModelFactory.SQViewModel.LocalViewModel.OnPreviewCommand();
         }
 
         /// <summary>
@@ -289,12 +280,12 @@ namespace VSSonarQubeExtension
         /// </param>
         private void LoadPluginIntoNewToolWindow(object sender, EventArgs eventArgs)
         {
-            var plugin = SonarQubeModel.InUsePlugin;
+            var plugin = SonarQubeViewModelFactory.SQViewModel.InUsePlugin;
             this.ShowToolWindow(
                 plugin.Value.GetUserControl(
-                SonarQubeModel.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig,
-                SonarQubeModel.AssociatedProject,
-                SonarQubeModel.VsHelper),
+                SonarQubeViewModelFactory.SQViewModel.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig,
+                SonarQubeViewModelFactory.SQViewModel.AssociatedProject,
+                SonarQubeViewModelFactory.SQViewModel.VsHelper),
                 plugin.Key,
                 plugin.Value.GetHeader());
 

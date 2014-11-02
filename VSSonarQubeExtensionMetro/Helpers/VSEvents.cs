@@ -75,8 +75,8 @@ namespace VSSonarQubeExtension.Helpers
 
             VSColorTheme.ThemeChanged += this.VSColorTheme_ThemeChanged;
 
-            VsSonarExtensionPackage.SonarQubeModel.AnalysisModeHasChange += this.AnalysisModeHasChange;
-            VsSonarExtensionPackage.SonarQubeModel.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.ConfigurationHasChanged +=
+            SonarQubeViewModelFactory.SQViewModel.AnalysisModeHasChange += this.AnalysisModeHasChange;
+            SonarQubeViewModelFactory.SQViewModel.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.ConfigurationHasChanged +=
                 this.AnalysisModeHasChange;
         }
 
@@ -119,8 +119,8 @@ namespace VSSonarQubeExtension.Helpers
             }
             catch (Exception ex)
             {
-                VsSonarExtensionPackage.SonarQubeModel.ErrorMessage = "Something Terrible Happen";
-                VsSonarExtensionPackage.SonarQubeModel.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
+                SonarQubeViewModelFactory.SQViewModel.ErrorMessage = "Something Terrible Happen";
+                SonarQubeViewModelFactory.SQViewModel.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
             }
 
             return default(T);
@@ -141,7 +141,7 @@ namespace VSSonarQubeExtension.Helpers
         /// </param>
         private void AnalysisModeHasChange(object sender, EventArgs e)
         {
-            VsSonarExtensionPackage.SonarQubeModel.RefreshDataForResource(this.LastDocumentWindowWithFocus.Document.FullName);
+            SonarQubeViewModelFactory.SQViewModel.RefreshDataForResource(this.LastDocumentWindowWithFocus.Document.FullName);
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace VSSonarQubeExtension.Helpers
         /// </param>
         private void DoumentSaved(Document document)
         {
-            VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("DoumentSaved : " + document);
+            SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("DoumentSaved : " + document);
             if (document == null)
             {
                 return;
@@ -166,12 +166,12 @@ namespace VSSonarQubeExtension.Helpers
 
             try
             {
-                VsSonarExtensionPackage.SonarQubeModel.RefreshDataForResource(document.FullName);
+                SonarQubeViewModelFactory.SQViewModel.RefreshDataForResource(document.FullName);
             }
             catch (Exception ex)
             {
-                VsSonarExtensionPackage.SonarQubeModel.ErrorMessage = "Something Terrible Happen";
-                VsSonarExtensionPackage.SonarQubeModel.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
+                SonarQubeViewModelFactory.SQViewModel.ErrorMessage = "Something Terrible Happen";
+                SonarQubeViewModelFactory.SQViewModel.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
             }
         }
 
@@ -180,8 +180,8 @@ namespace VSSonarQubeExtension.Helpers
         /// </summary>
         private void SolutionClosed()
         {
-            VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("Solution Closed");
-            VsSonarExtensionPackage.SonarQubeModel.ClearProjectAssociation();            
+            SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Solution Closed");
+            SonarQubeViewModelFactory.SQViewModel.ClearProjectAssociation();            
         }
 
         /// <summary>
@@ -193,8 +193,8 @@ namespace VSSonarQubeExtension.Helpers
             string solutionName = this.environment.ActiveSolutionName();
             string solutionPath = this.environment.ActiveSolutionPath();
 
-            VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("Solution Opened: " + solutionName + " : " + solutionPath);
-            VsSonarExtensionPackage.SonarQubeModel.AssociateProjectToSolution(solutionName, solutionPath);
+            SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Solution Opened: " + solutionName + " : " + solutionPath);
+            SonarQubeViewModelFactory.SQViewModel.AssociateProjectToSolution(solutionName, solutionPath);
 
             string text = this.environment.GetCurrentTextInView();
             if (string.IsNullOrEmpty(text))
@@ -203,7 +203,7 @@ namespace VSSonarQubeExtension.Helpers
             }
 
             string fileName = this.environment.ActiveFileFullPath();
-            VsSonarExtensionPackage.SonarQubeModel.RefreshDataForResource(fileName);
+            SonarQubeViewModelFactory.SQViewModel.RefreshDataForResource(fileName);
         }
 
         /// <summary>
@@ -217,7 +217,7 @@ namespace VSSonarQubeExtension.Helpers
             Color defaultBackground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBackgroundColorKey);
             Color defaultForeground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowTextColorKey);
 
-            VsSonarExtensionPackage.SonarQubeModel.UpdateTheme(
+            SonarQubeViewModelFactory.SQViewModel.UpdateTheme(
                 VsSonarExtensionPackage.ToMediaColor(defaultBackground), 
                 VsSonarExtensionPackage.ToMediaColor(defaultForeground));
         }
@@ -233,7 +233,7 @@ namespace VSSonarQubeExtension.Helpers
         /// </param>
         private void WindowActivated(Window gotFocus, Window lostFocus)
         {
-            VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("Window Activated: Kind: " + gotFocus.Kind);
+            SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Window Activated: Kind: " + gotFocus.Kind);
 
             if (gotFocus.Kind != "Document")
             {
@@ -245,20 +245,20 @@ namespace VSSonarQubeExtension.Helpers
             {
                 if (this.LastDocumentWindowWithFocus == gotFocus)
                 {
-                    VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("Last and Current Window are the same");
+                    SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Last and Current Window are the same");
                     return;
                 }
 
-                VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("New Document Open: " + gotFocus.Document.FullName);
+                SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("New Document Open: " + gotFocus.Document.FullName);
 
                 this.LastDocumentWindowWithFocus = gotFocus;
-                VsSonarExtensionPackage.SonarQubeModel.RefreshDataForResource(gotFocus.Document.FullName);
+                SonarQubeViewModelFactory.SQViewModel.RefreshDataForResource(gotFocus.Document.FullName);
             }
             catch (Exception ex)
             {
-                VsSonarExtensionPackage.SonarQubeModel.Logger.WriteException(ex);
-                VsSonarExtensionPackage.SonarQubeModel.ErrorMessage = "Something Terrible Happen";
-                VsSonarExtensionPackage.SonarQubeModel.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
+                SonarQubeViewModelFactory.SQViewModel.Logger.WriteException(ex);
+                SonarQubeViewModelFactory.SQViewModel.ErrorMessage = "Something Terrible Happen";
+                SonarQubeViewModelFactory.SQViewModel.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
             }
         }
 

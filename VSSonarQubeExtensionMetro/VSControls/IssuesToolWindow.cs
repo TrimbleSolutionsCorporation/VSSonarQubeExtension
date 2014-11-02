@@ -33,7 +33,7 @@ namespace VSSonarQubeExtension.VSControls
             this.Caption = "SonarQube";
             this.BitmapResourceID = 301;
             this.BitmapIndex = 1;
-            this.Content = new SonarQubeUserControlVs(VsSonarExtensionPackage.SonarQubeModel);
+            this.Content = new SonarQubeUserControlVs(SonarQubeViewModelFactory.SQViewModel);
         }
     }
 }

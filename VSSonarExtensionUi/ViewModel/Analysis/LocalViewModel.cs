@@ -113,10 +113,12 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             SonarQubeViewModel sonarQubeViewModel, 
             List<IAnalysisPlugin> plugins, 
             ISonarRestService service, 
-            IVsEnvironmentHelper helper)
+            IVsEnvironmentHelper helper,
+            IConfigurationHelper configurationHelper)
         {
             this.RestService = service;
             this.Vsenvironmenthelper = helper;
+            this.ConfigurationHelper = configurationHelper;
             this.sonarQubeViewModel = sonarQubeViewModel;
             this.Header = "Local Analysis";
             this.IssuesGridView = new IssueGridViewModel(sonarQubeViewModel, false, "LocalView");
@@ -125,7 +127,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.InitCommanding();
             this.InitFileAnalysis();
 
-            this.LocalAnalyserModule = new SonarLocalAnalyser(plugins, this.RestService, this.Vsenvironmenthelper);
+            this.LocalAnalyserModule = new SonarLocalAnalyser(plugins, this.RestService, this.ConfigurationHelper);
             this.LocalAnalyserModule.StdOutEvent += this.UpdateOutputMessagesFromPlugin;
             this.LocalAnalyserModule.LocalAnalysisCompleted += this.UpdateLocalIssues;
 
@@ -296,6 +298,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         public IVsEnvironmentHelper Vsenvironmenthelper { get; set; }
 
+        public IConfigurationHelper ConfigurationHelper { get; set; }
+
         #endregion
 
         #region Public Methods and Operators
@@ -393,7 +397,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             if (this.CanRunAnalysis)
             {
-                this.Vsenvironmenthelper.WriteOptionInApplicationData(
+                this.ConfigurationHelper.WriteOptionInApplicationData(
                     "SonarOptionsGeneral", 
                     "FileAnalysisIsEnabled", 
                     this.FileAnalysisIsEnabled ? "TRUE" : "FALSE");
@@ -504,7 +508,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </param>
         public void UpdateServices(
             ISonarRestService restServiceIn, 
-            IVsEnvironmentHelper vsenvironmenthelperIn, 
+            IVsEnvironmentHelper vsenvironmenthelperIn,
+            IConfigurationHelper configurationHelper,
             IVSSStatusBar statusBar, 
             IServiceProvider provider)
         {
@@ -539,7 +544,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         private void InitFileAnalysis()
         {
-            string option = this.Vsenvironmenthelper.ReadOptionFromApplicationData("SonarOptionsGeneral", "FileAnalysisIsEnabled");
+            string option = this.ConfigurationHelper.ReadOptionFromApplicationData("SonarOptionsGeneral", "FileAnalysisIsEnabled");
             if (string.IsNullOrEmpty(option))
             {
                 this.FileAnalysisIsEnabled = true;

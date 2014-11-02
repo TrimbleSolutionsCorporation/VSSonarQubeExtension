@@ -14,13 +14,10 @@
 namespace VSSonarQubeExtension
 {
     using EnvDTE80;
-
     using Microsoft.VisualStudio.Shell;
-
     using SonarRestService;
-
+    using VSSonarExtensionUi.ViewModel;
     using VSSonarPlugins;
-
     using VSSonarQubeExtension.Helpers;
 
     /// <summary>
@@ -67,5 +64,29 @@ namespace VSSonarQubeExtension
         /// Gets or sets the vs events.
         /// </summary>
         public VsEvents VsEvents { get; set; }
+
+
+    }
+
+    internal class SonarQubeViewModelFactory
+    {
+        private static SonarQubeViewModel model;
+
+        private SonarQubeViewModelFactory()
+        {
+        }
+
+        public static SonarQubeViewModel SQViewModel
+        {
+            get
+            {
+                if (model == null)
+                {
+                    model = new VSSonarExtensionUi.ViewModel.SonarQubeViewModel();
+                }
+
+                return model;
+            }
+        }
     }
 }

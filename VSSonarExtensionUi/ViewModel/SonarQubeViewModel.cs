@@ -75,6 +75,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// </summary>
         public SonarQubeViewModel()
         {
+            this.configurationHelper = new ConfigurationHelper();
             this.SonarRestConnector = new SonarRestService(new JsonSonarConnector());
             this.Logger = new VsSonarExtensionLogger(this);
 
@@ -417,9 +418,9 @@ namespace VSSonarExtensionUi.ViewModel
                     continue;
                 }
 
-                string isEnabled = this.VsHelper.ReadOptionFromApplicationData(
-                    GlobalIds.PluginEnabledControlId, 
-                    plugin.Value.GetPluginDescription(this.VsHelper).Name);
+                string isEnabled = this.configurationHelper.ReadOptionFromApplicationData(
+                    GlobalIds.PluginEnabledControlId,
+                    plugin.Value.GetPluginDescription(this.configurationHelper).Name);
 
                 if (string.IsNullOrEmpty(isEnabled) || isEnabled.Equals("true", StringComparison.CurrentCultureIgnoreCase))
                 {
@@ -445,7 +446,7 @@ namespace VSSonarExtensionUi.ViewModel
                 }
                 else
                 {
-                    MessageBox.Show(plugin.Value.GetPluginDescription(this.VsHelper).Name + " is disabled");
+                    MessageBox.Show(plugin.Value.GetPluginDescription(this.configurationHelper).Name + " is disabled");
                 }
             }
         }
@@ -478,13 +479,13 @@ namespace VSSonarExtensionUi.ViewModel
 
             foreach (IAnalysisViewModelBase view in this.SonarQubeViews)
             {
-                view.UpdateServices(restServiceIn, vsenvironmenthelperIn, statusBar, provider);
+                view.UpdateServices(restServiceIn, vsenvironmenthelperIn, this.configurationHelper, statusBar, provider);
             }
 
             this.VSonarQubeOptionsViewData.UpdateServices(restServiceIn, vsenvironmenthelperIn, statusBar, provider);
             foreach (IOptionsViewModelBase view in this.VSonarQubeOptionsViewData.AvailableOptions)
             {
-                view.UpdateServices(restServiceIn, vsenvironmenthelperIn, statusBar, provider);
+                view.UpdateServices(restServiceIn, vsenvironmenthelperIn, this.configurationHelper, statusBar, provider);
             }
         }
 
@@ -573,7 +574,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// </summary>
         public void OnSelectedViewChanged()
         {
-            this.VsHelper.WriteOptionInApplicationData("VSSonarQubeConfig", "SelectedView", this.SelectedView.Header);
+            this.configurationHelper.WriteOptionInApplicationData("VSSonarQubeConfig", "SelectedView", this.SelectedView.Header);
             this.OnAnalysisModeHasChange(EventArgs.Empty);
             Debug.WriteLine("Name Changed");
         }
@@ -730,7 +731,7 @@ namespace VSSonarExtensionUi.ViewModel
                 return null;
             }
 
-            string sourceKey = this.VsHelper.ReadOptionFromApplicationData(Path.Combine(solutionPath, solutionName), "PROJECTKEY");
+            string sourceKey = this.configurationHelper.ReadOptionFromApplicationData(Path.Combine(solutionPath, solutionName), "PROJECTKEY");
             if (!string.IsNullOrEmpty(sourceKey))
             {
                 try
@@ -895,7 +896,7 @@ namespace VSSonarExtensionUi.ViewModel
         private void InitOptionsModel()
         {
             List<IAnalysisPlugin> plugins = this.PluginControl.GetPlugins();
-            this.VSonarQubeOptionsViewData = new VSonarQubeOptionsViewModel(this.PluginControl, this, this.VsHelper)
+            this.VSonarQubeOptionsViewData = new VSonarQubeOptionsViewModel(this.PluginControl, this, this.VsHelper, this.configurationHelper)
                                                  {
                                                      Vsenvironmenthelper =
                                                          this.VsHelper
@@ -914,7 +915,7 @@ namespace VSSonarExtensionUi.ViewModel
                     }
 
                     string pluginKey = plugin.GetKey(this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig);
-                    Dictionary<string, string> options = this.VsHelper.ReadAllAvailableOptionsInSettings(pluginKey);
+                    Dictionary<string, string> options = this.configurationHelper.ReadAllAvailableOptionsInSettings(pluginKey);
                     controloption.SetOptions(options);
                 }
             }
@@ -927,11 +928,12 @@ namespace VSSonarExtensionUi.ViewModel
         {
             this.ServerViewModel = new ServerViewModel(
                 this, 
-                this.VsHelper, 
+                this.VsHelper,
+                this.configurationHelper,
                 this.SonarRestConnector, 
                 this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig);
-            this.LocalViewModel = new LocalViewModel(this, this.PluginControl.GetPlugins(), this.SonarRestConnector, this.VsHelper);
-            this.IssuesSearchViewModel = new IssuesSearchViewModel(this, this.VsHelper, this.SonarRestConnector);
+            this.LocalViewModel = new LocalViewModel(this, this.PluginControl.GetPlugins(), this.SonarRestConnector, this.VsHelper, this.configurationHelper);
+            this.IssuesSearchViewModel = new IssuesSearchViewModel(this, this.VsHelper, this.SonarRestConnector, this.configurationHelper);
 
             this.SonarQubeViews = new ObservableCollection<IAnalysisViewModelBase>
                                       {
@@ -940,7 +942,7 @@ namespace VSSonarExtensionUi.ViewModel
                                           this.IssuesSearchViewModel
                                       };
 
-            string view = this.VsHelper.ReadOptionFromApplicationData("VSSonarQubeConfig", "SelectedView");
+            string view = this.configurationHelper.ReadOptionFromApplicationData("VSSonarQubeConfig", "SelectedView");
 
             foreach (IAnalysisViewModelBase analysisViewModelBase in
                 this.SonarQubeViews.Where(analysisViewModelBase => analysisViewModelBase.Header.Equals(view)))
@@ -972,13 +974,13 @@ namespace VSSonarExtensionUi.ViewModel
 
             if (!string.IsNullOrEmpty(this.OpenSolutionName))
             {
-                this.VsHelper.WriteOptionInApplicationData(
+                this.configurationHelper.WriteOptionInApplicationData(
                     Path.Combine(this.OpenSolutionPath, this.OpenSolutionName), 
                     "PROJECTKEY", 
                     this.SelectedProject.Key);
-                this.VsHelper.WriteOptionInApplicationData(this.SelectedProject.Key, "PROJECTKEY", this.SelectedProject.Key);
-                this.VsHelper.WriteOptionInApplicationData(this.SelectedProject.Key, "PROJECTLOCATION", this.OpenSolutionPath);
-                this.VsHelper.WriteOptionInApplicationData(this.SelectedProject.Key, "PROJECTNAME", this.OpenSolutionName);
+                this.configurationHelper.WriteOptionInApplicationData(this.SelectedProject.Key, "PROJECTKEY", this.SelectedProject.Key);
+                this.configurationHelper.WriteOptionInApplicationData(this.SelectedProject.Key, "PROJECTLOCATION", this.OpenSolutionPath);
+                this.configurationHelper.WriteOptionInApplicationData(this.SelectedProject.Key, "PROJECTNAME", this.OpenSolutionName);
             }
 
             this.VSonarQubeOptionsViewData.Project = this.SelectedProject;
@@ -989,8 +991,8 @@ namespace VSSonarExtensionUi.ViewModel
 
             if (string.IsNullOrEmpty(this.OpenSolutionPath))
             {
-                this.OpenSolutionPath = this.VsHelper.ReadOptionFromApplicationData(this.SelectedProject.Key, "PROJECTLOCATION");
-                this.OpenSolutionName = this.VsHelper.ReadOptionFromApplicationData(this.SelectedProject.Key, "PROJECTNAME");
+                this.OpenSolutionPath = this.configurationHelper.ReadOptionFromApplicationData(this.SelectedProject.Key, "PROJECTLOCATION");
+                this.OpenSolutionName = this.configurationHelper.ReadOptionFromApplicationData(this.SelectedProject.Key, "PROJECTNAME");
             }
 
             foreach (IAnalysisViewModelBase analyser in
@@ -1138,5 +1140,7 @@ namespace VSSonarExtensionUi.ViewModel
         }
 
         #endregion
+
+        private readonly IConfigurationHelper configurationHelper;
     }
 }

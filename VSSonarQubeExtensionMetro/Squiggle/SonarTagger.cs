@@ -81,12 +81,6 @@ namespace VSSonarQubeExtension.Squiggle
             }
 
             this.SourceBuffer = sourceBuffer;
-
-            VsSonarExtensionPackage.SonarQubeModel.ServerViewModel.IssuesReadyForCollecting += this.IssuesListChanged;
-            VsSonarExtensionPackage.SonarQubeModel.LocalViewModel.IssuesReadyForCollecting += this.IssuesListChanged;
-            VsSonarExtensionPackage.SonarQubeModel.IssuesSearchViewModel.IssuesReadyForCollecting += this.IssuesListChanged;
-
-
             this.dispatcher = Dispatcher.CurrentDispatcher;
 
             try
@@ -96,6 +90,17 @@ namespace VSSonarQubeExtension.Squiggle
             catch (Exception ex)
             {
                 Debug.WriteLine("Problems schedulling update: " + ex.Message + "::" + ex.StackTrace);
+            }
+
+            try
+            {
+                SonarQubeViewModelFactory.SQViewModel.ServerViewModel.IssuesReadyForCollecting += this.IssuesListChanged;
+                SonarQubeViewModelFactory.SQViewModel.LocalViewModel.IssuesReadyForCollecting += this.IssuesListChanged;
+                SonarQubeViewModelFactory.SQViewModel.IssuesSearchViewModel.IssuesReadyForCollecting += this.IssuesListChanged;
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentNullException(ex.Message);
             }
         }
 
@@ -232,9 +237,9 @@ namespace VSSonarQubeExtension.Squiggle
             {
                 if (disposing)
                 {
-                    VsSonarExtensionPackage.SonarQubeModel.ServerViewModel.IssuesReadyForCollecting -= this.IssuesListChanged;
-                    VsSonarExtensionPackage.SonarQubeModel.LocalViewModel.IssuesReadyForCollecting -= this.IssuesListChanged;
-                    VsSonarExtensionPackage.SonarQubeModel.IssuesSearchViewModel.IssuesReadyForCollecting -= this.IssuesListChanged;
+                    SonarQubeViewModelFactory.SQViewModel.ServerViewModel.IssuesReadyForCollecting -= this.IssuesListChanged;
+                    SonarQubeViewModelFactory.SQViewModel.LocalViewModel.IssuesReadyForCollecting -= this.IssuesListChanged;
+                    SonarQubeViewModelFactory.SQViewModel.IssuesSearchViewModel.IssuesReadyForCollecting -= this.IssuesListChanged;
 
                     this.SourceBuffer = null;
                 }
@@ -305,7 +310,7 @@ namespace VSSonarQubeExtension.Squiggle
             try
             {
                 var document = VsEvents.GetPropertyFromBuffer<ITextDocument>(this.SourceBuffer);
-                Resource resource = VsSonarExtensionPackage.SonarQubeModel.ResourceInEditor;
+                Resource resource = SonarQubeViewModelFactory.SQViewModel.ResourceInEditor;
 
                 if (resource == null || document == null)
                 {
@@ -318,7 +323,7 @@ namespace VSSonarQubeExtension.Squiggle
                 }
 
                 this.sonarTags.Clear();
-                List<Issue> issuesInEditor = VsSonarExtensionPackage.SonarQubeModel.GetIssuesInEditor(
+                List<Issue> issuesInEditor = SonarQubeViewModelFactory.SQViewModel.GetIssuesInEditor(
                     resource, 
                     this.SourceBuffer.CurrentSnapshot.GetText());
 

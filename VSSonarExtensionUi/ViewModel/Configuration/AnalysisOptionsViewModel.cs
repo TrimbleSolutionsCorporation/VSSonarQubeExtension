@@ -70,6 +70,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         private IVsEnvironmentHelper vsenvironmenthelper;
 
+        private IConfigurationHelper configurationHelper;
+
         #endregion
 
         #region Constructors and Destructors
@@ -83,9 +85,10 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="viewModel">
         /// The view Model.
         /// </param>
-        public AnalysisOptionsViewModel(IVsEnvironmentHelper vsenvironmenthelper, VSonarQubeOptionsViewModel viewModel)
+        public AnalysisOptionsViewModel(IVsEnvironmentHelper vsenvironmenthelper, VSonarQubeOptionsViewModel viewModel, IConfigurationHelper configurationHelper)
         {
             this.vsenvironmenthelper = vsenvironmenthelper;
+            this.configurationHelper = configurationHelper;
             this.viewModel = viewModel;
             this.TimeoutValue = 10;
             this.Header = "Analysis Options";
@@ -240,9 +243,11 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public void UpdateServices(
             ISonarRestService restServiceIn,
             IVsEnvironmentHelper vsenvironmenthelperIn,
+            IConfigurationHelper configurationHelper,
             IVSSStatusBar statusBar,
             IServiceProvider provider)
         {
+            this.configurationHelper = configurationHelper;
             this.vsenvironmenthelper = vsenvironmenthelperIn;
         }
 
@@ -251,23 +256,23 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         public void Apply()
         {
-            this.vsenvironmenthelper.WriteOptionInApplicationData(GlobalIds.GlobalPropsId, GlobalIds.RunnerExecutableKey, this.SonarQubeBinary);
-            this.vsenvironmenthelper.WriteOptionInApplicationData(GlobalIds.GlobalPropsId, GlobalIds.JavaExecutableKey, this.JavaBinary);
-            this.vsenvironmenthelper.WriteOptionInApplicationData(
+            this.configurationHelper.WriteOptionInApplicationData(GlobalIds.GlobalPropsId, GlobalIds.RunnerExecutableKey, this.SonarQubeBinary);
+            this.configurationHelper.WriteOptionInApplicationData(GlobalIds.GlobalPropsId, GlobalIds.JavaExecutableKey, this.JavaBinary);
+            this.configurationHelper.WriteOptionInApplicationData(
                 GlobalIds.GlobalPropsId, 
                 GlobalIds.LocalAnalysisTimeoutKey, 
                 this.TimeoutValue.ToString(CultureInfo.InvariantCulture));
-            this.vsenvironmenthelper.WriteOptionInApplicationData(
+            this.configurationHelper.WriteOptionInApplicationData(
                 GlobalIds.GlobalPropsId, 
                 GlobalIds.IsDebugAnalysisOnKey, 
                 this.DebugIsChecked.ToString());
-            this.vsenvironmenthelper.WriteOptionInApplicationData(GlobalIds.GlobalPropsId, GlobalIds.ExcludedPluginsKey, this.ExcludedPlugins);
+            this.configurationHelper.WriteOptionInApplicationData(GlobalIds.GlobalPropsId, GlobalIds.ExcludedPluginsKey, this.ExcludedPlugins);
 
             if (this.viewModel.Project != null)
             {
                 string solId = VsSonarUtils.SolutionGlobPropKey(this.viewModel.Project.Key);
-                this.vsenvironmenthelper.WriteOptionInApplicationData(solId, GlobalIds.SonarSourceKey, this.SourceDir);
-                this.vsenvironmenthelper.WriteOptionInApplicationData(solId, GlobalIds.SourceEncodingKey, this.SourceEncoding);
+                this.configurationHelper.WriteOptionInApplicationData(solId, GlobalIds.SonarSourceKey, this.SourceDir);
+                this.configurationHelper.WriteOptionInApplicationData(solId, GlobalIds.SourceEncodingKey, this.SourceEncoding);
             }
         }
 
@@ -284,7 +289,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         public void Exit()
         {
-            Dictionary<string, string> generalOptionsInDsk = this.vsenvironmenthelper.ReadAllAvailableOptionsInSettings(GlobalIds.GlobalPropsId);
+            Dictionary<string, string> generalOptionsInDsk = this.configurationHelper.ReadAllAvailableOptionsInSettings(GlobalIds.GlobalPropsId);
 
             if (generalOptionsInDsk != null)
             {
@@ -294,7 +299,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             if (this.viewModel.Project != null)
             {
                 string solId = VsSonarUtils.SolutionGlobPropKey(this.viewModel.Project.Key);
-                Dictionary<string, string> projectOptionsInDsk = this.vsenvironmenthelper.ReadAllAvailableOptionsInSettings(solId);
+                Dictionary<string, string> projectOptionsInDsk = this.configurationHelper.ReadAllAvailableOptionsInSettings(solId);
                 this.SetProjectOptions(projectOptionsInDsk);
             }
         }

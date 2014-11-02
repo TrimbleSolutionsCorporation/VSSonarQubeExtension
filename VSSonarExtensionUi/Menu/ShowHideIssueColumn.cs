@@ -44,7 +44,7 @@ namespace VSSonarExtensionUi.Menu
         /// <summary>
         ///     The helper.
         /// </summary>
-        private readonly IVsEnvironmentHelper helper;
+        private readonly IConfigurationHelper helper;
 
         /// <summary>
         ///     The model.
@@ -72,7 +72,7 @@ namespace VSSonarExtensionUi.Menu
         /// <param name="name">
         /// The name.
         /// </param>
-        public ShowHideIssueColumn(IssueGridViewModel model, IVsEnvironmentHelper helper, string name)
+        public ShowHideIssueColumn(IssueGridViewModel model, IConfigurationHelper helper, string name)
         {
             this.helper = helper;
             this.name = name;
@@ -126,7 +126,7 @@ namespace VSSonarExtensionUi.Menu
         /// <returns>
         /// The <see cref="IMenuItem"/>.
         /// </returns>
-        public static IMenuItem MakeMenu(IssueGridViewModel model, IVsEnvironmentHelper helper, List<string> columns)
+        public static IMenuItem MakeMenu(IssueGridViewModel model, IConfigurationHelper helper, List<string> columns)
         {
             var menu = new ShowHideIssueColumn(model, helper, string.Empty) { CommandText = "Columns", IsEnabled = false };
 

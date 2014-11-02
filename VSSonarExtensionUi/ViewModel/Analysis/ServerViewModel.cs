@@ -68,6 +68,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         private IVsEnvironmentHelper vsenvironmenthelper;
 
+        private IConfigurationHelper configurationHelper;
+
         #endregion
 
         #region Constructors and Destructors
@@ -89,12 +91,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </param>
         public ServerViewModel(
             SonarQubeViewModel sonarQubeViewModel, 
-            IVsEnvironmentHelper vsenvironmenthelper, 
+            IVsEnvironmentHelper vsenvironmenthelper,
+            IConfigurationHelper configurationHelper,
             ISonarRestService restservice, 
             ISonarConfiguration config)
         {
             this.sonarQubeViewModel = sonarQubeViewModel;
             this.vsenvironmenthelper = vsenvironmenthelper;
+            this.configurationHelper = configurationHelper;
             this.restservice = restservice;
             this.config = config;
 
@@ -384,9 +388,11 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public void UpdateServices(
             ISonarRestService restServiceIn, 
             IVsEnvironmentHelper vsenvironmenthelperIn, 
+            IConfigurationHelper configurationHelper,
             IVSSStatusBar statusBar, 
             IServiceProvider provider)
         {
+            this.configurationHelper = configurationHelper;
             this.restservice = restServiceIn;
             this.vsenvironmenthelper = vsenvironmenthelperIn;
             this.StatusBar = statusBar;

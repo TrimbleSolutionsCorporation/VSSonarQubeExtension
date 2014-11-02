@@ -81,6 +81,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         void UpdateServices(
             ISonarRestService restServiceIn,
             IVsEnvironmentHelper vsenvironmenthelperIn,
+            IConfigurationHelper configurationHelper,
             IVSSStatusBar statusBar,
             IServiceProvider provider);
 

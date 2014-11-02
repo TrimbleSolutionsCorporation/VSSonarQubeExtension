@@ -34,7 +34,7 @@ type LanguageType =
 
 [<ComVisible(false)>]
 [<HostProtection(SecurityAction.LinkDemand, Synchronization = true, ExternalThreading = true)>]
-type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugin>, restService : ISonarRestService, vsinter : IVsEnvironmentHelper) =
+type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugin>, restService : ISonarRestService, vsinter : IConfigurationHelper) =
     let completionEvent = new DelegateEvent<System.EventHandler>()
     let stdOutEvent = new DelegateEvent<System.EventHandler>()
     let jsonReports : System.Collections.Generic.List<String> = new System.Collections.Generic.List<String>()

@@ -26,6 +26,7 @@ namespace VSSonarQubeExtension.Coverage
     using VSSonarExtensionUi.Cache;
 
     using VSSonarQubeExtension.Helpers;
+    using System.Diagnostics;
 
     /// <summary>
     ///     This tagger will provide tags for every word in the buffer that
@@ -60,13 +61,13 @@ namespace VSSonarQubeExtension.Coverage
             try
             {
                 this.SourceBuffer = sourceBuffer;
-                VsSonarExtensionPackage.SonarQubeModel.AnalysisModeHasChange += this.CoverageDataChanged;
-                VsSonarExtensionPackage.SonarQubeModel.ServerViewModel.CoverageWasModified += this.CoverageDataChanged;
+                SonarQubeViewModelFactory.SQViewModel.AnalysisModeHasChange += this.CoverageDataChanged;
+                SonarQubeViewModelFactory.SQViewModel.ServerViewModel.CoverageWasModified += this.CoverageDataChanged;
                 ThreadPool.QueueUserWorkItem(this.ScheduleUpdate, null);
             }
             catch (Exception ex)
             {
-                VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("Problems schedulling update: " + ex.Message + "::" + ex.StackTrace);
+                Debug.WriteLine(ex.Message);
             }
         }
 
@@ -78,6 +79,7 @@ namespace VSSonarQubeExtension.Coverage
         ///     The tags changed.
         /// </summary>
         public event EventHandler<SnapshotSpanEventArgs> TagsChanged;
+        
 
         #endregion
 
@@ -118,7 +120,7 @@ namespace VSSonarQubeExtension.Coverage
                 yield break;
             }
 
-            if (!VsSonarExtensionPackage.SonarQubeModel.ServerViewModel.CoverageInEditorEnabled)
+            if (!SonarQubeViewModelFactory.SQViewModel.ServerViewModel.CoverageInEditorEnabled)
             {
                 yield break;
             }
@@ -159,10 +161,10 @@ namespace VSSonarQubeExtension.Coverage
         {
             try
             {
-                VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("Coverage Changed Event Correctly Triggered");
+                SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Coverage Changed Event Correctly Triggered");
 
                 var document = VsEvents.GetPropertyFromBuffer<ITextDocument>(this.SourceBuffer);
-                Resource resource = VsSonarExtensionPackage.SonarQubeModel.ResourceInEditor;
+                Resource resource = SonarQubeViewModelFactory.SQViewModel.ResourceInEditor;
 
                 if (resource == null || document == null)
                 {
@@ -174,11 +176,11 @@ namespace VSSonarQubeExtension.Coverage
                     return;
                 }
 
-                VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("Getting Coverage");
+                SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Getting Coverage");
                 Dictionary<int, CoverageElement> coverageLine =
-                    VsSonarExtensionPackage.SonarQubeModel.ServerViewModel.GetCoverageInEditor(this.SourceBuffer.CurrentSnapshot.GetText());
+                    SonarQubeViewModelFactory.SQViewModel.ServerViewModel.GetCoverageInEditor(this.SourceBuffer.CurrentSnapshot.GetText());
 
-                VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("Got Cov Measures: " + coverageLine.Count);
+                SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Got Cov Measures: " + coverageLine.Count);
                 this.coverageTags.Clear();
 
                 if (coverageLine.Count == 0)
@@ -196,7 +198,7 @@ namespace VSSonarQubeExtension.Coverage
             }
             catch (Exception ex)
             {
-                VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("Failed To Update Issues: " + ex.Message + " : " + ex.StackTrace);
+                SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Failed To Update Issues: " + ex.Message + " : " + ex.StackTrace);
             }
         }
 
@@ -215,9 +217,9 @@ namespace VSSonarQubeExtension.Coverage
 
             if (disposing)
             {
-                VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("Dispose File");
-                VsSonarExtensionPackage.SonarQubeModel.AnalysisModeHasChange -= this.CoverageDataChanged;
-                VsSonarExtensionPackage.SonarQubeModel.ServerViewModel.CoverageWasModified -= this.CoverageDataChanged;
+                SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Dispose File");
+                SonarQubeViewModelFactory.SQViewModel.AnalysisModeHasChange -= this.CoverageDataChanged;
+                SonarQubeViewModelFactory.SQViewModel.ServerViewModel.CoverageWasModified -= this.CoverageDataChanged;
 
                 this.SourceBuffer = null;
             }
@@ -297,7 +299,7 @@ namespace VSSonarQubeExtension.Coverage
         /// </summary>
         private void ScheduleUpdate(object state)
         {
-            VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("Schedulle Update After Constructor");
+            SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Schedulle Update After Constructor");
             Thread.Sleep(2);
             this.CoverageDataChanged(state, EventArgs.Empty);
         }
