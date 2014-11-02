@@ -38,11 +38,6 @@ namespace VSSonarQubeExtension.SmartTags.Coverage
         #region Fields
 
         /// <summary>
-        ///     The dispatcher.
-        /// </summary>
-        private readonly Dispatcher dispatcher;
-
-        /// <summary>
         ///     The coverage tags.
         /// </summary>
         private volatile List<CoverageTag> coverageTags = new List<CoverageTag>();
@@ -51,16 +46,6 @@ namespace VSSonarQubeExtension.SmartTags.Coverage
         ///     The m disposed.
         /// </summary>
         private bool isDisposed;
-
-        /// <summary>
-        ///     The timer.
-        /// </summary>
-        private DispatcherTimer timer;
-
-        /// <summary>
-        ///     The update thread.
-        /// </summary>
-        private Thread updateThread;
 
         #endregion
 
@@ -79,15 +64,11 @@ namespace VSSonarQubeExtension.SmartTags.Coverage
                 this.SourceBuffer = sourceBuffer;
                 VsSonarExtensionPackage.SonarQubeModel.AnalysisModeHasChange += this.CoverageDataChanged;
                 VsSonarExtensionPackage.SonarQubeModel.ServerViewModel.CoverageWasModified += this.CoverageDataChanged;
-
-                this.dispatcher = Dispatcher.CurrentDispatcher;
-                new List<SnapshotSpan>();
-
-                this.ScheduleUpdate();
+                ThreadPool.QueueUserWorkItem(this.ScheduleUpdate, null);
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Problems schedulling update: " + ex.Message + "::" + ex.StackTrace);
+                VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("Problems schedulling update: " + ex.Message + "::" + ex.StackTrace);
             }
         }
 
@@ -217,7 +198,7 @@ namespace VSSonarQubeExtension.SmartTags.Coverage
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Failed To Update Issues: " + ex.Message + " : " + ex.StackTrace);
+                VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("Failed To Update Issues: " + ex.Message + " : " + ex.StackTrace);
             }
         }
 
@@ -236,6 +217,7 @@ namespace VSSonarQubeExtension.SmartTags.Coverage
 
             if (disposing)
             {
+                VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("Dispose File");
                 VsSonarExtensionPackage.SonarQubeModel.AnalysisModeHasChange -= this.CoverageDataChanged;
                 VsSonarExtensionPackage.SonarQubeModel.ServerViewModel.CoverageWasModified -= this.CoverageDataChanged;
 
@@ -298,7 +280,7 @@ namespace VSSonarQubeExtension.SmartTags.Coverage
         /// </summary>
         private void RefreshTags()
         {
-            this.dispatcher.Invoke(
+            Dispatcher.CurrentDispatcher.Invoke(
                 () =>
                     {
                         EventHandler<SnapshotSpanEventArgs> tempEvent = this.TagsChanged;
@@ -315,45 +297,11 @@ namespace VSSonarQubeExtension.SmartTags.Coverage
         /// <summary>
         ///     The schedule update.
         /// </summary>
-        private void ScheduleUpdate()
+        private void ScheduleUpdate(object state)
         {
-            if (this.timer == null)
-            {
-                this.timer = new DispatcherTimer(DispatcherPriority.ApplicationIdle, this.dispatcher) { Interval = TimeSpan.FromMilliseconds(500) };
-
-                this.timer.Tick += (sender, args) =>
-                    {
-                        if (this.updateThread != null && this.updateThread.IsAlive)
-                        {
-                            return;
-                        }
-
-                        this.timer.Stop();
-
-                        this.updateThread = new Thread(this.UpdateDataAfterConstructor) { Name = "Spell Check", Priority = ThreadPriority.Normal };
-
-                        if (!this.updateThread.TrySetApartmentState(ApartmentState.STA))
-                        {
-                            Debug.Fail("Unable to set thread apartment state to STA, things *will* break.");
-                        }
-
-                        this.updateThread.Start();
-                    };
-            }
-
-            this.timer.Stop();
-            this.timer.Start();
-        }
-
-        /// <summary>
-        /// The update data after constructor.
-        /// </summary>
-        /// <param name="obj">
-        /// The obj.
-        /// </param>
-        private void UpdateDataAfterConstructor(object obj)
-        {
-            this.CoverageDataChanged(obj, EventArgs.Empty);
+            VsSonarExtensionPackage.SonarQubeModel.Logger.WriteMessage("Schedulle Update After Constructor");
+            Thread.Sleep(2);
+            this.CoverageDataChanged(state, EventArgs.Empty);
         }
 
         #endregion

@@ -340,6 +340,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.IssuesGridView.Issues.Clear();
             foreach (Issue newIssue in newIssues)
             {
+                this.IssuesGridView.AllIssues.Add(newIssue);
                 this.IssuesGridView.Issues.Add(newIssue);
             }
 
@@ -406,6 +407,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             if (this.CoverageWasModified != null)
             {
+                this.sonarQubeViewModel.Logger.WriteMessage("Triggering Event: OnCoverageWasModified");
                 this.CoverageWasModified(this, e);
             }
         }
