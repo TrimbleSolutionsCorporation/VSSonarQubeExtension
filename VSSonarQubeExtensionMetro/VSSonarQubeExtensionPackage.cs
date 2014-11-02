@@ -25,8 +25,6 @@ namespace VSSonarQubeExtension
 
     using EnvDTE80;
 
-    using ExtensionHelpers;
-
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.PlatformUI;
     using Microsoft.VisualStudio.Shell;
@@ -37,8 +35,8 @@ namespace VSSonarQubeExtension
     using VSSonarExtensionUi.View.Helpers;
     using VSSonarExtensionUi.ViewModel;
 
-    using VSSonarQubeExtension.SmartTags.BufferUpdate;
-    using VSSonarQubeExtension.SmartTags.StatusBar;
+    using VSSonarQubeExtension.Helpers;
+    using VSSonarQubeExtension.StatusBar;
     using VSSonarQubeExtension.VSControls;
 
     using DColor = System.Drawing.Color;

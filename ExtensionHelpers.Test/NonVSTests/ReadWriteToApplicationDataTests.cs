@@ -20,6 +20,8 @@ namespace ExtensionHelpers.Test.NonVSTests
 
     using NUnit.Framework;
 
+    using VSSonarQubeExtension.Helpers;
+
     /// <summary>
     /// The write to application data tests.
     /// </summary>

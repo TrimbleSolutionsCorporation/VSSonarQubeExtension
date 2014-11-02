@@ -71,6 +71,7 @@
       <HintPath>..\packages\MahApps.Metro.0.14.0.0\lib\net45\MahApps.Metro.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.Editor, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.Shell.12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
@@ -91,6 +92,13 @@
     <Reference Include="Microsoft.VisualStudio.Text.Logic, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.Text.UI, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.Text.UI.Wpf, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.TextManager.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.TextManager.Interop.11.0, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TextManager.Interop.12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="PresentationFramework.Aero" />
@@ -127,20 +135,21 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Coverage\CoverageTag.cs" />
+    <Compile Include="Coverage\CoveredFormatDefinition.cs" />
+    <Compile Include="Coverage\HighlightCoverageTagger.cs" />
+    <Compile Include="Coverage\HighlightCoverageTaggerProvider.cs" />
+    <Compile Include="Coverage\NotCoveredFormatDefinition.cs" />
+    <Compile Include="Coverage\PartialCoveredFormatDefinition.cs" />
+    <Compile Include="Helpers\VSEvents.cs" />
+    <Compile Include="Helpers\VsPropertiesHelper.cs" />
     <Compile Include="InternalStateVariables.cs" />
-    <Compile Include="SmartTags\BufferUpdate\VSEvents.cs" />
-    <Compile Include="SmartTags\Coverage\CoveredFormatDefinition.cs" />
-    <Compile Include="SmartTags\Coverage\HighlightCoverageTagger.cs" />
-    <Compile Include="SmartTags\Coverage\HighlightCoverageTaggerProvider.cs" />
-    <Compile Include="SmartTags\Coverage\NotCoveredFormatDefinition.cs" />
-    <Compile Include="SmartTags\Coverage\PartialCoveredFormatDefinition.cs" />
-    <Compile Include="SmartTags\Coverage\CoverageTag.cs" />
-    <Compile Include="SmartTags\Squiggle\SonarTag.cs" />
-    <Compile Include="SmartTags\Squiggle\SonarTagFormatDefinition.cs" />
-    <Compile Include="SmartTags\Squiggle\SonarTagger.cs" />
-    <Compile Include="SmartTags\Squiggle\SonarTaggerProvider.cs" />
-    <Compile Include="SmartTags\StatusBar\IVSStatusBar.cs" />
-    <Compile Include="SmartTags\StatusBar\VSSStatusBar.cs" />
+    <Compile Include="Squiggle\SonarTag.cs" />
+    <Compile Include="Squiggle\SonarTagFormatDefinition.cs" />
+    <Compile Include="Squiggle\SonarTagger.cs" />
+    <Compile Include="Squiggle\SonarTaggerProvider.cs" />
+    <Compile Include="StatusBar\IVSStatusBar.cs" />
+    <Compile Include="StatusBar\VSSStatusBar.cs" />
     <Compile Include="VSControls\GuidList.cs" />
     <Compile Include="PckResources\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -167,11 +176,15 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-    <None Include="PckResources\Source.extension.vsixmanifest">
+    <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+    <Content Include="LICENSE.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="SonarRunner\bin\sonar-runner">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
@@ -199,7 +212,10 @@
     <Resource Include="Resources\sonariconsource.bmp" />
     <Resource Include="Resources\sonariconviolationslocaladded.bmp" />
     <Resource Include="Resources\sonariconviolationslocal.bmp" />
-    <Resource Include="Resources\sonarviolations.bmp" />
+    <Content Include="Resources\sonarviolations.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DifferenceEngine\DifferenceEngine.csproj">

@@ -75,7 +75,6 @@ namespace VSSonarExtensionUi.ViewModel
         /// </summary>
         public SonarQubeViewModel()
         {
-            this.VsHelper = new VsPropertiesHelper();
             this.SonarRestConnector = new SonarRestService(new JsonSonarConnector());
             this.Logger = new VsSonarExtensionLogger(this);
 
@@ -91,8 +90,6 @@ namespace VSSonarExtensionUi.ViewModel
 
             this.UpdateTheme(Colors.Black, Colors.White);
         }
-
-        public VsSonarExtensionLogger Logger { get; set; }
 
         #endregion
 
@@ -208,6 +205,11 @@ namespace VSSonarExtensionUi.ViewModel
         public KeyValuePair<int, IMenuCommandPlugin> InUsePlugin { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether is associated.
+        /// </summary>
+        public bool IsAssociated { get; set; }
+
+        /// <summary>
         ///     Gets or sets a value indicating whether is connected.
         /// </summary>
         public bool IsConnected { get; set; }
@@ -241,6 +243,11 @@ namespace VSSonarExtensionUi.ViewModel
         ///     Gets or sets the local view viewModel.
         /// </summary>
         public LocalViewModel LocalViewModel { get; set; }
+
+        /// <summary>
+        /// Gets or sets the logger.
+        /// </summary>
+        public VsSonarExtensionLogger Logger { get; set; }
 
         /// <summary>
         ///     Gets or sets the open solution name.
@@ -372,8 +379,6 @@ namespace VSSonarExtensionUi.ViewModel
             }
         }
 
-        public bool IsAssociated { get; set; }
-
         /// <summary>
         ///     The clear project association.
         /// </summary>
@@ -384,12 +389,12 @@ namespace VSSonarExtensionUi.ViewModel
             this.IsConnectedButNotAssociated = this.IsConnected;
             this.IsAssociated = !this.IsConnected;
 
-            foreach (var sonarQubeView in this.SonarQubeViews)
+            foreach (IAnalysisViewModelBase sonarQubeView in this.SonarQubeViews)
             {
                 sonarQubeView.EndDataAssociation();
             }
 
-            foreach (var option in this.VSonarQubeOptionsViewData.AvailableOptions)
+            foreach (IOptionsViewModelBase option in this.VSonarQubeOptionsViewData.AvailableOptions)
             {
                 option.EndDataAssociation();
             }
@@ -412,33 +417,31 @@ namespace VSSonarExtensionUi.ViewModel
                     continue;
                 }
 
-                var isEnabled = this.VsHelper.ReadOptionFromApplicationData(
+                string isEnabled = this.VsHelper.ReadOptionFromApplicationData(
                     GlobalIds.PluginEnabledControlId, 
                     plugin.Value.GetPluginDescription(this.VsHelper).Name);
 
                 if (string.IsNullOrEmpty(isEnabled) || isEnabled.Equals("true", StringComparison.CurrentCultureIgnoreCase))
-                {                    
+                {
                     if (this.IsRunningInVisualStudio())
                     {
                         this.InUsePlugin = plugin;
                         this.OnPluginRequest(EventArgs.Empty);
                     }
                     else
-                    {                        
+                    {
                         var window = new Window
                                          {
                                              Content =
                                                  plugin.Value.GetUserControl(
-                                                     this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig,
-                                                     this.AssociatedProject,
+                                                     this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, 
+                                                     this.AssociatedProject, 
                                                      this.VsHelper)
                                          };
 
                         plugin.Value.UpdateTheme(this.BackGroundColor, this.ForeGroundColor);
                         window.ShowDialog();
                     }
-
-
                 }
                 else
                 {
@@ -517,7 +520,6 @@ namespace VSSonarExtensionUi.ViewModel
                 return null;
             }
 
-
             return view.GetIssuesForResource(fileResource, fileContent);
         }
 
@@ -552,7 +554,7 @@ namespace VSSonarExtensionUi.ViewModel
                     if (!string.IsNullOrEmpty(this.OpenSolutionName))
                     {
                         this.AssociateProjectToSolution(this.OpenSolutionName, this.OpenSolutionPath);
-                    }                    
+                    }
                 };
 
             bw.RunWorkerAsync();
@@ -617,7 +619,6 @@ namespace VSSonarExtensionUi.ViewModel
                     this.Logger.WriteException(ex);
                     this.ErrorMessage = "Cannot Find File in Server";
                 }
-                
             }
         }
 
@@ -941,9 +942,8 @@ namespace VSSonarExtensionUi.ViewModel
 
             string view = this.VsHelper.ReadOptionFromApplicationData("VSSonarQubeConfig", "SelectedView");
 
-            foreach (
-                IAnalysisViewModelBase analysisViewModelBase in
-                    this.SonarQubeViews.Where(analysisViewModelBase => analysisViewModelBase.Header.Equals(view)))
+            foreach (IAnalysisViewModelBase analysisViewModelBase in
+                this.SonarQubeViews.Where(analysisViewModelBase => analysisViewModelBase.Header.Equals(view)))
             {
                 this.SelectedView = analysisViewModelBase;
             }
@@ -972,7 +972,10 @@ namespace VSSonarExtensionUi.ViewModel
 
             if (!string.IsNullOrEmpty(this.OpenSolutionName))
             {
-                this.VsHelper.WriteOptionInApplicationData(Path.Combine(this.OpenSolutionPath, this.OpenSolutionName), "PROJECTKEY", this.SelectedProject.Key);
+                this.VsHelper.WriteOptionInApplicationData(
+                    Path.Combine(this.OpenSolutionPath, this.OpenSolutionName), 
+                    "PROJECTKEY", 
+                    this.SelectedProject.Key);
                 this.VsHelper.WriteOptionInApplicationData(this.SelectedProject.Key, "PROJECTKEY", this.SelectedProject.Key);
                 this.VsHelper.WriteOptionInApplicationData(this.SelectedProject.Key, "PROJECTLOCATION", this.OpenSolutionPath);
                 this.VsHelper.WriteOptionInApplicationData(this.SelectedProject.Key, "PROJECTNAME", this.OpenSolutionName);
@@ -1044,7 +1047,7 @@ namespace VSSonarExtensionUi.ViewModel
         private void OnDisconnectToSonar()
         {
             this.IsConnected = false;
-            foreach (var view in this.SonarQubeViews)
+            foreach (IAnalysisViewModelBase view in this.SonarQubeViews)
             {
                 view.EndDataAssociation();
             }

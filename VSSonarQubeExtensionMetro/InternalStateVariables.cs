@@ -19,9 +19,9 @@ namespace VSSonarQubeExtension
 
     using SonarRestService;
 
-    using VSSonarQubeExtension.SmartTags.BufferUpdate;
-
     using VSSonarPlugins;
+
+    using VSSonarQubeExtension.Helpers;
 
     /// <summary>
     /// The vs sonar extension package.
