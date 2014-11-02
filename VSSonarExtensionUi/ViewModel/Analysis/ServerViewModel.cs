@@ -338,6 +338,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             List<Issue> newIssues = this.restservice.GetIssuesInResource(this.config, this.ResourceInEditor.Key);
 
             this.IssuesGridView.Issues.Clear();
+            this.IssuesGridView.AllIssues.Clear();
             foreach (Issue newIssue in newIssues)
             {
                 this.IssuesGridView.AllIssues.Add(newIssue);
