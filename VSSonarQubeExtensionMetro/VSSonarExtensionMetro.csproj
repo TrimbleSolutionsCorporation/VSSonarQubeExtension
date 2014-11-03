@@ -187,6 +187,7 @@
     </Content>
     <Content Include="Resources\vsiximage.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="SonarRunner\bin\sonar-runner">
       <IncludeInVSIX>true</IncludeInVSIX>
@@ -210,7 +211,10 @@
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Resource Include="Resources\sonarreviews.bmp" />
-    <Content Include="Resources\Package.ico" />
+    <Content Include="Resources\Package.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Resource Include="Resources\sonariconcoverage.bmp" />
     <Resource Include="Resources\sonariconsource.bmp" />
     <Resource Include="Resources\sonariconviolationslocaladded.bmp" />

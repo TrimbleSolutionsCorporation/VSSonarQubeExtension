@@ -5,7 +5,7 @@
         <DisplayName>VSSonarExtension</DisplayName>
         <Description xml:space="preserve">Visual Studio Extension For SonarQube(TM)</Description>
         <License>LICENSE.txt</License>
-        <Icon>Resources\vsiximage.png</Icon>
+        <Icon>Resources\Package.ico</Icon>
         <PreviewImage>Resources\vsiximage.png</PreviewImage>
     </Metadata>
     <Installation>
