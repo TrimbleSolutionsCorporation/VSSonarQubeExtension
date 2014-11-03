@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSSonarQubeStandalone", "VS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSSonarExtensionMetro", "VSSonarQubeExtensionMetro\VSSonarExtensionMetro.csproj", "{CDA074CC-04BC-4D9E-B285-5A2D47C001B9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSSonarExtensionMetroVs2012", "VSSonarQubeExtensionMetro\VSSonarExtensionMetroVs2012.csproj", "{09F6E247-F5DF-40C9-98D8-68CC3FBB9330}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +87,10 @@ Global
 		{CDA074CC-04BC-4D9E-B285-5A2D47C001B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDA074CC-04BC-4D9E-B285-5A2D47C001B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CDA074CC-04BC-4D9E-B285-5A2D47C001B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09F6E247-F5DF-40C9-98D8-68CC3FBB9330}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09F6E247-F5DF-40C9-98D8-68CC3FBB9330}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09F6E247-F5DF-40C9-98D8-68CC3FBB9330}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09F6E247-F5DF-40C9-98D8-68CC3FBB9330}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
