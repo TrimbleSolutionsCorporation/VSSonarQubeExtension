@@ -281,7 +281,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             this.AssociatedProject = associatedProject;
             this.Configuration = userConnectionConfig;
-            this.IsRunningInVisualStudio = this.sonarQubeViewModel.VsHelper.AreWeRunningInVisualStudio();
+            if (this.sonarQubeViewModel.VsHelper != null)
+            {
+                this.IsRunningInVisualStudio = this.sonarQubeViewModel.VsHelper.AreWeRunningInVisualStudio();
+            }
+            else
+            {
+                this.IsRunningInVisualStudio = false;
+            }
         }
 
         /// <summary>

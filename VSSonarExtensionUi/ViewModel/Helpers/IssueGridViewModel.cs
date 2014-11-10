@@ -921,7 +921,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.FilterTermAssignee = string.Empty;
             this.FilterTermRule = string.Empty;
 
-            if (this.Issues == null || this.Issues.Count == 0)
+            if (this.AllIssues == null || this.AllIssues.Count == 0)
             {
                 return;
             }
