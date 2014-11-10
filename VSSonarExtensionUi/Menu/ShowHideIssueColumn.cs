@@ -1,17 +1,11 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ShowHideIssueColumn.cs" company="Copyright © 2014 Tekla Corporation. Tekla is a Trimble Company">
-//     Copyright (C) 2014 [Jorge Costa, Jorge.Costa@tekla.com]
+// <copyright file="ShowHideIssueColumn.cs" company="">
+//   
 // </copyright>
+// <summary>
+//   The show hide issue column.
+// </summary>
 // --------------------------------------------------------------------------------------------------------------------
-// This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
-// as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
-// of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. 
-// You should have received a copy of the GNU Lesser General Public License along with this program; if not, write to the Free
-// Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// --------------------------------------------------------------------------------------------------------------------
-
 namespace VSSonarExtensionUi.Menu
 {
     using System.Collections.Generic;
@@ -20,7 +14,6 @@ namespace VSSonarExtensionUi.Menu
 
     using GalaSoft.MvvmLight.Command;
 
-    using VSSonarExtensionUi.ViewModel;
     using VSSonarExtensionUi.ViewModel.Helpers;
 
     using VSSonarPlugins;
@@ -30,16 +23,12 @@ namespace VSSonarExtensionUi.Menu
     /// </summary>
     internal class ShowHideIssueColumn : IMenuItem
     {
-        #region Constants
+        #region Fields
 
         /// <summary>
-        ///     The data grid options key.
+        /// The grid key.
         /// </summary>
-        private const string DataGridOptionsKey = "DataGridOptions";
-
-        #endregion
-
-        #region Fields
+        private readonly string gridKey;
 
         /// <summary>
         ///     The helper.
@@ -72,8 +61,12 @@ namespace VSSonarExtensionUi.Menu
         /// <param name="name">
         /// The name.
         /// </param>
-        public ShowHideIssueColumn(IssueGridViewModel model, IConfigurationHelper helper, string name)
+        /// <param name="gridKey">
+        /// The grid key.
+        /// </param>
+        public ShowHideIssueColumn(IssueGridViewModel model, IConfigurationHelper helper, string name, string gridKey)
         {
+            this.gridKey = gridKey;
             this.helper = helper;
             this.name = name;
             this.model = model;
@@ -123,17 +116,25 @@ namespace VSSonarExtensionUi.Menu
         /// <param name="columns">
         /// The columns.
         /// </param>
+        /// <param name="gridKey">
+        /// The grid key.
+        /// </param>
         /// <returns>
         /// The <see cref="IMenuItem"/>.
         /// </returns>
-        public static IMenuItem MakeMenu(IssueGridViewModel model, IConfigurationHelper helper, List<string> columns)
+        public static IMenuItem MakeMenu(IssueGridViewModel model, IConfigurationHelper helper, List<string> columns, string gridKey)
         {
-            var menu = new ShowHideIssueColumn(model, helper, string.Empty) { CommandText = "Columns", IsEnabled = false };
+            var menu = new ShowHideIssueColumn(model, helper, string.Empty, gridKey) { CommandText = "Columns", IsEnabled = false };
 
             foreach (string column in columns)
             {
-                var subItem = new ShowHideIssueColumn(model, helper, column) { IsEnabled = true };
-                string visible = helper.ReadOptionFromApplicationData(DataGridOptionsKey, column + "Visible");
+                if (column.Equals("Component") || column.Equals("Message") || column.Equals("Line"))
+                {
+                    continue;
+                }
+
+                var subItem = new ShowHideIssueColumn(model, helper, column, gridKey) { IsEnabled = true };
+                string visible = helper.ReadOptionFromApplicationData(gridKey, column + "Visible");
                 if (visible.Equals("true"))
                 {
                     subItem.CommandText = "Hide " + column;
@@ -180,12 +181,12 @@ namespace VSSonarExtensionUi.Menu
             if (this.CommandText.Equals("Show " + this.name))
             {
                 this.CommandText = "Hide " + this.name;
-                this.helper.WriteOptionInApplicationData(DataGridOptionsKey, this.name + "Visible", "true");
+                this.helper.WriteOptionInApplicationData(this.gridKey, this.name + "Visible", "true");
             }
             else
             {
                 this.CommandText = "Show " + this.name;
-                this.helper.WriteOptionInApplicationData(DataGridOptionsKey, this.name + "Visible", "false");
+                this.helper.WriteOptionInApplicationData(this.gridKey, this.name + "Visible", "false");
             }
 
             this.model.RestoreUserSettingsInIssuesDataGrid();

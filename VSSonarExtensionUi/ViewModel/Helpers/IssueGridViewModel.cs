@@ -578,7 +578,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// </summary>
         public void RestoreUserSettingsInIssuesDataGrid()
         {
-            if (this.Vsenvironmenthelper == null)
+            if (this.configurationHelper == null)
             {
                 this.ResetWindowDefaults();
                 return;
@@ -684,7 +684,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             PropertyInfo[] props = typeof(Issue).GetProperties();
             List<string> submenus = props.Select(propertyInfo => propertyInfo.Name).ToList();
 
-            var menu = new ObservableCollection<IMenuItem> { ShowHideIssueColumn.MakeMenu(this, this.configurationHelper, submenus) };
+            var menu = new ObservableCollection<IMenuItem> { ShowHideIssueColumn.MakeMenu(this, this.configurationHelper, submenus, this.dataGridOptionsKey) };
 
             return menu;
         }
@@ -969,6 +969,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 this.CloseDateIndex = int.Parse(options["CloseDateIndex"], CultureInfo.InvariantCulture);
                 this.KeyIndex = int.Parse(options["KeyIndex"], CultureInfo.InvariantCulture);
                 this.IdIndex = int.Parse(options["IdIndex"], CultureInfo.InvariantCulture);
+                this.IsNewIndex = int.Parse(options["IsNewIndex"], CultureInfo.InvariantCulture);
 
                 this.ComponentVisible = bool.Parse(options["ComponentVisible"]);
                 this.LineVisible = bool.Parse(options["LineVisible"]);
@@ -984,8 +985,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 this.UpdateDateVisible = bool.Parse(options["UpdateDateVisible"]);
                 this.CloseDateVisible = bool.Parse(options["CloseDateVisible"]);
                 this.KeyVisible = bool.Parse(options["KeyVisible"]);
-                this.IdVisible = bool.Parse(options["IdVisible"]);
-                this.IsNewIndex = int.Parse(options["IsNewIndex"], CultureInfo.InvariantCulture);
+                this.IdVisible = bool.Parse(options["IdVisible"]);                
                 this.IsNewVisible = bool.Parse(options["IsNewVisible"]);
             }
             catch (Exception ex)
@@ -999,12 +999,13 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// </summary>
         private void ResetWindowDefaults()
         {
-            this.MessageIndex = 0;
-            this.CreationDateIndex = 1;
-            this.CloseDateIndex = 2;
-            this.ComponentIndex = 3;
-            this.EffortToFixIndex = 4;
-            this.LineIndex = 5;
+            this.ComponentIndex = 0;
+            this.MessageIndex = 1;
+            this.LineIndex = 2;
+
+            this.CreationDateIndex = 3;
+            this.CloseDateIndex = 4;
+            this.EffortToFixIndex = 5;            
             this.ProjectIndex = 6;
             this.UpdateDateIndex = 7;
             this.StatusIndex = 8;
@@ -1115,12 +1116,9 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 "ViolationIdIndex", 
                 this.ViolationIdIndex.ToString(CultureInfo.InvariantCulture));
 
-            this.configurationHelper.WriteOptionInApplicationData(this.dataGridOptionsKey, "MessageVisible", this.MessageVisible.ToString());
             this.configurationHelper.WriteOptionInApplicationData(this.dataGridOptionsKey, "CreationDateVisible", this.CreationDateVisible.ToString());
             this.configurationHelper.WriteOptionInApplicationData(this.dataGridOptionsKey, "CloseDateVisible", this.CloseDateVisible.ToString());
-            this.configurationHelper.WriteOptionInApplicationData(this.dataGridOptionsKey, "ComponentVisible", this.ComponentVisible.ToString());
             this.configurationHelper.WriteOptionInApplicationData(this.dataGridOptionsKey, "EffortToFixVisible", this.EffortToFixVisible.ToString());
-            this.configurationHelper.WriteOptionInApplicationData(this.dataGridOptionsKey, "LineVisible", this.LineVisible.ToString());
             this.configurationHelper.WriteOptionInApplicationData(this.dataGridOptionsKey, "ProjectVisible", this.ProjectVisible.ToString());
             this.configurationHelper.WriteOptionInApplicationData(this.dataGridOptionsKey, "UpdateDateVisible", this.UpdateDateVisible.ToString());
             this.configurationHelper.WriteOptionInApplicationData(this.dataGridOptionsKey, "StatusVisible", this.StatusVisible.ToString());
