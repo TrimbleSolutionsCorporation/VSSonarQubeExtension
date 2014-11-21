@@ -1,5 +1,7 @@
 VSSonarQubeExtension
 ====================
+[![Build status](https://ci.appveyor.com/api/projects/status/7c1r35db6k6ug756?svg=true)](https://ci.appveyor.com/project/jorgecosta/vssonarqubeextension)
+
 
 This is a Extension for Visual Studio to interact wiht SonarQube (TM).
 
