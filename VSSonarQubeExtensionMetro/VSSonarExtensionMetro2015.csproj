@@ -15,7 +15,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>VSSonarQubeExtension</RootNamespace>
-    <AssemblyName>VSSonarQubeExtensionMetro</AssemblyName>
+    <AssemblyName>VSSonarQubeExtensionMetro2015</AssemblyName>
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
