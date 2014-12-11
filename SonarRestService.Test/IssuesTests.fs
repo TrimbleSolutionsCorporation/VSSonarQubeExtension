@@ -160,3 +160,16 @@ type IssuesTests() =
         let issues = (service :> ISonarRestService).ParseDryRunReportOfIssues("testdata/dryrunissues.txt")
         issues.Count |> should equal 10
 
+    [<Test>]
+    member test.``Should Parse issue with sonar 4.2`` () =
+        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1")
+
+        let mockHttpReq =
+            Mock<IHttpSonarConnector>()
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText("testdata/incrementalrun.txt"))
+                .Create()
+
+        let service = SonarRestService(mockHttpReq)
+        let issues = (service :> ISonarRestService).ParseReportOfIssues("testdata/incrementalrun.txt")
+        issues.Count |> should equal 1
+

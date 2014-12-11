@@ -217,54 +217,57 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
         stdOutEvent.Trigger([|x; message|])
 
     member x.ProcessOutputDataReceived(e : DataReceivedEventArgs) =
-        if e.Data <> null && not(x.Abort) then
-            if e.Data.EndsWith(".json") then
-                let elems = e.Data.Split(' ');
-                jsonReports.Add(elems.[elems.Length-1])
+        try
+            if e.Data <> null && not(x.Abort) then
+                if e.Data.EndsWith(".json") then
+                    let elems = e.Data.Split(' ');
+                    jsonReports.Add(elems.[elems.Length-1])
 
-            let isDebugOn = vsinter.ReadOptionFromApplicationData(GlobalIds.GlobalPropsId, GlobalIds.IsDebugAnalysisOnKey)
+                let isDebugOn = vsinter.ReadOptionFromApplicationData(GlobalIds.GlobalPropsId, GlobalIds.IsDebugAnalysisOnKey)
         
-            if e.Data.Contains(" DEBUG - ") then
-                if isDebugOn.Equals("True") then
+                if e.Data.Contains(" DEBUG - ") then
+                    if isDebugOn.Equals("True") then
+                        let message = new LocalAnalysisEventArgs("LA:", e.Data, null)
+                        stdOutEvent.Trigger([|x; message|])
+                else
                     let message = new LocalAnalysisEventArgs("LA:", e.Data, null)
                     stdOutEvent.Trigger([|x; message|])
-            else
-                let message = new LocalAnalysisEventArgs("LA:", e.Data, null)
-                stdOutEvent.Trigger([|x; message|])
 
-            if e.Data.Contains("DEBUG - Populating index from") then
-                let message = new LocalAnalysisEventArgs("LA:", e.Data, null)
-                stdOutEvent.Trigger([|x; message|])
-                let separator = [| "Populating index from" |]
-                let mutable fileName = e.Data.Split(separator, StringSplitOptions.RemoveEmptyEntries).[1]
+                if e.Data.Contains("DEBUG - Populating index from") then
+                    let message = new LocalAnalysisEventArgs("LA:", e.Data, null)
+                    stdOutEvent.Trigger([|x; message|])
+                    let separator = [| "Populating index from" |]
+                    let mutable fileName = e.Data.Split(separator, StringSplitOptions.RemoveEmptyEntries).[1]
 
-                if fileName.Contains("abs=") then 
-                    let separator = [| "abs=" |]
-                    let absfileName = fileName.Split(separator, StringSplitOptions.RemoveEmptyEntries).[1].Trim()
-                    fileName <- absfileName.TrimEnd(']')
+                    if fileName.Contains("abs=") then 
+                        let separator = [| "abs=" |]
+                        let absfileName = fileName.Split(separator, StringSplitOptions.RemoveEmptyEntries).[1].Trim()
+                        fileName <- absfileName.TrimEnd(']')
 
-                if File.Exists(fileName) then
-                    let vsprojitem = new VsProjectItem(Path.GetFileName(fileName), fileName, "", "", "", x.ProjectRoot)                    
-                    let extension = GetExtensionThatSupportsThisFile(vsprojitem, x.Conf)
-                    if extension <> null then
-                        let plugin = GetPluginThatSupportsResource(vsprojitem)
-                        let project = new Resource()
-                        project.Date <- x.Project.Date
-                        project.Lang <- x.Project.Lang
-                        project.Id <- x.Project.Id
-                        project.Key <- x.Project.Key
-                        project.Lname <- x.Project.Lname
-                        project.Version <- x.Project.Version
-                        project.Name <- x.Project.Name
-                        project.Qualifier <- x.Project.Qualifier
-                        project.Scope <- x.Project.Scope
+                    if File.Exists(fileName) then
+                        let vsprojitem = new VsProjectItem(Path.GetFileName(fileName), fileName, "", "", "", x.ProjectRoot)                    
+                        let extension = GetExtensionThatSupportsThisFile(vsprojitem, x.Conf)
+                        if extension <> null then
+                            let plugin = GetPluginThatSupportsResource(vsprojitem)
+                            let project = new Resource()
+                            project.Date <- x.Project.Date
+                            project.Lang <- x.Project.Lang
+                            project.Id <- x.Project.Id
+                            project.Key <- x.Project.Key
+                            project.Lname <- x.Project.Lname
+                            project.Version <- x.Project.Version
+                            project.Name <- x.Project.Name
+                            project.Qualifier <- x.Project.Qualifier
+                            project.Scope <- x.Project.Scope
 
-                        project.Lang <- plugin.GetLanguageKey()
-                        let issues = extension.ExecuteAnalysisOnFile(vsprojitem, GetQualityProfile(x.Conf, project, vsprojitem), project)
-                        lock syncLock (
-                            fun () -> 
-                                localissues.AddRange(issues)
-                            )
+                            project.Lang <- plugin.GetLanguageKey()
+                            let issues = extension.ExecuteAnalysisOnFile(vsprojitem, GetQualityProfile(x.Conf, project, vsprojitem), project)
+                            lock syncLock (
+                                fun () -> 
+                                    localissues.AddRange(issues)
+                                )
+            with
+            | ex -> ()
 
 
     member x.generateCommandArgsForMultiLangProject(mode : AnalysisMode, version : double, conf : ISonarConfiguration, project : Resource) =
