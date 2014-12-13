@@ -86,6 +86,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             IConfigurationHelper configurationHelper)
         {
             this.Header = "General Settings";
+            this.UserName = "";
+            this.Password = "";
             this.viewModel = viewModel;
             this.restService = restService;
             this.configurationHelper = configurationHelper;
@@ -387,6 +389,12 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </param>
         private void OnTestAndSavePassword(object obj)
         {
+            if (String.IsNullOrEmpty(this.ServerAddress))
+            {
+                this.StatusMessage = "Failed: Address not set";
+                return;
+            }
+
             var passwordBox = obj as PasswordBox;
             if (passwordBox != null)
             {

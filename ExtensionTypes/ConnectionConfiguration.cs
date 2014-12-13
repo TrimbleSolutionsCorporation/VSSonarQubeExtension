@@ -67,9 +67,17 @@ namespace ExtensionTypes
         /// </param>
         public ConnectionConfiguration(string hostname, string username, string password)
         {
-            this.password = password;
             this.hostname = hostname;
+            this.password = password;
             this.username = username;
+            if (password == null)
+            {
+                this.password = string.Empty;
+            }
+            if (username == null)
+            {
+                this.username = string.Empty;
+            }
         }
 
         #endregion

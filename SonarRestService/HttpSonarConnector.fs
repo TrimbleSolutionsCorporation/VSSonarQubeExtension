@@ -75,8 +75,10 @@ type JsonSonarConnector() =
                 let req = HttpWebRequest.Create(userConf.Hostname + url) :?> HttpWebRequest 
                 req.Method <- "GET"
                 req.ContentType <- "text/json"
-                let auth = "Basic " + (userConf.Username + ":" + userConf.Password |> Encoding.UTF8.GetBytes |> Convert.ToBase64String)
-                req.Headers.Add("Authorization", auth)
+
+                if userConf.Username <> "" && userConf.Password <> "" then
+                    let auth = "Basic " + (userConf.Username + ":" + userConf.Password |> Encoding.UTF8.GetBytes |> Convert.ToBase64String)
+                    req.Headers.Add("Authorization", auth)
 
                 let addLine (line:string) =
                     if not(String.IsNullOrEmpty(Environment.GetEnvironmentVariable("VSSONAREXTENSIONDEBUG"))) then

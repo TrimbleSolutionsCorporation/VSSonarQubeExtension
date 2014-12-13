@@ -925,14 +925,11 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
         member this.AuthenticateUser(newConf : ISonarConfiguration) =
             let url = "/api/authentication/validate"
 
-            if newConf.Username = "" && newConf.Password = "" then
-                true
-            else                             
-                try
-                    let responsecontent = httpconnector.HttpSonarGetRequest(newConf, url)
-                    JsonValidateUser.Parse(responsecontent).Valid
-                with
-                    | ex -> false
+            try
+                let responsecontent = httpconnector.HttpSonarGetRequest(newConf, url)
+                JsonValidateUser.Parse(responsecontent).Valid
+            with
+                | ex -> false
 
         member this.GetResourcesData(conf : ISonarConfiguration, resource : string) =
             let url = "/api/resources?resource=" + resource
