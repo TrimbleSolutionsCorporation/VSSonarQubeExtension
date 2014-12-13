@@ -49,6 +49,8 @@ namespace VSSonarQubeExtension.Helpers
         /// </summary>
         private readonly IVsEnvironmentHelper environment;
 
+        private VsSonarExtensionPackage package;
+
         #endregion
 
         #region Constructors and Destructors
@@ -57,21 +59,25 @@ namespace VSSonarQubeExtension.Helpers
         /// Initializes a new instance of the <see cref="VsEvents"/> class.
         /// </summary>
         /// <param name="environment">
-        /// The environment.
+        ///     The environment.
         /// </param>
         /// <param name="dte2">
-        /// The dte 2.
+        ///     The dte 2.
         /// </param>
-        public VsEvents(IVsEnvironmentHelper environment, DTE2 dte2)
+        /// <param name="vsSonarExtensionPackage"></param>
+        public VsEvents(IVsEnvironmentHelper environment, DTE2 dte2, VsSonarExtensionPackage vsSonarExtensionPackage)
         {
+            this.package = vsSonarExtensionPackage;
             this.environment = environment;
             this.SolutionEvents = dte2.Events;
+            this.visualStudioEvents = dte2.Events.DTEEvents;
             this.DocumentsEvents = this.SolutionEvents.DocumentEvents;
 
             this.SolutionEvents.SolutionEvents.Opened += this.SolutionOpened;
             this.SolutionEvents.SolutionEvents.AfterClosing += this.SolutionClosed;
             this.SolutionEvents.WindowEvents.WindowActivated += this.WindowActivated;
             this.DocumentsEvents.DocumentSaved += this.DoumentSaved;
+            this.visualStudioEvents.OnStartupComplete += this.CloseToolWindows;
 
             VSColorTheme.ThemeChanged += this.VSColorTheme_ThemeChanged;
 
@@ -79,6 +85,13 @@ namespace VSSonarQubeExtension.Helpers
             SonarQubeViewModelFactory.SQViewModel.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.ConfigurationHasChanged +=
                 this.AnalysisModeHasChange;
         }
+
+        private void CloseToolWindows()
+        {
+            this.package.CloseToolWindow();
+        }
+
+        private DTEEvents visualStudioEvents { get; set; }
 
         #endregion
 

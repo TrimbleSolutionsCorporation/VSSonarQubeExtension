@@ -109,7 +109,7 @@ namespace VSSonarQubeExtension
                     }
 
                     var windowFrame = (IVsWindowFrame)currentWindow.Frame;
-                    ErrorHandler.ThrowOnFailure(windowFrame.Hide());
+                    ErrorHandler.ThrowOnFailure(windowFrame.CloseFrame((uint)__FRAMECLOSE.FRAMECLOSE_NoSave));
                 }
                 catch (Exception ex)
                 {
@@ -182,7 +182,7 @@ namespace VSSonarQubeExtension
                 {
                     this.visualStudioInterface = new VsPropertiesHelper(this.dte2, this);
                     this.restService = new SonarRestService(new JsonSonarConnector());
-                    this.VsEvents = new VsEvents(this.visualStudioInterface, this.dte2);
+                    this.VsEvents = new VsEvents(this.visualStudioInterface, this.dte2, this);
                     var bar = this.GetService(typeof(SVsStatusbar)) as IVsStatusbar;
                     this.StatusBar = new VSSStatusBar(bar, this.dte2);
 
@@ -207,6 +207,7 @@ namespace VSSonarQubeExtension
                         }
 
                         SonarQubeViewModelFactory.SQViewModel.PluginRequest += this.LoadPluginIntoNewToolWindow;
+                        this.CloseToolWindow();
                     }
                     catch (Exception ex)
                     {
