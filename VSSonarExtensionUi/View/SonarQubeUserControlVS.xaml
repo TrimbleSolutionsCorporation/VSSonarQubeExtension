@@ -95,7 +95,7 @@
        
 		<StatusBar Grid.Row="2" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}">		
 			<StatusBarItem HorizontalAlignment="Left">
-				<TextBlock Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Text="{Binding ErrorMessage}" ToolTip="{Binding DiagnosticMessage}"></TextBlock>
+				<TextBlock Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Text="{Binding ErrorMessage, FallbackValue=Connected}" ToolTip="{Binding DiagnosticMessage}"></TextBlock>
 				</StatusBarItem>
 			<StatusBarItem HorizontalAlignment="Right">
 				<StackPanel Orientation="Horizontal">

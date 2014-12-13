@@ -590,9 +590,17 @@ namespace VSSonarExtensionUi.ViewModel
             this.Logger.WriteMessage("Refresh Data For File: " + fullName);
             if (string.IsNullOrEmpty(fullName) || this.AssociatedProject == null)
             {
-                this.ErrorMessage = this.IsConnected ? "Not Connected" : "Not Associated";
-                this.DiagnosticMessage = string.Empty;
+                if (this.IsConnected && this.AssociatedProject == null)
+                {
+                    this.ErrorMessage = "Online : Not Associated";
+                }
 
+                if (!this.IsConnected)
+                {
+                    this.ErrorMessage = "Offline";
+                }
+
+                this.DiagnosticMessage = string.Empty;
                 return;
             }
 
@@ -1014,7 +1022,7 @@ namespace VSSonarExtensionUi.ViewModel
                     this.OpenSolutionPath);
             }
 
-            this.ErrorMessage = string.Empty;
+            this.ErrorMessage = "Associated";
             this.IsAssociated = true;
         }
 
@@ -1054,7 +1062,8 @@ namespace VSSonarExtensionUi.ViewModel
                 view.EndDataAssociation();
             }
 
-            if (!this.VsHelper.AreWeRunningInVisualStudio())
+
+            if (this.VsHelper == null || !this.VsHelper.AreWeRunningInVisualStudio())
             {
                 this.OpenSolutionPath = string.Empty;
                 this.OpenSolutionName = string.Empty;
