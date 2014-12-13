@@ -248,7 +248,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
     let getViolationsOldAndNewFormat(userConf, resource : string) = 
         try
-            let url =  "/api/issues/search?components=" + resource
+            let url =  "/api/issues/search?components=" + resource + "&statuses=OPEN,CONFIRMED,REOPENED"
             let responsecontent = httpconnector.HttpSonarGetRequest(userConf, url)
             getIssuesFromString(responsecontent)
         with
@@ -877,22 +877,22 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             getIssuesOldAndNewVersions(newConf, url, oldurlreview, oldurlviolations)
 
         member this.GetIssuesByAssigneeInProject(newConf : ISonarConfiguration, project : string, login : string) = 
-            let url =  "/api/issues/search?componentRoots=" + project + "&assignees="+ login
+            let url =  "/api/issues/search?componentRoots=" + project + "&assignees="+ login+ "&pageSize=200&statuses=OPEN,CONFIRMED,REOPENED"
             let oldurl = "/api/reviews?projects=" + project + "&assignees="+ login
             getIssuesOldAndNewVersions(newConf, url, oldurl, "")
    
         member this.GetAllIssuesByAssignee(newConf : ISonarConfiguration, login : string) = 
-            let url =  "/api/issues/search?assignees="+ login
+            let url =  "/api/issues/search?assignees="+ login + "&pageSize=200&statuses=OPEN,CONFIRMED,REOPENED"
             let oldurl = "/api/reviews?assignees="+ login
             getIssuesOldAndNewVersions(newConf, url, oldurl, "")
 
         member this.GetIssuesForProjectsCreatedAfterDate(newConf : ISonarConfiguration, project : string, date : DateTime) =
-            let url =  "/api/issues/search?componentRoots=" + project + "&pageSize=200&createdAfter=" + Convert.ToString(date.Year) + "-" + Convert.ToString(date.Month) + "-"  + Convert.ToString(date.Day)
+            let url =  "/api/issues/search?componentRoots=" + project + "&pageSize=200&createdAfter=" + Convert.ToString(date.Year) + "-" + Convert.ToString(date.Month) + "-"  + Convert.ToString(date.Day) + "&statuses=OPEN,CONFIRMED,REOPENED"
             let oldurl = "/api/reviews?projects="+ project
             getIssuesOldAndNewVersions(newConf, url, oldurl, "")
 
         member this.GetIssuesForProjects(newConf : ISonarConfiguration, project : string) =
-            let url =  "/api/issues/search?componentRoots=" + project + "&pageSize=200"
+            let url =  "/api/issues/search?componentRoots=" + project + "&pageSize=200&statuses=OPEN,CONFIRMED,REOPENED"
             let oldurlreview = "/api/reviews?projects="+ project
             let oldurlviolations = "/api/violations?resource="+ project + "&depth=-1"
             getIssuesOldAndNewVersions(newConf, url, oldurlreview, oldurlviolations)

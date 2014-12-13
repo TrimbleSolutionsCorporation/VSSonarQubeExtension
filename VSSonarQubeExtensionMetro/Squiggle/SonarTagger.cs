@@ -336,6 +336,11 @@ namespace VSSonarQubeExtension.Squiggle
                 var alreadyAddLine = new Dictionary<int, string>();
                 foreach (Issue issue in issuesInEditor)
                 {
+                    if (issue.Status == IssueStatus.CLOSED || issue.Status == IssueStatus.RESOLVED)
+                    {
+                        continue;
+                    }
+
                     if (alreadyAddLine.ContainsKey(issue.Line))
                     {
                         continue;
