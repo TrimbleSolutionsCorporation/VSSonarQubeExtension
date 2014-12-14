@@ -148,7 +148,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
 
         let foundinconfingFile = sonarProps |> Seq.tryFind (fun c -> c.Contains("sonar.sources="))
         match foundinconfingFile with
-        | None -> builder.AppendSwitchIfNotNull("-Dsonar.sources=", optionsInDsk.[GlobalIds.SonarSourceKey])
+        | None -> builder.AppendSwitchIfNotNull("-Dsonar.sources=", "")
         | Some x -> ()
 
         // optional project properties
