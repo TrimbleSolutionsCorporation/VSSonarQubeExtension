@@ -9,6 +9,7 @@
 namespace VSSonarExtensionUi.ViewModel.Helpers
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
 
     /// <summary>
@@ -67,9 +68,16 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 return;
             }
 
-            using (var writer = new StreamWriter(this.userRoamingFile, true))
+            try
             {
-                writer.WriteLineAsync(ex.Message + " : " + ex.StackTrace);
+                using (var writer = new StreamWriter(this.userRoamingFile, true))
+                {
+                    writer.WriteLineAsync(ex.Message + " : " + ex.StackTrace);
+                }
+            }
+            catch (Exception error)
+            {
+                Debug.WriteLine(error.Message);
             }
         }
 
@@ -86,9 +94,16 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 return;
             }
 
-            using (var writer = new StreamWriter(this.userRoamingFile, true))
+            try
             {
-                writer.WriteLineAsync(msg);
+                using (var writer = new StreamWriter(this.userRoamingFile, true))
+                {
+                    writer.WriteLineAsync(msg);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
             }
         }
 
