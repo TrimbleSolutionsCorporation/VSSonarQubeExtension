@@ -571,6 +571,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// </summary>
         public void RefreshView()
         {
+            this.OnFilterApplyCommand();
         }
 
         /// <summary>
@@ -743,7 +744,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.ClearFilterTermResolutionCommand = new RelayCommand<object>(this.OnClearFilterTermResolutionCommand);
             this.ClearFilterTermSeverityCommand = new RelayCommand<object>(this.OnClearFilterTermSeverityCommand);
             this.ClearFilterTermStatusCommand = new RelayCommand<object>(this.OnClearFilterTermStatusCommand);
-            this.FilterApplyCommand = new RelayCommand<object>(this.OnFilterApplyCommand);
+            this.FilterApplyCommand = new RelayCommand(this.OnFilterApplyCommand);
             this.FilterClearAllCommand = new RelayCommand<object>(this.OnFilterClearAllCommand);
         }
 
@@ -882,34 +883,28 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// <param name="obj">
         /// The obj.
         /// </param>
-        private void OnFilterApplyCommand(object obj)
+        private void OnFilterApplyCommand()
         {
-            if (this.Issues == null || !this.Issues.Any())
+            if (this.AllIssues == null || !this.AllIssues.Any())
             {
                 return;
             }
 
-            var issuesToRemove = new List<Issue>();
-
-            foreach (Issue issue in this.Issues)
+            this.Issues.Clear();
+            foreach (Issue issue in this.AllIssues)
             {
                 try
                 {
-                    if (!this.filter.FilterFunction(issue))
+                    if (this.filter.FilterFunction(issue))
                     {
-                        issuesToRemove.Add(issue);
+                        this.Issues.Add(issue);
                     }
                 }
                 catch (Exception ex)
                 {
-                    this.model.Logger.WriteMessage("Cannot filter");
-                    this.model.Logger.WriteException(ex);
+                    this.model.Logger.WriteMessage("Filter Failed: " + ex.Message);
+                    this.Issues.Add(issue);
                 }
-            }
-
-            foreach (Issue issue in issuesToRemove)
-            {
-                this.Issues.Remove(issue);
             }
 
             this.model.OnIssuesChangeEvent();
