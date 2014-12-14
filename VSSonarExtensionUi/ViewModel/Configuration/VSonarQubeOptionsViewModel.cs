@@ -542,10 +542,18 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                     }
                 }
 
-                Dictionary<string, string> optionsInDsk = this.ConfigurationHelper.ReadAllAvailableOptionsInSettings(pluginKey);
-                this.OptionsInView = pluginOptionsController.GetUserControlOptions(this.Project);
-                this.AnalysisPluginInView = plugin;
-                pluginOptionsController.SetOptions(optionsInDsk);
+                try
+                {
+                    Dictionary<string, string> optionsInDsk = this.ConfigurationHelper.ReadAllAvailableOptionsInSettings(pluginKey);
+                    this.OptionsInView = pluginOptionsController.GetUserControlOptions(this.Project);
+                    this.AnalysisPluginInView = plugin;
+                    pluginOptionsController.SetOptions(optionsInDsk);
+                }
+                catch (Exception ex)
+                {
+                    this.model.Logger.WriteMessage("Failed to Save properties for: " + pluginKey);
+                    this.model.Logger.WriteException(ex);
+                }
             }
         }
 

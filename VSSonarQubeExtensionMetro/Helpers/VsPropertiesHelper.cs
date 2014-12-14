@@ -541,18 +541,26 @@ namespace VSSonarQubeExtension.Helpers
             }
 
             string tempfile = Path.Combine(this.TempDataFolder, "server." + Path.GetFileName(documentInViewPath));
+            string tempfile2 = Path.Combine(this.TempDataFolder, "local." + Path.GetFileName(documentInViewPath));
 
             File.WriteAllText(tempfile, resourceInEditor);
+            File.WriteAllText(tempfile2, File.ReadAllText(documentInViewPath));
 
-            diff.OpenComparisonWindow(tempfile, documentInViewPath);
+            diff.OpenComparisonWindow(tempfile, tempfile2);
         }
 
-        public void ClearDiffFile(string fileName)
+        public void ClearDiffFile(string localFileName, string serverFileName)
         {
-            string tempfile = Path.Combine(this.TempDataFolder, fileName);
+            string tempfile = Path.Combine(this.TempDataFolder, localFileName);
             if (File.Exists(tempfile))
             {
                 File.Delete(tempfile);
+            }
+
+            string tempfile2 = Path.Combine(this.TempDataFolder, serverFileName);
+            if (File.Exists(tempfile2))
+            {
+                File.Delete(tempfile2);
             }
         }
 

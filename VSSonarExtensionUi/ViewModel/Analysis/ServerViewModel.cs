@@ -479,10 +479,10 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 return;
             }
 
-            if (this.AlreadyOpenDiffs.Contains(files[1].Trim()))
+            if (this.AlreadyOpenDiffs.Contains(files[1].Trim().Replace("local.", "")))
             {
-                this.AlreadyOpenDiffs.Remove(files[1].Trim());
-                this.vsenvironmenthelper.ClearDiffFile(files[0].Trim());
+                this.AlreadyOpenDiffs.Remove(files[1].Trim().Replace("local.", ""));
+                this.vsenvironmenthelper.ClearDiffFile(files[0].Trim(), files[1].Trim());
             }
         }
     }

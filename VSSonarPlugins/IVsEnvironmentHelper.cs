@@ -269,6 +269,6 @@ namespace VSSonarPlugins
         /// </returns>
         string ReadSavedOption(string category, string page, string item);
 
-        void ClearDiffFile(string s);
+        void ClearDiffFile(string localFileName, string serverFileName);
     }
 }
