@@ -154,7 +154,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
         // optional project properties
         let foundinconfingFile = sonarProps |> Seq.tryFind (fun c -> c.Contains("sonar.sourceEncoding="))
         match foundinconfingFile with
-        | None -> builder.AppendSwitchIfNotNull("-Dsonar.sourceEncoding=", optionsInDsk.[GlobalIds.SourceEncodingKey])
+        | None -> builder.AppendSwitchIfNotNull("-Dsonar.sourceEncoding=UTF-8", optionsInDsk.[GlobalIds.SourceEncodingKey])
         | Some x -> ()
         
         // analysis
