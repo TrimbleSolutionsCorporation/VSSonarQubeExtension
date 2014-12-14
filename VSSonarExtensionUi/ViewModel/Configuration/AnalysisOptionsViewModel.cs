@@ -396,8 +396,16 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </param>
         public void SetGeneralOptions(Dictionary<string, string> options)
         {
-            this.JavaBinary = this.GetOptionFromDictionary(options, GlobalIds.JavaExecutableKey);
-            this.SonarQubeBinary = this.GetOptionFromDictionary(options, GlobalIds.RunnerExecutableKey);
+            if (File.Exists(this.GetOptionFromDictionary(options, GlobalIds.JavaExecutableKey)))
+            {
+                this.JavaBinary = this.GetOptionFromDictionary(options, GlobalIds.JavaExecutableKey);
+            }
+
+            if (File.Exists(this.GetOptionFromDictionary(options, GlobalIds.RunnerExecutableKey)))
+            {
+                this.SonarQubeBinary = this.GetOptionFromDictionary(options, GlobalIds.RunnerExecutableKey);
+            }
+
             this.ExcludedPlugins = this.GetOptionFromDictionary(options, GlobalIds.ExcludedPluginsKey);
 
             try
@@ -515,9 +523,10 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         private void GetDefaultJavaLocationIfAvailable()
         {
-            string programFiles = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Java");
+            string programFiles = Path.Combine("C:\\Program Files", "Java");
+            string programFilesX86 = Path.Combine("C:\\Program Files (x86)", "Java");
 
-            if (!string.IsNullOrEmpty(programFiles))
+            if (Directory.Exists(programFiles))
             {
                 try
                 {
@@ -529,15 +538,16 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                             this.JavaBinary = Path.Combine(fileList[0].DirectoryName, fileList[0].Name);
                         }
                     }
+
+                    return;
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine("Cannot Find Java: " + ex.StackTrace);
+                    Debug.WriteLine("Cannot Find Java in : " + ex.StackTrace);
                 }
             }
-            else
+            if (Directory.Exists(programFilesX86))
             {
-                string programFilesX86 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "Java");
                 if (!string.IsNullOrEmpty(programFilesX86))
                 {
                     try
