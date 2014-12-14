@@ -178,7 +178,7 @@ namespace VSSonarQubeExtension.Coverage
 
                 SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Getting Coverage");
                 Dictionary<int, CoverageElement> coverageLine =
-                    SonarQubeViewModelFactory.SQViewModel.ServerViewModel.GetCoverageInEditor(this.SourceBuffer.CurrentSnapshot.GetText());
+                    SonarQubeViewModelFactory.SQViewModel.GetCoverageInEditor(this.SourceBuffer.CurrentSnapshot.GetText());
 
                 SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Got Cov Measures: " + coverageLine.Count);
                 this.coverageTags.Clear();

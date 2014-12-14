@@ -29,6 +29,7 @@ namespace VSSonarExtensionUi.ViewModel
 
     using SonarRestService;
 
+    using VSSonarExtensionUi.Cache;
     using VSSonarExtensionUi.View.Configuration;
     using VSSonarExtensionUi.View.Helpers;
     using VSSonarExtensionUi.ViewModel.Analysis;
@@ -1158,6 +1159,16 @@ namespace VSSonarExtensionUi.ViewModel
             {
                 this.ServerViewModel.UpdateOpenDiffWindowList(fullName);
             }
+        }
+
+        public Dictionary<int, CoverageElement> GetCoverageInEditor(string buffer)
+        {
+            if (this.SelectedView == this.ServerViewModel)
+            {
+                return this.ServerViewModel.GetCoverageInEditor(buffer);
+            }
+
+            return new Dictionary<int, CoverageElement>();
         }
     }
 }
