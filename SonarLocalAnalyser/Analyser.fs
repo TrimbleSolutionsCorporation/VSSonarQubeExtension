@@ -128,7 +128,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                 triggerException(x, "DirectoryNotFound For Required Variable: " + data, new Exception("Directory Not Foud"))
             data
 
-    let GenerateCommonArgumentsForAnalysis(mode : AnalysisMode, version : double, conf : ISonarConfiguration, project : Resource) =
+    let GenerateCommonArgumentsForAnalysis(mode : AnalysisMode, version : double, conf : ISonarConfiguration, project : Resource, sonarProps : string []) =
         let builder = new CommandLineBuilder()
         // mandatory properties
         builder.AppendSwitchIfNotNull("-Dsonar.host.url=", conf.Hostname.Trim())
@@ -145,13 +145,20 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
         // mandatory project properties
         let solId = VsSonarUtils.SolutionGlobPropKey(project.Key)
         let optionsInDsk = vsinter.ReadAllAvailableOptionsInSettings(solId)
-        builder.AppendSwitchIfNotNull("-Dsonar.sources=", optionsInDsk.[GlobalIds.SonarSourceKey])
+
+        let foundinconfingFile = sonarProps |> Seq.tryFind (fun c -> c.Contains("sonar.sources="))
+        match foundinconfingFile with
+        | None -> builder.AppendSwitchIfNotNull("-Dsonar.sources=", optionsInDsk.[GlobalIds.SonarSourceKey])
+        | Some x -> ()
 
         // optional project properties
-        builder.AppendSwitchIfNotNull("-Dsonar.sourceEncoding=", optionsInDsk.[GlobalIds.SourceEncodingKey])
+        let foundinconfingFile = sonarProps |> Seq.tryFind (fun c -> c.Contains("sonar.sourceEncoding="))
+        match foundinconfingFile with
+        | None -> builder.AppendSwitchIfNotNull("-Dsonar.sourceEncoding=", optionsInDsk.[GlobalIds.SourceEncodingKey])
+        | Some x -> ()
         
         // analysis
-        if version >= 4.0 && not(mode.Equals(AnalysisMode.Full)) then            
+        if version >= 4.0 && not(mode.Equals(AnalysisMode.Full)) then
             match mode with
             | AnalysisMode.Incremental -> builder.AppendSwitchIfNotNull("-Dsonar.analysis.mode=", "incremental")
                                           builder.AppendSwitchIfNotNull("-Dsonar.preview.excludePlugins=", vsinter.ReadOptionFromApplicationData(GlobalIds.GlobalPropsId, GlobalIds.ExcludedPluginsKey))
@@ -205,6 +212,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
     member val ItemInView = null : VsProjectItem with get, set
     member val OnModifyFiles = false with get, set
     member val AnalysisIsRunning = false with get, set
+    member val SonarRunnerPropsFile : string []  = null with get, set
 
     member x.ProcessExecutionEventComplete(e : EventArgs) =
         let data = e :?> LocalAnalysisEventArgs
@@ -271,7 +279,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
 
 
     member x.generateCommandArgsForMultiLangProject(mode : AnalysisMode, version : double, conf : ISonarConfiguration, project : Resource) =
-        let builder = GenerateCommonArgumentsForAnalysis(mode, version, conf, project)
+        let builder = GenerateCommonArgumentsForAnalysis(mode, version, conf, project, x.SonarRunnerPropsFile)
 
         let AddProperties(extension : ILocalAnalyserExtension) = 
             if extension <> null then
@@ -289,7 +297,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
         builder.ToString()
 
     member x.generateCommandArgsForSingleLangProject(mode : AnalysisMode, version : double, conf : ISonarConfiguration, project : Resource) =
-        let builder = GenerateCommonArgumentsForAnalysis(mode, version, conf, project)
+        let builder = GenerateCommonArgumentsForAnalysis(mode, version, conf, project, x.SonarRunnerPropsFile)
 
         let extension = GetExtensionThatSupportsThisProject(conf, project)
 
@@ -364,7 +372,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
 
         x.AnalysisIsRunning <- false
 
-    member x.RunIncrementalBuild() =       
+    member x.RunIncrementalBuild() = 
         try
             jsonReports.Clear()
             localissues.Clear()
@@ -529,6 +537,8 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
             x.Abort <- false            
             x.Project <- project
 
+            x.SonarRunnerPropsFile <- File.ReadAllLines(Path.Combine(x.ProjectRoot, "sonar-project.properties"))
+
             if not(String.IsNullOrEmpty(project.Lang)) then
                 x.RunningLanguageMethod <- LanguageType.SingleLang
             else
@@ -545,6 +555,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
             x.Conf <- conf
             x.Version <- version
             x.Abort <- false
+            x.SonarRunnerPropsFile <- File.ReadAllLines(Path.Combine(x.ProjectRoot, "sonar-project.properties"))
 
             if not(String.IsNullOrEmpty(project.Lang)) then
                 x.RunningLanguageMethod <- LanguageType.SingleLang
@@ -562,6 +573,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
             x.Conf <- conf
             x.Version <- version
             x.Abort <- false
+            x.SonarRunnerPropsFile <- File.ReadAllLines(Path.Combine(x.ProjectRoot, "sonar-project.properties"))
 
             if project.Lang = null then
                 x.RunningLanguageMethod <- LanguageType.MultiLang
