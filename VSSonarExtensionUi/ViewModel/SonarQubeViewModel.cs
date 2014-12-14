@@ -610,8 +610,6 @@ namespace VSSonarExtensionUi.ViewModel
 
             if (this.ResourceInEditor == null)
             {
-                this.ErrorMessage = "Cannot Find File in Server";
-                this.Logger.WriteMessage("Cannot See File In Sonar Server: " + fullName);
                 return;
             }
 
