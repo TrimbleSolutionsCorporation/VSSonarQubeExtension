@@ -512,6 +512,8 @@ namespace VSSonarQubeExtension.Helpers
                 return string.Empty;
             }
         }
+
+
         /// <summary>
         ///     The restart visual studio.
         /// </summary>
@@ -544,6 +546,16 @@ namespace VSSonarQubeExtension.Helpers
 
             diff.OpenComparisonWindow(tempfile, documentInViewPath);
         }
+
+        public void ClearDiffFile(string fileName)
+        {
+            string tempfile = Path.Combine(this.TempDataFolder, fileName);
+            if (File.Exists(tempfile))
+            {
+                File.Delete(tempfile);
+            }
+        }
+
 
         /// <summary>
         /// The get vs project item.

@@ -1151,5 +1151,13 @@ namespace VSSonarExtensionUi.ViewModel
         #endregion
 
         private readonly IConfigurationHelper configurationHelper;
+
+        public void ClosedWindow(string fullName)
+        {
+            if (this.ServerViewModel != null)
+            {
+                this.ServerViewModel.UpdateOpenDiffWindowList(fullName);
+            }
+        }
     }
 }

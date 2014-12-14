@@ -76,6 +76,7 @@ namespace VSSonarQubeExtension.Helpers
             this.SolutionEvents.SolutionEvents.Opened += this.SolutionOpened;
             this.SolutionEvents.SolutionEvents.AfterClosing += this.SolutionClosed;
             this.SolutionEvents.WindowEvents.WindowActivated += this.WindowActivated;
+            this.SolutionEvents.WindowEvents.WindowClosing += this.WindowClosed;
             this.DocumentsEvents.DocumentSaved += this.DoumentSaved;
             this.visualStudioEvents.OnStartupComplete += this.CloseToolWindows;
 
@@ -233,6 +234,19 @@ namespace VSSonarQubeExtension.Helpers
             SonarQubeViewModelFactory.SQViewModel.UpdateTheme(
                 VsSonarExtensionPackage.ToMediaColor(defaultBackground), 
                 VsSonarExtensionPackage.ToMediaColor(defaultForeground));
+        }
+
+        private void WindowClosed(Window window)
+        {
+            if (window.Kind != "Document")
+            {
+                return;
+            }
+
+            if (window.Document == null)
+            {
+                SonarQubeViewModelFactory.SQViewModel.ClosedWindow(window.Caption);
+            }
         }
 
         /// <summary>

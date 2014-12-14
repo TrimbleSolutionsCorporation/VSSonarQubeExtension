@@ -17,6 +17,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.IO;
     using System.Linq;
     using System.Windows.Media;
 
@@ -103,6 +104,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.config = config;
 
             this.Header = "Server Analysis";
+            this.AlreadyOpenDiffs = new SortedSet<string>();
             this.IssuesGridView = new IssueGridViewModel(sonarQubeViewModel, true, "ServerView");
             this.InitCommanding();
 
@@ -441,6 +443,13 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             if (this.ResourceInEditor != null && this.DocumentInView != null)
             {
+                if (this.AlreadyOpenDiffs.Contains(Path.GetFileName(this.DocumentInView)))
+                {
+                    return;
+                }
+
+                this.AlreadyOpenDiffs.Add(Path.GetFileName(this.DocumentInView));
+
                 try
                 {
                     this.vsenvironmenthelper.ShowSourceDiff(this.localEditorCache.GetSourceForResource(this.ResourceInEditor), this.DocumentInView);
@@ -453,6 +462,26 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             }
         }
 
+        public SortedSet<string> AlreadyOpenDiffs { get; set; }
+
         #endregion
+
+        public void UpdateOpenDiffWindowList(string fullName)
+        {
+            string[] delimiters = new string[] { "vs." };
+
+            var files = fullName.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+
+            if (files.Count() != 2)
+            {
+                return;
+            }
+
+            if (this.AlreadyOpenDiffs.Contains(files[1].Trim()))
+            {
+                this.AlreadyOpenDiffs.Remove(files[1].Trim());
+                this.vsenvironmenthelper.ClearDiffFile(files[0].Trim());
+            }
+        }
     }
 }

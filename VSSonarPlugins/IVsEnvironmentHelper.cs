@@ -268,5 +268,7 @@ namespace VSSonarPlugins
         /// The <see cref="string"/>.
         /// </returns>
         string ReadSavedOption(string category, string page, string item);
+
+        void ClearDiffFile(string s);
     }
 }
