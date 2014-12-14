@@ -747,6 +747,19 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.FilterClearAllCommand = new RelayCommand<object>(this.OnFilterClearAllCommand);
         }
 
+        public void UpdateVsService(IVsEnvironmentHelper service)
+        {
+            if (this.ContextMenuItems == null)
+            {
+                return;
+            }
+
+            foreach (var menu in this.ContextMenuItems)
+            {
+                menu.UpdateServices(service);
+            }
+        }
+
         /// <summary>
         /// The on clear clear filter term rule command.
         /// </summary>

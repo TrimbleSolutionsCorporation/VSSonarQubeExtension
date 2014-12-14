@@ -55,7 +55,7 @@ namespace VSSonarExtensionUi.Menu
         /// <summary>
         /// The vs helper.
         /// </summary>
-        private readonly IVsEnvironmentHelper visualStudioHelper;
+        private IVsEnvironmentHelper visualStudioHelper;
 
         #endregion
 
@@ -110,6 +110,15 @@ namespace VSSonarExtensionUi.Menu
         /// Gets or sets the sub items.
         /// </summary>
         public ObservableCollection<IMenuItem> SubItems { get; set; }
+
+        public void UpdateServices(IVsEnvironmentHelper vsHelper)
+        {
+            this.visualStudioHelper = vsHelper;
+            foreach (var menuItem in this.SubItems)
+            {
+                menuItem.UpdateServices(vsHelper);
+            }
+        }
 
         #endregion
 

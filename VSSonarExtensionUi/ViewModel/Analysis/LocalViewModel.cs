@@ -518,6 +518,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.StatusBar = statusBar;
             this.ServiceProvier = provider;
             this.IssuesGridView.Vsenvironmenthelper = vsenvironmenthelperIn;
+
+            this.IssuesGridView.UpdateVsService(this.Vsenvironmenthelper);
         }
 
         #endregion

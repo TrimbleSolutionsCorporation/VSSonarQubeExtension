@@ -17,6 +17,8 @@ namespace VSSonarExtensionUi.Menu
     using System.Collections.ObjectModel;
     using System.Windows.Input;
 
+    using VSSonarPlugins;
+
     /// <summary>
     ///     The MenuItem interface.
     /// </summary>
@@ -43,6 +45,8 @@ namespace VSSonarExtensionUi.Menu
         ///     Gets or sets the sub items.
         /// </summary>
         ObservableCollection<IMenuItem> SubItems { get; set; }
+
+        void UpdateServices(IVsEnvironmentHelper vsHelper);
 
         #endregion
     }

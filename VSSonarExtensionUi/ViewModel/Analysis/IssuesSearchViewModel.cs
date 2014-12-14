@@ -610,6 +610,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.ServiceProvier = provider;
 
             this.IssuesGridView.Vsenvironmenthelper = vsenvironmenthelperIn;
+            this.IssuesGridView.UpdateVsService(this.visualStudioHelper);
         }
 
         #endregion

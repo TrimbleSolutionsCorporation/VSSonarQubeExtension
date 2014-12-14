@@ -100,6 +100,10 @@ namespace VSSonarExtensionUi.Menu
         /// </summary>
         public ObservableCollection<IMenuItem> SubItems { get; set; }
 
+        public void UpdateServices(IVsEnvironmentHelper vsHelper)
+        {
+        }
+
         #endregion
 
         #region Public Methods and Operators

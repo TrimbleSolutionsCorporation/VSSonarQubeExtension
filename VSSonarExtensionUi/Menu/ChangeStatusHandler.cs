@@ -28,6 +28,8 @@ namespace VSSonarExtensionUi.Menu
     using VSSonarExtensionUi.ViewModel;
     using VSSonarExtensionUi.ViewModel.Helpers;
 
+    using VSSonarPlugins;
+
     /// <summary>
     ///     The issue handler menu.
     /// </summary>
@@ -98,6 +100,10 @@ namespace VSSonarExtensionUi.Menu
         /// Gets or sets the sub items.
         /// </summary>
         public ObservableCollection<IMenuItem> SubItems { get; set; }
+
+        public void UpdateServices(IVsEnvironmentHelper vsHelper)
+        {
+        }
 
         #endregion
 
