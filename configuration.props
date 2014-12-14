@@ -11,9 +11,9 @@
         
         <!-- Version settings -->
         <MajorVersionNumber           Condition="'$(MajorVersionNumber)'==''">1</MajorVersionNumber>
-        <MinorVersionNumber           Condition="'$(MinorVersionNumber)'==''">4</MinorVersionNumber>
-        <BuildNumber                  Condition="'$(BuildNumber)'==''">2</BuildNumber>
-        <RevisionNumber               Condition="'$(RevisionNumber)'==''">1</RevisionNumber>
+        <MinorVersionNumber           Condition="'$(MinorVersionNumber)'==''">5</MinorVersionNumber>
+        <BuildNumber                  Condition="'$(BuildNumber)'==''">0</BuildNumber>
+        <RevisionNumber               Condition="'$(RevisionNumber)'==''">0</RevisionNumber>
         <AssemblyPatcherTaskOn        Condition="'$(AssemblyPatcherTaskOn)'==''">false</AssemblyPatcherTaskOn>
         <UnitTestsDisabled            Condition="'$(UnitTestsDisabled)'==''">true</UnitTestsDisabled>
         
