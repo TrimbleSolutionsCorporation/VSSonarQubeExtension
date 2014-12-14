@@ -45,9 +45,16 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         {
             this.model = model;
 
-            if (File.Exists(this.userRoamingFile))
+            try
             {
-                File.Delete(this.userRoamingFile);
+                if (File.Exists(this.userRoamingFile))
+                {
+                    File.Delete(this.userRoamingFile);
+                }
+            }
+            catch (Exception error)
+            {
+                Debug.WriteLine(error.Message);
             }
         }
 
