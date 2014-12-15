@@ -1,44 +1,44 @@
 ﻿<UserControl
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-             xmlns:command="http://www.galasoft.ch/mvvmlight"
-             x:Class="VSSonarExtensionUi.View.Configuration.PluginManagerView" 
-             mc:Ignorable="d" d:DesignHeight="400" d:DesignWidth="800">
+    xmlns:command="http://www.galasoft.ch/mvvmlight"
+    x:Class="VSSonarExtensionUi.View.Configuration.PluginManagerView"
+    mc:Ignorable="d" d:DesignHeight="400" d:DesignWidth="800">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/Styles.xaml"/>
-                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/DataGridStyles.xaml"/>                
+                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/Styles.xaml" />
+                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/DataGridStyles.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
-                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/ButtonStyles.xaml"/>
-            </ResourceDictionary.MergedDictionaries>        	
+                <ResourceDictionary
+                    Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/ButtonStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
     <UserControl.Background>
-        <SolidColorBrush Color="{Binding BackGroundColor, FallbackValue=White}"/>
+        <SolidColorBrush Color="{Binding BackGroundColor, FallbackValue=White}" />
     </UserControl.Background>
 
     <UserControl.Foreground>
-        <SolidColorBrush Color="{Binding ForeGroundColor, FallbackValue=Black}"/>
+        <SolidColorBrush Color="{Binding ForeGroundColor, FallbackValue=Black}" />
     </UserControl.Foreground>
     <Grid>
-		<ScrollViewer>
-			<Grid Height="auto" >
-				<Grid.RowDefinitions>
-					<RowDefinition Height="25*"/>
-                    <RowDefinition Height="200"/>
-					<RowDefinition Height="30"/>
-
-				</Grid.RowDefinitions>							
+        <ScrollViewer>
+            <Grid Height="auto">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="25*" />
+                    <RowDefinition Height="25*" />
+                </Grid.RowDefinitions>
                 <DataGrid Background="Transparent"
-                          Grid.Row="0"
+                          Grid.Row="1"
                           SelectedItem="{Binding SelectedPlugin}"
                           ItemsSource="{Binding PluginList}"
                           AutoGenerateColumns="False"
@@ -50,41 +50,43 @@
                           BorderThickness="1"
                           ColumnHeaderHeight="20"
                           HeadersVisibility="Column"
-                          RowHeaderWidth="0" >
+                          RowHeaderWidth="0">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
-                        <command:EventToCommand Command="{Binding SelectionChangedCommand}" />
-                    </i:EventTrigger>
-                        </i:Interaction.Triggers>
+                            <command:EventToCommand Command="{Binding SelectionChangedCommand}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                     <DataGrid.Columns>
-						<DataGridTextColumn Binding="{Binding Name}" Header="Name   " IsReadOnly="True"/>
-						<DataGridTextColumn Binding="{Binding SupportedExtensions}" Header="Supported Extensions   " IsReadOnly="True"/>
-						<DataGridTextColumn Binding="{Binding Description}" Header="Description   " IsReadOnly="True"/>
-						<DataGridCheckBoxColumn Binding="{Binding Enabled}" Header="Enabled   " IsReadOnly="False" />
-						<DataGridTextColumn Binding="{Binding Version}" Header="Version   " IsReadOnly="True" />
-						<DataGridTextColumn Binding="{Binding Status}" Header="Status   " IsReadOnly="True" />
-					</DataGrid.Columns>											
-				</DataGrid>
-                <ScrollViewer IsEnabled="{Binding CanModifyPluginProps}" Grid.Column="0" Grid.Row="1" BorderBrush="Black"  Content="{Binding OptionsInView}"></ScrollViewer>
-				<StackPanel Grid.Row="2" Orientation="Horizontal">
-	                <Button 
-                            Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-				            Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"                    
-                            Style="{StaticResource MyMetroButton}"
-                            Content="New" Command="{Binding InstallNewPlugin}" />
-                    <Button 
+                        <DataGridTextColumn Binding="{Binding Name}" Header="Name   " IsReadOnly="True" />
+                        <DataGridTextColumn Binding="{Binding SupportedExtensions}" Header="Supported Extensions   "
+                                            IsReadOnly="True" />
+                        <DataGridTextColumn Binding="{Binding Description}" Header="Description   " IsReadOnly="True" />
+                        <DataGridCheckBoxColumn Binding="{Binding Enabled}" Header="Enabled   " IsReadOnly="False" />
+                        <DataGridTextColumn Binding="{Binding Version}" Header="Version   " IsReadOnly="True" />
+                        <DataGridTextColumn Binding="{Binding Status}" Header="Status   " IsReadOnly="True" />
+                    </DataGrid.Columns>
+                </DataGrid>
+                <ScrollViewer IsEnabled="{Binding CanModifyPluginProps}" Grid.Column="0" Grid.Row="2"
+                              BorderBrush="Black" Content="{Binding OptionsInView}" />
+                <StackPanel Grid.Row="0" Orientation="Horizontal">
+                    <Button
                         Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-				        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"                    
+                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                        Style="{StaticResource MyMetroButton}"
+                        Content="New" Command="{Binding InstallNewPlugin}" />
+                    <Button
+                        Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
                         Style="{StaticResource MyMetroButton}"
                         Content="Restart" Command="{Binding RestartVs}" />
-                    <Button 
+                    <Button
                         IsEnabled="{Binding PluginIsSelected}"
                         Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-				        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"                    
+                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
                         Style="{StaticResource MyMetroButton}"
-                        Content="Remove" Command="{Binding RemovePlugin}" />					
-				</StackPanel>
-			</Grid>
-		</ScrollViewer>
-	</Grid>
+                        Content="Remove" Command="{Binding RemovePlugin}" />
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
 </UserControl>
