@@ -16,6 +16,8 @@ namespace VSSonarExtensionUi.Menu
 {
     using System;
     using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Windows;
     using System.Windows.Input;
 
     using ExtensionTypes;
@@ -35,42 +37,24 @@ namespace VSSonarExtensionUi.Menu
     /// </summary>
     internal class ChangeStatusHandler : IMenuItem
     {
-        #region Fields
-
-        /// <summary>
-        /// The config.
-        /// </summary>
-        private readonly ISonarConfiguration config;
-
-        /// <summary>
-        /// The model.
-        /// </summary>
-        private readonly IssueGridViewModel model;
-
-        /// <summary>
-        /// The rest.
-        /// </summary>
-        private readonly ISonarRestService rest;
-
-        #endregion
-
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ChangeStatusHandler"/> class.
+        ///     Initializes a new instance of the <see cref="ChangeStatusHandler" /> class.
         /// </summary>
         /// <param name="config">
-        /// The config.
+        ///     The config.
         /// </param>
         /// <param name="rest">
-        /// The rest.
+        ///     The rest.
         /// </param>
         /// <param name="model">
-        /// The model.
+        ///     The model.
         /// </param>
-        private ChangeStatusHandler(ISonarConfiguration config, ISonarRestService rest, IssueGridViewModel model)
+        private ChangeStatusHandler(ISonarConfiguration config, ISonarRestService rest, IssueGridViewModel model, SonarQubeViewModel mainModel)
         {
             this.model = model;
+            this.mainModel = mainModel;
             this.rest = rest;
             this.config = config;
             this.AssociatedCommand = new RelayCommand(this.OnAssociateCommand);
@@ -79,58 +63,30 @@ namespace VSSonarExtensionUi.Menu
 
         #endregion
 
-        #region Public Properties
-
-        /// <summary>
-        /// Gets or sets the associated command.
-        /// </summary>
-        public ICommand AssociatedCommand { get; set; }
-
-        /// <summary>
-        /// Gets or sets the command text.
-        /// </summary>
-        public string CommandText { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether is enabled.
-        /// </summary>
-        public bool IsEnabled { get; set; }
-
-        /// <summary>
-        /// Gets or sets the sub items.
-        /// </summary>
-        public ObservableCollection<IMenuItem> SubItems { get; set; }
-
-        public void UpdateServices(IVsEnvironmentHelper vsHelper)
-        {
-        }
-
-        #endregion
-
         #region Public Methods and Operators
 
         /// <summary>
-        /// The make menu.
+        ///     The make menu.
         /// </summary>
         /// <param name="config">
-        /// The config.
+        ///     The config.
         /// </param>
         /// <param name="rest">
-        /// The rest.
+        ///     The rest.
         /// </param>
         /// <param name="model">
-        /// The model.
+        ///     The model.
         /// </param>
         /// <returns>
-        /// The <see cref="IMenuItem"/>.
+        ///     The <see cref="IMenuItem" />.
         /// </returns>
-        public static IMenuItem MakeMenu(ISonarConfiguration config, ISonarRestService rest, IssueGridViewModel model)
+        public static IMenuItem MakeMenu(ISonarConfiguration config, ISonarRestService rest, IssueGridViewModel model, SonarQubeViewModel mainModel)
         {
-            var topLel = new ChangeStatusHandler(config, rest, model) { CommandText = "Status", IsEnabled = false };
+            var topLel = new ChangeStatusHandler(config, rest, model, mainModel) { CommandText = "Status", IsEnabled = false };
 
-            topLel.SubItems.Add(new ChangeStatusHandler(config, rest, model) { CommandText = "Confirm", IsEnabled = true });
-            topLel.SubItems.Add(new ChangeStatusHandler(config, rest, model) { CommandText = "Fix", IsEnabled = true });
-            topLel.SubItems.Add(new ChangeStatusHandler(config, rest, model) { CommandText = "False Positive", IsEnabled = true });
+            topLel.SubItems.Add(new ChangeStatusHandler(config, rest, model, mainModel) { CommandText = "Confirm", IsEnabled = true });
+            topLel.SubItems.Add(new ChangeStatusHandler(config, rest, model, mainModel) { CommandText = "Fix", IsEnabled = true });
+            topLel.SubItems.Add(new ChangeStatusHandler(config, rest, model, mainModel) { CommandText = "False Positive", IsEnabled = true });
             return topLel;
         }
 
@@ -139,7 +95,7 @@ namespace VSSonarExtensionUi.Menu
         #region Methods
 
         /// <summary>
-        /// The on associate command.
+        ///     The on associate command.
         /// </summary>
         private void OnAssociateCommand()
         {
@@ -147,26 +103,102 @@ namespace VSSonarExtensionUi.Menu
             {
                 if (this.CommandText.Equals("False Positive"))
                 {
-                    this.rest.MarkIssuesAsFalsePositive(this.config, this.model.SelectedItems, string.Empty);
-                    this.model.RefreshView();
+                    var bw = new BackgroundWorker { WorkerReportsProgress = false };
+                    bw.RunWorkerCompleted += delegate { Application.Current.Dispatcher.Invoke(delegate { this.mainModel.IsExtensionBusy = false; }); };
+
+                    bw.DoWork += delegate
+                        {
+                            this.mainModel.IsExtensionBusy = true;
+                            this.rest.MarkIssuesAsFalsePositive(this.config, this.model.SelectedItems, string.Empty);
+                            this.model.RefreshView();
+                        };
+
+                    bw.RunWorkerAsync();
                 }
 
                 if (this.CommandText.Equals("Confirm"))
                 {
-                    this.rest.ConfirmIssues(this.config, this.model.SelectedItems, string.Empty);
-                    this.model.RefreshView();
+                    var bw = new BackgroundWorker { WorkerReportsProgress = false };
+                    bw.RunWorkerCompleted += delegate { Application.Current.Dispatcher.Invoke(delegate { this.mainModel.IsExtensionBusy = false; }); };
+
+                    bw.DoWork += delegate
+                    {
+                        this.mainModel.IsExtensionBusy = true;
+                        this.rest.ConfirmIssues(this.config, this.model.SelectedItems, string.Empty);
+                        this.model.RefreshView();
+                    };
+
+                    bw.RunWorkerAsync();
                 }
 
                 if (this.CommandText.Equals("Fix"))
                 {
-                    this.rest.ResolveIssues(this.config, this.model.SelectedItems, string.Empty);
-                    this.model.RefreshView();
+                    var bw = new BackgroundWorker { WorkerReportsProgress = false };
+                    bw.RunWorkerCompleted += delegate { Application.Current.Dispatcher.Invoke(delegate { this.mainModel.IsExtensionBusy = false; }); };
+
+                    bw.DoWork += delegate
+                    {
+                        this.mainModel.IsExtensionBusy = true;
+                        this.rest.ResolveIssues(this.config, this.model.SelectedItems, string.Empty);
+                        this.model.RefreshView();
+                    };
+
+                    bw.RunWorkerAsync();
                 }
             }
             catch (Exception ex)
             {
                 UserExceptionMessageBox.ShowException("Cannot Modify Status Of Issues", ex);
             }
+        }
+
+        #endregion
+
+        #region Fields
+
+        /// <summary>
+        ///     The config.
+        /// </summary>
+        private readonly ISonarConfiguration config;
+
+        /// <summary>
+        ///     The model.
+        /// </summary>
+        private readonly IssueGridViewModel model;
+
+        /// <summary>
+        ///     The rest.
+        /// </summary>
+        private readonly ISonarRestService rest;
+
+        private readonly SonarQubeViewModel mainModel;
+
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>
+        ///     Gets or sets the associated command.
+        /// </summary>
+        public ICommand AssociatedCommand { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the command text.
+        /// </summary>
+        public string CommandText { get; set; }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether is enabled.
+        /// </summary>
+        public bool IsEnabled { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the sub items.
+        /// </summary>
+        public ObservableCollection<IMenuItem> SubItems { get; set; }
+
+        public void UpdateServices(IVsEnvironmentHelper vsHelper)
+        {
         }
 
         #endregion

@@ -731,7 +731,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                                    this.model.VSonarQubeOptionsViewData.GeneralConfigurationViewModel
                                    .UserConnectionConfig, 
                                    this.model.SonarRestConnector, 
-                                   this), 
+                                   this, this.model), 
                                OpenResourceMenu.MakeMenu(
                                    this.model.VSonarQubeOptionsViewData.GeneralConfigurationViewModel
                                    .UserConnectionConfig, 
