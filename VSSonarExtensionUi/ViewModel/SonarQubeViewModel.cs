@@ -1002,27 +1002,31 @@ namespace VSSonarExtensionUi.ViewModel
                 this.OpenSolutionName = this.configurationHelper.ReadOptionFromApplicationData(this.SelectedProject.Key, "PROJECTNAME");
             }
 
+            RefreshConfigurationInPlugins();
+
+            this.ErrorMessage = "Associated";
+            this.IsAssociated = true;
+        }
+
+        public void RefreshConfigurationInPlugins()
+        {
             foreach (IAnalysisViewModelBase analyser in
                 (from IViewModelBase sonarQubeView in this.SonarQubeViews select sonarQubeView).OfType<IAnalysisViewModelBase>())
             {
                 analyser.InitDataAssociation(
-                    this.AssociatedProject, 
-                    this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, 
+                    this.AssociatedProject,
+                    this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig,
                     this.OpenSolutionPath);
             }
 
             foreach (IOptionsViewModelBase option in
-                (from IViewModelBase sonarQubeView in this.VSonarQubeOptionsViewData.AvailableOptions select sonarQubeView)
-                    .OfType<IOptionsViewModelBase>())
+                (from IViewModelBase sonarQubeView in this.VSonarQubeOptionsViewData.AvailableOptions select sonarQubeView).OfType<IOptionsViewModelBase>())
             {
                 option.InitDataAssociation(
-                    this.AssociatedProject, 
-                    this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, 
+                    this.AssociatedProject,
+                    this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig,
                     this.OpenSolutionPath);
             }
-
-            this.ErrorMessage = "Associated";
-            this.IsAssociated = true;
         }
 
         /// <summary>

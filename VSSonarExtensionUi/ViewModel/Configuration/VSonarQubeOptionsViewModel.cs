@@ -488,6 +488,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 }
             }
 
+            this.model.RefreshConfigurationInPlugins();
+
             this.OnRequestClose(this, "Exit");
         }
 
