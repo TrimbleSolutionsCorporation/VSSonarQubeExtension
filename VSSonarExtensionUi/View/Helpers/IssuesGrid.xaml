@@ -118,7 +118,8 @@
           CanUserDeleteRows="False"
           CanUserResizeRows="True"
           CanUserSortColumns="True"
-          CanUserReorderColumns="True" >
+          CanUserReorderColumns="True" 
+          SelectedIndex="{Binding SelectedIndex}">
             <DataGrid.InputBindings>
                 <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding OpenInVsCommand}" CommandParameter="{Binding SelectedItems, ElementName=Datagrid}" />
             </DataGrid.InputBindings>

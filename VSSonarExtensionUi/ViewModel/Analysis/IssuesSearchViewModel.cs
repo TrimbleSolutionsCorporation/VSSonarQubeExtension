@@ -197,6 +197,10 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         public ICommand GetIssuesByFilterCommand { get; set; }
 
+        public ICommand GoToPrevIssueCommand { get; set; }
+
+        public ICommand GoToNextIssueCommand { get; set; }
+
         /// <summary>
         ///     Gets or sets the get my issues in project command.
         /// </summary>
@@ -743,6 +747,9 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             this.CanQUeryIssues = false;
             this.GetIssuesByFilterCommand = new RelayCommand(this.OnGetIssuesByFilterCommand);
+            this.GoToPrevIssueCommand = new RelayCommand(this.OnGoToPrevIssueCommand);
+            this.GoToNextIssueCommand = new RelayCommand(this.OnGoToNextIssueCommand);
+
             this.GetAllIssuesFromProjectCommand = new RelayCommand(this.OnGetAllIssuesInProject);
             this.GetAllIssuesSinceLastAnalysisCommand = new RelayCommand(this.OnGetAllIssuesSinceLastAnalysisCommand);
             this.GetMyIssuesInProjectCommand = new RelayCommand(this.OnGetMyIssuesInProjectCommand);
@@ -847,6 +854,16 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                     };
 
             bw.RunWorkerAsync();
+        }
+
+        private void OnGoToNextIssueCommand()
+        {
+            this.IssuesGridView.GoToNextIssue();
+        }
+
+        private void OnGoToPrevIssueCommand()
+        {
+            this.IssuesGridView.GoToPrevIssue();
         }
 
         /// <summary>

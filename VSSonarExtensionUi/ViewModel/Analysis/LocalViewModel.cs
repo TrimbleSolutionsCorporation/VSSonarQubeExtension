@@ -298,6 +298,12 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
 
         public ICommand OpenLogCommand { get; set; }
 
+        public ICommand GoToPrevIssueCommand { get; set; }
+
+        public ICommand GoToNextIssueCommand { get; set; }
+
+        
+
         /// <summary>
         ///     Gets or sets the vsenvironmenthelper.
         /// </summary>
@@ -542,9 +548,21 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.AnalysisCommand = new RelayCommand(this.OnAnalysisCommand);
             this.StopLocalAnalysisCommand = new RelayCommand(this.OnStopLocalAnalysisCommand);
             this.OpenLogCommand = new RelayCommand(this.OnOpenLogCommand);
+            this.GoToPrevIssueCommand = new RelayCommand(this.OnGoToPrevIssueCommand);
+            this.GoToNextIssueCommand = new RelayCommand(this.OnGoToNextIssueCommand);
 
             this.FlyoutLogViewerCommand = new RelayCommand(this.OnFlyoutLogViewerCommand);
             this.CloseFlyoutLogViewerCommand = new RelayCommand(this.OnCloseFlyoutLogViewerCommand);
+        }
+
+        private void OnGoToNextIssueCommand()
+        {
+            this.IssuesGridView.GoToNextIssue();
+        }
+
+        private void OnGoToPrevIssueCommand()
+        {
+            this.IssuesGridView.GoToPrevIssue();
         }
 
         /// <summary>

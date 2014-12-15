@@ -1,298 +1,385 @@
 ﻿<UserControl
-	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-	xmlns:helpers="clr-namespace:VSSonarExtensionUi.View.Helpers"
-	xmlns:viewModel="clr-namespace:VSSonarExtensionUi.ViewModel.Helpers"
-	mc:Ignorable="d"
-	x:Class="VSSonarExtensionUi.View.Analysis.IssueSearchView"
-	x:Name="UserControl"
-	d:DesignWidth="640" d:DesignHeight="480">
+    xmlns:helpers="clr-namespace:VSSonarExtensionUi.View.Helpers"
+    xmlns:viewModel="clr-namespace:VSSonarExtensionUi.ViewModel.Helpers"
+    mc:Ignorable="d"
+    x:Class="VSSonarExtensionUi.View.Analysis.IssueSearchView"
+    x:Name="UserControl"
+    d:DesignWidth="640" d:DesignHeight="480">
 
-	<UserControl.Resources>
-		<ResourceDictionary>
-			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/Styles.xaml" />
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/Styles.xaml" />
 
-				<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
-				<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
-				<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
-				<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
-				<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
 
-				<ResourceDictionary Source="pack://application:,,,/VSSonarExtensionUi;component/Resources/Icons.xaml" />
-                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/ButtonStyles.xaml"/>
-			</ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/VSSonarExtensionUi;component/Resources/Icons.xaml" />
+                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/ButtonStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
 
 
             <DataTemplate DataType="{x:Type viewModel:IssueGridViewModel}">
-				<helpers:IssuesGrid />
-			</DataTemplate>
+                <helpers:IssuesGrid />
+            </DataTemplate>
 
 
-			<DataTemplate x:Key="UserSelectionComboBoxDataTemplate">
-				<StackPanel>
-					<TextBlock Text="{Binding Name}" />
-				</StackPanel>
-			</DataTemplate>
-		</ResourceDictionary>
-	</UserControl.Resources>
+            <DataTemplate x:Key="UserSelectionComboBoxDataTemplate">
+                <StackPanel>
+                    <TextBlock Text="{Binding Name}" />
+                </StackPanel>
+            </DataTemplate>
+        </ResourceDictionary>
+    </UserControl.Resources>
 
- <UserControl.Background>
-   <SolidColorBrush Color="{Binding BackGroundColor}"/>
-</UserControl.Background>
+    <UserControl.Background>
+        <SolidColorBrush Color="{Binding BackGroundColor}" />
+    </UserControl.Background>
 
     <UserControl.Foreground>
-   <SolidColorBrush Color="{Binding ForeGroundColor}"/>
-</UserControl.Foreground>  
-    
-	<DockPanel>
-		<controls:FlyoutsControl Foreground="{Binding ForeGround, Converter={StaticResource ColorToBrushConverter}}" Background="{Binding BackGround, Converter={StaticResource ColorToBrushConverter}}" Height="{Binding SizeOfFlyout}" DockPanel.Dock="Top">
-			<controls:Flyout Foreground="{Binding ForeGround, Converter={StaticResource ColorToBrushConverter}}" Background="{Binding BackGround, Converter={StaticResource ColorToBrushConverter}}"  IsOpen="{Binding ShowFlyouts}" Height="{Binding SizeOfFlyout}" Header="" Position="Top">
-				<ScrollViewer x:Name="ControlPanel">
-					<StackPanel>
-						<Grid Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}">
-							<Grid.RowDefinitions>
-								<RowDefinition Height="20*" />
-								<RowDefinition Height="20*" />
-								<RowDefinition Height="20*" />
-								<RowDefinition Height="20*" />
-								<RowDefinition Height="20*" />
-								<RowDefinition Height="20*" />
-								<RowDefinition Height="20*" />
-								<RowDefinition Height="20*" />
-							</Grid.RowDefinitions>
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="20*" />
-								<ColumnDefinition Width="20*" />
-							</Grid.ColumnDefinitions>
-                            
-							<Expander Header="Users" Grid.Row="5" Grid.ColumnSpan="2"
-							          Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
-								<Grid Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Height="50">
-									<Grid.RowDefinitions>
-										<RowDefinition Height="25" />
-										<RowDefinition Height="25" />
-									</Grid.RowDefinitions>
-									<Grid.ColumnDefinitions>
-										<ColumnDefinition Width="60" />
-										<ColumnDefinition Width="20*" />
-										<ColumnDefinition Width="25" />
-									</Grid.ColumnDefinitions>
-									<Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Content="Reporter" />
-									<Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Grid.Row="1" Grid.Column="0"
-									       Content="Assignee" />
-									<ComboBox Grid.Row="0" Grid.Column="1" IsTextSearchEnabled="True"
-									          SelectedItem="{Binding Reporter, Mode=TwoWay}" ItemsSource="{Binding UsersList}"
-									          MaxDropDownHeight="101" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-									          ItemTemplate="{DynamicResource UserSelectionComboBoxDataTemplate}" />
-									<ComboBox Grid.Row="1" Grid.Column="1" IsTextSearchEnabled="True"
-									          SelectedItem="{Binding Assignee, Mode=TwoWay}" ItemsSource="{Binding UsersList}"
-									          MaxDropDownHeight="101" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-									          ItemTemplate="{DynamicResource UserSelectionComboBoxDataTemplate}" />
-									<CheckBox Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"
-									          IsChecked="{Binding IsReporterChecked}" />
-									<CheckBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"
-									          IsChecked="{Binding IsAssigneeChecked}" />
-								</Grid>
-							</Expander>
+        <SolidColorBrush Color="{Binding ForeGroundColor}" />
+    </UserControl.Foreground>
 
-							<Expander Header="Status" Grid.Row="4" Grid.ColumnSpan="2" Grid.Column="0"
-							          Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
-								<Grid Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Height="125">
-									<Grid.RowDefinitions>
-										<RowDefinition Height="25" />
-										<RowDefinition Height="25" />
-										<RowDefinition Height="25" />
-										<RowDefinition Height="25" />
-										<RowDefinition Height="25" />
-									</Grid.RowDefinitions>
-									<Grid.ColumnDefinitions>
-										<ColumnDefinition Width="80" />
-										<ColumnDefinition Width="20*" />
-										<ColumnDefinition Width="25" />
-									</Grid.ColumnDefinitions>
-									<Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Content="Open" />
-									<Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Grid.Row="1" Grid.Column="0"
-									       Content="Closed" />
-									<Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Grid.Row="2" Grid.Column="0"
-									       Content="Resolved" />
-									<Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Grid.Row="3" Grid.Column="0"
-									       Content="Confirmed" />
-									<Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Grid.Row="4" Grid.Column="0"
-									       Content="Reopened" />
-									<CheckBox Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"
-									          IsChecked="{Binding IsStatusOpenChecked}" />
-									<CheckBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"
-									          IsChecked="{Binding IsStatusClosedChecked}" />
-									<CheckBox Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"
-									          IsChecked="{Binding IsStatusResolvedChecked}" />
-									<CheckBox Grid.Row="3" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"
-									          IsChecked="{Binding IsStatusConfirmedChecked}" />
-									<CheckBox Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"
-									          IsChecked="{Binding IsStatusReopenedChecked}" />
-								</Grid>
-							</Expander>
+    <DockPanel>
+        <controls:FlyoutsControl Foreground="{Binding ForeGround, Converter={StaticResource ColorToBrushConverter}}"
+                                 Background="{Binding BackGround, Converter={StaticResource ColorToBrushConverter}}"
+                                 Height="{Binding SizeOfFlyout}" DockPanel.Dock="Top">
+            <controls:Flyout Foreground="{Binding ForeGround, Converter={StaticResource ColorToBrushConverter}}"
+                             Background="{Binding BackGround, Converter={StaticResource ColorToBrushConverter}}"
+                             IsOpen="{Binding ShowFlyouts}" Height="{Binding SizeOfFlyout}" Header="" Position="Top">
+                <ScrollViewer x:Name="ControlPanel">
+                    <StackPanel>
+                        <Grid Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="20*" />
+                                <RowDefinition Height="20*" />
+                                <RowDefinition Height="20*" />
+                                <RowDefinition Height="20*" />
+                                <RowDefinition Height="20*" />
+                                <RowDefinition Height="20*" />
+                                <RowDefinition Height="20*" />
+                                <RowDefinition Height="20*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="20*" />
+                                <ColumnDefinition Width="20*" />
+                            </Grid.ColumnDefinitions>
 
-							<Expander Header="Severity" Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="0"
-							          Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
-								<Grid Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Height="125">
-									<Grid.RowDefinitions>
-										<RowDefinition Height="25" />
-										<RowDefinition Height="25" />
-										<RowDefinition Height="25" />
-										<RowDefinition Height="25" />
-										<RowDefinition Height="25" />
-									</Grid.RowDefinitions>
-									<Grid.ColumnDefinitions>
-										<ColumnDefinition Width="80" />
-										<ColumnDefinition Width="20*" />
-										<ColumnDefinition Width="25" />
-									</Grid.ColumnDefinitions>
-									<Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Content="Blocker" />
-									<Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Grid.Row="1" Grid.Column="0"
-									       Content="Critical" />
-									<Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Grid.Row="2" Grid.Column="0"
-									       Content="Major" />
-									<Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Grid.Row="3" Grid.Column="0"
-									       Content="Minor" />
-									<Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Grid.Row="4" Grid.Column="0"
-									       Content="Info" />
-									<CheckBox Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"
-									          IsChecked="{Binding IsBlockerChecked}" />
-									<CheckBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"
-									          IsChecked="{Binding IsCriticalChecked}" />
-									<CheckBox Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"
-									          IsChecked="{Binding IsMajaorChecked}" />
-									<CheckBox Grid.Row="3" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"
-									          IsChecked="{Binding IsMinorChecked}" />
-									<CheckBox Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"
-									          IsChecked="{Binding IsInfoChecked}" />
-								</Grid>
-							</Expander>
+                            <Expander Header="Users" Grid.Row="5" Grid.ColumnSpan="2"
+                                      Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
+                                <Grid
+                                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                    Height="50">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="25" />
+                                        <RowDefinition Height="25" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="60" />
+                                        <ColumnDefinition Width="20*" />
+                                        <ColumnDefinition Width="25" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Content="Reporter" />
+                                    <Label
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Grid.Row="1" Grid.Column="0"
+                                        Content="Assignee" />
+                                    <ComboBox Grid.Row="0" Grid.Column="1" IsTextSearchEnabled="True"
+                                              SelectedItem="{Binding Reporter, Mode=TwoWay}"
+                                              ItemsSource="{Binding UsersList}"
+                                              MaxDropDownHeight="101"
+                                              Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                              ItemTemplate="{DynamicResource UserSelectionComboBoxDataTemplate}" />
+                                    <ComboBox Grid.Row="1" Grid.Column="1" IsTextSearchEnabled="True"
+                                              SelectedItem="{Binding Assignee, Mode=TwoWay}"
+                                              ItemsSource="{Binding UsersList}"
+                                              MaxDropDownHeight="101"
+                                              Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                              ItemTemplate="{DynamicResource UserSelectionComboBoxDataTemplate}" />
+                                    <CheckBox Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              IsChecked="{Binding IsReporterChecked}" />
+                                    <CheckBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              IsChecked="{Binding IsAssigneeChecked}" />
+                                </Grid>
+                            </Expander>
 
-							<Expander Header="Resolution" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0"
-							          Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
-								<Grid Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Height="75">
-									<Grid.RowDefinitions>
-										<RowDefinition Height="25" />
-										<RowDefinition Height="25" />
-										<RowDefinition Height="25" />
-									</Grid.RowDefinitions>
-									<Grid.ColumnDefinitions>
-										<ColumnDefinition Width="80" />
-										<ColumnDefinition Width="20*" />
-										<ColumnDefinition Width="25" />
-									</Grid.ColumnDefinitions>
-									<Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Content="False Positive" />
-									<Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Grid.Row="1" Grid.Column="0"
-									       Content="Removed" />
-									<Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Grid.Row="2" Grid.Column="0"
-									       Content="Fixed" />
-									<CheckBox Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"
-									          IsChecked="{Binding IsFalsePositiveChecked}" />
-									<CheckBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"
-									          IsChecked="{Binding IsRemovedChecked}" />
-									<CheckBox Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"
-									          IsChecked="{Binding IsFixedChecked}" />
-								</Grid>
-							</Expander>
-                            
-							<Expander Header="Creation Date" Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0"
-							          Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
-								<Grid Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Height="55">
-									<Grid.RowDefinitions>
-										<RowDefinition Height="25" />
-										<RowDefinition Height="25" />
-									</Grid.RowDefinitions>
-									<Grid.ColumnDefinitions>
-										<ColumnDefinition Width="50" />
-										<ColumnDefinition Width="60*" />
-										<ColumnDefinition Width="25" />
-									</Grid.ColumnDefinitions>
-									<Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Content="Since" />
-									<Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Grid.Row="1" Grid.Column="0"
-									       Content="Before" />
-									<DatePicker SelectedDate="{Binding CreatedSinceDate}" Grid.Row="0" Grid.Column="1" />
-									<DatePicker SelectedDate="{Binding CreatedBeforeDate}" Grid.Row="1" Grid.Column="1" />
-									<CheckBox Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"
-									          IsChecked="{Binding IsDateSinceChecked}" />
-									<CheckBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"
-									          IsChecked="{Binding IsDateBeforeChecked}" />
-								</Grid>
-							</Expander>
-						</Grid>
-					</StackPanel>
-				</ScrollViewer>
-			</controls:Flyout>
-		</controls:FlyoutsControl>
+                            <Expander Header="Status" Grid.Row="4" Grid.ColumnSpan="2" Grid.Column="0"
+                                      Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
+                                <Grid
+                                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                    Height="125">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="25" />
+                                        <RowDefinition Height="25" />
+                                        <RowDefinition Height="25" />
+                                        <RowDefinition Height="25" />
+                                        <RowDefinition Height="25" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="80" />
+                                        <ColumnDefinition Width="20*" />
+                                        <ColumnDefinition Width="25" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Content="Open" />
+                                    <Label
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Grid.Row="1" Grid.Column="0"
+                                        Content="Closed" />
+                                    <Label
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Grid.Row="2" Grid.Column="0"
+                                        Content="Resolved" />
+                                    <Label
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Grid.Row="3" Grid.Column="0"
+                                        Content="Confirmed" />
+                                    <Label
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Grid.Row="4" Grid.Column="0"
+                                        Content="Reopened" />
+                                    <CheckBox Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              IsChecked="{Binding IsStatusOpenChecked}" />
+                                    <CheckBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              IsChecked="{Binding IsStatusClosedChecked}" />
+                                    <CheckBox Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              IsChecked="{Binding IsStatusResolvedChecked}" />
+                                    <CheckBox Grid.Row="3" Grid.Column="2" HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              IsChecked="{Binding IsStatusConfirmedChecked}" />
+                                    <CheckBox Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              IsChecked="{Binding IsStatusReopenedChecked}" />
+                                </Grid>
+                            </Expander>
 
-		<Grid x:Name="LayoutRoot" DockPanel.Dock="Top">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="250" />
-				<ColumnDefinition Width="400*" />
-			</Grid.ColumnDefinitions>
-            
-			<Grid.RowDefinitions>
-				<RowDefinition Height="37" />
+                            <Expander Header="Severity" Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="0"
+                                      Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
+                                <Grid
+                                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                    Height="125">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="25" />
+                                        <RowDefinition Height="25" />
+                                        <RowDefinition Height="25" />
+                                        <RowDefinition Height="25" />
+                                        <RowDefinition Height="25" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="80" />
+                                        <ColumnDefinition Width="20*" />
+                                        <ColumnDefinition Width="25" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Content="Blocker" />
+                                    <Label
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Grid.Row="1" Grid.Column="0"
+                                        Content="Critical" />
+                                    <Label
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Grid.Row="2" Grid.Column="0"
+                                        Content="Major" />
+                                    <Label
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Grid.Row="3" Grid.Column="0"
+                                        Content="Minor" />
+                                    <Label
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Grid.Row="4" Grid.Column="0"
+                                        Content="Info" />
+                                    <CheckBox Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              IsChecked="{Binding IsBlockerChecked}" />
+                                    <CheckBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              IsChecked="{Binding IsCriticalChecked}" />
+                                    <CheckBox Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              IsChecked="{Binding IsMajaorChecked}" />
+                                    <CheckBox Grid.Row="3" Grid.Column="2" HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              IsChecked="{Binding IsMinorChecked}" />
+                                    <CheckBox Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              IsChecked="{Binding IsInfoChecked}" />
+                                </Grid>
+                            </Expander>
+
+                            <Expander Header="Resolution" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0"
+                                      Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
+                                <Grid
+                                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                    Height="75">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="25" />
+                                        <RowDefinition Height="25" />
+                                        <RowDefinition Height="25" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="80" />
+                                        <ColumnDefinition Width="20*" />
+                                        <ColumnDefinition Width="25" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Content="False Positive" />
+                                    <Label
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Grid.Row="1" Grid.Column="0"
+                                        Content="Removed" />
+                                    <Label
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Grid.Row="2" Grid.Column="0"
+                                        Content="Fixed" />
+                                    <CheckBox Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              IsChecked="{Binding IsFalsePositiveChecked}" />
+                                    <CheckBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              IsChecked="{Binding IsRemovedChecked}" />
+                                    <CheckBox Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              IsChecked="{Binding IsFixedChecked}" />
+                                </Grid>
+                            </Expander>
+
+                            <Expander Header="Creation Date" Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0"
+                                      Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
+                                <Grid
+                                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                    Height="55">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="25" />
+                                        <RowDefinition Height="25" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="50" />
+                                        <ColumnDefinition Width="60*" />
+                                        <ColumnDefinition Width="25" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Content="Since" />
+                                    <Label
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Grid.Row="1" Grid.Column="0"
+                                        Content="Before" />
+                                    <DatePicker SelectedDate="{Binding CreatedSinceDate}" Grid.Row="0" Grid.Column="1" />
+                                    <DatePicker SelectedDate="{Binding CreatedBeforeDate}" Grid.Row="1" Grid.Column="1" />
+                                    <CheckBox Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              IsChecked="{Binding IsDateSinceChecked}" />
+                                    <CheckBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              IsChecked="{Binding IsDateBeforeChecked}" />
+                                </Grid>
+                            </Expander>
+                        </Grid>
+                    </StackPanel>
+                </ScrollViewer>
+            </controls:Flyout>
+        </controls:FlyoutsControl>
+
+        <Grid x:Name="LayoutRoot" DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250" />
+                <ColumnDefinition Width="400*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="37" />
                 <RowDefinition Height="35*" />
-			</Grid.RowDefinitions>
+            </Grid.RowDefinitions>
 
             <Grid Grid.Row="0" Grid.ColumnSpan="2">
                 <StatusBar Visibility="{Binding ShowFlyouts, Converter={StaticResource BoolToVis}}"
-				           Grid.Row="0" Grid.ColumnSpan="2" Foreground="{Binding ForeGround, Converter={StaticResource ColorToBrushConverter}}" Background="{Binding BackGround, Converter={StaticResource ColorToBrushConverter}}">
+                           Grid.Row="0" Grid.ColumnSpan="2"
+                           Foreground="{Binding ForeGround, Converter={StaticResource ColorToBrushConverter}}"
+                           Background="{Binding BackGround, Converter={StaticResource ColorToBrushConverter}}">
                     <StatusBarItem HorizontalAlignment="Left">
                         <StackPanel Orientation="Horizontal">
                             <StatusBarItem>
-                                <Button 
+                                <Button
                                     Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
-                                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}" 
-                                        Style="{DynamicResource MyMetroButton}"
-									    
-									        Content="All Issues" Command="{Binding GetAllIssuesFromProjectCommand}" IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}" />
+                                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"
+                                    Style="{DynamicResource MyMetroButton}"
+
+                                    Content="All Issues" Command="{Binding GetAllIssuesFromProjectCommand}"
+                                    IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}" />
                             </StatusBarItem>
                             <StatusBarItem>
-                                <Button Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Style="{DynamicResource MyMetroButton}"
-									        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-									        Content="All Issues Since Last Analysis"
-									        Command="{Binding GetAllIssuesSinceLastAnalysisCommand}" IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}"/>
+                                <Button
+                                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                    Style="{DynamicResource MyMetroButton}"
+                                    Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                    Content="All Issues Since Last Analysis"
+                                    Command="{Binding GetAllIssuesSinceLastAnalysisCommand}"
+                                    IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}" />
                             </StatusBarItem>
                             <StatusBarItem>
-                                <Button Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Style="{DynamicResource MyMetroButton}"
-									        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-									        Content="My Issues In Project"
-									        Command="{Binding GetMyIssuesInProjectCommand}" IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}" />
+                                <Button
+                                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                    Style="{DynamicResource MyMetroButton}"
+                                    Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                    Content="My Issues In Project"
+                                    Command="{Binding GetMyIssuesInProjectCommand}"
+                                    IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}" />
                             </StatusBarItem>
                             <StatusBarItem>
-                                <Button Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Style="{DynamicResource MyMetroButton}"
-									        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-									        Content="All My Issues" Command="{Binding GetAllMyIssuesCommand}" IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}" />
+                                <Button
+                                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                    Style="{DynamicResource MyMetroButton}"
+                                    Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                    Content="All My Issues" Command="{Binding GetAllMyIssuesCommand}"
+                                    IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}" />
                             </StatusBarItem>
                         </StackPanel>
                     </StatusBarItem>
                     <StatusBarItem HorizontalAlignment="Right">
                         <StackPanel Orientation="Horizontal">
                             <StatusBarItem>
-                                <Button Style="{DynamicResource MyMetroButton}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-							        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" 
-							        Content="Get Issues By Filter"
-							        Command="{Binding GetIssuesByFilterCommand}" IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}"/>
+                                <Button Style="{DynamicResource MyMetroButton}"
+                                        Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Content="Get Issues By Filter"
+                                        Command="{Binding GetIssuesByFilterCommand}"
+                                        IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}" />
 
                             </StatusBarItem>
                             <StatusBarItem>
-                                <Button Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Width="30"
-								        Height="30"
-								        Margin="0, -8, 0, 0"
-                                        ToolTip="Show Log"
-								        Style="{DynamicResource MetroCircleButtonStyle}" Command="{Binding CloseFlyoutIssueSearchCommand}">
-                                    <Rectangle  Width="15"
-									           Height="15"
-									           Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
+                                <Button
+                                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                    Width="30"
+                                    Height="30"
+                                    Margin="0, -8, 0, 0"
+                                    ToolTip="Show Log"
+                                    Style="{DynamicResource MetroCircleButtonStyle}"
+                                    Command="{Binding CloseFlyoutIssueSearchCommand}">
+                                    <Rectangle Width="15"
+                                               Height="15"
+                                               Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
                                         <Rectangle.OpacityMask>
                                             <VisualBrush Stretch="Fill"
-											             Visual="{StaticResource appbar_arrow_up}" />
+                                                         Visual="{StaticResource appbar_arrow_up}" />
                                         </Rectangle.OpacityMask>
                                     </Rectangle>
                                 </Button>
@@ -300,59 +387,115 @@
                         </StackPanel>
                     </StatusBarItem>
                 </StatusBar>
-                <StatusBar Visibility="{Binding ShowFlyouts, Converter={StaticResource BoolToVis}, ConverterParameter=Inverted}"
-				           Grid.Row="0" Grid.ColumnSpan="2" Foreground="{Binding ForeGround, Converter={StaticResource ColorToBrushConverter}}" Background="{Binding BackGround, Converter={StaticResource ColorToBrushConverter}}">
+                <StatusBar
+                    Visibility="{Binding ShowFlyouts, Converter={StaticResource BoolToVis}, ConverterParameter=Inverted}"
+                    Grid.Row="0" Grid.ColumnSpan="2"
+                    Foreground="{Binding ForeGround, Converter={StaticResource ColorToBrushConverter}}"
+                    Background="{Binding BackGround, Converter={StaticResource ColorToBrushConverter}}">
                     <StatusBarItem HorizontalAlignment="Left">
                         <StackPanel Orientation="Horizontal">
                             <StatusBarItem>
-                                <Button 
+                                <Button
                                     Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
-                                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}" 
-                                        Style="{DynamicResource MyMetroButton}"
-									    
-									        x:Name="AllIssues" Content="All Issues" Command="{Binding GetAllIssuesFromProjectCommand}" IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}" />
+                                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"
+                                    Style="{DynamicResource MyMetroButton}"
+
+                                    x:Name="AllIssues" Content="All Issues"
+                                    Command="{Binding GetAllIssuesFromProjectCommand}"
+                                    IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}" />
                             </StatusBarItem>
                             <StatusBarItem>
-                                <Button 
-                                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Style="{DynamicResource MyMetroButton}"
-									Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-									        Content="All Issues Since Last Analysis"
-									        Command="{Binding GetAllIssuesSinceLastAnalysisCommand}" IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}"/>
+                                <Button
+                                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                    Style="{DynamicResource MyMetroButton}"
+                                    Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                    Content="All Issues Since Last Analysis"
+                                    Command="{Binding GetAllIssuesSinceLastAnalysisCommand}"
+                                    IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}" />
                             </StatusBarItem>
                             <StatusBarItem>
-                                <Button Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Style="{DynamicResource MyMetroButton}"
-									        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-									        Content="My Issues In Project"
-									        Command="{Binding GetMyIssuesInProjectCommand}" IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}" />
+                                <Button
+                                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                    Style="{DynamicResource MyMetroButton}"
+                                    Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                    Content="My Issues In Project"
+                                    Command="{Binding GetMyIssuesInProjectCommand}"
+                                    IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}" />
                             </StatusBarItem>
                             <StatusBarItem>
-                                <Button Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Style="{DynamicResource MyMetroButton}"
-									        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-									        Content="All My Issues" Command="{Binding GetAllMyIssuesCommand}" IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}" />
+                                <Button
+                                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                    Style="{DynamicResource MyMetroButton}"
+                                    Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                    Content="All My Issues" Command="{Binding GetAllMyIssuesCommand}"
+                                    IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}" />
                             </StatusBarItem>
                         </StackPanel>
                     </StatusBarItem>
                     <StatusBarItem HorizontalAlignment="Right">
                         <StackPanel Orientation="Horizontal">
+                            <Button Width="30"
+                                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                    Height="30"
+                                    Margin="0, 0, 0, 0"
+                                    ToolTip="Go to previous issue"
+                                    Style="{DynamicResource SquareButtonStyle}"
+                                    Command="{Binding GoToPrevIssueCommand}"
+                                    IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}">
+                                <Rectangle Width="15"
+                                           Height="15"
+                                           Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}">
+                                    <Rectangle.OpacityMask>
+                                        <VisualBrush Stretch="Fill"
+                                                     Visual="{StaticResource appbar_list_up}" />
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                            </Button>
+
+                            <Button Width="30"
+                                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                    Height="30"
+                                    Margin="0, 0, 0, 0"
+                                    ToolTip="Go to next issue"
+                                    Style="{DynamicResource SquareButtonStyle}"
+                                    Command="{Binding GoToNextIssueCommand}"
+                                    IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}">
+                                <Rectangle Width="15"
+                                           Height="15"
+                                           Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}">
+                                    <Rectangle.OpacityMask>
+                                        <VisualBrush Stretch="Fill"
+                                                     Visual="{StaticResource appbar_list_reorder_down}" />
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                            </Button>
+
                             <StatusBarItem>
-                                <Button Style="{DynamicResource MyMetroButton}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-							        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" x:Name="GetFromServer"
-							        Content="Get Issues By Filter"
-							        Command="{Binding GetIssuesByFilterCommand}" IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}"/>
+
+                                <Button Style="{DynamicResource MyMetroButton}"
+                                        Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        x:Name="GetFromServer"
+                                        Content="Get Issues By Filter"
+                                        Command="{Binding GetIssuesByFilterCommand}"
+                                        IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}" />
 
                             </StatusBarItem>
                             <StatusBarItem>
-                                <Button Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" x:Name="ShowFlyoutButton" Width="30"
-								        Height="30"
-								        Margin="0, -8, 0, 0"
-                                        ToolTip="Show Log"
-								        Style="{DynamicResource MetroCircleButtonStyle}" Command="{Binding FlyoutIssueSearchCommand}">
-                                    <Rectangle  Width="15"
-									           Height="15"
-									           Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
+                                <Button
+                                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                    x:Name="ShowFlyoutButton" Width="30"
+                                    Height="30"
+                                    Margin="0, -8, 0, 0"
+                                    ToolTip="Show Log"
+                                    Style="{DynamicResource MetroCircleButtonStyle}"
+                                    Command="{Binding FlyoutIssueSearchCommand}">
+                                    <Rectangle Width="15"
+                                               Height="15"
+                                               Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
                                         <Rectangle.OpacityMask>
                                             <VisualBrush Stretch="Fill"
-											             Visual="{StaticResource appbar_arrow_down}" />
+                                                         Visual="{StaticResource appbar_arrow_down}" />
                                         </Rectangle.OpacityMask>
                                     </Rectangle>
                                 </Button>
@@ -363,8 +506,8 @@
             </Grid>
         </Grid>
         <Border Margin="5" BorderBrush="#FF7F9DB9" BorderThickness="1">
-		    <ContentControl Content="{Binding IssuesGridView}" />
-		</Border>      
-	</DockPanel>
+            <ContentControl Content="{Binding IssuesGridView}" />
+        </Border>
+    </DockPanel>
 
 </UserControl>

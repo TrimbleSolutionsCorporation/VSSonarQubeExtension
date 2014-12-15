@@ -486,9 +486,31 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// </summary>
         public IVsEnvironmentHelper Vsenvironmenthelper { get; set; }
 
+        public int SelectedIndex { get; set; }
+
         #endregion
 
         #region Public Methods and Operators
+
+        public void GoToNextIssue()
+        {
+            if (this.SelectedIndex < this.Issues.Count)
+            {
+                this.SelectedIndex++;
+            }
+
+            this.OnOpenInVsCommand(this.SelectedItems);
+        }
+
+        public void GoToPrevIssue()
+        {
+            if (this.SelectedIndex > 0)
+            {
+                this.SelectedIndex--;
+            }
+
+            this.OnOpenInVsCommand(this.SelectedItems);
+        }
 
         /// <summary>
         /// The is not filtered.
