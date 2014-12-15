@@ -652,6 +652,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.OuputLogLines.Clear();
             this.AllLog.Clear();
             this.OutputLog = string.Empty;
+            this.PermissionsAreNotAvailable = false;
             try
             {
                 switch (analysis)
@@ -715,6 +716,12 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.CanRunAnalysis = true;
             this.sonarQubeViewModel.IsExtensionBusy = false;
 
+            if (this.PermissionsAreNotAvailable)
+            {
+                MessageBox.Show("You're not authorized to execute a dry run analysis. Please contact your SonarQube administrator.");
+                return;
+            }
+
             try
             {
                 var exceptionMsg = (LocalAnalysisEventArgs)e;
@@ -769,7 +776,15 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             Application.Current.Dispatcher.Invoke(() => this.OuputLogLines.Insert(0, exceptionMsg.ErrorMessage));
             this.AllLog.Add(exceptionMsg.ErrorMessage);
             this.Vsenvironmenthelper.WriteToVisualStudioOutput(exceptionMsg.ErrorMessage);
+
+            if (exceptionMsg.ErrorMessage.Contains(
+                "You're not authorized to execute a dry run analysis. Please contact your SonarQube administrator."))
+            {
+                this.PermissionsAreNotAvailable = true;
+            }
         }
+
+        public bool PermissionsAreNotAvailable { get; set; }
 
         private void OnOpenLogCommand()
         {
