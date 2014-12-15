@@ -16,6 +16,19 @@ namespace ExtensionHelpers
         /// </summary>
         public string ApplicationDataUserSettingsFile { get; set; }
 
+        public string LogForAnalysis { get; set; }
+
+
+        /// <summary>
+        ///     The get user app data configuration file.
+        /// </summary>
+        /// <returns>
+        ///     The <see cref="string" />.
+        /// </returns>
+        public string UserLogForAnalysisFile()
+        {
+            return this.LogForAnalysis;
+        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="VsPropertiesHelper" /> class.
@@ -24,6 +37,9 @@ namespace ExtensionHelpers
         {
             this.ApplicationDataUserSettingsFile = System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData)
                                                    + "\\VSSonarExtension\\settings.cfg";
+
+            this.LogForAnalysis = System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData)
+                                                   + "\\VSSonarExtension\\temp\\analysisLog.txt";
         }
 
         /// <summary>

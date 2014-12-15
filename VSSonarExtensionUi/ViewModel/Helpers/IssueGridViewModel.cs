@@ -625,6 +625,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                         try
                         {
                             this.Issues.Clear();
+                            this.AllIssues.Clear();
                         }
                         catch (Exception ex)
                         {

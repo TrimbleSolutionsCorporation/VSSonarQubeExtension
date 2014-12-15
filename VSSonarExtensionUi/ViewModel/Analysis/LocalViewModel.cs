@@ -123,6 +123,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.Header = "Local Analysis";
             this.IssuesGridView = new IssueGridViewModel(sonarQubeViewModel, false, "LocalView");
             this.OuputLogLines = new PaginatedObservableCollection<string>(300);
+            this.AllLog = new List<string>();
 
             this.InitCommanding();
             this.InitFileAnalysis();
@@ -231,6 +232,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         public PaginatedObservableCollection<string> OuputLogLines { get; set; }
 
+        public List<string> AllLog { get; set; }
+
         /// <summary>
         ///     Gets or sets the output log.
         /// </summary>
@@ -292,6 +295,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         ///     Gets or sets the stop local analysis command.
         /// </summary>
         public ICommand StopLocalAnalysisCommand { get; set; }
+
+        public ICommand OpenLogCommand { get; set; }
 
         /// <summary>
         ///     Gets or sets the vsenvironmenthelper.
@@ -536,6 +541,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.PreviewCommand = new RelayCommand(this.OnPreviewCommand);
             this.AnalysisCommand = new RelayCommand(this.OnAnalysisCommand);
             this.StopLocalAnalysisCommand = new RelayCommand(this.OnStopLocalAnalysisCommand);
+            this.OpenLogCommand = new RelayCommand(this.OnOpenLogCommand);
 
             this.FlyoutLogViewerCommand = new RelayCommand(this.OnFlyoutLogViewerCommand);
             this.CloseFlyoutLogViewerCommand = new RelayCommand(this.OnCloseFlyoutLogViewerCommand);
@@ -626,6 +632,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         private void RunLocalAnalysis(AnalysisTypes analysis)
         {
             this.OuputLogLines.Clear();
+            this.AllLog.Clear();
             this.OutputLog = string.Empty;
             try
             {
@@ -742,7 +749,28 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             var exceptionMsg = (LocalAnalysisEventArgs)e;
             Application.Current.Dispatcher.Invoke(() => this.OuputLogLines.Insert(0, exceptionMsg.ErrorMessage));
+            this.AllLog.Add(exceptionMsg.ErrorMessage);
             this.Vsenvironmenthelper.WriteToVisualStudioOutput(exceptionMsg.ErrorMessage);
+        }
+
+        private void OnOpenLogCommand()
+        {
+            var logFile = this.ConfigurationHelper.UserLogForAnalysisFile();
+            var logFolder = Directory.GetParent(logFile).ToString();
+
+            if (File.Exists(logFile))
+            {
+                File.Delete(logFile);
+            }
+
+            if(!Directory.Exists(logFolder))
+            {
+                Directory.CreateDirectory(logFolder);
+            }
+
+            File.WriteAllLines(this.ConfigurationHelper.UserLogForAnalysisFile(), this.AllLog);
+
+            this.Vsenvironmenthelper.OpenResourceInVisualStudio(this.ConfigurationHelper.UserLogForAnalysisFile(), 0, this.sonarQubeViewModel.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserDefinedEditor);
         }
 
         #endregion

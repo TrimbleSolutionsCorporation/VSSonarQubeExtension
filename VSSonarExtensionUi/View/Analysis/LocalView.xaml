@@ -201,9 +201,23 @@
 											             Visual="{StaticResource appbar_cancel}" />
                                         </Rectangle.OpacityMask>
                                     </Rectangle>
-                                </Button>                           
+                                </Button>
                         
-                        </StackPanel>
+                <Button Width="30" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+								        Height="30"
+								        Margin="0, 0, 0, 0"
+                                        ToolTip="Open Analysis Log"
+								        Style="{DynamicResource SquareButtonStyle}" Command="{Binding OpenLogCommand}" IsEnabled="{Binding CanRunAnalysis}">
+                    <Rectangle Width="15"
+									           Height="15"
+									           Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill"
+											             Visual="{StaticResource appbar_paper}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                </Button>
+            </StackPanel>
                 
         
                 <Border Grid.Row="1" BorderBrush="#FF7F9DB9" BorderThickness="1">

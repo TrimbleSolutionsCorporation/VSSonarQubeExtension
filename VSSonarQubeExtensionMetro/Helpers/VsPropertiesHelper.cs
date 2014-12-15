@@ -15,6 +15,7 @@ namespace VSSonarQubeExtension.Helpers
     using System.Linq;
     using System.Runtime.InteropServices;
     using System.Text;
+    using System.Windows;
 
     using EnvDTE;
 
@@ -473,6 +474,64 @@ namespace VSSonarQubeExtension.Helpers
                 catch (Exception ex)
                 {
                     this.ErroMessage = "Exception Occured: " + filename + " : " + Convert.ToString(line) + " ex: " + ex.Message;
+                }
+            }
+        }
+
+        public void OpenResourceInVisualStudio(string filename, int line, string editorCommandExec = "notepad")
+        {
+            if (this.environment == null)
+            {
+                (new Thread(() => Process.Start(editorCommandExec, filename))).Start();
+                return;
+            }
+
+            ProjectItem files = this.environment.Solution.FindProjectItem(filename);
+            if (files != null)
+            {
+                (new Thread(
+                    () =>
+                    {
+                        try
+                        {
+                            object masterPath = files.Properties.Item("FullPath").Value;
+                            this.environment.ItemOperations.OpenFile(masterPath.ToString());
+                            var textSelection = (TextSelection)this.environment.ActiveDocument.Selection;
+                            textSelection.GotoLine(line < 1 ? 1 : line);
+                            textSelection.SelectLine();
+                        }
+                        catch
+                        {
+                            try
+                            {
+                                if (File.Exists(filename))
+                                {
+                                    this.environment.ItemOperations.OpenFile(filename);
+                                    var textSelection = (TextSelection)this.environment.ActiveDocument.Selection;
+                                    textSelection.GotoLine(line < 1 ? 1 : line);
+                                    textSelection.SelectLine();
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Cannot Open File: " + filename);
+                                }
+                            }
+                            catch (Exception ex1)
+                            {
+                                MessageBox.Show("Cannot Open File: " + ex1.Message);
+                            }
+                        }
+                    })).Start();
+            }
+            else
+            {
+                try
+                {
+                    this.environment.ItemOperations.OpenFile(filename);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Cannot Open File: " + ex.Message);
                 }
             }
         }
