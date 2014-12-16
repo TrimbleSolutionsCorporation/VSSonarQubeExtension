@@ -896,16 +896,19 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
         member this.GetProfilesUsingRulesApp(conf : ISonarConfiguration) = 
             let profiles = new System.Collections.Generic.List<Profile>()
-            let reply = httpconnector.HttpSonarGetRequest(conf, "/api/rules/app")
-            let data = JsonInternalData.Parse(reply)
-            for profile in data.Qualityprofiles do
-                let newprofile = new Profile()
-                newprofile.Key <- profile.Key
-                newprofile.Language <- profile.Lang
-                newprofile.Name <- profile.Name
-                profiles.Add(newprofile)
+            try
+                let reply = httpconnector.HttpSonarGetRequest(conf, "/api/rules/app")
+                let data = JsonInternalData.Parse(reply)
+                for profile in data.Qualityprofiles do
+                    let newprofile = new Profile()
+                    newprofile.Key <- profile.Key
+                    newprofile.Language <- profile.Lang
+                    newprofile.Name <- profile.Name
+                    profiles.Add(newprofile)
+            with
+            | ex -> ()
 
-            profiles            
+            profiles
 
         member this.GetAvailableProfiles(conf : ISonarConfiguration) = 
             let profiles = new System.Collections.Generic.List<Profile>()
