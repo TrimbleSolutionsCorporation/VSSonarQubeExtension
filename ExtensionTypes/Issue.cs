@@ -179,6 +179,7 @@ namespace ExtensionTypes
                                     Component = this.Component,
                                     CreationDate = this.CreationDate,
                                     EffortToFix = this.EffortToFix,
+                                    Debt = this.Debt,
                                     ViolationId = this.ViolationId,
                                     Assignee = this.Assignee,
                                     Comments = new List<Comment>()
@@ -199,6 +200,8 @@ namespace ExtensionTypes
 
             return copyIssue;
         }
+
+        public string Debt { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

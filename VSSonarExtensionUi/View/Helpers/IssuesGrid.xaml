@@ -97,7 +97,34 @@
 			<RowDefinition Height="3*"/>
 			<RowDefinition Height="25"/>
 		</Grid.RowDefinitions>
-        <TextBlock Grid.Row="1" Margin="2"><Hyperlink Command="{Binding DataContext.FilterClearAllCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"><Run Text="Clear All Filters"/></Hyperlink></TextBlock>
+        <StatusBar Grid.Row="1" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}">
+            <StatusBarItem HorizontalAlignment="Left">
+                <TextBlock Grid.Row="1">
+                        <Hyperlink
+                            Command="{Binding DataContext.FilterClearAllCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
+                            <Run Text="Clear All Filters" />
+                        </Hyperlink>
+                </TextBlock>
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Left" >
+                <TextBlock Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Text="{Binding NumberOfIssuesStr, FallbackValue=Total}"></TextBlock>
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Left" >
+                <TextBlock Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Text="{Binding NumberOfBlockersStr, FallbackValue=Blockers}"></TextBlock>
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Left" >
+                <TextBlock Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Text="{Binding NumberOfCriticalsStr, FallbackValue=Criticals}"></TextBlock>
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Left" >
+                <TextBlock Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Text="{Binding NumberOfMajorsStr, FallbackValue=Majors}"></TextBlock>
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Left" >
+                <TextBlock Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Text="{Binding TechnicalDebtStr, FallbackValue=Debt}"></TextBlock>
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Left" >
+                <TextBlock Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Text="{Binding SqaleRatingStr, FallbackValue=A}"></TextBlock>
+            </StatusBarItem>
+        </StatusBar>
         <DataGrid Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type UserControl}, Mode=FindAncestor}}" 
           x:Name="Datagrid"
           Grid.Row="0"
@@ -423,7 +450,12 @@
                 <DataGridTextColumn Binding="{Binding Id}" MinWidth="100" x:Name="IdTemplateCol" Header="Id" CanUserSort="True" SortMemberPath="Id" DisplayIndex="{Binding IdIndex, FallbackValue=15, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.IdVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
 
                 <DataGridTextColumn Binding="{Binding ViolationId}" MinWidth="100" x:Name="ViolationIdTemplateCol" Header="ViolationId" CanUserSort="true" SortMemberPath="ViolationId" DisplayIndex="{Binding ViolationIdIndex, FallbackValue=16, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.ViolationIdVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
-               
+
+                <DataGridTextColumn Binding="{Binding Debt}" MinWidth="100" x:Name="DebtemplateCol"
+                                    Header="Debt" CanUserSort="True" SortMemberPath="Debt"
+                                    DisplayIndex="{Binding Debt, FallbackValue=17, Mode=TwoWay, Source={StaticResource Proxy}}"
+                                    IsReadOnly="True"
+                                    Visibility="{Binding Data.EffortToFixVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}" />
             </DataGrid.Columns>
             
             

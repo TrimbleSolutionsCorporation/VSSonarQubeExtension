@@ -121,7 +121,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.ConfigurationHelper = configurationHelper;
             this.sonarQubeViewModel = sonarQubeViewModel;
             this.Header = "Local Analysis";
-            this.IssuesGridView = new IssueGridViewModel(sonarQubeViewModel, false, "LocalView");
+            this.IssuesGridView = new IssueGridViewModel(sonarQubeViewModel, false, "LocalView", false);
             this.OuputLogLines = new PaginatedObservableCollection<string>(300);
             this.AllLog = new List<string>();
 
@@ -757,8 +757,10 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             }
             catch (Exception ex)
             {
-                UserExceptionMessageBox.ShowException("Analysis Finish", ex, "Can Retrive Any Issues From Analysis. For the installed plugins");
+                UserExceptionMessageBox.ShowException("Analysis Finish", ex, "Cannot retrieve Any Issues From Analysis. For the installed plugins");
             }
+
+            this.IssuesGridView.RefreshStatistics();
         }
 
         /// <summary>

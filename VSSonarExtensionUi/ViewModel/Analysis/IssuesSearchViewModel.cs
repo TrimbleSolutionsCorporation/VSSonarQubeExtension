@@ -101,7 +101,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.Header = "Issues";
             this.SonarVersion = 4.5;
             this.UsersList = new ObservableCollection<User>();
-            this.IssuesGridView = new IssueGridViewModel(sonarQubeViewModel, true, "SearchView");
+            this.IssuesGridView = new IssueGridViewModel(sonarQubeViewModel, true, "SearchView", false);
 
             this.InitCommanding();
 

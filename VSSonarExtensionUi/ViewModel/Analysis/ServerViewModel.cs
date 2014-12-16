@@ -74,7 +74,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
 
             this.Header = "Server Analysis";
             this.AlreadyOpenDiffs = new SortedSet<string>();
-            this.IssuesGridView = new IssueGridViewModel(sonarQubeViewModel, true, "ServerView");
+            this.IssuesGridView = new IssueGridViewModel(sonarQubeViewModel, true, "ServerView", true);
             this.InitCommanding();
 
             this.ForeGroundColor = Colors.Black;
@@ -284,7 +284,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             {
                 return new List<Issue>();
             }
-
+            this.IssuesGridView.RefreshStatistics();
             var issuesWithModifiedData = this.localEditorCache.GetIssuesForResource(this.ResourceInEditor, fileContent);
             return issuesWithModifiedData.Where(issue => this.IssuesGridView.IsNotFiltered(issue)).ToList();
         }

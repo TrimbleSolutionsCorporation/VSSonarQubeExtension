@@ -72,7 +72,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// <param name="gridId">
         /// The grid Id.
         /// </param>
-        public IssueGridViewModel(SonarQubeViewModel model, bool rowContextMenu, string gridId)
+        public IssueGridViewModel(SonarQubeViewModel model, bool rowContextMenu, string gridId, bool showSqaleRating)
         {
             this.dataGridOptionsKey += gridId;
             this.model = model;
@@ -104,6 +104,8 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
 
             this.ForeGroundColor = Colors.Black;
             this.BackGroundColor = Colors.White;
+
+            this.ShowSqaleRating = showSqaleRating;
         }
 
         #endregion
@@ -913,6 +915,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 return;
             }
 
+            this.ResetStatistics();
             this.Issues.Clear();
             foreach (Issue issue in this.AllIssues)
             {
@@ -920,6 +923,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 {
                     if (this.filter.FilterFunction(issue))
                     {
+                        this.PopulateStatistics(issue);
                         this.Issues.Add(issue);
                     }
                 }
@@ -930,8 +934,101 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 }
             }
 
+            this.UpdateStatistics();
             this.model.OnIssuesChangeEvent();
         }
+
+        public void RefreshStatistics()
+        {
+            if (this.Issues == null || !this.Issues.Any())
+            {
+                return;
+            }
+
+            this.ResetStatistics();
+            foreach (Issue issue in this.Issues)
+            {
+                this.PopulateStatistics(issue);
+            }
+
+            this.UpdateStatistics();
+        }
+
+        private void UpdateStatistics()
+        {
+            this.NumberOfIssuesStr = "Issues: " + this.NumberOfIssues;
+            this.NumberOfBlockersStr = "Blockers: " + this.NumberOfBlockers;
+            this.NumberOfCriticalsStr = "Criticals: " + this.NumberOfCriticals;
+            this.NumberOfMajorsStr = "Majors: " + this.NumberOfMajors;
+            this.TechnicalDebtStr = "Debt: " + this.TechnicalDebt + " mn";
+
+            if (this.ShowSqaleRating)
+            {
+                //this.SqaleRatingStr = "Rating: " + this.SqaleRating;
+            }
+        }
+
+        private void PopulateStatistics(Issue issue)
+        {
+            this.NumberOfIssues++;
+
+            switch (issue.Severity)
+            {
+                case Severity.BLOCKER: this.NumberOfBlockers++;
+                    break;
+                case Severity.CRITICAL: this.NumberOfCriticals++;
+                    break;
+                case Severity.MAJOR: this.NumberOfMajors++;
+                    break;
+            }
+
+            if (!string.IsNullOrEmpty(issue.Debt))
+            {
+                try
+                {
+                    var debt = issue.Debt.Replace("min", "").Replace("sec", "").Replace("hour", "").Replace("day", "").Replace("d", "").Replace("h", "");
+                    this.TechnicalDebt += int.Parse(debt);
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+        }
+
+        private void ResetStatistics()
+        {
+            this.NumberOfBlockers = 0;
+            this.NumberOfCriticals = 0;
+            this.NumberOfMajors = 0;
+            this.NumberOfIssues = 0;
+            this.TechnicalDebt = 0;
+        }
+
+        public long TechnicalDebt { get; set; }
+
+        public int NumberOfIssues { get; set; }
+
+        public int NumberOfMajors { get; set; }
+
+        public int NumberOfCriticals { get; set; }
+
+        public int NumberOfBlockers { get; set; }
+
+        public string TechnicalDebtStr { get; set; }
+
+        public string NumberOfIssuesStr { get; set; }
+
+        public string NumberOfMajorsStr { get; set; }
+
+        public string NumberOfCriticalsStr { get; set; }
+
+        public string NumberOfBlockersStr { get; set; }
+
+        public bool ShowSqaleRating { get; set; }
+
+        public string SqaleRating { get; set; }
+        public string SqaleRatingStr { get; set; }
 
         /// <summary>
         /// The on filter clear all command.

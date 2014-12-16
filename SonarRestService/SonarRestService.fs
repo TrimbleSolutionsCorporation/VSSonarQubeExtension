@@ -104,7 +104,52 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             issue.Resolution <- (EnumHelper.asEnum<Resolution>(data.Resolution.Replace("-","_"))).Value
 
         issue
-                        
+
+    let getIssuesFromStringAfter45(responsecontent : string) =
+        let data = JSonIssuesRest.Parse(responsecontent)
+        let issueList = new System.Collections.Generic.List<Issue>()
+        for elem in data.Issues do
+            let issue = new Issue()
+            issue.Message <- elem.Message
+            issue.CreationDate <- elem.CreationDate
+
+            issue.Component <- elem.Component
+            if not(obj.ReferenceEquals(elem.Line, null)) then
+                issue.Line <- elem.Line
+            else
+                issue.Line <- 0
+
+            issue.Project <- elem.Project
+            issue.UpdateDate <- elem.UpdateDate
+            issue.Status <- (EnumHelper.asEnum<IssueStatus>(elem.Status)).Value
+            issue.Severity <- GetSeverity(elem.Severity)
+            issue.Rule <- elem.Rule
+            issue.Key <- elem.Key
+
+            match elem.Assignee with
+            | None -> ()
+            | Some value -> issue.Assignee <- value
+
+            match elem.Comments with
+            | None -> ()
+            | Some value -> for elemC in value do issue.Comments.Add(new Comment(elemC.CreatedAt, elemC.HtmlText, elemC.Key, elemC.Login, -1))
+
+            match elem.CloseDate with
+            | None -> ()
+            | Some value -> issue.CloseDate <- value
+
+            match elem.Resolution with
+            | None -> ()
+            | Some value -> issue.Resolution <- (EnumHelper.asEnum<Resolution>(value.Replace("-", "_"))).Value
+
+            match elem.Debt with
+            | None -> ()
+            | Some value -> issue.Debt <- value
+
+            issueList.Add(issue)
+
+        issueList
+
     let getIssuesFromString(responsecontent : string) =
         let data = JsonIssues.Parse(responsecontent)
         let issueList = new System.Collections.Generic.List<Issue>()
@@ -218,21 +263,38 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
     let getIssuesOldAndNewVersions(userConf, newurl : string, oldurlreviews: string, oldurlviolations) = 
         try
             let allIssues = new System.Collections.Generic.List<Issue>()
-            let responsecontent = httpconnector.HttpSonarGetRequest(userConf, newurl)
-            let data = JsonIssues.Parse(responsecontent)
+            try
+                let responsecontent = httpconnector.HttpSonarGetRequest(userConf, newurl)
+                let data = JSonIssuesRest.Parse(responsecontent)
 
-            let AddElements(all : System.Collections.Generic.List<Issue>) = 
-                for issue in all do
-                    allIssues.Add(issue)
+                let AddElements(all : System.Collections.Generic.List<Issue>) = 
+                    for issue in all do
+                        allIssues.Add(issue)
 
-            AddElements(getIssuesFromString(responsecontent))
+                AddElements(getIssuesFromStringAfter45(responsecontent))
 
-            // we need to get all pages
+                // we need to get all pages
+                for i = 2 to data.Paging.Pages do
+                    let url = newurl + "&pageIndex=" + Convert.ToString(i)
+                    let newresponse = httpconnector.HttpSonarGetRequest(userConf, url)
+                    AddElements(getIssuesFromStringAfter45(newresponse))
+            with
+            | ex -> 
+                let responsecontent = httpconnector.HttpSonarGetRequest(userConf, newurl)
+                let data = JsonIssues.Parse(responsecontent)
+
+                let AddElements(all : System.Collections.Generic.List<Issue>) = 
+                    for issue in all do
+                        allIssues.Add(issue)
+
+                AddElements(getIssuesFromString(responsecontent))
+
+                // we need to get all pages
             
-            for i = 2 to data.Paging.Pages do
-                let url = newurl + "&pageIndex=" + Convert.ToString(i)
-                let newresponse = httpconnector.HttpSonarGetRequest(userConf, url)
-                AddElements(getIssuesFromString(newresponse))
+                for i = 2 to data.Paging.Pages do
+                    let url = newurl + "&pageIndex=" + Convert.ToString(i)
+                    let newresponse = httpconnector.HttpSonarGetRequest(userConf, url)
+                    AddElements(getIssuesFromString(newresponse))
 
             allIssues
         with
@@ -250,7 +312,10 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
         try
             let url =  "/api/issues/search?components=" + resource + "&statuses=OPEN,CONFIRMED,REOPENED"
             let responsecontent = httpconnector.HttpSonarGetRequest(userConf, url)
-            getIssuesFromString(responsecontent)
+            try
+                getIssuesFromStringAfter45(responsecontent)
+            with
+            | ex -> getIssuesFromString(responsecontent)
         with
         | ex ->            
             let reviewsurl = "/api/reviews?resources="+ resource
