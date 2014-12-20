@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.22310.1
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSSonarExtension.Test", "VSSonarExtension.Test\VSSonarExtension.Test.csproj", "{2DD5EFBB-A28F-4A4F-BBDD-1394B4634C77}"
 EndProject
@@ -30,14 +30,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSSonarExtensionMetro", "VSSonarQubeExtensionMetro\VSSonarExtensionMetro.csproj", "{CDA074CC-04BC-4D9E-B285-5A2D47C001B9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSSonarExtensionMetroVs2012", "VSSonarQubeExtensionMetro\VSSonarExtensionMetroVs2012.csproj", "{09F6E247-F5DF-40C9-98D8-68CC3FBB9330}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSSonarExtensionMetro2015", "VSSonarQubeExtensionMetro\VSSonarExtensionMetro2015.csproj", "{00245123-FEBB-4AF3-99E5-223142A598C8}"
-EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "RoslynAdapter", "RoslynAdapter\RoslynAdapter.fsproj", "{496B669E-8CB4-41AC-B928-E84E3C820807}"
-EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "RoslynAdapter.Test", "RoslynAdapter.Test\RoslynAdapter.Test.fsproj", "{3146E27C-401A-4E03-8D53-ED987EFEDA4D}"
-EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "CommandExecutor", "CommandExecutor\CommandExecutor.fsproj", "{9B154406-0AF6-45A9-BF32-9C5C23822B6B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -99,22 +91,6 @@ Global
 		{09F6E247-F5DF-40C9-98D8-68CC3FBB9330}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09F6E247-F5DF-40C9-98D8-68CC3FBB9330}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09F6E247-F5DF-40C9-98D8-68CC3FBB9330}.Release|Any CPU.Build.0 = Release|Any CPU
-		{00245123-FEBB-4AF3-99E5-223142A598C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{00245123-FEBB-4AF3-99E5-223142A598C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{00245123-FEBB-4AF3-99E5-223142A598C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{00245123-FEBB-4AF3-99E5-223142A598C8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{496B669E-8CB4-41AC-B928-E84E3C820807}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{496B669E-8CB4-41AC-B928-E84E3C820807}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{496B669E-8CB4-41AC-B928-E84E3C820807}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{496B669E-8CB4-41AC-B928-E84E3C820807}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3146E27C-401A-4E03-8D53-ED987EFEDA4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3146E27C-401A-4E03-8D53-ED987EFEDA4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3146E27C-401A-4E03-8D53-ED987EFEDA4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3146E27C-401A-4E03-8D53-ED987EFEDA4D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9B154406-0AF6-45A9-BF32-9C5C23822B6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9B154406-0AF6-45A9-BF32-9C5C23822B6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9B154406-0AF6-45A9-BF32-9C5C23822B6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9B154406-0AF6-45A9-BF32-9C5C23822B6B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

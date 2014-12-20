@@ -35,6 +35,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FSharp.Core, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.CodeAnalysis">
+      <HintPath>..\RoslynAdapter.Test\bin\Debug\Microsoft.CodeAnalysis.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="CredentialManagement">
       <HintPath>..\packages\CredentialManagement.1.0.1\lib\net35\CredentialManagement.dll</HintPath>
     </Reference>
@@ -53,6 +58,9 @@
     <Reference Include="PropertyChanged">
       <HintPath>..\packages\PropertyChanged.Fody.1.48.6\Lib\portable-net4+sl4+wp8+win8+wpa81+MonoAndroid16+MonoTouch40\PropertyChanged.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="RoslynAdapter">
+      <HintPath>..\RoslynAdapter.Test\bin\Debug\RoslynAdapter.dll</HintPath>
     </Reference>
     <Reference Include="SonarLocalAnalyser">
       <HintPath>..\BuildDrop\SonarLocalAnalyser.dll</HintPath>

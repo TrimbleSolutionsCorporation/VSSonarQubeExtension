@@ -133,10 +133,10 @@ module GlobalsVars =
         let xmldoc = XDocument.Load(stream).ToString()
         let sqale = SqaleModelType.Parse(xmldoc)
         
-        for chk in sqale.GetChcs() do
+        for chk in sqale.Chcs do
             let char = CreateAChar(EnumHelper.asEnum<Category>(chk.Key).Value, chk.Name)            
 
-            for subchk in chk.GetChcs() do
+            for subchk in chk.Chcs do
                 char.CreateSubChar(EnumHelper.asEnum<SubCategory>(subchk.Key).Value, subchk.Name)
 
         characteristics

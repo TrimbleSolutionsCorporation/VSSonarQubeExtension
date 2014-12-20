@@ -22,11 +22,11 @@ open System.Diagnostics
 open VSSonarPlugins
 open ExtensionTypes
 open CommonExtensions
-open MSBuild.Tekla.Tasks.Executor
 open System.Diagnostics
 open Microsoft.Build.Utilities
 open SonarRestService
 open ExtensionHelpers
+open CommandExecutor
 
 type LanguageType =
    | SingleLang = 0

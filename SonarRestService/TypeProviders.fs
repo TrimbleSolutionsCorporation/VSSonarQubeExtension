@@ -322,8 +322,8 @@ type JsonProfileAfter44 = JsonProvider<""" [
         "severity": "MAJOR",
         "params": [
           {
-            "key": "max",
-            "value": "10"
+            "key": "sdfsdfsd",
+            "value": "sdfsdfsd"
           }
         ]
       }

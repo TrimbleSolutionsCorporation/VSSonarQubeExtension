@@ -66,7 +66,7 @@ type ISonarRestService =
   // might be remove in the future
   abstract member GetProfilesUsingRulesApp : ISonarConfiguration -> System.Collections.Generic.List<Profile>
   abstract member GetRulesForProfileUsingRulesApp : conf:ISonarConfiguration * profile:Profile * active:bool -> unit
-  
+  abstract member GetRuleUsingProfileAppId :  conf:ISonarConfiguration * ruleKey:string -> Rule
 
   abstract member ParseReportOfIssues : string -> System.Collections.Generic.List<Issue>
   abstract member ParseReportOfIssuesOld : string -> System.Collections.Generic.List<Issue>

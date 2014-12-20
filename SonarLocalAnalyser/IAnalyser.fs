@@ -22,7 +22,7 @@ open System.Diagnostics
 open VSSonarPlugins
 open ExtensionTypes
 open CommonExtensions
-open MSBuild.Tekla.Tasks.Executor
+open CommandExecutor
 open System.Diagnostics
 open Microsoft.Build.Utilities
 

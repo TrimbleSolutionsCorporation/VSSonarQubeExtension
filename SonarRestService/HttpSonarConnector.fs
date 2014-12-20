@@ -13,7 +13,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace SonarRestService
 
-open FSharp.Net
 open System
 open System.Net
 open System.Web

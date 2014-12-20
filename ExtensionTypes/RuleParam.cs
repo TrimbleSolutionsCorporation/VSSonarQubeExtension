@@ -26,7 +26,7 @@ namespace ExtensionTypes
         /// <summary>
         /// Gets or sets the default value.
         /// </summary>
-        public int DefaultValue { get; set; }
+        public string DefaultValue { get; set; }
 
         /// <summary>
         /// Gets or sets the desc.

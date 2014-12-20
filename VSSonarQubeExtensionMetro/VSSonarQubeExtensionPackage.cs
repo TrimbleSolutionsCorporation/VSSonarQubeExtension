@@ -18,8 +18,10 @@ namespace VSSonarQubeExtension
     using System.Diagnostics;
     using System.Drawing;
     using System.Globalization;
+    using System.Reflection;
     using System.Runtime.InteropServices;
     using System.Windows.Controls;
+    using System.IO;
 
     using EnvDTE;
 
@@ -186,7 +188,7 @@ namespace VSSonarQubeExtension
                     var bar = this.GetService(typeof(SVsStatusbar)) as IVsStatusbar;
                     this.StatusBar = new VSSStatusBar(bar, this.dte2);
 
-                    SonarQubeViewModelFactory.SQViewModel.ExtensionDataModelUpdate(this.restService, this.visualStudioInterface, this.StatusBar, this);
+                    SonarQubeViewModelFactory.SQViewModel.ExtensionDataModelUpdate(this.restService, this.visualStudioInterface, this.StatusBar, this, this.AssemblyDirectory);
 
                     DColor defaultBackground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBackgroundColorKey);
                     DColor defaultForeground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowTextColorKey);
@@ -223,6 +225,17 @@ namespace VSSonarQubeExtension
             {
                 UserExceptionMessageBox.ShowException("Extension Failed to Start", ex);
                 throw;
+            }
+        }
+
+        public string AssemblyDirectory
+        {
+            get
+            {
+                string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+                UriBuilder uri = new UriBuilder(codeBase);
+                string path = Uri.UnescapeDataString(uri.Path);
+                return Path.GetDirectoryName(path);
             }
         }
 

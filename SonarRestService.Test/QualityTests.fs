@@ -42,10 +42,54 @@ type QualityTests() =
         resourceinfo.[0].Metrics.[0].Key |> should equal "profile"
         resourceinfo.[0].Metrics.[0].Data |> should equal "DefaultC++"
 
-    //[<Test>]
-    member test.``Should Get Rules`` () =
-        let conf = ConnectionConfiguration("http://sonar", "jocs1", "jocs1")
+    [<Test>]
+    member test.``Should Get Rules From Profile using App`` () =
+        let conf = ConnectionConfiguration("http://sonar", "user", "pass")
+       
+        let mockHttpReq =
+            Mock<IHttpSonarConnector>()
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText("testdata/rulesearchquery.txt"))
+                .Create()
 
-        let service = SonarRestService(new JsonSonarConnector())
-        let rules = (service :> ISonarRestService).GetRules(conf, "c++")
-        rules.Count |> should equal 1
+        let service = SonarRestService(mockHttpReq)
+
+        let profile = Profile()
+        profile.Key <- "msbuild-sonar-way-77787"
+        profile.Language <- "msbuild"
+        (service :> ISonarRestService).GetRulesForProfileUsingRulesApp(conf, profile, true)
+        profile.Rules.Count |> should equal 3
+
+    [<Test>]
+    member test.``Should Get Rules From Profile`` () =
+        let conf = ConnectionConfiguration("http://sonar", "user", "user")
+       
+        let mockHttpReq =
+            Mock<IHttpSonarConnector>()
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText("testdata/profileusingappid.txt"))
+                .Create()
+
+        let service = SonarRestService(mockHttpReq)
+
+        let profile = Profile()
+        profile.Name <- "Sonar way"
+        profile.Language <- "cs"
+        (service :> ISonarRestService).GetRulesForProfile(conf, profile)
+        profile.Rules.Count |> should equal 199
+        profile.Rules.[1].Params.Count |> should equal 1
+
+    [<Test>]
+    member test.``Should Search Rule in Profile`` () =
+        let conf = ConnectionConfiguration("http://sonar", "user", "pass")
+       
+        let mockHttpReq =
+            Mock<IHttpSonarConnector>()
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText("testdata/rulesearchanswer.txt"))
+                .Create()
+
+        let service = SonarRestService(mockHttpReq)
+
+        let profile = Profile()
+        profile.Key <- "msbuild-sonar-way-77787"
+        profile.Language <- "msbuild"
+        let rule = (service :> ISonarRestService).GetRuleUsingProfileAppId(conf, "csharpsquid:S108")
+        rule.ConfigKey |> should equal "csharpsquid:S108"

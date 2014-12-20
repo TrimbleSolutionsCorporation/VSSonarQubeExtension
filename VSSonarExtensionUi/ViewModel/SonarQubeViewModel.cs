@@ -25,7 +25,13 @@ namespace VSSonarExtensionUi.ViewModel
 
     using GalaSoft.MvvmLight.Command;
 
+    using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.Diagnostics;
+    using Microsoft.FSharp.Collections;
+
     using PropertyChanged;
+
+    using RoslynAdapter;
 
     using SonarRestService;
 
@@ -90,8 +96,17 @@ namespace VSSonarExtensionUi.ViewModel
             this.InitViews();
             this.InitConnection();
 
+            this.InitDiagnosticAnalyser();
+
             this.UpdateTheme(Colors.Black, Colors.White);
         }
+
+        private void InitDiagnosticAnalyser()
+        {
+            this.RoslynAdapter = new RoslynAdapter();
+        }
+
+        public RoslynAdapter RoslynAdapter { get; set; }
 
         #endregion
 
@@ -367,17 +382,43 @@ namespace VSSonarExtensionUi.ViewModel
             if (this.IsConnected)
             {
                 Resource solResource = this.AssociateSolutionWithSonarProject(solutionName, solutionPath);
-                foreach (Resource availableProject in this.AvailableProjects)
+                if(solResource != null)
                 {
-                    if (availableProject.Key.Equals(solResource.Key))
+                    foreach (Resource availableProject in this.AvailableProjects)
                     {
-                        this.SelectedProject = availableProject;
-                        this.OnAssignProjectCommand();
-                        this.IsConnectedButNotAssociated = false;
-                        this.IsAssociated = true;
-                        return;
+                        if (availableProject.Key.Equals(solResource.Key))
+                        {
+                            this.SelectedProject = availableProject;
+                            this.OnAssignProjectCommand();
+                            this.IsConnectedButNotAssociated = false;
+                            this.IsAssociated = true;
+
+                            this.UpdateDiagnostics(solResource);
+                            return;
+                        }
                     }
-                }
+                }           
+            }
+        }
+
+        private void UpdateDiagnostics(Resource solResource)
+        {
+            var profile = new Profile();
+
+            profile.Name = "Sonar way";
+            profile.Language = "cs";
+            this.SonarRestConnector.GetRulesForProfile(this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, profile);
+
+            if (this.PublisherMessages == null)
+            {
+                this.PublisherMessages = this.RoslynAdapter.GetSubscriberData(this.Diagnostics, profile);
+                this.RoslynAdapter.CreateASubscriberWithMessages(this.PublisherMessages);
+            }
+            else
+            {
+                this.PublisherMessages = this.RoslynAdapter.GetSubscriberData(this.Diagnostics, profile);
+                this.RoslynAdapter.UpdateSubscriberMessages(this.PublisherMessages);
+
             }
         }
 
@@ -471,12 +512,14 @@ namespace VSSonarExtensionUi.ViewModel
             ISonarRestService restServiceIn, 
             IVsEnvironmentHelper vsenvironmenthelperIn, 
             IVSSStatusBar statusBar, 
-            IServiceProvider provider)
+            IServiceProvider provider,
+            string extensionFolder)
         {
             this.ServiceProvider = provider;
             this.SonarRestConnector = restServiceIn;
             this.VsHelper = vsenvironmenthelperIn;
             this.StatusBar = statusBar;
+            this.ExtensionFolder = extensionFolder;
 
             foreach (IAnalysisViewModelBase view in this.SonarQubeViews)
             {
@@ -488,7 +531,15 @@ namespace VSSonarExtensionUi.ViewModel
             {
                 view.UpdateServices(restServiceIn, vsenvironmenthelperIn, this.configurationHelper, statusBar, provider);
             }
+
+            this.Diagnostics = this.RoslynAdapter.GetDiagnosticElementFromManifest(Path.Combine(this.ExtensionFolder, "extension.vsixmanifest"));
         }
+
+        public FSharpList<DiagnosticDescriptor> Diagnostics { get; set; }
+
+        public FSharpList<SubscriberElem> PublisherMessages { get; set; }
+
+        public string ExtensionFolder { get; set; }
 
         /// <summary>
         /// The get issues in editor.

@@ -72,6 +72,9 @@
     <CodeAnalysisIgnoreGeneratedCode>false</CodeAnalysisIgnoreGeneratedCode>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="clrzmq">
+      <HintPath>..\packages\clrzmq.3.0.0-rc1\lib\net40\clrzmq.dll</HintPath>
+    </Reference>
     <Reference Include="MahApps.Metro, Version=0.14.0.0, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\MahApps.Metro.0.14.0.0\lib\net45\MahApps.Metro.dll</HintPath>
@@ -192,6 +195,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="vs2015\SQAnalyzer\NSonarQubeAnalyzer.pdb">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <None Include="vs2015\source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
@@ -252,6 +258,10 @@
     <ProjectReference Include="..\ExtensionTypes\ExtensionTypes.csproj">
       <Project>{75A39A9B-06B2-4249-9D3C-C2319951BC53}</Project>
       <Name>ExtensionTypes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RoslynAdapter\RoslynAdapter.fsproj">
+      <Project>{496b669e-8cb4-41ac-b928-e84e3c820807}</Project>
+      <Name>RoslynAdapter</Name>
     </ProjectReference>
     <ProjectReference Include="..\SonarLocalAnalyser\SonarLocalAnalyser.fsproj">
       <Project>{a7d09c0c-efc5-4662-83b6-dae14e68c94c}</Project>

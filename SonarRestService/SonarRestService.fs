@@ -14,8 +14,7 @@
 namespace SonarRestService
 
 open FSharp.Data
-open FSharp.Data.Json
-open FSharp.Data.Json.Extensions
+open FSharp.Data.JsonExtensions
 open RestSharp
 open ExtensionTypes
 open System.Collections.ObjectModel
@@ -55,10 +54,9 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             else
                 newUser.Email <- ""
 
-            if not(obj.ReferenceEquals(user.Name, null)) then
-                newUser.Name <- user.Name
-            else
-                newUser.Name <- ""
+            match user.Name with
+            | None -> newUser.Name <- ""
+            | Some c -> newUser.Name <- c
 
             newUser.Active <- user.Active
             newUser.Login <- user.Login
@@ -130,9 +128,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             | None -> ()
             | Some value -> issue.Assignee <- value
 
-            match elem.Comments with
-            | None -> ()
-            | Some value -> for elemC in value do issue.Comments.Add(new Comment(elemC.CreatedAt, elemC.HtmlText, elemC.Key, elemC.Login, -1))
+            for elemC in elem.Comments do issue.Comments.Add(new Comment(elemC.CreatedAt, elemC.HtmlText, elemC.Key, elemC.Login, -1))
 
             match elem.CloseDate with
             | None -> ()
@@ -175,7 +171,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 issue.Assignee <- elem.Assignee.Value
             
             if not(obj.ReferenceEquals(elem.Comments, null)) then
-                for elemC in elem.Comments.Value do issue.Comments.Add(new Comment(elemC.CreatedAt, elemC.HtmlText, elemC.Key, elemC.Login, -1))
+                for elemC in elem.Comments do issue.Comments.Add(new Comment(elemC.CreatedAt, elemC.HtmlText, elemC.Key, elemC.Login, -1))
 
             if not(obj.ReferenceEquals(elem.CloseDate, null)) then
                 issue.CloseDate <- elem.CloseDate.Value
@@ -380,10 +376,8 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                             met.Data <- metric.Data.Value.Trim()
                         | _ -> ()
 
-                        if not(obj.ReferenceEquals(metric.FrmtVal.Number, null)) then
-                            met.FormatedValue <- sprintf "%f" metric.FrmtVal.Number.Value
-                        else
-                            met.FormatedValue <- sprintf "%s" metric.FrmtVal.String.Value
+                        
+                        met.FormatedValue <- sprintf "%f" metric.FrmtVal
 
                         match metric.JsonValue.TryGetProperty("val") with
                         | NotNull ->
@@ -488,7 +482,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
         let CreateLine(data : string, elem : JsonValue) =
             let line = new Line()
-            arrayOfLines.[Int32.Parse(data) - 1] <- elem.InnerText
+            arrayOfLines.[Int32.Parse(data) - 1] <- elem.InnerText()
             ()
 
         data.[0].Properties |> Seq.iter (fun elem -> CreateLine(elem))
@@ -514,9 +508,9 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                             duplicatedResource.Resource <- resource
 
                             let data = DupsData.Parse(x.Msr.[0].Data)
-                            for group in data.GetGs() do
+                            for group in data.Gs do
                                 let groupToAdd = new DuplicatedGroup()
-                                for block in group.GetBs() do
+                                for block in group.Bs do
                                     let blockToAdd = new DuplicatedBlock()
                                     blockToAdd.Lenght <- block.L
                                     blockToAdd.Startline <- block.S
@@ -572,7 +566,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
         status
 
-    let CreateRuleInProfile2(parsedDataRule:JsonRule.DomainTypes.Rule, profile : Profile)=
+    let CreateRuleInProfile2(parsedDataRule:JsonRule.Rule, profile : Profile)=
         let newRule = new Rule()
         newRule.Key <-  try parsedDataRule.InternalKey with | ex -> ""
         newRule.ConfigKey <-  try parsedDataRule.InternalKey with | ex -> ""
@@ -623,7 +617,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
         profile.Rules.Add(newRule)  
 
-    let CreateRuleInProfile(parsedDataRule:JsonRuleSearchResponse.DomainTypes.Rule, profile : Profile, enabledStatus:bool) =
+    let CreateRuleInProfile(parsedDataRule:JsonRuleSearchResponse.Rule, profile : Profile, enabledStatus:bool) =
 
         let IfExists(propertyToSet:string) =
             match parsedDataRule.JsonValue.TryGetProperty(propertyToSet) with
@@ -697,7 +691,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
         profile.Rules.Add(newRule)  
 
-    let GetRulesFromSearchQuery(rules : JsonRuleSearchResponse.DomainTypes.Rule [], profile : Profile, enabledStatus:bool) =
+    let GetRulesFromSearchQuery(rules : JsonRuleSearchResponse.Rule [], profile : Profile, enabledStatus:bool) =
         if profile.Rules = null then
             profile.Rules <- new System.Collections.Generic.List<Rule>() 
 
@@ -829,10 +823,30 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                     let newRule = new Rule()
                     newRule.Key <- rule.Key
                     newRule.Repo <- rule.Repo
+                    match rule.Params with
+                    | NotNull ->
+                        for para in rule.Params do
+                            let param = new RuleParam()
+                            param.Key <- para.Key
+                            param.DefaultValue <- para.Value.ToString()
+                            
+                            newRule.Params.Add(param)
+                    | _ -> ()
+
                     newRule.Severity <- (EnumHelper.asEnum<Severity>(rule.Severity)).Value
 
                     profile.Rules.Add(newRule)
 
+        member this.GetRuleUsingProfileAppId(conf:ISonarConfiguration, key:string) = 
+                let url = "/api/rules/search?&rule_key=" + HttpUtility.UrlEncode(key)
+                let reply = httpconnector.HttpSonarGetRequest(conf, url)
+                let rules = JsonRuleSearchResponse.Parse(reply)
+                if rules.Total = 1 then
+                    let profile = new Profile()
+                    CreateRuleInProfile(rules.Rules.[0], profile, false)                
+                    profile.Rules.[0]
+                else
+                    null
 
         member this.GetRulesForProfileUsingRulesApp(conf:ISonarConfiguration , profile:Profile, active:bool) = 
             if profile <> null then
@@ -984,7 +998,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             let dic = new System.Collections.Generic.Dictionary<string, string>()
             for i in data do
                 try
-                    dic.Add(i.Key, i.Value.JsonValue.InnerText)
+                    dic.Add(i.Key, i.Value.JsonValue.InnerText())
                 with
                 | ex -> ()
 
@@ -1337,7 +1351,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             let issuesInFile = JSonIssues.Parse(File.ReadAllText(path))
             let currentListOfIssues = new System.Collections.Generic.List<Issue>()
 
-            let ConvertIssue(elem : JSonIssues.DomainTypes.Issue ) =
+            let ConvertIssue(elem : JSonIssues.Issue ) =
                 let issue = new Issue()
                 if not(obj.ReferenceEquals(elem.Component, null)) then
                     issue.Component <- elem.Component.Value
