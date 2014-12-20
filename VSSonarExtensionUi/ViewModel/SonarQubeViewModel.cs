@@ -541,6 +541,7 @@ namespace VSSonarExtensionUi.ViewModel
             }
 
             this.Diagnostics = this.RoslynAdapter.GetDiagnosticElementFromManifest(Path.Combine(this.ExtensionFolder, "extension.vsixmanifest"));
+            this.DiagnosticsFound = "Sonar Rules Found: " + this.Diagnostics.Length;
         }
 
         public FSharpList<DiagnosticDescriptor> Diagnostics { get; set; }
@@ -548,6 +549,8 @@ namespace VSSonarExtensionUi.ViewModel
         public FSharpList<SubscriberElem> PublisherMessages { get; set; }
 
         public string ExtensionFolder { get; set; }
+
+        public string DiagnosticsFound { get; set; }
 
         /// <summary>
         /// The get issues in editor.

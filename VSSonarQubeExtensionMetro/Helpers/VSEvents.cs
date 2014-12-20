@@ -15,6 +15,7 @@
 namespace VSSonarQubeExtension.Helpers
 {
     using System;
+    using System.Diagnostics;
     using System.Drawing;
     using System.Linq;
 
@@ -243,9 +244,16 @@ namespace VSSonarQubeExtension.Helpers
                 return;
             }
 
-            if (window.Document == null)
+            try
             {
-                SonarQubeViewModelFactory.SQViewModel.ClosedWindow(window.Caption);
+                if (window.Document == null)
+                {
+                    SonarQubeViewModelFactory.SQViewModel.ClosedWindow(window.Caption);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
             }
         }
 

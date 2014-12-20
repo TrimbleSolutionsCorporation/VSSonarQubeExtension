@@ -4,6 +4,7 @@ open NUnit.Framework
 open FsUnit
 open RoslynAdapter
 open System.IO
+open System
 open Foq
 open SonarRestService
 open ExtensionTypes
@@ -54,7 +55,7 @@ type RoslynAdapterTest() =
     [<Test>]
     member test.``gets correct number of diagnostics from assembly`` () = 
         let adapter = RoslynAdapter()
-        let diagnostics = adapter.GetDiagnosticsFromAssembly("testdata/NSonarQubeDiagnostics.dll")
+        let diagnostics = adapter.GetDiagnosticsFromAssembly(Environment.CurrentDirectory, "testdata/NSonarQubeDiagnostics.dll")
         diagnostics.Length |> should equal 24
         diagnostics.[0].Id |> should equal "AssignmentInsideSubExpression"
         
@@ -71,7 +72,7 @@ type RoslynAdapterTest() =
     member test.``gets correct number of codefix from diagnostic`` () = 
         let adapter = RoslynAdapter()
         let codeFix = adapter.GetCodeFixFromAssembly("testdata/Analyzer1.dll")
-        let codeDiag = adapter.GetDiagnosticsFromAssembly("testdata/Analyzer1.dll")
+        let codeDiag = adapter.GetDiagnosticsFromAssembly(Environment.CurrentDirectory, "testdata/Analyzer1.dll")
 
         let fix = adapter.GetCodeFixesForDiagnostics(codeDiag.[0].Id, codeFix)
         fix.Count |> should equal 1
@@ -80,7 +81,7 @@ type RoslynAdapterTest() =
     member test.``gets correct number of codefix from diagnostic, no codefix`` () = 
         let adapter = RoslynAdapter()
         let codeFix = adapter.GetCodeFixFromAssembly("testdata/NSonarQubeDiagnostics.dll")
-        let codeDiag = adapter.GetDiagnosticsFromAssembly("testdata/NSonarQubeDiagnostics.dll")
+        let codeDiag = adapter.GetDiagnosticsFromAssembly(Environment.CurrentDirectory, "testdata/NSonarQubeDiagnostics.dll")
 
         let fix = adapter.GetCodeFixesForDiagnostics(codeDiag.[0].Id, codeFix)
         fix.Count |> should equal 0
@@ -88,7 +89,7 @@ type RoslynAdapterTest() =
     [<Test>]
     member test.``gets subscriber list with enable and disable rules`` () = 
         let adapter = RoslynAdapter()
-        let codeDiag = adapter.GetDiagnosticsFromAssembly("testdata/NSonarQubeDiagnostics.dll")
+        let codeDiag = adapter.GetDiagnosticsFromAssembly(Environment.CurrentDirectory, "testdata/NSonarQubeDiagnostics.dll")
 
         let subscription = adapter.GetSubscriberData(codeDiag, profile)
         subscription.Length |> should equal 24

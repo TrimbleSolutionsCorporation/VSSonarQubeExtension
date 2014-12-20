@@ -13,6 +13,7 @@ open Microsoft.CodeAnalysis
 open ExtensionTypes
 open ZeroMQ
 open System.Threading
+open System.Diagnostics
 
 type RoslynAdapter() =     
     let AddDllAnalysisToManifest(assemblyToAdd:string, manifestPath:string) =
@@ -46,7 +47,12 @@ type RoslynAdapter() =
     member x.StartPublisher() =
         use context = ZmqContext.Create()
         use publisher = context.CreateSocket(SocketType.PUB)
-        publisher.Bind("tcp://*:5561")
+        let currentProcess = Process.GetCurrentProcess()
+        let mutable id = currentProcess.Id
+        if id < 5000 then
+            id <- id + 5000
+
+        publisher.Bind(sprintf "tcp://*:%i" id)
 
         while not(x.EndBroadcaster) do
 
@@ -99,10 +105,10 @@ type RoslynAdapter() =
             
         subs        
 
-    member x.GetDiagnosticsFromAssembly(assemblyToAdd:string) =
+    member x.GetDiagnosticsFromAssembly(assemblyToAdd:string, path:string) =
         let listOfDiagnosticsId : string List = List.Empty
 
-        let domaininfo = new AppDomainSetup(ApplicationBase = Environment.CurrentDirectory, PrivateBinPath = @"vs2015\SQAnalyzer")
+        let domaininfo = new AppDomainSetup(ApplicationBase = path, PrivateBinPath = @"vs2015\SQAnalyzer")
         let adevidence = AppDomain.CurrentDomain.Evidence
         AppDomain.CurrentDomain.add_AssemblyResolve(fun _ args ->
             let name = System.Reflection.AssemblyName(args.Name)
@@ -124,7 +130,7 @@ type RoslynAdapter() =
         let typesd = asmLoaderProxy.GetType()
         let getdiag = typesd.GetMethod("GetDiagnosticPresentInAssembly")
         let data : System.Object array = Array.zeroCreate 1
-        data.[0] <- (assemblyToAdd :> System.Object)
+        data.[0] <- (Path.Combine(path,assemblyToAdd) :> System.Object)
         let ret = (getdiag.Invoke(asmLoaderProxy, data) :?> DiagnosticDescriptor List)
         AppDomain.Unload(domain)
         ret
@@ -155,7 +161,7 @@ type RoslynAdapter() =
             for asset in manifest.Assets do
                 if asset.Type.Equals("Microsoft.VisualStudio.Analyzer") || asset.Type.Equals("Microsoft.VisualStudio.MefComponent") then
                     try
-                        let diag = x.GetDiagnosticsFromAssembly(asset.Path)
+                        let diag = x.GetDiagnosticsFromAssembly(asset.Path, Directory.GetParent(manifestPath).ToString())
                         for elem in diag do
                             diagnostics <- diagnostics @ [elem]
                     with

@@ -9,6 +9,7 @@ open Foq
 open SonarRestService
 open ExtensionTypes
 open ZeroMQ
+open System.Diagnostics
 
 type CommunicationTest() = 
     let profile = Profile()
@@ -49,9 +50,14 @@ type CommunicationTest() =
             retData
 
         adapter.BroadcastPeriod <- 100
+        let currentProcess = Process.GetCurrentProcess()
+        let mutable id = currentProcess.Id
+        if id < 5000 then
+            id <- id + 5000
+
         for elm in publisherMessages do
             use subscriber = context.CreateSocket(SocketType.SUB)
-            subscriber.Connect("tcp://127.0.0.1:5561")
+            subscriber.Connect(sprintf "tcp://127.0.0.1:%i" id)
             subscriber.Subscribe(Encoding.Unicode.GetBytes(elm.Id))
             let m = subscriber.Receive(Encoding.Unicode)
             let expectedData = sprintf "%s;%b;%s" elm.Id elm.Status (getParamsData(elm))
