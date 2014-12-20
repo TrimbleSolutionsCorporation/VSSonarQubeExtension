@@ -403,10 +403,18 @@ namespace VSSonarExtensionUi.ViewModel
 
         private void UpdateDiagnostics(Resource solResource)
         {
+            var profiles = this.SonarRestConnector.GetQualityProfilesForProject(this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, solResource.Key);
             var profile = new Profile();
 
-            profile.Name = "Sonar way";
-            profile.Language = "cs";
+            foreach (var profile1 in profiles)
+            {
+                if (profile1.Language.Equals("cs"))
+                {
+                    profile.Language = "cs";
+                    profile.Name = profile1.Name;
+                }
+            }           
+            
             this.SonarRestConnector.GetRulesForProfile(this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, profile);
 
             if (this.PublisherMessages == null)
