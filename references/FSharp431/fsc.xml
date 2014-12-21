@@ -11,25 +11,13 @@
 <member name="">
 
 </member>
-<member name="T:Microsoft.FSharp.Compiler.CommandLineMain.OutputCollector">
-<summary>
- Collect the output from the stdout and stderr streams, character by character,
- recording the console color used along the way.
-</summary>
-</member>
 <member name="">
 
 </member>
 <member name="">
 
 </member>
-<member name="">
-
-</member>
-<member name="">
-
-</member>
-<member name="">
+<member name="T:Microsoft.FSharp.Compiler.CommandLineMain.Driver">
 
 </member>
 <member name="">
@@ -89,6 +77,21 @@
 <member name="T:Microsoft.FSharp.Compiler.CommandLineMain.FSharpResidentCompiler.FSharpCompilationServer">
 <summary>
  The compilation server, which runs in the server process. Accessed by clients using .NET remoting.
+</summary>
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="T:Microsoft.FSharp.Compiler.CommandLineMain.FSharpResidentCompiler.OutputCollector">
+<summary>
+ Collect the output from the stdout and stderr streams, character by character,
+ recording the console color used along the way.
 </summary>
 </member>
 <member name="T:Microsoft.FSharp.Compiler.CommandLineMain.FSharpResidentCompiler">

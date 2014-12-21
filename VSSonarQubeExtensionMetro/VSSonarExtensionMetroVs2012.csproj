@@ -145,6 +145,7 @@
     <Compile Include="StatusBar\IVSStatusBar.cs" />
     <Compile Include="StatusBar\VSSStatusBar.cs" />
     <Compile Include="VSControls\GuidList.cs" />
+	<Compile Include="SolutionEventsListener.cs" />
     <Compile Include="PckResources\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -1,0 +1,389 @@
+Microsoft (R) Build Engine version 4.0.30319.36242
+[Microsoft .NET Framework, version 4.0.30319.0]
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Build started 21/12/2014 18:17:38.
+Project "c:\dev\VSSonarQubeExtension\ExtensionHelpers.Test\ExtensionHelpers.Test.csproj" on node 1 (default targets).
+Project "c:\dev\VSSonarQubeExtension\ExtensionHelpers.Test\ExtensionHelpers.Test.csproj" (1) is building "c:\dev\VSSonarQubeExtension\DifferenceEngine\DifferenceEngine.csproj" (2) on node 1 (default targets).
+GenerateTargetFrameworkMonikerAttribute:
+Skipping target "GenerateTargetFrameworkMonikerAttribute" because all output files are up-to-date with respect to the input files.
+CoreCompile:
+Skipping target "CoreCompile" because all output files are up-to-date with respect to the input files.
+CopyFilesToOutputDirectory:
+  DifferenceEngine -> c:\dev\VSSonarQubeExtension\BuildDrop\DifferenceEngine.dll
+Done Building Project "c:\dev\VSSonarQubeExtension\DifferenceEngine\DifferenceEngine.csproj" (default targets).
+Project "c:\dev\VSSonarQubeExtension\ExtensionHelpers.Test\ExtensionHelpers.Test.csproj" (1) is building "c:\dev\VSSonarQubeExtension\ExtensionHelpers\ExtensionHelpers.csproj" (3) on node 1 (default targets).
+Project "c:\dev\VSSonarQubeExtension\ExtensionHelpers\ExtensionHelpers.csproj" (3) is building "c:\dev\VSSonarQubeExtension\ExtensionTypes\ExtensionTypes.csproj" (4) on node 1 (default targets).
+GenerateTargetFrameworkMonikerAttribute:
+Skipping target "GenerateTargetFrameworkMonikerAttribute" because all output files are up-to-date with respect to the input files.
+CoreCompile:
+Skipping target "CoreCompile" because all output files are up-to-date with respect to the input files.
+WinFodyTarget:
+    Fody (version 1.26.3.0) Executing
+    ProjectDirectory: 'c:\dev\VSSonarQubeExtension\ExtensionTypes\'.
+    AssemblyPath: 'c:\dev\VSSonarQubeExtension\ExtensionTypes\obj\Debug\ExtensionTypes.dll'
+    Found path to weavers file 'c:\dev\VSSonarQubeExtension\ExtensionTypes\FodyWeavers.xml'.
+    Did not process because file has already been processed.
+    Finding weavers
+    Adding weaver dlls from '..\Packages'.
+    Fody weaver file added '..\Packages\PropertyChanged.Fody.1.48.5\PropertyChanged.Fody.dll'
+    Fody weaver file added '..\Packages\PropertyChanged.Fody.1.48.6\PropertyChanged.Fody.dll'
+    Could not find packages dir from nuget config.
+    SolutionDirectoryPath: ..\
+    Adding weaver dlls from 'c:\dev\VSSonarQubeExtension\packages'.
+    Fody weaver file added 'c:\dev\VSSonarQubeExtension\packages\PropertyChanged.Fody.1.48.5\PropertyChanged.Fody.dll'
+    Fody weaver file added 'c:\dev\VSSonarQubeExtension\packages\PropertyChanged.Fody.1.48.6\PropertyChanged.Fody.dll'
+    SolutionDirectoryPath: ..\
+    Skipped scanning '..\Tools' for weavers since it doesn't exist.
+    No Weaver project file found.
+    Finished finding weavers 12ms
+      Finished Fody 58ms.
+CopyFilesToOutputDirectory:
+  ExtensionTypes -> c:\dev\VSSonarQubeExtension\BuildDrop\ExtensionTypes.dll
+Done Building Project "c:\dev\VSSonarQubeExtension\ExtensionTypes\ExtensionTypes.csproj" (default targets).
+Project "c:\dev\VSSonarQubeExtension\ExtensionHelpers\ExtensionHelpers.csproj" (3) is building "c:\dev\VSSonarQubeExtension\SonarRestService\SonarRestService.fsproj" (5) on node 1 (default targets).
+ResolveAssemblyReferences:
+  Unified primary reference "FSharp.Core, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a".
+      Using this version instead of original version "4.3.0.0" in "c:\dev\VSSonarQubeExtension\packages\FSharp.Data.2.1.0\lib\net40\FSharp.Data.dll" because AutoUnify is 'true'.
+C:\Windows\Microsoft.NET\Framework\v4.0.30319\Microsoft.Common.targets(1605,5): warning MSB3245: Could not resolve this reference. Could not locate the assembly "FSharp.Core, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a". Check to make sure the assembly exists on disk. If this reference is required by your code, you may get compilation errors. [c:\dev\VSSonarQubeExtension\SonarRestService\SonarRestService.fsproj]
+          For SearchPath "c:\dev\VSSonarQubeExtension\packages\FSharp.Data.2.1.0\lib\net40".
+          Considered "c:\dev\VSSonarQubeExtension\packages\FSharp.Data.2.1.0\lib\net40\FSharp.Core.winmd", but it didn't exist.
+          Considered "c:\dev\VSSonarQubeExtension\packages\FSharp.Data.2.1.0\lib\net40\FSharp.Core.dll", but it didn't exist.
+          Considered "c:\dev\VSSonarQubeExtension\packages\FSharp.Data.2.1.0\lib\net40\FSharp.Core.exe", but it didn't exist.
+          For SearchPath "{HintPathFromItem}".
+          Considered "c:\dev\VSSonarQubeExtension\references\FSharp.Core.dll", but its name "FSharp.Core, Version=4.3.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" didn't match.
+          For SearchPath "{TargetFrameworkDirectory}".
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\FSharp.Core.winmd", but it didn't exist.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\FSharp.Core.dll", but it didn't exist.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\FSharp.Core.exe", but it didn't exist.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\Facades\FSharp.Core.winmd", but it didn't exist.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\Facades\FSharp.Core.dll", but it didn't exist.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\Facades\FSharp.Core.exe", but it didn't exist.
+          For SearchPath "{Registry:Software\Microsoft\.NETFramework,v4.5,AssemblyFoldersEx}".
+          Considered AssemblyFoldersEx locations.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.0\4.3.0.0\FSharp.Core.dll", but its name "FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" didn't match.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.0\4.3.1.0\FSharp.Core.dll", but its name "FSharp.Core, Version=4.3.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" didn't match.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\3.0\Runtime\v4.0\FSharp.Core.dll", but its name "FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" didn't match.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.0\4.3.0.0\FSharp.Core.dll", but its name "FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" didn't match.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.0\4.3.1.0\FSharp.Core.dll", but its name "FSharp.Core, Version=4.3.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" didn't match.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\3.0\Runtime\v4.0\FSharp.Core.dll", but its name "FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" didn't match.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v2.0\2.3.0.0\FSharp.Core.dll", but its name "FSharp.Core, Version=2.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" didn't match.
+          For SearchPath "{AssemblyFolders}".
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\v3.5\FSharp.Core.winmd", but it didn't exist.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\v3.5\FSharp.Core.dll", but it didn't exist.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\v3.5\FSharp.Core.exe", but it didn't exist.
+          For SearchPath "{GAC}".
+          Considered "FSharp.Core, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", which was not found in the GAC.
+          For SearchPath "c:\dev\VSSonarQubeExtension\BuildDrop\".
+          Considered "c:\dev\VSSonarQubeExtension\BuildDrop\FSharp.Core.winmd", but it didn't exist.
+          Considered "c:\dev\VSSonarQubeExtension\BuildDrop\FSharp.Core.dll", but its name "FSharp.Core, Version=4.3.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" didn't match.
+          Considered "c:\dev\VSSonarQubeExtension\BuildDrop\FSharp.Core.exe", but it didn't exist.
+  AssemblyFoldersEx location: "{Registry:Software\Microsoft\.NETFramework,v4.5,AssemblyFoldersEx}"
+          C:\Program Files (x86)\Microsoft SQL Server Compact Edition\v4.0\Desktop
+          C:\Program Files (x86)\Microsoft Web Tools\ReferenceAssemblies\12.0\
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\ReferenceAssemblies\v4.5\
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\ReferenceAssemblies\v4.5\
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\PublicAssemblies\
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\PublicAssemblies\
+          C:\Program Files (x86)\Microsoft.NET\Primary Interop Assemblies\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.0\4.3.0.0\Type Providers\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.0\4.3.0.0\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.0\4.3.1.0\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\3.0\Runtime\v4.0\Type Providers\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\3.0\Runtime\v4.0\
+          C:\Program Files (x86)\Microsoft SDKs\Expression\Blend\.NETFramework\v4.5\Prototyping\Libraries\
+          C:\Program Files (x86)\Microsoft SDKs\Expression\Blend\.NETFramework\v4.5\Libraries\
+          C:\Program Files (x86)\Microsoft WCF Data Services\5.6\bin\.NETFramework\
+          C:\Program Files (x86)\Microsoft WCF Data Services\5.0\bin\.NETFramework\
+          C:\Program Files\Reference Assemblies\Microsoft\VSTO40\v4.0.Framework\
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\Visual Studio Tools for Office\PIA\Office14\
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\Visual Studio Tools for Office\PIA\Common\
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\Extensions\Microsoft\SharePoint\PublicAssemblies\
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\ReferenceAssemblies\v4.0\
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\ReferenceAssemblies\v4.0\
+          C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\VBPowerPacks\v10.0\
+          C:\Program Files (x86)\Microsoft SDKs\RIA Services\v1.0\Libraries\Server\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.0\4.3.0.0\Type Providers\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.0\4.3.0.0\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.0\4.3.1.0\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\3.0\Runtime\v4.0\Type Providers\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\3.0\Runtime\v4.0\
+          C:\Program Files (x86)\Microsoft SDKs\Expression\Blend\.NETFramework\v4.0\Prototyping\Libraries\
+          C:\Program Files (x86)\Microsoft SDKs\Expression\Blend\.NETFramework\v4.0\Libraries\
+          C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v2.0\Assemblies\
+          C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\Assemblies\
+          C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET MVC 4\Assemblies\
+          C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET MVC 3\Assemblies\
+          
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\Extensions\Microsoft\SharePoint\PublicAssemblies\
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v2.0\
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\ReferenceAssemblies\v2.0\
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v2.0\
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\ReferenceAssemblies\v2.0\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\VBPowerPacks\v10.0\
+          C:\Program Files (x86)\Common Files\Microsoft Shared\MSEnv\PublicAssemblies\
+          C:\Program Files (x86)\Microsoft Chart Controls\Assemblies
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v2.0\2.3.0.0\
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\Blend\
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\Blend\
+GenerateTargetFrameworkMonikerAttribute:
+Skipping target "GenerateTargetFrameworkMonikerAttribute" because all output files are up-to-date with respect to the input files.
+CoreCompile:
+Skipping target "CoreCompile" because all output files are up-to-date with respect to the input files.
+CopyFilesToOutputDirectory:
+  SonarRestService -> c:\dev\VSSonarQubeExtension\BuildDrop\SonarRestService.dll
+Done Building Project "c:\dev\VSSonarQubeExtension\SonarRestService\SonarRestService.fsproj" (default targets).
+Project "c:\dev\VSSonarQubeExtension\ExtensionHelpers\ExtensionHelpers.csproj" (3) is building "c:\dev\VSSonarQubeExtension\VSSonarPlugins\VSSonarPlugins.csproj" (6) on node 1 (default targets).
+GenerateTargetFrameworkMonikerAttribute:
+Skipping target "GenerateTargetFrameworkMonikerAttribute" because all output files are up-to-date with respect to the input files.
+CoreCompile:
+Skipping target "CoreCompile" because all output files are up-to-date with respect to the input files.
+CopyFilesToOutputDirectory:
+  VSSonarPlugins -> c:\dev\VSSonarQubeExtension\BuildDrop\VSSonarPlugins.dll
+Done Building Project "c:\dev\VSSonarQubeExtension\VSSonarPlugins\VSSonarPlugins.csproj" (default targets).
+GenerateTargetFrameworkMonikerAttribute:
+Skipping target "GenerateTargetFrameworkMonikerAttribute" because all output files are up-to-date with respect to the input files.
+CoreCompile:
+Skipping target "CoreCompile" because all output files are up-to-date with respect to the input files.
+CopyFilesToOutputDirectory:
+  ExtensionHelpers -> c:\dev\VSSonarQubeExtension\BuildDrop\ExtensionHelpers.dll
+Done Building Project "c:\dev\VSSonarQubeExtension\ExtensionHelpers\ExtensionHelpers.csproj" (default targets).
+Project "c:\dev\VSSonarQubeExtension\ExtensionHelpers.Test\ExtensionHelpers.Test.csproj" (1) is building "c:\dev\VSSonarQubeExtension\VSSonarQubeExtensionMetro\VSSonarExtensionMetro.csproj" (7) on node 1 (default targets).
+Project "c:\dev\VSSonarQubeExtension\VSSonarQubeExtensionMetro\VSSonarExtensionMetro.csproj" (7) is building "c:\dev\VSSonarQubeExtension\SonarLocalAnalyser\SonarLocalAnalyser.fsproj" (8) on node 1 (default targets).
+Project "c:\dev\VSSonarQubeExtension\SonarLocalAnalyser\SonarLocalAnalyser.fsproj" (8) is building "c:\dev\VSSonarQubeExtension\CommandExecutor\CommandExecutor.fsproj" (9) on node 1 (default targets).
+ResolveAssemblyReferences:
+  Primary reference "FSharp.Core, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a".
+C:\Windows\Microsoft.NET\Framework\v4.0.30319\Microsoft.Common.targets(1605,5): warning MSB3245: Could not resolve this reference. Could not locate the assembly "FSharp.Core, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a". Check to make sure the assembly exists on disk. If this reference is required by your code, you may get compilation errors. [c:\dev\VSSonarQubeExtension\CommandExecutor\CommandExecutor.fsproj]
+          For SearchPath "{HintPathFromItem}".
+          Considered "c:\dev\VSSonarQubeExtension\references\FSharp.Core.dll", but its name "FSharp.Core, Version=4.3.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" didn't match.
+          For SearchPath "{TargetFrameworkDirectory}".
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\FSharp.Core.winmd", but it didn't exist.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\FSharp.Core.dll", but it didn't exist.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\FSharp.Core.exe", but it didn't exist.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\Facades\FSharp.Core.winmd", but it didn't exist.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\Facades\FSharp.Core.dll", but it didn't exist.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\Facades\FSharp.Core.exe", but it didn't exist.
+          For SearchPath "{Registry:Software\Microsoft\.NETFramework,v4.5,AssemblyFoldersEx}".
+          Considered AssemblyFoldersEx locations.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.0\4.3.0.0\FSharp.Core.dll", but its name "FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" didn't match.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.0\4.3.1.0\FSharp.Core.dll", but its name "FSharp.Core, Version=4.3.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" didn't match.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\3.0\Runtime\v4.0\FSharp.Core.dll", but its name "FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" didn't match.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.0\4.3.0.0\FSharp.Core.dll", but its name "FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" didn't match.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.0\4.3.1.0\FSharp.Core.dll", but its name "FSharp.Core, Version=4.3.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" didn't match.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\3.0\Runtime\v4.0\FSharp.Core.dll", but its name "FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" didn't match.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v2.0\2.3.0.0\FSharp.Core.dll", but its name "FSharp.Core, Version=2.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" didn't match.
+          For SearchPath "{AssemblyFolders}".
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\v3.5\FSharp.Core.winmd", but it didn't exist.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\v3.5\FSharp.Core.dll", but it didn't exist.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\v3.5\FSharp.Core.exe", but it didn't exist.
+          For SearchPath "{GAC}".
+          Considered "FSharp.Core, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", which was not found in the GAC.
+          For SearchPath "{RawFileName}".
+          Considered treating "FSharp.Core, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" as a file name, but it didn't exist.
+          For SearchPath "..\BuildDrop\".
+          Considered "..\BuildDrop\FSharp.Core.winmd", but it didn't exist.
+          Considered "..\BuildDrop\FSharp.Core.dll", but its name "FSharp.Core, Version=4.3.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" didn't match.
+          Considered "..\BuildDrop\FSharp.Core.exe", but it didn't exist.
+  AssemblyFoldersEx location: "{Registry:Software\Microsoft\.NETFramework,v4.5,AssemblyFoldersEx}"
+          C:\Program Files (x86)\Microsoft SQL Server Compact Edition\v4.0\Desktop
+          C:\Program Files (x86)\Microsoft Web Tools\ReferenceAssemblies\12.0\
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\ReferenceAssemblies\v4.5\
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\ReferenceAssemblies\v4.5\
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\PublicAssemblies\
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\PublicAssemblies\
+          C:\Program Files (x86)\Microsoft.NET\Primary Interop Assemblies\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.0\4.3.0.0\Type Providers\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.0\4.3.0.0\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.0\4.3.1.0\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\3.0\Runtime\v4.0\Type Providers\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\3.0\Runtime\v4.0\
+          C:\Program Files (x86)\Microsoft SDKs\Expression\Blend\.NETFramework\v4.5\Prototyping\Libraries\
+          C:\Program Files (x86)\Microsoft SDKs\Expression\Blend\.NETFramework\v4.5\Libraries\
+          C:\Program Files (x86)\Microsoft WCF Data Services\5.6\bin\.NETFramework\
+          C:\Program Files (x86)\Microsoft WCF Data Services\5.0\bin\.NETFramework\
+          C:\Program Files\Reference Assemblies\Microsoft\VSTO40\v4.0.Framework\
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\Visual Studio Tools for Office\PIA\Office14\
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\Visual Studio Tools for Office\PIA\Common\
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\Extensions\Microsoft\SharePoint\PublicAssemblies\
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\ReferenceAssemblies\v4.0\
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\ReferenceAssemblies\v4.0\
+          C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\VBPowerPacks\v10.0\
+          C:\Program Files (x86)\Microsoft SDKs\RIA Services\v1.0\Libraries\Server\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.0\4.3.0.0\Type Providers\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.0\4.3.0.0\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.0\4.3.1.0\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\3.0\Runtime\v4.0\Type Providers\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\3.0\Runtime\v4.0\
+          C:\Program Files (x86)\Microsoft SDKs\Expression\Blend\.NETFramework\v4.0\Prototyping\Libraries\
+          C:\Program Files (x86)\Microsoft SDKs\Expression\Blend\.NETFramework\v4.0\Libraries\
+          C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v2.0\Assemblies\
+          C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\Assemblies\
+          C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET MVC 4\Assemblies\
+          C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET MVC 3\Assemblies\
+          
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\Extensions\Microsoft\SharePoint\PublicAssemblies\
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v2.0\
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\ReferenceAssemblies\v2.0\
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v2.0\
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\ReferenceAssemblies\v2.0\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\VBPowerPacks\v10.0\
+          C:\Program Files (x86)\Common Files\Microsoft Shared\MSEnv\PublicAssemblies\
+          C:\Program Files (x86)\Microsoft Chart Controls\Assemblies
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v2.0\2.3.0.0\
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\Blend\
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\Blend\
+GenerateTargetFrameworkMonikerAttribute:
+Skipping target "GenerateTargetFrameworkMonikerAttribute" because all output files are up-to-date with respect to the input files.
+CoreCompile:
+Skipping target "CoreCompile" because all output files are up-to-date with respect to the input files.
+CopyFilesToOutputDirectory:
+  CommandExecutor -> c:\dev\VSSonarQubeExtension\BuildDrop\CommandExecutor.dll
+Done Building Project "c:\dev\VSSonarQubeExtension\CommandExecutor\CommandExecutor.fsproj" (default targets).
+ResolveAssemblyReferences:
+  Unified primary reference "FSharp.Core, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a".
+      Using this version instead of original version "4.3.0.0" in "c:\dev\VSSonarQubeExtension\BuildDrop\SonarRestService.dll" because AutoUnify is 'true'.
+      Using this version instead of original version "4.3.0.0" in "c:\dev\VSSonarQubeExtension\BuildDrop\FSharp.Data.dll" because AutoUnify is 'true'.
+C:\Windows\Microsoft.NET\Framework\v4.0.30319\Microsoft.Common.targets(1605,5): warning MSB3245: Could not resolve this reference. Could not locate the assembly "FSharp.Core, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a". Check to make sure the assembly exists on disk. If this reference is required by your code, you may get compilation errors. [c:\dev\VSSonarQubeExtension\SonarLocalAnalyser\SonarLocalAnalyser.fsproj]
+          For SearchPath "c:\dev\VSSonarQubeExtension\BuildDrop".
+          Considered "c:\dev\VSSonarQubeExtension\BuildDrop\FSharp.Core.winmd", but it didn't exist.
+          Considered "c:\dev\VSSonarQubeExtension\BuildDrop\FSharp.Core.dll", but its name "FSharp.Core, Version=4.3.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" didn't match.
+          Considered "c:\dev\VSSonarQubeExtension\BuildDrop\FSharp.Core.exe", but it didn't exist.
+          For SearchPath "{HintPathFromItem}".
+          Considered "c:\dev\VSSonarQubeExtension\references\FSharp.Core.dll", but its name "FSharp.Core, Version=4.3.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" didn't match.
+          For SearchPath "{TargetFrameworkDirectory}".
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\FSharp.Core.winmd", but it didn't exist.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\FSharp.Core.dll", but it didn't exist.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\FSharp.Core.exe", but it didn't exist.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\Facades\FSharp.Core.winmd", but it didn't exist.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\Facades\FSharp.Core.dll", but it didn't exist.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\Facades\FSharp.Core.exe", but it didn't exist.
+          For SearchPath "{Registry:Software\Microsoft\.NETFramework,v4.5,AssemblyFoldersEx}".
+          Considered AssemblyFoldersEx locations.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.0\4.3.0.0\FSharp.Core.dll", but its name "FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" didn't match.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.0\4.3.1.0\FSharp.Core.dll", but its name "FSharp.Core, Version=4.3.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" didn't match.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\3.0\Runtime\v4.0\FSharp.Core.dll", but its name "FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" didn't match.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.0\4.3.0.0\FSharp.Core.dll", but its name "FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" didn't match.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.0\4.3.1.0\FSharp.Core.dll", but its name "FSharp.Core, Version=4.3.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" didn't match.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\3.0\Runtime\v4.0\FSharp.Core.dll", but its name "FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" didn't match.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v2.0\2.3.0.0\FSharp.Core.dll", but its name "FSharp.Core, Version=2.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" didn't match.
+          For SearchPath "{AssemblyFolders}".
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\v3.5\FSharp.Core.winmd", but it didn't exist.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\v3.5\FSharp.Core.dll", but it didn't exist.
+          Considered "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\v3.5\FSharp.Core.exe", but it didn't exist.
+          For SearchPath "{GAC}".
+          Considered "FSharp.Core, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", which was not found in the GAC.
+          For SearchPath "c:\dev\VSSonarQubeExtension\BuildDrop\".
+          Considered "c:\dev\VSSonarQubeExtension\BuildDrop\FSharp.Core.winmd", but it didn't exist.
+          Considered "c:\dev\VSSonarQubeExtension\BuildDrop\FSharp.Core.dll", but its name "FSharp.Core, Version=4.3.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" didn't match.
+          Considered "c:\dev\VSSonarQubeExtension\BuildDrop\FSharp.Core.exe", but it didn't exist.
+  AssemblyFoldersEx location: "{Registry:Software\Microsoft\.NETFramework,v4.5,AssemblyFoldersEx}"
+          C:\Program Files (x86)\Microsoft SQL Server Compact Edition\v4.0\Desktop
+          C:\Program Files (x86)\Microsoft Web Tools\ReferenceAssemblies\12.0\
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\ReferenceAssemblies\v4.5\
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\ReferenceAssemblies\v4.5\
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\PublicAssemblies\
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\PublicAssemblies\
+          C:\Program Files (x86)\Microsoft.NET\Primary Interop Assemblies\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.0\4.3.0.0\Type Providers\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.0\4.3.0.0\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.0\4.3.1.0\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\3.0\Runtime\v4.0\Type Providers\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\3.0\Runtime\v4.0\
+          C:\Program Files (x86)\Microsoft SDKs\Expression\Blend\.NETFramework\v4.5\Prototyping\Libraries\
+          C:\Program Files (x86)\Microsoft SDKs\Expression\Blend\.NETFramework\v4.5\Libraries\
+          C:\Program Files (x86)\Microsoft WCF Data Services\5.6\bin\.NETFramework\
+          C:\Program Files (x86)\Microsoft WCF Data Services\5.0\bin\.NETFramework\
+          C:\Program Files\Reference Assemblies\Microsoft\VSTO40\v4.0.Framework\
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\Visual Studio Tools for Office\PIA\Office14\
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\Visual Studio Tools for Office\PIA\Common\
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\Extensions\Microsoft\SharePoint\PublicAssemblies\
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\ReferenceAssemblies\v4.0\
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\ReferenceAssemblies\v4.0\
+          C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\VBPowerPacks\v10.0\
+          C:\Program Files (x86)\Microsoft SDKs\RIA Services\v1.0\Libraries\Server\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.0\4.3.0.0\Type Providers\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.0\4.3.0.0\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.0\4.3.1.0\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\3.0\Runtime\v4.0\Type Providers\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\3.0\Runtime\v4.0\
+          C:\Program Files (x86)\Microsoft SDKs\Expression\Blend\.NETFramework\v4.0\Prototyping\Libraries\
+          C:\Program Files (x86)\Microsoft SDKs\Expression\Blend\.NETFramework\v4.0\Libraries\
+          C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v2.0\Assemblies\
+          C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\Assemblies\
+          C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET MVC 4\Assemblies\
+          C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET MVC 3\Assemblies\
+          
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\Extensions\Microsoft\SharePoint\PublicAssemblies\
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v2.0\
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\ReferenceAssemblies\v2.0\
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v2.0\
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\ReferenceAssemblies\v2.0\
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\VBPowerPacks\v10.0\
+          C:\Program Files (x86)\Common Files\Microsoft Shared\MSEnv\PublicAssemblies\
+          C:\Program Files (x86)\Microsoft Chart Controls\Assemblies
+          C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v2.0\2.3.0.0\
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\Blend\
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\Blend\
+GenerateTargetFrameworkMonikerAttribute:
+Skipping target "GenerateTargetFrameworkMonikerAttribute" because all output files are up-to-date with respect to the input files.
+CoreCompile:
+Skipping target "CoreCompile" because all output files are up-to-date with respect to the input files.
+CopyFilesToOutputDirectory:
+  SonarLocalAnalyser -> c:\dev\VSSonarQubeExtension\BuildDrop\SonarLocalAnalyser.dll
+Done Building Project "c:\dev\VSSonarQubeExtension\SonarLocalAnalyser\SonarLocalAnalyser.fsproj" (default targets).
+Project "c:\dev\VSSonarQubeExtension\VSSonarQubeExtensionMetro\VSSonarExtensionMetro.csproj" (7) is building "c:\dev\VSSonarQubeExtension\VSSonarExtensionUi\VSSonarExtensionUi.csproj" (10) on node 1 (default targets).
+C:\Windows\Microsoft.NET\Framework\v4.0.30319\Microsoft.Common.targets(1605,5): warning MSB3106: Assembly strong name "FSharp.Core, Version=, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" is either a path which could not be found or it is a full assembly name which is badly formed. If it is a full assembly name it may contain characters that need to be escaped with backslash(\). Those characters are Equals(=), Comma(,), Quote("), Apostrophe('), Backslash(\). [c:\dev\VSSonarQubeExtension\VSSonarExtensionUi\VSSonarExtensionUi.csproj]
+C:\Windows\Microsoft.NET\Framework\v4.0.30319\Microsoft.Common.targets(1605,5): warning MSB3106: Assembly strong name "FSharp.Core, Version=, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" is either a path which could not be found or it is a full assembly name which is badly formed. If it is a full assembly name it may contain characters that need to be escaped with backslash(\). Those characters are Equals(=), Comma(,), Quote("), Apostrophe('), Backslash(\). [c:\dev\VSSonarQubeExtension\VSSonarExtensionUi\VSSonarExtensionUi.csproj]
+C:\Windows\Microsoft.NET\Framework\v4.0.30319\Microsoft.WinFX.targets(268,9): error MC1000: Unknown build error, 'Cannot resolve dependency to assembly 'FSharp.Core, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' because it has not been preloaded. When using the ReflectionOnly APIs, dependent assemblies must be pre-loaded or loaded on demand through the ReflectionOnlyAssemblyResolve event.'  [c:\dev\VSSonarQubeExtension\VSSonarExtensionUi\VSSonarExtensionUi.csproj]
+Done Building Project "c:\dev\VSSonarQubeExtension\VSSonarExtensionUi\VSSonarExtensionUi.csproj" (default targets) -- FAILED.
+Done Building Project "c:\dev\VSSonarQubeExtension\VSSonarQubeExtensionMetro\VSSonarExtensionMetro.csproj" (default targets) -- FAILED.
+Done Building Project "c:\dev\VSSonarQubeExtension\ExtensionHelpers.Test\ExtensionHelpers.Test.csproj" (default targets) -- FAILED.
+
+Build FAILED.
+
+"c:\dev\VSSonarQubeExtension\ExtensionHelpers.Test\ExtensionHelpers.Test.csproj" (default target) (1) ->
+"c:\dev\VSSonarQubeExtension\ExtensionHelpers\ExtensionHelpers.csproj" (default target) (3) ->
+"c:\dev\VSSonarQubeExtension\SonarRestService\SonarRestService.fsproj" (default target) (5) ->
+(ResolveAssemblyReferences target) -> 
+  C:\Windows\Microsoft.NET\Framework\v4.0.30319\Microsoft.Common.targets(1605,5): warning MSB3245: Could not resolve this reference. Could not locate the assembly "FSharp.Core, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a". Check to make sure the assembly exists on disk. If this reference is required by your code, you may get compilation errors. [c:\dev\VSSonarQubeExtension\SonarRestService\SonarRestService.fsproj]
+
+
+"c:\dev\VSSonarQubeExtension\ExtensionHelpers.Test\ExtensionHelpers.Test.csproj" (default target) (1) ->
+"c:\dev\VSSonarQubeExtension\VSSonarQubeExtensionMetro\VSSonarExtensionMetro.csproj" (default target) (7) ->
+"c:\dev\VSSonarQubeExtension\SonarLocalAnalyser\SonarLocalAnalyser.fsproj" (default target) (8) ->
+"c:\dev\VSSonarQubeExtension\CommandExecutor\CommandExecutor.fsproj" (default target) (9) ->
+  C:\Windows\Microsoft.NET\Framework\v4.0.30319\Microsoft.Common.targets(1605,5): warning MSB3245: Could not resolve this reference. Could not locate the assembly "FSharp.Core, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a". Check to make sure the assembly exists on disk. If this reference is required by your code, you may get compilation errors. [c:\dev\VSSonarQubeExtension\CommandExecutor\CommandExecutor.fsproj]
+
+
+"c:\dev\VSSonarQubeExtension\ExtensionHelpers.Test\ExtensionHelpers.Test.csproj" (default target) (1) ->
+"c:\dev\VSSonarQubeExtension\VSSonarQubeExtensionMetro\VSSonarExtensionMetro.csproj" (default target) (7) ->
+"c:\dev\VSSonarQubeExtension\SonarLocalAnalyser\SonarLocalAnalyser.fsproj" (default target) (8) ->
+  C:\Windows\Microsoft.NET\Framework\v4.0.30319\Microsoft.Common.targets(1605,5): warning MSB3245: Could not resolve this reference. Could not locate the assembly "FSharp.Core, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a". Check to make sure the assembly exists on disk. If this reference is required by your code, you may get compilation errors. [c:\dev\VSSonarQubeExtension\SonarLocalAnalyser\SonarLocalAnalyser.fsproj]
+
+
+"c:\dev\VSSonarQubeExtension\ExtensionHelpers.Test\ExtensionHelpers.Test.csproj" (default target) (1) ->
+"c:\dev\VSSonarQubeExtension\VSSonarQubeExtensionMetro\VSSonarExtensionMetro.csproj" (default target) (7) ->
+"c:\dev\VSSonarQubeExtension\VSSonarExtensionUi\VSSonarExtensionUi.csproj" (default target) (10) ->
+  C:\Windows\Microsoft.NET\Framework\v4.0.30319\Microsoft.Common.targets(1605,5): warning MSB3106: Assembly strong name "FSharp.Core, Version=, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" is either a path which could not be found or it is a full assembly name which is badly formed. If it is a full assembly name it may contain characters that need to be escaped with backslash(\). Those characters are Equals(=), Comma(,), Quote("), Apostrophe('), Backslash(\). [c:\dev\VSSonarQubeExtension\VSSonarExtensionUi\VSSonarExtensionUi.csproj]
+  C:\Windows\Microsoft.NET\Framework\v4.0.30319\Microsoft.Common.targets(1605,5): warning MSB3106: Assembly strong name "FSharp.Core, Version=, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" is either a path which could not be found or it is a full assembly name which is badly formed. If it is a full assembly name it may contain characters that need to be escaped with backslash(\). Those characters are Equals(=), Comma(,), Quote("), Apostrophe('), Backslash(\). [c:\dev\VSSonarQubeExtension\VSSonarExtensionUi\VSSonarExtensionUi.csproj]
+
+
+"c:\dev\VSSonarQubeExtension\ExtensionHelpers.Test\ExtensionHelpers.Test.csproj" (default target) (1) ->
+"c:\dev\VSSonarQubeExtension\VSSonarQubeExtensionMetro\VSSonarExtensionMetro.csproj" (default target) (7) ->
+"c:\dev\VSSonarQubeExtension\VSSonarExtensionUi\VSSonarExtensionUi.csproj" (default target) (10) ->
+(MarkupCompilePass1 target) -> 
+  C:\Windows\Microsoft.NET\Framework\v4.0.30319\Microsoft.WinFX.targets(268,9): error MC1000: Unknown build error, 'Cannot resolve dependency to assembly 'FSharp.Core, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' because it has not been preloaded. When using the ReflectionOnly APIs, dependent assemblies must be pre-loaded or loaded on demand through the ReflectionOnlyAssemblyResolve event.'  [c:\dev\VSSonarQubeExtension\VSSonarExtensionUi\VSSonarExtensionUi.csproj]
+
+    5 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:00.78

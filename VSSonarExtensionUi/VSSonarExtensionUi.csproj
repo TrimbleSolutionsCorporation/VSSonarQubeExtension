@@ -13,6 +13,7 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ExpressionBlendVersion>12.0.50716.0</ExpressionBlendVersion>
+	<TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>a397900b</NuGetPackageImportStamp>
@@ -35,9 +36,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FSharp.Core, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>$(ReferencesFolder)\FSharp431\FSharp.Core.dll</HintPath>
+      <SpecificVersion>True</SpecificVersion>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CodeAnalysis">
-      <HintPath>..\RoslynAdapter.Test\bin\Debug\Microsoft.CodeAnalysis.dll</HintPath>
+      <HintPath>..\packages\Microsoft.CodeAnalysis.Common.1.0.0-beta1-20141031-01\lib\portable-net45+win8\Microsoft.CodeAnalysis.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="CredentialManagement">
@@ -58,12 +63,6 @@
     <Reference Include="PropertyChanged">
       <HintPath>..\packages\PropertyChanged.Fody.1.48.6\Lib\portable-net4+sl4+wp8+win8+wpa81+MonoAndroid16+MonoTouch40\PropertyChanged.dll</HintPath>
       <Private>False</Private>
-    </Reference>
-    <Reference Include="RoslynAdapter">
-      <HintPath>..\RoslynAdapter.Test\bin\Debug\RoslynAdapter.dll</HintPath>
-    </Reference>
-    <Reference Include="SonarLocalAnalyser">
-      <HintPath>..\BuildDrop\SonarLocalAnalyser.dll</HintPath>
     </Reference>
     <Reference Include="SonarRestService, Version=1.4.1.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -285,6 +284,14 @@
       <Project>{3311C918-B662-436D-8BC8-F38B447B1414}</Project>
       <Name>VSSonarPlugins</Name>
     </ProjectReference>
+    <ProjectReference Include="..\RoslynAdapter\RoslynAdapter.fsproj">
+      <Project>{496B669E-8CB4-41AC-B928-E84E3C820807}</Project>
+      <Name>VSSonarPlugins</Name>
+    </ProjectReference>
+	<ProjectReference Include="..\SonarLocalAnalyser\SonarLocalAnalyser.fsproj">
+      <Project>{A7D09C0C-EFC5-4662-83B6-DAE14E68C94C}</Project>
+      <Name>VSSonarPlugins</Name>
+    </ProjectReference>	
   </ItemGroup>
   <ItemGroup>
     <Content Include="FodyWeavers.xml" />
