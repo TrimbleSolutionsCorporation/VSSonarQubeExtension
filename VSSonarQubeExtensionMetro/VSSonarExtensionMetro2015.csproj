@@ -196,9 +196,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="vs2015\SQAnalyzer\NSonarQubeAnalyzer.pdb">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
     <None Include="vs2015\source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
