@@ -573,6 +573,11 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                     }
                 }
 
+                if (this.Vsenvironmenthelper == null)
+                {
+                    return;
+                }
+
                 this.Vsenvironmenthelper.OpenResourceInVisualStudio(this.model.OpenSolutionPath, filename, issue.Line);
             }
         }
