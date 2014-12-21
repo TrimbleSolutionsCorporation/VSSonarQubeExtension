@@ -154,7 +154,7 @@
     <PackageFiles>
         $(OutputPath)\CredentialManagement.dll;
         $(OutputPath)\DifferenceEngine.dll;
-        $(OutputPath)\Executor.dll;
+        $(OutputPath)\CommandExecutor.dll;
         $(OutputPath)\ExtensionHelpers.dll;
         $(OutputPath)\ExtensionTypes.dll;
         $(OutputPath)\FSharp.Data.dll;
