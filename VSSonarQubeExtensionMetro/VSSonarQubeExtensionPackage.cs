@@ -232,7 +232,6 @@ namespace VSSonarQubeExtension
         }
 
         SolutionEventsListener listener = null;
-        IVsUIShellDocumentWindowMgr winmgr = null;
 
         private void StartSolutionListeners()
         {

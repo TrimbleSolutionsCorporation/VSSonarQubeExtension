@@ -245,6 +245,10 @@
       <Project>{3311C918-B662-436D-8BC8-F38B447B1414}</Project>
       <Name>VSSonarPlugins</Name>
     </ProjectReference>
+    <ProjectReference Include="..\RoslynAdapter\RoslynAdapter.fsproj">
+      <Project>{496b669e-8cb4-41ac-b928-e84e3c820807}</Project>
+      <Name>RoslynAdapter</Name>
+    </ProjectReference>    
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
