@@ -74,7 +74,13 @@ type RoslynAdapter() =
 
         syncService.ReceiveReady.AddHandler( fun s e -> let message = syncService.ReceiveMessage()
                                                         let id = Encoding.Unicode.GetString(message.[0].Buffer)
-                                                        let data = syncService.Send(Encoding.Unicode.GetBytes(mapData.[id]))
+                                                        if id <> "" then
+                                                            let data = syncService.Send(Encoding.Unicode.GetBytes(mapData.[id]))
+                                                            ()
+                                                        else
+                                                            let data = syncService.Send(Encoding.Unicode.GetBytes("NO DATA FOR ID"))
+                                                            ()
+
                                                         ())
 
         let sockets = System.Collections.Generic.List<ZmqSocket>()
@@ -82,6 +88,8 @@ type RoslynAdapter() =
         use poller = new Poller(sockets)
         while not(x.EndBroadcaster) do
             poller.Poll() |> ignore
+
+        ()
 
     member x.CreateASubscriberWithMessages(messages : SubscriberElem List) =
         x.Messages <- messages
@@ -165,11 +173,21 @@ type RoslynAdapter() =
         ret
 
     
-    member x.GetCodeFixFromAssembly(assemblyToAdd:string) =
+    member x.GetCodeFixFromAssembly(assemblyToAdd:string, path:string) =
         let listOfDiagnostics = List.Empty
 
-        let domaininfo = new AppDomainSetup(ApplicationBase = Environment.CurrentDirectory)
+        let domaininfo = new AppDomainSetup(ApplicationBase = path, PrivateBinPath = @"vs2015\SQAnalyzer")
         let adevidence = AppDomain.CurrentDomain.Evidence
+        AppDomain.CurrentDomain.add_AssemblyResolve(fun _ args ->
+            let name = System.Reflection.AssemblyName(args.Name)
+            let existingAssembly = 
+                System.AppDomain.CurrentDomain.GetAssemblies()
+                |> Seq.tryFind(fun a -> System.Reflection.AssemblyName.ReferenceMatchesDefinition(name, a.GetName()))
+            match existingAssembly with
+            | Some a -> a
+            | None -> null
+        )
+
         let domain = AppDomain.CreateDomain("AllowUnloadingOfAssembliesDomain", adevidence, domaininfo)
         let typeDom = typeof<ProxyDomain>
         domain.CreateInstanceAndUnwrap(typeDom.Assembly.FullName, typeDom.FullName) |> ignore

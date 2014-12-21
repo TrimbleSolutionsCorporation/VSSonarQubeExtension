@@ -58,10 +58,16 @@ type CommunicationTest() =
 
         for elm in publisherMessages do
             use subscriber = context.CreateSocket(SocketType.REQ)
-            subscriber.Connect(sprintf "tcp://127.0.0.1:%i" (id + 1))
+            subscriber.Connect(sprintf "tcp://127.0.0.1:%i" id)
             subscriber.Send(Encoding.Unicode.GetBytes(elm.Id)) |> ignore
             let message = subscriber.ReceiveMessage()
             let m = Encoding.Unicode.GetString(message.[0].Buffer)
             let expectedData = sprintf "%s;%b;%s" elm.Id elm.Status (getParamsData(elm))
             m |> should equal expectedData
         
+        adapter.EndBroadcaster <- true
+        use subscriber = context.CreateSocket(SocketType.REQ)
+        subscriber.Connect(sprintf "tcp://127.0.0.1:%i" id)
+        subscriber.Send(Encoding.Unicode.GetBytes("")) |> ignore
+        let message = subscriber.ReceiveMessage()
+        ()

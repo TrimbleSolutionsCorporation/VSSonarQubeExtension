@@ -20,7 +20,7 @@ type RoslynAdapterTest() =
        
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText("testdata/profileusingappid.txt"))
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText("profileusingappid.txt"))
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
@@ -37,25 +37,25 @@ type RoslynAdapterTest() =
     [<Test>]
     member test.``If manifest does not contain diagnostic, it should add it`` () = 
         let adapter = RoslynAdapter()
-        adapter.AddDiagnosticElementToManifest("testdata/Analyzer1.dll", "testdata/source.extension.vsixmanifest") |> should equal PatchSourceManifestRetCode.AddedMefAndAnalysis
-        let textFile = File.ReadAllText("testdata/source.extension.vsixmanifest")
+        adapter.AddDiagnosticElementToManifest("Analyzer1.dll", "source.extension.vsixmanifest") |> should equal PatchSourceManifestRetCode.AddedMefAndAnalysis
+        let textFile = File.ReadAllText("source.extension.vsixmanifest")
         textFile.Contains(""" <Asset d:Source="File" Path="diagnostics\Analyzer1.dll" d:VsixSubPath="diagnostics" Type="Microsoft.VisualStudio.Analyzer" />""") |> should be True
         textFile.Contains(""" <Asset d:Source="File" Path="diagnostics\Analyzer1.dll" d:VsixSubPath="diagnostics" Type="Microsoft.VisualStudio.MefComponent" />""") |> should be True
 
     [<Test>]
     member test.``test assembly not found`` () = 
         let adapter = RoslynAdapter()
-        adapter.AddDiagnosticElementToManifest("testdata/Analyzer.dll", "testdata/source.extension.vsixmanifest") |> should equal PatchSourceManifestRetCode.FileNotFound
+        adapter.AddDiagnosticElementToManifest("Analyzer.dll", "source.extension.vsixmanifest") |> should equal PatchSourceManifestRetCode.FileNotFound
 
     [<Test>]
     member test.``assembly contains no diagnostics or codefixes`` () = 
         let adapter = RoslynAdapter()
-        adapter.AddDiagnosticElementToManifest("RoslynAdapter.dll", "testdata/source.extension.vsixmanifest") |> should equal PatchSourceManifestRetCode.NotFoundDiagnosticOrCodeFixers
+        adapter.AddDiagnosticElementToManifest("RoslynAdapter.dll", "source.extension.vsixmanifest") |> should equal PatchSourceManifestRetCode.NotFoundDiagnosticOrCodeFixers
 
     [<Test>]
     member test.``gets correct number of diagnostics from assembly`` () = 
         let adapter = RoslynAdapter()
-        let diagnostics = adapter.GetDiagnosticsFromAssembly(Environment.CurrentDirectory, "testdata/NSonarQubeDiagnostics.dll")
+        let diagnostics = adapter.GetDiagnosticsFromAssembly("NSonarQubeDiagnostics.dll", Environment.CurrentDirectory)
         diagnostics.Length |> should equal 24
         diagnostics.[0].Id |> should equal "AssignmentInsideSubExpression"
         
@@ -63,7 +63,7 @@ type RoslynAdapterTest() =
     [<Test>]
     member test.``gets correct number of codefix from assembly`` () = 
         let adapter = RoslynAdapter()
-        let codeFix = adapter.GetCodeFixFromAssembly("testdata/Analyzer1.dll")
+        let codeFix = adapter.GetCodeFixFromAssembly("Analyzer1.dll", Environment.CurrentDirectory)
         codeFix.Length |> should equal 1
         codeFix.[0].GetFixableDiagnosticIds().Length |> should equal 1
 
@@ -71,8 +71,8 @@ type RoslynAdapterTest() =
     [<Test>]
     member test.``gets correct number of codefix from diagnostic`` () = 
         let adapter = RoslynAdapter()
-        let codeFix = adapter.GetCodeFixFromAssembly("testdata/Analyzer1.dll")
-        let codeDiag = adapter.GetDiagnosticsFromAssembly(Environment.CurrentDirectory, "testdata/Analyzer1.dll")
+        let codeFix = adapter.GetCodeFixFromAssembly("Analyzer1.dll", Environment.CurrentDirectory)
+        let codeDiag = adapter.GetDiagnosticsFromAssembly("Analyzer1.dll", Environment.CurrentDirectory)
 
         let fix = adapter.GetCodeFixesForDiagnostics(codeDiag.[0].Id, codeFix)
         fix.Count |> should equal 1
@@ -80,8 +80,8 @@ type RoslynAdapterTest() =
     [<Test>]
     member test.``gets correct number of codefix from diagnostic, no codefix`` () = 
         let adapter = RoslynAdapter()
-        let codeFix = adapter.GetCodeFixFromAssembly("testdata/NSonarQubeDiagnostics.dll")
-        let codeDiag = adapter.GetDiagnosticsFromAssembly(Environment.CurrentDirectory, "testdata/NSonarQubeDiagnostics.dll")
+        let codeFix = adapter.GetCodeFixFromAssembly("NSonarQubeDiagnostics.dll", Environment.CurrentDirectory)
+        let codeDiag = adapter.GetDiagnosticsFromAssembly("NSonarQubeDiagnostics.dll", Environment.CurrentDirectory)
 
         let fix = adapter.GetCodeFixesForDiagnostics(codeDiag.[0].Id, codeFix)
         fix.Count |> should equal 0
@@ -89,7 +89,7 @@ type RoslynAdapterTest() =
     [<Test>]
     member test.``gets subscriber list with enable and disable rules`` () = 
         let adapter = RoslynAdapter()
-        let codeDiag = adapter.GetDiagnosticsFromAssembly(Environment.CurrentDirectory, "testdata/NSonarQubeDiagnostics.dll")
+        let codeDiag = adapter.GetDiagnosticsFromAssembly("NSonarQubeDiagnostics.dll", Environment.CurrentDirectory)
 
         let subscription = adapter.GetSubscriberData(codeDiag, profile)
         subscription.Length |> should equal 24
@@ -105,7 +105,7 @@ type RoslynAdapterTest() =
     [<Test>]
     member test.``should get correct number of diagnostics from manifest`` () = 
         let adapter = RoslynAdapter()
-        let diag = adapter.GetDiagnosticElementFromManifest("testdata/source.extension.vsixmanifest")
+        let diag = adapter.GetDiagnosticElementFromManifest("source.extension.vsixmanifest")
         diag.Length |> should equal 28
 
     //[<Test>]
