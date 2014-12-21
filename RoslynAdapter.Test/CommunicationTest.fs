@@ -4,6 +4,7 @@ open NUnit.Framework
 open FsUnit
 open RoslynAdapter
 open System.IO
+open System
 open System.Text
 open Foq
 open SonarRestService
@@ -20,7 +21,7 @@ type CommunicationTest() =
        
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText("testdata/profileusingappid.txt"))
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText("profileusingappid.txt"))
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
@@ -33,11 +34,11 @@ type CommunicationTest() =
 
     [<TearDown>]
     member test.``tearDown`` () = ()
-            
+               
     [<Test>]
-    member test.``Test Publisher Syncs Ok`` () = 
+    member test.``Test Master Server Syncs Ok`` () = 
         let adapter = RoslynAdapter()
-        let diag = adapter.GetDiagnosticElementFromManifest("testdata/source.extension.vsixmanifest")
+        let diag = adapter.GetDiagnosticElementFromManifest(Path.Combine(Environment.CurrentDirectory, "source.extension.vsixmanifest"))
         let publisherMessages = adapter.GetSubscriberData(diag, profile)     
         adapter.CreateASubscriberWithMessages(publisherMessages)
 
@@ -56,13 +57,11 @@ type CommunicationTest() =
             id <- id + 5000
 
         for elm in publisherMessages do
-            use subscriber = context.CreateSocket(SocketType.SUB)
-            subscriber.Connect(sprintf "tcp://127.0.0.1:%i" id)
-            subscriber.Subscribe(Encoding.Unicode.GetBytes(elm.Id))
-            let m = subscriber.Receive(Encoding.Unicode)
+            use subscriber = context.CreateSocket(SocketType.REQ)
+            subscriber.Connect(sprintf "tcp://127.0.0.1:%i" (id + 1))
+            subscriber.Send(Encoding.Unicode.GetBytes(elm.Id)) |> ignore
+            let message = subscriber.ReceiveMessage()
+            let m = Encoding.Unicode.GetString(message.[0].Buffer)
             let expectedData = sprintf "%s;%b;%s" elm.Id elm.Status (getParamsData(elm))
             m |> should equal expectedData
-      
-
-
         

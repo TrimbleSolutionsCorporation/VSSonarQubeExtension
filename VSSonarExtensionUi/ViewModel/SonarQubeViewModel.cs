@@ -413,8 +413,8 @@ namespace VSSonarExtensionUi.ViewModel
                     profile.Language = "cs";
                     profile.Name = profile1.Name;
                 }
-            }           
-            
+            }
+
             this.SonarRestConnector.GetRulesForProfile(this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, profile);
 
             if (this.PublisherMessages == null)

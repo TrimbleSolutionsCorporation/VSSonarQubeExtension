@@ -159,6 +159,7 @@
     <Compile Include="Helpers\VSEvents.cs" />
     <Compile Include="Helpers\VsPropertiesHelper.cs" />
     <Compile Include="InternalStateVariables.cs" />
+    <Compile Include="SolutionEventsListener.cs" />
     <Compile Include="Squiggle\SonarTag.cs" />
     <Compile Include="Squiggle\SonarTagFormatDefinition.cs" />
     <Compile Include="Squiggle\SonarTagger.cs" />

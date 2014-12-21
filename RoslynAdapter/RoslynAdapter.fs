@@ -16,6 +16,8 @@ open System.Threading
 open System.Diagnostics
 
 type RoslynAdapter() =     
+    let mapData = System.Collections.Generic.Dictionary<string, string>()
+
     let AddDllAnalysisToManifest(assemblyToAdd:string, manifestPath:string) =
         let lines = File.ReadAllLines(manifestPath)
         let mutable linesout = List.Empty
@@ -43,31 +45,43 @@ type RoslynAdapter() =
     member val Messages : SubscriberElem List = List.Empty with get, set
     member val EndBroadcaster : bool = false with get, set
     member val BroadcastPeriod : int = 3000 with get, set
+    member val PublisherRunning = false with get, set
 
     member x.StartPublisher() =
         use context = ZmqContext.Create()
-        use publisher = context.CreateSocket(SocketType.PUB)
+        use syncService = context.CreateSocket(SocketType.REP)
         let currentProcess = Process.GetCurrentProcess()
         let mutable id = currentProcess.Id
         if id < 5000 then
             id <- id + 5000
 
-        publisher.Bind(sprintf "tcp://*:%i" id)
+        
 
-        while not(x.EndBroadcaster) do
-
-            let getParamsData(c : SubscriberElem) = 
-                let mutable retData = ""
-                for elem in c.GetParams do
-                    retData <- retData + ";" + elem.Key + "=" + elem.DefaultValue.Replace("\"", "")
-                retData
+        let getParamsData(c : SubscriberElem) = 
+            let mutable retData = ""
+            for elem in c.GetParams do
+                retData <- retData + ";" + elem.Key + "=" + elem.DefaultValue.Replace("\"", "")
+            retData
                           
-            let publishData(m : SubscriberElem) = 
-                let value = sprintf "%s;%b;%s" m.Id m.Status (getParamsData(m))
-                publisher.Send(value, Encoding.Unicode) |> ignore
+        let publishData(m : SubscriberElem) = 
+            let value = sprintf "%s;%b;%s" m.Id m.Status (getParamsData(m))
+            mapData.Add(m.Id, value)
 
-            Thread.Sleep(x.BroadcastPeriod)
-            x.Messages |> List.iter (fun x -> publishData(x))
+        x.Messages |> List.iter (fun x -> publishData(x))
+
+        syncService.Bind(sprintf "tcp://*:%i" id)
+        x.PublisherRunning <- true
+
+        syncService.ReceiveReady.AddHandler( fun s e -> let message = syncService.ReceiveMessage()
+                                                        let id = Encoding.Unicode.GetString(message.[0].Buffer)
+                                                        let data = syncService.Send(Encoding.Unicode.GetBytes(mapData.[id]))
+                                                        ())
+
+        let sockets = System.Collections.Generic.List<ZmqSocket>()
+        sockets.Add(syncService)
+        use poller = new Poller(sockets)
+        while not(x.EndBroadcaster) do
+            poller.Poll() |> ignore
 
     member x.CreateASubscriberWithMessages(messages : SubscriberElem List) =
         x.Messages <- messages
@@ -75,6 +89,20 @@ type RoslynAdapter() =
 
     member x.UpdateSubscriberMessages(messages : SubscriberElem List) =
         x.Messages <- messages
+
+        let getParamsData(c : SubscriberElem) = 
+            let mutable retData = ""
+            for elem in c.GetParams do
+                retData <- retData + ";" + elem.Key + "=" + elem.DefaultValue.Replace("\"", "")
+            retData
+                          
+        let publishData(m : SubscriberElem) = 
+            let value = sprintf "%s;%b;%s" m.Id m.Status (getParamsData(m))
+            mapData.[m.Id] <- value
+
+        x.Messages |> List.iter (fun x -> publishData(x))
+
+            
         
     member x.GetCodeFixesForDiagnostics(ruleId : string, codeFixes : CodeFixProvider List) = 
         let codeFixesOut = System.Collections.Generic.List<CodeFixProvider>()
@@ -104,6 +132,7 @@ type RoslynAdapter() =
             subs <- subs @ [data]
             
         subs        
+            
 
     member x.GetDiagnosticsFromAssembly(assemblyToAdd:string, path:string) =
         let listOfDiagnosticsId : string List = List.Empty

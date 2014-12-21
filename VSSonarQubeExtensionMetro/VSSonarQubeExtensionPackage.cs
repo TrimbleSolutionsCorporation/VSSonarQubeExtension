@@ -52,6 +52,7 @@ namespace VSSonarQubeExtension
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideAutoLoad("{05ca2046-1eb1-4813-a91f-a69df9b27698}")]
     [ProvideAutoLoad(UIContextGuids80.SolutionExists)]
+    [ProvideAutoLoad(UIContextGuids80.NoSolution)]
     [ProvideToolWindow(typeof(IssuesToolWindow), Style = VsDockStyle.Tabbed, Window = "ac305e7a-a44b-4541-8ece-3c88d5425338")]
     [ProvideToolWindow(typeof(PluginToolWindow), Style = VsDockStyle.Tabbed, MultiInstances = true)]
     [Guid(GuidList.GuidVSSonarExtensionPkgString)]
@@ -210,6 +211,8 @@ namespace VSSonarQubeExtension
 
                         SonarQubeViewModelFactory.SQViewModel.PluginRequest += this.LoadPluginIntoNewToolWindow;
                         this.CloseToolWindow();
+
+                        this.StartSolutionListeners();
                     }
                     catch (Exception ex)
                     {
@@ -226,6 +229,26 @@ namespace VSSonarQubeExtension
                 UserExceptionMessageBox.ShowException("Extension Failed to Start", ex);
                 throw;
             }
+        }
+
+        SolutionEventsListener listener = null;
+        IVsUIShellDocumentWindowMgr winmgr = null;
+
+        private void StartSolutionListeners()
+        {
+            listener = new SolutionEventsListener();
+
+            listener.OnAfterOpenProject += () =>
+            {
+                if (!SonarQubeViewModelFactory.SQViewModel.IsAssociated)
+                {
+                    string solutionName = this.visualStudioInterface.ActiveSolutionName();
+                    string solutionPath = this.visualStudioInterface.ActiveSolutionPath();
+
+                    SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Solution Opened: " + solutionName + " : " + solutionPath);
+                    SonarQubeViewModelFactory.SQViewModel.AssociateProjectToSolution(solutionName, solutionPath);
+                }
+            };
         }
 
         public string AssemblyDirectory

@@ -54,19 +54,19 @@
     <Compile Include="CommunicationTest.fs" />
     <Content Include="packages.config" />
     <Content Include="app.config" />
-    <None Include="testdata\source.extension.vsixmanifest">
+    <None Include="source.extension.vsixmanifest">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="testdata\Analyzer1.dll">
+    <None Include="Analyzer1.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="testdata\NSonarQubeDiagnostics.dll">
+    <None Include="NSonarQubeDiagnostics.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Content Include="testdata\profileusingappid.txt">
+    <Content Include="profileusingappid.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="testdata\NSonarQubeAnalyzer.exe">
+    <None Include="NSonarQubeAnalyzer.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Compile Include="RoslynAdapterTest.fs" />
