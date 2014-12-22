@@ -236,11 +236,13 @@ namespace VSSonarQubeExtension
         private void StartSolutionListeners()
         {
             listener = new SolutionEventsListener();
+            var triedOnceAlready = false;
 
             listener.OnAfterOpenProject += () =>
             {
-                if (!SonarQubeViewModelFactory.SQViewModel.IsAssociated)
+                if (!SonarQubeViewModelFactory.SQViewModel.IsAssociated && !triedOnceAlready)
                 {
+                    triedOnceAlready = true;
                     string solutionName = this.visualStudioInterface.ActiveSolutionName();
                     string solutionPath = this.visualStudioInterface.ActiveSolutionPath();
 
