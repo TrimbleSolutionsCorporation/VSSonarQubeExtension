@@ -17,7 +17,7 @@
 <member name="M:FSBuild.SR.toolpathUnknown">
 <summary>
  ToolPath is unknown; specify the path to fsc.exe as the ToolPath property.
- (Originally from c:\dev\fsharp\src\fsharp\FSharp.Build\FSBuild.txt:2)
+ (Originally from E:\Development\SonarQube\fsharp\src\fsharp\FSharp.Build\FSBuild.txt:2)
 </summary>
 </member>
 <member name="P:FSBuild.SR.SwallowResourceText(System.Boolean)">
