@@ -11,82 +11,117 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/Styles.xaml" />
-                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/DataGridStyles.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
                 <ResourceDictionary
                     Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+
+                <ResourceDictionary Source="pack://application:,,,/VSSonarExtensionUi;component/Resources/Icons.xaml" />
                 <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/ButtonStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <DataTemplate x:Key="ListViewTemplate">
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox IsChecked="{Binding Enabled}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2,0,0,0"></CheckBox>
+                    <TextBlock Text="{Binding Name, FallbackValue=Plugin}" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                </StackPanel>
+            </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
     <UserControl.Background>
-        <SolidColorBrush Color="{Binding BackGroundColor, FallbackValue=White}" />
+        <SolidColorBrush Color="{Binding BackGroundColor, FallbackValue=Black}" />
     </UserControl.Background>
 
     <UserControl.Foreground>
-        <SolidColorBrush Color="{Binding ForeGroundColor, FallbackValue=Black}" />
+        <SolidColorBrush Color="{Binding ForeGroundColor, FallbackValue=White}" />
     </UserControl.Foreground>
     <Grid>
-        <ScrollViewer>
-            <Grid Height="auto">
+        <Grid Height="auto">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="74*"/>
+                <ColumnDefinition Width="319*"/>
+            </Grid.ColumnDefinitions>
+            <ScrollViewer IsEnabled="{Binding CanModifyPluginProps}" Grid.Column="1"
+                              BorderBrush="Black" Content="{Binding OptionsInView}" Grid.ColumnSpan="2" />
+            <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="30" />
                     <RowDefinition Height="25*" />
-                    <RowDefinition Height="25*" />
+                    <RowDefinition Height="25" />
+                    <RowDefinition Height="25" />
+                    <RowDefinition Height="40" />
+                    <RowDefinition Height="25" />
+                    <RowDefinition Height="40" />
                 </Grid.RowDefinitions>
-                <DataGrid Background="Transparent"
-                          Grid.Row="1"
+                <TextBlock Grid.Row="2" Text="Info" ></TextBlock>
+                <TextBlock Grid.Row="3" Text="{Binding SelectedItem.SupportedExtensions, ElementName=Plugins, FallbackValue=extension}" HorizontalAlignment="Right"/>
+                <TextBlock TextWrapping="Wrap" Grid.Row="4" Text="{Binding SelectedItem.Description, ElementName=Plugins, FallbackValue=description}" HorizontalAlignment="Right"/>
+                <TextBlock Grid.Row="5" Text="{Binding SelectedItem.Version, ElementName=Plugins, FallbackValue=version}" HorizontalAlignment="Right"/>
+                <TextBlock TextWrapping="Wrap"  Grid.Row="6" Text="{Binding SelectedItem.Status, ElementName=Plugins, FallbackValue=Status}" HorizontalAlignment="Right"/>
+
+                <ListView Grid.Row="1" x:Name="Plugins"
                           SelectedItem="{Binding SelectedPlugin}"
-                          ItemsSource="{Binding PluginList}"
-                          AutoGenerateColumns="False"
-                          VerticalScrollBarVisibility="Visible"
-                          CanUserAddRows="False"
-                          CanUserDeleteRows="False"
-                          GridLinesVisibility="None"
-                          BorderBrush="Transparent"
+                          ItemsSource="{Binding PluginList}"                          
                           BorderThickness="1"
-                          ColumnHeaderHeight="20"
-                          HeadersVisibility="Column"
-                          RowHeaderWidth="0">
+                          Grid.ColumnSpan="2"
+                          ItemTemplate="{DynamicResource ListViewTemplate}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
                             <command:EventToCommand Command="{Binding SelectionChangedCommand}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding Name}" Header="Name   " IsReadOnly="True" />
-                        <DataGridTextColumn Binding="{Binding SupportedExtensions}" Header="Supported Extensions   "
-                                            IsReadOnly="True" />
-                        <DataGridTextColumn Binding="{Binding Description}" Header="Description   " IsReadOnly="True" />
-                        <DataGridCheckBoxColumn Binding="{Binding Enabled}" Header="Enabled   " IsReadOnly="False" />
-                        <DataGridTextColumn Binding="{Binding Version}" Header="Version   " IsReadOnly="True" />
-                        <DataGridTextColumn Binding="{Binding Status}" Header="Status   " IsReadOnly="True" />
-                    </DataGrid.Columns>
-                </DataGrid>
-                <ScrollViewer IsEnabled="{Binding CanModifyPluginProps}" Grid.Column="0" Grid.Row="2"
-                              BorderBrush="Black" Content="{Binding OptionsInView}" />
-                <StackPanel Grid.Row="0" Orientation="Horizontal">
-                    <Button
+                </ListView>
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Grid.ColumnSpan="2">
+                    <Button Width="30"
                         Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                        Style="{StaticResource MyMetroButton}"
-                        Content="New" Command="{Binding InstallNewPlugin}" />
-                    <Button
+                        Height="30"
+                        Margin="0, 0, 0, 0"
+                        ToolTip="Install new plugin"
+                        Style="{DynamicResource SquareButtonStyle}" Command="{Binding InstallNewPlugin}">
+                        <Rectangle Width="15"
+                               Height="15"
+                               Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}">
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Stretch="Fill"
+                                         Visual="{StaticResource appbar_add}" />
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                    </Button>
+                    <Button Width="30"
                         Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                        Style="{StaticResource MyMetroButton}"
-                        Content="Restart" Command="{Binding RestartVs}" />
-                    <Button
-                        IsEnabled="{Binding PluginIsSelected}"
+                        Height="30"
+                        Margin="0, 0, 0, 0"
+                        ToolTip="Restart Visual Studio"
+                        Style="{DynamicResource SquareButtonStyle}" Command="{Binding RestartVs}">
+                        <Rectangle Width="15"
+                               Height="15"
+                               Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}">
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Stretch="Fill"
+                                         Visual="{StaticResource appbar_reset}" />
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                    </Button>                    
+                    <Button Width="30"
                         Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                        Style="{StaticResource MyMetroButton}"
-                        Content="Remove" Command="{Binding RemovePlugin}" />
+                        Height="30"
+                        Margin="0, 0, 0, 0"
+                        ToolTip="Remove Plugin"
+                        Style="{DynamicResource SquareButtonStyle}" Command="{Binding RemovePlugin}" IsEnabled="{Binding PluginIsSelected}">
+                        <Rectangle Width="15"
+                               Height="15"
+                               Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}">
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Stretch="Fill"
+                                         Visual="{StaticResource appbar_delete}" />
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                    </Button>
                 </StackPanel>
             </Grid>
-        </ScrollViewer>
+
+        </Grid>
     </Grid>
 </UserControl>

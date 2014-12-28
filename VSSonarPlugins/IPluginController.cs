@@ -94,7 +94,7 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="bool"/>.
         /// </returns>
-        bool RemovePlugin(ISonarConfiguration conf, PluginDescription selectedPlugin);
+        bool RemovePlugin(ISonarConfiguration conf, IConfigurationHelper conf2, PluginDescription selectedPlugin);
 
         #endregion
     }

@@ -132,6 +132,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+	  <HintPath>$(ReferencesFolder)\FSharp431\FSharp.Core.dll</HintPath>
       <SpecificVersion>True</SpecificVersion>
       <Private>True</Private>
     </Reference>

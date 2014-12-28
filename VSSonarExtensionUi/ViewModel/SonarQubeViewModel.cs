@@ -85,6 +85,7 @@ namespace VSSonarExtensionUi.ViewModel
             this.configurationHelper = new ConfigurationHelper();
             this.SonarRestConnector = new SonarRestService(new JsonSonarConnector());
             this.Logger = new VsSonarExtensionLogger(this);
+            this.VsHelper = new StandAloneVsHelper();
 
             this.IsExtensionBusy = false;
             this.IsConnected = false;

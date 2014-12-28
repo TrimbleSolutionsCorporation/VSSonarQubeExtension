@@ -1,5 +1,5 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IVsEnvironmentHelper.cs" company="Copyright © 2014 Tekla Corporation. Tekla is a Trimble Company">
+ï»¿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="IVsEnvironmentHelper.cs" company="Copyright ï¿½ 2014 Tekla Corporation. Tekla is a Trimble Company">
 //     Copyright (C) 2013 [Jorge Costa, Jorge.Costa@tekla.com]
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -17,6 +17,8 @@ namespace VSSonarPlugins
     using System.Collections.Generic;
 
     using ExtensionTypes;
+
+    using System.Diagnostics;
 
     public interface IConfigurationHelper
     {
@@ -86,6 +88,113 @@ namespace VSSonarPlugins
         string UserAppDataConfigurationFile();
 
         string UserLogForAnalysisFile();
+    }
+
+    public class StandAloneVsHelper : IVsEnvironmentHelper
+    {
+        public void WriteDefaultOption(string sonarOptions, string communityOptions, string item, string value)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void WriteOption(string category, string page, string item, string value)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void WriteToVisualStudioOutput(string errorMessage)
+        {
+        }
+
+        public void NavigateToResource(string url)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void OpenResourceInVisualStudio(string workfolder, string filename, int line, string editorCommandExec = "notepad")
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void OpenResourceInVisualStudio(string filename, int line, string editorCommandExec = "notepad")
+        {
+            Process.Start(editorCommandExec, filename);
+        }
+
+        public string GetProperFilePathCapitalization(string filename)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public string ActiveProjectName()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public string ActiveProjectFileFullPath()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public string ActiveFileFullPath()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public string CurrentSelectedDocumentLanguage()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public string ActiveSolutionPath()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public string ActiveSolutionName()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void RestartVisualStudio()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public VsProjectItem VsProjectItem(string filename)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public string GetFileRealPathForSolution(string fileInView)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public string GetCurrentTextInView()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool AreWeRunningInVisualStudio()
+        {
+            return false;
+        }
+
+        public void ShowSourceDiff(string resourceInEditorTxt, string documentInViewPath)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public string ReadSavedOption(string category, string page, string item)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void ClearDiffFile(string localFileName, string serverFileName)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 
     /// <summary>

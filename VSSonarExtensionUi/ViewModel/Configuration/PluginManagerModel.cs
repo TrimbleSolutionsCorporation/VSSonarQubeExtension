@@ -355,7 +355,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         public void OnRemovePlugin()
         {
-            if (this.controller.RemovePlugin(this.Conf, this.SelectedPlugin))
+            if (this.controller.RemovePlugin(this.Conf, this.configurationHelper, this.SelectedPlugin))
             {
                 this.UpdatePluginInListOfPlugins(this.SelectedPlugin, "Plugin Will Be Removed In Next Restart");
                 this.ChangesAreRequired = true;

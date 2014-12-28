@@ -349,7 +349,7 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="bool"/>.
         /// </returns>
-        public bool RemovePlugin(ISonarConfiguration configuration, PluginDescription selectedPlugin)
+        public bool RemovePlugin(ISonarConfiguration configuration, IConfigurationHelper configurationhelper, PluginDescription selectedPlugin)
         {
             foreach (var plugin in this.loadedPlugins)
             {
@@ -361,7 +361,7 @@ namespace VSSonarPlugins
 
             foreach (var plugin in this.menuCommandPlugins)
             {
-                if (plugin.GetHeader().Equals(selectedPlugin.Name))
+                if (plugin.GetPluginDescription(configurationhelper).Name.Equals(selectedPlugin.Name))
                 {
                     return this.SyncFileWithRemovePlugin(plugin);
                 }
