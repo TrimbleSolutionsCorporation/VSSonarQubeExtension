@@ -1064,6 +1064,11 @@ namespace VSSonarExtensionUi.ViewModel
                 this.OpenSolutionPath = this.configurationHelper.ReadOptionFromApplicationData(this.SelectedProject.Key, "PROJECTLOCATION");
                 this.OpenSolutionName = this.configurationHelper.ReadOptionFromApplicationData(this.SelectedProject.Key, "PROJECTNAME");
             }
+            else
+            {
+                this.configurationHelper.WriteOptionInApplicationData(this.SelectedProject.Key, "PROJECTLOCATION", this.OpenSolutionPath);
+                this.configurationHelper.WriteOptionInApplicationData(this.SelectedProject.Key, "PROJECTNAME", this.OpenSolutionName);
+            }
 
             RefreshConfigurationInPlugins();
 
