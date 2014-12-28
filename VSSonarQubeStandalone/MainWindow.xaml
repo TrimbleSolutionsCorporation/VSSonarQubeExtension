@@ -7,10 +7,21 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:ViewModel="clr-namespace:VSSonarQubeStandalone.ViewModel" mc:Ignorable="d" x:Class="VSSonarQubeStandalone.MainWindow"
         Title="VSSonarQube Standalone" Height="600" Width="800">
     <Controls:MetroWindow.Resources>
-    	<ViewModel:MainViewModel x:Key="MainViewModelDataSource" d:IsDataSource="True"/>
-        <DataTemplate DataType="{x:Type viewModel:SonarQubeViewModel}">
-        	<view:SonarQubeUserControlVs/>
-        </DataTemplate>
+        <ResourceDictionary>        
+        <ResourceDictionary.MergedDictionaries>
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/VSSonarExtensionUi;component/Resources/Icons.xaml" />
+        </ResourceDictionary.MergedDictionaries>
+            <DataTemplate DataType="{x:Type viewModel:SonarQubeViewModel}">
+                <view:SonarQubeUserControlVs/>
+            </DataTemplate>
+            <ViewModel:MainViewModel x:Key="MainViewModelDataSource" d:IsDataSource="True"/>
+        </ResourceDictionary>
+                
     </Controls:MetroWindow.Resources>
 	<Controls:MetroWindow.DataContext>
 		<Binding Source="{StaticResource MainViewModelDataSource}"/>
