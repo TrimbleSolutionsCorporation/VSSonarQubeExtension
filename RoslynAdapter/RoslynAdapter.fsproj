@@ -36,10 +36,10 @@
     </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="!Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\4.0\Framework\v4.0\Microsoft.FSharp.Targets')">
-	<FSharpTargetsPath>..\references\FSharp431\Microsoft.FSharp.Targets</FSharpTargetsPath>
-  </PropertyGroup>  
+    <FSharpTargetsPath>..\references\FSharp431\Microsoft.FSharp.Targets</FSharpTargetsPath>
+  </PropertyGroup>
   <PropertyGroup Condition="Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\4.0\Framework\v4.0\Microsoft.FSharp.Targets')">
-	<FSharpTargetsPath>$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\4.0\Framework\v4.0\Microsoft.FSharp.Targets</FSharpTargetsPath>
+    <FSharpTargetsPath>$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\4.0\Framework\v4.0\Microsoft.FSharp.Targets</FSharpTargetsPath>
   </PropertyGroup>
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
@@ -51,10 +51,6 @@
   <ItemGroup>
     <Reference Include="clrzmq">
       <HintPath>..\packages\clrzmq.3.0.0-rc1\lib\net40\clrzmq.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="FSharp.Data">
-	  <HintPath>$(ReferencesFolder)\FSharp.Data.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CodeAnalysis">
@@ -75,8 +71,8 @@
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-	  <HintPath>$(ReferencesFolder)\FSharp431\FSharp.Core.dll</HintPath>
-	  <SpecificVersion>True</SpecificVersion>
+      <HintPath>$(ReferencesFolder)\FSharp431\FSharp.Core.dll</HintPath>
+      <SpecificVersion>True</SpecificVersion>
       <Private>True</Private>
     </Reference>
     <Reference Include="nunit.core">
@@ -91,6 +87,9 @@
       <HintPath>..\packages\NUnitTestAdapter.1.2\lib\nunit.util.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="FSharp.Data">
+      <HintPath>..\References\FSharp.Data.dll</HintPath>
+    </Reference>	
     <Reference Include="NUnit.VisualStudio.TestAdapter">
       <HintPath>..\packages\NUnitTestAdapter.1.2\lib\NUnit.VisualStudio.TestAdapter.dll</HintPath>
       <Private>False</Private>

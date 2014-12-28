@@ -83,7 +83,7 @@
             <ComboBox Width="200"
                       Style="{DynamicResource VirtualisedMetroComboBox}"
                       TextSearch.TextPath="Name"
-                      controls:TextboxHelper.Watermark="Project"
+                      controls:TextBoxHelper.Watermark="Project"
                       IsEditable="True"
                       SelectedItem="{Binding SelectedProject, Mode=TwoWay}"
                       ItemsSource="{Binding AvailableProjects}"                   
@@ -133,11 +133,11 @@
                                        ToolTip="{Binding BusyToolTip}"
                                        Foreground="{DynamicResource AccentColorBrush}"/>
 
-        <TabControl controls:ControlsHelper.IsUnderlined="True" Grid.Row="1"  x:Name="TabControlViews" ItemsSource="{Binding SonarQubeViews}" SelectedItem="{Binding SelectedView}" TabStripPlacement="Bottom" >
+        <TabControl controls:TabControlHelper.IsUnderlined="True" Grid.Row="1"  x:Name="TabControlViews" ItemsSource="{Binding SonarQubeViews}" SelectedItem="{Binding SelectedView}" TabStripPlacement="Bottom" >
             <TabControl.Resources>
                     <Style TargetType="TabItem" BasedOn="{StaticResource MetroTabItem}">
                         <Setter Property="controls:ControlsHelper.HeaderFontSize" Value="12" />
-                        <Setter Property="controls:ControlsHelper.IsUnderlined" Value="True" />
+                    <Setter Property="controls:TabControlHelper.IsUnderlined" Value="True" />
                     </Style>
             </TabControl.Resources>
             <TabControl.ItemTemplate>
