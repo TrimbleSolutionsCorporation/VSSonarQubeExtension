@@ -58,7 +58,7 @@
 			<ColumnDefinition MinWidth="820" Width="820"/>
 		</Grid.ColumnDefinitions>
         
-        <ListBox Style="{Binding MetroListBox}" x:Name="OptionsListBox"                    
+        <ListBox x:Name="OptionsListBox"                    
                  Grid.Column="0" Grid.Row="0" Margin="5"
                  ItemsSource="{Binding AvailableOptions}"
 				 SelectedItem="{Binding SelectedOption}"

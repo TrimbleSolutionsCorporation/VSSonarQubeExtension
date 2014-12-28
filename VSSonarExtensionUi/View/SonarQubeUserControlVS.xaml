@@ -67,7 +67,7 @@
 		</Grid.RowDefinitions>
 		<Menu x:Name="MainMenuIssues" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
 			<MenuItem Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" x:Name="ToolsMenu" Header="Menu" Width="auto" HorizontalAlignment="Center" VerticalAlignment="Center" >
-				<MenuItem Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" x:Name="OptionsMenu" Header="Properties" Command="{Binding LaunchExtensionPropertiesCommand}"/>
+            <MenuItem Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" x:Name="OptionsMenu" Header="Properties" Command="{Binding LaunchExtensionPropertiesCommand}"/>
 			</MenuItem>
             <MenuItem x:Name="PluginsMenu" Header="Tools" ItemsSource="{Binding ToolsProvidedByPlugins}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <MenuItem.ItemContainerStyle>
@@ -80,7 +80,7 @@
                     </Style>
                 </MenuItem.ItemContainerStyle>
             </MenuItem>
-            <ComboBox Width="200"
+            <ComboBox Width="200" 
                       Style="{DynamicResource VirtualisedMetroComboBox}"
                       TextSearch.TextPath="Name"
                       controls:TextBoxHelper.Watermark="Project"
@@ -89,8 +89,11 @@
                       ItemsSource="{Binding AvailableProjects}"                   
                       MaxDropDownHeight="125"
                       ItemTemplate="{DynamicResource ProjectSelectionComboBoxDataTemplate}"
-                      />            
-			<Button Style="{StaticResource MyMetroButton}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Content="Associate" Command="{Binding AssignProjectCommand}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                      />
+            <Button Style="{DynamicResource MyMetroButton}"
+                    Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                    Content="Associate" Command="{Binding AssignProjectCommand}" HorizontalAlignment="Center" VerticalAlignment="Center" />
 		</Menu>
        
 		<StatusBar Grid.Row="2" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}">		

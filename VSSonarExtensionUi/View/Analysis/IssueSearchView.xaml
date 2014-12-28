@@ -50,11 +50,11 @@
     </UserControl.Foreground>
 
     <DockPanel>
-        <controls:FlyoutsControl Foreground="{Binding ForeGround, Converter={StaticResource ColorToBrushConverter}}"
-                                 Background="{Binding BackGround, Converter={StaticResource ColorToBrushConverter}}"
+        <controls:FlyoutsControl Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                 Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
                                  Height="{Binding SizeOfFlyout}" DockPanel.Dock="Top">
-            <controls:Flyout Foreground="{Binding ForeGround, Converter={StaticResource ColorToBrushConverter}}"
-                             Background="{Binding BackGround, Converter={StaticResource ColorToBrushConverter}}"
+            <controls:Flyout Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                             Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
                              IsOpen="{Binding ShowFlyouts}" Height="{Binding SizeOfFlyout}" Header="" Position="Top">
                 <ScrollViewer x:Name="ControlPanel">
                     <StackPanel>
@@ -313,8 +313,8 @@
             <Grid Grid.Row="0" Grid.ColumnSpan="2">
                 <StatusBar Visibility="{Binding ShowFlyouts, Converter={StaticResource BoolToVis}}"
                            Grid.Row="0" Grid.ColumnSpan="2"
-                           Foreground="{Binding ForeGround, Converter={StaticResource ColorToBrushConverter}}"
-                           Background="{Binding BackGround, Converter={StaticResource ColorToBrushConverter}}">
+                           Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                           Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}">
                     <StatusBarItem HorizontalAlignment="Left">
                         <StackPanel Orientation="Horizontal">
                             <StatusBarItem>
@@ -390,8 +390,8 @@
                 <StatusBar
                     Visibility="{Binding ShowFlyouts, Converter={StaticResource BoolToVis}, ConverterParameter=Inverted}"
                     Grid.Row="0" Grid.ColumnSpan="2"
-                    Foreground="{Binding ForeGround, Converter={StaticResource ColorToBrushConverter}}"
-                    Background="{Binding BackGround, Converter={StaticResource ColorToBrushConverter}}">
+                    Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}">
                     <StatusBarItem HorizontalAlignment="Left">
                         <StackPanel Orientation="Horizontal">
                             <StatusBarItem>
