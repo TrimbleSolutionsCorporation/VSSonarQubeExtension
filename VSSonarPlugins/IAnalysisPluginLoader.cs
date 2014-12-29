@@ -14,6 +14,7 @@
 namespace VSSonarPlugins
 {
     using System.Collections.ObjectModel;
+    using System.Collections.Generic;
 
     /// <summary>
     /// The AnalysisPluginLoader interface.
@@ -30,6 +31,8 @@ namespace VSSonarPlugins
         /// The <see cref="ReadOnlyCollection{T}"/>.
         /// </returns>
         ReadOnlyCollection<IPlugin> LoadPluginsFromFolder(string folder);
+
+        List<IPlugin> LoadPluginsFromFolderWihtoutLockingDlls(string folder);
 
         /// <summary>
         /// The get error data.

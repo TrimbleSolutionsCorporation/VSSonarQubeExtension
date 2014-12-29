@@ -331,22 +331,37 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 }
                 else
                 {
-                    PluginDescription plugin = this.controller.IstallNewPlugin(filedialog.FileName, this.Conf);
+                    IPlugin plugin = this.controller.IstallNewPlugin(filedialog.FileName, this.Conf);
 
                     if (plugin != null)
                     {
-                        if (!this.UpdatePluginInListOfPlugins(plugin, "Plugin Will Be Updated in Next Restart"))
+                        try
                         {
-                            this.PluginList.Add(plugin);
+                            IMenuCommandPlugin menuPlugin = (IMenuCommandPlugin)plugin;
+                            this.sqmodel.AddANewMenu(menuPlugin);
+                            var pluginDesc = menuPlugin.GetPluginDescription(this.configurationHelper);
+                            pluginDesc.Enabled = true;
+                            this.PluginList.Add(pluginDesc);
+                        }
+                        catch(Exception ex)
+                        {
+                            Debug.WriteLine(ex.Message);
+                            try
+                            {
+                                IAnalysisPlugin analysisPlugin = (IAnalysisPlugin)plugin;
+                                this.AnalysisPlugins.Add(analysisPlugin);
+                                var pluginDesc = analysisPlugin.GetPluginDescription(this.configurationHelper);
+                                pluginDesc.Enabled = true;
+                                this.PluginList.Add(pluginDesc);
+                            }
+                            catch (Exception ex1)
+                            {
+                                Debug.WriteLine(ex1.Message);
+                            }
                         }
 
-                        this.ChangesAreRequired = true;
 
-                        if(plugin.Type.Equals(typeof(IMenuCommandPlugin).ToString()))
-                        {
-                            var menuPlugin = this.controller.IstallAndUseNewMenuPlugin(filedialog.FileName, this.Conf);
-                            this.sqmodel.AddANewMenu(menuPlugin);
-                        }                        
+                      
                     }
                     else
                     {

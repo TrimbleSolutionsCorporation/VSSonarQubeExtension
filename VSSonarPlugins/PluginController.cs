@@ -73,18 +73,17 @@ namespace VSSonarPlugins
                 return;
             }
 
-            this.ExtensionFolder = this.ExtensionFolder.Replace("file:\\", string.Empty);
+            this.ExtensionFolder = this.ExtensionFolder.Replace("file:\\", string.Empty);            
             this.TempInstallPathFolder = Path.Combine(this.ExtensionFolder, Tempinstallfolder);
             this.InstallPathFile = Path.Combine(this.ExtensionFolder, Installfile);
-
-
-            this.CreatePluginDomain();
+            this.PluginsFolder = Path.Combine(this.ExtensionFolder, "plugins");
 
             this.UpgradePlugins();
 
             var pluginLoader = new PluginLoader();
+            AppDomain.CurrentDomain.AssemblyResolve += this.CurrentDomainAssemblyResolve;
 
-            var plugins = pluginLoader.LoadPluginsFromFolder(this.ExtensionFolder);
+            var plugins = pluginLoader.LoadPluginsFromFolderWihtoutLockingDlls(this.PluginsFolder);
 
             if (plugins == null)
             {
@@ -111,26 +110,6 @@ namespace VSSonarPlugins
             }
         }
 
-        ~PluginController()
-        {
-            AppDomain.Unload(domain);
-        }
-
-        private void CreatePluginDomain()
-        {
-            var trustedLoadGrantSet = new PermissionSet(PermissionState.Unrestricted);
-            var trustedLoadSetup = new AppDomainSetup
-            {
-                ApplicationBase = this.ExtensionFolder,
-                PrivateBinPath = this.TempInstallPathFolder,
-                LoaderOptimization = LoaderOptimization.MultiDomainHost
-            };
-
-            var adevidence = AppDomain.CurrentDomain.Evidence;
-            this.domain = AppDomain.CreateDomain("PluginCheckerDomain", adevidence, trustedLoadSetup, trustedLoadGrantSet);
-            this.domain.AssemblyResolve += this.CurrentDomainAssemblyResolve;            
-        }
-
         #endregion
 
         #region Public Properties
@@ -150,6 +129,8 @@ namespace VSSonarPlugins
         /// </summary>
         public string InstallPathFile { get; set; }
 
+        public string PluginsFolder { get; set; }
+        
         /// <summary>
         ///     Gets or sets the temp install path folder.
         /// </summary>
@@ -173,13 +154,42 @@ namespace VSSonarPlugins
         /// </returns>
         public Assembly CurrentDomainAssemblyResolve(object sender, ResolveEventArgs args)
         {
-            var name = System.Reflection.AssemblyName.GetAssemblyName(args.Name);
-            foreach(var assemb in System.AppDomain.CurrentDomain.GetAssemblies())
+            var assemblyToGet = args.Name.Replace(".resources,", ",");
+            try
             {
-                if(System.Reflection.AssemblyName.ReferenceMatchesDefinition(name, assemb.GetName()))
+                foreach (Assembly assemb in System.AppDomain.CurrentDomain.GetAssemblies())
                 {
-                    return assemb;
+                    var fullName = assemb.FullName;
+
+                    if (fullName.Equals(assemblyToGet))
+                    {
+                        return assemb;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+
+            try
+            {
+                var files = Directory.GetFiles(this.ExtensionFolder);
+                foreach (var file in files) 
+                {
+                    if (file.ToLower().EndsWith(".dll") || file.ToLower().EndsWith(".exe"))
+                    {
+                        var fullName = AssemblyName.GetAssemblyName(file).FullName;
+                        if (fullName.Equals(assemblyToGet))
+                        {
+                            return Assembly.LoadFrom(file);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
             }
 
             return null;
@@ -248,36 +258,22 @@ namespace VSSonarPlugins
             return this.loadedPlugins;
         }
 
-        /// <summary>
-        /// The istall new plugin.
-        /// </summary>
-        /// <param name="fileName">
-        /// The file name.
-        /// </param>
-        /// <param name="conf">
-        /// The conf.
-        /// </param>
-        /// <returns>
-        /// The <see cref="bool"/>.
-        /// </returns>
-        public PluginDescription IstallNewPlugin(string fileName, ISonarConfiguration conf)
+        public IPlugin IstallNewPlugin(string fileName, ISonarConfiguration conf)
         {
-            var assembliesInFile = this.UnzipFiles(fileName);
+            var assembliesInFile = this.UnzipFiles(fileName, this.TempInstallPathFolder);
             var assembliesToTempFolder = this.GetAssembliesInTempFolder();
-            return this.LoadPluginUsingDedicatedDomain(
-                assembliesInFile.ToArray(),
-                this.TempInstallPathFolder, 
-                conf);
-        }
-
-        public IMenuCommandPlugin IstallAndUseNewMenuPlugin(string fileName, ISonarConfiguration conf)
-        {
-            var assembliesInFile = this.UnzipFiles(fileName);
-            var assembliesToTempFolder = this.GetAssembliesInTempFolder();
-            return this.LoadMenuPluginUsingDedicatedDomain(
+            var plugins = this.LoadPlugin(
                 assembliesInFile.ToArray(),
                 this.TempInstallPathFolder,
                 conf);
+
+            if (plugins != null)
+            {
+                Directory.Delete(this.TempInstallPathFolder, true);
+                this.UnzipFiles(fileName, this.PluginsFolder);
+            }
+
+            return plugins;
         }
 
         /// <summary>
@@ -298,19 +294,24 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="PluginDescription"/>.
         /// </returns>
-        public IMenuCommandPlugin LoadMenuPluginUsingDedicatedDomain(
+        public IPlugin LoadPlugin(
             string[] assemblies,
             string basePath, 
             ISonarConfiguration conf)
         {
-            IMenuCommandPlugin pluginDesc = null;
-
             try
             {
                 var loader = PluginSandBoxLoader.Sandbox(AppDomain.CurrentDomain, assemblies, this.CurrentDomainAssemblyResolve);
                 try
                 {
-                    pluginDesc = (IMenuCommandPlugin)loader.LoadPlugin(conf);
+                    var pluginDesc = loader.LoadPlugin(conf);
+
+                    foreach (string assembly in assemblies)
+                    {
+                        File.Delete(assembly);
+                    }
+
+                    return pluginDesc;
                 }
                 catch (Exception ex)
                 {
@@ -331,59 +332,7 @@ namespace VSSonarPlugins
                 this.ErrorMessage = "Cannot Create Domain: " + ex.Message + " : " + ex.StackTrace;
             }
 
-            if (pluginDesc == null)
-            {
-                foreach (string assembly in assemblies)
-                {
-                    File.Delete(assembly);
-                }
-            }
-
-            return pluginDesc;
-        }
-
-        public PluginDescription LoadPluginUsingDedicatedDomain(
-            string[] assemblies,
-            string basePath,
-            ISonarConfiguration conf)
-        {
-            PluginDescription pluginDesc = null;
-
-            try
-            {
-                PluginSandBoxLoader loader = PluginSandBoxLoader.Sandbox(AppDomain.CurrentDomain, assemblies, this.CurrentDomainAssemblyResolve);
-                try
-                {
-                    pluginDesc = loader.LoadPluginDescription(conf);
-                }
-                catch (Exception ex)
-                {
-                    if (ex.InnerException != null)
-                    {
-                        this.ErrorMessage = "Cannot Load Plugin: " + ex.InnerException.Message + " : " + ex.InnerException.StackTrace;
-                    }
-                    else
-                    {
-                        this.ErrorMessage = "Cannot Load Plugin: " + ex.Message + " : " + ex.StackTrace;
-                    }
-
-                    Debug.WriteLine(ex.Message + " " + ex.StackTrace);
-                }
-            }
-            catch (Exception ex)
-            {
-                this.ErrorMessage = "Cannot Create Domain: " + ex.Message + " : " + ex.StackTrace;
-            }
-
-            if (pluginDesc == null)
-            {
-                foreach (string assembly in assemblies)
-                {
-                    File.Delete(assembly);
-                }
-            }
-
-            return pluginDesc;
+            return null;
         }
 
         /// <summary>
@@ -496,19 +445,19 @@ namespace VSSonarPlugins
         ///     </see>
         ///     .
         /// </returns>
-        private List<string> UnzipFiles(string fileName)
+        private List<string> UnzipFiles(string fileName, string folderToInstall)
         {
             var files = new List<string>();
-            if (!Directory.Exists(this.TempInstallPathFolder))
+            if (!Directory.Exists(folderToInstall))
             {
-                Directory.CreateDirectory(this.TempInstallPathFolder);
+                Directory.CreateDirectory(folderToInstall);
             }
 
             using (var archive = ZipFile.OpenRead(fileName))
             {
                 foreach (var entry in archive.Entries)
                 {
-                    var endFile = Path.Combine(this.TempInstallPathFolder, entry.FullName);
+                    var endFile = Path.Combine(folderToInstall, entry.FullName);
                     try
                     {
                         entry.ExtractToFile(endFile, true);

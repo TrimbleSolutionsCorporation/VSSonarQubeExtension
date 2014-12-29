@@ -67,11 +67,9 @@ namespace VSSonarPlugins
         /// The conf.
         /// </param>
         /// <returns>
-        /// The <see cref="PluginDescription"/>.
+        /// The <see cref="IMenuCommandPlugin"/>.
         /// </returns>
-        PluginDescription IstallNewPlugin(string fileName, ISonarConfiguration conf);
-
-        IMenuCommandPlugin IstallAndUseNewMenuPlugin(string fileName, ISonarConfiguration conf);
+        IPlugin IstallNewPlugin(string fileName, ISonarConfiguration conf);
 
         /// <summary>
         /// The pick plugin from multiple supported plugins.

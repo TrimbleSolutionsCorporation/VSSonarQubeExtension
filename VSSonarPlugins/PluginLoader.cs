@@ -14,6 +14,7 @@
 namespace VSSonarPlugins
 {
     using System;
+    using System.IO;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel.Composition;
@@ -54,6 +55,64 @@ namespace VSSonarPlugins
         public string GetErrorData()
         {
             return this.errorData;
+        }
+
+        public List<IPlugin> LoadPluginsFromFolderWihtoutLockingDlls(string folder)
+        {
+            var pluginsData = new List<IPlugin>();
+            var assemblies = new List<Assembly>();
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+            var files = Directory.GetFiles(folder);
+            foreach(var file in files)
+            {
+                assemblies.Add(AppDomain.CurrentDomain.Load(File.ReadAllBytes(file)));           
+            }    
+        
+            foreach(var assembly in assemblies)
+            {
+                var plugin = this.LoadPlugin(assembly);
+                if (plugin != null)
+                {
+                    pluginsData.Add(plugin);
+                }                
+            }
+
+            return pluginsData;
+        }
+
+        public IPlugin LoadPlugin(Assembly assembly)
+        {
+            var types2 = assembly.GetTypes();
+            foreach (var type in types2)
+            {
+                Debug.WriteLine("Type In Assembly:" + type.FullName);
+
+                try
+                {
+                    if (typeof(IAnalysisPlugin).IsAssignableFrom(type))
+                    {
+                        Debug.WriteLine("Can Cast Type In Assembly To: " + typeof(IAnalysisPlugin).FullName);
+                        return (IPlugin)Activator.CreateInstance(type);
+                    }
+
+                    if (typeof(IMenuCommandPlugin).IsAssignableFrom(type))
+                    {
+                        Debug.WriteLine("Can Cast Type In Assembly To: " + typeof(IMenuCommandPlugin).FullName);
+                        return (IPlugin)Activator.CreateInstance(type);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(
+                        "Cannot Cast Type In Assembly To: " + typeof(IAnalysisPlugin).FullName + "\r\n" + ex.Message + "\r\n" + ex.StackTrace);
+                    Debug.WriteLine(ex.InnerException.Message + " : " + ex.InnerException.StackTrace);
+                }
+            }
+
+            return null;
         }
 
         /// <summary>
