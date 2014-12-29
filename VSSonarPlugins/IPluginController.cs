@@ -71,6 +71,8 @@ namespace VSSonarPlugins
         /// </returns>
         PluginDescription IstallNewPlugin(string fileName, ISonarConfiguration conf);
 
+        IMenuCommandPlugin IstallAndUseNewMenuPlugin(string fileName, ISonarConfiguration conf);
+
         /// <summary>
         /// The pick plugin from multiple supported plugins.
         /// </summary>

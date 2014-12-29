@@ -13,6 +13,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarPlugins
 {
+    using System.Runtime.Serialization;
     using System.Windows.Media;
 
     /// <summary>

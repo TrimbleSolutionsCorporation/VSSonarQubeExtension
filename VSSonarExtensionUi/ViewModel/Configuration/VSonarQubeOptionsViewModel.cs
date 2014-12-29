@@ -419,7 +419,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 this.plugincontroller, 
                 this.GeneralConfigurationViewModel.UserConnectionConfig, 
                 this.Vsenvironmenthelper, this.ConfigurationHelper, 
-                this);
+                this, this.model);
             this.LicenseManager = new LicenseViewerViewModel();
 
             this.AvailableOptions.Add(this.GeneralConfigurationViewModel);

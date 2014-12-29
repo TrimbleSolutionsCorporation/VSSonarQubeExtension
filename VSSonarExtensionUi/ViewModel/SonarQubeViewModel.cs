@@ -123,9 +123,13 @@ namespace VSSonarExtensionUi.ViewModel
         /// </summary>
         public event ChangedEventHandler PluginRequest;
 
+        public event ChangedEventHandler RemovePluginRequest;
+
         #endregion
 
         #region Public Properties
+
+        public int IdOfPluginToRemove { get; set; }
 
         /// <summary>
         ///     Gets a value indicating whether analysis change lines.
@@ -778,6 +782,75 @@ namespace VSSonarExtensionUi.ViewModel
             if (this.PluginRequest != null)
             {
                 this.PluginRequest(this, e);
+            }
+        }
+
+        protected virtual void OnRemovePluginRequest(EventArgs e)
+        {
+            if (this.RemovePluginRequest != null)
+            {
+                this.RemovePluginRequest(this, e);
+            }
+        }
+
+        public int GetFirstFreeId()
+        {
+            int i = 0;
+            foreach (var menu in this.menuItemPlugins)
+            {
+                if (menu.Key != i)
+                {
+                    return i;
+                }
+
+                i++;
+            }
+
+            return i;
+        }
+
+        public void AddANewMenu(IMenuCommandPlugin toAdd)
+        {
+            foreach (var menu in this.ToolsProvidedByPlugins)
+            {
+                if (menu.Header.Equals(toAdd.GetHeader()))
+                {
+                    this.RemoveMenuPlugin(toAdd);
+                    this.ToolsProvidedByPlugins.Add(new MenuItem { Header = toAdd.GetHeader() });
+                    this.menuItemPlugins.Add(this.GetFirstFreeId(), toAdd);
+                    return;
+                }
+            }
+
+            this.ToolsProvidedByPlugins.Add(new MenuItem { Header = toAdd.GetHeader() });
+            this.menuItemPlugins.Add(this.GetFirstFreeId(), toAdd);
+        }
+
+        public void RemoveMenuPlugin(IMenuCommandPlugin toRemove)
+        {
+            foreach (var menu in this.ToolsProvidedByPlugins)
+            {
+                if (menu.Header.Equals(toRemove.GetHeader()))
+                {
+                    this.ToolsProvidedByPlugins.Remove(menu);
+                    KeyValuePair<int, IMenuCommandPlugin> selectMenu = InUsePlugin;
+                    foreach (var menuCheck in this.menuItemPlugins)
+                    {
+                        if (menuCheck.Value.GetHeader().Equals(toRemove.GetHeader()))
+                        {
+                            selectMenu = menuCheck;
+                        }
+                    }
+
+                    if (this.IsRunningInVisualStudio())
+                    {
+                        this.IdOfPluginToRemove = selectMenu.Key;
+                        this.OnRemovePluginRequest(EventArgs.Empty);
+                    }
+
+                    this.menuItemPlugins.Remove(selectMenu.Key);
+                    return;
+                }
             }
         }
 

@@ -14,6 +14,7 @@
 namespace VSSonarPlugins
 {
     using System;
+    using System.IO;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
@@ -48,7 +49,7 @@ namespace VSSonarPlugins
         {
             foreach (var assemblyFilename in assemblyFilenames)
             {
-                this.trustedAssembly.Add(Assembly.LoadFrom(assemblyFilename));
+                this.trustedAssembly.Add(Assembly.Load(File.ReadAllBytes(assemblyFilename)));
             }
         }
 
@@ -76,7 +77,7 @@ namespace VSSonarPlugins
             string[] assemblyFilenames, 
             ResolveEventHandler handler)
         {
-            AppDomain.CurrentDomain.AssemblyResolve += handler;
+            //AppDomain.CurrentDomain.AssemblyResolve += handler;
 
             var loader =
                 domain.CreateInstanceAndUnwrap(
@@ -123,7 +124,8 @@ namespace VSSonarPlugins
                                                Name = plugin.GetKey(conf),
                                                Enabled = false,
                                                SupportedExtensions = plugin.GetLanguageKey(),
-                                               Version = assembly.GetName().Version.ToString()
+                                               Version = assembly.GetName().Version.ToString(),
+                                               Type = typeof(IAnalysisPlugin).ToString()
                                            };
                             return desc;
                         }
@@ -137,9 +139,46 @@ namespace VSSonarPlugins
                                                Description = "Plugin to be loaded after VS restart",
                                                Name = plugin.GetHeader(),
                                                Enabled = false,
-                                               Version = assembly.GetName().Version.ToString()
+                                               Version = assembly.GetName().Version.ToString(),
+                                               Type = typeof(IMenuCommandPlugin).ToString()
                                            };
                             return desc;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(
+                            "Cannot Cast Type In Assembly To: " + typeof(IAnalysisPlugin).FullName + "\r\n" + ex.Message + "\r\n" + ex.StackTrace);
+                        Debug.WriteLine(ex.InnerException.Message + " : " + ex.InnerException.StackTrace);
+                        throw;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public IPlugin LoadPlugin(ISonarConfiguration conf)
+        {
+            foreach (var assembly in this.trustedAssembly)
+            {
+                var types2 = assembly.GetTypes();
+                foreach (var type in types2)
+                {
+                    Debug.WriteLine("Type In Assembly:" + type.FullName);
+
+                    try
+                    {
+                        if (typeof(IAnalysisPlugin).IsAssignableFrom(type))
+                        {
+                            Debug.WriteLine("Can Cast Type In Assembly To: " + typeof(IAnalysisPlugin).FullName);
+                            return (IPlugin)Activator.CreateInstance(type);
+                        }
+
+                        if (typeof(IMenuCommandPlugin).IsAssignableFrom(type))
+                        {
+                            Debug.WriteLine("Can Cast Type In Assembly To: " + typeof(IMenuCommandPlugin).FullName);
+                            return (IPlugin)Activator.CreateInstance(type);
                         }
                     }
                     catch (Exception ex)

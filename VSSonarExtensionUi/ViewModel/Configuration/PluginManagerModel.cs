@@ -56,6 +56,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         ///     The viewModel.
         /// </summary>
         private readonly VSonarQubeOptionsViewModel viewModel;
+        private readonly SonarQubeViewModel sqmodel;
 
         /// <summary>
         ///     The visual studio helper.
@@ -101,11 +102,13 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             ISonarConfiguration conf, 
             IVsEnvironmentHelper visualStudioHelper, 
             IConfigurationHelper configurationHelper,
-            VSonarQubeOptionsViewModel viewModel)
+            VSonarQubeOptionsViewModel viewModel, 
+            SonarQubeViewModel mainModel)
         {
             this.visualStudioHelper = visualStudioHelper;
             this.configurationHelper = configurationHelper;
             this.viewModel = viewModel;
+            this.sqmodel = mainModel;
             this.Header = "Plugin Manager";
             this.Conf = conf;
             this.controller = controller;
@@ -338,6 +341,12 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                         }
 
                         this.ChangesAreRequired = true;
+
+                        if(plugin.Type.Equals(typeof(IMenuCommandPlugin).ToString()))
+                        {
+                            var menuPlugin = this.controller.IstallAndUseNewMenuPlugin(filedialog.FileName, this.Conf);
+                            this.sqmodel.AddANewMenu(menuPlugin);
+                        }                        
                     }
                     else
                     {

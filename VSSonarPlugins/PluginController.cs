@@ -28,7 +28,7 @@ namespace VSSonarPlugins
 
     /// <summary>
     ///     The local analyser.
-    /// </summary>
+    /// </summary>    
     public class PluginController : IPluginController
     {
         #region Static Fields
@@ -57,6 +57,7 @@ namespace VSSonarPlugins
         /// </summary>
         private readonly List<IMenuCommandPlugin> menuCommandPlugins = new List<IMenuCommandPlugin>();
 
+        private AppDomain domain;
         #endregion
 
         #region Constructors and Destructors
@@ -75,6 +76,9 @@ namespace VSSonarPlugins
             this.ExtensionFolder = this.ExtensionFolder.Replace("file:\\", string.Empty);
             this.TempInstallPathFolder = Path.Combine(this.ExtensionFolder, Tempinstallfolder);
             this.InstallPathFile = Path.Combine(this.ExtensionFolder, Installfile);
+
+
+            this.CreatePluginDomain();
 
             this.UpgradePlugins();
 
@@ -105,6 +109,26 @@ namespace VSSonarPlugins
                     }
                 }
             }
+        }
+
+        ~PluginController()
+        {
+            AppDomain.Unload(domain);
+        }
+
+        private void CreatePluginDomain()
+        {
+            var trustedLoadGrantSet = new PermissionSet(PermissionState.Unrestricted);
+            var trustedLoadSetup = new AppDomainSetup
+            {
+                ApplicationBase = this.ExtensionFolder,
+                PrivateBinPath = this.TempInstallPathFolder,
+                LoaderOptimization = LoaderOptimization.MultiDomainHost
+            };
+
+            var adevidence = AppDomain.CurrentDomain.Evidence;
+            this.domain = AppDomain.CreateDomain("PluginCheckerDomain", adevidence, trustedLoadSetup, trustedLoadGrantSet);
+            this.domain.AssemblyResolve += this.CurrentDomainAssemblyResolve;            
         }
 
         #endregion
@@ -149,7 +173,16 @@ namespace VSSonarPlugins
         /// </returns>
         public Assembly CurrentDomainAssemblyResolve(object sender, ResolveEventArgs args)
         {
-            return typeof(PluginSandBoxLoader).Assembly;
+            var name = System.Reflection.AssemblyName.GetAssemblyName(args.Name);
+            foreach(var assemb in System.AppDomain.CurrentDomain.GetAssemblies())
+            {
+                if(System.Reflection.AssemblyName.ReferenceMatchesDefinition(name, assemb.GetName()))
+                {
+                    return assemb;
+                }
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -233,8 +266,17 @@ namespace VSSonarPlugins
             var assembliesToTempFolder = this.GetAssembliesInTempFolder();
             return this.LoadPluginUsingDedicatedDomain(
                 assembliesInFile.ToArray(),
-                this.GetReferenceAssemblies(assembliesToTempFolder), 
                 this.TempInstallPathFolder, 
+                conf);
+        }
+
+        public IMenuCommandPlugin IstallAndUseNewMenuPlugin(string fileName, ISonarConfiguration conf)
+        {
+            var assembliesInFile = this.UnzipFiles(fileName);
+            var assembliesToTempFolder = this.GetAssembliesInTempFolder();
+            return this.LoadMenuPluginUsingDedicatedDomain(
+                assembliesInFile.ToArray(),
+                this.TempInstallPathFolder,
                 conf);
         }
 
@@ -256,27 +298,60 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="PluginDescription"/>.
         /// </returns>
-        public PluginDescription LoadPluginUsingDedicatedDomain(
+        public IMenuCommandPlugin LoadMenuPluginUsingDedicatedDomain(
             string[] assemblies,
-            List<string> refAssemblies, 
             string basePath, 
             ISonarConfiguration conf)
         {
-            PluginDescription pluginDesc = null;
-            IEnumerable<string> refAssembliesInDropFolder = this.DropRefAssembliesIntoBasePath(refAssemblies);
+            IMenuCommandPlugin pluginDesc = null;
 
             try
             {
-                var trustedLoadGrantSet = new PermissionSet(PermissionState.Unrestricted);
-                var trustedLoadSetup = new AppDomainSetup
-                                           {
-                                               ApplicationBase = this.TempInstallPathFolder, 
-                                               LoaderOptimization = LoaderOptimization.MultiDomainHost
-                                           };
+                var loader = PluginSandBoxLoader.Sandbox(AppDomain.CurrentDomain, assemblies, this.CurrentDomainAssemblyResolve);
+                try
+                {
+                    pluginDesc = (IMenuCommandPlugin)loader.LoadPlugin(conf);
+                }
+                catch (Exception ex)
+                {
+                    if (ex.InnerException != null)
+                    {
+                        this.ErrorMessage = "Cannot Load Plugin: " + ex.InnerException.Message + " : " + ex.InnerException.StackTrace;
+                    }
+                    else
+                    {
+                        this.ErrorMessage = "Cannot Load Plugin: " + ex.Message + " : " + ex.StackTrace;
+                    }
 
-                AppDomain domain = AppDomain.CreateDomain("PluginCheckerDomain", null, trustedLoadSetup, trustedLoadGrantSet);
+                    Debug.WriteLine(ex.Message + " " + ex.StackTrace);
+                }
+            }
+            catch (Exception ex)
+            {
+                this.ErrorMessage = "Cannot Create Domain: " + ex.Message + " : " + ex.StackTrace;
+            }
 
-                PluginSandBoxLoader loader = PluginSandBoxLoader.Sandbox(domain, assemblies, this.CurrentDomainAssemblyResolve);
+            if (pluginDesc == null)
+            {
+                foreach (string assembly in assemblies)
+                {
+                    File.Delete(assembly);
+                }
+            }
+
+            return pluginDesc;
+        }
+
+        public PluginDescription LoadPluginUsingDedicatedDomain(
+            string[] assemblies,
+            string basePath,
+            ISonarConfiguration conf)
+        {
+            PluginDescription pluginDesc = null;
+
+            try
+            {
+                PluginSandBoxLoader loader = PluginSandBoxLoader.Sandbox(AppDomain.CurrentDomain, assemblies, this.CurrentDomainAssemblyResolve);
                 try
                 {
                     pluginDesc = loader.LoadPluginDescription(conf);
@@ -294,8 +369,6 @@ namespace VSSonarPlugins
 
                     Debug.WriteLine(ex.Message + " " + ex.StackTrace);
                 }
-
-                AppDomain.Unload(domain);
             }
             catch (Exception ex)
             {
@@ -308,11 +381,6 @@ namespace VSSonarPlugins
                 {
                     File.Delete(assembly);
                 }
-            }
-
-            foreach (string assembly in refAssembliesInDropFolder)
-            {
-                File.Delete(assembly);
             }
 
             return pluginDesc;
@@ -375,41 +443,6 @@ namespace VSSonarPlugins
         #region Methods
 
         /// <summary>
-        /// The drop ref assemblies into base path.
-        /// </summary>
-        /// <param name="refAssemblies">
-        /// The ref assemblies.
-        /// </param>
-        /// <returns>
-        /// The
-        ///     <see>
-        ///         <cref>List</cref>
-        ///     </see>
-        ///     .
-        /// </returns>
-        private IEnumerable<string> DropRefAssembliesIntoBasePath(IEnumerable<string> refAssemblies)
-        {
-            var newRefAssemblies = new List<string>();
-            foreach (string assembly in refAssemblies)
-            {
-                if (assembly == null)
-                {
-                    continue;
-                }
-
-                string dropFile = Path.Combine(this.TempInstallPathFolder, Path.GetFileName(assembly));
-                if (!File.Exists(dropFile))
-                {
-                    File.Copy(assembly, dropFile);
-                }
-
-                newRefAssemblies.Add(dropFile);
-            }
-
-            return newRefAssemblies;
-        }
-
-        /// <summary>
         ///     The get assemblies in temp folder.
         /// </summary>
         /// <returns>
@@ -423,45 +456,6 @@ namespace VSSonarPlugins
             List<string> files = Directory.GetFiles(this.TempInstallPathFolder, "*.*").ToList();
 
             return files.ToList();
-        }
-
-        /// <summary>
-        /// The get reference assemblies.
-        /// </summary>
-        /// <param name="listOfAssemblies">
-        /// The list of assemblies.
-        /// </param>
-        /// <returns>
-        /// The
-        ///     <see>
-        ///         <cref>List</cref>
-        ///     </see>
-        ///     .
-        /// </returns>
-        private List<string> GetReferenceAssemblies(List<string> listOfAssemblies)
-        {
-            List<string> assembliesInExtensionFolder = Directory.GetFiles(this.ExtensionFolder, "*.dll").ToList();
-            var refAssemblies = new List<string>();
-            foreach (string assembly in assembliesInExtensionFolder)
-            {
-                bool isPresent = false;
-                foreach (string assemblyToImport in listOfAssemblies)
-                {
-                    string name = Path.GetFileName(assembly);
-
-                    if (name != null && name.Equals(Path.GetFileName(assemblyToImport), StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        isPresent = true;
-                    }
-                }
-
-                if (!isPresent)
-                {
-                    refAssemblies.Add(assembly);
-                }
-            }
-
-            return refAssemblies;
         }
 
         /// <summary>
