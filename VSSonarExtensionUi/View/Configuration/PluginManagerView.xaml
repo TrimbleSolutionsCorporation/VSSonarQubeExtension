@@ -89,21 +89,7 @@
                             </Rectangle.OpacityMask>
                         </Rectangle>
                     </Button>
-                    <Button Width="30"
-                        Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                        Height="30"
-                        Margin="0, 0, 0, 0"
-                        ToolTip="Restart Visual Studio"
-                        Style="{DynamicResource SquareButtonStyle}" Command="{Binding RestartVs}">
-                        <Rectangle Width="15"
-                               Height="15"
-                               Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}">
-                            <Rectangle.OpacityMask>
-                                <VisualBrush Stretch="Fill"
-                                         Visual="{StaticResource appbar_reset}" />
-                            </Rectangle.OpacityMask>
-                        </Rectangle>
-                    </Button>                    
+        
                     <Button Width="30"
                         Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
                         Height="30"

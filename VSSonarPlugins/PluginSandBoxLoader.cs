@@ -102,7 +102,7 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="bool"/>.
         /// </returns>
-        public PluginDescription LoadPluginDescription(ISonarConfiguration conf)
+        public PluginDescription LoadPluginDescription(ISonarConfiguration conf, IConfigurationHelper helper)
         {
             foreach (var assembly in this.trustedAssembly)
             {
@@ -117,32 +117,14 @@ namespace VSSonarPlugins
                         {
                             Debug.WriteLine("Can Cast Type In Assembly To: " + typeof(IAnalysisPlugin).FullName);
                             var plugin = (IAnalysisPlugin)Activator.CreateInstance(type);
-
-                            var desc = new PluginDescription
-                                           {
-                                               Status = "Plugin to be loaded after VS restart",
-                                               Name = plugin.GetKey(conf),
-                                               Enabled = false,
-                                               SupportedExtensions = plugin.GetLanguageKey(),
-                                               Version = assembly.GetName().Version.ToString(),
-                                               Type = typeof(IAnalysisPlugin).ToString()
-                                           };
-                            return desc;
+                            return plugin.GetPluginDescription();
                         }
 
                         if (typeof(IMenuCommandPlugin).IsAssignableFrom(type))
                         {
                             Debug.WriteLine("Can Cast Type In Assembly To: " + typeof(IMenuCommandPlugin).FullName);
                             var plugin = (IMenuCommandPlugin)Activator.CreateInstance(type);
-                            var desc = new PluginDescription
-                                           {
-                                               Description = "Plugin to be loaded after VS restart",
-                                               Name = plugin.GetHeader(),
-                                               Enabled = false,
-                                               Version = assembly.GetName().Version.ToString(),
-                                               Type = typeof(IMenuCommandPlugin).ToString()
-                                           };
-                            return desc;
+                            return plugin.GetPluginDescription();
                         }
                     }
                     catch (Exception ex)

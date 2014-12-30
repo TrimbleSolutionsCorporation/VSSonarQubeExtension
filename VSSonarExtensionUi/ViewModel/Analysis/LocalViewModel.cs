@@ -85,6 +85,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         private readonly SonarQubeViewModel sonarQubeViewModel;
 
+        private readonly List<IAnalysisPlugin> plugins;
+
         /// <summary>
         ///     The show flyouts.
         /// </summary>
@@ -110,25 +112,28 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// The helper.
         /// </param>
         public LocalViewModel(
-            SonarQubeViewModel sonarQubeViewModel, 
-            List<IAnalysisPlugin> plugins, 
+            SonarQubeViewModel sonarQubeViewModelIn, 
+            List<IAnalysisPlugin> pluginsIn, 
             ISonarRestService service, 
             IVsEnvironmentHelper helper,
-            IConfigurationHelper configurationHelper)
+            IConfigurationHelper configurationHelper,
+            ISonarConfiguration sqhelper)
         {
             this.RestService = service;
             this.Vsenvironmenthelper = helper;
             this.ConfigurationHelper = configurationHelper;
-            this.sonarQubeViewModel = sonarQubeViewModel;
+            this.sonarQubeViewModel = sonarQubeViewModelIn;
+            this.plugins = pluginsIn;
             this.Header = "Local Analysis";
             this.IssuesGridView = new IssueGridViewModel(sonarQubeViewModel, false, "LocalView", false);
             this.OuputLogLines = new PaginatedObservableCollection<string>(300);
             this.AllLog = new List<string>();
 
+
             this.InitCommanding();
             this.InitFileAnalysis();
 
-            this.LocalAnalyserModule = new SonarLocalAnalyser(plugins, this.RestService, this.ConfigurationHelper);
+            this.LocalAnalyserModule = new SonarLocalAnalyser(this.plugins, this.RestService, this.ConfigurationHelper, sqhelper);
             this.LocalAnalyserModule.StdOutEvent += this.UpdateOutputMessagesFromPlugin;
             this.LocalAnalyserModule.LocalAnalysisCompleted += this.UpdateLocalIssues;
 

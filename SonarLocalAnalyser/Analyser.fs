@@ -34,7 +34,7 @@ type LanguageType =
 
 [<ComVisible(false)>]
 [<HostProtection(SecurityAction.LinkDemand, Synchronization = true, ExternalThreading = true)>]
-type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugin>, restService : ISonarRestService, vsinter : IConfigurationHelper) =
+type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugin>, restService : ISonarRestService, vsinter : IConfigurationHelper, sconf : ISonarConfiguration) =
     let completionEvent = new DelegateEvent<System.EventHandler>()
     let stdOutEvent = new DelegateEvent<System.EventHandler>()
     let jsonReports : System.Collections.Generic.List<String> = new System.Collections.Generic.List<String>()
@@ -55,7 +55,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
             raise(new NoFileInViewException())
 
         let IsSupported(plugin : IAnalysisPlugin, item : VsProjectItem) = 
-            let name = plugin.GetPluginDescription(vsinter).Name
+            let name = plugin.GetPluginDescription().Name
             let isEnabled = vsinter.ReadOptionFromApplicationData(GlobalIds.PluginEnabledControlId, name)
             if String.IsNullOrEmpty(isEnabled) then
                 plugin.IsSupported(item)
@@ -452,7 +452,8 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
 
             let GetIssuesFromPlugins(plug : IAnalysisPlugin) = 
                 try
-                    localissues.AddRange(plug.GetLocalAnalysisExtension(conf).GetSupportedIssues(issues))
+                    if plug.GetPluginDescription().Enabled then
+                        localissues.AddRange(plug.GetLocalAnalysisExtension(conf).GetSupportedIssues(issues))
                 with
                 | ex -> ()                        
 

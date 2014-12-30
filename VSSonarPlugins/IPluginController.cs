@@ -34,30 +34,6 @@ namespace VSSonarPlugins
         string GetErrorData();
 
         /// <summary>
-        ///     The get menu item plugins.
-        /// </summary>
-        /// <returns>
-        ///     The
-        ///     <see>
-        ///         <cref>ReadOnlyCollection</cref>
-        ///     </see>
-        ///     .
-        /// </returns>
-        List<IMenuCommandPlugin> GetMenuItemPlugins();
-
-        /// <summary>
-        ///     The get plugins options.
-        /// </summary>
-        /// <returns>
-        ///     The
-        ///     <see>
-        ///         <cref>Dictionary</cref>
-        ///     </see>
-        ///     .
-        /// </returns>
-        List<IAnalysisPlugin> GetPlugins();
-
-        /// <summary>
         /// The istall new plugin.
         /// </summary>
         /// <param name="fileName">
@@ -94,8 +70,10 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="bool"/>.
         /// </returns>
-        bool RemovePlugin(ISonarConfiguration conf, IConfigurationHelper conf2, PluginDescription selectedPlugin);
+        bool RemovePlugin(IPlugin selectedPlugin);
 
+
+        List<IPlugin> LoadPluginsFromPluginFolder();
         #endregion
     }
 }

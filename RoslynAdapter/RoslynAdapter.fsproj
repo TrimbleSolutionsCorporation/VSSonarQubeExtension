@@ -47,6 +47,7 @@
     <Compile Include="RoslynAdapter.fs" />
     <Content Include="packages.config" />
     <Content Include="app.config" />
+    <Compile Include="AssemblyInfo.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="clrzmq">
@@ -89,7 +90,7 @@
     </Reference>
     <Reference Include="FSharp.Data">
       <HintPath>..\References\FSharp.Data.dll</HintPath>
-    </Reference>	
+    </Reference>
     <Reference Include="NUnit.VisualStudio.TestAdapter">
       <HintPath>..\packages\NUnitTestAdapter.1.2\lib\NUnit.VisualStudio.TestAdapter.dll</HintPath>
       <Private>False</Private>

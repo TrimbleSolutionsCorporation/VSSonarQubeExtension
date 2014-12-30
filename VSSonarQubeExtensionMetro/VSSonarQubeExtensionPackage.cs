@@ -325,7 +325,7 @@ namespace VSSonarQubeExtension
                 SonarQubeViewModelFactory.SQViewModel.AssociatedProject,
                 SonarQubeViewModelFactory.SQViewModel.VsHelper),
                 plugin.Key,
-                plugin.Value.GetHeader());
+                plugin.Value.GetPluginDescription().Name);
 
             DColor defaultBackground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBackgroundColorKey);
             DColor defaultForeground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowTextColorKey);

@@ -13,7 +13,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarPlugins
 {
-    using System.Collections.Generic;
     using System.Windows.Controls;
     using System.Windows.Documents;
 
@@ -25,34 +24,12 @@ namespace VSSonarPlugins
     public interface IAnalysisPlugin : IPlugin
     {
         /// <summary>
-        /// The get key.
-        /// </summary>
-        /// <param name="configuration">
-        /// The configuration.
-        /// </param>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
-        string GetKey(ISonarConfiguration configuration);
-
-        /// <summary>
         /// The get language.
         /// </summary>
         /// <returns>
         /// The <see cref="string"/>.
         /// </returns>
         string GetLanguageKey();
-
-        /// <summary>
-        /// The get use plugin control options.
-        /// </summary>
-        /// <param name="configuration">
-        /// The configuration.
-        /// </param>
-        /// <returns>
-        /// The <see cref="UserControl"/>.
-        /// </returns>
-        IPluginsOptions GetPluginControlOptions(ISonarConfiguration configuration);
 
         /// <summary>
         /// The is supported.
@@ -104,38 +81,5 @@ namespace VSSonarPlugins
         /// The <see cref="ILocalAnalyserExtension"/>.
         /// </returns>
         ILocalAnalyserExtension GetLocalAnalysisExtension(ISonarConfiguration configuration);
-
-        /// <summary>
-        /// The get licenses.
-        /// </summary>
-        /// <param name="configuration">
-        /// The configuration.
-        /// </param>
-        /// <returns>
-        /// The <see cref="List"/>.
-        /// </returns>
-        Dictionary<string, VsLicense> GetLicenses(ISonarConfiguration configuration);
-
-        /// <summary>
-        /// The generate token id.
-        /// </summary>
-        /// <param name="configuration">
-        /// The configuration.
-        /// </param>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
-        string GenerateTokenId(ISonarConfiguration configuration);
-
-        /// <summary>
-        /// The get plugin descritpion.
-        /// </summary>
-        /// <param name="vsinter">
-        /// The vsinter.
-        /// </param>
-        /// <returns>
-        /// The <see cref="PluginDescription"/>.
-        /// </returns>
-        PluginDescription GetPluginDescription(IConfigurationHelper vsinter);
     }
 }

@@ -55,5 +55,10 @@ namespace VSSonarPlugins
         /// Gets or sets the type.
         /// </summary>
         public string Type { get; set; }
+
+        /// <summary>
+        /// Gets or sets the path.
+        /// </summary>
+        public string AssemblyPath { get; set; }
     }
 }

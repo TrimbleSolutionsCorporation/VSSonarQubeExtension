@@ -13,8 +13,9 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarPlugins
 {
-    using System.Runtime.Serialization;
     using System.Windows.Media;
+    using ExtensionTypes;
+    using System.Collections.Generic;
 
     /// <summary>
     /// The Plugin interface.
@@ -22,19 +23,47 @@ namespace VSSonarPlugins
     public interface IPlugin
     {
         /// <summary>
-        /// The get version.
+        /// The get use plugin control options.
         /// </summary>
+        /// <param name="configuration">
+        /// The configuration.
+        /// </param>
         /// <returns>
-        /// The <see cref="string"/>.
+        /// The <see cref="UserControl"/>.
         /// </returns>
-        string GetVersion();
+        IPluginsOptions GetPluginControlOptions(ISonarConfiguration configuration);
 
         /// <summary>
-        /// The get assembly path.
+        /// The get licenses.
         /// </summary>
+        /// <param name="configuration">
+        /// The configuration.
+        /// </param>
+        /// <returns>
+        /// The <see cref="List"/>.
+        /// </returns>
+        Dictionary<string, VsLicense> GetLicenses(ISonarConfiguration configuration);
+
+        /// <summary>
+        /// The generate token id.
+        /// </summary>
+        /// <param name="configuration">
+        /// The configuration.
+        /// </param>
         /// <returns>
         /// The <see cref="string"/>.
         /// </returns>
-        string GetAssemblyPath();
+        string GenerateTokenId(ISonarConfiguration configuration);
+
+        /// <summary>
+        /// The get plugin descritpion.
+        /// </summary>
+        /// <param name="vsinter">
+        /// The vsinter.
+        /// </param>
+        /// <returns>
+        /// The <see cref="PluginDescription"/>.
+        /// </returns>
+        PluginDescription GetPluginDescription();
     }
 }

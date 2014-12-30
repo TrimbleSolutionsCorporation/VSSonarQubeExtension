@@ -34,30 +34,10 @@ namespace VSSonarPlugins
         #region Static Fields
 
         /// <summary>
-        ///     The installfile.
-        /// </summary>
-        public static readonly string Installfile = "InstallFile";
-
-        /// <summary>
         ///     The tempinstallfolder.
         /// </summary>
         public static readonly string Tempinstallfolder = "TempInstallFolder";
 
-        #endregion
-
-        #region Fields
-
-        /// <summary>
-        ///     The loaded plugins.
-        /// </summary>
-        private readonly List<IAnalysisPlugin> loadedPlugins = new List<IAnalysisPlugin>();
-
-        /// <summary>
-        ///     The loaded plugins.
-        /// </summary>
-        private readonly List<IMenuCommandPlugin> menuCommandPlugins = new List<IMenuCommandPlugin>();
-
-        private AppDomain domain;
         #endregion
 
         #region Constructors and Destructors
@@ -75,39 +55,10 @@ namespace VSSonarPlugins
 
             this.ExtensionFolder = this.ExtensionFolder.Replace("file:\\", string.Empty);            
             this.TempInstallPathFolder = Path.Combine(this.ExtensionFolder, Tempinstallfolder);
-            this.InstallPathFile = Path.Combine(this.ExtensionFolder, Installfile);
             this.PluginsFolder = Path.Combine(this.ExtensionFolder, "plugins");
-
-            this.UpgradePlugins();
 
             var pluginLoader = new PluginLoader();
             AppDomain.CurrentDomain.AssemblyResolve += this.CurrentDomainAssemblyResolve;
-
-            var plugins = pluginLoader.LoadPluginsFromFolderWihtoutLockingDlls(this.PluginsFolder);
-
-            if (plugins == null)
-            {
-                return;
-            }
-
-            foreach (IPlugin plugin in plugins)
-            {
-                try
-                {
-                    this.loadedPlugins.Add((IAnalysisPlugin)plugin);
-                }
-                catch (Exception)
-                {
-                    try
-                    {
-                        this.menuCommandPlugins.Add((IMenuCommandPlugin)plugin);
-                    }
-                    catch (Exception)
-                    {
-                        Debug.WriteLine("Cannot Import Plugin");
-                    }
-                }
-            }
         }
 
         #endregion
@@ -206,56 +157,42 @@ namespace VSSonarPlugins
             return this.ErrorMessage;
         }
 
-        /// <summary>
-        /// The get menu command plugin to run command.
-        /// </summary>
-        /// <param name="configuration">
-        /// The configuration.
-        /// </param>
-        /// <param name="key">
-        /// The key.
-        /// </param>
-        /// <returns>
-        /// The <see cref="IMenuCommandPlugin"/>.
-        /// </returns>
-        public IMenuCommandPlugin GetMenuCommandPluginToRunCommand(ISonarConfiguration configuration, string key)
+        public List<IPlugin> LoadPluginsFromPluginFolder()
         {
-            if (this.menuCommandPlugins == null)
-            {
-                return null;
-            }
+            var folder = this.PluginsFolder;
+            var pluginsData = new List<IPlugin>();
 
-            return (from plugin in this.menuCommandPlugins where plugin.GetHeader().Equals(key) select plugin).FirstOrDefault();
-        }
+                var assemblies = new Dictionary<string, Assembly>();
+                if (!Directory.Exists(folder))
+                {
+                    Directory.CreateDirectory(folder);
+                }
+                var files = Directory.GetFiles(folder);
+                foreach (var file in files)
+                {
+                    assemblies.Add(file, AppDomain.CurrentDomain.Load(File.ReadAllBytes(file)));
+                }
 
-        /// <summary>
-        ///     The get plugins options.
-        /// </summary>
-        /// <returns>
-        ///     The
-        ///     <see>
-        ///         <cref>Dictionary</cref>
-        ///     </see>
-        ///     .
-        /// </returns>
-        public List<IMenuCommandPlugin> GetMenuItemPlugins()
-        {
-            return this.menuCommandPlugins;
-        }
+                foreach (var assembly in assemblies)
+                {
+                    try
+                    {
+                        var plugin = this.LoadPlugin(assembly.Value);
+                        if (plugin != null)
+                        {
+                            pluginsData.Add(plugin);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.Message);
+                        File.Delete(assembly.Key);
+                    }
+                }
 
-        /// <summary>
-        ///     The get plugins options.
-        /// </summary>
-        /// <returns>
-        ///     The
-        ///     <see>
-        ///         <cref>Dictionary</cref>
-        ///     </see>
-        ///     .
-        /// </returns>
-        public List<IAnalysisPlugin> GetPlugins()
-        {
-            return this.loadedPlugins;
+
+
+            return pluginsData;
         }
 
         public IPlugin IstallNewPlugin(string fileName, ISonarConfiguration conf)
@@ -335,6 +272,39 @@ namespace VSSonarPlugins
             return null;
         }
 
+
+        public IPlugin LoadPlugin(Assembly assembly)
+        {
+            var types2 = assembly.GetTypes();
+            foreach (var type in types2)
+            {
+                Debug.WriteLine("Type In Assembly:" + type.FullName);
+
+                try
+                {
+                    if (typeof(IAnalysisPlugin).IsAssignableFrom(type))
+                    {
+                        Debug.WriteLine("Can Cast Type In Assembly To: " + typeof(IAnalysisPlugin).FullName);
+                        return (IPlugin)Activator.CreateInstance(type);
+                    }
+
+                    if (typeof(IMenuCommandPlugin).IsAssignableFrom(type))
+                    {
+                        Debug.WriteLine("Can Cast Type In Assembly To: " + typeof(IMenuCommandPlugin).FullName);
+                        return (IPlugin)Activator.CreateInstance(type);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(
+                        "Cannot Cast Type In Assembly To: " + typeof(IAnalysisPlugin).FullName + "\r\n" + ex.Message + "\r\n" + ex.StackTrace);
+                    Debug.WriteLine(ex.InnerException.Message + " : " + ex.InnerException.StackTrace);
+                }
+            }
+
+            return null;
+        }
+
         /// <summary>
         /// The pick plugin from multiple supported plugins.
         /// </summary>
@@ -366,25 +336,9 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="bool"/>.
         /// </returns>
-        public bool RemovePlugin(ISonarConfiguration configuration, IConfigurationHelper configurationhelper, PluginDescription selectedPlugin)
+        public bool RemovePlugin(IPlugin selectedPlugin)
         {
-            foreach (var plugin in this.loadedPlugins)
-            {
-                if (plugin.GetKey(configuration).Equals(selectedPlugin.Name))
-                {
-                    return this.SyncFileWithRemovePlugin(plugin);
-                }
-            }
-
-            foreach (var plugin in this.menuCommandPlugins)
-            {
-                if (plugin.GetPluginDescription(configurationhelper).Name.Equals(selectedPlugin.Name))
-                {
-                    return this.SyncFileWithRemovePlugin(plugin);
-                }
-            }
-
-            return false;
+            return true;
         }
 
         #endregion
@@ -405,32 +359,6 @@ namespace VSSonarPlugins
             List<string> files = Directory.GetFiles(this.TempInstallPathFolder, "*.*").ToList();
 
             return files.ToList();
-        }
-
-        /// <summary>
-        /// The sync file with remove plugin.
-        /// </summary>
-        /// <param name="plugin">
-        /// The plugin.
-        /// </param>
-        /// <returns>
-        /// The <see cref="bool"/>.
-        /// </returns>
-        private bool SyncFileWithRemovePlugin(IPlugin plugin)
-        {
-            string location = plugin.GetAssemblyPath();
-
-            if (!File.Exists(location))
-            {
-                return false;
-            }
-
-            using (StreamWriter w = File.AppendText(this.InstallPathFile))
-            {
-                w.WriteLine(location);
-            }
-
-            return true;
         }
 
         /// <summary>
@@ -471,50 +399,6 @@ namespace VSSonarPlugins
             }
 
             return files;
-        }
-
-        /// <summary>
-        ///     The upgrade plugins.
-        /// </summary>
-        private void UpgradePlugins()
-        {
-            if (File.Exists(this.InstallPathFile))
-            {
-                IEnumerable<string> content = File.ReadLines(this.InstallPathFile);
-                foreach (string line in content)
-                {
-                    if (File.Exists(line))
-                    {
-                        File.Delete(line);
-                    }
-                }
-
-                File.Delete(this.InstallPathFile);
-            }
-
-            if (Directory.Exists(this.TempInstallPathFolder))
-            {
-                string[] files = Directory.GetFiles(this.TempInstallPathFolder, "*.*");
-
-                foreach (string file in files)
-                {
-                    try
-                    {
-                        if (file == null)
-                        {
-                            continue;
-                        }
-
-                        string dest = Path.Combine(this.ExtensionFolder, Path.GetFileName(file));
-                        File.Copy(file, dest, true);
-                        File.Delete(file);
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine("Cannot Move File: " + file + " : " + ex.Message);
-                    }
-                }
-            }
         }
 
         #endregion

@@ -27,19 +27,19 @@ type RunAnalysisTests() =
 
     [<Test>]
     member test.``If Thread is Null then analysis is not running`` () =
-        let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create())
+        let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create(), Mock<ISonarConfiguration>().Create())
         ((analyser :> ISonarLocalAnalyser).IsExecuting()) |> should be False
 
     [<Test>]
     [<ExpectedException>]
     member test.``Should throw exception when no plugin is found`` () =
-        let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create())
+        let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create(), Mock<ISonarConfiguration>().Create())
         ((analyser :> ISonarLocalAnalyser).GetResourceKey(new VsProjectItem("fileName", "filePath", "projectName", "projectFilePath", "solutionName", "solutionPath"), new Resource(), new ConnectionConfiguration(), true)) |> should throw typeof<ResourceNotSupportedException>
 
     [<Test>]
     [<ExpectedException>]
     member test.``Should throw exception if No plugins are loaded and we give a good resource`` () =
-        let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create())
+        let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create(), Mock<ISonarConfiguration>().Create())
         let project = new Resource()
         project.Lang <- "c++"
         ((analyser :> ISonarLocalAnalyser).GetResourceKey(new VsProjectItem("fileName", "filePath", "projectName", "projectFilePath", "solutionName", "solutionPath"), new Resource(), new ConnectionConfiguration(), true)) |> should throw typeof<ResourceNotSupportedException>
@@ -60,12 +60,12 @@ type RunAnalysisTests() =
             Mock<IAnalysisPlugin>()
                 .Setup(fun x -> <@ x.IsSupported(vsItem) @>).Returns(true)
                 .Setup(fun x -> <@ x.GetResourceKey(any(), any(), any()) @>).Returns("Key")
-                .Setup(fun x -> <@ x.GetPluginDescription(mockAVsinterface) @>).Returns(pluginDescription)
+                .Setup(fun x -> <@ x.GetPluginDescription() @>).Returns(pluginDescription)
                 .Create()
 
         let listofPlugins = new System.Collections.Generic.List<IAnalysisPlugin>()
         listofPlugins.Add(mockAPlugin)
-        let analyser = new SonarLocalAnalyser(listofPlugins, Mock<ISonarRestService>().Create(), mockAVsinterface)
+        let analyser = new SonarLocalAnalyser(listofPlugins, Mock<ISonarRestService>().Create(), mockAVsinterface, Mock<ISonarConfiguration>().Create())
         
         
         (analyser :> ISonarLocalAnalyser).GetResourceKey(vsItem, project, new ConnectionConfiguration(), true) |> should equal "Key"

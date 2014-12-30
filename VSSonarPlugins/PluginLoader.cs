@@ -36,12 +36,6 @@ namespace VSSonarPlugins
         /// </summary>
         private string errorData;
 
-        /// <summary>
-        ///     The plugins.
-        /// </summary>
-        [ImportMany]
-        private IEnumerable<Lazy<IPlugin>> plugins;
-
         #endregion
 
         #region Public Methods and Operators
@@ -57,31 +51,7 @@ namespace VSSonarPlugins
             return this.errorData;
         }
 
-        public List<IPlugin> LoadPluginsFromFolderWihtoutLockingDlls(string folder)
-        {
-            var pluginsData = new List<IPlugin>();
-            var assemblies = new List<Assembly>();
-            if (!Directory.Exists(folder))
-            {
-                Directory.CreateDirectory(folder);
-            }
-            var files = Directory.GetFiles(folder);
-            foreach(var file in files)
-            {
-                assemblies.Add(AppDomain.CurrentDomain.Load(File.ReadAllBytes(file)));           
-            }    
-        
-            foreach(var assembly in assemblies)
-            {
-                var plugin = this.LoadPlugin(assembly);
-                if (plugin != null)
-                {
-                    pluginsData.Add(plugin);
-                }                
-            }
 
-            return pluginsData;
-        }
 
         public IPlugin LoadPlugin(Assembly assembly)
         {
@@ -106,6 +76,7 @@ namespace VSSonarPlugins
                 }
                 catch (Exception ex)
                 {
+                    this.errorData += ex.Message;
                     Debug.WriteLine(
                         "Cannot Cast Type In Assembly To: " + typeof(IAnalysisPlugin).FullName + "\r\n" + ex.Message + "\r\n" + ex.StackTrace);
                     Debug.WriteLine(ex.InnerException.Message + " : " + ex.InnerException.StackTrace);
@@ -113,48 +84,6 @@ namespace VSSonarPlugins
             }
 
             return null;
-        }
-
-        /// <summary>
-        /// The load plugins from folder.
-        /// </summary>
-        /// <param name="folder">
-        /// The folder.
-        /// </param>
-        /// <returns>
-        /// The <see>
-        ///         <cref>ReadOnlyCollection</cref>
-        ///     </see>
-        ///     .
-        /// </returns>
-        public ReadOnlyCollection<IPlugin> LoadPluginsFromFolder(string folder)
-        {
-            var sensors = new AggregateCatalog();
-            sensors.Catalogs.Add(new AssemblyCatalog(typeof(PluginLoader).Assembly));
-            sensors.Catalogs.Add(new DirectoryCatalog(folder));
-            var compositonContainer = new CompositionContainer(sensors);
-            try
-            {
-                compositonContainer.ComposeParts(this);
-                return new ReadOnlyCollection<IPlugin>(this.plugins.Select(plugin => plugin.Value).ToList());
-            }
-            catch (Exception compositionException)
-            {
-                if (compositionException is System.Reflection.ReflectionTypeLoadException)
-                {
-                    var typeLoadException = compositionException as ReflectionTypeLoadException;
-                    var loaderExceptions = typeLoadException.LoaderExceptions;
-                    foreach (var loaderException in loaderExceptions)
-                    {
-                        Debug.WriteLine(loaderException.Message + " " + loaderException.StackTrace);    
-                    }
-                    
-                }
-
-                this.errorData = compositionException.Message + " " + compositionException.StackTrace;
-                Debug.WriteLine(compositionException.ToString());
-                return null;
-            }
         }
 
         #endregion

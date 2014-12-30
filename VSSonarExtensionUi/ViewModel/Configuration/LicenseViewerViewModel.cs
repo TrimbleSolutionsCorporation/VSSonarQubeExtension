@@ -36,24 +36,18 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         /// The plugins.
         /// </summary>
-        private readonly List<IAnalysisPlugin> plugins;
+        private readonly PluginManagerModel pluginModel;
+
+        /// <summary>
+        /// Gets or sets the connection configuration.
+        /// </summary>
+        private readonly ISonarConfiguration connectionConfiguration;
+
+        private readonly IConfigurationHelper confHelper;
 
         #endregion
 
         #region Constructors and Destructors
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LicenseViewerViewModel"/> class.
-        /// </summary>
-        public LicenseViewerViewModel()
-        {
-            this.Header = "License Manager";
-            this.AvailableLicenses = new ObservableCollection<VsLicense>();
-            this.AvailableLicenses = this.GetLicensesFromServer();
-
-            this.ForeGroundColor = Colors.Black;
-            this.ForeGroundColor = Colors.Black;
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LicenseViewerViewModel"/> class.
@@ -64,13 +58,15 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="configuration">
         /// The configuration.
         /// </param>
-        public LicenseViewerViewModel(PluginController plugincontroller, ISonarConfiguration configuration)
+        public LicenseViewerViewModel(PluginManagerModel plugincontroller, ISonarConfiguration configuration, IConfigurationHelper helper)
         {
             this.Header = "License Manager";
+            this.pluginModel = plugincontroller;
+            this.connectionConfiguration = configuration;
+            this.confHelper = helper;
+
             this.AvailableLicenses = new ObservableCollection<VsLicense>();
             this.AvailableLicenses = this.GetLicensesFromServer();
-            this.plugins = plugincontroller.GetPlugins();
-            this.ConnectionConfiguration = configuration;
 
             this.GenerateTokenCommand = new RelayCommand(this.OnGenerateTokenCommand, () => this.SelectedLicense != null);
 
@@ -91,11 +87,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// Gets or sets the back ground color.
         /// </summary>
         public Color BackGroundColor { get; set; }
-
-        /// <summary>
-        /// Gets or sets the connection configuration.
-        /// </summary>
-        public ISonarConfiguration ConnectionConfiguration { get; set; }
 
         /// <summary>
         /// Gets or sets the fore ground color.
@@ -185,34 +176,44 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         {
             var licenses = new ObservableCollection<VsLicense>();
 
-            if (this.plugins != null)
+            if (this.pluginModel != null)
             {
-                foreach (IAnalysisPlugin plugin in this.plugins)
+                foreach (var plugin in this.pluginModel.AnalysisPlugins)
                 {
-                    Dictionary<string, VsLicense> lics = plugin.GetLicenses(this.ConnectionConfiguration);
-                    if (lics != null)
-                    {
-                        foreach (var license in lics)
-                        {
-                            bool existsAlready = false;
-                            foreach (VsLicense existinglicense in licenses)
-                            {
-                                if (existinglicense.LicenseTxt.Equals(license.Value.LicenseTxt))
-                                {
-                                    existsAlready = true;
-                                }
-                            }
+                    GetLicenceForPlugin(licenses, plugin);
+                }
 
-                            if (!existsAlready)
-                            {
-                                licenses.Add(license.Value);
-                            }
-                        }
-                    }
+                foreach (var plugin in this.pluginModel.MenuPlugins)
+                {
+                    GetLicenceForPlugin(licenses, plugin);
                 }
             }
 
             return licenses;
+        }
+
+        private void GetLicenceForPlugin(ObservableCollection<VsLicense> licenses, IPlugin plugin)
+        {
+            Dictionary<string, VsLicense> lics = plugin.GetLicenses(this.connectionConfiguration);
+            if (lics != null)
+            {
+                foreach (var license in lics)
+                {
+                    bool existsAlready = false;
+                    foreach (VsLicense existinglicense in licenses)
+                    {
+                        if (existinglicense.LicenseTxt.Equals(license.Value.LicenseTxt))
+                        {
+                            existsAlready = true;
+                        }
+                    }
+
+                    if (!existsAlready)
+                    {
+                        licenses.Add(license.Value);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -272,12 +273,21 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         private void OnGenerateTokenCommand()
         {
-            foreach (IAnalysisPlugin plugin in this.plugins)
+            foreach (var plugin in this.pluginModel.AnalysisPlugins)
             {
-                string key = plugin.GetKey(this.ConnectionConfiguration);
+                string key = plugin.GetPluginDescription().Name;
                 if (this.SelectedLicense.ProductId.Contains(key))
                 {
-                    this.GeneratedToken = plugin.GenerateTokenId(this.ConnectionConfiguration);
+                    this.GeneratedToken = plugin.GenerateTokenId(this.connectionConfiguration);
+                }
+            }
+
+            foreach (var plugin in this.pluginModel.MenuPlugins)
+            {
+                string key = plugin.GetPluginDescription().Name;
+                if (this.SelectedLicense.ProductId.Contains(key))
+                {
+                    this.GeneratedToken = plugin.GenerateTokenId(this.connectionConfiguration);
                 }
             }
         }

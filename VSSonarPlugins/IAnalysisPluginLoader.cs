@@ -22,19 +22,6 @@ namespace VSSonarPlugins
     public interface IPluginLoader
     {
         /// <summary>
-        /// The load plugins from folder.
-        /// </summary>
-        /// <param name="folder">
-        /// The folder.
-        /// </param>
-        /// <returns>
-        /// The <see cref="ReadOnlyCollection{T}"/>.
-        /// </returns>
-        ReadOnlyCollection<IPlugin> LoadPluginsFromFolder(string folder);
-
-        List<IPlugin> LoadPluginsFromFolderWihtoutLockingDlls(string folder);
-
-        /// <summary>
         /// The get error data.
         /// </summary>
         /// <returns>

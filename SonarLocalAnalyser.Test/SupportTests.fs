@@ -30,7 +30,7 @@ type SupportTests() =
     member test.``Should throw exception if no plugins are loaded for multilanguage scenario`` () =
         let project = new Resource()
 
-        let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create())        
+        let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create(), Mock<ISonarConfiguration>().Create())        
         (analyser.IsMultiLanguageAnalysis(project)) |> should throw typeof<NoPluginInstalledException>
 
     [<Test>]
@@ -40,7 +40,7 @@ type SupportTests() =
 
         let listofPlugins = new System.Collections.Generic.List<IAnalysisPlugin>()
         listofPlugins.Add(Mock<IAnalysisPlugin>().Create())                
-        let analyser = new SonarLocalAnalyser(listofPlugins, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create())        
+        let analyser = new SonarLocalAnalyser(listofPlugins, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create(), Mock<ISonarConfiguration>().Create())        
         (analyser.IsMultiLanguageAnalysis(null)) |> should throw typeof<ProjectNotAssociatedException>
 
     [<Test>]
@@ -49,7 +49,7 @@ type SupportTests() =
 
         let listofPlugins = new System.Collections.Generic.List<IAnalysisPlugin>()
         listofPlugins.Add(Mock<IAnalysisPlugin>().Create())
-        let analyser = new SonarLocalAnalyser(listofPlugins, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create())
+        let analyser = new SonarLocalAnalyser(listofPlugins, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create(), Mock<ISonarConfiguration>().Create())
         (analyser.IsMultiLanguageAnalysis(project)) |> should be True
 
     [<Test>]
@@ -58,6 +58,6 @@ type SupportTests() =
 
         let listofPlugins = new System.Collections.Generic.List<IAnalysisPlugin>()
         listofPlugins.Add(Mock<IAnalysisPlugin>().Create())
-        let analyser = new SonarLocalAnalyser(listofPlugins, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create())
+        let analyser = new SonarLocalAnalyser(listofPlugins, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create(), Mock<ISonarConfiguration>().Create())
         (analyser.IsMultiLanguageAnalysis(project)) |> should be False
 

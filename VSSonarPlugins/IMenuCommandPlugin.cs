@@ -24,14 +24,6 @@ namespace VSSonarPlugins
     public interface IMenuCommandPlugin : IPlugin
     {
         /// <summary>
-        /// The get header.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
-        string GetHeader();
-
-        /// <summary>
         /// The get user control.
         /// </summary>
         /// <param name="configuration">
@@ -61,17 +53,6 @@ namespace VSSonarPlugins
         /// The vshelper.
         /// </param>
         void UpdateConfiguration(ISonarConfiguration configuration, Resource project, IVsEnvironmentHelper vshelper);
-
-        /// <summary>
-        /// The get plugin descritpion.
-        /// </summary>
-        /// <param name="vsinter">
-        /// The vsinter.
-        /// </param>
-        /// <returns>
-        /// The <see cref="PluginDescription"/>.
-        /// </returns>
-        PluginDescription GetPluginDescription(IConfigurationHelper vsinter);
 
         /// <summary>
         /// The update theme.
