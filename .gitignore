@@ -1,7 +1,10 @@
 # Build Folders (you can keep bin if you'd like, to store dlls and pdbs)
+<<<<<<< HEAD
 
 BuildDrop/
 
+=======
+>>>>>>> 4af5e85... 1.5.2
 # mstest test results
 TestResults
 BuildDrop
