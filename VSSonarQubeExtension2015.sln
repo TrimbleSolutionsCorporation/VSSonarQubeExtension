@@ -27,7 +27,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSSonarExtensionUi", "VSSon
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSSonarQubeStandalone", "VSSonarQubeStandalone\VSSonarQubeStandalone.csproj", "{B9B03BEF-2B09-43C3-A14E-E297E2100FE1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSSonarExtensionMetro", "VSSonarQubeExtensionMetro\VSSonarExtensionMetro.csproj", "{CDA074CC-04BC-4D9E-B285-5A2D47C001B9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSSonarExtensionMetro2015", "VSSonarQubeExtensionMetro\VSSonarExtensionMetro2015.csproj", "{00245123-FEBB-4AF3-99E5-223142A598C8}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "RoslynAdapter", "RoslynAdapter\RoslynAdapter.fsproj", "{496B669E-8CB4-41AC-B928-E84E3C820807}"
 EndProject
