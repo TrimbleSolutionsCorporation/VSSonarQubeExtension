@@ -31,38 +31,3 @@ You should have received a copy of the GNU Lesser General Public License along w
 Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 
 
-### Changelog
-#### Version 1.4.1.3
-     Metro style
-     Standalone Mode
-     
-
-#### Version 1.1
-     Local analysis, incremental, full and preview analysis
-     Duplication plugin
-     Support VS themes
-     Performance improvements
-     Editor improvements
-     
-#### Version 1.0.1
-     Associaton broken when pom.xml or sonar runner properties is not found. 
-     Add key filter to combo box
-     Support longer names in project keys
-
-#### Version 1.0
-     Control Panel 
-     Better visual integration with Visual Studio 
-     Local analysis provided by plugins 
-     Filter on issues 
-
-#### Version 0.4
-     Issues window 
-     Suport SonarQube 3.6 
-     Project association window 
-     vb.net 
-
-#### Version 0.3
-     Support for c++, c# 
-     c++ local analysis 
-     Coverage display in editor 
-     Violations in editor 
