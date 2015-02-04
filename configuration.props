@@ -18,7 +18,7 @@
 
         <TargetFSharpCoreVersion Condition="'$(VisualStudioVersion)'=='11.0'">4.3.1.0</TargetFSharpCoreVersion>
         <TargetFSharpCoreVersion Condition="'$(VisualStudioVersion)'=='12.0'">4.3.1.0</TargetFSharpCoreVersion>
-        <TargetFSharpCoreVersion Condition="'$(VisualStudioVersion)'=='14.0'">4.4.0.0</TargetFSharpCoreVersion>
+        <TargetFSharpCoreVersion Condition="'$(VisualStudioVersion)'=='14.0'">4.3.1.0</TargetFSharpCoreVersion>
         
         <FSharpFolder Condition="'$(TargetFSharpCoreVersion)'=='4.3.1.0'">FSharp431</FSharpFolder>
         <FSharpFolder Condition="'$(TargetFSharpCoreVersion)'=='4.4.0.0'">FSharp440</FSharpFolder>
