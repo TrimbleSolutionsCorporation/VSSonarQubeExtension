@@ -10,7 +10,6 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>VSSonarQubeStandalone</RootNamespace>
     <AssemblyName>VSSonarQubeStandalone</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -58,7 +57,6 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      
       <SpecificVersion>True</SpecificVersion>
       <Private>True</Private>
     </Reference>
@@ -148,6 +146,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ExtensionHelpers\ExtensionHelpers.csproj">
+      <Project>{82914bc7-eee5-49e7-ac2b-a7451a7a797d}</Project>
+      <Name>ExtensionHelpers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ExtensionTypes\ExtensionTypes.csproj">
+      <Project>{75a39a9b-06b2-4249-9d3c-c2319951bc53}</Project>
+      <Name>ExtensionTypes</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VSSonarExtensionUi\VSSonarExtensionUi.csproj">
       <Project>{bc583a5d-931b-4ed9-ac2c-5667a37b3043}</Project>
       <Name>VSSonarExtensionUi</Name>
