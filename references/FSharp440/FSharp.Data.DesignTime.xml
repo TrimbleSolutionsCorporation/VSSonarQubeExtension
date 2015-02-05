@@ -800,7 +800,7 @@
 <member name="">
 
 </member>
-<member name="F:FSharp.Data.FSharp.Data.HttpResponse.Headers">
+<member name="P:FSharp.Data.HttpResponse.Headers">
 <summary>
  If the same header is present multiple times, the values will be concatenated with comma as the separator
 </summary>
@@ -833,7 +833,7 @@
 <member name="">
 
 </member>
-<member name="F:FSharp.Data.FSharp.Data.HttpResponseWithStream.Headers">
+<member name="P:FSharp.Data.HttpResponseWithStream.Headers">
 <summary>
  If the same header is present multiple times, the values will be concatenated with comma as the separator
 </summary>
@@ -2953,12 +2953,12 @@
  [omit]
 </summary>
 </member>
-<member name="F:FSharp.Data.Runtime.BaseTypes.FSharp.Data.Runtime.BaseTypes.JsonDocument.Path">
+<member name="P:FSharp.Data.Runtime.BaseTypes.JsonDocument.Path">
 <summary>
  [omit]
 </summary>
 </member>
-<member name="F:FSharp.Data.Runtime.BaseTypes.FSharp.Data.Runtime.BaseTypes.JsonDocument.Json">
+<member name="P:FSharp.Data.Runtime.BaseTypes.JsonDocument.Json">
 <summary>
  [omit]
 </summary>
@@ -4161,7 +4161,7 @@
 <member name="">
 
 </member>
-<member name="F:FSharp.Data.Runtime.Freebase.FreebaseSchema.FreebaseProperty.UnitOfMeasureId">
+<member name="P:FSharp.Data.Runtime.Freebase.FreebaseSchema.FreebaseProperty.UnitOfMeasureId">
 <summary>
  The unit of measure for the property, if any. e.g. /en/kilometer
 </summary>
@@ -4169,7 +4169,7 @@
 <member name="">
 
 </member>
-<member name="F:FSharp.Data.Runtime.Freebase.FreebaseSchema.FreebaseProperty.EnumerationId">
+<member name="P:FSharp.Data.Runtime.Freebase.FreebaseSchema.FreebaseProperty.EnumerationId">
 <summary>
  Name of the enumeration type. Like /authority/gnis
 </summary>
@@ -6154,7 +6154,7 @@
 <member name="">
 
 </member>
-<member name="F:ProviderImplementation.ProviderImplementation.FreebaseTypeProvider.rootNamespace">
+<member name="F:ProviderImplementation.FreebaseTypeProvider.rootNamespace">
 <summary>
  Root namespace of Freebase types
 </summary>

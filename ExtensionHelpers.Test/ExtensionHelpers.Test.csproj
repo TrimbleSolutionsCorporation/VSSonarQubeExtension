@@ -76,10 +76,6 @@
       <Project>{3311c918-b662-436d-8bc8-f38b447b1414}</Project>
       <Name>VSSonarPlugins</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VSSonarQubeExtensionMetro\VSSonarExtensionMetro.csproj">
-      <Project>{CDA074CC-04BC-4D9E-B285-5A2D47C001B9}</Project>
-      <Name>VSSonarExtensionMetro</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
