@@ -1,8 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-VisualStudioVersion = 11.0.31101.0
-MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSSonarExtension.Test", "VSSonarExtension.Test\VSSonarExtension.Test.csproj", "{2DD5EFBB-A28F-4A4F-BBDD-1394B4634C77}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DifferenceEngine", "DifferenceEngine\DifferenceEngine.csproj", "{8AE4897A-EA74-49B1-BA55-D892C27AF9C9}"
@@ -87,18 +85,10 @@ Global
 		{B9B03BEF-2B09-43C3-A14E-E297E2100FE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9B03BEF-2B09-43C3-A14E-E297E2100FE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9B03BEF-2B09-43C3-A14E-E297E2100FE1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CDA074CC-04BC-4D9E-B285-5A2D47C001B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CDA074CC-04BC-4D9E-B285-5A2D47C001B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CDA074CC-04BC-4D9E-B285-5A2D47C001B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CDA074CC-04BC-4D9E-B285-5A2D47C001B9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{09F6E247-F5DF-40C9-98D8-68CC3FBB9330}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{09F6E247-F5DF-40C9-98D8-68CC3FBB9330}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09F6E247-F5DF-40C9-98D8-68CC3FBB9330}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09F6E247-F5DF-40C9-98D8-68CC3FBB9330}.Release|Any CPU.Build.0 = Release|Any CPU
-		{00245123-FEBB-4AF3-99E5-223142A598C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{00245123-FEBB-4AF3-99E5-223142A598C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{00245123-FEBB-4AF3-99E5-223142A598C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{00245123-FEBB-4AF3-99E5-223142A598C8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{496B669E-8CB4-41AC-B928-E84E3C820807}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{496B669E-8CB4-41AC-B928-E84E3C820807}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{496B669E-8CB4-41AC-B928-E84E3C820807}.Release|Any CPU.ActiveCfg = Release|Any CPU

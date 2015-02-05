@@ -21,10 +21,18 @@
         <TargetFSharpCoreVersion Condition="'$(VisualStudioVersion)'=='14.0'">4.4.0.0</TargetFSharpCoreVersion>
         
         <FSharpFolder Condition="'$(TargetFSharpCoreVersion)'=='4.3.1.0'">FSharp431</FSharpFolder>
+        <FSharpFolder Condition="'$(TargetFSharpCoreVersion)'=='4.3.1.0'">FSharp431</FSharpFolder>
         <FSharpFolder Condition="'$(TargetFSharpCoreVersion)'=='4.4.0.0'">FSharp440</FSharpFolder>
         <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
         
-        <ExtensionOutputPath     Condition="'$(ExtensionOutputPath)'==''">$(MSBuildThisFileDirectory)BuildDrop\$(FSharpFolder)\</ExtensionOutputPath>
+        
+        <OutFolder Condition="'$(VisualStudioVersion)'=='12.0'">vs13</OutFolder>
+        <OutFolder Condition="'$(VisualStudioVersion)'=='14.0'">vs15</OutFolder>
+        <OutFolder Condition="'$(Build2012)'=='true'">vs12</OutFolder>
+        
+        <ExtensionOutputPath     Condition="'$(ExtensionOutputPath)'==''">$(MSBuildThisFileDirectory)BuildDrop\$(OutFolder)\</ExtensionOutputPath>
+        <OBJDir>$(MSBuildThisFileDirectory)ObjDrop\$(OutFolder)\$(Configuration)\$(TSPlatform)</OBJDir>
+        <IntermediateOutputPath>$(OBJDir)$(MSBuildProjectName)\</IntermediateOutputPath>
     </PropertyGroup>
     
 
