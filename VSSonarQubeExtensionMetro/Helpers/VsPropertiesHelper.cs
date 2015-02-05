@@ -814,5 +814,40 @@ namespace VSSonarQubeExtension.Helpers
         }
 
         #endregion
+
+
+        public string ActiveConfiguration()
+        {
+            if (this.environment == null)
+            {
+                return "";
+            }
+
+            try
+            {
+                var solutionConfiguration2 = (EnvDTE80.SolutionConfiguration2)this.environment.Solution.SolutionBuild.ActiveConfiguration;
+                return solutionConfiguration2.Name;
+            } catch (Exception ex) {
+                return "";
+            }
+        }
+
+        public string ActivePlatform()
+        {
+            if (this.environment == null)
+            {
+                return "";
+            }
+
+            try
+            {
+                var solutionConfiguration2 = (EnvDTE80.SolutionConfiguration2)this.environment.Solution.SolutionBuild.ActiveConfiguration;
+                return solutionConfiguration2.PlatformName;
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+        }
     }
 }

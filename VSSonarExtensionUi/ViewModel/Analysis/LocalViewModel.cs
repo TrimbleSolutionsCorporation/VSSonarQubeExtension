@@ -660,6 +660,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.PermissionsAreNotAvailable = false;
             try
             {
+                this.AssociatedProject.ActiveConfiguration = this.Vsenvironmenthelper.ActiveConfiguration();
+                this.AssociatedProject.ActivePlatform = this.Vsenvironmenthelper.ActivePlatform();
                 switch (analysis)
                 {
                     case AnalysisTypes.FILE:

@@ -195,6 +195,18 @@ namespace VSSonarPlugins
         {
             throw new System.NotImplementedException();
         }
+
+
+        public string ActiveConfiguration()
+        {
+            throw new System.NotImplementedException();
+        }
+
+
+        public string ActivePlatform()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 
     /// <summary>
@@ -302,6 +314,10 @@ namespace VSSonarPlugins
         ///     The <see cref="string" />.
         /// </returns>
         string ActiveSolutionPath();
+
+        string ActiveConfiguration();
+
+        string ActivePlatform();
 
         /// <summary>
         ///     The solution name.

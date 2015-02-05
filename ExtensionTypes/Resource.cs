@@ -82,5 +82,9 @@ namespace ExtensionTypes
         /// Gets or sets the non safe key.
         /// </summary>
         public string NonSafeKey { get; set; }
+
+        public string ActiveConfiguration { get; set; }
+
+        public string ActivePlatform { get; set; }
     }
 }

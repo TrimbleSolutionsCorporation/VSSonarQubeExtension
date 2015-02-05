@@ -179,7 +179,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
 
         builder
 
-    let SetupEnvironment(x)= 
+    let SetupEnvironment(x, platform : string, configuration : string)= 
         let javaexec = vsinter.ReadOptionFromApplicationData(GlobalIds.GlobalPropsId, GlobalIds.JavaExecutableKey)
         let runnerexec = vsinter.ReadOptionFromApplicationData(GlobalIds.GlobalPropsId, GlobalIds.RunnerExecutableKey)
         let javahome = GetDoubleParent(x, javaexec)
@@ -195,7 +195,15 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
         if not(Environment.GetEnvironmentVariable("PATH") = null) then
             Environment.SetEnvironmentVariable("PATH", "")
 
-        Map.ofList [("PATH", path); ("JAVA_HOME", javahome); ("SONAR_RUNNER_HOME", sonarrunnerhome)]
+        if not(Environment.GetEnvironmentVariable("Platform") = null) then
+            Environment.SetEnvironmentVariable("Platform", "")
+
+        if not(Environment.GetEnvironmentVariable("Configuration") = null) then
+            Environment.SetEnvironmentVariable("Configuration", "")
+
+        let cleanPlat = platform.Replace(" ", "")
+        let cleanConf = configuration.Replace(" ", "")
+        Map.ofList [("PATH", path); ("JAVA_HOME", javahome); ("SONAR_RUNNER_HOME", sonarrunnerhome); ("Platform", cleanPlat); ("Configuration", cleanConf)]
 
 
     let monitor = new Object()
@@ -293,7 +301,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                 let commandData = new LocalAnalysisEventArgs("CMD: ", message, null)
                 stdOutEvent.Trigger([|x; commandData|])               
         
-            let errorCode = (exec :> ICommandExecutor).ExecuteCommand(executable, incrementalArgs, SetupEnvironment x, x.ProcessOutputDataReceived, x.ProcessOutputDataReceived, x.ProjectRoot)
+            let errorCode = (exec :> ICommandExecutor).ExecuteCommand(executable, incrementalArgs, SetupEnvironment(x,  x.Project.ActivePlatform, x.Project.ActiveConfiguration), x.ProcessOutputDataReceived, x.ProcessOutputDataReceived, x.ProjectRoot)
             if errorCode > 0 then
                 let errorInExecution = new LocalAnalysisEventArgs("LA", "Failed To Execute", new Exception("Error Code: " + errorCode.ToString()))
                 completionEvent.Trigger([|x; errorInExecution|])               
@@ -319,7 +327,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                 let commandData = new LocalAnalysisEventArgs("TODO SORT KEY", message, null)
                 stdOutEvent.Trigger([|x; commandData|])
           
-            let errorCode = (exec :> ICommandExecutor).ExecuteCommand(executable, incrementalArgs, SetupEnvironment x, x.ProcessOutputDataReceived, x.ProcessOutputDataReceived, x.ProjectRoot)
+            let errorCode = (exec :> ICommandExecutor).ExecuteCommand(executable, incrementalArgs, SetupEnvironment(x,  x.Project.ActivePlatform, x.Project.ActiveConfiguration), x.ProcessOutputDataReceived, x.ProcessOutputDataReceived, x.ProjectRoot)
             if errorCode > 0 then
                 let errorInExecution = new LocalAnalysisEventArgs("LA", "Failed To Execute", new Exception("Error Code: " + errorCode.ToString()))
                 completionEvent.Trigger([|x; errorInExecution|])               
@@ -344,7 +352,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                 let commandData = new LocalAnalysisEventArgs("CMD: ", message, null)
                 stdOutEvent.Trigger([|x; commandData|])         
          
-            let errorCode = (exec :> ICommandExecutor).ExecuteCommand(executable, incrementalArgs, SetupEnvironment x, x.ProcessOutputDataReceived, x.ProcessOutputDataReceived, x.ProjectRoot)
+            let errorCode = (exec :> ICommandExecutor).ExecuteCommand(executable, incrementalArgs, SetupEnvironment(x,  x.Project.ActivePlatform, x.Project.ActiveConfiguration), x.ProcessOutputDataReceived, x.ProcessOutputDataReceived, x.ProjectRoot)
             if errorCode > 0 then
                 let errorInExecution = new LocalAnalysisEventArgs("LA", "Failed To Execute", new Exception("Error Code: " + errorCode.ToString()))
                 completionEvent.Trigger([|x; errorInExecution|])               
@@ -488,7 +496,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
             x.ProjectRoot <- projectRoot
             x.Conf <- conf
             x.Version <- version
-            x.Abort <- false            
+            x.Abort <- false
             x.Project <- project
 
             x.SonarRunnerPropsFile <- File.ReadAllLines(Path.Combine(x.ProjectRoot, "sonar-project.properties"))
