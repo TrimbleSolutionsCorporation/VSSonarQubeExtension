@@ -16,9 +16,9 @@
         <AssemblyPatcherTaskOn        Condition="'$(AssemblyPatcherTaskOn)'==''">false</AssemblyPatcherTaskOn>
         <UnitTestsDisabled            Condition="'$(UnitTestsDisabled)'==''">true</UnitTestsDisabled>
 
-        <TargetFSharpCoreVersion Condition="'$(VisualStudioVersion)'=='11.0'">4.3.1.0</TargetFSharpCoreVersion>
-        <TargetFSharpCoreVersion Condition="'$(VisualStudioVersion)'=='12.0'">4.3.1.0</TargetFSharpCoreVersion>
-        <TargetFSharpCoreVersion Condition="'$(VisualStudioVersion)'=='14.0'">4.4.0.0</TargetFSharpCoreVersion>
+        <TargetFSharpCoreVersion Condition="'$(VSVersion)'=='12.0'">4.3.1.0</TargetFSharpCoreVersion>
+        <TargetFSharpCoreVersion Condition="'$(VSVersion)'=='13.0'">4.3.1.0</TargetFSharpCoreVersion>
+        <TargetFSharpCoreVersion Condition="'$(VSVersion)'=='15.0'">4.4.0.0</TargetFSharpCoreVersion>
         
         <FSharpFolder Condition="'$(TargetFSharpCoreVersion)'=='4.3.1.0'">FSharp431</FSharpFolder>
         <FSharpFolder Condition="'$(TargetFSharpCoreVersion)'=='4.3.1.0'">FSharp431</FSharpFolder>
@@ -26,9 +26,9 @@
         <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
         
         
-        <OutFolder Condition="'$(VisualStudioVersion)'=='12.0'">vs13</OutFolder>
-        <OutFolder Condition="'$(VisualStudioVersion)'=='14.0'">vs15</OutFolder>
-        <OutFolder Condition="'$(Build2012)'=='true'">vs12</OutFolder>
+        <OutFolder Condition="'$(VSVersion)'=='13.0'">vs13</OutFolder>
+        <OutFolder Condition="'$(VSVersion)'=='15.0'">vs15</OutFolder>
+        <OutFolder Condition="'$(VSVersion)'=='12.0'">vs12</OutFolder>
         
         <ExtensionOutputPath     Condition="'$(ExtensionOutputPath)'==''">$(MSBuildThisFileDirectory)BuildDrop\$(OutFolder)\</ExtensionOutputPath>
         <OBJDir>$(MSBuildThisFileDirectory)ObjDrop\$(OutFolder)\$(Configuration)\$(TSPlatform)</OBJDir>
