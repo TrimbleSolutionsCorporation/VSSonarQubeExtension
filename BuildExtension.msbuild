@@ -13,7 +13,7 @@
     <Target Name="BuildExtension" DependsOnTargets="RestoreExtensionNuget">
         <MSBuild Projects="@(VSSonarQubeExtension)" Properties="Configuration=Release;VSVersion=13.0" BuildInParallel="true" StopOnFirstFailure="true" />
 		<MSBuild Projects="@(VSSonarQubeExtension2012)" Properties="Configuration=Release;VSVersion=12.0" BuildInParallel="true" StopOnFirstFailure="true" />
-		<MSBuild Projects="@(VSSonarQubeExtension2015)" Properties="Configuration=Release;VSVersion=15.0" BuildInParallel="true" StopOnFirstFailure="true" />
+		<MSBuild Projects="@(VSSonarQubeExtension2015)" Properties="Configuration=Release;VSVersion=14.0" BuildInParallel="true" StopOnFirstFailure="true" />
     </Target>
     
     <Target Name="Build" DependsOnTargets="BuildExtension">

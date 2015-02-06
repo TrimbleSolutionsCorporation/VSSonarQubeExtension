@@ -40,7 +40,6 @@ namespace VSSonarQubeExtension
     using VSSonarQubeExtension.Helpers;
     using VSSonarQubeExtension.StatusBar;
     using VSSonarQubeExtension.VSControls;
-
     using DColor = System.Drawing.Color;
     using MColor = System.Windows.Media.Color;
 

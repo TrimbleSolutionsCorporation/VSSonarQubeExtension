@@ -17,6 +17,7 @@ open System.Diagnostics
 
 type RoslynAdapter() =     
     let mapData = System.Collections.Generic.Dictionary<string, string>()
+    let assemblyRunningPath = Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString()
 
     let AddDllAnalysisToManifest(assemblyToAdd:string, manifestPath:string) =
         let lines = File.ReadAllLines(manifestPath)
@@ -149,12 +150,22 @@ type RoslynAdapter() =
         let adevidence = AppDomain.CurrentDomain.Evidence
         AppDomain.CurrentDomain.add_AssemblyResolve(fun _ args ->
             let name = System.Reflection.AssemblyName(args.Name)
+
+            if name.Name = "System.Windows.Interactivity" then
+                ()
+
             let existingAssembly = 
                 System.AppDomain.CurrentDomain.GetAssemblies()
                 |> Seq.tryFind(fun a -> System.Reflection.AssemblyName.ReferenceMatchesDefinition(name, a.GetName()))
             match existingAssembly with
             | Some a -> a
-            | None -> null
+            | None -> 
+                let path = Path.Combine(assemblyRunningPath, name.Name + ".dll")
+                if File.Exists(path) then 
+                    let inFileAssembly = Assembly.LoadFrom(path)
+                    inFileAssembly
+                else
+                    null                
         )
 
         let domain = AppDomain.CreateDomain("AllowUnloadingOfAssembliesDomain", adevidence, domaininfo)
@@ -185,7 +196,13 @@ type RoslynAdapter() =
                 |> Seq.tryFind(fun a -> System.Reflection.AssemblyName.ReferenceMatchesDefinition(name, a.GetName()))
             match existingAssembly with
             | Some a -> a
-            | None -> null
+            | None ->
+                let path = Path.Combine(assemblyRunningPath, name.Name + ".dll")
+                if File.Exists(path) then 
+                    let inFileAssembly = Assembly.LoadFrom(path)
+                    inFileAssembly
+                else
+                    null
         )
 
         let domain = AppDomain.CreateDomain("AllowUnloadingOfAssembliesDomain", adevidence, domaininfo)
