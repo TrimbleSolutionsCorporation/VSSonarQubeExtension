@@ -26,7 +26,7 @@ open System.Diagnostics
 open Microsoft.Build.Utilities
 open SonarRestService
 open ExtensionHelpers
-open CommandExecutor
+open VSSonarQubeCmdExecutor
 open FSharp.Collections.ParallelSeq
 
 type LanguageType =

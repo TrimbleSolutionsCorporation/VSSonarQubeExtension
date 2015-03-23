@@ -1,4 +1,4 @@
-﻿namespace CommandExecutor
+﻿namespace VSSonarQubeCmdExecutor
 
 open System
 open System.IO

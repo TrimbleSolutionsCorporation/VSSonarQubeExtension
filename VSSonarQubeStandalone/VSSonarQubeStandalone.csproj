@@ -167,7 +167,7 @@
     <PackageFiles>
         $(OutputPath)\CredentialManagement.dll;
         $(OutputPath)\DifferenceEngine.dll;
-        $(OutputPath)\CommandExecutor.dll;
+        $(OutputPath)\VSSonarQubeCmdExecutor.dll;
         $(OutputPath)\ExtensionHelpers.dll;
         $(OutputPath)\ExtensionTypes.dll;
         $(OutputPath)\FSharp.Data.dll;

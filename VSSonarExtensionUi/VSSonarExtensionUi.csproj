@@ -267,10 +267,6 @@
     <None Include="VSSonarExtensionUi.licenseheader" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CommandExecutor\CommandExecutor.fsproj">
-      <Project>{9b154406-0af6-45a9-bf32-9c5c23822b6b}</Project>
-      <Name>CommandExecutor</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DifferenceEngine\DifferenceEngine.csproj">
       <Project>{8AE4897A-EA74-49B1-BA55-D892C27AF9C9}</Project>
       <Name>DifferenceEngine</Name>
@@ -302,6 +298,10 @@
     <ProjectReference Include="..\SonarLocalAnalyser\SonarLocalAnalyser.fsproj">
       <Project>{A7D09C0C-EFC5-4662-83B6-DAE14E68C94C}</Project>
       <Name>VSSonarPlugins</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VSSonarQubeCmdExecutor\VSSonarQubeCmdExecutor.fsproj">
+      <Project>{9b154406-0af6-45a9-bf32-9c5c23822b6b}</Project>
+      <Name>VSSonarQubeCmdExecutor</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

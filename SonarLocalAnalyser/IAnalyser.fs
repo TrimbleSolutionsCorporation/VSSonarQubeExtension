@@ -22,7 +22,7 @@ open System.Diagnostics
 open VSSonarPlugins
 open ExtensionTypes
 open CommonExtensions
-open CommandExecutor
+open VSSonarQubeCmdExecutor
 open System.Diagnostics
 open Microsoft.Build.Utilities
 

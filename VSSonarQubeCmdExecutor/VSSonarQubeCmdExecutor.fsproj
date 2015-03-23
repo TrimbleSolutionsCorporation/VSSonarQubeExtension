@@ -8,9 +8,9 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>9b154406-0af6-45a9-bf32-9c5c23822b6b</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>CommandExecutor</RootNamespace>
-    <AssemblyName>CommandExecutor</AssemblyName>
-    <Name>CommandExecutor</Name>
+    <RootNamespace>VSSonarQubeCmdExecutor</RootNamespace>
+    <AssemblyName>VSSonarQubeCmdExecutor</AssemblyName>
+    <Name>VSSonarQubeCmdExecutor</Name>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <TargetFrameworkProfile />
   </PropertyGroup>
