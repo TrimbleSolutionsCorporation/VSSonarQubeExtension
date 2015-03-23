@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ILocalAnalyserExtension.cs" company="Copyright © 2014 Tekla Corporation. Tekla is a Trimble Company">
+// <copyright file="IFileAnalyser.cs" company="Copyright © 2014 Tekla Corporation. Tekla is a Trimble Company">
 //     Copyright (C) 2013 [Jorge Costa, Jorge.Costa@tekla.com]
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -50,58 +50,8 @@ namespace VSSonarPlugins
     /// <summary>
     /// The Sensors interface.
     /// </summary>
-    public interface ILocalAnalyserExtension
+    public interface IFileAnalyser
     {
-        /// <summary>
-        /// The model will register to all extensions, so after analysis each
-        /// extension will need to trigger this event to tell the model that issues
-        /// are ready to read.
-        /// Analysis will be done in a separate thread, therefore this is mandatory
-        /// to be done for the extension to work
-        /// </summary>
-        event EventHandler LocalAnalysisCompleted;
-
-        /// <summary>
-        /// The std out event.
-        /// </summary>
-        event EventHandler StdOutEvent;
-
-        /// <summary>
-        /// The std err event.
-        /// </summary>
-        event EventHandler StdErrEvent;
-
-        /// <summary>
-        /// The get file analyser thread.
-        /// </summary>
-        /// <param name="item">
-        /// The item.
-        /// </param>
-        /// <param name="projectKey">
-        /// The project key.
-        /// </param>
-        /// <param name="profile">
-        /// The profile.
-        /// </param>
-        /// <param name="fileSourceInServer">
-        /// The file Source In Server.
-        /// </param>
-        /// <param name="onModifiedLinesOnly">
-        /// The on Modified Lines Only.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Thread"/>.
-        /// </returns>
-        Thread GetFileAnalyserThread(VsProjectItem item, Resource project, Profile profile, string fileSourceInServer, bool onModifiedLinesOnly);
-
-        /// <summary>
-        /// The stop all execution.
-        /// </summary>
-        /// <param name="runningThread">
-        /// The running thread.
-        /// </param>
-        void StopAllExecution(Thread runningThread);
-
         /// <summary>
         /// The execute analysis on file.
         /// </summary>
@@ -122,21 +72,13 @@ namespace VSSonarPlugins
         /// <summary>
         /// The get issues.
         /// </summary>
-        /// <returns>
-        /// The <see cref="List"/>.
-        /// </returns>
-        List<Issue> GetIssues();
-
-        /// <summary>
-        /// The get issues.
-        /// </summary>
-        /// <param name="issues">
-        /// The issues.
+        /// <param name="issue">
+        /// The issue.
         /// </param>
         /// <returns>
         /// The <see cref="List"/>.
         /// </returns>
-        List<Issue> GetSupportedIssues(List<Issue> issues);
+        bool IsIssueSupported(Issue issue);
 
         /// <summary>
         /// The get local analysis paramenters.

@@ -78,8 +78,8 @@ namespace VSSonarPlugins
         /// The configuration.
         /// </param>
         /// <returns>
-        /// The <see cref="ILocalAnalyserExtension"/>.
+        /// The <see cref="IFileAnalyser"/>.
         /// </returns>
-        ILocalAnalyserExtension GetLocalAnalysisExtension(ISonarConfiguration configuration);
+        IFileAnalyser GetLocalAnalysisExtension(ISonarConfiguration configuration);
     }
 }

@@ -27,6 +27,7 @@ open Microsoft.Build.Utilities
 open SonarRestService
 open ExtensionHelpers
 open CommandExecutor
+open FSharp.Collections.ParallelSeq
 
 type LanguageType =
    | SingleLang = 0
@@ -388,23 +389,15 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                         | ex -> ""
                
                 let extension = GetExtensionThatSupportsThisFile(x.ItemInView, x.Conf)
-                extension.StdOutEvent.Add(x.ProcessOutputPluginData)
-                extension.LocalAnalysisCompleted.Add(x.ProcessOutputPluginData)
-                x.ExecutingThread <- extension.GetFileAnalyserThread(x.ItemInView, x.Project, GetQualityProfile(x.Conf, x.Project, x.ItemInView), GetSourceFromServer(), x.OnModifyFiles)            
+                let profile = GetQualityProfile(x.Conf, x.Project, x.ItemInView)
+                let issues = extension.ExecuteAnalysisOnFile(x.ItemInView, profile, x.Project)
 
-                if x.ExecutingThread = null then
-                    let errorInExecution = new LocalAnalysisEventArgs("Local Analyser", "Cannot Run Analyis: Not Supported: ", new ResourceNotSupportedException())
-                    completionEvent.Trigger([|x; errorInExecution|])
-                else
-                    x.ExecutingThread.Start()
-                    x.ExecutingThread.Join()
+                lock syncLock (
+                    fun () -> 
+                        localissues.AddRange(issues)
+                    )
 
-                    lock syncLock (
-                        fun () -> 
-                            localissues.AddRange(extension.GetIssues())
-                        )
-
-                    completionEvent.Trigger([|x; null|])
+                completionEvent.Trigger([|x; null|])
 
                 x.AnalysisIsRunning <- false
                             
@@ -431,14 +424,6 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
         [<CLIEvent>]
         member x.StdOutEvent = stdOutEvent.Publish
 
-        member x.GetIssuesInFile(conf : ISonarConfiguration, file:VsProjectItem) =
-            let extension = GetExtensionThatSupportsThisFile(file, conf)
-            if extension <> null then
-                extension.GetIssues()
-            else
-                new System.Collections.Generic.List<Issue>()
-
-
         member x.GetIssues(conf : ISonarConfiguration, project : Resource) =
                                         
             let issues = new System.Collections.Generic.List<Issue>()
@@ -457,13 +442,18 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                                     | ex -> ()
 
             List.ofSeq jsonReports |> Seq.iter (fun m -> ParseReport(m))
+            let _lock = new Object()
 
-            let GetIssuesFromPlugins(plug : IAnalysisPlugin) = 
+            let GetIssuesFromPlugins(plug : IAnalysisPlugin) =
+                let extension = plug.GetLocalAnalysisExtension(conf)
                 try
-                    if plug.GetPluginDescription().Enabled then
-                        localissues.AddRange(plug.GetLocalAnalysisExtension(conf).GetSupportedIssues(issues))
+                    let AddIssueToLocalIssues(c : Issue) =
+                        if extension.IsIssueSupported(c) then
+                            lock _lock (fun () -> localissues.Add(c))
+
+                    issues |> PSeq.iter (fun c -> AddIssueToLocalIssues(c))
                 with
-                | ex -> ()                        
+                | ex -> ()
 
             List.ofSeq plugins |> Seq.iter (fun m -> GetIssuesFromPlugins(m))
 
@@ -547,7 +537,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
         member x.StopAllExecution() =
             x.Abort <- true
             x.AnalysisIsRunning <- false
-            if x.ExecutingThread = null || not(x.ExecutingThread.IsAlive) then
+            if x.ExecutingThread = null then
                 ()
             else
                 if not(obj.ReferenceEquals(exec, null)) then

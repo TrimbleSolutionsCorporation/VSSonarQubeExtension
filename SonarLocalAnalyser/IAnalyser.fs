@@ -37,7 +37,6 @@ type ISonarLocalAnalyser =
   abstract member RunFullAnalysis : string * Resource * version:double * ISonarConfiguration -> unit
 
   abstract member GetIssues : config:ISonarConfiguration * project:Resource -> System.Collections.Generic.List<Issue>
-  abstract member GetIssuesInFile : config:ISonarConfiguration * file:VsProjectItem -> System.Collections.Generic.List<Issue>
  
   [<CLIEvent>]
   abstract member LocalAnalysisCompleted : IDelegateEvent<System.EventHandler>

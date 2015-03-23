@@ -53,7 +53,7 @@
     <Compile Include="GlobalIds.cs" />
     <Compile Include="IPlugin.cs" />
     <Compile Include="IPluginController.cs" />
-    <Compile Include="ILocalAnalyserExtension.cs" />
+    <Compile Include="IFileAnalyser.cs" />
     <Compile Include="IAnalysisPlugin.cs" />
     <Compile Include="IAnalysisPluginLoader.cs" />
     <Compile Include="IPluginsOptions.cs" />
