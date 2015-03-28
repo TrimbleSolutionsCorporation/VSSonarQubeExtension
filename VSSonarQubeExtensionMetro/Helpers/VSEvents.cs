@@ -156,7 +156,10 @@ namespace VSSonarQubeExtension.Helpers
         /// </param>
         private void AnalysisModeHasChange(object sender, EventArgs e)
         {
-            SonarQubeViewModelFactory.SQViewModel.RefreshDataForResource(this.LastDocumentWindowWithFocus.Document.FullName);
+            if (this.LastDocumentWindowWithFocus != null)
+            {
+                SonarQubeViewModelFactory.SQViewModel.RefreshDataForResource(this.LastDocumentWindowWithFocus.Document.FullName);
+            }
         }
 
         /// <summary>

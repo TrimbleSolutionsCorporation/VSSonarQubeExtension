@@ -19,6 +19,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
     using System.Windows.Forms;
     using System.Windows.Media;
@@ -30,6 +31,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using GalaSoft.MvvmLight.Command;
 
     using PropertyChanged;
+
+    using SonarLocalAnalyser;
 
     using SonarRestService;
 
@@ -50,11 +53,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         ///     The defaut value sonar sources.
         /// </summary>
         public static readonly string DefautValueSonarSources = ".";
-
-        /// <summary>
-        ///     The excluded plugins defaut value.
-        /// </summary>
-        public static readonly string ExcludedPluginsDefautValue = "devcockpit,pdfreport,report,scmactivity,views,jira,scmstats";
 
         #endregion
 
@@ -93,22 +91,9 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.TimeoutValue = 10;
             this.Header = "Analysis Options";
             this.ForeGroundColor = Colors.Black;
-            this.ForeGroundColor = Colors.Black;
-
-            if (string.IsNullOrEmpty(this.SonarQubeBinary))
-            {
-                this.GetDefaultSonarRunnerLocation();
-            }
-
-            if (string.IsNullOrEmpty(this.JavaBinary))
-            {
-                this.GetDefaultJavaLocationIfAvailable();
-            }
-
+            this.BackGroundColor = Colors.White;
             this.BrowseForJavaTrigger = new RelayCommand(this.OnBrowseForJavaTrigger);
             this.BrowseForSonarRunnerQubeTrigger = new RelayCommand(this.OnBrowseForSonarRunnerQubeTrigger);
-
-            this.ResetDefaults();
         }
 
         #endregion
@@ -152,7 +137,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         ///     Gets or sets the excluded plugins.
         /// </summary>
-        public string ExcludedPlugins { get; set; }
+        //public string ExcludedPlugins { get; set; }
 
         /// <summary>
         ///     Gets or sets the fore ground color.
@@ -170,11 +155,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public bool IsSolutionOpen { get; set; }
 
         /// <summary>
-        ///     Gets or sets the java binary.
-        /// </summary>
-        public string JavaBinary { get; set; }
-
-        /// <summary>
         ///     Gets or sets the language.
         /// </summary>
         public string Language { get; set; }
@@ -188,11 +168,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         ///     Gets or sets the java binary.
         /// </summary>
         public string ProjectVersion { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the sonar qube binary.
-        /// </summary>
-        public string SonarQubeBinary { get; set; }
 
         /// <summary>
         ///     Gets or sets the java binary.
@@ -251,76 +226,66 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.vsenvironmenthelper = vsenvironmenthelperIn;
         }
 
-        /// <summary>
-        ///     The apply.
-        /// </summary>
-        public void Apply()
+        public void SaveCurrentViewToDisk(IConfigurationHelper conf)
         {
-            this.configurationHelper.WriteOptionInApplicationData(GlobalIds.GlobalPropsId, GlobalIds.RunnerExecutableKey, this.SonarQubeBinary);
-            this.configurationHelper.WriteOptionInApplicationData(GlobalIds.GlobalPropsId, GlobalIds.JavaExecutableKey, this.JavaBinary);
-            this.configurationHelper.WriteOptionInApplicationData(
-                GlobalIds.GlobalPropsId, 
-                GlobalIds.LocalAnalysisTimeoutKey, 
-                this.TimeoutValue.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(
-                GlobalIds.GlobalPropsId, 
-                GlobalIds.IsDebugAnalysisOnKey, 
-                this.DebugIsChecked.ToString());
-            this.configurationHelper.WriteOptionInApplicationData(GlobalIds.GlobalPropsId, GlobalIds.ExcludedPluginsKey, this.ExcludedPlugins);
+            // general props
+            conf.WriteOptionInApplicationData(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.JavaExecutableKey, this.JavaBinary);
+            conf.WriteOptionInApplicationData(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.RunnerExecutableKey, this.SonarQubeBinary);
+            conf.WriteOptionInApplicationData(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.ExcludedPluginsKey, this.ExcludedPlugins);
+            conf.WriteOptionInApplicationData(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.IsDebugAnalysisOnKey, this.DebugIsChecked.ToString());
+            conf.WriteOptionInApplicationData(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.LocalAnalysisTimeoutKey, this.TimeoutValue.ToString());
 
-            if (this.viewModel.Project != null)
+            if (this.Project != null)
             {
-                string solId = VsSonarUtils.SolutionGlobPropKey(this.viewModel.Project.Key);
-                this.configurationHelper.WriteOptionInApplicationData(solId, GlobalIds.SonarSourceKey, this.SourceDir);
-                this.configurationHelper.WriteOptionInApplicationData(solId, GlobalIds.SourceEncodingKey, this.SourceEncoding);
+                conf.WriteOptionInApplicationData(Context.AnalysisProject, this.Project.Key, GlobalAnalysisIds.SonarSourceKey, this.SourceDir);
+                conf.WriteOptionInApplicationData(Context.AnalysisProject, this.Project.Key, GlobalAnalysisIds.SourceEncodingKey, this.SourceEncoding);
             }
         }
 
         /// <summary>
-        ///     The end data association.
-        /// </summary>
-        public void EndDataAssociation()
-        {
-            this.IsSolutionOpen = false;
-        }
-
-        /// <summary>
-        ///     The exit.
-        /// </summary>
-        public void Exit()
-        {
-            Dictionary<string, string> generalOptionsInDsk = this.configurationHelper.ReadAllAvailableOptionsInSettings(GlobalIds.GlobalPropsId);
-
-            if (generalOptionsInDsk != null)
-            {
-                this.SetGeneralOptions(generalOptionsInDsk);
-            }
-
-            if (this.viewModel.Project != null)
-            {
-                string solId = VsSonarUtils.SolutionGlobPropKey(this.viewModel.Project.Key);
-                Dictionary<string, string> projectOptionsInDsk = this.configurationHelper.ReadAllAvailableOptionsInSettings(solId);
-                this.SetProjectOptions(projectOptionsInDsk);
-            }
-        }
-
-        /// <summary>
-        /// The init data association.
+        /// The refresh properties in view.
         /// </summary>
         /// <param name="associatedProject">
         /// The associated project.
         /// </param>
-        /// <param name="userConnectionConfig">
-        /// The user connection config.
-        /// </param>
-        /// <param name="workingDir">
-        /// The working dir.
-        /// </param>
-        public void InitDataAssociation(Resource associatedProject, ISonarConfiguration userConnectionConfig, string workingDir)
+        public void RefreshPropertiesInView(Resource associatedProject)
         {
-            this.IsSolutionOpen = true;
-            this.EnsureProjectMandatoryPropertiesAreSet();
+            this.Project = associatedProject;
+
+            this.JavaBinary = this.configurationHelper.ReadSetting(
+                Context.AnalysisGeneral,
+                OwnersId.AnalysisOwnerId,
+                GlobalAnalysisIds.JavaExecutableKey).Value;
+
+            this.SonarQubeBinary = this.configurationHelper.ReadSetting(
+                Context.AnalysisGeneral,
+                OwnersId.AnalysisOwnerId,
+                GlobalAnalysisIds.RunnerExecutableKey).Value;
+
+            this.ExcludedPlugins = this.configurationHelper.ReadSetting(
+                Context.AnalysisGeneral,
+                OwnersId.AnalysisOwnerId,
+                GlobalAnalysisIds.ExcludedPluginsKey).Value;
+
+            this.DebugIsChecked = bool.Parse(this.configurationHelper.ReadSetting(
+                Context.AnalysisGeneral,
+                OwnersId.AnalysisOwnerId,
+                GlobalAnalysisIds.IsDebugAnalysisOnKey).Value);
+
+            this.TimeoutValue =
+                int.Parse(
+                    this.configurationHelper.ReadSetting(
+                        Context.AnalysisGeneral,
+                        OwnersId.AnalysisOwnerId,
+                        GlobalAnalysisIds.LocalAnalysisTimeoutKey).Value);
+
+            if (this.Project != null)
+            {
+                this.IsSolutionOpen = true;
+            }
         }
+
+        private Resource Project { get; set; }
 
         /// <summary>
         ///     Gets or sets a value indicating whether browse for java trigger.
@@ -365,52 +330,39 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         }
 
         /// <summary>
-        ///     The reset defaults.
-        /// </summary>
-        public void ResetDefaults()
-        {
-            try
-            {
-                this.EnsureGeneralMandatoryPropertiesAreSet();
-                this.EnsureProjectMandatoryPropertiesAreSet();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message + " : " + ex.StackTrace);
-            }
-        }
-
-        /// <summary>
-        ///     The save and close.
-        /// </summary>
-        public void SaveAndClose()
-        {
-            this.Apply();
-        }
-
-        /// <summary>
         /// The set options.
         /// </summary>
         /// <param name="options">
         /// The options.
         /// </param>
-        public void SetGeneralOptions(Dictionary<string, string> options)
+        public void SetGeneralOptions()
         {
-            if (File.Exists(this.GetOptionFromDictionary(options, GlobalIds.JavaExecutableKey)))
-            {
-                this.JavaBinary = this.GetOptionFromDictionary(options, GlobalIds.JavaExecutableKey);
-            }
+            this.SonarQubeBinary =
+                configurationHelper.ReadSetting(
+                    Context.AnalysisGeneral,
+                    OwnersId.AnalysisOwnerId,
+                    GlobalAnalysisIds.RunnerExecutableKey).Value;
 
-            if (File.Exists(this.GetOptionFromDictionary(options, GlobalIds.RunnerExecutableKey)))
-            {
-                this.SonarQubeBinary = this.GetOptionFromDictionary(options, GlobalIds.RunnerExecutableKey);
-            }
+            this.JavaBinary =
+                configurationHelper.ReadSetting(
+                    Context.AnalysisGeneral,
+                    OwnersId.AnalysisOwnerId,
+                    GlobalAnalysisIds.JavaExecutableKey).Value;
 
-            this.ExcludedPlugins = this.GetOptionFromDictionary(options, GlobalIds.ExcludedPluginsKey);
+            this.ExcludedPlugins =
+                configurationHelper.ReadSetting(
+                    Context.AnalysisGeneral,
+                    OwnersId.AnalysisOwnerId,
+                    GlobalAnalysisIds.ExcludedPluginsKey).Value;
 
             try
             {
-                string timeout = this.GetOptionFromDictionary(options, GlobalIds.LocalAnalysisTimeoutKey);
+                string timeout =
+                    configurationHelper.ReadSetting(
+                        Context.AnalysisGeneral,
+                        OwnersId.AnalysisOwnerId,
+                        GlobalAnalysisIds.LocalAnalysisTimeoutKey).Value;
+
                 this.TimeoutValue = int.Parse(timeout);
             }
             catch
@@ -420,36 +372,23 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
             try
             {
-                this.DebugIsChecked = bool.Parse(this.GetOptionFromDictionary(options, GlobalIds.IsDebugAnalysisOnKey));
+                var debugCheck =
+                    configurationHelper.ReadSetting(
+                        Context.AnalysisGeneral,
+                        OwnersId.AnalysisOwnerId,
+                        GlobalAnalysisIds.IsDebugAnalysisOnKey).Value;
+
+                this.DebugIsChecked = bool.Parse(debugCheck);
             }
             catch
             {
                 this.DebugIsChecked = false;
             }
-
-            this.EnsureGeneralMandatoryPropertiesAreSet();
         }
 
-        /// <summary>
-        /// The set options.
-        /// </summary>
-        /// <param name="options">
-        /// The options.
-        /// </param>
-        public void SetProjectOptions(Dictionary<string, string> options)
-        {
-            // set solution general properties
-            if (this.viewModel.Project != null)
-            {
-                this.SourceDir = this.GetGeneralProjectOptionFromDictionary(options, GlobalIds.SonarSourceKey);
-                this.SourceEncoding = this.GetGeneralProjectOptionFromDictionary(options, GlobalIds.SourceEncodingKey);
-                this.Language = this.viewModel.Project.Lang;
-                this.ProjectId = this.viewModel.Project.Key;
-                this.ProjectVersion = this.viewModel.Project.Version;
-            }
+        public string SonarQubeBinary { get; set; }
 
-            this.EnsureProjectMandatoryPropertiesAreSet();
-        }
+        public string JavaBinary { get; set; }
 
         /// <summary>
         /// The update colours.
@@ -470,114 +409,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
         #region Methods
 
-        /// <summary>
-        ///     The ensure mandatory properties are set.
-        /// </summary>
-        private void EnsureGeneralMandatoryPropertiesAreSet()
-        {
-            if (string.IsNullOrEmpty(this.SonarQubeBinary))
-            {
-                this.GetDefaultSonarRunnerLocation();
-            }
-
-            if (string.IsNullOrEmpty(this.JavaBinary))
-            {
-                this.GetDefaultJavaLocationIfAvailable();
-            }
-
-            if (string.IsNullOrEmpty(this.ExcludedPlugins))
-            {
-                this.ExcludedPlugins = ExcludedPluginsDefautValue;
-            }
-        }
-
-        /// <summary>
-        ///     The ensure mandatory properties are set.
-        /// </summary>
-        private void EnsureProjectMandatoryPropertiesAreSet()
-        {
-            if (this.viewModel.Project == null)
-            {
-                return;
-            }
-
-            // set mandatory properties, that normally are not available in server or plugin
-            if (string.IsNullOrEmpty(this.SourceDir))
-            {
-                this.SourceDir = DefautValueSonarSources;
-            }
-
-            if (string.IsNullOrEmpty(this.ProjectVersion))
-            {
-                this.ProjectVersion = "work";
-            }
-
-            if (string.IsNullOrEmpty(this.SourceEncoding))
-            {
-                this.SourceEncoding = "UTF-8";
-            }
-        }
-
-        /// <summary>
-        ///     The get default java location if available.
-        /// </summary>
-        private void GetDefaultJavaLocationIfAvailable()
-        {
-            string programFiles = Path.Combine("C:\\Program Files", "Java");
-            string programFilesX86 = Path.Combine("C:\\Program Files (x86)", "Java");
-
-            if (Directory.Exists(programFiles))
-            {
-                try
-                {
-                    FileInfo[] fileList = new DirectoryInfo(programFiles).GetFiles("java.exe", SearchOption.AllDirectories);
-                    if (fileList.Length > 0)
-                    {
-                        if (fileList[0].DirectoryName != null)
-                        {
-                            this.JavaBinary = Path.Combine(fileList[0].DirectoryName, fileList[0].Name);
-                        }
-                    }
-
-                    return;
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine("Cannot Find Java in : " + ex.StackTrace);
-                }
-            }
-            if (Directory.Exists(programFilesX86))
-            {
-                if (!string.IsNullOrEmpty(programFilesX86))
-                {
-                    try
-                    {
-                        FileInfo[] fileList = new DirectoryInfo(programFilesX86).GetFiles("java.exe", SearchOption.AllDirectories);
-                        if (fileList.Length > 0)
-                        {
-                            this.JavaBinary = fileList[0].Name;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine("Cannot Find Java: " + ex.StackTrace);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        ///     The get default sonar runner location.
-        /// </summary>
-        private void GetDefaultSonarRunnerLocation()
-        {
-            string runnigPath = AssemblyDirectory;
-            string sonarRunner = Path.Combine(runnigPath, "SonarRunner\\bin\\sonar-runner.bat");
-            if (File.Exists(sonarRunner))
-            {
-                this.SonarQubeBinary = sonarRunner;
-            }
-        }
+        public string ExcludedPlugins { get; set; }
 
         /// <summary>
         /// The get general project option from dictionary.
@@ -591,9 +423,14 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <returns>
         /// The <see cref="string"/>.
         /// </returns>
-        private string GetGeneralProjectOptionFromDictionary(Dictionary<string, string> options, string key)
+        private string GetGeneralProjectOptionFromDictionary(IEnumerable<SonarQubeProperties> options, string key)
         {
-            return options.ContainsKey(key) ? options[key] : string.Empty;
+            foreach (var option in options.Where(option => option.Key.Equals(key)))
+            {
+                return option.Value;
+            }
+
+            return string.Empty;
         }
 
         /// <summary>
@@ -608,11 +445,17 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <returns>
         /// The <see cref="string"/>.
         /// </returns>
-        private string GetOptionFromDictionary(Dictionary<string, string> options, string key)
+        private string GetOptionFromDictionary(IEnumerable<SonarQubeProperties> options, string key)
         {
-            return options.ContainsKey(key) ? options[key] : string.Empty;
+            foreach (var sonarQubePropertiese in options.Where(sonarQubePropertiese => sonarQubePropertiese.Key.Equals(key)))
+            {
+                return sonarQubePropertiese.Value;
+            }
+
+            return string.Empty;
         }
 
         #endregion
+
     }
 }

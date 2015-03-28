@@ -125,7 +125,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.sonarQubeViewModel = sonarQubeViewModelIn;
             this.plugins = pluginsIn;
             this.Header = "Local Analysis";
-            this.IssuesGridView = new IssueGridViewModel(sonarQubeViewModel, false, "LocalView", false);
+            this.IssuesGridView = new IssueGridViewModel(sonarQubeViewModel, false, "LocalView", false, this.ConfigurationHelper);
             this.OuputLogLines = new PaginatedObservableCollection<string>(300);
             this.AllLog = new List<string>();
 
@@ -413,7 +413,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             if (this.CanRunAnalysis)
             {
-                this.ConfigurationHelper.WriteOptionInApplicationData(
+                this.ConfigurationHelper.WriteOptionInApplicationData(Context.AnalysisGeneral,
                     "SonarOptionsGeneral", 
                     "FileAnalysisIsEnabled", 
                     this.FileAnalysisIsEnabled ? "TRUE" : "FALSE");
@@ -575,14 +575,15 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         private void InitFileAnalysis()
         {
-            string option = this.ConfigurationHelper.ReadOptionFromApplicationData("SonarOptionsGeneral", "FileAnalysisIsEnabled");
-            if (string.IsNullOrEmpty(option))
+            try
+            {
+                var option = this.ConfigurationHelper.ReadSetting(Context.AnalysisGeneral, "SonarOptionsGeneral", "FileAnalysisIsEnabled");
+                this.FileAnalysisIsEnabled = option.Value.Equals("TRUE");
+            }
+            catch (Exception)
             {
                 this.FileAnalysisIsEnabled = true;
-                return;
             }
-
-            this.FileAnalysisIsEnabled = option.Equals("TRUE");
         }
 
         /// <summary>
@@ -662,11 +663,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             {
                 this.AssociatedProject.ActiveConfiguration = this.Vsenvironmenthelper.ActiveConfiguration();
                 this.AssociatedProject.ActivePlatform = this.Vsenvironmenthelper.ActivePlatform();
+                this.AssociatedProject.SolutionRoot = this.SourceWorkingDir;
                 switch (analysis)
                 {
                     case AnalysisTypes.FILE:
+                        var itemInView = this.Vsenvironmenthelper.VsProjectItem(this.sonarQubeViewModel.DocumentInView);
+                        itemInView.SqResourceKey = this.DocumentInView.Key;
                         this.LocalAnalyserModule.AnalyseFile(
-                            this.Vsenvironmenthelper.VsProjectItem(this.sonarQubeViewModel.DocumentInView), 
+                            itemInView, 
                             this.AssociatedProject, 
                             this.sonarQubeViewModel.AnalysisChangeLines, 
                             this.sonarQubeViewModel.SonarVersion, 
@@ -674,21 +678,18 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                         break;
                     case AnalysisTypes.ANALYSIS:
                         this.LocalAnalyserModule.RunFullAnalysis(
-                            this.SourceWorkingDir, 
                             this.AssociatedProject, 
                             this.sonarQubeViewModel.SonarVersion, 
                             this.sonarQubeViewModel.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig);
                         break;
                     case AnalysisTypes.INCREMENTAL:
                         this.LocalAnalyserModule.RunIncrementalAnalysis(
-                            this.SourceWorkingDir, 
                             this.AssociatedProject, 
                             this.sonarQubeViewModel.SonarVersion, 
                             this.sonarQubeViewModel.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig);
                         break;
                     case AnalysisTypes.PREVIEW:
                         this.LocalAnalyserModule.RunPreviewAnalysis(
-                            this.SourceWorkingDir, 
                             this.AssociatedProject, 
                             this.sonarQubeViewModel.SonarVersion, 
                             this.sonarQubeViewModel.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig);

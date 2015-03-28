@@ -15,9 +15,9 @@ open ZeroMQ
 open System.Threading
 
 type SourceManifest = XmlProvider<"""<?xml version="1.0" encoding="utf-8"?>
-<PackageManifest Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+<PackageManifest Version="3.0.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="VSSonarExtension2015-6FC40A4F-2B69-4DFB-98D0-08D50056643E" Version="3.0.0" Language="en-US" Publisher="Tekla Oy" />
+    <Identity Id="VSSonarExtension2015-6FC40A4F-2B69-4DFB-98D0-08D50056643E" Version="3.0.0.0" Language="en-US" Publisher="Tekla Oy" />
     <DisplayName>VSSonarExtension2015</DisplayName>
     <Description xml:space="preserve">Visual Studio Extension For SonarQube(TM) Version 2015 - Rosylin</Description>
     <License>LICENSE.txt</License>
@@ -46,7 +46,7 @@ type SubscriberElem(idIn:string) =
     member val Status = false with get, set
 
     member this.GetParams = parameters
-    member this.AddParam(param : RuleParam) =        
+    member this.AddParam(param : RuleParam) = 
         parameters <- parameters @ [param]
 
 type PatchSourceManifestRetCode =
@@ -66,7 +66,7 @@ type ProxyDomain() =
             
             for types in types2 do
                 if types.BaseType.Equals(typeof<CodeFixProvider>) then
-                    let properties = types.GetFields(BindingFlags.NonPublic)                    
+                    let properties = types.GetFields(BindingFlags.NonPublic)
                     let data : System.Object array = Array.zeroCreate 1
                                         
                     let diagnosticConstructor = types.GetConstructor(Type.EmptyTypes)

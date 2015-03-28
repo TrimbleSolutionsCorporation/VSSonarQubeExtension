@@ -74,7 +74,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
 
             this.Header = "Server Analysis";
             this.AlreadyOpenDiffs = new SortedSet<string>();
-            this.IssuesGridView = new IssueGridViewModel(sonarQubeViewModel, true, "ServerView", true);
+            this.IssuesGridView = new IssueGridViewModel(sonarQubeViewModel, true, "ServerView", true, this.configurationHelper);
             this.InitCommanding();
 
             this.ForeGroundColor = Colors.Black;

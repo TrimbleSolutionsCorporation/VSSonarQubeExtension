@@ -9,7 +9,7 @@
 
         
         <!-- Version settings -->
-        <MajorVersionNumber           Condition="'$(MajorVersionNumber)'==''">2</MajorVersionNumber>
+        <MajorVersionNumber           Condition="'$(MajorVersionNumber)'==''">3</MajorVersionNumber>
         <MinorVersionNumber           Condition="'$(MinorVersionNumber)'==''">0</MinorVersionNumber>
         <BuildNumber                  Condition="'$(BuildNumber)'==''">0</BuildNumber>
         <RevisionNumber               Condition="'$(RevisionNumber)'==''">0</RevisionNumber>

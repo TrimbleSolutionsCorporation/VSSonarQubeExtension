@@ -68,6 +68,8 @@ namespace VSSonarExtensionUi.ViewModel
         /// </summary>
         public readonly PluginController PluginControl = new PluginController();
 
+        private readonly RoslynAdapter roslynAdapter = new RoslynAdapter();
+
         /// <summary>
         ///     The menu item plugins.
         /// </summary>
@@ -97,17 +99,8 @@ namespace VSSonarExtensionUi.ViewModel
             this.InitViews();
             this.InitConnection();
 
-            this.InitDiagnosticAnalyser();
-
             this.UpdateTheme(Colors.Black, Colors.White);
         }
-
-        private void InitDiagnosticAnalyser()
-        {
-            this.RoslynAdapter = new RoslynAdapter();
-        }
-
-        public RoslynAdapter RoslynAdapter { get; set; }
 
         #endregion
 
@@ -402,7 +395,7 @@ namespace VSSonarExtensionUi.ViewModel
                             return;
                         }
                     }
-                }           
+                }
             }
         }
 
@@ -424,14 +417,13 @@ namespace VSSonarExtensionUi.ViewModel
 
             if (this.PublisherMessages == null)
             {
-                this.PublisherMessages = this.RoslynAdapter.GetSubscriberData(this.Diagnostics, profile);
-                this.RoslynAdapter.CreateASubscriberWithMessages(this.PublisherMessages);
+                this.PublisherMessages = this.roslynAdapter.GetSubscriberData(this.Diagnostics, profile);
+                this.roslynAdapter.CreateASubscriberWithMessages(this.PublisherMessages);
             }
             else
             {
-                this.PublisherMessages = this.RoslynAdapter.GetSubscriberData(this.Diagnostics, profile);
-                this.RoslynAdapter.UpdateSubscriberMessages(this.PublisherMessages);
-
+                this.PublisherMessages = this.roslynAdapter.GetSubscriberData(this.Diagnostics, profile);
+                this.roslynAdapter.UpdateSubscriberMessages(this.PublisherMessages);
             }
         }
 
@@ -448,11 +440,6 @@ namespace VSSonarExtensionUi.ViewModel
             foreach (IAnalysisViewModelBase sonarQubeView in this.SonarQubeViews)
             {
                 sonarQubeView.EndDataAssociation();
-            }
-
-            foreach (IOptionsViewModelBase option in this.VSonarQubeOptionsViewData.AvailableOptions)
-            {
-                option.EndDataAssociation();
             }
 
             this.VSonarQubeOptionsViewData.EndDataAssociation();
@@ -474,9 +461,10 @@ namespace VSSonarExtensionUi.ViewModel
                     continue;
                 }
 
-                string isEnabled = this.configurationHelper.ReadOptionFromApplicationData(
-                    GlobalIds.PluginEnabledControlId,
-                    plugDesc.Name);
+                string isEnabled = this.configurationHelper.ReadSetting(
+                    Context.AnalysisGeneral, 
+                    plugDesc.Name,
+                    GlobalIds.PluginEnabledControlId).Value;
 
                 if (string.IsNullOrEmpty(isEnabled) || isEnabled.Equals("true", StringComparison.CurrentCultureIgnoreCase))
                 {
@@ -546,7 +534,7 @@ namespace VSSonarExtensionUi.ViewModel
                 view.UpdateServices(restServiceIn, vsenvironmenthelperIn, this.configurationHelper, statusBar, provider);
             }
 
-            this.Diagnostics = this.RoslynAdapter.GetDiagnosticElementFromManifest(Path.Combine(this.ExtensionFolder, "extension.vsixmanifest"));
+            this.Diagnostics = this.roslynAdapter.GetDiagnosticElementFromManifest(Path.Combine(this.ExtensionFolder, "extension.vsixmanifest"));
             this.DiagnosticsFound = "Sonar Rules Found: " + this.Diagnostics.Length;
         }
 
@@ -643,7 +631,15 @@ namespace VSSonarExtensionUi.ViewModel
         /// </summary>
         public void OnSelectedViewChanged()
         {
-            this.configurationHelper.WriteOptionInApplicationData("VSSonarQubeConfig", "SelectedView", this.SelectedView.Header);
+            this.configurationHelper.WriteSetting(
+                new SonarQubeProperties
+                    {
+                        Context = Context.UIProperties,
+                        Key = "SelectedView",
+                        Owner = OwnersId.ApplicationOwnerId,
+                        Value = this.SelectedView.Header
+                    }, true);
+
             this.OnAnalysisModeHasChange(EventArgs.Empty);
             Debug.WriteLine("Name Changed");
         }
@@ -868,15 +864,19 @@ namespace VSSonarExtensionUi.ViewModel
                 return null;
             }
 
-            string sourceKey = this.configurationHelper.ReadOptionFromApplicationData(Path.Combine(solutionPath, solutionName), "PROJECTKEY");
-            if (!string.IsNullOrEmpty(sourceKey))
+            try
             {
+                var prop = this.configurationHelper.ReadSetting(
+                    Context.GlobalPropsId,
+                    Path.Combine(solutionPath, solutionName),
+                    "PROJECTKEY");
+
                 try
                 {
                     return
                         this.SonarRestConnector.GetResourcesData(
-                            this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, 
-                            sourceKey)[0];
+                            this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig,
+                            prop.Value)[0];
                 }
                 catch (Exception ex)
                 {
@@ -884,8 +884,11 @@ namespace VSSonarExtensionUi.ViewModel
                     return null;
                 }
             }
+            catch (Exception ex)
+            {
+            }
 
-            sourceKey = VsSonarUtils.GetProjectKey(solutionPath);
+            var sourceKey = VsSonarUtils.GetProjectKey(solutionPath);
             return string.IsNullOrEmpty(sourceKey)
                        ? null
                        : this.SonarRestConnector.GetResourcesData(
@@ -1025,21 +1028,8 @@ namespace VSSonarExtensionUi.ViewModel
                                                      Vsenvironmenthelper =
                                                          this.VsHelper
                                                  };
+
             this.VSonarQubeOptionsViewData.ResetUserData();
-
-            foreach (IAnalysisPlugin plugin in this.VSonarQubeOptionsViewData.PluginManager.AnalysisPlugins)
-            {
-                ISonarConfiguration configuration = this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig;
-                IPluginsOptions controloption = plugin.GetPluginControlOptions(configuration);
-                if (controloption == null)
-                {
-                    continue;
-                }
-
-                string pluginKey = plugin.GetPluginDescription().Name;
-                Dictionary<string, string> options = this.configurationHelper.ReadAllAvailableOptionsInSettings(pluginKey);
-                controloption.SetOptions(options);
-            }
         }
 
         /// <summary>
@@ -1063,12 +1053,19 @@ namespace VSSonarExtensionUi.ViewModel
                                           this.IssuesSearchViewModel
                                       };
 
-            string view = this.configurationHelper.ReadOptionFromApplicationData("VSSonarQubeConfig", "SelectedView");
-
-            foreach (IAnalysisViewModelBase analysisViewModelBase in
-                this.SonarQubeViews.Where(analysisViewModelBase => analysisViewModelBase.Header.Equals(view)))
+            try
             {
-                this.SelectedView = analysisViewModelBase;
+                string view = this.configurationHelper.ReadSetting(Context.UIProperties, OwnersId.ApplicationOwnerId, "SelectedView").Value;
+
+                foreach (IAnalysisViewModelBase analysisViewModelBase in
+                    this.SonarQubeViews.Where(analysisViewModelBase => analysisViewModelBase.Header.Equals(view)))
+                {
+                    this.SelectedView = analysisViewModelBase;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
             }
         }
 
@@ -1077,6 +1074,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// </summary>
         private void LaunchExtensionProperties()
         {
+            this.VSonarQubeOptionsViewData.RefreshPropertiesInView(this.AssociatedProject);
             var window = new VSonarQubeOptionsView(this.VSonarQubeOptionsViewData);
             window.ShowDialog();
         }
@@ -1095,56 +1093,72 @@ namespace VSSonarExtensionUi.ViewModel
 
             if (!string.IsNullOrEmpty(this.OpenSolutionName))
             {
-                this.configurationHelper.WriteOptionInApplicationData(
-                    Path.Combine(this.OpenSolutionPath, this.OpenSolutionName), 
-                    "PROJECTKEY", 
-                    this.SelectedProject.Key);
-                this.configurationHelper.WriteOptionInApplicationData(this.SelectedProject.Key, "PROJECTKEY", this.SelectedProject.Key);
-                this.configurationHelper.WriteOptionInApplicationData(this.SelectedProject.Key, "PROJECTLOCATION", this.OpenSolutionPath);
-                this.configurationHelper.WriteOptionInApplicationData(this.SelectedProject.Key, "PROJECTNAME", this.OpenSolutionName);
+                this.configurationHelper.WriteSetting(
+                    new SonarQubeProperties
+                        {
+                            Owner = OwnersId.ApplicationOwnerId,
+                            Key = "PROJECTKEY",
+                            Value = this.SelectedProject.Key,
+                            Context = Context.GlobalPropsId
+                        });
+
+                this.configurationHelper.WriteSetting(
+                    new SonarQubeProperties
+                        {
+                            Owner = OwnersId.ApplicationOwnerId,
+                            Key = "PROJECTLOCATION",
+                            Value = this.OpenSolutionPath,
+                            Context = Context.GlobalPropsId
+                        });
+                this.configurationHelper.WriteSetting(
+                    new SonarQubeProperties
+                        {
+                            Owner = OwnersId.ApplicationOwnerId,
+                            Key = "PROJECTNAME",
+                            Value = this.OpenSolutionName,
+                            Context = Context.GlobalPropsId
+                        });
             }
 
-            this.VSonarQubeOptionsViewData.Project = this.SelectedProject;
-            this.VSonarQubeOptionsViewData.RefreshGeneralProperties();
-            this.VSonarQubeOptionsViewData.RefreshPropertiesInPlugins();
-            this.VSonarQubeOptionsViewData.SyncOptionsToFile();
             this.AssociatedProject = this.SelectedProject;
 
             if (string.IsNullOrEmpty(this.OpenSolutionPath))
             {
-                this.OpenSolutionPath = this.configurationHelper.ReadOptionFromApplicationData(this.SelectedProject.Key, "PROJECTLOCATION");
-                this.OpenSolutionName = this.configurationHelper.ReadOptionFromApplicationData(this.SelectedProject.Key, "PROJECTNAME");
-            }
-            else
-            {
-                this.configurationHelper.WriteOptionInApplicationData(this.SelectedProject.Key, "PROJECTLOCATION", this.OpenSolutionPath);
-                this.configurationHelper.WriteOptionInApplicationData(this.SelectedProject.Key, "PROJECTNAME", this.OpenSolutionName);
-            }
+                try
+                {
+                    var option = this.configurationHelper.ReadSetting(
+                        Context.GlobalPropsId,
+                        this.SelectedProject.Key,
+                        "PROJECTLOCATION");
+                    this.OpenSolutionPath = option.Value;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
 
-            RefreshConfigurationInPlugins();
+                try
+                {
+                    var option = this.configurationHelper.ReadSetting(
+                        Context.GlobalPropsId,
+                        this.SelectedProject.Key,
+                        "PROJECTNAME");
+                    this.OpenSolutionName = option.Value;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
+            }
 
             this.ErrorMessage = "Associated";
             this.IsAssociated = true;
-        }
 
-        public void RefreshConfigurationInPlugins()
-        {
-            foreach (IAnalysisViewModelBase analyser in
-                (from IViewModelBase sonarQubeView in this.SonarQubeViews select sonarQubeView).OfType<IAnalysisViewModelBase>())
+            this.configurationHelper.SyncSettings();
+            this.VSonarQubeOptionsViewData.RefreshPropertiesInView(this.SelectedProject);
+            foreach (var view in this.SonarQubeViews)
             {
-                analyser.InitDataAssociation(
-                    this.AssociatedProject,
-                    this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig,
-                    this.OpenSolutionPath);
-            }
-
-            foreach (IOptionsViewModelBase option in
-                (from IViewModelBase sonarQubeView in this.VSonarQubeOptionsViewData.AvailableOptions select sonarQubeView).OfType<IOptionsViewModelBase>())
-            {
-                option.InitDataAssociation(
-                    this.AssociatedProject,
-                    this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig,
-                    this.OpenSolutionPath);
+                view.InitDataAssociation(this.AssociatedProject, this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, this.OpenSolutionPath);
             }
         }
 

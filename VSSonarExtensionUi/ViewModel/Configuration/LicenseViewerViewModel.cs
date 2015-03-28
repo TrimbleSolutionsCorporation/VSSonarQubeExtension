@@ -141,24 +141,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         {
         }
 
-        /// <summary>
-        /// The apply.
-        /// </summary>
-        public void Apply()
-        {
-        }
-
-        /// <summary>
-        /// The end data association.
-        /// </summary>
-        public void EndDataAssociation()
-        {
-        }
-
-        /// <summary>
-        /// The exit.
-        /// </summary>
-        public void Exit()
+        public void SaveCurrentViewToDisk(IConfigurationHelper configurationHelper)
         {
         }
 
@@ -194,6 +177,11 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
         private void GetLicenceForPlugin(ObservableCollection<VsLicense> licenses, IPlugin plugin)
         {
+            if (this.connectionConfiguration == null)
+            {
+                return;
+            }
+
             Dictionary<string, VsLicense> lics = plugin.GetLicenses(this.connectionConfiguration);
             if (lics != null)
             {
@@ -228,7 +216,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="workingDir">
         /// The working dir.
         /// </param>
-        public void InitDataAssociation(Resource associatedProject, ISonarConfiguration userConnectionConfig, string workingDir)
+        public void RefreshPropertiesInView(Resource associatedProject)
         {
         }
 

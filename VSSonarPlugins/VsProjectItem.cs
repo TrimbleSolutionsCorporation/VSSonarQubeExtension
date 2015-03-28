@@ -144,5 +144,7 @@ namespace VSSonarPlugins
                 return this.solutionName;
             }
         }
+
+        public string SqResourceKey { get; set; }
     }
 }

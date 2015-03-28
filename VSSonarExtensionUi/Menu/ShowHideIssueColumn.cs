@@ -8,9 +8,12 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarExtensionUi.Menu
 {
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Windows.Input;
+
+    using ExtensionTypes;
 
     using GalaSoft.MvvmLight.Command;
 
@@ -137,15 +140,22 @@ namespace VSSonarExtensionUi.Menu
                     continue;
                 }
 
-                var subItem = new ShowHideIssueColumn(model, helper, column, gridKey) { IsEnabled = true };
-                string visible = helper.ReadOptionFromApplicationData(gridKey, column + "Visible");
-                if (visible.Equals("true"))
+                var subItem = new ShowHideIssueColumn(model, helper, column, gridKey) { IsEnabled = true, CommandText = "Hide " + column };
+                try
+                {
+                    var value = helper.ReadSetting(Context.UIProperties, OwnersId.ApplicationOwnerId, column + "Visible").Value;
+                    if (value.Equals("true"))
+                    {
+                        subItem.CommandText = "Hide " + column;
+                    }
+                    else
+                    {
+                        subItem.CommandText = "Show " + column;
+                    }
+                }
+                catch (Exception)
                 {
                     subItem.CommandText = "Hide " + column;
-                }
-                else
-                {
-                    subItem.CommandText = "Show " + column;
                 }
 
                 menu.SubItems.Add(subItem);
@@ -185,12 +195,20 @@ namespace VSSonarExtensionUi.Menu
             if (this.CommandText.Equals("Show " + this.name))
             {
                 this.CommandText = "Hide " + this.name;
-                this.helper.WriteOptionInApplicationData(this.gridKey, this.name + "Visible", "true");
+                var prop = new SonarQubeProperties();
+                prop.Value = "true";
+                prop.Key = this.name + "Visible";
+                prop.Context = Context.UIProperties;
+                this.helper.WriteSetting(prop);
             }
             else
             {
                 this.CommandText = "Show " + this.name;
-                this.helper.WriteOptionInApplicationData(this.gridKey, this.name + "Visible", "false");
+                var prop = new SonarQubeProperties();
+                prop.Value = "false";
+                prop.Key = this.name + "Visible";
+                prop.Context = Context.UIProperties;
+                this.helper.WriteSetting(prop);
             }
 
             this.model.RestoreUserSettingsInIssuesDataGrid();

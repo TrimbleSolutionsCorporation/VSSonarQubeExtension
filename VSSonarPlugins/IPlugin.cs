@@ -16,6 +16,7 @@ namespace VSSonarPlugins
     using System.Windows.Media;
     using ExtensionTypes;
     using System.Collections.Generic;
+    using System.Windows.Controls;
 
     /// <summary>
     /// The Plugin interface.
@@ -25,13 +26,16 @@ namespace VSSonarPlugins
         /// <summary>
         /// The get use plugin control options.
         /// </summary>
+        /// <param name="project">
+        /// The project.
+        /// </param>
         /// <param name="configuration">
         /// The configuration.
         /// </param>
         /// <returns>
         /// The <see cref="UserControl"/>.
         /// </returns>
-        IPluginsOptions GetPluginControlOptions(ISonarConfiguration configuration);
+        IPluginControlOption GetPluginControlOptions(Resource project, ISonarConfiguration configuration, IConfigurationHelper helper);
 
         /// <summary>
         /// The get licenses.
@@ -65,5 +69,12 @@ namespace VSSonarPlugins
         /// The <see cref="PluginDescription"/>.
         /// </returns>
         PluginDescription GetPluginDescription();
+
+        /// <summary>
+        /// The reset defaults.
+        /// </summary>
+        void ResetDefaults(IConfigurationHelper helper);
+
+        void AssociateProject(Resource project, IConfigurationHelper helper);
     }
 }

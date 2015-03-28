@@ -43,8 +43,7 @@
                 <ColumnDefinition Width="74*"/>
                 <ColumnDefinition Width="319*"/>
             </Grid.ColumnDefinitions>
-            <ScrollViewer IsEnabled="{Binding CanModifyPluginProps}" Grid.Column="1"
-                              BorderBrush="Black" Content="{Binding OptionsInView}" Grid.ColumnSpan="2" />
+            <UserControl Grid.Column="1" BorderBrush="Black" Content="{Binding OptionsInView}" />
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="30" />

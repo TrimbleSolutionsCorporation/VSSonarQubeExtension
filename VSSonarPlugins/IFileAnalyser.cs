@@ -67,7 +67,7 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="List"/>.
         /// </returns>
-        List<Issue> ExecuteAnalysisOnFile(VsProjectItem itemInView, Profile externlProfile, Resource project);
+        List<Issue> ExecuteAnalysisOnFile(VsProjectItem itemInView, Profile externlProfile, Resource project, IConfigurationHelper helper);
 
         /// <summary>
         /// The get issues.
@@ -79,16 +79,5 @@ namespace VSSonarPlugins
         /// The <see cref="List"/>.
         /// </returns>
         bool IsIssueSupported(Issue issue);
-
-        /// <summary>
-        /// The get local analysis paramenters.
-        /// </summary>
-        /// <param name="project">
-        /// The project.
-        /// </param>
-        /// <returns>
-        /// The <see cref="ICollection"/>.
-        /// </returns>
-        List<SonarQubeProperties> GetLocalAnalysisParamenters(Resource project);
     }
 }

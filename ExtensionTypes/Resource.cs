@@ -83,8 +83,19 @@ namespace ExtensionTypes
         /// </summary>
         public string NonSafeKey { get; set; }
 
+        /// <summary>
+        /// Gets or sets the active configuration.
+        /// </summary>
         public string ActiveConfiguration { get; set; }
 
+        /// <summary>
+        /// Gets or sets the active platform.
+        /// </summary>
         public string ActivePlatform { get; set; }
+
+        /// <summary>
+        /// Gets or sets the solution root.
+        /// </summary>
+        public string SolutionRoot { get; set; }
     }
 }

@@ -170,7 +170,10 @@ namespace VSSonarPlugins
                 var files = Directory.GetFiles(folder);
                 foreach (var file in files)
                 {
-                    assemblies.Add(file, AppDomain.CurrentDomain.Load(File.ReadAllBytes(file)));
+                    if (file.EndsWith(".dll"))
+                    {
+                        assemblies.Add(file, AppDomain.CurrentDomain.Load(File.ReadAllBytes(file)));
+                    }
                 }
 
                 foreach (var assembly in assemblies)

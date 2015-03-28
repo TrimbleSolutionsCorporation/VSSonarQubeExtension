@@ -23,61 +23,24 @@ namespace VSSonarPlugins
     public interface IConfigurationHelper
     {
         /// <summary>
-        ///     The read option from application data.
+        /// The write configuration.
         /// </summary>
-        /// <param name="pluginKey">
-        ///     The plugin key.
+        /// <param name="config">
+        /// The config.
         /// </param>
-        /// <param name="key">
-        ///     The key.
+        /// <param name="context">
+        /// The context.
         /// </param>
-        /// <returns>
-        ///     The <see cref="string" />.
-        /// </returns>
-        string ReadOptionFromApplicationData(string pluginKey, string key);
+        SonarQubeProperties ReadSetting(Context context, string owner, string key);
 
-        /// <summary>
-        ///     The write option in application data.
-        /// </summary>
-        /// <param name="pluginKey">
-        ///     The plugin key.
-        /// </param>
-        /// <param name="key">
-        ///     The key.
-        /// </param>
-        /// <param name="value">
-        ///     The value.
-        /// </param>
-        void WriteOptionInApplicationData(string pluginKey, string key, string value);
+        IEnumerable<SonarQubeProperties> ReadSettings(Context context, string owner);
 
-        /// <summary>
-        ///     The read all options for plugin option in application data.
-        /// </summary>
-        /// <param name="pluginKey">
-        ///     The plugin key.
-        /// </param>
-        /// <returns>
-        ///     The
-        ///     <see>
-        ///         <cref>Dictionary</cref>
-        ///     </see>
-        ///     .
-        /// </returns>
-        Dictionary<string, string> ReadAllAvailableOptionsInSettings(string pluginKey);
+        void WriteSetting(SonarQubeProperties prop, bool sync = false, bool skipIfExist = false);
 
-        /// <summary>
-        ///     The write all options for plugin option in application data.
-        /// </summary>
-        /// <param name="pluginKey">
-        ///     The plugin key.
-        /// </param>
-        /// <param name="project">
-        ///     The project.
-        /// </param>
-        /// <param name="options">
-        ///     The options.
-        /// </param>
-        void WriteAllOptionsForPluginOptionInApplicationData(string pluginKey, Resource project, Dictionary<string, string> options);
+
+        void SyncSettings();
+
+        void ResetSettings();
 
         /// <summary>
         ///     The get user app data configuration file.
@@ -88,6 +51,11 @@ namespace VSSonarPlugins
         string UserAppDataConfigurationFile();
 
         string UserLogForAnalysisFile();
+
+        void WriteOptionInApplicationData(Context context,
+            string owner,
+            string key,
+            string value, bool sync = false, bool skipIfExist = false);
     }
 
     public class StandAloneVsHelper : IVsEnvironmentHelper

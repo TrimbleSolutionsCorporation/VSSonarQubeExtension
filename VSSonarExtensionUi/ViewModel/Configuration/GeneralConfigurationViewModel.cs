@@ -102,7 +102,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.ForeGroundColor = Colors.Black;
 
             this.GetCredentials();
-            this.ResetDefaults();
+            this.RefreshPropertiesInView(null);
         }
 
         #endregion
@@ -159,6 +159,21 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public bool IsConnectAtStartOn { get; set; }
 
         /// <summary>
+        /// The on is connect at star on changed.
+        /// </summary>
+        public void OnIsConnectAtStarOnChanged()
+        {
+            this.configurationHelper.WriteSetting(
+                new SonarQubeProperties
+                    {
+                        Context = Context.GlobalPropsId,
+                        Key = "AutoConnectAtStart",
+                        Owner = OwnersId.ApplicationOwnerId,
+                        Value = this.IsConnectAtStartOn ? "true" : "false"
+                    });
+        }
+
+        /// <summary>
         ///     Gets or sets the password.
         /// </summary>
         public string Password { get; set; }
@@ -198,36 +213,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         #region Public Methods and Operators
 
         /// <summary>
-        ///     The apply.
-        /// </summary>
-        public void Apply()
-        {
-            this.configurationHelper.WriteOptionInApplicationData("VSSonarQubeConfig", "UserDefinedEditor", this.UserDefinedEditor);
-            this.configurationHelper.WriteOptionInApplicationData("VSSonarQubeConfig", "DisableEditorTags", this.DisableEditorTags ? "TRUE" : "FALSE");
-
-            this.configurationHelper.WriteOptionInApplicationData(
-                "VSSonarQubeConfig", 
-                "AutoConnectAtStart", 
-                this.IsConnectAtStartOn ? "true" : "false");
-        }
-
-        /// <summary>
-        ///     The end data association.
-        /// </summary>
-        public void EndDataAssociation()
-        {
-        }
-
-        /// <summary>
-        ///     The exit.
-        /// </summary>
-        public void Exit()
-        {
-            this.GetCredentials();
-            this.ResetDefaults();
-        }
-
-        /// <summary>
         /// The init data association.
         /// </summary>
         /// <param name="associatedProject">
@@ -239,8 +224,64 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="workingDir">
         /// The working dir.
         /// </param>
-        public void InitDataAssociation(Resource associatedProject, ISonarConfiguration userConnectionConfig, string workingDir)
+        public void RefreshPropertiesInView(Resource associatedProject)
         {
+            try
+            {
+                string isConnectAuto = this.configurationHelper.ReadSetting(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.IsConnectAtStartOn).Value;
+                this.IsConnectAtStartOn = isConnectAuto.Equals("true");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                this.IsConnectAtStartOn = true;
+                this.configurationHelper.WriteSetting(new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.IsConnectAtStartOn, this.IsConnectAtStartOn ? "true" : "false"));
+            }
+
+            try
+            {
+                string editor = this.configurationHelper.ReadSetting(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.UserDefinedEditor).Value;
+                this.UserDefinedEditor = editor;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                this.UserDefinedEditor = "notepad";
+                this.configurationHelper.WriteSetting(new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.UserDefinedEditor, "notepad"));
+            }
+
+            try
+            {
+                string editorTags = this.configurationHelper.ReadSetting(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.DisableEditorTags).Value;
+                this.DisableEditorTags = editorTags.ToLower().Equals("true");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                this.DisableEditorTags = false;
+                this.configurationHelper.WriteSetting(new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.DisableEditorTags, "false"));
+            }
+
+            try
+            {
+                string debugmode =
+                    this.configurationHelper.ReadSetting(
+                        Context.GlobalPropsId,
+                        OwnersId.ApplicationOwnerId,
+                        GlobalIds.ExtensionDebugModeEnabled).Value;
+                this.ExtensionDebugModeEnabled = debugmode.ToLower().Equals("true");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                this.ExtensionDebugModeEnabled = false;
+                this.configurationHelper.WriteSetting(
+                    new SonarQubeProperties(
+                        Context.GlobalPropsId,
+                        OwnersId.ApplicationOwnerId,
+                        GlobalIds.ExtensionDebugModeEnabled,
+                        "false"));
+            }
         }
 
         /// <summary>
@@ -248,10 +289,15 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         public void OnExtensionDebugModeEnabledChanged()
         {
-            this.configurationHelper.WriteOptionInApplicationData(
-                "VSSonarQubeConfig", 
-                "ExtensionDebugModeEnabled", 
-                this.ExtensionDebugModeEnabled ? "TRUE" : "FALSE");
+            var prp = new SonarQubeProperties
+                          {
+                              Context = Context.GlobalPropsId,
+                              Owner = OwnersId.ApplicationOwnerId,
+                              Key = "ExtensionDebugModeEnabled",
+                              Value = this.ExtensionDebugModeEnabled ? "TRUE" : "FALSE"
+                          };
+
+            this.configurationHelper.WriteSetting(prp);
         }
 
         /// <summary>
@@ -261,14 +307,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         {
             this.OnAnalysisModeHasChange(EventArgs.Empty);
             Debug.WriteLine("Name Changed");
-        }
-
-        /// <summary>
-        ///     The save and close.
-        /// </summary>
-        public void SaveAndClose()
-        {
-            this.Apply();
         }
 
         /// <summary>
@@ -313,6 +351,15 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.configurationHelper = configurationHelper;
         }
 
+        public void SaveCurrentViewToDisk(IConfigurationHelper configurationHelper)
+        {
+            this.configurationHelper.WriteSetting(new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, "ServerAddress", this.ServerAddress));
+            this.configurationHelper.WriteSetting(new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.IsConnectAtStartOn, this.IsConnectAtStartOn ? "true" : "false"));
+            this.configurationHelper.WriteSetting(new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.UserDefinedEditor, this.UserDefinedEditor));
+            this.configurationHelper.WriteSetting(new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.ExtensionDebugModeEnabled, this.ExtensionDebugModeEnabled ? "true" : "false"));
+            this.configurationHelper.WriteSetting(new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.DisableEditorTags, this.DisableEditorTags ? "true" : "false"));
+        }
+
         #endregion
 
         #region Methods
@@ -345,20 +392,22 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
             cm.Load();
 
-            string address = this.configurationHelper.ReadOptionFromApplicationData("VSSonarQubeConfig", "ServerAddress");
-
-            if (string.IsNullOrEmpty(address))
+            try
             {
-                return;
-            }
+                string address = this.configurationHelper.ReadSetting(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, "ServerAddress").Value;
 
-            this.UserConnectionConfig = new ConnectionConfiguration(
-                address, 
-                cm.Username, 
-                ConnectionConfiguration.ConvertToUnsecureString(cm.SecurePassword));
-            this.UserName = cm.Username;
-            this.ServerAddress = address;
-            this.Password = ConnectionConfiguration.ConvertToUnsecureString(cm.SecurePassword);
+                this.UserConnectionConfig = new ConnectionConfiguration(
+                    address,
+                    cm.Username,
+                    ConnectionConfiguration.ConvertToUnsecureString(cm.SecurePassword));
+                this.UserName = cm.Username;
+                this.ServerAddress = address;
+                this.Password = ConnectionConfiguration.ConvertToUnsecureString(cm.SecurePassword);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
         }
 
         /// <summary>
@@ -422,37 +471,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         }
 
         /// <summary>
-        ///     The reset defaults.
-        /// </summary>
-        private void ResetDefaults()
-        {
-            string isConnectAuto = this.configurationHelper.ReadOptionFromApplicationData("VSSonarQubeConfig", "AutoConnectAtStart");
-
-            if (string.IsNullOrEmpty(isConnectAuto))
-            {
-                this.IsConnectAtStartOn = true;
-                return;
-            }
-
-            this.IsConnectAtStartOn = isConnectAuto.Equals("true");
-
-            string editor = this.configurationHelper.ReadOptionFromApplicationData("VSSonarQubeConfig", "UserDefinedEditor");
-            this.UserDefinedEditor = !string.IsNullOrEmpty(editor) ? editor : "notepad";
-
-            string editorTags = this.configurationHelper.ReadOptionFromApplicationData("VSSonarQubeConfig", "DisableEditorTags");
-            if (!string.IsNullOrEmpty(editorTags))
-            {
-                this.DisableEditorTags = editorTags.ToLower().Equals("true");
-            }
-
-            string debugmode = this.configurationHelper.ReadOptionFromApplicationData("VSSonarQubeConfig", "ExtensionDebugModeEnabled");
-            if (!string.IsNullOrEmpty(debugmode))
-            {
-                this.ExtensionDebugModeEnabled = debugmode.ToLower().Equals("true");
-            }
-        }
-
-        /// <summary>
         /// The set credentials.
         /// </summary>
         /// <param name="userName">
@@ -463,7 +481,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </param>
         private void SetCredentials(string userName, string password)
         {
-            this.configurationHelper.WriteOptionInApplicationData("VSSonarQubeConfig", "ServerAddress", this.ServerAddress);
+            this.configurationHelper.WriteSetting(new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, "ServerAddress", this.ServerAddress));
             var cm = new Credential
                          {
                              Target = "VSSonarQubeExtension", 

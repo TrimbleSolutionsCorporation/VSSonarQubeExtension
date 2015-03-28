@@ -20,6 +20,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
+    using System.Linq;
     using System.Windows.Controls;
     using System.Windows.Media;
 
@@ -152,7 +153,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         ///     The project.
         /// </summary>
-        public Resource Project { get; set; }
+        private Resource Project { get; set; }
 
         /// <summary>
         ///     Gets or sets the save and exit command.
@@ -207,17 +208,14 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         ///     The refresh general properties.
         /// </summary>
-        public void RefreshGeneralProperties()
+        /// <param name="selectedProject"></param>
+        public void RefreshPropertiesInView(Resource selectedProject)
         {
-            this.ResetGeneralOptionsForProject();
-        }
-
-        /// <summary>
-        ///     The refresh properties in plugins.
-        /// </summary>
-        public void RefreshPropertiesInPlugins()
-        {
-            this.UpdatePluginOptions(string.Empty);
+            this.Project = selectedProject;
+            foreach (var availableOption in this.AvailableOptions)
+            {
+                availableOption.RefreshPropertiesInView(selectedProject);
+            }
         }
 
         /// <summary>
@@ -225,7 +223,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         public void ResetUserData()
         {
-            bool fileIsMissing = File.Exists(this.ConfigurationHelper.UserAppDataConfigurationFile());
             if (this.PluginManager == null)
             {
                 return;
@@ -233,84 +230,12 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
             foreach (var plugin in this.PluginManager.AnalysisPlugins)
             {
-                var plugDesc = plugin.GetPluginDescription();
-                var plugOptions = plugin.GetPluginControlOptions(this.GeneralConfigurationViewModel.UserConnectionConfig);
-
-                if (plugOptions == null)
-                {
-                    continue;
-                }
-
-                if (!fileIsMissing || this.ConfigurationHelper.ReadAllAvailableOptionsInSettings(plugDesc.Name).Count == 0)
-                {
-                    plugOptions.ResetDefaults();
-
-                    Dictionary<string, string> optionsToSave = plugOptions.GetOptions();
-                    this.ConfigurationHelper.WriteAllOptionsForPluginOptionInApplicationData(plugDesc.Name, null, optionsToSave);
-                }
+                plugin.ResetDefaults(this.ConfigurationHelper);
             }
 
             foreach (var plugin in this.PluginManager.MenuPlugins)
             {
-                var plugDesc = plugin.GetPluginDescription();
-                var plugOptions = plugin.GetPluginControlOptions(this.GeneralConfigurationViewModel.UserConnectionConfig);
-
-                if (plugOptions == null)
-                {
-                    continue;
-                }
-
-                if (!fileIsMissing || this.ConfigurationHelper.ReadAllAvailableOptionsInSettings(plugDesc.Name).Count == 0)
-                {
-                    plugOptions.ResetDefaults();
-
-                    Dictionary<string, string> optionsToSave = plugOptions.GetOptions();
-                    this.ConfigurationHelper.WriteAllOptionsForPluginOptionInApplicationData(plugDesc.Name, null, optionsToSave);
-                }
-            }
-        }
-
-        /// <summary>
-        ///     The sync options to file.
-        /// </summary>
-        public void SyncOptionsToFile()
-        {
-            this.ConfigurationHelper.WriteOptionInApplicationData(
-                GlobalIds.GlobalPropsId, 
-                GlobalIds.RunnerExecutableKey, 
-                this.AnalysisOptionsViewModel.SonarQubeBinary);
-            this.ConfigurationHelper.WriteOptionInApplicationData(GlobalIds.GlobalPropsId, GlobalIds.JavaExecutableKey, this.AnalysisOptionsViewModel.JavaBinary);
-            this.ConfigurationHelper.WriteOptionInApplicationData(
-                GlobalIds.GlobalPropsId, 
-                GlobalIds.LocalAnalysisTimeoutKey, 
-                this.AnalysisOptionsViewModel.TimeoutValue.ToString(CultureInfo.InvariantCulture));
-            this.ConfigurationHelper.WriteOptionInApplicationData(
-                GlobalIds.GlobalPropsId, 
-                GlobalIds.IsDebugAnalysisOnKey, 
-                this.AnalysisOptionsViewModel.DebugIsChecked.ToString());
-            this.ConfigurationHelper.WriteOptionInApplicationData(
-                GlobalIds.GlobalPropsId, 
-                GlobalIds.ExcludedPluginsKey, 
-                this.AnalysisOptionsViewModel.ExcludedPlugins);
-
-            foreach (PluginDescription plugin in this.PluginManager.PluginList)
-            {
-                this.ConfigurationHelper.WriteOptionInApplicationData(GlobalIds.PluginEnabledControlId, plugin.Name, plugin.Enabled.ToString());
-            }
-
-            if (this.Project != null)
-            {
-                string solId = VsSonarUtils.SolutionGlobPropKey(this.Project.Key);
-                this.ConfigurationHelper.WriteOptionInApplicationData(solId, GlobalIds.SonarSourceKey, this.AnalysisOptionsViewModel.SourceDir);
-                this.ConfigurationHelper.WriteOptionInApplicationData(solId, GlobalIds.SourceEncodingKey, this.AnalysisOptionsViewModel.SourceEncoding);
-            }
-
-            if (this.AnalysisPluginInView != null)
-            {
-                Dictionary<string, string> options =
-                    this.AnalysisPluginInView.GetPluginControlOptions(this.GeneralConfigurationViewModel.UserConnectionConfig).GetOptions();
-                string key = this.AnalysisPluginInView.GetPluginDescription().Name;
-                this.ConfigurationHelper.WriteAllOptionsForPluginOptionInApplicationData(key, this.Project, options);
+                plugin.ResetDefaults(this.ConfigurationHelper);
             }
         }
 
@@ -403,19 +328,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.AvailableOptions.Add(this.AnalysisOptionsViewModel);
             this.AvailableOptions.Add(this.PluginManager);
             this.AvailableOptions.Add(this.LicenseManager);
-
-            foreach (var availableOption in this.AvailableOptions)
-            {
-                try
-                {
-                    availableOption.Exit();
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.Message);
-                }
-            }
-
             this.SelectedOption = this.GeneralConfigurationViewModel;
         }
 
@@ -424,14 +336,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         private void OnApplyCommand()
         {
-            foreach (IViewModelBase availableOption in this.AvailableOptions)
-            {
-                var option = availableOption as IOptionsViewModelBase;
-                if (option != null)
-                {
-                    option.Apply();
-                }
-            }
+            this.ConfigurationHelper.SyncSettings();
         }
 
         /// <summary>
@@ -439,15 +344,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         private void OnCancelAndExitCommand()
         {
-            foreach (IViewModelBase availableOption in this.AvailableOptions)
-            {
-                var option = availableOption as IOptionsViewModelBase;
-                if (option != null)
-                {
-                    option.Exit();
-                }
-            }
-
+            this.ConfigurationHelper.ResetSettings();
             this.OnRequestClose(this, "Exit");
         }
 
@@ -456,84 +353,13 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         private void OnSaveAndExitCommand()
         {
-            foreach (IViewModelBase availableOption in this.AvailableOptions)
+            foreach (var option in AvailableOptions)
             {
-                var option = availableOption as IOptionsViewModelBase;
-                if (option != null)
-                {
-                    option.SaveAndClose();
-                }
+                option.SaveCurrentViewToDisk(this.ConfigurationHelper);
             }
 
-            this.model.RefreshConfigurationInPlugins();
-
+            this.ConfigurationHelper.SyncSettings();
             this.OnRequestClose(this, "Exit");
-        }
-
-        /// <summary>
-        ///     The reset general options for project.
-        /// </summary>
-        private void ResetGeneralOptionsForProject()
-        {
-            Dictionary<string, string> generalOptionsInDsk = this.ConfigurationHelper.ReadAllAvailableOptionsInSettings(GlobalIds.GlobalPropsId);
-
-            if (generalOptionsInDsk != null)
-            {
-                this.AnalysisOptionsViewModel.SetGeneralOptions(generalOptionsInDsk);
-            }
-
-            if (this.Project != null)
-            {
-                string solId = VsSonarUtils.SolutionGlobPropKey(this.Project.Key);
-                Dictionary<string, string> projectOptionsInDsk = this.ConfigurationHelper.ReadAllAvailableOptionsInSettings(solId);
-                this.AnalysisOptionsViewModel.SetProjectOptions(projectOptionsInDsk);
-            }
-        }
-
-        /// <summary>
-        /// The update analysisPlugin options.
-        /// </summary>
-        /// <param name="selectedPlugin">
-        /// The selected analysisPlugin.
-        /// </param>
-        private void UpdatePluginOptions(string selectedPlugin)
-        {
-            if (this.Project != null)
-            {
-                this.PluginManager.CanModifyPluginProps = true;
-            }
-            
-            foreach (IAnalysisPlugin plugin in this.PluginManager.AnalysisPlugins)
-            {
-                IPluginsOptions pluginOptionsController = plugin.GetPluginControlOptions(this.GeneralConfigurationViewModel.UserConnectionConfig);
-                string pluginKey = plugin.GetPluginDescription().Name;
-
-                if (pluginOptionsController == null)
-                {
-                    continue;
-                }
-
-                if (!string.IsNullOrEmpty(selectedPlugin))
-                {
-                    if (!pluginKey.Equals(selectedPlugin))
-                    {
-                        continue;
-                    }
-                }
-
-                try
-                {
-                    Dictionary<string, string> optionsInDsk = this.ConfigurationHelper.ReadAllAvailableOptionsInSettings(pluginKey);
-                    this.OptionsInView = pluginOptionsController.GetUserControlOptions(this.Project);
-                    this.AnalysisPluginInView = plugin;
-                    pluginOptionsController.SetOptions(optionsInDsk);
-                }
-                catch (Exception ex)
-                {
-                    this.model.Logger.WriteMessage("Failed to Save properties for: " + pluginKey);
-                    this.model.Logger.WriteException(ex);
-                }
-            }
         }
 
         #endregion

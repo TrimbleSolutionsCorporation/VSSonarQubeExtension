@@ -30,21 +30,6 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         #region Public Methods and Operators
 
         /// <summary>
-        /// The apply.
-        /// </summary>
-        void Apply();
-
-        /// <summary>
-        /// The end data association.
-        /// </summary>
-        void EndDataAssociation();
-
-        /// <summary>
-        /// The exit.
-        /// </summary>
-        void Exit();
-
-        /// <summary>
         /// The init data association.
         /// </summary>
         /// <param name="associatedProject">
@@ -56,12 +41,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// <param name="workingDir">
         /// The working dir.
         /// </param>
-        void InitDataAssociation(Resource associatedProject, ISonarConfiguration userConnectionConfig, string workingDir);
-
-        /// <summary>
-        /// The save and close.
-        /// </summary>
-        void SaveAndClose();
+        void RefreshPropertiesInView(Resource associatedProject);
 
         /// <summary>
         /// The update services.
@@ -86,5 +66,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             IServiceProvider provider);
 
         #endregion
+
+        void SaveCurrentViewToDisk(IConfigurationHelper configurationHelper);
     }
 }

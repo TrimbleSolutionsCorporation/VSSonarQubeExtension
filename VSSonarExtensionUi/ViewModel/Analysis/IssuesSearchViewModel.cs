@@ -101,7 +101,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.Header = "Issues";
             this.SonarVersion = 4.5;
             this.UsersList = new ObservableCollection<User>();
-            this.IssuesGridView = new IssueGridViewModel(sonarQubeViewModel, true, "SearchView", false);
+            this.IssuesGridView = new IssueGridViewModel(sonarQubeViewModel, true, "SearchView", false, this.configurationHelper);
 
             this.InitCommanding();
 
@@ -513,55 +513,55 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             if (this.visualStudioHelper != null)
             {
-                this.configurationHelper.WriteOptionInApplicationData(
+                this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, 
                     IssuesFilterViewModelKey, 
                     "IsStatusOpenChecked", 
                     this.IsStatusOpenChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
+                this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties,
                     IssuesFilterViewModelKey, 
                     "IsStatusClosedChecked", 
                     this.IsStatusClosedChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
+                this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties,
                     IssuesFilterViewModelKey, 
                     "IsStatusResolvedChecked", 
                     this.IsStatusResolvedChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
+                this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties,
                     IssuesFilterViewModelKey, 
                     "IsStatusConfirmedChecked", 
                     this.IsStatusConfirmedChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
+                this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties,
                     IssuesFilterViewModelKey, 
                     "IsStatusReopenedChecked", 
                     this.IsStatusReopenedChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
+                this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties,
                     IssuesFilterViewModelKey, 
                     "IsBlockerChecked", 
                     this.IsBlockerChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
+                this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties,
                     IssuesFilterViewModelKey, 
                     "IsCriticalChecked", 
                     this.IsCriticalChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
+                this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties,
                     IssuesFilterViewModelKey, 
                     "IsMajaorChecked", 
                     this.IsMajaorChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
+                this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties,
                     IssuesFilterViewModelKey, 
                     "IsMinorChecked", 
                     this.IsMinorChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
+                this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties,
                     IssuesFilterViewModelKey, 
                     "IsInfoChecked", 
                     this.IsInfoChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
+                this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties,
                     IssuesFilterViewModelKey, 
                     "IsFalsePositiveChecked", 
                     this.IsFalsePositiveChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
+                this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties,
                     IssuesFilterViewModelKey, 
                     "IsRemovedChecked", 
                     this.IsRemovedChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
+                this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties,
                     IssuesFilterViewModelKey, 
                     "IsFixedChecked", 
                     this.IsFixedChecked.ToString(CultureInfo.InvariantCulture));

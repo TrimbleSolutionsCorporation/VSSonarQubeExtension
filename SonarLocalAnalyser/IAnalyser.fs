@@ -26,17 +26,29 @@ open VSSonarQubeCmdExecutor
 open System.Diagnostics
 open Microsoft.Build.Utilities
 
+type GlobalAnalysisIds = 
+    static member ExcludedPluginsKey : string = "ExcludedPluginsKey"
+    static member RunnerExecutableKey = "RunnerExecutable"
+    static member JavaExecutableKey = "JavaExecutable"
+    static member LocalAnalysisTimeoutKey = "TimeoutAnalysis"
+    static member IsDebugAnalysisOnKey = "IsDebugAnalysisOn"
+    static member SonarSourceKey = "SonarSources"
+    static member SourceEncodingKey = "SourceEncoding"
+    static member PropertiesFileKey = "PropertiesFile"
+
 type ISonarLocalAnalyser =     
   abstract member StopAllExecution : unit -> unit
   abstract member IsExecuting : unit -> bool
-  abstract member GetResourceKey : VsProjectItem * Resource * ISonarConfiguration * safeIsOn:bool -> string                               
+  abstract member GetResourceKey : VsProjectItem * Resource * ISonarConfiguration * safeIsOn:bool -> string
 
   abstract member AnalyseFile : VsProjectItem * Resource * onModifiedLinesOnly:bool *  version:double * ISonarConfiguration -> unit
-  abstract member RunIncrementalAnalysis : string * Resource * version:double * ISonarConfiguration -> unit
-  abstract member RunPreviewAnalysis : string * Resource * version:double * ISonarConfiguration -> unit
-  abstract member RunFullAnalysis : string * Resource * version:double * ISonarConfiguration -> unit
+  abstract member RunIncrementalAnalysis : Resource * version:double * ISonarConfiguration -> unit
+  abstract member RunPreviewAnalysis : Resource * version:double * ISonarConfiguration -> unit
+  abstract member RunFullAnalysis : Resource * version:double * ISonarConfiguration -> unit
 
   abstract member GetIssues : config:ISonarConfiguration * project:Resource -> System.Collections.Generic.List<Issue>
+
+  abstract member AssociateWithProject : project:Resource -> unit
  
   [<CLIEvent>]
   abstract member LocalAnalysisCompleted : IDelegateEvent<System.EventHandler>

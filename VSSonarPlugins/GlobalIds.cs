@@ -13,59 +13,55 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarPlugins
 {
+    using System;
+    using System.ComponentModel;
+
+    /// <summary>
+    /// The context.
+    /// </summary>
+    [Serializable]
+    public enum Context
+    {
+        [Description("UIProperties")]
+        UIProperties,
+        [Description("GlobalPropsId")]
+        GlobalPropsId,
+        [Description("AnalysisProjectId")]
+        AnalysisProject,
+        [Description("AnalysisGeneral")]
+        AnalysisGeneral,
+        [Description("FileAnalysisProperties")]
+        FileAnalysisProperties,
+        [Description("SQAnalysisProperties")]
+        SQAnalysisProperties,
+    }
+
     /// <summary>
     /// The global ids.
     /// </summary>
     public class GlobalIds
     {
         /// <summary>
-        /// The global props id.
-        /// </summary>
-        public static readonly string GlobalPropsId = "LocalAnalyserOptions";
-
-        /// <summary>
-        /// The general solution props key.
-        /// </summary>
-        public static readonly string GeneralSolutionPropsKey = "SolutionGeneralAnalysisOptions";
-
-        /// <summary>
         /// The excluded plugins.
         /// </summary>
-        public static readonly string ExcludedPluginsKey = "ExcludedPluginsKey";
+        public static readonly string PluginEnabledControlId = "PluginEnabled";
 
-        /// <summary>
-        /// The runner executable key.
-        /// </summary>
-        public static readonly string RunnerExecutableKey = "RunnerExecutable";
+        public static readonly string IsConnectAtStartOn = "IsConnectAtStartOn";
 
-        /// <summary>
-        /// The java executable key.
-        /// </summary>
-        public static readonly string JavaExecutableKey = "JavaExecutable";
+        public static readonly string UserDefinedEditor = "UserDefinedEditor";
 
-        /// <summary>
-        /// The local analysis timeout key.
-        /// </summary>
-        public static readonly string LocalAnalysisTimeoutKey = "TimeoutAnalysis";
+        public static readonly string ExtensionDebugModeEnabled = "ExtensionDebugModeEnabled";
 
-        /// <summary>
-        /// The is debug analysis on key.
-        /// </summary>
-        public static readonly string IsDebugAnalysisOnKey = "IsDebugAnalysisOn";
+        public static readonly string DisableEditorTags = "DisableEditorTags";
+    }
 
-        /// <summary>
-        /// The sonar source key.
-        /// </summary>
-        public static readonly string SonarSourceKey = "SonarSources";
+    public class OwnersId
+    {
+        public static readonly string ApplicationOwnerId = "ExtensionControl";
 
-        /// <summary>
-        /// The source encoding.
-        /// </summary>
-        public static readonly string SourceEncodingKey = "SourceEncoding";
+        public static readonly string AnalysisOwnerId = "AnalysisControl";
 
-        /// <summary>
-        /// The plugin enabled control id.
-        /// </summary>
-        public static readonly string PluginEnabledControlId = "PluginEnableControl";
+        public static readonly string PluginGeneralOwnerId = "PluginGeneral";
+
     }
 }

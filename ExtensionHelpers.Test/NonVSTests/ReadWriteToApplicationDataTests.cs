@@ -15,6 +15,7 @@ namespace ExtensionHelpers.Test.NonVSTests
 {
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
 
     using ExtensionTypes;
 
@@ -113,7 +114,7 @@ namespace ExtensionHelpers.Test.NonVSTests
             vshelper.WriteOptionInApplicationData("key1", "data3", "value3");
 
             var value = vshelper.ReadAllAvailableOptionsInSettings("key");
-            Assert.AreEqual(3, value.Count);
+            Assert.AreEqual(3, value.Count());
             Assert.AreEqual("value", value["data"]);
             Assert.AreEqual("value1", value["data1"]);
             Assert.AreEqual("value2", value["data2"]);

@@ -65,7 +65,7 @@ type RoslynAdapterTest() =
         let adapter = RoslynAdapter()
         let codeFix = adapter.GetCodeFixFromAssembly("Analyzer1.dll", Environment.CurrentDirectory)
         codeFix.Length |> should equal 1
-        codeFix.[0].GetFixableDiagnosticIds().Length |> should equal 1
+        codeFix.[0].FixableDiagnosticIds.Length |> should equal 1
 
 
     [<Test>]

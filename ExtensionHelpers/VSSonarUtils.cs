@@ -172,20 +172,6 @@ namespace ExtensionHelpers
         }
 
         /// <summary>
-        /// Gets the solution glob prop key.
-        /// </summary>
-        /// <param name="projectKey">
-        /// The project Key.
-        /// </param>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
-        public static string SolutionGlobPropKey(string projectKey)
-        {
-            return GlobalIds.GeneralSolutionPropsKey + "." + projectKey;
-        }
-
-        /// <summary>
         /// The write data to configuration file.
         /// </summary>
         /// <param name="key">

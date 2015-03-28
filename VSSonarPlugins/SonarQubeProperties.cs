@@ -13,9 +13,12 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarPlugins
 {
+    using System;
+
     /// <summary>
     ///     The sonar qube properties.
     /// </summary>
+    [Serializable]
     public class SonarQubeProperties
     {
         #region Constructors and Destructors
@@ -37,7 +40,16 @@ namespace VSSonarPlugins
         {
             this.Key = prop.Key;
             this.Value = prop.Value;
-            this.ValueInServer = prop.ValueInServer;
+            this.Context = prop.Context;
+            this.Owner = prop.Owner;
+        }
+
+        public SonarQubeProperties(Context context, string owner, string key, string value)
+        {
+            this.Key = key;
+            this.Value = value;
+            this.Context = context;
+            this.Owner = owner;
         }
 
         #endregion
@@ -57,7 +69,12 @@ namespace VSSonarPlugins
         /// <summary>
         ///     Gets or sets the value in server.
         /// </summary>
-        public string ValueInServer { get; set; }
+        public Context Context { get; set; }
+
+        /// <summary>
+        /// Gets or sets the owner.
+        /// </summary>
+        public string Owner { get; set; }
 
         #endregion
     }

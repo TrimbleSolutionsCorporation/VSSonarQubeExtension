@@ -138,11 +138,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public Color BackGroundColor { get; set; }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether can modify plugin props.
-        /// </summary>
-        public bool CanModifyPluginProps { get; set; }
-
-        /// <summary>
         ///     Gets or sets a value indicating whether changes are required.
         /// </summary>
         public bool ChangesAreRequired { get; set; }
@@ -213,85 +208,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         #region Public Methods and Operators
 
         /// <summary>
-        ///     The apply.
-        /// </summary>
-        public void Apply()
-        {
-            foreach (var plugin in this.AnalysisPlugins)
-            {
-                ApplySettingsForPlugin(plugin);
-            }
-
-            foreach (var plugin in this.MenuPlugins)
-            {
-                ApplySettingsForPlugin(plugin);
-            }
-        }
-
-        private void ApplySettingsForPlugin(IPlugin plugin)
-        {
-            var plugDesc = plugin.GetPluginDescription();
-            this.configurationHelper.WriteOptionInApplicationData(
-                GlobalIds.PluginEnabledControlId,
-                plugDesc.Name,
-                plugDesc.Enabled.ToString());
-
-            if (this.viewModel.Project != null)
-            {
-                try
-                {
-                    Dictionary<string, string> options = plugin.GetPluginControlOptions(this.sonarConf).GetOptions();
-                    string key = plugDesc.Name;
-                    this.configurationHelper.WriteAllOptionsForPluginOptionInApplicationData(key, this.viewModel.Project, options);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.Message);
-                }
-            }
-        }
-
-        /// <summary>
-        ///     The end data association.
-        /// </summary>
-        public void EndDataAssociation()
-        {
-            this.CanModifyPluginProps = false;
-        }
-
-        /// <summary>
-        ///     The exit.
-        /// </summary>
-        public void Exit()
-        {
-            foreach (var plugin in this.AnalysisPlugins)
-            {
-                ResetDefaultsOptionsInPlugin(plugin);
-            }
-
-            foreach (var plugin in this.MenuPlugins)
-            {
-                ResetDefaultsOptionsInPlugin(plugin);
-            }
-        }
-
-        private void ResetDefaultsOptionsInPlugin(IPlugin plugin)
-        {
-            var pluginOptions = plugin.GetPluginControlOptions(this.sonarConf);
-            string pluginKey = plugin.GetPluginDescription().Name;
-            bool fileExists = File.Exists(this.configurationHelper.UserAppDataConfigurationFile());
-            if (pluginOptions != null && fileExists)
-            {
-                if (this.configurationHelper.ReadAllAvailableOptionsInSettings(pluginKey).Count == 0)
-                {
-                    pluginOptions.ResetDefaults();
-                    Dictionary<string, string> optionsToSave = pluginOptions.GetOptions();
-                    this.configurationHelper.WriteAllOptionsForPluginOptionInApplicationData(pluginKey, null, optionsToSave);
-                }
-            }
-        }
-
-        /// <summary>
         /// The init data association.
         /// </summary>
         /// <param name="associatedProject">
@@ -303,9 +219,12 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="workingDir">
         /// The working dir.
         /// </param>
-        public void InitDataAssociation(Resource associatedProject, ISonarConfiguration userConnectionConfig, string workingDir)
+        public void RefreshPropertiesInView(Resource associatedProject)
         {
+            this.Project = associatedProject;
         }
+
+        private Resource Project { get; set; }
 
         /// <summary>
         ///     Gets or sets a value indicating whether install new plugin.
@@ -403,14 +322,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         }
 
         /// <summary>
-        ///     The save and close.
-        /// </summary>
-        public void SaveAndClose()
-        {
-            this.Apply();
-        }
-
-        /// <summary>
         /// The update colours.
         /// </summary>
         /// <param name="background">
@@ -456,6 +367,30 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.visualStudioHelper = vsenvironmenthelperIn;
         }
 
+        public void SaveCurrentViewToDisk(IConfigurationHelper configurationHelper)
+        {
+            if (this.PluginController != null)
+            {
+                this.PluginController.SaveDataInUi(this.Project, this.configurationHelper);
+            }
+
+            foreach (var pluginDescription in this.pluginList)
+            {
+                if (pluginDescription.Enabled)
+                {
+                    this.configurationHelper.WriteOptionInApplicationData(
+                        Context.AnalysisGeneral,
+                        pluginDescription.Name,
+                        GlobalIds.PluginEnabledControlId,
+                        "true");
+                }
+                else
+                {
+                    this.configurationHelper.WriteOptionInApplicationData(Context.AnalysisGeneral, pluginDescription.Name, GlobalIds.PluginEnabledControlId, "false");
+                }
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -479,18 +414,22 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             foreach (var plugin in this.controller.LoadPluginsFromPluginFolder())
             {
                 var plugDesc = plugin.GetPluginDescription();
-                string isEnabled = this.configurationHelper.ReadOptionFromApplicationData(GlobalIds.PluginEnabledControlId, plugDesc.Name);
-                if (string.IsNullOrEmpty(isEnabled))
+                try
                 {
-                    plugDesc.Enabled = true;
+                    string isEnabled = this.configurationHelper.ReadSetting(Context.AnalysisGeneral, plugDesc.Name, GlobalIds.PluginEnabledControlId).Value;
+                    if (isEnabled.Equals("true", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        plugDesc.Enabled = true;
+                    }
+                    else
+                    {
+                        plugDesc.Enabled = false;
+                    }
                 }
-                else if (isEnabled.Equals("true", StringComparison.CurrentCultureIgnoreCase))
+                catch (Exception)
                 {
+                    this.configurationHelper.WriteOptionInApplicationData(Context.AnalysisGeneral, plugDesc.Name, GlobalIds.PluginEnabledControlId, "true");
                     plugDesc.Enabled = true;
-                }
-                else
-                {
-                    plugDesc.Enabled = false;
                 }
 
                 try
@@ -532,15 +471,15 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                     {
                         try
                         {
-                            this.OptionsInView = plugin.GetPluginControlOptions(this.sonarConf).GetUserControlOptions(this.viewModel.Project);
+                            this.PluginController = plugin.GetPluginControlOptions(this.Project, this.sonarConf, this.configurationHelper);
+                            this.OptionsInView = this.PluginController.GetOptionControlUserInterface();
                         }
                         catch (Exception ex)
                         {
                             Debug.WriteLine(ex.Message);
                         }
 
-                        this.CanModifyPluginProps = this.viewModel.Project != null;
-
+                        this.PluginController.RefreshDataInUi(this.Project, this.configurationHelper);
                         return;
                     }
                 }
@@ -551,6 +490,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 this.OptionsInView = null;
             }
         }
+
+        public IPluginControlOption PluginController { get; set; }
 
         /// <summary>
         /// The update plugin in list of plugins.
