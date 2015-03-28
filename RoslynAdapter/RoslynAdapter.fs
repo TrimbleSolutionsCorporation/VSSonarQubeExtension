@@ -19,6 +19,15 @@ type RoslynAdapter() =
     let mapData = System.Collections.Generic.Dictionary<string, string>()
     let assemblyRunningPath = Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString()
 
+    // bring dll into context
+    let analysesAssembly =
+        for dll in Directory.GetFiles(assemblyRunningPath, "*.dll") do
+            try
+                Assembly.LoadFrom(dll) |> ignore
+            with
+            | ex -> System.Diagnostics.Debug.WriteLine(ex.Message)
+        true
+
     let AddDllAnalysisToManifest(assemblyToAdd:string, manifestPath:string) =
         let lines = File.ReadAllLines(manifestPath)
         let mutable linesout = List.Empty

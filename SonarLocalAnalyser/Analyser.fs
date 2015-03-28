@@ -54,15 +54,6 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
         vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.LocalAnalysisTimeoutKey, Value = "10", Context = Context.AnalysisGeneral, Owner = OwnersId.AnalysisOwnerId), false, true)
         true
 
-    // bring dll into context
-    let analysesAssembly =
-        for dll in Directory.GetFiles(assemblyRunningPath, "*.dll") do
-            try
-                Assembly.LoadFrom(dll) |> ignore
-            with
-            | ex -> System.Diagnostics.Debug.WriteLine(ex.Message)
-        true
-
     let triggerException(x, msg : string, ex : Exception) = 
         let errorInExecution = new LocalAnalysisEventArgs("LA: ", "INVALID OPTIONS: " + msg, ex)
         completionEvent.Trigger([|x; errorInExecution|])

@@ -391,8 +391,6 @@ namespace VSSonarExtensionUi.ViewModel
                             this.OnAssignProjectCommand();
                             this.IsConnectedButNotAssociated = false;
                             this.IsAssociated = true;
-
-                            this.UpdateDiagnostics(solResource);
                             return;
                         }
                     }
@@ -535,8 +533,8 @@ namespace VSSonarExtensionUi.ViewModel
                 view.UpdateServices(restServiceIn, vsenvironmenthelperIn, this.configurationHelper, statusBar, provider);
             }
 
-            this.Diagnostics = this.roslynAdapter.GetDiagnosticElementFromManifest(Path.Combine(this.ExtensionFolder, "extension.vsixmanifest"));
-            this.DiagnosticsFound = "Sonar Rules Found: " + this.Diagnostics.Length;
+            //this.Diagnostics = this.roslynAdapter.GetDiagnosticElementFromManifest(Path.Combine(this.ExtensionFolder, "extension.vsixmanifest"));
+            //this.DiagnosticsFound = "Sonar Rules Found: " + this.Diagnostics.Length;
         }
 
         public FSharpList<DiagnosticDescriptor> Diagnostics { get; set; }
