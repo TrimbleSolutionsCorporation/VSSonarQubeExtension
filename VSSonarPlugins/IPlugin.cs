@@ -17,9 +17,23 @@ namespace VSSonarPlugins
     using ExtensionTypes;
     using System.Collections.Generic;
     using System.Windows.Controls;
+    using System;
+
+    public class Message
+    {
+        public string Id { get; set; }
+        public string Data { get; set; }
+    }
+
+    public interface INotificationManager
+    {
+        void ReportException(Exception ex);
+
+        void ReportMessage(Message messages);
+    }
 
     /// <summary>
-    /// The Plugin interface.
+    /// The Plugin interface. INotificationManager and IConfigurationHelper are injected during instantioation
     /// </summary>
     public interface IPlugin
     {
@@ -35,7 +49,7 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="UserControl"/>.
         /// </returns>
-        IPluginControlOption GetPluginControlOptions(Resource project, ISonarConfiguration configuration, IConfigurationHelper helper);
+        IPluginControlOption GetPluginControlOptions(Resource project, ISonarConfiguration configuration);
 
         /// <summary>
         /// The get licenses.
@@ -73,8 +87,10 @@ namespace VSSonarPlugins
         /// <summary>
         /// The reset defaults.
         /// </summary>
-        void ResetDefaults(IConfigurationHelper helper);
+        void ResetDefaults();
 
-        void AssociateProject(Resource project, IConfigurationHelper helper);
+        void AssociateProject(Resource project, ISonarConfiguration configuration);
     }
+
+
 }

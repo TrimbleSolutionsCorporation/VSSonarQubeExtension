@@ -54,6 +54,15 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
         vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.LocalAnalysisTimeoutKey, Value = "10", Context = Context.AnalysisGeneral, Owner = OwnersId.AnalysisOwnerId), false, true)
         true
 
+    // bring dll into context
+    let analysesAssembly =
+        for dll in Directory.GetFiles(assemblyRunningPath, "*.dll") do
+            try
+                Assembly.LoadFrom(dll) |> ignore
+            with
+            | ex -> System.Diagnostics.Debug.WriteLine(ex.Message)
+        true
+
     let triggerException(x, msg : string, ex : Exception) = 
         let errorInExecution = new LocalAnalysisEventArgs("LA: ", "INVALID OPTIONS: " + msg, ex)
         completionEvent.Trigger([|x; errorInExecution|])
@@ -107,7 +116,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
             else
                 if project.Lang = null then
                     let plugin = GetPluginThatSupportsResource(itemInView)
-                    project.Lang <- plugin.GetLanguageKey()
+                    project.Lang <- plugin.GetLanguageKey(itemInView)
 
                 let profile = profiles |> Seq.find (fun x -> x.Language = project.Lang)
                 if profile <> null then
@@ -291,9 +300,9 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                             project.Qualifier <- x.Project.Qualifier
                             project.Scope <- x.Project.Scope
 
-                            project.Lang <- plugin.GetLanguageKey()
+                            project.Lang <- plugin.GetLanguageKey(vsprojitem)
 
-                            let issues = extension.ExecuteAnalysisOnFile(vsprojitem, GetQualityProfile(x.Conf, project, vsprojitem), project, vsinter)
+                            let issues = extension.ExecuteAnalysisOnFile(vsprojitem, GetQualityProfile(x.Conf, project, vsprojitem), project, x.Conf)
                             lock syncLock (
                                 fun () -> 
                                     localissues.AddRange(issues)
@@ -407,7 +416,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                 let extension = plugin.GetLocalAnalysisExtension(x.Conf)
                 if extension <> null then
                     let profile = GetQualityProfile(x.Conf, x.Project, x.ItemInView)
-                    let issues = extension.ExecuteAnalysisOnFile(x.ItemInView, profile, x.Project, vsinter)
+                    let issues = extension.ExecuteAnalysisOnFile(x.ItemInView, profile, x.Project, x.Conf)
 
                     lock syncLock (
                         fun () -> 
@@ -464,7 +473,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                 let extension = plug.GetLocalAnalysisExtension(conf)
                 try
                     let AddIssueToLocalIssues(c : Issue) =
-                        if extension.IsIssueSupported(c) then
+                        if extension.IsIssueSupported(c, conf) then
                             lock _lock (fun () -> localissues.Add(c))
 
                     issues |> PSeq.iter (fun c -> AddIssueToLocalIssues(c))

@@ -51,6 +51,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         private readonly SonarQubeViewModel model;
 
+        private readonly INotificationManager notifycationManager;
+
         #endregion
 
         #region Constructors and Destructors
@@ -67,8 +69,13 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="vsHelper">
         /// The vs helper.
         /// </param>
-        public VSonarQubeOptionsViewModel(PluginController plugincontroller, SonarQubeViewModel model, IVsEnvironmentHelper vsHelper, IConfigurationHelper configurationHelper)
+        public VSonarQubeOptionsViewModel(PluginController plugincontroller,
+            SonarQubeViewModel model,
+            IVsEnvironmentHelper vsHelper,
+            IConfigurationHelper configurationHelper,
+            INotificationManager notificationManager)
         {
+            this.notifycationManager = notificationManager;
             this.model = model;
             this.Vsenvironmenthelper = vsHelper;
             this.ConfigurationHelper = configurationHelper;
@@ -85,6 +92,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         ///     The request close.
         /// </summary>
         public event Action<object, object> RequestClose;
+        
 
         #endregion
 
@@ -230,12 +238,12 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
             foreach (var plugin in this.PluginManager.AnalysisPlugins)
             {
-                plugin.ResetDefaults(this.ConfigurationHelper);
+                plugin.ResetDefaults();
             }
 
             foreach (var plugin in this.PluginManager.MenuPlugins)
             {
-                plugin.ResetDefaults(this.ConfigurationHelper);
+                plugin.ResetDefaults();
             }
         }
 
@@ -321,7 +329,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 plugincontroller, 
                 this.GeneralConfigurationViewModel.UserConnectionConfig, 
                 this.Vsenvironmenthelper, this.ConfigurationHelper, 
-                this, this.model);
+                this, this.model, this.notifycationManager);
             this.LicenseManager = new LicenseViewerViewModel(this.PluginManager, this.GeneralConfigurationViewModel.UserConnectionConfig, this.ConfigurationHelper);
 
             this.AvailableOptions.Add(this.GeneralConfigurationViewModel);

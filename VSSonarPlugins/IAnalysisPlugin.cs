@@ -30,7 +30,7 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="string"/>.
         /// </returns>
-        string GetLanguageKey();
+        string GetLanguageKey(VsProjectItem projectItem);
 
         /// <summary>
         /// The is supported.

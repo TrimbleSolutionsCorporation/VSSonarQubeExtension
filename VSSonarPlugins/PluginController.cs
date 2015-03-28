@@ -157,7 +157,7 @@ namespace VSSonarPlugins
             return this.ErrorMessage;
         }
 
-        public List<IPlugin> LoadPluginsFromPluginFolder()
+        public List<IPlugin> LoadPluginsFromPluginFolder(INotificationManager manager,IConfigurationHelper helper)
         {
             var folder = this.PluginsFolder;
             var pluginsData = new List<IPlugin>();
@@ -180,7 +180,7 @@ namespace VSSonarPlugins
                 {
                     try
                     {
-                        var plugin = this.LoadPlugin(assembly.Value);
+                        var plugin = this.LoadPlugin(assembly.Value, manager, helper);
                         if (plugin != null)
                         {
                             pluginsData.Add(plugin);
@@ -276,7 +276,7 @@ namespace VSSonarPlugins
         }
 
 
-        public IPlugin LoadPlugin(Assembly assembly)
+        public IPlugin LoadPlugin(Assembly assembly, INotificationManager manager, IConfigurationHelper helper)
         {
             var types2 = assembly.GetTypes();
             foreach (var type in types2)
@@ -288,7 +288,17 @@ namespace VSSonarPlugins
                     if (typeof(IAnalysisPlugin).IsAssignableFrom(type))
                     {
                         Debug.WriteLine("Can Cast Type In Assembly To: " + typeof(IAnalysisPlugin).FullName);
-                        return (IPlugin)Activator.CreateInstance(type);
+                        var obj = type.GetConstructor(new[] { typeof(INotificationManager), typeof(IConfigurationHelper) });
+                        if (obj != null)
+                        {
+                            object[] lobject = new object[] { manager, helper };
+                            return (IPlugin)obj.Invoke(lobject);
+                        }
+                        else
+                        {
+                            return (IPlugin)Activator.CreateInstance(type);
+                        }
+                        
                     }
 
                     if (typeof(IMenuCommandPlugin).IsAssignableFrom(type))

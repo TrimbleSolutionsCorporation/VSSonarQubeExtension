@@ -66,6 +66,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         private IVsEnvironmentHelper visualStudioHelper;
 
         private IConfigurationHelper configurationHelper;
+        private readonly INotificationManager notificationManager;
 
         #endregion
 
@@ -92,8 +93,10 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             IVsEnvironmentHelper visualStudioHelper, 
             IConfigurationHelper configurationHelper,
             VSonarQubeOptionsViewModel viewModel, 
-            SonarQubeViewModel mainModel)
+            SonarQubeViewModel mainModel,
+            INotificationManager notifyManager)
         {
+            this.notificationManager = notifyManager;
             this.Header = "Plugin Manager";
             this.visualStudioHelper = visualStudioHelper;
             this.configurationHelper = configurationHelper;
@@ -411,7 +414,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         private void InitPluginList()
         {
-            foreach (var plugin in this.controller.LoadPluginsFromPluginFolder())
+            foreach (var plugin in this.controller.LoadPluginsFromPluginFolder(this.notificationManager, this.configurationHelper))
             {
                 var plugDesc = plugin.GetPluginDescription();
                 try
@@ -471,7 +474,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                     {
                         try
                         {
-                            this.PluginController = plugin.GetPluginControlOptions(this.Project, this.sonarConf, this.configurationHelper);
+                            this.PluginController = plugin.GetPluginControlOptions(this.Project, this.sonarConf);
                             this.OptionsInView = this.PluginController.GetOptionControlUserInterface();
                         }
                         catch (Exception ex)

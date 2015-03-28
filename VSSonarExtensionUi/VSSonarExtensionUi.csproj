@@ -116,6 +116,7 @@
     <Compile Include="Menu\ShowHideIssueColumn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Helpers\AsyncObservableCollection.cs" />
+    <Compile Include="ViewModel\Configuration\NotifyCationManager.cs" />
     <Compile Include="ViewModel\Configuration\VSonarQubeOptionsViewModel.cs" />
     <Compile Include="ViewModel\Configuration\AnalysisOptionsViewModel.cs" />
     <Compile Include="ViewModel\Helpers\IOptionsViewModelBase.cs" />

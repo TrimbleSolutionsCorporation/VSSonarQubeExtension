@@ -88,6 +88,7 @@ namespace VSSonarExtensionUi.ViewModel
             this.SonarRestConnector = new SonarRestService(new JsonSonarConnector());
             this.Logger = new VsSonarExtensionLogger(this);
             this.VsHelper = new StandAloneVsHelper();
+            this.notificationManager = new NotifyCationManager(this);
 
             this.IsExtensionBusy = false;
             this.IsConnected = false;
@@ -1023,7 +1024,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// </summary>
         private void InitOptionsModel()
         {
-            this.VSonarQubeOptionsViewData = new VSonarQubeOptionsViewModel(this.PluginControl, this, this.VsHelper, this.configurationHelper)
+            this.VSonarQubeOptionsViewData = new VSonarQubeOptionsViewModel(this.PluginControl, this, this.VsHelper, this.configurationHelper, this.notificationManager)
                                                  {
                                                      Vsenvironmenthelper =
                                                          this.VsHelper
@@ -1287,6 +1288,7 @@ namespace VSSonarExtensionUi.ViewModel
         #endregion
 
         private readonly IConfigurationHelper configurationHelper;
+        private readonly INotificationManager notificationManager;
 
         public void ClosedWindow(string fullName)
         {

@@ -67,7 +67,7 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="List"/>.
         /// </returns>
-        List<Issue> ExecuteAnalysisOnFile(VsProjectItem itemInView, Profile externlProfile, Resource project, IConfigurationHelper helper);
+        List<Issue> ExecuteAnalysisOnFile(VsProjectItem itemInView, Profile externlProfile, Resource project, ISonarConfiguration conf);
 
         /// <summary>
         /// The get issues.
@@ -78,6 +78,6 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="List"/>.
         /// </returns>
-        bool IsIssueSupported(Issue issue);
+        bool IsIssueSupported(Issue issue, ISonarConfiguration conf);
     }
 }
