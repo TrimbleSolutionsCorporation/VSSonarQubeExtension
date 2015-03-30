@@ -79,7 +79,7 @@ namespace VSSonarExtensionUi.ViewModel
             this.SonarRestConnector = new SonarRestService(new JsonSonarConnector());
             this.Logger = new VsSonarExtensionLogger(this);
             this.VsHelper = new StandAloneVsHelper();
-            this.notificationManager = new NotifyCationManager(this);
+            this.notificationManager = new NotifyCationManager(this, this.VsHelper);
 
             this.IsExtensionBusy = false;
             this.IsConnected = false;

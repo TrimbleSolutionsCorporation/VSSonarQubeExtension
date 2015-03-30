@@ -82,7 +82,7 @@ namespace VSSonarPlugins.Types
                 return null;
             }
 
-            return profile.Rules.FirstOrDefault(rule => (rule.Repo + "." + rule.Key).Equals(idWithRepository));
+            return profile.Rules.FirstOrDefault(rule => (rule.Repo + ":" + rule.Key).Equals(idWithRepository));
         }
 
         /// <summary>
