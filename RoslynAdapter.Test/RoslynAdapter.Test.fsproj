@@ -147,11 +147,6 @@
     </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
-    <ProjectReference Include="..\RoslynAdapter\RoslynAdapter.fsproj">
-      <Name>RoslynAdapter</Name>
-      <Project>{496b669e-8cb4-41ac-b928-e84e3c820807}</Project>
-      <Private>True</Private>
-    </ProjectReference>
     <Reference Include="System.Reflection.Metadata">
       <HintPath>..\packages\System.Reflection.Metadata.1.0.18-beta\lib\portable-net45+win8\System.Reflection.Metadata.dll</HintPath>
       <Private>True</Private>

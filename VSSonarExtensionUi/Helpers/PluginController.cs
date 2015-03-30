@@ -61,6 +61,26 @@ namespace VSSonarExtensionUi.Helpers
 
             var pluginLoader = new PluginLoader();
             AppDomain.CurrentDomain.AssemblyResolve += this.CurrentDomainAssemblyResolve;
+
+            this.LoadAllAssembliesFromExtensionFolder();
+        }
+
+        /// <summary>The load all assemblies from extension folder.</summary>
+        private void LoadAllAssembliesFromExtensionFolder()
+        {
+            var assemblyRunningPath = Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString();
+
+            foreach (var dll in Directory.GetFiles(assemblyRunningPath, "*.dll"))
+            {
+                try
+                {
+                    Assembly.LoadFrom(dll);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
+            }
         }
 
         #endregion
