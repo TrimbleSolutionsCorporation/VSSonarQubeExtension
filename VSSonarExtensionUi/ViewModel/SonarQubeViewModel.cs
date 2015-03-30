@@ -21,17 +21,12 @@ namespace VSSonarExtensionUi.ViewModel
 
     using GalaSoft.MvvmLight.Command;
 
-    using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.Diagnostics;
-    using Microsoft.FSharp.Collections;
-
     using PropertyChanged;
-
-    using RoslynAdapter;
 
     using SonarRestService;
 
     using VSSonarExtensionUi.Cache;
+    using VSSonarExtensionUi.Helpers;
     using VSSonarExtensionUi.View.Configuration;
     using VSSonarExtensionUi.View.Helpers;
     using VSSonarExtensionUi.ViewModel.Analysis;
@@ -39,9 +34,8 @@ namespace VSSonarExtensionUi.ViewModel
     using VSSonarExtensionUi.ViewModel.Helpers;
 
     using VSSonarPlugins;
-    using VSSonarExtensionUi.Helpers;
-    using VSSonarPlugins.Types;
     using VSSonarPlugins.Helpers;
+    using VSSonarPlugins.Types;
 
     /// <summary>
     ///     The changed event handler.
@@ -66,8 +60,6 @@ namespace VSSonarExtensionUi.ViewModel
         ///     The analysisPlugin control.
         /// </summary>
         public readonly PluginController PluginControl = new PluginController();
-
-        private readonly RoslynAdapter roslynAdapter = new RoslynAdapter();
 
         /// <summary>
         ///     The menu item plugins.
@@ -116,12 +108,14 @@ namespace VSSonarExtensionUi.ViewModel
         /// </summary>
         public event ChangedEventHandler PluginRequest;
 
+        /// <summary>The remove plugin request.</summary>
         public event ChangedEventHandler RemovePluginRequest;
 
         #endregion
 
         #region Public Properties
 
+        /// <summary>Gets or sets the id of plugin to remove.</summary>
         public int IdOfPluginToRemove { get; set; }
 
         /// <summary>
@@ -354,15 +348,9 @@ namespace VSSonarExtensionUi.ViewModel
 
         #region Public Methods and Operators
 
-        /// <summary>
-        /// The associate project to solution.
-        /// </summary>
-        /// <param name="solutionName">
-        /// The solution Name.
-        /// </param>
-        /// <param name="solutionPath">
-        /// The solution Path.
-        /// </param>
+        /// <summary>The associate project to solution.</summary>
+        /// <param name="solutionName">The solution Name.</param>
+        /// <param name="solutionPath">The solution Path.</param>
         public void AssociateProjectToSolution(string solutionName, string solutionPath)
         {
             if (!solutionName.ToLower().EndsWith(".sln"))
@@ -397,34 +385,6 @@ namespace VSSonarExtensionUi.ViewModel
             }
         }
 
-        private void UpdateDiagnostics(Resource solResource)
-        {
-            var profiles = this.SonarRestConnector.GetQualityProfilesForProject(AuthtenticationHelper.AuthToken, solResource.Key);
-            var profile = new Profile();
-
-            foreach (var profile1 in profiles)
-            {
-                if (profile1.Language.Equals("cs"))
-                {
-                    profile.Language = "cs";
-                    profile.Name = profile1.Name;
-                }
-            }
-
-            this.SonarRestConnector.GetRulesForProfile(AuthtenticationHelper.AuthToken, profile);
-
-            if (this.PublisherMessages == null)
-            {
-                this.PublisherMessages = this.roslynAdapter.GetSubscriberData(this.Diagnostics, profile);
-                this.roslynAdapter.CreateASubscriberWithMessages(this.PublisherMessages);
-            }
-            else
-            {
-                this.PublisherMessages = this.roslynAdapter.GetSubscriberData(this.Diagnostics, profile);
-                this.roslynAdapter.UpdateSubscriberMessages(this.PublisherMessages);
-            }
-        }
-
         /// <summary>
         ///     The clear project association.
         /// </summary>
@@ -443,12 +403,8 @@ namespace VSSonarExtensionUi.ViewModel
             this.VSonarQubeOptionsViewData.EndDataAssociation();
         }
 
-        /// <summary>
-        /// The execute plugin.
-        /// </summary>
-        /// <param name="header">
-        /// The data.
-        /// </param>
+        /// <summary>The execute plugin.</summary>
+        /// <param name="header">The data.</param>
         public void ExecutePlugin(string header)
         {
             foreach (var plugin in this.menuItemPlugins)
@@ -461,7 +417,7 @@ namespace VSSonarExtensionUi.ViewModel
 
                 string isEnabled = this.configurationHelper.ReadSetting(
                     Context.AnalysisGeneral, 
-                    plugDesc.Name,
+                    plugDesc.Name, 
                     GlobalIds.PluginEnabledControlId).Value;
 
                 if (string.IsNullOrEmpty(isEnabled) || isEnabled.Equals("true", StringComparison.CurrentCultureIgnoreCase))
@@ -493,26 +449,17 @@ namespace VSSonarExtensionUi.ViewModel
             }
         }
 
-        /// <summary>
-        /// The extension data viewModel update.
-        /// </summary>
-        /// <param name="restServiceIn">
-        /// The rest service in.
-        /// </param>
-        /// <param name="vsenvironmenthelperIn">
-        /// The vsenvironmenthelper in.
-        /// </param>
-        /// <param name="statusBar">
-        /// The status bar.
-        /// </param>
-        /// <param name="provider">
-        /// The provider.
-        /// </param>
+        /// <summary>The extension data viewModel update.</summary>
+        /// <param name="restServiceIn">The rest service in.</param>
+        /// <param name="vsenvironmenthelperIn">The vsenvironmenthelper in.</param>
+        /// <param name="statusBar">The status bar.</param>
+        /// <param name="provider">The provider.</param>
+        /// <param name="extensionFolder">The extension Folder.</param>
         public void ExtensionDataModelUpdate(
             ISonarRestService restServiceIn, 
             IVsEnvironmentHelper vsenvironmenthelperIn, 
             IVSSStatusBar statusBar, 
-            IServiceProvider provider,
+            IServiceProvider provider, 
             string extensionFolder)
         {
             this.ServiceProvider = provider;
@@ -532,34 +479,20 @@ namespace VSSonarExtensionUi.ViewModel
                 view.UpdateServices(restServiceIn, vsenvironmenthelperIn, this.configurationHelper, statusBar, provider);
             }
 
-            //this.Diagnostics = this.roslynAdapter.GetDiagnosticElementFromManifest(Path.Combine(this.ExtensionFolder, "extension.vsixmanifest"));
-            //this.DiagnosticsFound = "Sonar Rules Found: " + this.Diagnostics.Length;
+            // this.Diagnostics = this.roslynAdapter.GetDiagnosticElementFromManifest(Path.Combine(this.ExtensionFolder, "extension.vsixmanifest"));
+            // this.DiagnosticsFound = "Sonar Rules Found: " + this.Diagnostics.Length;
         }
 
-        public FSharpList<DiagnosticDescriptor> Diagnostics { get; set; }
-
-        public FSharpList<SubscriberElem> PublisherMessages { get; set; }
-
+        /// <summary>Gets or sets the extension folder.</summary>
         public string ExtensionFolder { get; set; }
 
-        public string DiagnosticsFound { get; set; }
-
-        /// <summary>
-        /// The get issues in editor.
-        /// </summary>
-        /// <param name="fileResource">
-        /// The file Resource.
-        /// </param>
-        /// <param name="fileContent">
-        /// The file Content.
-        /// </param>
-        /// <returns>
-        /// The
-        ///     <see>
+        /// <summary>The get issues in editor.</summary>
+        /// <param name="fileResource">The file Resource.</param>
+        /// <param name="fileContent">The file Content.</param>
+        /// <returns>The<see>
         ///         <cref>List</cref>
         ///     </see>
-        ///     .
-        /// </returns>
+        ///     .</returns>
         public List<Issue> GetIssuesInEditor(Resource fileResource, string fileContent)
         {
             this.Logger.WriteMessage("Return issues for resource: " + fileResource);
@@ -632,9 +565,9 @@ namespace VSSonarExtensionUi.ViewModel
             this.configurationHelper.WriteSetting(
                 new SonarQubeProperties
                     {
-                        Context = Context.UIProperties,
-                        Key = "SelectedView",
-                        Owner = OwnersId.ApplicationOwnerId,
+                        Context = Context.UIProperties, 
+                        Key = "SelectedView", 
+                        Owner = OwnersId.ApplicationOwnerId, 
                         Value = this.SelectedView.Header
                     }, true);
 
@@ -642,12 +575,8 @@ namespace VSSonarExtensionUi.ViewModel
             Debug.WriteLine("Name Changed");
         }
 
-        /// <summary>
-        /// The refresh data for resource.
-        /// </summary>
-        /// <param name="fullName">
-        /// The full name.
-        /// </param>
+        /// <summary>The refresh data for resource.</summary>
+        /// <param name="fullName">The full name.</param>
         public void RefreshDataForResource(string fullName)
         {
             this.Logger.WriteMessage("Refresh Data For File: " + fullName);
@@ -692,30 +621,18 @@ namespace VSSonarExtensionUi.ViewModel
             }
         }
 
-        /// <summary>
-        /// The update colours.
-        /// </summary>
-        /// <param name="background">
-        /// The background.
-        /// </param>
-        /// <param name="foreground">
-        /// The foreground.
-        /// </param>
+        /// <summary>The update colours.</summary>
+        /// <param name="background">The background.</param>
+        /// <param name="foreground">The foreground.</param>
         public void UpdateColours(Color background, Color foreground)
         {
             this.BackGroundColor = background;
             this.ForeGroundColor = foreground;
         }
 
-        /// <summary>
-        /// The update theme.
-        /// </summary>
-        /// <param name="background">
-        /// The background.
-        /// </param>
-        /// <param name="foreground">
-        /// The foreground.
-        /// </param>
+        /// <summary>The update theme.</summary>
+        /// <param name="background">The background.</param>
+        /// <param name="foreground">The foreground.</param>
         public void UpdateTheme(Color background, Color foreground)
         {
             this.BackGroundColor = background;
@@ -742,12 +659,8 @@ namespace VSSonarExtensionUi.ViewModel
 
         #region Methods
 
-        /// <summary>
-        /// The on changed.
-        /// </summary>
-        /// <param name="e">
-        /// The e.
-        /// </param>
+        /// <summary>The on changed.</summary>
+        /// <param name="e">The e.</param>
         protected virtual void OnAnalysisModeHasChange(EventArgs e)
         {
             if (this.AnalysisModeHasChange != null)
@@ -756,12 +669,8 @@ namespace VSSonarExtensionUi.ViewModel
             }
         }
 
-        /// <summary>
-        /// The on plugin request.
-        /// </summary>
-        /// <param name="e">
-        /// The e.
-        /// </param>
+        /// <summary>The on plugin request.</summary>
+        /// <param name="e">The e.</param>
         protected virtual void OnPluginRequest(EventArgs e)
         {
             if (this.PluginRequest != null)
@@ -770,6 +679,8 @@ namespace VSSonarExtensionUi.ViewModel
             }
         }
 
+        /// <summary>The on remove plugin request.</summary>
+        /// <param name="e">The e.</param>
         protected virtual void OnRemovePluginRequest(EventArgs e)
         {
             if (this.RemovePluginRequest != null)
@@ -778,6 +689,8 @@ namespace VSSonarExtensionUi.ViewModel
             }
         }
 
+        /// <summary>The get first free id.</summary>
+        /// <returns>The <see cref="int"/>.</returns>
         public int GetFirstFreeId()
         {
             int i = 0;
@@ -794,6 +707,8 @@ namespace VSSonarExtensionUi.ViewModel
             return i;
         }
 
+        /// <summary>The add a new menu.</summary>
+        /// <param name="toAdd">The to add.</param>
         public void AddANewMenu(IMenuCommandPlugin toAdd)
         {
             var plugDesc = toAdd.GetPluginDescription();
@@ -813,6 +728,8 @@ namespace VSSonarExtensionUi.ViewModel
             this.menuItemPlugins.Add(this.GetFirstFreeId(), toAdd);
         }
 
+        /// <summary>The remove menu plugin.</summary>
+        /// <param name="toRemove">The to remove.</param>
         public void RemoveMenuPlugin(IMenuCommandPlugin toRemove)
         {
             var plugDescRemove = toRemove.GetPluginDescription();
@@ -842,18 +759,10 @@ namespace VSSonarExtensionUi.ViewModel
             }
         }
 
-        /// <summary>
-        /// The associate solution with sonar project.
-        /// </summary>
-        /// <param name="solutionName">
-        /// The solution Name.
-        /// </param>
-        /// <param name="solutionPath">
-        /// The solution Path.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Resource"/>.
-        /// </returns>
+        /// <summary>The associate solution with sonar project.</summary>
+        /// <param name="solutionName">The solution Name.</param>
+        /// <param name="solutionPath">The solution Path.</param>
+        /// <returns>The <see cref="Resource"/>.</returns>
         private Resource AssociateSolutionWithSonarProject(string solutionName, string solutionPath)
         {
             if (AuthtenticationHelper.AuthToken == null)
@@ -865,15 +774,15 @@ namespace VSSonarExtensionUi.ViewModel
             try
             {
                 var prop = this.configurationHelper.ReadSetting(
-                    Context.GlobalPropsId,
-                    Path.Combine(solutionPath, solutionName),
+                    Context.GlobalPropsId, 
+                    Path.Combine(solutionPath, solutionName), 
                     "PROJECTKEY");
 
                 try
                 {
                     return
                         this.SonarRestConnector.GetResourcesData(
-                            AuthtenticationHelper.AuthToken,
+                            AuthtenticationHelper.AuthToken, 
                             prop.Value)[0];
                 }
                 catch (Exception ex)
@@ -894,15 +803,9 @@ namespace VSSonarExtensionUi.ViewModel
                            sourceKey)[0];
         }
 
-        /// <summary>
-        /// The create a resource for file in editor.
-        /// </summary>
-        /// <param name="fullName">
-        /// The full name.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Resource"/>.
-        /// </returns>
+        /// <summary>The create a resource for file in editor.</summary>
+        /// <param name="fullName">The full name.</param>
+        /// <returns>The <see cref="Resource"/>.</returns>
         private Resource CreateAResourceForFileInEditor(string fullName)
         {
             var keyTypes = new string[3];
@@ -911,12 +814,12 @@ namespace VSSonarExtensionUi.ViewModel
             {
                 keyTypes[1] = this.LocalViewModel.LocalAnalyserModule.GetResourceKey(
                     this.VsHelper.VsProjectItem(fullName), 
-                    this.AssociatedProject,
+                    this.AssociatedProject, 
                     AuthtenticationHelper.AuthToken, 
                     true);
                 keyTypes[2] = this.LocalViewModel.LocalAnalyserModule.GetResourceKey(
                     this.VsHelper.VsProjectItem(fullName), 
-                    this.AssociatedProject,
+                    this.AssociatedProject, 
                     AuthtenticationHelper.AuthToken, 
                     false);
 
@@ -1037,8 +940,8 @@ namespace VSSonarExtensionUi.ViewModel
         {
             this.ServerViewModel = new ServerViewModel(
                 this, 
-                this.VsHelper,
-                this.configurationHelper,
+                this.VsHelper, 
+                this.configurationHelper, 
                 this.SonarRestConnector, 
                 AuthtenticationHelper.AuthToken);
             this.LocalViewModel = new LocalViewModel(this, this.VSonarQubeOptionsViewData.PluginManager.AnalysisPlugins, this.SonarRestConnector, this.VsHelper, this.configurationHelper, AuthtenticationHelper.AuthToken);
@@ -1094,26 +997,26 @@ namespace VSSonarExtensionUi.ViewModel
                 this.configurationHelper.WriteSetting(
                     new SonarQubeProperties
                         {
-                            Owner = OwnersId.ApplicationOwnerId,
-                            Key = "PROJECTKEY",
-                            Value = this.SelectedProject.Key,
+                            Owner = OwnersId.ApplicationOwnerId, 
+                            Key = "PROJECTKEY", 
+                            Value = this.SelectedProject.Key, 
                             Context = Context.GlobalPropsId
                         });
 
                 this.configurationHelper.WriteSetting(
                     new SonarQubeProperties
                         {
-                            Owner = OwnersId.ApplicationOwnerId,
-                            Key = "PROJECTLOCATION",
-                            Value = this.OpenSolutionPath,
+                            Owner = OwnersId.ApplicationOwnerId, 
+                            Key = "PROJECTLOCATION", 
+                            Value = this.OpenSolutionPath, 
                             Context = Context.GlobalPropsId
                         });
                 this.configurationHelper.WriteSetting(
                     new SonarQubeProperties
                         {
-                            Owner = OwnersId.ApplicationOwnerId,
-                            Key = "PROJECTNAME",
-                            Value = this.OpenSolutionName,
+                            Owner = OwnersId.ApplicationOwnerId, 
+                            Key = "PROJECTNAME", 
+                            Value = this.OpenSolutionName, 
                             Context = Context.GlobalPropsId
                         });
             }
@@ -1125,8 +1028,8 @@ namespace VSSonarExtensionUi.ViewModel
                 try
                 {
                     var option = this.configurationHelper.ReadSetting(
-                        Context.GlobalPropsId,
-                        this.SelectedProject.Key,
+                        Context.GlobalPropsId, 
+                        this.SelectedProject.Key, 
                         "PROJECTLOCATION");
                     this.OpenSolutionPath = option.Value;
                 }
@@ -1138,8 +1041,8 @@ namespace VSSonarExtensionUi.ViewModel
                 try
                 {
                     var option = this.configurationHelper.ReadSetting(
-                        Context.GlobalPropsId,
-                        this.SelectedProject.Key,
+                        Context.GlobalPropsId, 
+                        this.SelectedProject.Key, 
                         "PROJECTNAME");
                     this.OpenSolutionName = option.Value;
                 }
@@ -1210,12 +1113,8 @@ namespace VSSonarExtensionUi.ViewModel
             this.AssociatedProject = null;
         }
 
-        /// <summary>
-        /// The on refresh project list.
-        /// </summary>
-        /// <param name="projects">
-        /// The projects.
-        /// </param>
+        /// <summary>The on refresh project list.</summary>
+        /// <param name="projects">The projects.</param>
         private void OnRefreshProjectList(IEnumerable<Resource> projects)
         {
             this.IsConnected = true;
@@ -1284,9 +1183,14 @@ namespace VSSonarExtensionUi.ViewModel
 
         #endregion
 
+        /// <summary>The configuration helper.</summary>
         private readonly IConfigurationHelper configurationHelper;
+
+        /// <summary>The notification manager.</summary>
         private readonly INotificationManager notificationManager;
 
+        /// <summary>The closed window.</summary>
+        /// <param name="fullName">The full name.</param>
         public void ClosedWindow(string fullName)
         {
             if (this.ServerViewModel != null)
@@ -1295,6 +1199,9 @@ namespace VSSonarExtensionUi.ViewModel
             }
         }
 
+        /// <summary>The get coverage in editor.</summary>
+        /// <param name="buffer">The buffer.</param>
+        /// <returns>The <see cref="Dictionary"/>.</returns>
         public Dictionary<int, CoverageElement> GetCoverageInEditor(string buffer)
         {
             if (this.SelectedView == this.ServerViewModel)

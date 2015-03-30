@@ -281,10 +281,6 @@
       <Project>{8AE4897A-EA74-49B1-BA55-D892C27AF9C9}</Project>
       <Name>DifferenceEngine</Name>
     </ProjectReference>
-    <ProjectReference Include="..\RoslynAdapter\RoslynAdapter.fsproj">
-      <Project>{496b669e-8cb4-41ac-b928-e84e3c820807}</Project>
-      <Name>RoslynAdapter</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SonarLocalAnalyser\SonarLocalAnalyser.fsproj">
       <Project>{a7d09c0c-efc5-4662-83b6-dae14e68c94c}</Project>
       <Name>SonarLocalAnalyser</Name>
