@@ -282,6 +282,10 @@
       <Project>{3311C918-B662-436D-8BC8-F38B447B1414}</Project>
       <Name>VSSonarPlugins</Name>
     </ProjectReference>   
+    <ProjectReference Include="..\VSSonarQubeCmdExecutor\VSSonarQubeCmdExecutor.fsproj">
+      <Project>{9b154406-0af6-45a9-bf32-9c5c23822b6b}</Project>
+      <Name>VSSonarQubeCmdExecutor</Name>
+    </ProjectReference>    
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
