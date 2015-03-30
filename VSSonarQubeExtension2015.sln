@@ -21,10 +21,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSSonarQubeStandalone", "VS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSSonarExtensionMetro2015", "VSSonarQubeExtensionMetro\VSSonarExtensionMetro2015.csproj", "{00245123-FEBB-4AF3-99E5-223142A598C8}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "RoslynAdapter", "RoslynAdapter\RoslynAdapter.fsproj", "{496B669E-8CB4-41AC-B928-E84E3C820807}"
-EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "RoslynAdapter.Test", "RoslynAdapter.Test\RoslynAdapter.Test.fsproj", "{3146E27C-401A-4E03-8D53-ED987EFEDA4D}"
-EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "VSSonarQubeCmdExecutor", "VSSonarQubeCmdExecutor\VSSonarQubeCmdExecutor.fsproj", "{9B154406-0AF6-45A9-BF32-9C5C23822B6B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSSonarExtensionUi.Test", "VSSonarExtensionUi.Test\VSSonarExtensionUi.Test.csproj", "{000DE400-B843-4C58-8A20-8ED95FE91FD3}"
