@@ -53,7 +53,7 @@ type RunAnalysisTests() =
 
         let mockAVsinterface =
             Mock<IConfigurationHelper>()
-                .Setup(fun x -> <@ x.ReadOptionFromApplicationData(VSSonarPlugins.GlobalIds.PluginEnabledControlId, "TestPlugin") @>).Returns("True")
+                .Setup(fun x -> <@ x.ReadSetting(any(), any(), any()) @>).Returns(new SonarQubeProperties(Value = "true"))
                 .Create()
 
         let mockAPlugin =

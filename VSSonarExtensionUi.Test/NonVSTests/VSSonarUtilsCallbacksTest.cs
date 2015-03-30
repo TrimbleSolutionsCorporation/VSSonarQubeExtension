@@ -21,6 +21,8 @@ namespace VSSonarExtensionUi.Helpers.Test.NonVSTests
 
     using NUnit.Framework;
 
+    using VSSonarPlugins.Helpers;
+
     /// <summary>
     /// The vs sonar utils callbacks test.
     /// </summary>

@@ -162,6 +162,11 @@
       <Project>{64728a55-1166-4ec6-b066-22c4e01fc1c7}</Project>
       <Private>True</Private>
     </ProjectReference>
+    <ProjectReference Include="..\VSSonarPlugins\VSSonarPlugins.csproj">
+      <Name>VSSonarPlugins</Name>
+      <Project>{3311c918-b662-436d-8bc8-f38b447b1414}</Project>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildFolder)\NunitRunnerTask.Targets" />
 </Project>

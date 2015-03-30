@@ -163,7 +163,6 @@
         $(OutputPath)\CredentialManagement.dll;
         $(OutputPath)\DifferenceEngine.dll;
         $(OutputPath)\VSSonarQubeCmdExecutor.dll;
-        $(OutputPath)\ExtensionHelpers.dll;
         $(OutputPath)\FSharp.Data.dll;
         $(OutputPath)\GalaSoft.MvvmLight.dll;
         $(OutputPath)\GalaSoft.MvvmLight.Extras.dll;

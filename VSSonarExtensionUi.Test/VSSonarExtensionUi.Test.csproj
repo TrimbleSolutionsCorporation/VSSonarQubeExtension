@@ -52,6 +52,9 @@
       <HintPath>..\packages\NUnitTestAdapter.1.2\lib\NUnit.VisualStudio.TestAdapter.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Rhino.Mocks">
+      <HintPath>..\references\Rhino.Mocks.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -96,6 +99,24 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="VSTests\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DifferenceEngine\DifferenceEngine.csproj">
+      <Project>{8ae4897a-ea74-49b1-ba55-d892c27af9c9}</Project>
+      <Name>DifferenceEngine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SonarRestService\SonarRestService.fsproj">
+      <Project>{64728a55-1166-4ec6-b066-22c4e01fc1c7}</Project>
+      <Name>SonarRestService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VSSonarExtensionUi\VSSonarExtensionUi.csproj">
+      <Project>{BC583A5D-931B-4ED9-AC2C-5667A37B3043}</Project>
+      <Name>VSSonarExtensionUi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VSSonarPlugins\VSSonarPlugins.csproj">
+      <Project>{3311c918-b662-436d-8bc8-f38b447b1414}</Project>
+      <Name>VSSonarPlugins</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
