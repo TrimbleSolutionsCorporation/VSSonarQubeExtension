@@ -16,9 +16,10 @@ namespace VSSonarPlugins
 {
     using System.Collections.Generic;
 
-    using ExtensionTypes;
+    
 
     using System.Diagnostics;
+    using VSSonarPlugins.Types;
 
     public interface IConfigurationHelper
     {
@@ -40,7 +41,9 @@ namespace VSSonarPlugins
 
         void SyncSettings();
 
-        void ResetSettings();
+        void ClearNonSavedSettings();
+
+        void DeleteSettingsFile();
 
         /// <summary>
         ///     The get user app data configuration file.

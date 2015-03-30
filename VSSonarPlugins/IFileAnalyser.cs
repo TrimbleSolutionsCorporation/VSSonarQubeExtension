@@ -18,7 +18,8 @@ namespace VSSonarPlugins
     using System.Threading;
     using System.Windows.Documents;
 
-    using ExtensionTypes;
+    
+    using VSSonarPlugins.Types;
 
 
     /// <summary>

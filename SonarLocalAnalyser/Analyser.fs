@@ -21,12 +21,12 @@ open System.IO
 open System.Diagnostics
 open System.Collections.Generic
 open VSSonarPlugins
-open ExtensionTypes
+open VSSonarPlugins.Types
+open VSSonarPlugins.Helpers
 open CommonExtensions
 open System.Diagnostics
 open Microsoft.Build.Utilities
 open SonarRestService
-open ExtensionHelpers
 open VSSonarQubeCmdExecutor
 open FSharp.Collections.ParallelSeq
 open System.Reflection
@@ -45,7 +45,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
     let localissues : System.Collections.Generic.List<Issue> = new System.Collections.Generic.List<Issue>()
     let mutable cachedProfiles : Map<string, Profile> = Map.empty
     let syncLock = new System.Object()
-    let mutable exec : CommandExecutor = new CommandExecutor(null, int64(1000 * 60 * 60)) // TODO timeout to be passed as parameter
+    let mutable exec : VSSonarQubeCmdExecutor = new VSSonarQubeCmdExecutor(null, int64(1000 * 60 * 60)) // TODO timeout to be passed as parameter
     let initializationDone = 
         vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.ExcludedPluginsKey, Value = "devcockpit,pdfreport,report,scmactivity,views,jira,scmstats", Context = Context.AnalysisGeneral, Owner = OwnersId.AnalysisOwnerId), false, true)
         vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.JavaExecutableKey, Value = @"C:\Program Files (x86)\Java\jre7\bin\java.exe", Context = Context.AnalysisGeneral, Owner = OwnersId.AnalysisOwnerId), false, true)
@@ -317,7 +317,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                 let commandData = new LocalAnalysisEventArgs("CMD: ", message, null)
                 stdOutEvent.Trigger([|x; commandData|])               
         
-            let errorCode = (exec :> ICommandExecutor).ExecuteCommand(runnerexec, incrementalArgs, SetupEnvironment(x,  x.Project.ActivePlatform, x.Project.ActiveConfiguration), x.ProcessOutputDataReceived, x.ProcessOutputDataReceived, x.ProjectRoot)
+            let errorCode = (exec :> IVSSonarQubeCmdExecutor).ExecuteCommand(runnerexec, incrementalArgs, SetupEnvironment(x,  x.Project.ActivePlatform, x.Project.ActiveConfiguration), x.ProcessOutputDataReceived, x.ProcessOutputDataReceived, x.ProjectRoot)
             if errorCode > 0 then
                 let errorInExecution = new LocalAnalysisEventArgs("LA", "Failed To Execute", new Exception("Error Code: " + errorCode.ToString()))
                 completionEvent.Trigger([|x; errorInExecution|])               
@@ -343,7 +343,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                 let commandData = new LocalAnalysisEventArgs("TODO SORT KEY", message, null)
                 stdOutEvent.Trigger([|x; commandData|])
           
-            let errorCode = (exec :> ICommandExecutor).ExecuteCommand(runnerexec, incrementalArgs, SetupEnvironment(x,  x.Project.ActivePlatform, x.Project.ActiveConfiguration), x.ProcessOutputDataReceived, x.ProcessOutputDataReceived, x.ProjectRoot)
+            let errorCode = (exec :> IVSSonarQubeCmdExecutor).ExecuteCommand(runnerexec, incrementalArgs, SetupEnvironment(x,  x.Project.ActivePlatform, x.Project.ActiveConfiguration), x.ProcessOutputDataReceived, x.ProcessOutputDataReceived, x.ProjectRoot)
             if errorCode > 0 then
                 let errorInExecution = new LocalAnalysisEventArgs("LA", "Failed To Execute", new Exception("Error Code: " + errorCode.ToString()))
                 completionEvent.Trigger([|x; errorInExecution|])               
@@ -369,7 +369,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                 let commandData = new LocalAnalysisEventArgs("CMD: ", message, null)
                 stdOutEvent.Trigger([|x; commandData|])         
          
-            let errorCode = (exec :> ICommandExecutor).ExecuteCommand(runnerexec, incrementalArgs, SetupEnvironment(x,  x.Project.ActivePlatform, x.Project.ActiveConfiguration), x.ProcessOutputDataReceived, x.ProcessOutputDataReceived, x.ProjectRoot)
+            let errorCode = (exec :> IVSSonarQubeCmdExecutor).ExecuteCommand(runnerexec, incrementalArgs, SetupEnvironment(x,  x.Project.ActivePlatform, x.Project.ActiveConfiguration), x.ProcessOutputDataReceived, x.ProcessOutputDataReceived, x.ProjectRoot)
             if errorCode > 0 then
                 let errorInExecution = new LocalAnalysisEventArgs("LA", "Failed To Execute", new Exception("Error Code: " + errorCode.ToString()))
                 completionEvent.Trigger([|x; errorInExecution|])               
@@ -419,7 +419,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                             
     member x.CancelExecution(thread : Thread) =
         if not(obj.ReferenceEquals(exec, null)) then
-            (exec :> ICommandExecutor).CancelExecution |> ignore
+            (exec :> IVSSonarQubeCmdExecutor).CancelExecution |> ignore
         ()
                    
     member x.IsMultiLanguageAnalysis(res : Resource) =
@@ -554,7 +554,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
             else
                 if not(obj.ReferenceEquals(exec, null)) then
                     try
-                        (exec :> ICommandExecutor).CancelExecution |> ignore
+                        (exec :> IVSSonarQubeCmdExecutor).CancelExecution |> ignore
                     with
                     | ex -> ()
 

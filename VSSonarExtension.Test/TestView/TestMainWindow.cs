@@ -17,7 +17,7 @@ namespace VSSonarExtension.Test.TestView
     using System.Threading;
     using System.Windows;
 
-    using ExtensionTypes;
+    
 
     using NUnit.Framework;
 

@@ -320,7 +320,7 @@ namespace VSSonarQubeExtension
             var plugin = SonarQubeViewModelFactory.SQViewModel.InUsePlugin;
             this.ShowToolWindow(
                 plugin.Value.GetUserControl(
-                SonarQubeViewModelFactory.SQViewModel.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig,
+                VSSonarExtensionUi.Helpers.AuthtenticationHelper.AuthToken,
                 SonarQubeViewModelFactory.SQViewModel.AssociatedProject,
                 SonarQubeViewModelFactory.SQViewModel.VsHelper),
                 plugin.Key,

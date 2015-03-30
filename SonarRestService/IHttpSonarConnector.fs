@@ -13,7 +13,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace SonarRestService
 
-open ExtensionTypes
+open VSSonarPlugins.Types
 open RestSharp
 
 type IHttpSonarConnector = 

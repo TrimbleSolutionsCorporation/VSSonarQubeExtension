@@ -21,7 +21,7 @@ namespace VSSonarQubeExtension.Helpers
 
     using EnvDTE80;
 
-    using ExtensionTypes;
+    
 
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Editor;
@@ -34,6 +34,7 @@ namespace VSSonarQubeExtension.Helpers
 
     using Process = System.Diagnostics.Process;
     using Thread = System.Threading.Thread;
+    using VSSonarPlugins.Types;
 
     /// <summary>
     ///     The vs properties helper.

@@ -15,8 +15,9 @@ namespace VSSonarPlugins
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using VSSonarPlugins.Types;
 
-    using ExtensionTypes;
+    
 
     /// <summary>
     ///     The PluginController interface.

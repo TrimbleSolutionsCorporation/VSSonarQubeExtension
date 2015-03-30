@@ -18,7 +18,7 @@ namespace VSSonarQubeExtension.Coverage
     using System.Threading;
     using System.Windows.Threading;
 
-    using ExtensionTypes;
+    
 
     using Microsoft.VisualStudio.Text;
     using Microsoft.VisualStudio.Text.Tagging;
@@ -27,6 +27,7 @@ namespace VSSonarQubeExtension.Coverage
 
     using VSSonarQubeExtension.Helpers;
     using System.Diagnostics;
+    using VSSonarPlugins.Types;
 
     /// <summary>
     ///     This tagger will provide tags for every word in the buffer that

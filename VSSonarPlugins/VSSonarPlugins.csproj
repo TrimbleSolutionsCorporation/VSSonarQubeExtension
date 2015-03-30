@@ -12,6 +12,7 @@
     <AssemblyName>VSSonarPlugins</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>49312c26</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,11 +34,20 @@
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="PropertyChanged">
+      <HintPath>..\packages\PropertyChanged.Fody.1.49.0\Lib\portable-net4+sl4+wp8+win8+wpa81+MonoAndroid16+MonoTouch40\PropertyChanged.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="RestSharp, Version=105.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\references\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Rhino.Licensing, Version=0.0.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\references\Rhino.Licensing.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
-    <Reference Include="System.IO.Compression" />
-    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -47,33 +57,62 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\VSSonarUtils.cs" />
+    <Compile Include="Helpers\VSSonarUtilsCallbacks.cs" />
+    <Compile Include="Helpers\VSSonarUtilsDifferenceHelpers.cs" />
     <Compile Include="IMenuCommandPlugin.cs" />
     <Compile Include="IPluginControlOption.cs" />
     <Compile Include="IVSSStatusBar.cs" />
-    <Compile Include="PluginSandBoxLoader.cs" />
-    <Compile Include="GlobalIds.cs" />
+    <Compile Include="Types\Alert.cs" />
+    <Compile Include="Types\BranchCoverage.cs" />
+    <Compile Include="Types\Characteristic.cs" />
+    <Compile Include="Types\Comment.cs" />
+    <Compile Include="Types\ConnectionConfiguration.cs" />
+    <Compile Include="Types\DuplicatedBlock.cs" />
+    <Compile Include="Types\DuplicatedGroup.cs" />
+    <Compile Include="Types\DuplicationData.cs" />
+    <Compile Include="Types\GlobalIds.cs" />
     <Compile Include="IPlugin.cs" />
     <Compile Include="IPluginController.cs" />
     <Compile Include="IFileAnalyser.cs" />
     <Compile Include="IAnalysisPlugin.cs" />
     <Compile Include="IAnalysisPluginLoader.cs" />
     <Compile Include="IVsEnvironmentHelper.cs" />
-    <Compile Include="LocalAnalysisEventArgs.cs" />
-    <Compile Include="PluginLoader.cs" />
-    <Compile Include="PluginController.cs" />
-    <Compile Include="PluginDescription.cs" />
-    <Compile Include="PluginException.cs" />
+    <Compile Include="Types\ISonarConfiguration.cs" />
+    <Compile Include="Types\Issue.cs" />
+    <Compile Include="Types\Line.cs" />
+    <Compile Include="Types\LineCoverage.cs" />
+    <Compile Include="Types\LocalAnalysisEventArgs.cs" />
+    <Compile Include="Types\Metric.cs" />
+    <Compile Include="Types\PluginDescription.cs" />
+    <Compile Include="Types\PluginException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SonarQubeProperties.cs" />
-    <Compile Include="VsProjectItem.cs" />
+    <Compile Include="Types\Profile.cs" />
+    <Compile Include="Types\Resource.cs" />
+    <Compile Include="Types\Rule.cs" />
+    <Compile Include="Types\RuleParam.cs" />
+    <Compile Include="Types\SonarProject.cs" />
+    <Compile Include="Types\SonarQubeProperties.cs" />
+    <Compile Include="Types\Source.cs" />
+    <Compile Include="Types\SourceCoverage.cs" />
+    <Compile Include="Types\SqaleConstants.cs" />
+    <Compile Include="Types\SqaleDefaultModel.cs" />
+    <Compile Include="Types\SubCharacteristics.cs" />
+    <Compile Include="Types\User.cs" />
+    <Compile Include="Types\VSLicense.cs" />
+    <Compile Include="Types\VsProjectItem.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="VSSonarPlugins.licenseheader" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ExtensionTypes\ExtensionTypes.csproj">
-      <Project>{75a39a9b-06b2-4249-9d3c-c2319951bc53}</Project>
-      <Name>ExtensionTypes</Name>
+    <Content Include="FodyWeavers.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DifferenceEngine\DifferenceEngine.csproj">
+      <Project>{8ae4897a-ea74-49b1-ba55-d892c27af9c9}</Project>
+      <Name>DifferenceEngine</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -85,4 +124,11 @@
   </Target>
   -->
   <Import Project="$(MSBuildFolder)\AssemblyPatcherTask.targets" />
+  <Import Project="..\packages\Fody.1.28.1\build\Fody.targets" Condition="Exists('..\packages\Fody.1.28.1\build\Fody.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Fody.1.28.1\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.1.28.1\build\Fody.targets'))" />
+  </Target>
 </Project>

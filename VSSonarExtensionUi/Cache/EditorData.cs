@@ -15,8 +15,9 @@
 namespace VSSonarExtensionUi.Cache
 {
     using System.Collections.Generic;
+    using VSSonarPlugins.Types;
 
-    using ExtensionTypes;
+    
 
     /// <summary>
     /// The editor data.

@@ -10,7 +10,6 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>VSSonarExtension.Test</RootNamespace>
     <AssemblyName>VSSonarExtension.Test</AssemblyName>
-    
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -71,9 +70,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="WindowsBase" />
-    <Reference Include="Xceed.Wpf.Toolkit">
-      <HintPath>$(ReferencesFolder)\Xceed.Wpf.Toolkit.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GeneralOptionsDialogsTest.cs" />
@@ -112,14 +108,6 @@
     <ProjectReference Include="..\DifferenceEngine\DifferenceEngine.csproj">
       <Project>{8AE4897A-EA74-49B1-BA55-D892C27AF9C9}</Project>
       <Name>DifferenceEngine</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ExtensionHelpers\ExtensionHelpers.csproj">
-      <Project>{82914bc7-eee5-49e7-ac2b-a7451a7a797d}</Project>
-      <Name>ExtensionHelpers</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ExtensionTypes\ExtensionTypes.csproj">
-      <Project>{75A39A9B-06B2-4249-9D3C-C2319951BC53}</Project>
-      <Name>ExtensionTypes</Name>
     </ProjectReference>
     <ProjectReference Include="..\SonarLocalAnalyser\SonarLocalAnalyser.fsproj">
       <Project>{a7d09c0c-efc5-4662-83b6-dae14e68c94c}</Project>

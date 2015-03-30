@@ -16,11 +16,12 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
 {
     using System;
 
-    using ExtensionTypes;
+    
 
     using SonarRestService;
 
     using VSSonarPlugins;
+    using VSSonarPlugins.Types;
 
     /// <summary>
     /// The OptionsViewModelBase interface.

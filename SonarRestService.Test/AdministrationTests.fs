@@ -6,7 +6,7 @@ open SonarRestService
 open Foq
 open System.IO
 
-open ExtensionTypes
+open VSSonarPlugins.Types
 
 type AdministrationTests() =
 

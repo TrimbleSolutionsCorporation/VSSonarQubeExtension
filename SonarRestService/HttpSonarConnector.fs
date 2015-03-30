@@ -18,7 +18,7 @@ open System.Net
 open System.Web
 open System.Text
 open System.IO
-open ExtensionTypes
+open VSSonarPlugins.Types
 open RestSharp
 
 type JsonSonarConnector() = 

@@ -21,7 +21,7 @@ open System.IO
 open VSSonarPlugins
 
 open SonarRestService
-open ExtensionTypes
+open VSSonarPlugins.Types
 
 type RunAnalysisTests() =
 

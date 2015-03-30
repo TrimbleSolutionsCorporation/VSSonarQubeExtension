@@ -1,103 +1,117 @@
 ﻿<controls:MetroWindow
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d" x:Class="VSSonarExtensionUi.View.Configuration.VSonarQubeOptionsView"
-        xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-        xmlns:viewconfiguration="clr-namespace:VSSonarExtensionUi.View.Configuration"
-        xmlns:configuration="clr-namespace:VSSonarExtensionUi.ViewModel.Configuration"
-        Title="VSSonarQube Options"
-        Height="472" Width="1040">
-	<Window.Resources>
-		<ResourceDictionary>
-			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/Styles.xaml"/>
+    xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+    xmlns:viewconfiguration="clr-namespace:VSSonarExtensionUi.View.Configuration"
+    xmlns:configuration="clr-namespace:VSSonarExtensionUi.ViewModel.Configuration"
+    Title="VSSonarQube Options"
+    Height="472" Width="1040">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/Styles.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
 
-                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/ButtonStyles.xaml"/>
+                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/ButtonStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-		    <DataTemplate DataType="{x:Type configuration:LicenseViewerViewModel}">
-                <viewconfiguration:LicenseViewerView/>
+            <DataTemplate DataType="{x:Type configuration:LicenseViewerViewModel}">
+                <viewconfiguration:LicenseViewerView />
             </DataTemplate>
-            
+
             <DataTemplate DataType="{x:Type configuration:AnalysisOptionsViewModel}">
-                <viewconfiguration:AnalysisOptionsView/>
+                <viewconfiguration:AnalysisOptionsView />
             </DataTemplate>
-            
+
             <DataTemplate DataType="{x:Type configuration:PluginManagerModel}">
-                <viewconfiguration:PluginManagerView/>
+                <viewconfiguration:PluginManagerView />
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type configuration:GeneralConfigurationViewModel}">
-                <viewconfiguration:GeneralConfigurationView/>
+                <viewconfiguration:GeneralConfigurationView />
             </DataTemplate>
 
         </ResourceDictionary>
-	</Window.Resources>
+    </Window.Resources>
 
     <Window.Background>
-        <SolidColorBrush Color="{Binding BackGroundColor, FallbackValue=White}"/>
+        <SolidColorBrush Color="{Binding BackGroundColor, FallbackValue=White}" />
     </Window.Background>
 
     <Window.Foreground>
-        <SolidColorBrush Color="{Binding ForeGroundColor, FallbackValue=Black}"/>
+        <SolidColorBrush Color="{Binding ForeGroundColor, FallbackValue=Black}" />
     </Window.Foreground>
-    <Border BorderBrush="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}" BorderThickness="1">
-    <Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="34*"/>
-			<RowDefinition Height="30"/>
-		</Grid.RowDefinitions>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition MinWidth="200" Width="200"/>
-			<ColumnDefinition MinWidth="820" Width="820"/>
-		</Grid.ColumnDefinitions>
-        
-        <ListBox x:Name="OptionsListBox"                    
-                 Grid.Column="0" Grid.Row="0" Margin="5"
-                 ItemsSource="{Binding AvailableOptions}"
-				 SelectedItem="{Binding SelectedOption}"
-                 SelectedIndex="0">			
-				<ListBox.ItemTemplate>
-					<DataTemplate>
-						<TextBlock Text="{Binding Header}" Padding="10"/>
-					</DataTemplate>
-				</ListBox.ItemTemplate>
-        </ListBox>
-        
-        <Border Grid.Column="1" Grid.Row="0" >
-            <ContentControl Content="{Binding ElementName=OptionsListBox, Path=SelectedItem}" Foreground="{Binding ForeGroundColor, FallbackValue=Black}" Background="{Binding BackGroundColor, FallbackValue=White}"/>
-        </Border>
-        
-		<Grid Grid.Column="1" Grid.Row="1">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="100"/>
-				<ColumnDefinition Width="100"/>
-				<ColumnDefinition Width="263*"/>
-				<ColumnDefinition Width="120"/>
-			</Grid.ColumnDefinitions>
-			<Button 
-                Style="{StaticResource MyMetroButton}"
-                Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
-                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"               
-                Content="Save and Exit" Command="{Binding SaveAndExitCommand}"/>
-            
-			<Button 
-                Style="{StaticResource MyMetroButton}"
-                Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
-                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}" 
-                x:Name="ApplyButton" Content="Apply" Grid.Column="1" Command="{Binding ApplyCommand}"/>
-			<Button
-                Style="{StaticResource MyMetroButton}"
-                Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
-                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}" 
-                Content="Cancel and Exit" Grid.Column="3" Command="{Binding CancelAndExitCommand}"/>			
-		</Grid>
-	</Grid>
+    <Border
+        BorderBrush="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
+        BorderThickness="1">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="34*" />
+                <RowDefinition Height="30" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MinWidth="200" Width="200" />
+                <ColumnDefinition MinWidth="820" Width="820" />
+            </Grid.ColumnDefinitions>
+
+            <ListBox x:Name="OptionsListBox"
+                     Grid.Column="0" Grid.Row="0" Margin="5"
+                     ItemsSource="{Binding AvailableOptions}"
+                     SelectedItem="{Binding SelectedOption}"
+                     SelectedIndex="0">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Header}" Padding="10" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <Border Grid.Column="1" Grid.Row="0">
+                <ContentControl Content="{Binding ElementName=OptionsListBox, Path=SelectedItem}"
+                                Foreground="{Binding ForeGroundColor, FallbackValue=Black}"
+                                Background="{Binding BackGroundColor, FallbackValue=White}" />
+            </Border>
+
+            <Grid Grid.Column="1" Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="263*" />
+                    <ColumnDefinition Width="120" />
+                </Grid.ColumnDefinitions>
+                <Button
+                    Style="{StaticResource MyMetroButton}"
+                    Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
+                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"
+                    Content="Save and Exit" Command="{Binding SaveAndExitCommand}" />
+
+                <Button
+                    Style="{StaticResource MyMetroButton}"
+                    Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
+                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"
+                    x:Name="ApplyButton" Content="Apply" Grid.Column="1" Command="{Binding ApplyCommand}" />
+
+                <Button
+                    Style="{StaticResource MyMetroButton}"
+                    Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
+                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"
+                    x:Name="ResetAllChanges" Content="Reset All Changes" Grid.Column="2" Command="{Binding ResetAllChangesCommand}" />
+                
+                <Button
+                    Style="{StaticResource MyMetroButton}"
+                    Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
+                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"
+                    Content="Cancel and Exit" Grid.Column="4" Command="{Binding CancelAndExitCommand}" />
+            </Grid>
+        </Grid>
     </Border>
 </controls:MetroWindow>

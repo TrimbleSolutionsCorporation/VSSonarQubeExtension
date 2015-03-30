@@ -94,11 +94,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
-    <ProjectReference Include="..\ExtensionTypes\ExtensionTypes.csproj">
-      <Name>ExtensionTypes</Name>
-      <Project>{75a39a9b-06b2-4249-9d3c-c2319951bc53}</Project>
-      <Private>True</Private>
-    </ProjectReference>
     <ProjectReference Include="..\SonarLocalAnalyser\SonarLocalAnalyser.fsproj">
       <Name>SonarLocalAnalyser</Name>
       <Project>{a7d09c0c-efc5-4662-83b6-dae14e68c94c}</Project>

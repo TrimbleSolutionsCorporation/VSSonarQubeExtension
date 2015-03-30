@@ -20,7 +20,7 @@ open Foq
 open System.IO
 open VSSonarPlugins
 
-open ExtensionTypes
+open VSSonarPlugins.Types
 open SonarRestService
 
 type SupportTests() =

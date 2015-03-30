@@ -18,7 +18,7 @@ namespace VSSonarExtensionUi.Menu
     using System.Collections.ObjectModel;
     using System.Windows.Input;
 
-    using ExtensionTypes;
+    
 
     using GalaSoft.MvvmLight.Command;
 
@@ -29,6 +29,7 @@ namespace VSSonarExtensionUi.Menu
     using VSSonarExtensionUi.ViewModel.Helpers;
 
     using VSSonarPlugins;
+    using VSSonarPlugins.Types;
 
     /// <summary>
     ///     The issue handler menu.

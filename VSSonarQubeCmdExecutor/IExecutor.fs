@@ -14,7 +14,7 @@ type ReturnCode =
    | Timeout = 1
    | NokAppSpecific = 2
 
-type ICommandExecutor = 
+type IVSSonarQubeCmdExecutor = 
   abstract member GetStdOut : list<string>
   abstract member GetStdError : list<string>
   abstract member GetErrorCode : ReturnCode
@@ -30,7 +30,7 @@ type ICommandExecutor =
   abstract member ExecuteCommand : string * string * Map<string, string> * (DataReceivedEventArgs -> unit) * (DataReceivedEventArgs -> unit) * string -> int
 
 
-type CommandExecutor(logger : TaskLoggingHelper, timeout : int64) =
+type VSSonarQubeCmdExecutor(logger : TaskLoggingHelper, timeout : int64) =
     let addEnvironmentVariable (startInfo:ProcessStartInfo) a b = startInfo.EnvironmentVariables.Add(a, b)
 
     let KillPrograms(currentProcessName : string) =
@@ -124,7 +124,7 @@ type CommandExecutor(logger : TaskLoggingHelper, timeout : int64) =
             Convert.ToInt32(mo.["ParentProcessId"])
 
 
-    interface ICommandExecutor with
+    interface IVSSonarQubeCmdExecutor with
         member this.GetStdOut =
             this.output
 

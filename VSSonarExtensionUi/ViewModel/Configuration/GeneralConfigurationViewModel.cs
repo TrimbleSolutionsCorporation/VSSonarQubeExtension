@@ -16,7 +16,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
     using CredentialManagement;
 
-    using ExtensionTypes;
+    
 
     using GalaSoft.MvvmLight.Command;
 
@@ -28,6 +28,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using VSSonarExtensionUi.ViewModel.Helpers;
 
     using VSSonarPlugins;
+    using VSSonarPlugins.Types;
+    using VSSonarExtensionUi.Helpers;
 
     /// <summary>
     ///     The sonar configuration view viewModel.
@@ -192,11 +194,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         ///     Gets or sets the test connection command.
         /// </summary>
         public RelayCommand<object> TestConnectionCommand { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the user connection config.
-        /// </summary>
-        public ISonarConfiguration UserConnectionConfig { get; set; }
 
         /// <summary>
         ///     Gets or sets the user defined editor.
@@ -395,14 +392,17 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             try
             {
                 string address = this.configurationHelper.ReadSetting(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, "ServerAddress").Value;
+                string bootatstart = this.configurationHelper.ReadSetting(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.IsConnectAtStartOn).Value;
 
-                this.UserConnectionConfig = new ConnectionConfiguration(
-                    address,
-                    cm.Username,
-                    ConnectionConfiguration.ConvertToUnsecureString(cm.SecurePassword));
-                this.UserName = cm.Username;
-                this.ServerAddress = address;
-                this.Password = ConnectionConfiguration.ConvertToUnsecureString(cm.SecurePassword);
+                if (address != null && bootatstart.Equals("true"))
+                {
+                    if (AuthtenticationHelper.EstablishAConnection(this.restService, address, cm.Username, ConnectionConfiguration.ConvertToUnsecureString(cm.SecurePassword)))
+                    {
+                        this.UserName = cm.Username;
+                        this.ServerAddress = address;
+                        this.Password = ConnectionConfiguration.ConvertToUnsecureString(cm.SecurePassword); 
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -447,13 +447,12 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             var passwordBox = obj as PasswordBox;
             if (passwordBox != null)
             {
-                string password = passwordBox.Password;
-
-                this.UserConnectionConfig = new ConnectionConfiguration(this.ServerAddress.TrimEnd('/'), this.UserName, password);
-
                 try
                 {
-                    if (this.restService.AuthenticateUser(this.UserConnectionConfig))
+                    string password = passwordBox.Password;
+                    AuthtenticationHelper.ResetConnection();
+
+                    if (AuthtenticationHelper.EstablishAConnection(this.restService, this.ServerAddress.TrimEnd('/'), this.UserName, password))
                     {
                         this.StatusMessage = "Authenticated";
                         this.SetCredentials(this.UserName, password);

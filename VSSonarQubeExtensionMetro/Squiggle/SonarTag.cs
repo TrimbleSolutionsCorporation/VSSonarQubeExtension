@@ -16,10 +16,11 @@ namespace VSSonarQubeExtension.Squiggle
     using System;
     using System.Collections.Generic;
 
-    using ExtensionTypes;
+    
 
     using Microsoft.VisualStudio.Text;
     using Microsoft.VisualStudio.Text.Tagging;
+    using VSSonarPlugins.Types;
 
     /// <summary>
     /// The spelling tag.

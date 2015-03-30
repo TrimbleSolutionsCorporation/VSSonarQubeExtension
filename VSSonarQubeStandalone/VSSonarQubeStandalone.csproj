@@ -149,14 +149,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ExtensionHelpers\ExtensionHelpers.csproj">
-      <Project>{82914bc7-eee5-49e7-ac2b-a7451a7a797d}</Project>
-      <Name>ExtensionHelpers</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ExtensionTypes\ExtensionTypes.csproj">
-      <Project>{75a39a9b-06b2-4249-9d3c-c2319951bc53}</Project>
-      <Name>ExtensionTypes</Name>
-    </ProjectReference>
     <ProjectReference Include="..\VSSonarExtensionUi\VSSonarExtensionUi.csproj">
       <Project>{bc583a5d-931b-4ed9-ac2c-5667a37b3043}</Project>
       <Name>VSSonarExtensionUi</Name>
@@ -172,7 +164,6 @@
         $(OutputPath)\DifferenceEngine.dll;
         $(OutputPath)\VSSonarQubeCmdExecutor.dll;
         $(OutputPath)\ExtensionHelpers.dll;
-        $(OutputPath)\ExtensionTypes.dll;
         $(OutputPath)\FSharp.Data.dll;
         $(OutputPath)\GalaSoft.MvvmLight.dll;
         $(OutputPath)\GalaSoft.MvvmLight.Extras.dll;

@@ -7,7 +7,7 @@ open Foq
 open System.IO
 open System.Web
 open System
-open ExtensionTypes
+open VSSonarPlugins.Types
 open RestSharp
 open System.Collections.ObjectModel
 

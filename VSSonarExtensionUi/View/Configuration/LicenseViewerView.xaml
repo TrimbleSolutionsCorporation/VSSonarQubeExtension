@@ -61,8 +61,14 @@
                 Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
 				Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"                    
                 Style="{StaticResource MyMetroButton}"
-                    Grid.Column="1" Grid.Row="1" x:Name="GenerateTokenButton" Content="Generate Token" Command="{Binding GenerateTokenCommand}" CommandParameter="{Binding Content, ElementName=GenerateTokenButton}" ToolTip="Copy Past Token and Fill the user property in the SonarQube server"/>				
-				<TextBox Grid.Column="0" Grid.Row="1"  TextWrapping="Wrap" Text="{Binding GeneratedToken}" />
+                    Grid.Column="1" Grid.Row="1" x:Name="GenerateTokenButton" Content="Generate Token" Command="{Binding GenerateTokenCommand}" CommandParameter="{Binding Content, ElementName=GenerateTokenButton}" ToolTip="Copy Past Token and Fill the user property in the SonarQube server"/>
+        <Button
+                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+				Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"                    
+                Style="{StaticResource MyMetroButton}"
+                    Grid.Column="2" Grid.Row="1" x:Name="Refresh" Content="Refresh" Command="{Binding RefreshCommand}" ToolTip="Copy Past Token and Fill the user property in the SonarQube server"/>
+
+        <TextBox Grid.Column="0" Grid.Row="1"  TextWrapping="Wrap" Text="{Binding GeneratedToken}" />
 			</Grid>
 
 </UserControl>

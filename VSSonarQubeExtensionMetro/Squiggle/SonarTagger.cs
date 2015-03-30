@@ -21,12 +21,13 @@ namespace VSSonarQubeExtension.Squiggle
     using System.Threading;
     using System.Windows.Threading;
 
-    using ExtensionTypes;
+    
 
     using Microsoft.VisualStudio.Text;
     using Microsoft.VisualStudio.Text.Tagging;
 
     using VSSonarQubeExtension.Helpers;
+    using VSSonarPlugins.Types;
 
     /// <summary>
     ///     The sonar tagger.

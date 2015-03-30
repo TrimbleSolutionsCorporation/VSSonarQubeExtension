@@ -13,7 +13,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace SonarRestService
 
-open ExtensionTypes
+open VSSonarPlugins.Types
 open System.Collections.ObjectModel
 open System
 open System.Web

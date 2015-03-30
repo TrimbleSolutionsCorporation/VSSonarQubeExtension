@@ -8,7 +8,7 @@ open System
 open System.Text
 open Foq
 open SonarRestService
-open ExtensionTypes
+open VSSonarPlugins.Types
 open ZeroMQ
 open System.Diagnostics
 

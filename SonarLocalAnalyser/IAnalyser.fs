@@ -20,11 +20,12 @@ open System.Threading
 open System.IO
 open System.Diagnostics
 open VSSonarPlugins
-open ExtensionTypes
+open VSSonarPlugins.Types
 open CommonExtensions
 open VSSonarQubeCmdExecutor
 open System.Diagnostics
 open Microsoft.Build.Utilities
+open VSSonarPlugins.Types
 
 type GlobalAnalysisIds = 
     static member ExcludedPluginsKey : string = "ExcludedPluginsKey"

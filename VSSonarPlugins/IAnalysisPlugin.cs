@@ -17,7 +17,8 @@ namespace VSSonarPlugins
     using System.Windows.Controls;
     using System.Windows.Documents;
 
-    using ExtensionTypes;
+    
+    using VSSonarPlugins.Types;
 
     /// <summary>
     /// The Plugin interface.

@@ -16,7 +16,7 @@ namespace VSSonarExtension.Test.TestViewModel
     using System;
     using System.Collections.Generic;
 
-    using ExtensionTypes;
+    
 
     using NUnit.Framework;
 

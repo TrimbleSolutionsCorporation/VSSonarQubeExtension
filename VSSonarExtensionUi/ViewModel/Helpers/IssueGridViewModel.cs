@@ -21,7 +21,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
     using System.Windows.Input;
     using System.Windows.Media;
 
-    using ExtensionTypes;
+    
 
     using GalaSoft.MvvmLight.Command;
 
@@ -31,7 +31,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
     using VSSonarExtensionUi.Menu;
 
     using VSSonarPlugins;
-    using ExtensionHelpers;
+    using VSSonarPlugins.Types;
 
     /// <summary>
     ///     The issue grid view viewModel.
@@ -551,7 +551,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 {
                     List<Resource> resources =
                         this.model.SonarRestConnector.GetResourcesData(
-                            this.model.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, 
+                            AuthtenticationHelper.AuthToken, 
                             issue.Component);
                     filename = resources[0].Name;
                 }
@@ -562,7 +562,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                     {
                         List<Resource> resources =
                             this.model.SonarRestConnector.GetResourcesData(
-                                this.model.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, 
+                                AuthtenticationHelper.AuthToken, 
                                 issue.ComponentSafe);
                         filename = resources[0].Name;
                     }
@@ -727,13 +727,11 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             var menu = new ObservableCollection<IMenuItem>
                            {
                                ChangeStatusHandler.MakeMenu(
-                                   this.model.VSonarQubeOptionsViewData.GeneralConfigurationViewModel
-                                   .UserConnectionConfig, 
+                                   AuthtenticationHelper.AuthToken, 
                                    this.model.SonarRestConnector, 
                                    this, this.model), 
                                OpenResourceMenu.MakeMenu(
-                                   this.model.VSonarQubeOptionsViewData.GeneralConfigurationViewModel
-                                   .UserConnectionConfig, 
+                                   AuthtenticationHelper.AuthToken, 
                                    this.model.SonarRestConnector, 
                                    this.Vsenvironmenthelper, 
                                    this)

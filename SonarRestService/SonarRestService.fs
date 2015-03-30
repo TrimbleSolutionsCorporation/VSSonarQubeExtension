@@ -16,7 +16,7 @@ namespace SonarRestService
 open FSharp.Data
 open FSharp.Data.JsonExtensions
 open RestSharp
-open ExtensionTypes
+open VSSonarPlugins.Types
 open System.Collections.ObjectModel
 open System
 open System.Web

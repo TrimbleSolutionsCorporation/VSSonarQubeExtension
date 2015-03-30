@@ -19,7 +19,7 @@ namespace ExtensionViewModel.Test
 
     using ExtensionHelpers;
 
-    using ExtensionTypes;
+    
 
     using NUnit.Framework;
 

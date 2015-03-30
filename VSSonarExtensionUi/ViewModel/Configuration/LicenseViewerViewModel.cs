@@ -13,7 +13,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using System.Collections.ObjectModel;
     using System.Windows.Media;
 
-    using ExtensionTypes;
+    
 
     using GalaSoft.MvvmLight.Command;
 
@@ -24,6 +24,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using VSSonarExtensionUi.ViewModel.Helpers;
 
     using VSSonarPlugins;
+    using VSSonarPlugins.Types;
+    using VSSonarExtensionUi.Helpers;
 
     /// <summary>
     /// The license viewer view model.
@@ -37,11 +39,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// The plugins.
         /// </summary>
         private readonly PluginManagerModel pluginModel;
-
-        /// <summary>
-        /// Gets or sets the connection configuration.
-        /// </summary>
-        private readonly ISonarConfiguration connectionConfiguration;
 
         private readonly IConfigurationHelper confHelper;
 
@@ -58,17 +55,17 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="configuration">
         /// The configuration.
         /// </param>
-        public LicenseViewerViewModel(PluginManagerModel plugincontroller, ISonarConfiguration configuration, IConfigurationHelper helper)
+        public LicenseViewerViewModel(PluginManagerModel plugincontroller, IConfigurationHelper helper)
         {
             this.Header = "License Manager";
             this.pluginModel = plugincontroller;
-            this.connectionConfiguration = configuration;
             this.confHelper = helper;
 
             this.AvailableLicenses = new ObservableCollection<VsLicense>();
-            this.AvailableLicenses = this.GetLicensesFromServer();
+            this.GetLicensesFromServer();
 
             this.GenerateTokenCommand = new RelayCommand(this.OnGenerateTokenCommand, () => this.SelectedLicense != null);
+            this.RefreshCommand = new RelayCommand(this.GetLicensesFromServer);
 
             this.ForeGroundColor = Colors.Black;
             this.ForeGroundColor = Colors.Black;
@@ -97,6 +94,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// Gets or sets the generate token command.
         /// </summary>
         public RelayCommand GenerateTokenCommand { get; set; }
+
+        public System.Windows.Input.ICommand RefreshCommand { get; set; }
 
         /// <summary>
         /// Gets or sets the generated token.
@@ -155,34 +154,34 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         ///     </see>
         ///     .
         /// </returns>
-        public ObservableCollection<VsLicense> GetLicensesFromServer()
+        public void GetLicensesFromServer()
         {
+            this.AvailableLicenses.Clear();
+
             var licenses = new ObservableCollection<VsLicense>();
 
             if (this.pluginModel != null)
             {
                 foreach (var plugin in this.pluginModel.AnalysisPlugins)
                 {
-                    GetLicenceForPlugin(licenses, plugin);
+                    GetLicenceForPlugin(this.AvailableLicenses, plugin);
                 }
 
                 foreach (var plugin in this.pluginModel.MenuPlugins)
                 {
-                    GetLicenceForPlugin(licenses, plugin);
+                    GetLicenceForPlugin(this.AvailableLicenses, plugin);
                 }
             }
-
-            return licenses;
         }
 
         private void GetLicenceForPlugin(ObservableCollection<VsLicense> licenses, IPlugin plugin)
         {
-            if (this.connectionConfiguration == null)
+            if (AuthtenticationHelper.AuthToken == null)
             {
                 return;
             }
 
-            Dictionary<string, VsLicense> lics = plugin.GetLicenses(this.connectionConfiguration);
+            Dictionary<string, VsLicense> lics = plugin.GetLicenses(AuthtenticationHelper.AuthToken);
             if (lics != null)
             {
                 foreach (var license in lics)
@@ -266,7 +265,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 string key = plugin.GetPluginDescription().Name;
                 if (this.SelectedLicense.ProductId.Contains(key))
                 {
-                    this.GeneratedToken = plugin.GenerateTokenId(this.connectionConfiguration);
+                    this.GeneratedToken = plugin.GenerateTokenId(AuthtenticationHelper.AuthToken);
                 }
             }
 
@@ -275,7 +274,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 string key = plugin.GetPluginDescription().Name;
                 if (this.SelectedLicense.ProductId.Contains(key))
                 {
-                    this.GeneratedToken = plugin.GenerateTokenId(this.connectionConfiguration);
+                    this.GeneratedToken = plugin.GenerateTokenId(AuthtenticationHelper.AuthToken);
                 }
             }
         }

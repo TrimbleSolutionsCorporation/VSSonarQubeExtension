@@ -49,24 +49,9 @@
     <Reference Include="System.ServiceModel" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NonVSTests\ConnectionConfigurationHelpersTests.cs" />
-    <Compile Include="NonVSTests\ReadWriteToApplicationDataTests.cs" />
-    <Compile Include="NonVSTests\VSSonarUtilsCallbacksTest.cs" />
-    <Compile Include="NonVSTests\VSSonarUtilsDifferenceHelpersTest.cs" />
-    <Compile Include="NonVSTests\VSSonarUtilsTest.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\DifferenceEngine\DifferenceEngine.csproj">
       <Project>{8ae4897a-ea74-49b1-ba55-d892c27af9c9}</Project>
       <Name>DifferenceEngine</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ExtensionHelpers\ExtensionHelpers.csproj">
-      <Project>{82914bc7-eee5-49e7-ac2b-a7451a7a797d}</Project>
-      <Name>ExtensionHelpers</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ExtensionTypes\ExtensionTypes.csproj">
-      <Project>{75a39a9b-06b2-4249-9d3c-c2319951bc53}</Project>
-      <Name>ExtensionTypes</Name>
     </ProjectReference>
     <ProjectReference Include="..\SonarRestService\SonarRestService.fsproj">
       <Project>{64728a55-1166-4ec6-b066-22c4e01fc1c7}</Project>
@@ -78,32 +63,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
-    <None Include="ExtensionHelpers.Test.licenseheader" />
-    <None Include="NonVSTests\TestData\sonar-runner\sonar-project.properties">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="NonVSTests\TestData\OriginalFileTest.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="NonVSTests\TestData\ModifyFileTest.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="NonVSTests\TestData\LocalSource.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="NonVSTests\TestData\maven\pom.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="NonVSTests\TestData\SonarSource.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Properties\" />
-    <Folder Include="VSTests\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

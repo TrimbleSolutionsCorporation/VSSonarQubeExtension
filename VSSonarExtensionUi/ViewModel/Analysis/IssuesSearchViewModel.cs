@@ -25,8 +25,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using System.Windows.Input;
     using System.Windows.Media;
 
-    using ExtensionTypes;
-
     using GalaSoft.MvvmLight.Command;
 
     using PropertyChanged;
@@ -36,6 +34,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using VSSonarExtensionUi.ViewModel.Helpers;
 
     using VSSonarPlugins;
+    using VSSonarPlugins.Types;
 
     /// <summary>
     ///     The issues search view model.

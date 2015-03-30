@@ -157,11 +157,6 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ExtensionTypes\ExtensionTypes.csproj">
-      <Name>ExtensionTypes</Name>
-      <Project>{75a39a9b-06b2-4249-9d3c-c2319951bc53}</Project>
-      <Private>True</Private>
-    </ProjectReference>
     <ProjectReference Include="..\SonarRestService\SonarRestService.fsproj">
       <Name>SonarRestService</Name>
       <Project>{64728a55-1166-4ec6-b066-22c4e01fc1c7}</Project>

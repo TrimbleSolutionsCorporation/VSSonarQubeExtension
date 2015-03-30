@@ -19,10 +19,6 @@ namespace VSSonarExtensionUi.ViewModel
     using System.Windows.Controls;
     using System.Windows.Media;
 
-    using ExtensionHelpers;
-
-    using ExtensionTypes;
-
     using GalaSoft.MvvmLight.Command;
 
     using Microsoft.CodeAnalysis;
@@ -43,6 +39,9 @@ namespace VSSonarExtensionUi.ViewModel
     using VSSonarExtensionUi.ViewModel.Helpers;
 
     using VSSonarPlugins;
+    using VSSonarExtensionUi.Helpers;
+    using VSSonarPlugins.Types;
+    using VSSonarPlugins.Helpers;
 
     /// <summary>
     ///     The changed event handler.
@@ -400,7 +399,7 @@ namespace VSSonarExtensionUi.ViewModel
 
         private void UpdateDiagnostics(Resource solResource)
         {
-            var profiles = this.SonarRestConnector.GetQualityProfilesForProject(this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, solResource.Key);
+            var profiles = this.SonarRestConnector.GetQualityProfilesForProject(AuthtenticationHelper.AuthToken, solResource.Key);
             var profile = new Profile();
 
             foreach (var profile1 in profiles)
@@ -412,7 +411,7 @@ namespace VSSonarExtensionUi.ViewModel
                 }
             }
 
-            this.SonarRestConnector.GetRulesForProfile(this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, profile);
+            this.SonarRestConnector.GetRulesForProfile(AuthtenticationHelper.AuthToken, profile);
 
             if (this.PublisherMessages == null)
             {
@@ -478,7 +477,7 @@ namespace VSSonarExtensionUi.ViewModel
                                          {
                                              Content =
                                                  plugin.Value.GetUserControl(
-                                                     this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, 
+                                                     AuthtenticationHelper.AuthToken, 
                                                      this.AssociatedProject, 
                                                      this.VsHelper)
                                          };
@@ -857,7 +856,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// </returns>
         private Resource AssociateSolutionWithSonarProject(string solutionName, string solutionPath)
         {
-            if (this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig == null)
+            if (AuthtenticationHelper.AuthToken == null)
             {
                 this.ErrorMessage = "User Not Logged In, Extension is Unusable. Configure User Settions in Tools > Options > Sonar";
                 return null;
@@ -874,7 +873,7 @@ namespace VSSonarExtensionUi.ViewModel
                 {
                     return
                         this.SonarRestConnector.GetResourcesData(
-                            this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig,
+                            AuthtenticationHelper.AuthToken,
                             prop.Value)[0];
                 }
                 catch (Exception ex)
@@ -891,7 +890,7 @@ namespace VSSonarExtensionUi.ViewModel
             return string.IsNullOrEmpty(sourceKey)
                        ? null
                        : this.SonarRestConnector.GetResourcesData(
-                           this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, 
+                           AuthtenticationHelper.AuthToken, 
                            sourceKey)[0];
         }
 
@@ -912,13 +911,13 @@ namespace VSSonarExtensionUi.ViewModel
             {
                 keyTypes[1] = this.LocalViewModel.LocalAnalyserModule.GetResourceKey(
                     this.VsHelper.VsProjectItem(fullName), 
-                    this.AssociatedProject, 
-                    this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, 
+                    this.AssociatedProject,
+                    AuthtenticationHelper.AuthToken, 
                     true);
                 keyTypes[2] = this.LocalViewModel.LocalAnalyserModule.GetResourceKey(
                     this.VsHelper.VsProjectItem(fullName), 
-                    this.AssociatedProject, 
-                    this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, 
+                    this.AssociatedProject,
+                    AuthtenticationHelper.AuthToken, 
                     false);
 
                 string tounix = this.VsHelper.GetProperFilePathCapitalization(fullName).Replace("\\", "/");
@@ -942,7 +941,7 @@ namespace VSSonarExtensionUi.ViewModel
                     this.Logger.WriteMessage("try key: " + key);
                     Resource toReturn =
                         this.SonarRestConnector.GetResourcesData(
-                            this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, 
+                            AuthtenticationHelper.AuthToken, 
                             key)[0];
                     string fileName = Path.GetFileName(fullName);
                     toReturn.Name = fileName;
@@ -1041,8 +1040,8 @@ namespace VSSonarExtensionUi.ViewModel
                 this.VsHelper,
                 this.configurationHelper,
                 this.SonarRestConnector, 
-                this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig);
-            this.LocalViewModel = new LocalViewModel(this, this.VSonarQubeOptionsViewData.PluginManager.AnalysisPlugins, this.SonarRestConnector, this.VsHelper, this.configurationHelper, this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig);
+                AuthtenticationHelper.AuthToken);
+            this.LocalViewModel = new LocalViewModel(this, this.VSonarQubeOptionsViewData.PluginManager.AnalysisPlugins, this.SonarRestConnector, this.VsHelper, this.configurationHelper, AuthtenticationHelper.AuthToken);
             this.IssuesSearchViewModel = new IssuesSearchViewModel(this, this.VsHelper, this.SonarRestConnector, this.configurationHelper);
 
             this.SonarQubeViews = new ObservableCollection<IAnalysisViewModelBase>
@@ -1157,7 +1156,7 @@ namespace VSSonarExtensionUi.ViewModel
             this.VSonarQubeOptionsViewData.RefreshPropertiesInView(this.SelectedProject);
             foreach (var view in this.SonarQubeViews)
             {
-                view.InitDataAssociation(this.AssociatedProject, this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, this.OpenSolutionPath);
+                view.InitDataAssociation(this.AssociatedProject, AuthtenticationHelper.AuthToken, this.OpenSolutionPath);
             }
         }
 
@@ -1241,14 +1240,14 @@ namespace VSSonarExtensionUi.ViewModel
         {
             try
             {
-                if (this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig == null)
+                if (AuthtenticationHelper.AuthToken == null)
                 {
                     var window = new VSonarQubeOptionsView(this.VSonarQubeOptionsViewData);
                     this.VSonarQubeOptionsViewData.SelectedOption = this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel;
                     window.ShowDialog();
                 }
 
-                if (this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig == null)
+                if (AuthtenticationHelper.AuthToken == null)
                 {
                     this.IsConnected = false;
                     return;
@@ -1261,14 +1260,14 @@ namespace VSSonarExtensionUi.ViewModel
                 this.ConnectionTooltip = "Authenticated, but no associated";
 
                 List<Resource> projects =
-                    this.SonarRestConnector.GetProjectsList(this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig);
+                    this.SonarRestConnector.GetProjectsList(AuthtenticationHelper.AuthToken);
                 if (projects != null && projects.Count > 0)
                 {
                     this.OnRefreshProjectList(projects);
                 }
 
                 this.SonarVersion =
-                    this.SonarRestConnector.GetServerInfo(this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig);
+                    this.SonarRestConnector.GetServerInfo(AuthtenticationHelper.AuthToken);
                 this.ErrorMessage = "Online";
             }
             catch (Exception ex)

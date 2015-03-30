@@ -74,7 +74,6 @@
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      
       <SpecificVersion>True</SpecificVersion>
       <Private>True</Private>
     </Reference>
@@ -116,9 +115,9 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ExtensionTypes\ExtensionTypes.csproj">
-      <Name>ExtensionTypes</Name>
-      <Project>{75a39a9b-06b2-4249-9d3c-c2319951bc53}</Project>
+    <ProjectReference Include="..\VSSonarPlugins\VSSonarPlugins.csproj">
+      <Name>VSSonarPlugins</Name>
+      <Project>{3311c918-b662-436d-8bc8-f38b447b1414}</Project>
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>

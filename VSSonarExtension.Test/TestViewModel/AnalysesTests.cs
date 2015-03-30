@@ -15,7 +15,7 @@ namespace VSSonarExtension.Test.TestViewModel
 {
     using System;
 
-    using ExtensionTypes;
+    
 
     using NUnit.Framework;
 

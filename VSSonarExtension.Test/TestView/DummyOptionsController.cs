@@ -17,7 +17,7 @@ namespace VSSonarExtension.Test.TestView
     using System.ComponentModel;
     using System.Windows.Controls;
 
-    using ExtensionTypes;
+    
 
     using VSSonarPlugins;
 

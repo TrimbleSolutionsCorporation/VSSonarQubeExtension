@@ -17,11 +17,12 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
     using System;
     using System.Collections.Generic;
 
-    using ExtensionTypes;
+    
 
     using SonarRestService;
 
     using VSSonarPlugins;
+    using VSSonarPlugins.Types;
 
     /// <summary>
     /// The AnalysisViewModelBase interface.

@@ -23,7 +23,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using System.Windows.Input;
     using System.Windows.Media;
 
-    using ExtensionTypes;
+    
 
     using GalaSoft.MvvmLight.Command;
 
@@ -40,6 +40,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using VSSonarPlugins;
 
     using Application = System.Windows.Application;
+    using VSSonarPlugins.Types;
 
     /// <summary>
     ///     The analysis types.
@@ -673,26 +674,26 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                             itemInView, 
                             this.AssociatedProject, 
                             this.sonarQubeViewModel.AnalysisChangeLines, 
-                            this.sonarQubeViewModel.SonarVersion, 
-                            this.sonarQubeViewModel.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig);
+                            this.sonarQubeViewModel.SonarVersion,
+                            AuthtenticationHelper.AuthToken);
                         break;
                     case AnalysisTypes.ANALYSIS:
                         this.LocalAnalyserModule.RunFullAnalysis(
                             this.AssociatedProject, 
-                            this.sonarQubeViewModel.SonarVersion, 
-                            this.sonarQubeViewModel.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig);
+                            this.sonarQubeViewModel.SonarVersion,
+                            AuthtenticationHelper.AuthToken);
                         break;
                     case AnalysisTypes.INCREMENTAL:
                         this.LocalAnalyserModule.RunIncrementalAnalysis(
                             this.AssociatedProject, 
-                            this.sonarQubeViewModel.SonarVersion, 
-                            this.sonarQubeViewModel.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig);
+                            this.sonarQubeViewModel.SonarVersion,
+                            AuthtenticationHelper.AuthToken);
                         break;
                     case AnalysisTypes.PREVIEW:
                         this.LocalAnalyserModule.RunPreviewAnalysis(
                             this.AssociatedProject, 
-                            this.sonarQubeViewModel.SonarVersion, 
-                            this.sonarQubeViewModel.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig);
+                            this.sonarQubeViewModel.SonarVersion,
+                            AuthtenticationHelper.AuthToken);
                         break;
                 }
             }
@@ -757,7 +758,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                             {
                                 this.IssuesGridView.UpdateIssues(
                                     this.LocalAnalyserModule.GetIssues(
-                                        this.sonarQubeViewModel.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserConnectionConfig, 
+                                        AuthtenticationHelper.AuthToken, 
                                         this.AssociatedProject));
                                 this.OnSelectedViewChanged();
                             });

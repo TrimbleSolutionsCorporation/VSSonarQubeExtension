@@ -3,7 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:helpers="clr-namespace:VSSonarExtensionUi.Helpers"
     xmlns:system="clr-namespace:System;assembly=mscorlib"
-	xmlns:extensionTypes="clr-namespace:ExtensionTypes;assembly=ExtensionTypes"
+	xmlns:extensionTypes="clr-namespace:VSSonarPlugins.Types;assembly=VSSonarPlugins"
 	xmlns:themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
 	xmlns:converters="clr-namespace:VSSonarExtensionUi.Converters">
 

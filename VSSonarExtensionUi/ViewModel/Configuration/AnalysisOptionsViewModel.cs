@@ -24,10 +24,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using System.Windows.Forms;
     using System.Windows.Media;
 
-    using ExtensionHelpers;
-
-    using ExtensionTypes;
-
     using GalaSoft.MvvmLight.Command;
 
     using PropertyChanged;
@@ -40,6 +36,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using VSSonarExtensionUi.ViewModel.Helpers;
 
     using VSSonarPlugins;
+    using VSSonarPlugins.Types;
 
     /// <summary>
     ///     The dummy options controller.

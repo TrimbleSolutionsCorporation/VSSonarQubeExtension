@@ -1,32 +1,19 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="VSonarQubeOptionsViewModel.cs" company="Copyright © 2014 Tekla Corporation. Tekla is a Trimble Company">
-//     Copyright (C) 2014 [Jorge Costa, Jorge.Costa@tekla.com]
+//   Copyright (C) 2014 [Jorge Costa, Jorge.Costa@tekla.com]
 // </copyright>
+// <summary>
+//   The plugins options model.
+// </summary>
 // --------------------------------------------------------------------------------------------------------------------
-// This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
-// as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
-// of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. 
-// You should have received a copy of the GNU Lesser General Public License along with this program; if not, write to the Free
-// Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// --------------------------------------------------------------------------------------------------------------------
-
 namespace VSSonarExtensionUi.ViewModel.Configuration
 {
     using System;
-    using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Diagnostics;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
+    using System.Windows;
     using System.Windows.Controls;
+    using System.Windows.Input;
     using System.Windows.Media;
-
-    using ExtensionHelpers;
-
-    using ExtensionTypes;
 
     using GalaSoft.MvvmLight.Command;
 
@@ -34,9 +21,11 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
     using SonarRestService;
 
+    using VSSonarExtensionUi.Helpers;
     using VSSonarExtensionUi.ViewModel.Helpers;
 
     using VSSonarPlugins;
+    using VSSonarPlugins.Types;
 
     /// <summary>
     ///     The plugins options model.
@@ -44,35 +33,19 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     [ImplementPropertyChanged]
     public class VSonarQubeOptionsViewModel : IViewModelBase
     {
-        #region Fields
-
-        /// <summary>
-        ///     The model.
-        /// </summary>
-        private readonly SonarQubeViewModel model;
-
-        private readonly INotificationManager notifycationManager;
-
-        #endregion
-
         #region Constructors and Destructors
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VSonarQubeOptionsViewModel"/> class.
-        /// </summary>
-        /// <param name="plugincontroller">
-        /// The plugincontroller.
-        /// </param>
-        /// <param name="model">
-        /// The model.
-        /// </param>
-        /// <param name="vsHelper">
-        /// The vs helper.
-        /// </param>
-        public VSonarQubeOptionsViewModel(PluginController plugincontroller,
-            SonarQubeViewModel model,
-            IVsEnvironmentHelper vsHelper,
-            IConfigurationHelper configurationHelper,
+        /// <summary>Initializes a new instance of the <see cref="VSonarQubeOptionsViewModel"/> class.</summary>
+        /// <param name="plugincontroller">The plugincontroller.</param>
+        /// <param name="model">The model.</param>
+        /// <param name="vsHelper">The vs helper.</param>
+        /// <param name="configurationHelper">The configuration Helper.</param>
+        /// <param name="notificationManager">The notification Manager.</param>
+        public VSonarQubeOptionsViewModel(
+            PluginController plugincontroller, 
+            SonarQubeViewModel model, 
+            IVsEnvironmentHelper vsHelper, 
+            IConfigurationHelper configurationHelper, 
             INotificationManager notificationManager)
         {
             this.notifycationManager = notificationManager;
@@ -92,7 +65,18 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         ///     The request close.
         /// </summary>
         public event Action<object, object> RequestClose;
-        
+
+        #endregion
+
+        #region Fields
+
+        /// <summary>
+        ///     The model.
+        /// </summary>
+        private readonly SonarQubeViewModel model;
+
+        /// <summary>The notifycation manager.</summary>
+        private readonly INotificationManager notifycationManager;
 
         #endregion
 
@@ -107,6 +91,9 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         ///     Gets or sets the apply command.
         /// </summary>
         public RelayCommand ApplyCommand { get; set; }
+
+        /// <summary>Gets or sets the reset all changes command.</summary>
+        public ICommand ResetAllChangesCommand { get; set; }
 
         /// <summary>
         ///     Gets the available plugins collection.
@@ -183,39 +170,28 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         public IVsEnvironmentHelper Vsenvironmenthelper { get; set; }
 
+        /// <summary>Gets or sets the configuration helper.</summary>
         public IConfigurationHelper ConfigurationHelper { get; set; }
 
         #endregion
 
         #region Public Methods and Operators
 
-        /// <summary>
-        /// The update services.
-        /// </summary>
-        /// <param name="restServiceIn">
-        /// The rest service in.
-        /// </param>
-        /// <param name="vsenvironmenthelperIn">
-        /// The vsenvironmenthelper in.
-        /// </param>
-        /// <param name="statusBar">
-        /// The status bar.
-        /// </param>
-        /// <param name="provider">
-        /// The provider.
-        /// </param>
+        /// <summary>The update services.</summary>
+        /// <param name="restServiceIn">The rest service in.</param>
+        /// <param name="vsenvironmenthelperIn">The vsenvironmenthelper in.</param>
+        /// <param name="statusBar">The status bar.</param>
+        /// <param name="provider">The provider.</param>
         public void UpdateServices(
-            ISonarRestService restServiceIn,
-            IVsEnvironmentHelper vsenvironmenthelperIn,
-            IVSSStatusBar statusBar,
+            ISonarRestService restServiceIn, 
+            IVsEnvironmentHelper vsenvironmenthelperIn, 
+            IVSSStatusBar statusBar, 
             IServiceProvider provider)
         {
             this.Vsenvironmenthelper = vsenvironmenthelperIn;
         }
 
-        /// <summary>
-        ///     The refresh general properties.
-        /// </summary>
+        /// <summary>The refresh general properties.</summary>
         /// <param name="selectedProject"></param>
         public void RefreshPropertiesInView(Resource selectedProject)
         {
@@ -248,14 +224,16 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         }
 
         /// <summary>
-        /// The update colours.
+        ///     The end data association.
         /// </summary>
-        /// <param name="background">
-        /// The background.
-        /// </param>
-        /// <param name="foreground">
-        /// The foreground.
-        /// </param>
+        public void EndDataAssociation()
+        {
+            this.Project = null;
+        }
+
+        /// <summary>The update colours.</summary>
+        /// <param name="background">The background.</param>
+        /// <param name="foreground">The foreground.</param>
         public void UpdateColours(Color background, Color foreground)
         {
             this.BackGroundColor = background;
@@ -266,15 +244,9 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
         #region Methods
 
-        /// <summary>
-        /// The update theme.
-        /// </summary>
-        /// <param name="background">
-        /// The background.
-        /// </param>
-        /// <param name="foreground">
-        /// The foreground.
-        /// </param>
+        /// <summary>The update theme.</summary>
+        /// <param name="background">The background.</param>
+        /// <param name="foreground">The foreground.</param>
         internal void UpdateTheme(Color background, Color foreground)
         {
             this.BackGroundColor = background;
@@ -286,18 +258,12 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             }
         }
 
-        /// <summary>
-        /// The on request close.
-        /// </summary>
-        /// <param name="arg1">
-        /// The arg 1.
-        /// </param>
-        /// <param name="arg2">
-        /// The arg 2.
-        /// </param>
+        /// <summary>The on request close.</summary>
+        /// <param name="arg1">The arg 1.</param>
+        /// <param name="arg2">The arg 2.</param>
         protected void OnRequestClose(object arg1, object arg2)
         {
-            Action<object, object> handler = this.RequestClose;
+            var handler = this.RequestClose;
             if (handler != null)
             {
                 handler(arg1, arg2);
@@ -312,25 +278,50 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.SaveAndExitCommand = new RelayCommand(this.OnSaveAndExitCommand);
 
             this.ApplyCommand = new RelayCommand(this.OnApplyCommand);
-
+            this.ResetAllChangesCommand = new RelayCommand(this.OnResetAllChangesCommand);
             this.CancelAndExitCommand = new RelayCommand(this.OnCancelAndExitCommand);
         }
 
-        /// <summary>
-        ///     The init models.
-        /// </summary>
+        /// <summary>The on reset all changes command.</summary>
+        private void OnResetAllChangesCommand()
+        {
+            var result = MessageBox.Show(
+                "This will delete all saved settings, VS will restart after the reset. Are  you sure? ", 
+                "Reset saved settings", 
+                MessageBoxButton.YesNo, 
+                MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+            {
+                this.ConfigurationHelper.DeleteSettingsFile();
+                this.Vsenvironmenthelper.RestartVisualStudio();
+            }
+        }
+
+        /// <summary>The init models.</summary>
+        /// <param name="plugincontroller">The plugincontroller.</param>
         private void InitModels(PluginController plugincontroller)
         {
             this.AvailableOptions = new ObservableCollection<IOptionsViewModelBase>();
 
-            this.GeneralConfigurationViewModel = new GeneralConfigurationViewModel(this, this.model.SonarRestConnector, this.Vsenvironmenthelper, this.model, this.ConfigurationHelper);
-            this.AnalysisOptionsViewModel = new AnalysisOptionsViewModel(this.Vsenvironmenthelper, this, this.ConfigurationHelper);
+            this.GeneralConfigurationViewModel = new GeneralConfigurationViewModel(
+                this, 
+                this.model.SonarRestConnector, 
+                this.Vsenvironmenthelper, 
+                this.model, 
+                this.ConfigurationHelper);
+            this.AnalysisOptionsViewModel = new AnalysisOptionsViewModel(
+                this.Vsenvironmenthelper, 
+                this, 
+                this.ConfigurationHelper);
             this.PluginManager = new PluginManagerModel(
                 plugincontroller, 
-                this.GeneralConfigurationViewModel.UserConnectionConfig, 
-                this.Vsenvironmenthelper, this.ConfigurationHelper, 
-                this, this.model, this.notifycationManager);
-            this.LicenseManager = new LicenseViewerViewModel(this.PluginManager, this.GeneralConfigurationViewModel.UserConnectionConfig, this.ConfigurationHelper);
+                AuthtenticationHelper.AuthToken, 
+                this.Vsenvironmenthelper, 
+                this.ConfigurationHelper, 
+                this, 
+                this.model, 
+                this.notifycationManager);
+            this.LicenseManager = new LicenseViewerViewModel(this.PluginManager, this.ConfigurationHelper);
 
             this.AvailableOptions.Add(this.GeneralConfigurationViewModel);
             this.AvailableOptions.Add(this.AnalysisOptionsViewModel);
@@ -352,7 +343,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         private void OnCancelAndExitCommand()
         {
-            this.ConfigurationHelper.ResetSettings();
+            this.ConfigurationHelper.ClearNonSavedSettings();
             this.OnRequestClose(this, "Exit");
         }
 
@@ -361,7 +352,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         private void OnSaveAndExitCommand()
         {
-            foreach (var option in AvailableOptions)
+            foreach (var option in this.AvailableOptions)
             {
                 option.SaveCurrentViewToDisk(this.ConfigurationHelper);
             }
@@ -371,13 +362,5 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         }
 
         #endregion
-
-        /// <summary>
-        /// The end data association.
-        /// </summary>
-        public void EndDataAssociation()
-        {
-            this.Project = null;
-        }
     }
 }

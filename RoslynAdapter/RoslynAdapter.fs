@@ -10,7 +10,7 @@ open System.Reflection
 open Microsoft.CodeAnalysis.CodeFixes
 open Microsoft.CodeAnalysis.Diagnostics
 open Microsoft.CodeAnalysis
-open ExtensionTypes
+open VSSonarPlugins.Types
 open ZeroMQ
 open System.Threading
 open System.Diagnostics

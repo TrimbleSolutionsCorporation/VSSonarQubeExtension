@@ -14,10 +14,11 @@
 namespace VSSonarPlugins
 {
     using System.Windows.Media;
-    using ExtensionTypes;
+    
     using System.Collections.Generic;
     using System.Windows.Controls;
     using System;
+    using VSSonarPlugins.Types;
 
     public class Message
     {

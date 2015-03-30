@@ -77,7 +77,10 @@
       <Private>True</Private>
       <HintPath>..\packages\System.Collections.Immutable.1.1.33-beta\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
     </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity">
       <HintPath>..\packages\MahApps.Metro.1.1.2.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
@@ -96,8 +99,13 @@
     <Compile Include="Converters\InverseBooleanConverter.cs" />
     <Compile Include="Converters\ConfigurableBooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\UrlToImageSourceConverter.cs" />
+    <Compile Include="Helpers\ConfigurationHelper.cs" />
+    <Compile Include="Helpers\ConnectionConfigurationHelpers.cs" />
     <Compile Include="Helpers\PaginatedObservableCollection.cs" />
     <Compile Include="Helpers\PasswordHelper.cs" />
+    <Compile Include="Helpers\PluginController.cs" />
+    <Compile Include="Helpers\PluginLoader.cs" />
+    <Compile Include="Helpers\PluginSandBoxLoader.cs" />
     <Compile Include="Helpers\TextBoxBehaviour.cs" />
     <Compile Include="Menu\OpenResourceMenu.cs" />
     <Compile Include="SampleData\DatagridSampleData\DatagridSampleData.xaml.cs">
@@ -270,6 +278,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Helpers\ExtensionHelpers.licenseheader" />
     <None Include="packages.config" />
     <None Include="VSSonarExtensionUi.licenseheader" />
   </ItemGroup>
@@ -277,14 +286,6 @@
     <ProjectReference Include="..\DifferenceEngine\DifferenceEngine.csproj">
       <Project>{8AE4897A-EA74-49B1-BA55-D892C27AF9C9}</Project>
       <Name>DifferenceEngine</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ExtensionHelpers\ExtensionHelpers.csproj">
-      <Project>{82914BC7-EEE5-49E7-AC2B-A7451A7A797D}</Project>
-      <Name>ExtensionHelpers</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ExtensionTypes\ExtensionTypes.csproj">
-      <Project>{75a39a9b-06b2-4249-9d3c-c2319951bc53}</Project>
-      <Name>ExtensionTypes</Name>
     </ProjectReference>
     <ProjectReference Include="..\RoslynAdapter\RoslynAdapter.fsproj">
       <Project>{496b669e-8cb4-41ac-b928-e84e3c820807}</Project>

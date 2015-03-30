@@ -19,7 +19,7 @@ open System.IO
 open System.Reflection
 open System
 open System.ComponentModel 
-open ExtensionTypes
+open VSSonarPlugins.Types
 
 type SqaleModelType = XmlProvider<"""<?xml version="1.0"?>
 <sqale>

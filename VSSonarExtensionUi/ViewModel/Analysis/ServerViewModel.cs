@@ -21,9 +21,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using System.Windows.Input;
     using System.Windows.Media;
 
-    using ExtensionHelpers;
-
-    using ExtensionTypes;
 
     using GalaSoft.MvvmLight.Command;
 
@@ -35,6 +32,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using VSSonarExtensionUi.ViewModel.Helpers;
 
     using VSSonarPlugins;
+    using VSSonarPlugins.Types;
+    using VSSonarPlugins.Helpers;
 
     /// <summary>
     ///     The server view model.

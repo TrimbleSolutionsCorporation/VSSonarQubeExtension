@@ -50,33 +50,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Alert.cs" />
-    <Compile Include="BranchCoverage.cs" />
-    <Compile Include="Comment.cs" />
-    <Compile Include="ISonarConfiguration.cs" />
-    <Compile Include="ConnectionConfiguration.cs" />
-    <Compile Include="DuplicatedBlock.cs" />
-    <Compile Include="DuplicatedGroup.cs" />
-    <Compile Include="DuplicationData.cs" />
-    <Compile Include="Characteristic.cs" />
-    <Compile Include="Issue.cs" />
-    <Compile Include="Line.cs" />
-    <Compile Include="LineCoverage.cs" />
-    <Compile Include="Metric.cs" />
-    <Compile Include="Profile.cs" />
     <Compile Include="Properties\Annotations.cs" />
-    <Compile Include="RuleParam.cs" />
-    <Compile Include="SonarProject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resource.cs" />
-    <Compile Include="Rule.cs" />
-    <Compile Include="Source.cs" />
-    <Compile Include="SourceCoverage.cs" />
-    <Compile Include="SqaleConstants.cs" />
-    <Compile Include="SqaleDefaultModel.cs" />
-    <Compile Include="SubCharacteristics.cs" />
-    <Compile Include="User.cs" />
-    <Compile Include="VSLicense.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="FodyWeavers.xml" />

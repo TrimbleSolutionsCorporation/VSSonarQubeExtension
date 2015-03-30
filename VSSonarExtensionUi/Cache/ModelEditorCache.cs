@@ -20,9 +20,10 @@ namespace VSSonarExtensionUi.Cache
 
     using DifferenceEngine;
 
-    using ExtensionHelpers;
+    using VSSonarPlugins.Types;
+    using VSSonarPlugins.Helpers;
 
-    using ExtensionTypes;
+    
 
     /// <summary>
     ///     The coverage element.
