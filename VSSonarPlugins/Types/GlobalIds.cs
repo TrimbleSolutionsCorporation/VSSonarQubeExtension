@@ -34,6 +34,8 @@ namespace VSSonarPlugins.Types
         FileAnalysisProperties,
         [Description("SQAnalysisProperties")]
         SQAnalysisProperties,
+        [Description("MenuPluginProperties")]
+        MenuPluginProperties,
     }
 
     /// <summary>

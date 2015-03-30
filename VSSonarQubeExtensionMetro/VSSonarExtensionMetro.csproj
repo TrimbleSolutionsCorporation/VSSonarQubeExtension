@@ -120,19 +120,19 @@
     </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="Microsoft.CodeAnalysis">
-      <HintPath>..\packages\Microsoft.CodeAnalysis.Common1.0.0-rc1\lib\portable-net45+win8\Microsoft.CodeAnalysis.dll</HintPath>
+      <HintPath>..\packages\Microsoft.CodeAnalysis.Common.1.0.0-rc1\lib\portable-net45+win8\Microsoft.CodeAnalysis.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CodeAnalysis.CSharp">
-      <HintPath>..\packages\Microsoft.CodeAnalysis.CSharp1.0.0-rc1\lib\portable-net45+win8\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
+      <HintPath>..\packages\Microsoft.CodeAnalysis.CSharp.1.0.0-rc1\lib\portable-net45+win8\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CodeAnalysis.CSharp.Workspaces">
-      <HintPath>..\packages\Microsoft.CodeAnalysis.CSharp.Workspaces1.0.0-rc1\lib\portable-net45+win8\Microsoft.CodeAnalysis.CSharp.Workspaces.dll</HintPath>
+      <HintPath>..\packages\Microsoft.CodeAnalysis.CSharp.Workspaces.1.0.0-rc1\lib\portable-net45+win8\Microsoft.CodeAnalysis.CSharp.Workspaces.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CodeAnalysis.Workspaces">
-      <HintPath>..\packages\Microsoft.CodeAnalysis.Workspaces.Common1.0.0-rc1\lib\portable-net45+win8\Microsoft.CodeAnalysis.Workspaces.dll</HintPath>
+      <HintPath>..\packages\Microsoft.CodeAnalysis.Workspaces.Common.1.0.0-rc1\lib\portable-net45+win8\Microsoft.CodeAnalysis.Workspaces.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Composition.AttributedModel">

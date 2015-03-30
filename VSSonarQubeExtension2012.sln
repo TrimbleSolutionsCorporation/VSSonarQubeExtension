@@ -9,12 +9,6 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SonarRestService", "SonarRe
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SonarRestService.Test", "SonarRestService.Test\SonarRestService.Test.fsproj", "{B9A5F92C-0B80-426C-B0D7-F94C26E6B77D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtensionTypes", "ExtensionTypes\ExtensionTypes.csproj", "{75A39A9B-06B2-4249-9D3C-C2319951BC53}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtensionHelpers", "ExtensionHelpers\ExtensionHelpers.csproj", "{82914BC7-EEE5-49E7-AC2B-A7451A7A797D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtensionHelpers.Test", "ExtensionHelpers.Test\ExtensionHelpers.Test.csproj", "{CEE9747C-4A18-46D3-8BAA-F07902C09843}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSSonarPlugins", "VSSonarPlugins\VSSonarPlugins.csproj", "{3311C918-B662-436D-8BC8-F38B447B1414}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SonarLocalAnalyser", "SonarLocalAnalyser\SonarLocalAnalyser.fsproj", "{A7D09C0C-EFC5-4662-83B6-DAE14E68C94C}"
@@ -31,7 +25,7 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "RoslynAdapter", "RoslynAdap
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "RoslynAdapter.Test", "RoslynAdapter.Test\RoslynAdapter.Test.fsproj", "{3146E27C-401A-4E03-8D53-ED987EFEDA4D}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "CommandExecutor", "CommandExecutor\CommandExecutor.fsproj", "{9B154406-0AF6-45A9-BF32-9C5C23822B6B}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "VSSonarQubeCmdExecutor", "VSSonarQubeCmdExecutor\VSSonarQubeCmdExecutor.fsproj", "{9B154406-0AF6-45A9-BF32-9C5C23822B6B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

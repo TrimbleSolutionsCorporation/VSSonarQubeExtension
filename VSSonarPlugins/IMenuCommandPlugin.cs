@@ -17,8 +17,6 @@ namespace VSSonarPlugins
     using System.Windows.Media;
     using VSSonarPlugins.Types;
 
-    
-
     /// <summary>
     /// The MenuCommandPlugin interface.
     /// </summary>
