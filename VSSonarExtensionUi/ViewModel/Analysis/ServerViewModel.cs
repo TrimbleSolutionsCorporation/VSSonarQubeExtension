@@ -228,6 +228,12 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.localEditorCache.ClearData();
         }
 
+        /// <summary>The trigger a project analysis.</summary>
+        /// <param name="project">The project.</param>
+        public void TriggerAProjectAnalysis(VsProjectItem project)
+        {
+        }
+
         /// <summary>
         ///     The end data association.
         /// </summary>

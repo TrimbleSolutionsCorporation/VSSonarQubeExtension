@@ -144,7 +144,7 @@ namespace VSSonarExtensionUi.Menu
                 var subItem = new ShowHideIssueColumn(model, helper, column, gridKey) { IsEnabled = true, CommandText = "Hide " + column };
                 try
                 {
-                    var value = helper.ReadSetting(Context.UIProperties, OwnersId.ApplicationOwnerId, column + "Visible").Value;
+                    var value = helper.ReadSetting(Context.UIProperties, gridKey, column + "Visible").Value;
                     if (value.Equals("true"))
                     {
                         subItem.CommandText = "Hide " + column;
@@ -197,19 +197,21 @@ namespace VSSonarExtensionUi.Menu
             {
                 this.CommandText = "Hide " + this.name;
                 var prop = new SonarQubeProperties();
+                prop.Owner = this.gridKey;
                 prop.Value = "true";
                 prop.Key = this.name + "Visible";
                 prop.Context = Context.UIProperties;
-                this.helper.WriteSetting(prop);
+                this.helper.WriteSetting(prop, true);
             }
             else
             {
                 this.CommandText = "Show " + this.name;
                 var prop = new SonarQubeProperties();
+                prop.Owner = this.gridKey;
                 prop.Value = "false";
                 prop.Key = this.name + "Visible";
                 prop.Context = Context.UIProperties;
-                this.helper.WriteSetting(prop);
+                this.helper.WriteSetting(prop, true);
             }
 
             this.model.RestoreUserSettingsInIssuesDataGrid();

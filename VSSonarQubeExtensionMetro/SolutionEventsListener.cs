@@ -1,15 +1,10 @@
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="SolutionEventsListener.cs" company="Copyright © 2014 Tekla Corporation. Tekla is a Trimble Company">
-//     Copyright (C) 2013 [Jorge Costa, Jorge.Costa@tekla.com]
+//   Copyright (C) 2013 [Jorge Costa, Jorge.Costa@tekla.com]
 // </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-// This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
-// as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
-// of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. 
-// You should have received a copy of the GNU Lesser General Public License along with this program; if not, write to the Free
-// Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+// <summary>
+//   The solution events listener.
+// </summary>
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarQubeExtension
 {
@@ -19,104 +14,154 @@ namespace VSSonarQubeExtension
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
 
+    /// <summary>The solution events listener.</summary>
     public class SolutionEventsListener : IVsSolutionEvents, IDisposable
     {
+        /// <summary>The solution.</summary>
         private IVsSolution solution;
+
+        /// <summary>The solution events cookie.</summary>
         private uint solutionEventsCookie;
 
-        public event Action OnAfterOpenProject;
-        public event Action OnQueryUnloadProject;
-
-
+        /// <summary>Initializes a new instance of the <see cref="SolutionEventsListener"/> class.</summary>
         public SolutionEventsListener()
         {
-            InitNullEvents();
+            this.InitNullEvents();
 
-            solution = Package.GetGlobalService(typeof(SVsSolution)) as IVsSolution;
+            this.solution = Package.GetGlobalService(typeof(SVsSolution)) as IVsSolution;
 
-            if (solution != null)
+            if (this.solution != null)
             {
-                solution.AdviseSolutionEvents(this, out solutionEventsCookie);
+                this.solution.AdviseSolutionEvents(this, out this.solutionEventsCookie);
             }
         }
 
+        /// <summary>The on after open project.</summary>
+        public event Action OnAfterOpenProject;
+
+        /// <summary>The on query unload project.</summary>
+        public event Action OnQueryUnloadProject;
+
+
+        #region IDisposable Members
+
+        /// <summary>The dispose.</summary>
+        public void Dispose()
+        {
+            if (this.solution != null && this.solutionEventsCookie != 0)
+            {
+                GC.SuppressFinalize(this);
+                this.solution.UnadviseSolutionEvents(this.solutionEventsCookie);
+                this.OnQueryUnloadProject = null;
+                this.OnAfterOpenProject = null;
+                this.solutionEventsCookie = 0;
+                this.solution = null;
+            }
+        }
+
+        #endregion
+
+        /// <summary>The init null events.</summary>
         private void InitNullEvents()
         {
-            OnAfterOpenProject += () => { };
-            OnQueryUnloadProject += () => { };
+            this.OnAfterOpenProject += () => { };
+            this.OnQueryUnloadProject += () => { };
         }
 
         #region IVsSolutionEvents Members
 
+        /// <summary>The on after close solution.</summary>
+        /// <param name="pUnkReserved">The p unk reserved.</param>
+        /// <returns>The <see cref="int"/>.</returns>
         int IVsSolutionEvents.OnAfterCloseSolution(object pUnkReserved)
         {
             return VSConstants.S_OK;
         }
 
+        /// <summary>The on after load project.</summary>
+        /// <param name="pStubHierarchy">The p stub hierarchy.</param>
+        /// <param name="pRealHierarchy">The p real hierarchy.</param>
+        /// <returns>The <see cref="int"/>.</returns>
         int IVsSolutionEvents.OnAfterLoadProject(IVsHierarchy pStubHierarchy, IVsHierarchy pRealHierarchy)
         {
             return VSConstants.S_OK;
         }
 
+        /// <summary>The on after open project.</summary>
+        /// <param name="pHierarchy">The p hierarchy.</param>
+        /// <param name="fAdded">The f added.</param>
+        /// <returns>The <see cref="int"/>.</returns>
         int IVsSolutionEvents.OnAfterOpenProject(IVsHierarchy pHierarchy, int fAdded)
         {
-            OnAfterOpenProject();
+            this.OnAfterOpenProject();
             return VSConstants.S_OK;
         }
 
+        /// <summary>The on after open solution.</summary>
+        /// <param name="pUnkReserved">The p unk reserved.</param>
+        /// <param name="fNewSolution">The f new solution.</param>
+        /// <returns>The <see cref="int"/>.</returns>
         int IVsSolutionEvents.OnAfterOpenSolution(object pUnkReserved, int fNewSolution)
         {
             return VSConstants.S_OK;
         }
 
+        /// <summary>The on before close project.</summary>
+        /// <param name="pHierarchy">The p hierarchy.</param>
+        /// <param name="fRemoved">The f removed.</param>
+        /// <returns>The <see cref="int"/>.</returns>
         int IVsSolutionEvents.OnBeforeCloseProject(IVsHierarchy pHierarchy, int fRemoved)
         {
             return VSConstants.S_OK;
         }
 
+        /// <summary>The on before close solution.</summary>
+        /// <param name="pUnkReserved">The p unk reserved.</param>
+        /// <returns>The <see cref="int"/>.</returns>
         int IVsSolutionEvents.OnBeforeCloseSolution(object pUnkReserved)
         {
             return VSConstants.S_OK;
         }
 
+        /// <summary>The on before unload project.</summary>
+        /// <param name="pRealHierarchy">The p real hierarchy.</param>
+        /// <param name="pStubHierarchy">The p stub hierarchy.</param>
+        /// <returns>The <see cref="int"/>.</returns>
         int IVsSolutionEvents.OnBeforeUnloadProject(IVsHierarchy pRealHierarchy, IVsHierarchy pStubHierarchy)
         {
             return VSConstants.S_OK;
         }
 
+        /// <summary>The on query close project.</summary>
+        /// <param name="pHierarchy">The p hierarchy.</param>
+        /// <param name="fRemoving">The f removing.</param>
+        /// <param name="pfCancel">The pf cancel.</param>
+        /// <returns>The <see cref="int"/>.</returns>
         int IVsSolutionEvents.OnQueryCloseProject(IVsHierarchy pHierarchy, int fRemoving, ref int pfCancel)
         {
             return VSConstants.S_OK;
         }
 
+        /// <summary>The on query close solution.</summary>
+        /// <param name="pUnkReserved">The p unk reserved.</param>
+        /// <param name="pfCancel">The pf cancel.</param>
+        /// <returns>The <see cref="int"/>.</returns>
         int IVsSolutionEvents.OnQueryCloseSolution(object pUnkReserved, ref int pfCancel)
         {
             return VSConstants.S_OK;
         }
 
+        /// <summary>The on query unload project.</summary>
+        /// <param name="pRealHierarchy">The p real hierarchy.</param>
+        /// <param name="pfCancel">The pf cancel.</param>
+        /// <returns>The <see cref="int"/>.</returns>
         int IVsSolutionEvents.OnQueryUnloadProject(IVsHierarchy pRealHierarchy, ref int pfCancel)
         {
-            OnQueryUnloadProject();
+            this.OnQueryUnloadProject();
             return VSConstants.S_OK;
         }
 
         #endregion
 
-        #region IDisposable Members
-
-        public void Dispose()
-        {
-            if (solution != null && solutionEventsCookie != 0)
-            {
-                GC.SuppressFinalize(this);
-                solution.UnadviseSolutionEvents(solutionEventsCookie);
-                OnQueryUnloadProject = null;
-                OnAfterOpenProject = null;
-                solutionEventsCookie = 0;
-                solution = null;
-            }
-        }
-
-        #endregion
     }
 }

@@ -15,18 +15,18 @@
 namespace VSSonarQubeExtension.Helpers
 {
     using System;
+    using System.IO;
     using System.Diagnostics;
     using System.Drawing;
     using System.Linq;
-
     using EnvDTE;
-
     using EnvDTE80;
 
     using Microsoft.VisualStudio.PlatformUI;
     using Microsoft.VisualStudio.Text;
 
     using VSSonarPlugins;
+    using VSSonarPlugins.Types;
 
     /// <summary>
     ///     The vs events.
@@ -50,7 +50,13 @@ namespace VSSonarQubeExtension.Helpers
         /// </summary>
         private readonly IVsEnvironmentHelper environment;
 
+        /// <summary>The package.</summary>
         private VsSonarExtensionPackage package;
+
+        /// <summary>The build events.</summary>
+        private BuildEvents buildEvents;
+
+        private readonly DTE2 dte2;
 
         #endregion
 
@@ -68,10 +74,12 @@ namespace VSSonarQubeExtension.Helpers
         /// <param name="vsSonarExtensionPackage"></param>
         public VsEvents(IVsEnvironmentHelper environment, DTE2 dte2, VsSonarExtensionPackage vsSonarExtensionPackage)
         {
+            this.dte2 = dte2;
             this.package = vsSonarExtensionPackage;
             this.environment = environment;
             this.SolutionEvents = dte2.Events;
             this.visualStudioEvents = dte2.Events.DTEEvents;
+            this.buildEvents = dte2.Events.BuildEvents;
             this.DocumentsEvents = this.SolutionEvents.DocumentEvents;
 
             this.SolutionEvents.SolutionEvents.Opened += this.SolutionOpened;
@@ -80,12 +88,77 @@ namespace VSSonarQubeExtension.Helpers
             this.SolutionEvents.WindowEvents.WindowClosing += this.WindowClosed;
             this.DocumentsEvents.DocumentSaved += this.DoumentSaved;
             this.visualStudioEvents.OnStartupComplete += this.CloseToolWindows;
+            this.buildEvents.OnBuildProjConfigDone += this.ProjectHasBuild;
 
             VSColorTheme.ThemeChanged += this.VSColorTheme_ThemeChanged;
 
             SonarQubeViewModelFactory.SQViewModel.AnalysisModeHasChange += this.AnalysisModeHasChange;
             SonarQubeViewModelFactory.SQViewModel.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.ConfigurationHasChanged +=
                 this.AnalysisModeHasChange;
+        }
+
+        private void ProjectHasBuild(string project, string projectconfig, string platform, string solutionconfig, bool success)
+        {
+            if (!success)
+            {
+                return;
+            }
+
+            var projectDte = this.dte2.Solution.Item(project);
+
+            if (projectDte != null)
+            {
+                
+
+                try
+                {
+                    string outputPath = projectDte.ConfigurationManager.ActiveConfiguration.Properties.Item("OutputPath").Value.ToString();
+                    string assemblyName = projectDte.Properties.Item("AssemblyName").Value.ToString();
+
+                    var projectItem = new VsProjectItem();
+
+                    if (Path.IsPathRooted(outputPath))
+                    {
+                        projectItem.OutputPath = Path.Combine(outputPath, assemblyName + ".dll");
+                        if (!File.Exists(projectItem.OutputPath))
+                        {
+                            projectItem.OutputPath = Path.Combine(outputPath, assemblyName + ".exe");
+                        }
+
+                        if (!File.Exists(projectItem.OutputPath))
+                        {
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        outputPath = Path.GetFullPath(
+                            Path.Combine(Directory.GetParent(projectDte.FullName).ToString(), outputPath));
+
+                        projectItem.OutputPath = Path.Combine(outputPath, assemblyName + ".dll");
+                        if (!File.Exists(projectItem.OutputPath))
+                        {
+                            projectItem.OutputPath = Path.Combine(outputPath, assemblyName + ".exe");
+                        }
+
+                        if (!File.Exists(projectItem.OutputPath))
+                        {
+                            return;
+                        }
+                    }
+
+                    projectItem.ProjectName = project;
+                    
+                    projectItem.ProjectFilePath = projectDte.FullName;
+
+                    SonarQubeViewModelFactory.SQViewModel.ProjectHasBuild(projectItem);
+                }
+                catch (Exception ex)
+                {
+                    SonarQubeViewModelFactory.SQViewModel.ErrorMessage = "Something Terrible Happen";
+                    SonarQubeViewModelFactory.SQViewModel.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
+                }
+            }
         }
 
         private void CloseToolWindows()

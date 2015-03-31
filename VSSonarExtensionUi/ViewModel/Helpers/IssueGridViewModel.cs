@@ -614,7 +614,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 return;
             }
 
-            this.ReadWindowOptions(this.configurationHelper);
+            this.ReadWindowOptions(this.configurationHelper, this.dataGridOptionsKey);
         }
 
         /// <summary>
@@ -1067,11 +1067,11 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         {
         }
 
-        private static string GetValueForOption(IConfigurationHelper helper, string key, string defaultvalue)
+        private static string GetValueForOption(IConfigurationHelper helper, string key, string defaultvalue, string owner)
         {
             try
             {
-                return helper.ReadSetting(Context.UIProperties, OwnersId.ApplicationOwnerId, key).Value;
+                return helper.ReadSetting(Context.UIProperties, owner, key).Value;
             }
             catch (Exception)
             {
@@ -1085,43 +1085,43 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// <param name="options">
         /// The options.
         /// </param>
-        private void ReadWindowOptions(IConfigurationHelper options)
+        private void ReadWindowOptions(IConfigurationHelper options, string owner)
         {
             try
             {
-                this.ComponentIndex = int.Parse(GetValueForOption(options,"ComponentIndex", "1"), CultureInfo.InvariantCulture);
-                this.LineIndex = int.Parse(GetValueForOption(options, "LineIndex", "2"), CultureInfo.InvariantCulture);
-                this.AssigneeIndex = int.Parse(GetValueForOption(options, "AssigneeIndex", "3"), CultureInfo.InvariantCulture);
-                this.MessageIndex = int.Parse(GetValueForOption(options, "MessageIndex", "4"), CultureInfo.InvariantCulture);
-                this.StatusIndex = int.Parse(GetValueForOption(options, "StatusIndex", "5"), CultureInfo.InvariantCulture);
-                this.SeverityIndex = int.Parse(GetValueForOption(options, "SeverityIndex", "6"), CultureInfo.InvariantCulture);
-                this.RuleIndex = int.Parse(GetValueForOption(options, "RuleIndex", "7"), CultureInfo.InvariantCulture);
-                this.CreationDateIndex = int.Parse(GetValueForOption(options, "CreationDateIndex", "8"), CultureInfo.InvariantCulture);
-                this.ProjectIndex = int.Parse(GetValueForOption(options, "ProjectIndex", "9"), CultureInfo.InvariantCulture);
-                this.ResolutionIndex = int.Parse(GetValueForOption(options, "ResolutionIndex", "10"), CultureInfo.InvariantCulture);
-                this.EffortToFixIndex = int.Parse(GetValueForOption(options, "EffortToFixIndex", "11"), CultureInfo.InvariantCulture);
-                this.UpdateDateIndex = int.Parse(GetValueForOption(options, "UpdateDateIndex", "12"), CultureInfo.InvariantCulture);
-                this.CloseDateIndex = int.Parse(GetValueForOption(options, "CloseDateIndex", "13"), CultureInfo.InvariantCulture);
-                this.KeyIndex = int.Parse(GetValueForOption(options, "KeyIndex", "14"), CultureInfo.InvariantCulture);
-                this.IdIndex = int.Parse(GetValueForOption(options, "IdIndex", "15"), CultureInfo.InvariantCulture);
-                this.IsNewIndex = int.Parse(GetValueForOption(options, "IsNewIndex", "16"), CultureInfo.InvariantCulture);
+                this.ComponentIndex = int.Parse(GetValueForOption(options, "ComponentIndex", "1", owner), CultureInfo.InvariantCulture);
+                this.LineIndex = int.Parse(GetValueForOption(options, "LineIndex", "2", owner), CultureInfo.InvariantCulture);
+                this.AssigneeIndex = int.Parse(GetValueForOption(options, "AssigneeIndex", "3", owner), CultureInfo.InvariantCulture);
+                this.MessageIndex = int.Parse(GetValueForOption(options, "MessageIndex", "4", owner), CultureInfo.InvariantCulture);
+                this.StatusIndex = int.Parse(GetValueForOption(options, "StatusIndex", "5", owner), CultureInfo.InvariantCulture);
+                this.SeverityIndex = int.Parse(GetValueForOption(options, "SeverityIndex", "6", owner), CultureInfo.InvariantCulture);
+                this.RuleIndex = int.Parse(GetValueForOption(options, "RuleIndex", "7", owner), CultureInfo.InvariantCulture);
+                this.CreationDateIndex = int.Parse(GetValueForOption(options, "CreationDateIndex", "8", owner), CultureInfo.InvariantCulture);
+                this.ProjectIndex = int.Parse(GetValueForOption(options, "ProjectIndex", "9", owner), CultureInfo.InvariantCulture);
+                this.ResolutionIndex = int.Parse(GetValueForOption(options, "ResolutionIndex", "10", owner), CultureInfo.InvariantCulture);
+                this.EffortToFixIndex = int.Parse(GetValueForOption(options, "EffortToFixIndex", "11", owner), CultureInfo.InvariantCulture);
+                this.UpdateDateIndex = int.Parse(GetValueForOption(options, "UpdateDateIndex", "12", owner), CultureInfo.InvariantCulture);
+                this.CloseDateIndex = int.Parse(GetValueForOption(options, "CloseDateIndex", "13", owner), CultureInfo.InvariantCulture);
+                this.KeyIndex = int.Parse(GetValueForOption(options, "KeyIndex", "14", owner), CultureInfo.InvariantCulture);
+                this.IdIndex = int.Parse(GetValueForOption(options, "IdIndex", "15", owner), CultureInfo.InvariantCulture);
+                this.IsNewIndex = int.Parse(GetValueForOption(options, "IsNewIndex", "16", owner), CultureInfo.InvariantCulture);
 
-                this.ComponentVisible = bool.Parse(GetValueForOption(options,"ComponentVisible", "true"));
-                this.LineVisible = bool.Parse(GetValueForOption(options, "LineVisible", "true"));
-                this.AssigneeVisible = bool.Parse(GetValueForOption(options, "AssigneeVisible", "true"));
-                this.MessageVisible = bool.Parse(GetValueForOption(options, "MessageVisible", "true"));
-                this.StatusVisible = bool.Parse(GetValueForOption(options, "StatusVisible", "true"));
-                this.SeverityVisible = bool.Parse(GetValueForOption(options, "SeverityVisible", "true"));
-                this.RuleVisible = bool.Parse(GetValueForOption(options, "RuleVisible", "true"));
-                this.CreationDateVisible = bool.Parse(GetValueForOption(options, "CreationDateVisible", "true"));
-                this.ProjectVisible = bool.Parse(GetValueForOption(options, "ProjectVisible", "true"));
-                this.ResolutionVisible = bool.Parse(GetValueForOption(options, "ResolutionVisible", "true"));
-                this.EffortToFixVisible = bool.Parse(GetValueForOption(options, "EffortToFixVisible", "true"));
-                this.UpdateDateVisible = bool.Parse(GetValueForOption(options, "UpdateDateVisible", "true"));
-                this.CloseDateVisible = bool.Parse(GetValueForOption(options, "CloseDateVisible", "true"));
-                this.KeyVisible = bool.Parse(GetValueForOption(options, "KeyVisible", "true"));
-                this.IdVisible = bool.Parse(GetValueForOption(options, "IdVisible", "true"));
-                this.IsNewVisible = bool.Parse(GetValueForOption(options, "IsNewVisible", "true"));
+                this.ComponentVisible = bool.Parse(GetValueForOption(options, "ComponentVisible", "true", owner));
+                this.LineVisible = bool.Parse(GetValueForOption(options, "LineVisible", "true", owner));
+                this.AssigneeVisible = bool.Parse(GetValueForOption(options, "AssigneeVisible", "true", owner));
+                this.MessageVisible = bool.Parse(GetValueForOption(options, "MessageVisible", "true", owner));
+                this.StatusVisible = bool.Parse(GetValueForOption(options, "StatusVisible", "true", owner));
+                this.SeverityVisible = bool.Parse(GetValueForOption(options, "SeverityVisible", "true", owner));
+                this.RuleVisible = bool.Parse(GetValueForOption(options, "RuleVisible", "true", owner));
+                this.CreationDateVisible = bool.Parse(GetValueForOption(options, "CreationDateVisible", "true", owner));
+                this.ProjectVisible = bool.Parse(GetValueForOption(options, "ProjectVisible", "true", owner));
+                this.ResolutionVisible = bool.Parse(GetValueForOption(options, "ResolutionVisible", "true", owner));
+                this.EffortToFixVisible = bool.Parse(GetValueForOption(options, "EffortToFixVisible", "true", owner));
+                this.UpdateDateVisible = bool.Parse(GetValueForOption(options, "UpdateDateVisible", "true", owner));
+                this.CloseDateVisible = bool.Parse(GetValueForOption(options, "CloseDateVisible", "true", owner));
+                this.KeyVisible = bool.Parse(GetValueForOption(options, "KeyVisible", "true", owner));
+                this.IdVisible = bool.Parse(GetValueForOption(options, "IdVisible", "true", owner));
+                this.IsNewVisible = bool.Parse(GetValueForOption(options, "IsNewVisible", "true", owner));
             }
             catch (Exception ex)
             {

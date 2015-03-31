@@ -621,6 +621,15 @@ namespace VSSonarExtensionUi.ViewModel
             }
         }
 
+        public void ProjectHasBuild(VsProjectItem project)
+        {
+            IAnalysisViewModelBase analyser = this.SelectedView;
+            if (analyser != null)
+            {
+                analyser.TriggerAProjectAnalysis(project);
+            }
+        }
+
         /// <summary>The update colours.</summary>
         /// <param name="background">The background.</param>
         /// <param name="foreground">The foreground.</param>

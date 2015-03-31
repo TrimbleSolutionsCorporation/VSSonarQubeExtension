@@ -440,6 +440,9 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
         [<CLIEvent>]
         member x.StdOutEvent = stdOutEvent.Publish
 
+        member x.RunProjectAnalysis(project : VsProjectItem, conf : ISonarConfiguration) =
+            ()
+
         member x.GetIssues(conf : ISonarConfiguration, project : Resource) =
                                         
             let issues = new System.Collections.Generic.List<Issue>()

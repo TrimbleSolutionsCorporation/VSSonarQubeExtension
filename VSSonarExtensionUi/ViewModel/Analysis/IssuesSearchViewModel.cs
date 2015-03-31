@@ -616,6 +616,12 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.IssuesGridView.UpdateVsService(this.visualStudioHelper);
         }
 
+        /// <summary>The trigger a project analysis.</summary>
+        /// <param name="project">The project.</param>
+        public void TriggerAProjectAnalysis(VsProjectItem project)
+        {
+        }
+
         #endregion
 
         #region Methods

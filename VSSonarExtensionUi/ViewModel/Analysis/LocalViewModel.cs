@@ -308,8 +308,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
 
         public ICommand GoToNextIssueCommand { get; set; }
 
-        
-
         /// <summary>
         ///     Gets or sets the vsenvironmenthelper.
         /// </summary>
@@ -537,6 +535,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.IssuesGridView.Vsenvironmenthelper = vsenvironmenthelperIn;
 
             this.IssuesGridView.UpdateVsService(this.Vsenvironmenthelper);
+        }
+
+        public void TriggerAProjectAnalysis(VsProjectItem project)
+        {
+            if (this.FileAnalysisIsEnabled)
+            {
+                this.LocalAnalyserModule.RunProjectAnalysis(project, AuthtenticationHelper.AuthToken);
+            }
         }
 
         #endregion

@@ -43,6 +43,7 @@ type ISonarLocalAnalyser =
   abstract member GetResourceKey : VsProjectItem * Resource * ISonarConfiguration * safeIsOn:bool -> string
 
   abstract member AnalyseFile : VsProjectItem * Resource * onModifiedLinesOnly:bool *  version:double * ISonarConfiguration -> unit
+  abstract member RunProjectAnalysis : project : VsProjectItem * conf : ISonarConfiguration -> unit
   abstract member RunIncrementalAnalysis : Resource * version:double * ISonarConfiguration -> unit
   abstract member RunPreviewAnalysis : Resource * version:double * ISonarConfiguration -> unit
   abstract member RunFullAnalysis : Resource * version:double * ISonarConfiguration -> unit
