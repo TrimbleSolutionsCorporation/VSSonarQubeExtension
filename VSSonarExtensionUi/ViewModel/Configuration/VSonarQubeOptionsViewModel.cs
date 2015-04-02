@@ -36,24 +36,19 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         #region Constructors and Destructors
 
         /// <summary>Initializes a new instance of the <see cref="VSonarQubeOptionsViewModel"/> class.</summary>
-        /// <param name="plugincontroller">The plugincontroller.</param>
         /// <param name="model">The model.</param>
-        /// <param name="vsHelper">The vs helper.</param>
-        /// <param name="configurationHelper">The configuration Helper.</param>
-        /// <param name="notificationManager">The notification Manager.</param>
+        /// <param name="configurationHelper">The configuration helper.</param>
+        /// <param name="notificationManager">The notification manager.</param>
         public VSonarQubeOptionsViewModel(
-            PluginController plugincontroller, 
             SonarQubeViewModel model, 
-            IVsEnvironmentHelper vsHelper, 
             IConfigurationHelper configurationHelper, 
             INotificationManager notificationManager)
         {
             this.notifycationManager = notificationManager;
             this.model = model;
-            this.Vsenvironmenthelper = vsHelper;
             this.ConfigurationHelper = configurationHelper;
 
-            this.InitModels(plugincontroller);
+            this.InitModels();
             this.InitCommanding();
         }
 
@@ -298,8 +293,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         }
 
         /// <summary>The init models.</summary>
-        /// <param name="plugincontroller">The plugincontroller.</param>
-        private void InitModels(PluginController plugincontroller)
+        private void InitModels()
         {
             this.AvailableOptions = new ObservableCollection<IOptionsViewModelBase>();
 
@@ -313,21 +307,27 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 this.Vsenvironmenthelper, 
                 this, 
                 this.ConfigurationHelper);
-            this.PluginManager = new PluginManagerModel(
-                plugincontroller, 
-                AuthtenticationHelper.AuthToken, 
-                this.Vsenvironmenthelper, 
-                this.ConfigurationHelper, 
-                this, 
-                this.model, 
-                this.notifycationManager);
-            this.LicenseManager = new LicenseViewerViewModel(this.PluginManager, this.ConfigurationHelper);
 
             this.AvailableOptions.Add(this.GeneralConfigurationViewModel);
             this.AvailableOptions.Add(this.AnalysisOptionsViewModel);
+            this.SelectedOption = this.GeneralConfigurationViewModel;
+        }
+
+        /// <summary>The init pugin system.</summary>
+        /// <param name="helper">The helper.</param>
+        public void InitPuginSystem(IVsEnvironmentHelper helper, PluginController plugincontroller)
+        {
+            this.PluginManager = new PluginManagerModel(
+                plugincontroller,
+                AuthtenticationHelper.AuthToken,
+                this.ConfigurationHelper,
+                this,
+                this.model,
+                this.notifycationManager,
+                helper);
+            this.LicenseManager = new LicenseViewerViewModel(this.PluginManager, this.ConfigurationHelper);
             this.AvailableOptions.Add(this.PluginManager);
             this.AvailableOptions.Add(this.LicenseManager);
-            this.SelectedOption = this.GeneralConfigurationViewModel;
         }
 
         /// <summary>
@@ -362,5 +362,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         }
 
         #endregion
+
     }
 }

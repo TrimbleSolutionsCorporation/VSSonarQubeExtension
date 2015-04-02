@@ -389,8 +389,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 return
                     this.IssuesGridView.Issues.Where(
                         issue =>
-                        this.IssuesGridView.IsNotFiltered(issue) && (file.Key.Equals(issue.Component) || file.Key.Equals(issue.ComponentSafe)))
-                        .ToList();
+                        this.IssuesGridView.IsNotFiltered(issue) && file.Key.Equals(issue.Component)).ToList();
             }
 
             return new List<Issue>();

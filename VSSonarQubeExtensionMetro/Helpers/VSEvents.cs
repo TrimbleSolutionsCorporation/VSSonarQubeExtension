@@ -26,6 +26,7 @@ namespace VSSonarQubeExtension.Helpers
     using Microsoft.VisualStudio.Text;
 
     using VSSonarPlugins;
+    using VSSonarPlugins.Helpers;
     using VSSonarPlugins.Types;
 
     /// <summary>
@@ -99,7 +100,7 @@ namespace VSSonarQubeExtension.Helpers
 
         private void ProjectHasBuild(string project, string projectconfig, string platform, string solutionconfig, bool success)
         {
-            if (!success)
+            if (!success || SonarQubeViewModelFactory.SQViewModel.AssociatedProject == null)
             {
                 return;
             }
@@ -108,14 +109,12 @@ namespace VSSonarQubeExtension.Helpers
 
             if (projectDte != null)
             {
-                
-
                 try
                 {
                     string outputPath = projectDte.ConfigurationManager.ActiveConfiguration.Properties.Item("OutputPath").Value.ToString();
                     string assemblyName = projectDte.Properties.Item("AssemblyName").Value.ToString();
 
-                    var projectItem = new VsProjectItem();
+                    var projectItem = this.environment.VsProjectItem(projectDte.FullName, SonarQubeViewModelFactory.SQViewModel.AssociatedProject);
 
                     if (Path.IsPathRooted(outputPath))
                     {
@@ -146,10 +145,6 @@ namespace VSSonarQubeExtension.Helpers
                             return;
                         }
                     }
-
-                    projectItem.ProjectName = project;
-                    
-                    projectItem.ProjectFilePath = projectDte.FullName;
 
                     SonarQubeViewModelFactory.SQViewModel.ProjectHasBuild(projectItem);
                 }

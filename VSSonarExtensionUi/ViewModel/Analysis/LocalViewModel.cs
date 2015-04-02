@@ -350,7 +350,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             return
                 this.IssuesGridView.Issues.Where(
                     issue =>
-                    this.IssuesGridView.IsNotFiltered(issue) && (file.Key.Equals(issue.Component) || file.Key.Equals(issue.ComponentSafe)))
+                    this.IssuesGridView.IsNotFiltered(issue) && file.Key.Equals(issue.Component))
                     .ToList();
         }
 
@@ -376,6 +376,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             if (!string.IsNullOrEmpty(this.SourceWorkingDir) && Directory.Exists(this.SourceWorkingDir))
             {
                 this.CanRunAnalysis = true;
+                this.LocalAnalyserModule.AssociateWithProject(associatedProject);
             }
         }
 
@@ -537,6 +538,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.IssuesGridView.UpdateVsService(this.Vsenvironmenthelper);
         }
 
+        /// <summary>The trigger a project analysis.</summary>
+        /// <param name="project">The project.</param>
         public void TriggerAProjectAnalysis(VsProjectItem project)
         {
             if (this.FileAnalysisIsEnabled)
@@ -674,8 +677,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 switch (analysis)
                 {
                     case AnalysisTypes.FILE:
-                        var itemInView = this.Vsenvironmenthelper.VsProjectItem(this.sonarQubeViewModel.DocumentInView);
-                        itemInView.SqResourceKey = this.DocumentInView.Key;
+                        var itemInView = this.Vsenvironmenthelper.VsFileItem(this.sonarQubeViewModel.DocumentInView, this.AssociatedProject, this.DocumentInView);
                         this.LocalAnalyserModule.AnalyseFile(
                             itemInView, 
                             this.AssociatedProject, 

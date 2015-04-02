@@ -179,7 +179,7 @@ namespace VSSonarExtensionUi.Helpers
             return this.ErrorMessage;
         }
 
-        public List<IPlugin> LoadPluginsFromPluginFolder(INotificationManager manager,IConfigurationHelper helper)
+        public List<IPlugin> LoadPluginsFromPluginFolder(INotificationManager manager, IConfigurationHelper helper, IVsEnvironmentHelper vshelper)
         {
             var folder = this.PluginsFolder;
             var pluginsData = new List<IPlugin>();
@@ -202,7 +202,7 @@ namespace VSSonarExtensionUi.Helpers
                 {
                     try
                     {
-                        var plugin = this.LoadPlugin(assembly.Value, manager, helper);
+                        var plugin = this.LoadPlugin(assembly.Value, manager, helper, vshelper);
                         if (plugin != null)
                         {
                             pluginsData.Add(plugin);
@@ -298,7 +298,7 @@ namespace VSSonarExtensionUi.Helpers
         }
 
 
-        public IPlugin LoadPlugin(Assembly assembly, INotificationManager manager, IConfigurationHelper helper)
+        public IPlugin LoadPlugin(Assembly assembly, INotificationManager manager, IConfigurationHelper helper, IVsEnvironmentHelper vshelper)
         {
             var types2 = assembly.GetTypes();
             foreach (var type in types2)
@@ -310,10 +310,10 @@ namespace VSSonarExtensionUi.Helpers
                     if (typeof(IAnalysisPlugin).IsAssignableFrom(type))
                     {
                         Debug.WriteLine("Can Cast Type In Assembly To: " + typeof(IAnalysisPlugin).FullName);
-                        var obj = type.GetConstructor(new[] { typeof(INotificationManager), typeof(IConfigurationHelper), typeof(ISonarRestService) });
+                        var obj = type.GetConstructor(new[] { typeof(INotificationManager), typeof(IConfigurationHelper), typeof(ISonarRestService), typeof(IVsEnvironmentHelper) });
                         if (obj != null)
                         {
-                            object[] lobject = new object[] { manager, helper, new SonarRestService(new JsonSonarConnector()) };
+                            object[] lobject = new object[] { manager, helper, new SonarRestService(new JsonSonarConnector()), vshelper };
                             return (IPlugin)obj.Invoke(lobject);
                         }
                         else

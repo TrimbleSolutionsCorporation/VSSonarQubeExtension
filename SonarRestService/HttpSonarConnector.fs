@@ -81,7 +81,7 @@ type JsonSonarConnector() =
 
                 let addLine (line:string) =
                     if not(String.IsNullOrEmpty(Environment.GetEnvironmentVariable("VSSONAREXTENSIONDEBUG"))) then
-                        use wr = StreamWriter(userRoamingFile, true)
+                        use wr = new StreamWriter(userRoamingFile, true)
                         wr.WriteLine(line)
                                 
                 // read data

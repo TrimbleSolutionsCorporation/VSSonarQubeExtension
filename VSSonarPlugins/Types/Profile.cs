@@ -15,6 +15,7 @@ namespace VSSonarPlugins.Types
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
 
     using PropertyChanged;
@@ -110,7 +111,27 @@ namespace VSSonarPlugins.Types
         /// </returns>
         public Rule GetRule(string key)
         {
-            return this.Rules.FirstOrDefault(rule => rule.Key.Equals(key));
+            int i = 0;
+            foreach (var rule in this.Rules)
+            {
+                if (rule.Key.Equals(key) || rule.Key.EndsWith(":" + key))
+                {
+                    return rule;
+                }
+
+                if (string.IsNullOrEmpty(rule.InternalKey))
+                {
+                    continue;
+                }
+
+                i++;
+                if (rule.InternalKey.Equals(key) || rule.InternalKey.EndsWith(":" + key))
+                {
+                    return rule;
+                }
+            }
+
+            return null;
         }
 
         /// <summary>

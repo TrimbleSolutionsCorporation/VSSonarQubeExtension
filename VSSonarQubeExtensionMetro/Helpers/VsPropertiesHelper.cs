@@ -624,17 +624,45 @@ namespace VSSonarQubeExtension.Helpers
             }
         }
 
+        /// <summary>The vs project item.</summary>
+        /// <param name="filename">The filename.</param>
+        /// <param name="associatedProject">The associated project.</param>
+        /// <returns>The <see cref="VsProjectItem"/>.</returns>
+        public VsProjectItem VsProjectItem(string filename, Resource associatedProject)
+        {
+            if (string.IsNullOrEmpty(filename))
+            {
+                return null;
+            }
 
-        /// <summary>
-        /// The get vs project item.
-        /// </summary>
-        /// <param name="filename">
-        /// The filename.
-        /// </param>
-        /// <returns>
-        /// The <see cref="VSSonarPlugins.VsProjectItem"/>.
-        /// </returns>
-        public VsProjectItem VsProjectItem(string filename)
+            string driveLetter = filename.Substring(0, 1);
+            string projectName = Path.GetFileNameWithoutExtension(filename);
+            string projectPath = driveLetter + this.GetProperFilePathCapitalization(filename).Substring(1);
+            string solutionName = this.ActiveSolutionName();
+            string solutionPath = driveLetter + this.ActiveSolutionPath().Substring(1);
+            var itemToReturn = 
+                new VsProjectItem
+                {
+                    ProjectName = projectName,
+                    ProjectFilePath = projectPath,
+                    Solution =
+                        new VsSolutionItem
+                        {
+                            SolutionName = solutionName,
+                            SolutionPath = solutionPath,
+                            SonarProject = associatedProject
+                        }
+                };
+
+            return itemToReturn;
+        }
+
+        /// <summary>The vs file item.</summary>
+        /// <param name="filename">The filename.</param>
+        /// <param name="associatedProject">The associated project.</param>
+        /// <param name="fileResource">The file resource.</param>
+        /// <returns>The <see cref="VsFileItem"/>.</returns>
+        public VsFileItem VsFileItem(string filename, Resource associatedProject, Resource fileResource)
         {
             if (string.IsNullOrEmpty(filename))
             {
@@ -655,11 +683,72 @@ namespace VSSonarQubeExtension.Helpers
             string projectPath = driveLetter + this.GetProperFilePathCapitalization(item.ContainingProject.FullName).Substring(1);
             string solutionName = this.ActiveSolutionName();
             string solutionPath = driveLetter + this.ActiveSolutionPath().Substring(1);
-            return new VsProjectItem(documentName, documentPath, projectName, projectPath, solutionName, solutionPath);
+            var itemToReturn = new VsFileItem
+            {
+                FileName = documentName,
+                FilePath = documentPath,
+                SonarResource = fileResource,
+                Project =
+                    new VsProjectItem
+                    {
+                        ProjectName = projectName,
+                        ProjectFilePath = projectPath,
+                        Solution =
+                            new VsSolutionItem
+                            {
+                                SolutionName = solutionName,
+                                SolutionPath = solutionPath,
+                                SonarProject = associatedProject
+                            }
+                    }
+            };
+
+            return itemToReturn;
         }
 
 
+        /// <summary>The vs file item.</summary>
+        /// <param name="fullPath">The full Path.</param>
+        /// <param name="projectFullPath">The project Full Path.</param>
+        /// <param name="associatedProject">The associated project.</param>
+        /// <param name="fileResource">The file resource.</param>
+        /// <returns>The <see cref="VsFileItem"/>.</returns>
+        public VsFileItem VsFileItem(string fullPath, string projectFullPath, Resource associatedProject, Resource fileResource)
+        {
+            if (string.IsNullOrEmpty(fullPath))
+            {
+                return null;
+            }
 
+            string driveLetter = fullPath.Substring(0, 1);
+            string documentName = Path.GetFileNameWithoutExtension(fullPath);
+            string documentPath = driveLetter + this.GetProperFilePathCapitalization(fullPath).Substring(1);
+            string projectName = Path.GetFileNameWithoutExtension(projectFullPath);
+            string projectPath = driveLetter + this.GetProperFilePathCapitalization(projectFullPath).Substring(1);
+            string solutionName = this.ActiveSolutionName();
+            string solutionPath = driveLetter + this.ActiveSolutionPath().Substring(1);
+            var itemToReturn = new VsFileItem
+            {
+                FileName = documentName,
+                FilePath = documentPath,
+                SonarResource = fileResource,
+                Project =
+                    new VsProjectItem
+                    {
+                        ProjectName = projectName,
+                        ProjectFilePath = projectPath,
+                        Solution =
+                            new VsSolutionItem
+                            {
+                                SolutionName = solutionName,
+                                SolutionPath = solutionPath,
+                                SonarProject = associatedProject
+                            }
+                    }
+            };
+
+            return itemToReturn;
+        }
 
         /// <summary>
         /// The set default option.

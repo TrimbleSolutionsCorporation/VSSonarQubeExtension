@@ -46,18 +46,27 @@ type SupportTests() =
     [<Test>]
     member test.``Should allow multi language if lang is not defined`` () =
         let project = new Resource()
+        let mockConfReq =
+            Mock<IConfigurationHelper>()
+                .Setup(fun x -> <@ x.ReadSetting(any(), any(), any()) @>).Returns(new SonarQubeProperties(Value = "something"))
+                .Create()
 
         let listofPlugins = new System.Collections.Generic.List<IAnalysisPlugin>()
         listofPlugins.Add(Mock<IAnalysisPlugin>().Create())
-        let analyser = new SonarLocalAnalyser(listofPlugins, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create(), Mock<ISonarConfiguration>().Create())
+        let analyser = new SonarLocalAnalyser(listofPlugins, Mock<ISonarRestService>().Create(), mockConfReq, Mock<ISonarConfiguration>().Create())
         (analyser.IsMultiLanguageAnalysis(project)) |> should be True
 
     [<Test>]
     member test.``Should not allow multi language if lang is defined`` () =
         let project = new Resource(Lang = "c++")
 
+        let mockConfReq =
+            Mock<IConfigurationHelper>()
+                .Setup(fun x -> <@ x.ReadSetting(any(), any(), any()) @>).Returns(new SonarQubeProperties(Value = "something"))
+                .Create()
+
         let listofPlugins = new System.Collections.Generic.List<IAnalysisPlugin>()
         listofPlugins.Add(Mock<IAnalysisPlugin>().Create())
-        let analyser = new SonarLocalAnalyser(listofPlugins, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create(), Mock<ISonarConfiguration>().Create())
+        let analyser = new SonarLocalAnalyser(listofPlugins, Mock<ISonarRestService>().Create(), mockConfReq, Mock<ISonarConfiguration>().Create())
         (analyser.IsMultiLanguageAnalysis(project)) |> should be False
 

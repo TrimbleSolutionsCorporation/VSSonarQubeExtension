@@ -617,6 +617,77 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
         profile.Rules.Add(newRule)  
 
+    let UpdateRuleInProfile(parsedDataRule:JsonRuleSearchResponse.Rule, rule : Rule, skipSeverity : bool) =
+
+        let IfExists(propertyToSet:string) =
+            match parsedDataRule.JsonValue.TryGetProperty(propertyToSet) with
+            | NotNull ->
+                true
+            | _ -> 
+                false
+
+        if IfExists("key") then
+            rule.Key <-  try parsedDataRule.Key with | ex -> ""
+            rule.ConfigKey <-  try parsedDataRule.Key with | ex -> ""
+
+        if IfExists("repo") then rule.Repo <- parsedDataRule.Repo
+        if IfExists("name") then rule.Name <- parsedDataRule.Name
+        if IfExists("createdAt") then rule.CreatedAt <- parsedDataRule.CreatedAt
+        if not(skipSeverity) then
+            if IfExists("severity") then rule.Severity <- try (EnumHelper.asEnum<Severity>(parsedDataRule.Severity)).Value with | ex -> Severity.UNDEFINED
+
+        if IfExists("status") then rule.Status <- try (EnumHelper.asEnum<Status>(parsedDataRule.Status)).Value with | ex -> Status.UNDEFINED
+        if IfExists("internalKey") then rule.InternalKey <- parsedDataRule.InternalKey
+
+        if IfExists("isTemplate") then rule.IsTemplate <- try parsedDataRule.IsTemplate with | ex -> false
+
+        if IfExists("tags") then
+            for tag in parsedDataRule.Tags do
+                rule.Tags.Add(tag)
+        if IfExists("sysTags") then
+            for tag in parsedDataRule.SysTags do
+                rule.SysTags.Add(tag)
+
+        if IfExists("lang") then rule.Lang <- parsedDataRule.Lang
+        if IfExists("langName") then rule.LangName <- parsedDataRule.LangName
+        if IfExists("htmlDesc") then rule.Description <- parsedDataRule.HtmlDesc
+        if IfExists("defaultDebtChar") then rule.DefaultDebtChar <- try (EnumHelper.asEnum<Category>(parsedDataRule.DefaultDebtChar)).Value with | ex -> Category.UNDEFINED
+        if IfExists("defaultDebtSubChar") then rule.DefaultDebtSubChar <- try (EnumHelper.asEnum<SubCategory>(parsedDataRule.DefaultDebtSubChar)).Value with | ex -> SubCategory.UNDEFINED
+        if IfExists("debtChar") then rule.Category <- try (EnumHelper.asEnum<Category>(parsedDataRule.DebtChar)).Value with | ex -> Category.UNDEFINED
+        if IfExists("debtSubChar") then rule.Subcategory <- try (EnumHelper.asEnum<SubCategory>(parsedDataRule.DebtSubChar)).Value with | ex -> SubCategory.UNDEFINED
+
+        if IfExists("debtCharName") then rule.SubcategoryName <- try parsedDataRule.DebtCharName with | ex -> ""
+        if IfExists("debtSubCharName") then rule.CategoryName <- try parsedDataRule.DebtSubCharName with | ex -> ""                 
+
+        if IfExists("defaultDebtRemFnType") then  rule.DefaultDebtRemFnType <- try (EnumHelper.asEnum<RemediationFunction>(parsedDataRule.DefaultDebtRemFnType)).Value with | ex -> RemediationFunction.UNDEFINED
+        if IfExists("defaultDebtRemFnCoeff") then rule.DefaultDebtRemFnCoeff <- try parsedDataRule.DefaultDebtRemFnCoeff with | ex -> ""
+        if IfExists("debtOverloaded") then rule.DebtOverloaded <- try parsedDataRule.DebtOverloaded with | ex -> false
+
+
+
+        if IfExists("debtRemFnType") then 
+            rule.RemediationFunction <- try (EnumHelper.asEnum<RemediationFunction>(parsedDataRule.DebtRemFnType)).Value with | ex -> RemediationFunction.UNDEFINED
+
+        if IfExists("debtRemFnCoeff") then
+            rule.DebtRemFnCoeff <- parsedDataRule.DebtRemFnCoeff
+            let value = Regex.Replace(rule.DebtRemFnCoeff, "[^0-9.]", "")
+            let unit = rule.DebtRemFnCoeff.Replace(value, "").Replace("min", "MN").Replace("hour", "H").Replace("day", "D")
+            rule.RemediationFactorVal <- Int32.Parse(value)
+            rule.RemediationFactorTxt <- try (EnumHelper.asEnum<RemediationUnit>(unit)).Value with | ex -> RemediationUnit.UNDEFINED
+        else
+            rule.DebtRemFnCoeff <- ""
+            rule.RemediationFactorVal <- 0
+            rule.RemediationFactorTxt <- RemediationUnit.UNDEFINED
+
+        if IfExists("params") then
+            try
+                for param in parsedDataRule.Params do
+                    let ruleparam  = new RuleParam()
+                    ruleparam.Key <- param.Key
+                    rule.Params.Add(ruleparam)
+            with
+            | ex -> ()
+
     let CreateRuleInProfile(parsedDataRule:JsonRuleSearchResponse.Rule, profile : Profile, enabledStatus:bool) =
 
         let IfExists(propertyToSet:string) =
@@ -836,6 +907,15 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                     newRule.Severity <- (EnumHelper.asEnum<Severity>(rule.Severity)).Value
 
                     profile.Rules.Add(newRule)
+
+                for rule in profile.Rules do
+                    let url = "/api/rules/search?rule_key=" + HttpUtility.UrlEncode(rule.Repo + ":" + rule.Key)
+                    let reply = httpconnector.HttpSonarGetRequest(conf, url)
+                    let rules = JsonRuleSearchResponse.Parse(reply)
+                    if rules.Total = 1 then
+                        // update values except for severity, since this is the default severity
+                        UpdateRuleInProfile(rules.Rules.[0], rule, true)
+
 
         member this.GetRuleUsingProfileAppId(conf:ISonarConfiguration, key:string) = 
                 let url = "/api/rules/search?&rule_key=" + HttpUtility.UrlEncode(key)

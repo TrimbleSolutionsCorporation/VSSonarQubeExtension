@@ -99,7 +99,9 @@
     <Compile Include="Types\SqaleDefaultModel.cs" />
     <Compile Include="Types\SubCharacteristics.cs" />
     <Compile Include="Types\User.cs" />
+    <Compile Include="Types\VsFileItem.cs" />
     <Compile Include="Types\VSLicense.cs" />
+    <Compile Include="Types\VsSolutionItem.cs" />
     <Compile Include="Types\VsProjectItem.cs" />
   </ItemGroup>
   <ItemGroup>

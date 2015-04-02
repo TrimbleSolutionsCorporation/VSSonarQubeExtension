@@ -29,6 +29,7 @@ type IVSSonarQubeCmdExecutor =
   // with redirection of output
   abstract member ExecuteCommand : string * string * Map<string, string> * (DataReceivedEventArgs -> unit) * (DataReceivedEventArgs -> unit) * string -> int
 
+  abstract member ExecuteCommand : program : string * args : string -> System.Collections.Generic.List<string>
 
 type VSSonarQubeCmdExecutor(logger : TaskLoggingHelper, timeout : int64) =
     let addEnvironmentVariable (startInfo:ProcessStartInfo) a b = startInfo.EnvironmentVariables.Add(a, b)
@@ -184,6 +185,33 @@ type VSSonarQubeCmdExecutor(logger : TaskLoggingHelper, timeout : int64) =
             this.cancelSignal <- true
             this.proc.ExitCode
 
+        member this.ExecuteCommand(program, args) =
+            let data = new System.Collections.Generic.List<string>()
+
+            this.Program <- program
+            let startInfo = ProcessStartInfo(FileName = program,
+                                             Arguments = args,
+                                             WindowStyle = ProcessWindowStyle.Normal,
+                                             UseShellExecute = false,
+                                             RedirectStandardOutput = true,
+                                             RedirectStandardError = true,
+                                             RedirectStandardInput = true,
+                                             CreateNoWindow = true)
+            this.proc <- new Process(StartInfo = startInfo)
+            let processData(e : DataReceivedEventArgs) =
+                if not(String.IsNullOrWhiteSpace(e.Data)) then
+                    data.Add(e.Data)
+                    System.Diagnostics.Debug.WriteLine("Data Cmd:" + e.Data)
+                ()
+
+            this.proc.ErrorDataReceived.Add(processData)
+            this.proc.OutputDataReceived.Add(processData)
+            this.proc.EnableRaisingEvents <- true
+            let ret = this.proc.Start()
+            this.proc.BeginOutputReadLine()
+            this.proc.BeginErrorReadLine()
+            this.proc.WaitForExit()
+            data
 
         member this.ExecuteCommand(program, args, env, outputHandler, errorHandler, workingDir) =        
             this.Program <- program       

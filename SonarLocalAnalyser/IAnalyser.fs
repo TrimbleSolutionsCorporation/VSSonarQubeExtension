@@ -27,22 +27,12 @@ open System.Diagnostics
 open Microsoft.Build.Utilities
 open VSSonarPlugins.Types
 
-type GlobalAnalysisIds = 
-    static member ExcludedPluginsKey : string = "ExcludedPluginsKey"
-    static member RunnerExecutableKey = "RunnerExecutable"
-    static member JavaExecutableKey = "JavaExecutable"
-    static member LocalAnalysisTimeoutKey = "TimeoutAnalysis"
-    static member IsDebugAnalysisOnKey = "IsDebugAnalysisOn"
-    static member SonarSourceKey = "SonarSources"
-    static member SourceEncodingKey = "SourceEncoding"
-    static member PropertiesFileKey = "PropertiesFile"
-
 type ISonarLocalAnalyser =     
   abstract member StopAllExecution : unit -> unit
   abstract member IsExecuting : unit -> bool
-  abstract member GetResourceKey : VsProjectItem * Resource * ISonarConfiguration * safeIsOn:bool -> string
+  abstract member GetResourceKey : VsFileItem * safeIsOn:bool -> string
 
-  abstract member AnalyseFile : VsProjectItem * Resource * onModifiedLinesOnly:bool *  version:double * ISonarConfiguration -> unit
+  abstract member AnalyseFile : VsFileItem * Resource * onModifiedLinesOnly:bool *  version:double * ISonarConfiguration -> unit
   abstract member RunProjectAnalysis : project : VsProjectItem * conf : ISonarConfiguration -> unit
   abstract member RunIncrementalAnalysis : Resource * version:double * ISonarConfiguration -> unit
   abstract member RunPreviewAnalysis : Resource * version:double * ISonarConfiguration -> unit

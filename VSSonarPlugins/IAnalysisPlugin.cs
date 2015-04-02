@@ -31,7 +31,7 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="string"/>.
         /// </returns>
-        string GetLanguageKey(VsProjectItem projectItem);
+        string GetLanguageKey(VsFileItem projectItem);
 
         /// <summary>
         /// The is supported.
@@ -45,7 +45,7 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="bool"/>.
         /// </returns>
-        bool IsSupported(ISonarConfiguration configuration, Resource project);
+        bool IsProjectSupported(ISonarConfiguration configuration, Resource project);
 
         /// <summary>
         /// The is supported.
@@ -56,7 +56,7 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="bool"/>.
         /// </returns>
-        bool IsSupported(VsProjectItem fileToAnalyse);
+        bool IsSupported(VsFileItem fileToAnalyse);
 
         /// <summary>
         /// The get resource key.
@@ -64,14 +64,11 @@ namespace VSSonarPlugins
         /// <param name="projectItem">
         /// The project item.
         /// </param>
-        /// <param name="projectKey">
-        /// The project key.
-        /// </param>
-        /// <param name="safeGeneration"></param>
+        /// <param name="bootStrapperOn"></param>
         /// <returns>
         /// The <see cref="string"/>.
         /// </returns>
-        string GetResourceKey(VsProjectItem projectItem, string projectKey, bool safeGeneration);
+        string GetResourceKey(VsFileItem projectItem, bool bootStrapperOn);
 
         /// <summary>
         /// The get local analysis extension.
@@ -83,5 +80,10 @@ namespace VSSonarPlugins
         /// The <see cref="IFileAnalyser"/>.
         /// </returns>
         IFileAnalyser GetLocalAnalysisExtension(ISonarConfiguration configuration);
+
+        /// <summary>The launch analysis on project.</summary>
+        /// <param name="project">The project.</param>
+        /// <param name="configuration">The configuration.</param>
+        void LaunchAnalysisOnProject(VsProjectItem project, ISonarConfiguration configuration);
     }
 }

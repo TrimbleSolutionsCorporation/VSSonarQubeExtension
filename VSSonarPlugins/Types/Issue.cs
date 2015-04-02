@@ -37,8 +37,6 @@ namespace VSSonarPlugins.Types
             this.CreationDate = DateTime.Now;
             this.CloseDate = DateTime.Now;
             this.Component = string.Empty;
-            this.ComponentSafe = string.Empty;
-
 
             this.EffortToFix = -1;
             this.Line = -1;
@@ -57,6 +55,9 @@ namespace VSSonarPlugins.Types
             this.Id = 0;
             this.ViolationId = 0;
         }
+
+        /// <summary>Gets or sets the path.</summary>
+        public string LocalPath { get; set; }
 
         /// <summary>
         /// Gets or sets the message.
@@ -77,11 +78,6 @@ namespace VSSonarPlugins.Types
         /// Gets or sets the component.
         /// </summary>
         public string Component { get; set; }
-
-        /// <summary>
-        /// Gets or sets the component.
-        /// </summary>
-        public string ComponentSafe { get; set; }
 
         /// <summary>
         /// Gets or sets the effort to fix.

@@ -27,14 +27,20 @@ type RunAnalysisTests() =
 
     [<Test>]
     member test.``If Thread is Null then analysis is not running`` () =
-        let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create(), Mock<ISonarConfiguration>().Create())
+
+        let mockConfReq =
+            Mock<IConfigurationHelper>()
+                .Setup(fun x -> <@ x.ReadSetting(any(), any(), any()) @>).Returns(new SonarQubeProperties(Value = "something"))
+                .Create()
+
+        let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), mockConfReq, Mock<ISonarConfiguration>().Create())
         ((analyser :> ISonarLocalAnalyser).IsExecuting()) |> should be False
 
     [<Test>]
     [<ExpectedException>]
     member test.``Should throw exception when no plugin is found`` () =
         let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create(), Mock<ISonarConfiguration>().Create())
-        ((analyser :> ISonarLocalAnalyser).GetResourceKey(new VsProjectItem("fileName", "filePath", "projectName", "projectFilePath", "solutionName", "solutionPath"), new Resource(), new ConnectionConfiguration(), true)) |> should throw typeof<ResourceNotSupportedException>
+        ((analyser :> ISonarLocalAnalyser).GetResourceKey(new VsFileItem(), true)) |> should throw typeof<ResourceNotSupportedException>
 
     [<Test>]
     [<ExpectedException>]
@@ -42,12 +48,12 @@ type RunAnalysisTests() =
         let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create(), Mock<ISonarConfiguration>().Create())
         let project = new Resource()
         project.Lang <- "c++"
-        ((analyser :> ISonarLocalAnalyser).GetResourceKey(new VsProjectItem("fileName", "filePath", "projectName", "projectFilePath", "solutionName", "solutionPath"), new Resource(), new ConnectionConfiguration(), true)) |> should throw typeof<ResourceNotSupportedException>
+        ((analyser :> ISonarLocalAnalyser).GetResourceKey(new VsFileItem(), true)) |> should throw typeof<ResourceNotSupportedException>
 
     [<Test>]
     member test.``Should Return Key When Single language is set`` () =
         let project = new Resource()
-        let vsItem = new VsProjectItem("fileName", "filePath", "projectName", "projectFilePath", "solutionName", "solutionPath")
+        let vsItem = new VsFileItem(FileName = "fileName", FilePath = "filePath")
         let pluginDescription = new PluginDescription()
         pluginDescription.Name <- "TestPlugin"
 
@@ -59,7 +65,7 @@ type RunAnalysisTests() =
         let mockAPlugin =
             Mock<IAnalysisPlugin>()
                 .Setup(fun x -> <@ x.IsSupported(vsItem) @>).Returns(true)
-                .Setup(fun x -> <@ x.GetResourceKey(any(), any(), any()) @>).Returns("Key")
+                .Setup(fun x -> <@ x.GetResourceKey(any(), any()) @>).Returns("Key")
                 .Setup(fun x -> <@ x.GetPluginDescription() @>).Returns(pluginDescription)
                 .Create()
 
@@ -68,4 +74,4 @@ type RunAnalysisTests() =
         let analyser = new SonarLocalAnalyser(listofPlugins, Mock<ISonarRestService>().Create(), mockAVsinterface, Mock<ISonarConfiguration>().Create())
         
         
-        (analyser :> ISonarLocalAnalyser).GetResourceKey(vsItem, project, new ConnectionConfiguration(), true) |> should equal "Key"
+        (analyser :> ISonarLocalAnalyser).GetResourceKey(vsItem, true) |> should equal "Key"

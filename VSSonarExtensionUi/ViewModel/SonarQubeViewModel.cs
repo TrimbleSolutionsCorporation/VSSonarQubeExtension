@@ -87,11 +87,6 @@ namespace VSSonarExtensionUi.ViewModel
             this.InitData();
             this.InitOptionsModel();
             this.InitCommands();
-            this.InitMenus();
-            this.InitViews();
-            this.InitConnection();
-
-            this.UpdateTheme(Colors.Black, Colors.White);
         }
 
         #endregion
@@ -455,7 +450,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// <param name="statusBar">The status bar.</param>
         /// <param name="provider">The provider.</param>
         /// <param name="extensionFolder">The extension Folder.</param>
-        public void ExtensionDataModelUpdate(
+        public void InitModelFromPackageInitialization(
             ISonarRestService restServiceIn, 
             IVsEnvironmentHelper vsenvironmenthelperIn, 
             IVSSStatusBar statusBar, 
@@ -468,6 +463,14 @@ namespace VSSonarExtensionUi.ViewModel
             this.StatusBar = statusBar;
             this.ExtensionFolder = extensionFolder;
 
+            this.VSonarQubeOptionsViewData.InitPuginSystem(vsenvironmenthelperIn, this.PluginControl);
+
+            this.InitMenus();
+            this.InitViews();
+            this.InitConnection();
+
+            this.UpdateTheme(Colors.Black, Colors.White);
+
             foreach (IAnalysisViewModelBase view in this.SonarQubeViews)
             {
                 view.UpdateServices(restServiceIn, vsenvironmenthelperIn, this.configurationHelper, statusBar, provider);
@@ -478,9 +481,6 @@ namespace VSSonarExtensionUi.ViewModel
             {
                 view.UpdateServices(restServiceIn, vsenvironmenthelperIn, this.configurationHelper, statusBar, provider);
             }
-
-            // this.Diagnostics = this.roslynAdapter.GetDiagnosticElementFromManifest(Path.Combine(this.ExtensionFolder, "extension.vsixmanifest"));
-            // this.DiagnosticsFound = "Sonar Rules Found: " + this.Diagnostics.Length;
         }
 
         /// <summary>Gets or sets the extension folder.</summary>
@@ -802,6 +802,7 @@ namespace VSSonarExtensionUi.ViewModel
             }
             catch (Exception ex)
             {
+                Debug.WriteLine(ex.Message);
             }
 
             var sourceKey = VsSonarUtils.GetProjectKey(solutionPath);
@@ -817,55 +818,49 @@ namespace VSSonarExtensionUi.ViewModel
         /// <returns>The <see cref="Resource"/>.</returns>
         private Resource CreateAResourceForFileInEditor(string fullName)
         {
-            var keyTypes = new string[3];
+            if (this.LocalViewModel.LocalAnalyserModule == null)
+            {
+                this.ErrorMessage = "No Plugin installed that supports this resource";
+                return null;
+            }
+
+            var key = this.LocalViewModel.LocalAnalyserModule.GetResourceKey(this.VsHelper.VsFileItem(fullName, this.AssociatedProject, null), false);
 
             try
             {
-                keyTypes[1] = this.LocalViewModel.LocalAnalyserModule.GetResourceKey(
-                    this.VsHelper.VsProjectItem(fullName), 
-                    this.AssociatedProject, 
-                    AuthtenticationHelper.AuthToken, 
-                    true);
-                keyTypes[2] = this.LocalViewModel.LocalAnalyserModule.GetResourceKey(
-                    this.VsHelper.VsProjectItem(fullName), 
-                    this.AssociatedProject, 
-                    AuthtenticationHelper.AuthToken, 
-                    false);
+                if (this.configurationHelper.ReadSetting(
+                        Context.AnalysisProject,
+                        this.AssociatedProject.Key,
+                        "sonar.visualstudio.enable").Value.ToLower().Equals("true"))
+                {
+                    key =
+                        this.LocalViewModel.LocalAnalyserModule.GetResourceKey(
+                            this.VsHelper.VsFileItem(fullName, this.AssociatedProject, null),
+                            true);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
 
-                string tounix = this.VsHelper.GetProperFilePathCapitalization(fullName).Replace("\\", "/");
-                string driveLetter = tounix.Substring(0, 1);
-                string solutionCan = driveLetter + this.OpenSolutionPath.Replace("\\", "/").Substring(1);
-                string fromBaseDir = tounix.Replace(solutionCan + "/", string.Empty);
-                keyTypes[0] = this.AssociatedProject.Key + ":" + fromBaseDir;
+            try
+            {
+                this.Logger.WriteMessage("try key: " + key);
+                Resource toReturn =
+                    this.SonarRestConnector.GetResourcesData(
+                        AuthtenticationHelper.AuthToken, 
+                        key)[0];
+                string fileName = Path.GetFileName(fullName);
+                toReturn.Name = fileName;
+                toReturn.Lname = fileName;
+                this.ErrorMessage = "Resource Found";
+                this.Logger.WriteMessage("Resource found: " + toReturn.Key);
+                return toReturn;
             }
             catch (Exception ex)
             {
                 this.Logger.WriteException(ex);
-                this.ErrorMessage = "No Plugin installed that supports this resource";
-                this.DiagnosticMessage = ex.Message + " " + ex.StackTrace;
-                return null;
-            }
-
-            foreach (string key in keyTypes)
-            {
-                try
-                {
-                    this.Logger.WriteMessage("try key: " + key);
-                    Resource toReturn =
-                        this.SonarRestConnector.GetResourcesData(
-                            AuthtenticationHelper.AuthToken, 
-                            key)[0];
-                    string fileName = Path.GetFileName(fullName);
-                    toReturn.Name = fileName;
-                    toReturn.Lname = fileName;
-                    this.ErrorMessage = "Resource Found";
-                    this.Logger.WriteMessage("Resource found: " + toReturn.Key);
-                    return toReturn;
-                }
-                catch (Exception ex)
-                {
-                    this.Logger.WriteException(ex);
-                }
             }
 
             this.Logger.WriteMessage("Resource not found in Server");
@@ -933,11 +928,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// </summary>
         private void InitOptionsModel()
         {
-            this.VSonarQubeOptionsViewData = new VSonarQubeOptionsViewModel(this.PluginControl, this, this.VsHelper, this.configurationHelper, this.notificationManager)
-                                                 {
-                                                     Vsenvironmenthelper =
-                                                         this.VsHelper
-                                                 };
+            this.VSonarQubeOptionsViewData = new VSonarQubeOptionsViewModel(this, this.configurationHelper, this.notificationManager);
 
             this.VSonarQubeOptionsViewData.ResetUserData();
         }
@@ -1031,6 +1022,7 @@ namespace VSSonarExtensionUi.ViewModel
             }
 
             this.AssociatedProject = this.SelectedProject;
+            this.AssociatedProject.SolutionRoot = this.OpenSolutionPath;
 
             if (string.IsNullOrEmpty(this.OpenSolutionPath))
             {

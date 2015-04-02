@@ -557,20 +557,8 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine(ex.Message);
-                    try
-                    {
-                        List<Resource> resources =
-                            this.model.SonarRestConnector.GetResourcesData(
-                                AuthtenticationHelper.AuthToken, 
-                                issue.ComponentSafe);
-                        filename = resources[0].Name;
-                    }
-                    catch (Exception final)
-                    {
-                        this.model.ErrorMessage = "Open file in VS failed";
-                        this.model.DiagnosticMessage = final.Message + " : " + final.StackTrace;
-                    }
+                    this.model.ErrorMessage = "Open file in VS failed";
+                    this.model.DiagnosticMessage = ex.Message + " : " + ex.StackTrace;
                 }
 
                 if (this.Vsenvironmenthelper == null)

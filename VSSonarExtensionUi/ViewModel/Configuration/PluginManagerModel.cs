@@ -60,12 +60,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         private readonly VSonarQubeOptionsViewModel viewModel;
         private readonly SonarQubeViewModel sqmodel;
         private readonly ISonarConfiguration sonarConf;
-
-        /// <summary>
-        ///     The visual studio helper.
-        /// </summary>
-        private IVsEnvironmentHelper visualStudioHelper;
-
         private IConfigurationHelper configurationHelper;
         private readonly INotificationManager notificationManager;
 
@@ -91,15 +85,14 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public PluginManagerModel(
             IPluginController controller, 
             ISonarConfiguration conf, 
-            IVsEnvironmentHelper visualStudioHelper, 
             IConfigurationHelper configurationHelper,
             VSonarQubeOptionsViewModel viewModel, 
             SonarQubeViewModel mainModel,
-            INotificationManager notifyManager)
+            INotificationManager notifyManager,
+            IVsEnvironmentHelper helper)
         {
             this.notificationManager = notifyManager;
             this.Header = "Plugin Manager";
-            this.visualStudioHelper = visualStudioHelper;
             this.configurationHelper = configurationHelper;
             this.viewModel = viewModel;
             this.sqmodel = mainModel;
@@ -109,7 +102,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.MenuPlugins = new List<IMenuCommandPlugin>();
             this.AnalysisPlugins = new List<IAnalysisPlugin>();
 
-            this.InitPluginList();
+            this.InitPluginList(helper);
             this.InitCommanding();
         }
 
@@ -368,7 +361,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             IServiceProvider provider)
         {
             this.configurationHelper = configurationHelper;
-            this.visualStudioHelper = vsenvironmenthelperIn;
         }
 
         public void SaveCurrentViewToDisk(IConfigurationHelper configurationHelper)
@@ -413,9 +405,9 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         ///     The init plugin list.
         /// </summary>
-        private void InitPluginList()
+        private void InitPluginList(IVsEnvironmentHelper visualStudioHelper)
         {
-            foreach (var plugin in this.controller.LoadPluginsFromPluginFolder(this.notificationManager, this.configurationHelper))
+            foreach (var plugin in this.controller.LoadPluginsFromPluginFolder(this.notificationManager, this.configurationHelper, visualStudioHelper))
             {
                 var plugDesc = plugin.GetPluginDescription();
                 try

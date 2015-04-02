@@ -31,6 +31,7 @@ open VSSonarQubeCmdExecutor
 open FSharp.Collections.ParallelSeq
 open System.Reflection
 
+
 type LanguageType =
    | SingleLang = 0
    | MultiLang = 1
@@ -46,10 +47,12 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
     let mutable cachedProfiles : Map<string, Profile> = Map.empty
     let syncLock = new System.Object()
     let mutable exec : VSSonarQubeCmdExecutor = new VSSonarQubeCmdExecutor(null, int64(1000 * 60 * 60)) // TODO timeout to be passed as parameter
+
     let initializationDone = 
         vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.ExcludedPluginsKey, Value = "devcockpit,pdfreport,report,scmactivity,views,jira,scmstats", Context = Context.AnalysisGeneral, Owner = OwnersId.AnalysisOwnerId), false, true)
         vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.JavaExecutableKey, Value = @"C:\Program Files (x86)\Java\jre7\bin\java.exe", Context = Context.AnalysisGeneral, Owner = OwnersId.AnalysisOwnerId), false, true)
         vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.RunnerExecutableKey, Value = Path.Combine(assemblyRunningPath, "SonarRunner", "bin", "sonar-runner.bat"), Context = Context.AnalysisGeneral, Owner = OwnersId.AnalysisOwnerId), false, true)
+        vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.FxCopPathKey, Value = @"C:\Program Files (x86)\Microsoft Visual Studio 12.0\Team Tools\Static Analysis Tools\FxCop\FxCopCmd.exe", Context = Context.AnalysisGeneral, Owner = OwnersId.AnalysisOwnerId), false, true)
         vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.IsDebugAnalysisOnKey, Value = "false", Context = Context.AnalysisGeneral, Owner = OwnersId.AnalysisOwnerId), false, true)
         vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.LocalAnalysisTimeoutKey, Value = "10", Context = Context.AnalysisGeneral, Owner = OwnersId.AnalysisOwnerId), false, true)
         true
@@ -59,13 +62,13 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
         completionEvent.Trigger([|x; errorInExecution|])
 
     let GetAPluginInListThatSupportSingleLanguage(project : Resource, conf : ISonarConfiguration) = 
-        (List.ofSeq plugins) |> List.find (fun plugin -> plugin.IsSupported(conf, project)) 
+        (List.ofSeq plugins) |> List.find (fun plugin -> plugin.IsProjectSupported(conf, project)) 
 
-    let GetPluginThatSupportsResource(itemInView : VsProjectItem) =      
+    let GetPluginThatSupportsResource(itemInView : VsFileItem) =      
         if itemInView = null then        
             raise(new NoFileInViewException())
 
-        let IsSupported(plugin : IAnalysisPlugin, item : VsProjectItem) = 
+        let IsSupported(plugin : IAnalysisPlugin, item : VsFileItem) = 
             let name = plugin.GetPluginDescription().Name
             try
                 let prop = vsinter.ReadSetting(Context.AnalysisGeneral, name, GlobalIds.PluginEnabledControlId)
@@ -84,14 +87,14 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
         else
             null
 
-    let GetExtensionThatSupportsThisFile(vsprojitem : VsProjectItem, conf:ISonarConfiguration) = 
+    let GetExtensionThatSupportsThisFile(vsprojitem : VsFileItem, conf:ISonarConfiguration) = 
         let plugin = GetPluginThatSupportsResource(vsprojitem)
         if plugin <> null then
             plugin.GetLocalAnalysisExtension(conf)
         else
             null
 
-    let GetQualityProfile(conf:ISonarConfiguration, project:Resource, itemInView:VsProjectItem) =
+    let GetQualityProfile(conf:ISonarConfiguration, project:Resource, itemInView:VsFileItem) =
         if cachedProfiles.ContainsKey(project.Lang) then
             cachedProfiles.[project.Lang]
         else
@@ -117,8 +120,6 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                     enabledrules.[0]
                 else
                     null
-
-
 
     let GetDoubleParent(x, path : string) =
         if String.IsNullOrEmpty(path) then
@@ -226,9 +227,10 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
     member val ExecutingThread = null with get, set
     member val CurrentAnalysisType = AnalysisMode.File with get, set
     member val RunningLanguageMethod = LanguageType.SingleLang with get, set
-    member val ItemInView = null : VsProjectItem with get, set
+    member val ItemInView = null : VsFileItem with get, set
     member val OnModifyFiles = false with get, set
     member val AnalysisIsRunning = false with get, set
+    member val ProjectLookupRunning = Set.empty with get, set
 
     member x.ProcessExecutionEventComplete(e : EventArgs) =
         let data = e :?> LocalAnalysisEventArgs
@@ -269,7 +271,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                         fileName <- absfileName.TrimEnd(']')
 
                     if File.Exists(fileName) then
-                        let vsprojitem = new VsProjectItem(Path.GetFileName(fileName), fileName, "", "", "", x.ProjectRoot)
+                        let vsprojitem = new VsFileItem(FileName = Path.GetFileName(fileName), FilePath = fileName)
                         let plugin = GetPluginThatSupportsResource(vsprojitem)
                         let extension = 
                             if plugin <> null then
@@ -290,7 +292,6 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                             project.Name <- x.Project.Name
                             project.Qualifier <- x.Project.Qualifier
                             project.Scope <- x.Project.Scope
-
                             project.Lang <- plugin.GetLanguageKey(vsprojitem)
 
                             let issues = extension.ExecuteAnalysisOnFile(vsprojitem, GetQualityProfile(x.Conf, project, vsprojitem), project, x.Conf)
@@ -392,13 +393,13 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
             else   
                 let GetSourceFromServer() = 
                     try
-                        let keyOfItem = (x :> ISonarLocalAnalyser).GetResourceKey(x.ItemInView, x.Project, x.Conf, true)
+                        let keyOfItem = (x :> ISonarLocalAnalyser).GetResourceKey(x.ItemInView, true)
                         let source = restService.GetSourceForFileResource(x.Conf, keyOfItem)
                         VsSonarUtils.GetLinesFromSource(source, "\r\n")
                     with
                     | ex ->
                         try
-                            let keyOfItem = (x :> ISonarLocalAnalyser).GetResourceKey(x.ItemInView, x.Project, x.Conf, false)
+                            let keyOfItem = (x :> ISonarLocalAnalyser).GetResourceKey(x.ItemInView, false)
                             let source = restService.GetSourceForFileResource(x.Conf, keyOfItem)
                             VsSonarUtils.GetLinesFromSource(source, "\r\n")
                         with
@@ -410,13 +411,13 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                     let issues = extension.ExecuteAnalysisOnFile(x.ItemInView, profile, x.Project, x.Conf)
 
                     lock syncLock (
-                        fun () -> 
+                        fun () ->
                             localissues.AddRange(issues)
                         )
 
                 completionEvent.Trigger([|x; null|])
                 x.AnalysisIsRunning <- false
-                            
+
     member x.CancelExecution(thread : Thread) =
         if not(obj.ReferenceEquals(exec, null)) then
             (exec :> IVSSonarQubeCmdExecutor).CancelExecution |> ignore
@@ -441,7 +442,9 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
         member x.StdOutEvent = stdOutEvent.Publish
 
         member x.RunProjectAnalysis(project : VsProjectItem, conf : ISonarConfiguration) =
-            ()
+            let plugin = GetAPluginInListThatSupportSingleLanguage(project.Solution.SonarProject, conf)
+            if plugin <> null then
+                plugin.LaunchAnalysisOnProject(project, conf)
 
         member x.GetIssues(conf : ISonarConfiguration, project : Resource) =
                                         
@@ -478,11 +481,11 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
 
             localissues
 
-        member x.AnalyseFile(itemInView : VsProjectItem, project : Resource, onModifiedLinesOnly : bool, version : double, conf : ISonarConfiguration) =
+        member x.AnalyseFile(itemInView : VsFileItem, project : Resource, onModifiedLinesOnly : bool, version : double, conf : ISonarConfiguration) =
             x.CurrentAnalysisType <- AnalysisMode.File
             x.Conf <- conf
             x.Version <- version
-            x.Abort <- false            
+            x.Abort <- false
             x.Project <- project
             x.ItemInView <- itemInView
             x.OnModifyFiles <- onModifiedLinesOnly
@@ -564,7 +567,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
         member x.IsExecuting() =
             x.AnalysisIsRunning
                 
-        member x.GetResourceKey(itemInView : VsProjectItem, associatedProject : Resource, conf : ISonarConfiguration, safeIsOn:bool) = 
+        member x.GetResourceKey(itemInView : VsFileItem, safeIsOn:bool) = 
             if plugins = null then
                 raise(new ResourceNotSupportedException())
 
@@ -573,7 +576,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
 
             let plugin = GetPluginThatSupportsResource(itemInView)
 
-            plugin.GetResourceKey(itemInView, associatedProject.Key, safeIsOn)
+            plugin.GetResourceKey(itemInView, safeIsOn)
 
         member x.AssociateWithProject(project : Resource) =
 
@@ -588,14 +591,14 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                     ()
 
                 try 
-                    let projectFile = vsinter.ReadSetting(Context.AnalysisProject, project.Key, GlobalAnalysisIds.PropertiesFileKey).Value
+                    let projectFile = vsinter.ReadSetting(Context.AnalysisGeneral, project.Key, GlobalAnalysisIds.PropertiesFileKey).Value
                     if File.Exists(projectFile) then
                         let lines = File.ReadAllLines(projectFile)
                         lines |> Seq.iter (fun line -> processLine(line))
                 with
                 | ex -> let projectFile = Path.Combine(project.SolutionRoot, "sonar-project.properties")
                         if File.Exists(projectFile) then
-                            vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.PropertiesFileKey, Value = "sonar-project.properties", Context = Context.AnalysisProject, Owner = OwnersId.AnalysisOwnerId))
+                            vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.PropertiesFileKey, Value = "sonar-project.properties", Context = Context.AnalysisGeneral, Owner = OwnersId.AnalysisOwnerId))
                             let lines = File.ReadAllLines(projectFile)
                             lines |> Seq.iter (fun line -> processLine(line))
 
