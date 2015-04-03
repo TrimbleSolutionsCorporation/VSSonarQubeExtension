@@ -38,13 +38,10 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>Initializes a new instance of the <see cref="VSonarQubeOptionsViewModel"/> class.</summary>
         /// <param name="model">The model.</param>
         /// <param name="configurationHelper">The configuration helper.</param>
-        /// <param name="notificationManager">The notification manager.</param>
         public VSonarQubeOptionsViewModel(
             SonarQubeViewModel model, 
-            IConfigurationHelper configurationHelper, 
-            INotificationManager notificationManager)
+            IConfigurationHelper configurationHelper)
         {
-            this.notifycationManager = notificationManager;
             this.model = model;
             this.ConfigurationHelper = configurationHelper;
 
@@ -69,9 +66,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         ///     The model.
         /// </summary>
         private readonly SonarQubeViewModel model;
-
-        /// <summary>The notifycation manager.</summary>
-        private readonly INotificationManager notifycationManager;
 
         #endregion
 
@@ -315,7 +309,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
         /// <summary>The init pugin system.</summary>
         /// <param name="helper">The helper.</param>
-        public void InitPuginSystem(IVsEnvironmentHelper helper, PluginController plugincontroller)
+        public void InitPuginSystem(IVsEnvironmentHelper helper, PluginController plugincontroller, INotificationManager manager)
         {
             this.PluginManager = new PluginManagerModel(
                 plugincontroller,
@@ -323,7 +317,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 this.ConfigurationHelper,
                 this,
                 this.model,
-                this.notifycationManager,
+                manager,
                 helper);
             this.LicenseManager = new LicenseViewerViewModel(this.PluginManager, this.ConfigurationHelper);
             this.AvailableOptions.Add(this.PluginManager);

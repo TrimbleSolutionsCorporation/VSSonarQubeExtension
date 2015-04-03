@@ -79,7 +79,6 @@ namespace VSSonarExtensionUi.ViewModel
             this.SonarRestConnector = new SonarRestService(new JsonSonarConnector());
             this.Logger = new VsSonarExtensionLogger(this);
             this.VsHelper = new StandAloneVsHelper();
-            this.notificationManager = new NotifyCationManager(this, this.VsHelper);
 
             this.IsExtensionBusy = false;
             this.IsConnected = false;
@@ -462,8 +461,9 @@ namespace VSSonarExtensionUi.ViewModel
             this.VsHelper = vsenvironmenthelperIn;
             this.StatusBar = statusBar;
             this.ExtensionFolder = extensionFolder;
+            this.NotificationManager = new NotifyCationManager(this, this.VsHelper);
 
-            this.VSonarQubeOptionsViewData.InitPuginSystem(vsenvironmenthelperIn, this.PluginControl);
+            this.VSonarQubeOptionsViewData.InitPuginSystem(vsenvironmenthelperIn, this.PluginControl, this.NotificationManager);
 
             this.InitMenus();
             this.InitViews();
@@ -928,8 +928,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// </summary>
         private void InitOptionsModel()
         {
-            this.VSonarQubeOptionsViewData = new VSonarQubeOptionsViewModel(this, this.configurationHelper, this.notificationManager);
-
+            this.VSonarQubeOptionsViewData = new VSonarQubeOptionsViewModel(this, this.configurationHelper);
             this.VSonarQubeOptionsViewData.ResetUserData();
         }
 
@@ -1187,9 +1186,6 @@ namespace VSSonarExtensionUi.ViewModel
         /// <summary>The configuration helper.</summary>
         private readonly IConfigurationHelper configurationHelper;
 
-        /// <summary>The notification manager.</summary>
-        private readonly INotificationManager notificationManager;
-
         /// <summary>The closed window.</summary>
         /// <param name="fullName">The full name.</param>
         public void ClosedWindow(string fullName)
@@ -1212,5 +1208,7 @@ namespace VSSonarExtensionUi.ViewModel
 
             return new Dictionary<int, CoverageElement>();
         }
+
+        public NotifyCationManager NotificationManager { get; set; }
     }
 }
