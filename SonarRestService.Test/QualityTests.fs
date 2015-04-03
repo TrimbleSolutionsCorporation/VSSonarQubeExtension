@@ -65,7 +65,8 @@ type QualityTests() =
        
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText("testdata/profileusingappid.txt"))
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), "/api/profiles/index?language=cs&name=Sonar+way") @>)
+                .Returns(File.ReadAllText("testdata/profileusingappid.txt"))
                 .Create()
 
         let service = SonarRestService(mockHttpReq)

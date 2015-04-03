@@ -911,10 +911,13 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 for rule in profile.Rules do
                     let url = "/api/rules/search?rule_key=" + HttpUtility.UrlEncode(rule.Repo + ":" + rule.Key)
                     let reply = httpconnector.HttpSonarGetRequest(conf, url)
-                    let rules = JsonRuleSearchResponse.Parse(reply)
-                    if rules.Total = 1 then
-                        // update values except for severity, since this is the default severity
-                        UpdateRuleInProfile(rules.Rules.[0], rule, true)
+                    try
+                        let rules = JsonRuleSearchResponse.Parse(reply)
+                        if rules.Total = 1 then
+                            // update values except for severity, since this is the default severity
+                            UpdateRuleInProfile(rules.Rules.[0], rule, true)
+                    with
+                    | ex -> ()
 
 
         member this.GetRuleUsingProfileAppId(conf:ISonarConfiguration, key:string) = 
