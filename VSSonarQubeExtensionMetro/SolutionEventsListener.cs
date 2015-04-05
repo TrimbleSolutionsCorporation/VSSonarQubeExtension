@@ -93,7 +93,7 @@ namespace VSSonarQubeExtension
         /// <returns>The <see cref="int"/>.</returns>
         int IVsSolutionEvents.OnAfterOpenProject(IVsHierarchy pHierarchy, int fAdded)
         {
-            this.OnAfterOpenProject();
+            //this.OnAfterOpenProject();
             return VSConstants.S_OK;
         }
 

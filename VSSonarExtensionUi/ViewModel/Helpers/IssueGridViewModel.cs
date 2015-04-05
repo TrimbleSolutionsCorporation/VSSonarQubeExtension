@@ -557,8 +557,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 }
                 catch (Exception ex)
                 {
-                    this.model.ErrorMessage = "Open file in VS failed";
-                    this.model.DiagnosticMessage = ex.Message + " : " + ex.StackTrace;
+                    this.model.NotificationManager.ReportException(ex);
                 }
 
                 if (this.Vsenvironmenthelper == null)
@@ -1048,8 +1047,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             }
             catch (Exception ex)
             {
-                this.model.ErrorMessage = "Cannot Clear Filter: " + ex.Message;
-                this.model.DiagnosticMessage = ex.StackTrace;
+                this.model.NotificationManager.ReportException(ex);
             }
         }
 

@@ -187,8 +187,6 @@ type VSSonarQubeCmdExecutor(logger : TaskLoggingHelper, timeout : int64) =
 
         member this.ExecuteCommand(program, args) =
             let data = new System.Collections.Generic.List<string>()
-
-            this.Program <- program
             let startInfo = ProcessStartInfo(FileName = program,
                                              Arguments = args,
                                              WindowStyle = ProcessWindowStyle.Normal,
@@ -197,20 +195,20 @@ type VSSonarQubeCmdExecutor(logger : TaskLoggingHelper, timeout : int64) =
                                              RedirectStandardError = true,
                                              RedirectStandardInput = true,
                                              CreateNoWindow = true)
-            this.proc <- new Process(StartInfo = startInfo)
+            let proc = new Process(StartInfo = startInfo)
             let processData(e : DataReceivedEventArgs) =
                 if not(String.IsNullOrWhiteSpace(e.Data)) then
                     data.Add(e.Data)
                     System.Diagnostics.Debug.WriteLine("Data Cmd:" + e.Data)
                 ()
 
-            this.proc.ErrorDataReceived.Add(processData)
-            this.proc.OutputDataReceived.Add(processData)
-            this.proc.EnableRaisingEvents <- true
-            let ret = this.proc.Start()
-            this.proc.BeginOutputReadLine()
-            this.proc.BeginErrorReadLine()
-            this.proc.WaitForExit()
+            proc.ErrorDataReceived.Add(processData)
+            proc.OutputDataReceived.Add(processData)
+            proc.EnableRaisingEvents <- true
+            let ret = proc.Start()
+            proc.BeginOutputReadLine()
+            proc.BeginErrorReadLine()
+            proc.WaitForExit()
             data
 
         member this.ExecuteCommand(program, args, env, outputHandler, errorHandler, workingDir) =        

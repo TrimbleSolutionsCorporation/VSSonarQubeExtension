@@ -35,15 +35,14 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="ex">The ex.</param>
         public void ReportException(Exception ex)
         {
-            this.model.ErrorMessage = ex.Message;
-            this.helper.WriteToVisualStudioOutput(ex.Message);
+            this.helper.WriteToVisualStudioOutput(DateTime.Now + ":" + ex.Source + ":" + ex.Message + " : " + ex.StackTrace);
         }
 
         /// <summary>The report message.</summary>
         /// <param name="messages">The messages.</param>
         public void ReportMessage(Message messages)
         {
-            this.helper.WriteToVisualStudioOutput(messages.Id + " : " + messages.Data);
+            this.helper.WriteToVisualStudioOutput(DateTime.Now + ":" + messages.Id + " : " + messages.Data);
         }
     }
 }

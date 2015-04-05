@@ -173,11 +173,6 @@ namespace VSSonarExtensionUi.ViewModel
         public string ConnectionTooltip { get; set; }
 
         /// <summary>
-        ///     Gets or sets the diagnostic message.
-        /// </summary>
-        public string DiagnosticMessage { get; set; }
-
-        /// <summary>
         ///     Gets or sets the disconnect to server command.
         /// </summary>
         public RelayCommand DisconnectToServerCommand { get; set; }
@@ -186,11 +181,6 @@ namespace VSSonarExtensionUi.ViewModel
         ///     Gets or sets the document in view.
         /// </summary>
         public string DocumentInView { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the error message.
-        /// </summary>
-        public string ErrorMessage { get; set; }
 
         /// <summary>
         ///     Gets or sets the fore ground color.
@@ -582,21 +572,19 @@ namespace VSSonarExtensionUi.ViewModel
             this.Logger.WriteMessage("Refresh Data For File: " + fullName);
             if (string.IsNullOrEmpty(fullName) || this.AssociatedProject == null)
             {
-                if (this.IsConnected && this.AssociatedProject == null)
-                {
-                    this.ErrorMessage = "Online : Not Associated";
-                }
-
-                if (!this.IsConnected)
-                {
-                    this.ErrorMessage = "Offline";
-                }
-
-                this.DiagnosticMessage = string.Empty;
                 return;
             }
 
             this.DocumentInView = fullName;
+            this.ResourceInEditor = null;
+            if (this.LocalViewModel.FileAnalysisIsEnabled)
+            {
+                this.LocalViewModel.IssuesGridView.AllIssues.Clear();
+                this.LocalViewModel.IssuesGridView.Issues.Clear();
+            }
+
+            this.ServerViewModel.IssuesGridView.AllIssues.Clear();
+            this.ServerViewModel.IssuesGridView.Issues.Clear();
             this.ResourceInEditor = this.CreateAResourceForFileInEditor(fullName);
 
             if (this.ResourceInEditor == null)
@@ -616,7 +604,7 @@ namespace VSSonarExtensionUi.ViewModel
                 {
                     this.Logger.WriteMessage("Cannot find file in server: " + ex.Message);
                     this.Logger.WriteException(ex);
-                    this.ErrorMessage = "Cannot Find File in Server";
+                    this.NotificationManager.ReportException(ex);
                 }
             }
         }
@@ -776,7 +764,6 @@ namespace VSSonarExtensionUi.ViewModel
         {
             if (AuthtenticationHelper.AuthToken == null)
             {
-                this.ErrorMessage = "User Not Logged In, Extension is Unusable. Configure User Settions in Tools > Options > Sonar";
                 return null;
             }
 
@@ -820,7 +807,6 @@ namespace VSSonarExtensionUi.ViewModel
         {
             if (this.LocalViewModel.LocalAnalyserModule == null)
             {
-                this.ErrorMessage = "No Plugin installed that supports this resource";
                 return null;
             }
 
@@ -854,7 +840,6 @@ namespace VSSonarExtensionUi.ViewModel
                 string fileName = Path.GetFileName(fullName);
                 toReturn.Name = fileName;
                 toReturn.Lname = fileName;
-                this.ErrorMessage = "Resource Found";
                 this.Logger.WriteMessage("Resource found: " + toReturn.Key);
                 return toReturn;
             }
@@ -864,7 +849,6 @@ namespace VSSonarExtensionUi.ViewModel
             }
 
             this.Logger.WriteMessage("Resource not found in Server");
-            this.ErrorMessage = "Resource not found in Server";
 
             return null;
         }
@@ -906,7 +890,6 @@ namespace VSSonarExtensionUi.ViewModel
             this.SonarVersion = 4.5;
             this.CanConnectEnabled = true;
             this.ConnectionTooltip = "Not Connected";
-            this.ErrorMessage = "Not Started";
             this.BackGroundColor = Colors.White;
             this.ForeGroundColor = Colors.Black;
         }
@@ -1052,7 +1035,6 @@ namespace VSSonarExtensionUi.ViewModel
                 }
             }
 
-            this.ErrorMessage = "Associated";
             this.IsAssociated = true;
 
             this.configurationHelper.SyncSettings();
@@ -1079,12 +1061,10 @@ namespace VSSonarExtensionUi.ViewModel
             if (this.IsConnected)
             {
                 this.OnConnectToSonar();
-                this.ErrorMessage = "Online";
             }
             else
             {
                 this.OnDisconnectToSonar();
-                this.ErrorMessage = "Offline";
             }
         }
 
@@ -1167,13 +1147,11 @@ namespace VSSonarExtensionUi.ViewModel
 
                 this.SonarVersion =
                     this.SonarRestConnector.GetServerInfo(AuthtenticationHelper.AuthToken);
-                this.ErrorMessage = "Online";
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                this.ErrorMessage = "Cannot Connect: Check Credentials";
-                this.DiagnosticMessage = "Cannot Connect: " + ex.Message + " \n " + ex.StackTrace;
+                this.NotificationManager.ReportException(ex);
                 this.ConnectionTooltip = "No Connection";
                 this.IsConnected = false;
                 this.IsConnectedButNotAssociated = false;

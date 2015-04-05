@@ -150,8 +150,7 @@ namespace VSSonarQubeExtension.Helpers
                 }
                 catch (Exception ex)
                 {
-                    SonarQubeViewModelFactory.SQViewModel.ErrorMessage = "Something Terrible Happen";
-                    SonarQubeViewModelFactory.SQViewModel.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
+                    SonarQubeViewModelFactory.SQViewModel.NotificationManager.ReportException(ex);
                 }
             }
         }
@@ -202,8 +201,7 @@ namespace VSSonarQubeExtension.Helpers
             }
             catch (Exception ex)
             {
-                SonarQubeViewModelFactory.SQViewModel.ErrorMessage = "Something Terrible Happen";
-                SonarQubeViewModelFactory.SQViewModel.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
+                SonarQubeViewModelFactory.SQViewModel.NotificationManager.ReportException(ex);
             }
 
             return default(T);
@@ -256,8 +254,7 @@ namespace VSSonarQubeExtension.Helpers
             }
             catch (Exception ex)
             {
-                SonarQubeViewModelFactory.SQViewModel.ErrorMessage = "Something Terrible Happen";
-                SonarQubeViewModelFactory.SQViewModel.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
+                SonarQubeViewModelFactory.SQViewModel.NotificationManager.ReportException(ex);
             }
         }
 
@@ -362,9 +359,7 @@ namespace VSSonarQubeExtension.Helpers
             }
             catch (Exception ex)
             {
-                SonarQubeViewModelFactory.SQViewModel.Logger.WriteException(ex);
-                SonarQubeViewModelFactory.SQViewModel.ErrorMessage = "Something Terrible Happen";
-                SonarQubeViewModelFactory.SQViewModel.DiagnosticMessage = ex.Message + "\r\n" + ex.StackTrace;
+                SonarQubeViewModelFactory.SQViewModel.NotificationManager.ReportException(ex);
             }
         }
 

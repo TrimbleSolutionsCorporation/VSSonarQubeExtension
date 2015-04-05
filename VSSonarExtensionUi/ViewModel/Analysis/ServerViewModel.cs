@@ -495,8 +495,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 }
                 catch (Exception ex)
                 {
-                    this.sonarQubeViewModel.ErrorMessage = "Cannot Display Diff: " + ex.Message;
-                    this.sonarQubeViewModel.DiagnosticMessage = ex.StackTrace;
+                    this.sonarQubeViewModel.NotificationManager.ReportException(ex);
                 }
             }
         }

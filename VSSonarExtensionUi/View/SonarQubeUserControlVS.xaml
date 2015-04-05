@@ -96,14 +96,11 @@
                     Content="Associate" Command="{Binding AssignProjectCommand}" HorizontalAlignment="Center" VerticalAlignment="Center" />
 		</Menu>
        
-		<StatusBar Grid.Row="2" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}">		
-			<StatusBarItem HorizontalAlignment="Left">
-				<TextBlock Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Text="{Binding ErrorMessage, FallbackValue=Connected}" ToolTip="{Binding DiagnosticMessage}"></TextBlock>
-				</StatusBarItem>
-			<StatusBarItem HorizontalAlignment="Left">
-				<TextBlock Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Text="{Binding DiagnosticsFound, FallbackValue=Found24}" ></TextBlock>
-				</StatusBarItem>            
-			<StatusBarItem HorizontalAlignment="Right">
+		<StatusBar Grid.Row="2" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}">
+            <StatusBarItem HorizontalAlignment="Left">
+                <TextBlock Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Text="{Binding ResourceInEditor.Key}"></TextBlock>
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
 				<StackPanel Orientation="Horizontal">
                     
                     <StatusBarItem>                                              

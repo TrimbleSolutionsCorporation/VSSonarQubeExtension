@@ -30,6 +30,7 @@ open SonarRestService
 open VSSonarQubeCmdExecutor
 open FSharp.Collections.ParallelSeq
 open System.Reflection
+open System.ComponentModel
 
 
 type LanguageType =
@@ -38,16 +39,19 @@ type LanguageType =
 
 [<ComVisible(false)>]
 [<HostProtection(SecurityAction.LinkDemand, Synchronization = true, ExternalThreading = true)>]
-type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugin>, restService : ISonarRestService, vsinter : IConfigurationHelper, sconf : ISonarConfiguration) =
+type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugin>, restService : ISonarRestService, vsinter : IConfigurationHelper, sconf : ISonarConfiguration, notificationManager : INotificationManager) =
     let assemblyRunningPath = Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString()
     let completionEvent = new DelegateEvent<System.EventHandler>()
     let stdOutEvent = new DelegateEvent<System.EventHandler>()
+    let mutable profileUpdated = false
     let jsonReports : System.Collections.Generic.List<String> = new System.Collections.Generic.List<String>()
     let localissues : System.Collections.Generic.List<Issue> = new System.Collections.Generic.List<Issue>()
     let cachedProfiles : System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, Profile>> =
                     let data = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, Profile>>()
                     data
     let syncLock = new System.Object()
+    let syncLockProfiles = new System.Object()
+    let mutable profilesCnt = 0
     let mutable exec : VSSonarQubeCmdExecutor = new VSSonarQubeCmdExecutor(null, int64(1000 * 60 * 60)) // TODO timeout to be passed as parameter
 
     let initializationDone = 
@@ -420,12 +424,12 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
         member x.StdOutEvent = stdOutEvent.Publish
 
         member x.RunProjectAnalysis(project : VsProjectItem, conf : ISonarConfiguration) =
-            let plugin = GetAPluginInListThatSupportSingleLanguage(project.Solution.SonarProject, conf)
-            if plugin <> null then
-                plugin.LaunchAnalysisOnProject(project, conf)
+            if profileUpdated then
+                let plugin = GetAPluginInListThatSupportSingleLanguage(project.Solution.SonarProject, conf)
+                if plugin <> null then
+                    plugin.LaunchAnalysisOnProject(project, conf)
 
         member x.GetIssues(conf : ISonarConfiguration, project : Resource) =
-                                        
             let issues = new System.Collections.Generic.List<Issue>()
 
             let ParseReport(report : string) =
@@ -460,75 +464,79 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
             localissues
 
         member x.AnalyseFile(itemInView : VsFileItem, project : Resource, onModifiedLinesOnly : bool, version : double, conf : ISonarConfiguration) =
-            x.CurrentAnalysisType <- AnalysisMode.File
-            x.Conf <- conf
-            x.Version <- version
-            x.Abort <- false
-            x.Project <- project
-            x.ItemInView <- itemInView
-            x.OnModifyFiles <- onModifiedLinesOnly
+            if profileUpdated then
+                x.CurrentAnalysisType <- AnalysisMode.File
+                x.Conf <- conf
+                x.Version <- version
+                x.Abort <- false
+                x.Project <- project
+                x.ItemInView <- itemInView
+                x.OnModifyFiles <- onModifiedLinesOnly
 
-            if plugins = null then
-                raise(new ResourceNotSupportedException())
+                if plugins = null then
+                    raise(new ResourceNotSupportedException())
 
-            if itemInView = null then
-                raise(new NoFileInViewException())
+                if itemInView = null then
+                    raise(new NoFileInViewException())
 
-            if GetPluginThatSupportsResource(x.ItemInView) = null then
-                raise(new ResourceNotSupportedException())
+                if GetPluginThatSupportsResource(x.ItemInView) = null then
+                    raise(new ResourceNotSupportedException())
             
-            x.AnalysisIsRunning <- true
-            localissues.Clear()
-            (new Thread(new ThreadStart(x.RunFileAnalysisThread))).Start()
+                x.AnalysisIsRunning <- true
+                localissues.Clear()
+                (new Thread(new ThreadStart(x.RunFileAnalysisThread))).Start()
 
         member x.RunIncrementalAnalysis(project : Resource, version : double, conf : ISonarConfiguration) =
-            x.CurrentAnalysisType <- AnalysisMode.Incremental
-            x.ProjectRoot <- project.SolutionRoot
-            x.Conf <- conf
-            x.Version <- version
-            x.Abort <- false
-            x.Project <- project
+            if profileUpdated then
+                x.CurrentAnalysisType <- AnalysisMode.Incremental
+                x.ProjectRoot <- project.SolutionRoot
+                x.Conf <- conf
+                x.Version <- version
+                x.Abort <- false
+                x.Project <- project
 
-            if not(String.IsNullOrEmpty(project.Lang)) then
-                x.RunningLanguageMethod <- LanguageType.SingleLang
-            else
-                x.RunningLanguageMethod <- LanguageType.MultiLang
+                if not(String.IsNullOrEmpty(project.Lang)) then
+                    x.RunningLanguageMethod <- LanguageType.SingleLang
+                else
+                    x.RunningLanguageMethod <- LanguageType.MultiLang
 
-            localissues.Clear()
-            x.AnalysisIsRunning <- true
-            (new Thread(new ThreadStart(x.RunIncrementalBuild))).Start()
+                localissues.Clear()
+                x.AnalysisIsRunning <- true
+                (new Thread(new ThreadStart(x.RunIncrementalBuild))).Start()
             
         member x.RunPreviewAnalysis(project : Resource, version : double, conf : ISonarConfiguration) =
-            x.CurrentAnalysisType <- AnalysisMode.Preview
-            x.ProjectRoot <- project.SolutionRoot
-            x.Project <- project
-            x.Conf <- conf
-            x.Version <- version
-            x.Abort <- false
+            if profileUpdated then
+                x.CurrentAnalysisType <- AnalysisMode.Preview
+                x.ProjectRoot <- project.SolutionRoot
+                x.Project <- project
+                x.Conf <- conf
+                x.Version <- version
+                x.Abort <- false
 
-            if not(String.IsNullOrEmpty(project.Lang)) then
-                x.RunningLanguageMethod <- LanguageType.SingleLang
-            else
-                x.RunningLanguageMethod <- LanguageType.MultiLang
+                if not(String.IsNullOrEmpty(project.Lang)) then
+                    x.RunningLanguageMethod <- LanguageType.SingleLang
+                else
+                    x.RunningLanguageMethod <- LanguageType.MultiLang
 
-            localissues.Clear()
-            x.AnalysisIsRunning <- true
-            (new Thread(new ThreadStart(x.RunPreviewBuild))).Start()
+                localissues.Clear()
+                x.AnalysisIsRunning <- true
+                (new Thread(new ThreadStart(x.RunPreviewBuild))).Start()
                                 
         member x.RunFullAnalysis(project : Resource,  version : double, conf : ISonarConfiguration) =
-            x.CurrentAnalysisType <- AnalysisMode.Full
-            x.ProjectRoot <- project.SolutionRoot
-            x.Project <- project
-            x.Conf <- conf
-            x.Version <- version
-            x.Abort <- false
+            if profileUpdated then
+                x.CurrentAnalysisType <- AnalysisMode.Full
+                x.ProjectRoot <- project.SolutionRoot
+                x.Project <- project
+                x.Conf <- conf
+                x.Version <- version
+                x.Abort <- false
 
-            if project.Lang = null then
-                x.RunningLanguageMethod <- LanguageType.MultiLang
+                if project.Lang = null then
+                    x.RunningLanguageMethod <- LanguageType.MultiLang
 
-            localissues.Clear()
-            x.AnalysisIsRunning <- true
-            (new Thread(new ThreadStart(x.RunFullBuild))).Start()
+                localissues.Clear()
+                x.AnalysisIsRunning <- true
+                (new Thread(new ThreadStart(x.RunFullBuild))).Start()
 
         member x.StopAllExecution() =
             x.Abort <- true
@@ -554,30 +562,43 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
 
             let plugin = GetPluginThatSupportsResource(itemInView)
 
+            if plugin = null then
+                raise(new ResourceNotSupportedException())
+
             plugin.GetResourceKey(itemInView, safeIsOn)
 
         member x.AssociateWithProject(project : Resource, conf:ISonarConfiguration) =
-
             let GetQualityProfiles(conf:ISonarConfiguration, project:Resource) =
                 if cachedProfiles.ContainsKey(project.Name) then
                     ()
                 else
                     let profiles = restService.GetQualityProfilesForProject(conf, project.Key)
-
+                    profilesCnt <- profiles.Count - 1
                     for profile in profiles do
-                        try
-                            restService.GetRulesForProfile(conf, profile)
-                            if cachedProfiles.ContainsKey(project.Name) then
-                                cachedProfiles.[project.Name].Add(profile.Language, profile)
-                            else
-                                let entry = new System.Collections.Generic.Dictionary<string, Profile>()
-                                cachedProfiles.Add(project.Name, entry)
-                                cachedProfiles.[project.Name].Add(profile.Language, profile)
-                        with
-                        | ex -> System.Diagnostics.Debug.WriteLine("cannot add profile: " + ex.Message + " : " + ex.StackTrace)
+                        let worker2 = new BackgroundWorker()
+
+                        worker2.DoWork.Add(fun c -> 
+                            notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "updating profile: " + profile.Name + " : " + profile.Language))
+                            try
+                                restService.GetRulesForProfile(conf, profile)
+                                lock syncLockProfiles (
+                                    fun () -> 
+                                        if cachedProfiles.ContainsKey(project.Name) then
+                                            cachedProfiles.[project.Name].Add(profile.Language, profile)
+                                        else
+                                            let entry = new System.Collections.Generic.Dictionary<string, Profile>()
+                                            cachedProfiles.Add(project.Name, entry)
+                                            cachedProfiles.[project.Name].Add(profile.Language, profile)
+                                    )
+                            with
+                            | ex -> System.Diagnostics.Debug.WriteLine("cannot add profile: " + ex.Message + " : " + ex.StackTrace)
+                            notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Completed update profile: " + profile.Name + " : " + profile.Language + " : " + (profilesCnt.ToString()) + " remaining"))
+                            profilesCnt <- profilesCnt - 1
+                            profileUpdated <- true)
+
+                        worker2.RunWorkerAsync()
 
             if project <> null && conf <> null then
-                GetQualityProfiles(conf, project)
                 let processLine(line : string) =
                     if line.Contains("=") then
                         let vals = line.Split('=')
@@ -598,5 +619,13 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                             vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.PropertiesFileKey, Value = "sonar-project.properties", Context = Context.AnalysisGeneral, Owner = OwnersId.AnalysisOwnerId))
                             let lines = File.ReadAllLines(projectFile)
                             lines |> Seq.iter (fun line -> processLine(line))
+
+                let worker = new BackgroundWorker()
+
+                worker.DoWork.Add(fun c -> profileUpdated <- false
+                                           notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Start Update profile"))
+                                           GetQualityProfiles(conf, project))
+
+                worker.RunWorkerAsync()
 
 

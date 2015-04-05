@@ -134,7 +134,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.InitCommanding();
             this.InitFileAnalysis();
 
-            this.LocalAnalyserModule = new SonarLocalAnalyser(this.plugins, this.RestService, this.ConfigurationHelper, sqhelper);
+            this.LocalAnalyserModule = new SonarLocalAnalyser(this.plugins, this.RestService, this.ConfigurationHelper, sqhelper, this.sonarQubeViewModel.NotificationManager);
             this.LocalAnalyserModule.StdOutEvent += this.UpdateOutputMessagesFromPlugin;
             this.LocalAnalyserModule.LocalAnalysisCompleted += this.UpdateLocalIssues;
 
@@ -439,13 +439,11 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             if (!this.sonarQubeViewModel.IsConnected)
             {
-                this.sonarQubeViewModel.ErrorMessage = "Cannot Run Analysis if not Connected to Sonar Server";
                 return;
             }
 
             if (!this.sonarQubeViewModel.IsAssociated)
             {
-                this.sonarQubeViewModel.ErrorMessage = "Cannot Run Analysis if not associated with a projct in SonarQube Server";
                 return;
             }
 
