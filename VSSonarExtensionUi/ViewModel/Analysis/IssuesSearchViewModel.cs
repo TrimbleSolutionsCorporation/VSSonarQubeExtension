@@ -73,24 +73,18 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         private IVsEnvironmentHelper visualStudioHelper;
 
+        /// <summary>The configuration helper.</summary>
         private IConfigurationHelper configurationHelper;
 
         #endregion
 
         #region Constructors and Destructors
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="IssuesSearchViewModel"/> class.
-        /// </summary>
-        /// <param name="sonarQubeViewModel">
-        /// The sonar qube view model.
-        /// </param>
-        /// <param name="visualStudioHelper">
-        /// The visual studio helper.
-        /// </param>
-        /// <param name="restService">
-        /// The rest service.
-        /// </param>
+        /// <summary>Initializes a new instance of the <see cref="IssuesSearchViewModel"/> class.</summary>
+        /// <param name="sonarQubeViewModel">The sonar qube view model.</param>
+        /// <param name="visualStudioHelper">The visual studio helper.</param>
+        /// <param name="restService">The rest service.</param>
+        /// <param name="configurationHelper">The configuration Helper.</param>
         public IssuesSearchViewModel(SonarQubeViewModel sonarQubeViewModel, IVsEnvironmentHelper visualStudioHelper, ISonarRestService restService, IConfigurationHelper configurationHelper)
         {
             this.configurationHelper = configurationHelper;
@@ -196,8 +190,10 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         public ICommand GetIssuesByFilterCommand { get; set; }
 
+        /// <summary>Gets or sets the go to prev issue command.</summary>
         public ICommand GoToPrevIssueCommand { get; set; }
 
+        /// <summary>Gets or sets the go to next issue command.</summary>
         public ICommand GoToNextIssueCommand { get; set; }
 
         /// <summary>
@@ -511,56 +507,69 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             if (this.visualStudioHelper != null)
             {
-                this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, 
-                    IssuesFilterViewModelKey, 
-                    "IsStatusOpenChecked", 
+                this.configurationHelper.WriteOptionInApplicationData(
+                    Context.UIProperties,
+                    IssuesFilterViewModelKey,
+                    "IsStatusOpenChecked",
                     this.IsStatusOpenChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties,
-                    IssuesFilterViewModelKey, 
-                    "IsStatusClosedChecked", 
+                this.configurationHelper.WriteOptionInApplicationData(
+                    Context.UIProperties,
+                    IssuesFilterViewModelKey,
+                    "IsStatusClosedChecked",
                     this.IsStatusClosedChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties,
-                    IssuesFilterViewModelKey, 
-                    "IsStatusResolvedChecked", 
+                this.configurationHelper.WriteOptionInApplicationData(
+                    Context.UIProperties,
+                    IssuesFilterViewModelKey,
+                    "IsStatusResolvedChecked",
                     this.IsStatusResolvedChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties,
-                    IssuesFilterViewModelKey, 
-                    "IsStatusConfirmedChecked", 
+                this.configurationHelper.WriteOptionInApplicationData(
+                    Context.UIProperties,
+                    IssuesFilterViewModelKey,
+                    "IsStatusConfirmedChecked",
                     this.IsStatusConfirmedChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties,
-                    IssuesFilterViewModelKey, 
-                    "IsStatusReopenedChecked", 
+                this.configurationHelper.WriteOptionInApplicationData(
+                    Context.UIProperties,
+                    IssuesFilterViewModelKey,
+                    "IsStatusReopenedChecked",
                     this.IsStatusReopenedChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties,
-                    IssuesFilterViewModelKey, 
-                    "IsBlockerChecked", 
+                this.configurationHelper.WriteOptionInApplicationData(
+                    Context.UIProperties,
+                    IssuesFilterViewModelKey,
+                    "IsBlockerChecked",
                     this.IsBlockerChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties,
-                    IssuesFilterViewModelKey, 
-                    "IsCriticalChecked", 
+                this.configurationHelper.WriteOptionInApplicationData(
+                    Context.UIProperties,
+                    IssuesFilterViewModelKey,
+                    "IsCriticalChecked",
                     this.IsCriticalChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties,
-                    IssuesFilterViewModelKey, 
-                    "IsMajaorChecked", 
+                this.configurationHelper.WriteOptionInApplicationData(
+                    Context.UIProperties,
+                    IssuesFilterViewModelKey,
+                    "IsMajaorChecked",
                     this.IsMajaorChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties,
-                    IssuesFilterViewModelKey, 
-                    "IsMinorChecked", 
+                this.configurationHelper.WriteOptionInApplicationData(
+                    Context.UIProperties,
+                    IssuesFilterViewModelKey,
+                    "IsMinorChecked",
                     this.IsMinorChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties,
-                    IssuesFilterViewModelKey, 
-                    "IsInfoChecked", 
+                this.configurationHelper.WriteOptionInApplicationData(
+                    Context.UIProperties,
+                    IssuesFilterViewModelKey,
+                    "IsInfoChecked",
                     this.IsInfoChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties,
-                    IssuesFilterViewModelKey, 
-                    "IsFalsePositiveChecked", 
+                this.configurationHelper.WriteOptionInApplicationData(
+                    Context.UIProperties,
+                    IssuesFilterViewModelKey,
+                    "IsFalsePositiveChecked",
                     this.IsFalsePositiveChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties,
-                    IssuesFilterViewModelKey, 
-                    "IsRemovedChecked", 
+                this.configurationHelper.WriteOptionInApplicationData(
+                    Context.UIProperties,
+                    IssuesFilterViewModelKey,
+                    "IsRemovedChecked",
                     this.IsRemovedChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties,
-                    IssuesFilterViewModelKey, 
+                this.configurationHelper.WriteOptionInApplicationData(
+                    Context.UIProperties,
+                    IssuesFilterViewModelKey,
                     "IsFixedChecked", 
                     this.IsFixedChecked.ToString(CultureInfo.InvariantCulture));
             }
@@ -583,31 +592,22 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.IssuesGridView.UpdateColours(background, foreground);
         }
 
-        /// <summary>
-        /// The update services.
-        /// </summary>
-        /// <param name="restServiceIn">
-        /// The rest service in.
-        /// </param>
-        /// <param name="vsenvironmenthelperIn">
-        /// The vsenvironmenthelper in.
-        /// </param>
-        /// <param name="statusBar">
-        /// The status bar.
-        /// </param>
-        /// <param name="provider">
-        /// The provider.
-        /// </param>
+        /// <summary>The update services.</summary>
+        /// <param name="restServiceIn">The rest service in.</param>
+        /// <param name="vsenvironmenthelperIn">The vsenvironmenthelper in.</param>
+        /// <param name="configurationHelperIn">The configuration Helper.</param>
+        /// <param name="statusBar">The status bar.</param>
+        /// <param name="provider">The provider.</param>
         public void UpdateServices(
             ISonarRestService restServiceIn, 
             IVsEnvironmentHelper vsenvironmenthelperIn,
-            IConfigurationHelper configurationHelper,
+            IConfigurationHelper configurationHelperIn,
             IVSSStatusBar statusBar, 
             IServiceProvider provider)
         {
             this.restService = restServiceIn;
             this.visualStudioHelper = vsenvironmenthelperIn;
-            this.configurationHelper = configurationHelper;
+            this.configurationHelper = configurationHelperIn;
             this.StatusBar = statusBar;
             this.ServiceProvier = provider;
 
@@ -860,11 +860,13 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             bw.RunWorkerAsync();
         }
 
+        /// <summary>The on go to next issue command.</summary>
         private void OnGoToNextIssueCommand()
         {
             this.IssuesGridView.GoToNextIssue();
         }
 
+        /// <summary>The on go to prev issue command.</summary>
         private void OnGoToPrevIssueCommand()
         {
             this.IssuesGridView.GoToPrevIssue();
