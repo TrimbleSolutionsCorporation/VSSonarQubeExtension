@@ -594,7 +594,9 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                             | ex -> System.Diagnostics.Debug.WriteLine("cannot add profile: " + ex.Message + " : " + ex.StackTrace)
                             notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Completed update profile: " + profile.Name + " : " + profile.Language + " : " + (profilesCnt.ToString()) + " remaining"))
                             profilesCnt <- profilesCnt - 1
-                            profileUpdated <- true)
+                            if profilesCnt = 0 then
+                                profileUpdated <- true
+                            )
 
                         worker2.RunWorkerAsync()
 
