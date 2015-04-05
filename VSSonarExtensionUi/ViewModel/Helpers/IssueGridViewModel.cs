@@ -1012,6 +1012,11 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
 
         public string SqaleRating { get; set; }
         public string SqaleRatingStr { get; set; }
+        /// <summary>Gets or sets a value indicating whether debt visible.</summary>
+        public bool DebtVisible { get; set; }
+
+        /// <summary>Gets or sets the debt index.</summary>
+        public int DebtIndex { get; set; }
 
         /// <summary>
         /// The on filter clear all command.
@@ -1093,6 +1098,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 this.KeyIndex = int.Parse(GetValueForOption(options, "KeyIndex", "14", owner), CultureInfo.InvariantCulture);
                 this.IdIndex = int.Parse(GetValueForOption(options, "IdIndex", "15", owner), CultureInfo.InvariantCulture);
                 this.IsNewIndex = int.Parse(GetValueForOption(options, "IsNewIndex", "16", owner), CultureInfo.InvariantCulture);
+                this.DebtIndex = int.Parse(GetValueForOption(options, "DebtIndex", "17", owner), CultureInfo.InvariantCulture);
 
                 this.ComponentVisible = bool.Parse(GetValueForOption(options, "ComponentVisible", "true", owner));
                 this.LineVisible = bool.Parse(GetValueForOption(options, "LineVisible", "true", owner));
@@ -1110,6 +1116,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 this.KeyVisible = bool.Parse(GetValueForOption(options, "KeyVisible", "true", owner));
                 this.IdVisible = bool.Parse(GetValueForOption(options, "IdVisible", "true", owner));
                 this.IsNewVisible = bool.Parse(GetValueForOption(options, "IsNewVisible", "true", owner));
+                this.DebtVisible = bool.Parse(GetValueForOption(options, "DebtVisible", "true", owner));
             }
             catch (Exception ex)
             {

@@ -446,7 +446,9 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 newRule.Repo <- eachrule.Repo
                 newRule.ConfigKey <- eachrule.Key + ":" + eachrule.Repo
                 newRule.Severity <- (EnumHelper.asEnum<Severity>(eachrule.Severity)).Value
-                profileRules.Add(newRule.ConfigKey, newRule)
+                if not(profileRules.ContainsKey(newRule.ConfigKey)) then
+                    profileRules.Add(newRule.ConfigKey, newRule)
+
                 newProfile.AddRule(newRule)
 
             try
@@ -911,7 +913,10 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                     with
                     | ex -> ()
 
-                    profile.AddRule(newRule)
+                    try
+                        profile.AddRule(newRule)
+                    with
+                    | ex -> System.Diagnostics.Debug.WriteLine("Cannot Add Rule: " + newRule.ConfigKey + " ex: " + ex.Message)
 
 
         member this.GetRuleUsingProfileAppId(conf:ISonarConfiguration, key:string) = 

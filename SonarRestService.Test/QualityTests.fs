@@ -23,7 +23,7 @@ type QualityTests() =
         let profile = (service :> ISonarRestService).GetEnabledRulesInProfile(conf , "language", "profile")
         profile.Count |> should equal 1
         profile.[0].Alerts.Count |> should equal 6
-        profile.[0].Rules.Count |> should equal 787
+        profile.[0].GetAllRules().Count |> should equal 784
 
     [<Test>]
     member test.``Should Get Valid Profile from Resource Response`` () =
@@ -57,7 +57,7 @@ type QualityTests() =
         profile.Key <- "msbuild-sonar-way-77787"
         profile.Language <- "msbuild"
         (service :> ISonarRestService).GetRulesForProfileUsingRulesApp(conf, profile, true)
-        profile.Rules.Count |> should equal 3
+        profile.GetAllRules().Count |> should equal 3
 
     [<Test>]
     member test.``Should Get Rules From Profile`` () =
@@ -75,8 +75,8 @@ type QualityTests() =
         profile.Name <- "Sonar way"
         profile.Language <- "cs"
         (service :> ISonarRestService).GetRulesForProfile(conf, profile)
-        profile.Rules.Count |> should equal 199
-        profile.Rules.[1].Params.Count |> should equal 1
+        profile.GetAllRules().Count |> should equal 199
+        profile.GetAllRules().[1].Params.Count |> should equal 1
 
     [<Test>]
     member test.``Should Search Rule in Profile`` () =

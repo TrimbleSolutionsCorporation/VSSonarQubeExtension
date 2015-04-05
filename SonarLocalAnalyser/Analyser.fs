@@ -565,10 +565,16 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                     let profiles = restService.GetQualityProfilesForProject(conf, project.Key)
 
                     for profile in profiles do
-                        restService.GetRulesForProfile(conf, profile)
-                        let entry = new System.Collections.Generic.Dictionary<string, Profile>()
-                        entry.Add(profile.Language, profile)
-                        cachedProfiles.Add(project.Name, entry)
+                        try
+                            restService.GetRulesForProfile(conf, profile)
+                            if cachedProfiles.ContainsKey(project.Name) then
+                                cachedProfiles.[project.Name].Add(profile.Language, profile)
+                            else
+                                let entry = new System.Collections.Generic.Dictionary<string, Profile>()
+                                cachedProfiles.Add(project.Name, entry)
+                                cachedProfiles.[project.Name].Add(profile.Language, profile)
+                        with
+                        | ex -> System.Diagnostics.Debug.WriteLine("cannot add profile: " + ex.Message + " : " + ex.StackTrace)
 
             if project <> null && conf <> null then
                 GetQualityProfiles(conf, project)

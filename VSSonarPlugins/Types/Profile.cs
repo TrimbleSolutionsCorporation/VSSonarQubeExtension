@@ -104,6 +104,11 @@ namespace VSSonarPlugins.Types
         /// </param>
         public void AddRule(Rule rule)
         {
+            if (rule.ConfigKey == null)
+            {
+                rule.ConfigKey = rule.Repo + ":" + rule.Key;
+            }
+
             if (!this.Rules.ContainsKey(rule.ConfigKey))
             {
                 this.Rules.Add(rule.ConfigKey, rule);

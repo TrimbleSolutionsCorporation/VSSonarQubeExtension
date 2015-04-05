@@ -455,7 +455,7 @@
                                     Header="Debt" CanUserSort="True" SortMemberPath="Debt"
                                     DisplayIndex="{Binding Debt, FallbackValue=17, Mode=TwoWay, Source={StaticResource Proxy}}"
                                     IsReadOnly="True"
-                                    Visibility="{Binding Data.EffortToFixVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}" />
+                                    Visibility="{Binding Data.DebtVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}" />
             </DataGrid.Columns>
             
             
