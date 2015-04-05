@@ -33,19 +33,19 @@ type RunAnalysisTests() =
                 .Setup(fun x -> <@ x.ReadSetting(any(), any(), any()) @>).Returns(new SonarQubeProperties(Value = "something"))
                 .Create()
 
-        let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), mockConfReq, Mock<ISonarConfiguration>().Create())
+        let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), mockConfReq, Mock<ISonarConfiguration>().Create(), Mock<INotificationManager>().Create())
         ((analyser :> ISonarLocalAnalyser).IsExecuting()) |> should be False
 
     [<Test>]
     [<ExpectedException>]
     member test.``Should throw exception when no plugin is found`` () =
-        let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create(), Mock<ISonarConfiguration>().Create())
+        let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create(), Mock<ISonarConfiguration>().Create(), Mock<INotificationManager>().Create())
         ((analyser :> ISonarLocalAnalyser).GetResourceKey(new VsFileItem(), true)) |> should throw typeof<ResourceNotSupportedException>
 
     [<Test>]
     [<ExpectedException>]
     member test.``Should throw exception if No plugins are loaded and we give a good resource`` () =
-        let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create(), Mock<ISonarConfiguration>().Create())
+        let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create(), Mock<ISonarConfiguration>().Create(), Mock<INotificationManager>().Create())
         let project = new Resource()
         project.Lang <- "c++"
         ((analyser :> ISonarLocalAnalyser).GetResourceKey(new VsFileItem(), true)) |> should throw typeof<ResourceNotSupportedException>
@@ -71,7 +71,7 @@ type RunAnalysisTests() =
 
         let listofPlugins = new System.Collections.Generic.List<IAnalysisPlugin>()
         listofPlugins.Add(mockAPlugin)
-        let analyser = new SonarLocalAnalyser(listofPlugins, Mock<ISonarRestService>().Create(), mockAVsinterface, Mock<ISonarConfiguration>().Create())
+        let analyser = new SonarLocalAnalyser(listofPlugins, Mock<ISonarRestService>().Create(), mockAVsinterface, Mock<ISonarConfiguration>().Create(), Mock<INotificationManager>().Create())
         
         
         (analyser :> ISonarLocalAnalyser).GetResourceKey(vsItem, true) |> should equal "Key"
