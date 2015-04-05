@@ -44,7 +44,9 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
     let stdOutEvent = new DelegateEvent<System.EventHandler>()
     let jsonReports : System.Collections.Generic.List<String> = new System.Collections.Generic.List<String>()
     let localissues : System.Collections.Generic.List<Issue> = new System.Collections.Generic.List<Issue>()
-    let mutable cachedProfiles : Map<string, Profile> = Map.empty
+    let cachedProfiles : System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, Profile>> =
+                    let data = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, Profile>>()
+                    data
     let syncLock = new System.Object()
     let mutable exec : VSSonarQubeCmdExecutor = new VSSonarQubeCmdExecutor(null, int64(1000 * 60 * 60)) // TODO timeout to be passed as parameter
 
@@ -93,33 +95,6 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
             plugin.GetLocalAnalysisExtension(conf)
         else
             null
-
-    let GetQualityProfile(conf:ISonarConfiguration, project:Resource, itemInView:VsFileItem) =
-        if cachedProfiles.ContainsKey(project.Lang) then
-            cachedProfiles.[project.Lang]
-        else
-            
-            let profiles = restService.GetQualityProfilesForProject(conf, project.Key)
-            let profileResource = restService.GetQualityProfile(conf, project.Key)
-
-            if profileResource.Count > 0 then
-                let enabledrules = restService.GetEnabledRulesInProfile(conf, project.Lang, profileResource.[0].Metrics.[0].Data)                            
-                restService.GetRulesForProfile(conf, enabledrules.[0])
-                cachedProfiles <- cachedProfiles.Add(project.Lang, enabledrules.[0])
-                enabledrules.[0]
-            else
-                if project.Lang = null then
-                    let plugin = GetPluginThatSupportsResource(itemInView)
-                    project.Lang <- plugin.GetLanguageKey(itemInView)
-
-                let profile = profiles |> Seq.find (fun x -> x.Language = project.Lang)
-                if profile <> null then
-                    let enabledrules = restService.GetEnabledRulesInProfile(conf, project.Lang, profile.Name)
-                    restService.GetRulesForProfile(conf, enabledrules.[0])
-                    cachedProfiles <- cachedProfiles.Add(project.Lang, enabledrules.[0])
-                    enabledrules.[0]
-                else
-                    null
 
     let GetDoubleParent(x, path : string) =
         if String.IsNullOrEmpty(path) then
@@ -294,7 +269,9 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                             project.Scope <- x.Project.Scope
                             project.Lang <- plugin.GetLanguageKey(vsprojitem)
 
-                            let issues = extension.ExecuteAnalysisOnFile(vsprojitem, GetQualityProfile(x.Conf, project, vsprojitem), project, x.Conf)
+                            let profile = cachedProfiles.[project.Name].[plugin.GetLanguageKey(vsprojitem)]
+
+                            let issues = extension.ExecuteAnalysisOnFile(vsprojitem, profile, project, x.Conf)
                             lock syncLock (
                                 fun () -> 
                                     localissues.AddRange(issues)
@@ -407,13 +384,14 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                
                 let extension = plugin.GetLocalAnalysisExtension(x.Conf)
                 if extension <> null then
-                    let profile = GetQualityProfile(x.Conf, x.Project, x.ItemInView)
-                    let issues = extension.ExecuteAnalysisOnFile(x.ItemInView, profile, x.Project, x.Conf)
+                    if cachedProfiles.[x.Project.Name].ContainsKey(plugin.GetLanguageKey(x.ItemInView)) then
+                        let profile = cachedProfiles.[x.Project.Name].[plugin.GetLanguageKey(x.ItemInView)]
+                        let issues = extension.ExecuteAnalysisOnFile(x.ItemInView, profile, x.Project, x.Conf)
 
-                    lock syncLock (
-                        fun () ->
-                            localissues.AddRange(issues)
-                        )
+                        lock syncLock (
+                            fun () ->
+                                localissues.AddRange(issues)
+                            )
 
                 completionEvent.Trigger([|x; null|])
                 x.AnalysisIsRunning <- false
@@ -578,9 +556,22 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
 
             plugin.GetResourceKey(itemInView, safeIsOn)
 
-        member x.AssociateWithProject(project : Resource) =
+        member x.AssociateWithProject(project : Resource, conf:ISonarConfiguration) =
 
-            if project <> null then
+            let GetQualityProfiles(conf:ISonarConfiguration, project:Resource) =
+                if cachedProfiles.ContainsKey(project.Name) then
+                    ()
+                else
+                    let profiles = restService.GetQualityProfilesForProject(conf, project.Key)
+
+                    for profile in profiles do
+                        restService.GetRulesForProfile(conf, profile)
+                        let entry = new System.Collections.Generic.Dictionary<string, Profile>()
+                        entry.Add(profile.Language, profile)
+                        cachedProfiles.Add(project.Name, entry)
+
+            if project <> null && conf <> null then
+                GetQualityProfiles(conf, project)
                 let processLine(line : string) =
                     if line.Contains("=") then
                         let vals = line.Split('=')

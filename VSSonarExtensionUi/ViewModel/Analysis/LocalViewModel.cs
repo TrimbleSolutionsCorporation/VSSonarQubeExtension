@@ -376,7 +376,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             if (!string.IsNullOrEmpty(this.SourceWorkingDir) && Directory.Exists(this.SourceWorkingDir))
             {
                 this.CanRunAnalysis = true;
-                this.LocalAnalyserModule.AssociateWithProject(associatedProject);
+                this.LocalAnalyserModule.AssociateWithProject(associatedProject, sonarCubeConfiguration);
             }
         }
 

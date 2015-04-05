@@ -40,7 +40,7 @@ type ISonarLocalAnalyser =
 
   abstract member GetIssues : config:ISonarConfiguration * project:Resource -> System.Collections.Generic.List<Issue>
 
-  abstract member AssociateWithProject : project:Resource -> unit
+  abstract member AssociateWithProject : project:Resource * conf:ISonarConfiguration -> unit
  
   [<CLIEvent>]
   abstract member LocalAnalysisCompleted : IDelegateEvent<System.EventHandler>
