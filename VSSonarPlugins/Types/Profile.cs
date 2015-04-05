@@ -29,8 +29,11 @@ namespace VSSonarPlugins.Types
     {
         public Profile()
         {
-            this.Rules = new List<Rule>();
+            this.Rules = new Dictionary<string, Rule>();
+            this.RulesByIternalKey = new Dictionary<string, Rule>();
         }
+
+        private Dictionary<string, Rule> RulesByIternalKey { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether default.
@@ -57,81 +60,40 @@ namespace VSSonarPlugins.Types
         /// <summary>
         /// Gets or sets the rules.
         /// </summary>
-        public List<Rule> Rules { get; set; }
+        private Dictionary<string, Rule> Rules { get; set; }
 
         /// <summary>
         /// Gets or sets the projects.
         /// </summary>
         public List<SonarProject> Projects { get; set; }
 
-        /// <summary>
-        /// The is rule enabled with repo.
-        /// </summary>
-        /// <param name="profile">
-        /// The profile.
-        /// </param>
-        /// <param name="idWithRepository">
-        /// The id with repository.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Rule"/>.
-        /// </returns>
-        public static Rule IsRuleEnabled(Profile profile, string idWithRepository)
+        /// <summary>The get rule.</summary>
+        /// <param name="internalKeyOrConfigKey">The internal Key Or Key.</param>
+        /// <returns>The <see cref="Rule"/>.</returns>
+        public Rule GetRule(string internalKeyOrConfigKey)
         {
-            if (profile == null)
+            try
             {
-                return null;
+                return this.Rules[internalKeyOrConfigKey];
             }
-
-            return profile.Rules.FirstOrDefault(rule => (rule.Repo + ":" + rule.Key).Equals(idWithRepository));
-        }
-
-        /// <summary>
-        /// The is rule present.
-        /// </summary>
-        /// <param name="key">
-        /// The key.
-        /// </param>
-        /// <returns>
-        /// The <see cref="bool"/>.
-        /// </returns>
-        public bool IsRulePresent(string key)
-        {
-            return this.Rules.Any(rule => rule.Key.Equals(key));
-        }
-
-        /// <summary>
-        /// The get rule.
-        /// </summary>
-        /// <param name="key">
-        /// The key.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Rule"/>.
-        /// </returns>
-        public Rule GetRule(string key)
-        {
-            int i = 0;
-            foreach (var rule in this.Rules)
+            catch (KeyNotFoundException)
             {
-                if (rule.Key.Equals(key) || rule.Key.EndsWith(":" + key))
+                try
                 {
-                    return rule;
+                    return this.RulesByIternalKey[internalKeyOrConfigKey];
                 }
-
-                if (string.IsNullOrEmpty(rule.InternalKey))
+                catch (KeyNotFoundException)
                 {
-                    continue;
-                }
-
-                i++;
-                if (rule.InternalKey.Equals(key) || rule.InternalKey.EndsWith(":" + key))
-                {
-                    return rule;
+                    return null;
                 }
             }
+        }
 
-            return null;
+        /// <summary>The get all rules.</summary>
+        /// <returns>The <see cref="List"/>.</returns>
+        public List<Rule> GetAllRules()
+        {
+            return this.Rules.Values.ToList();
         }
 
         /// <summary>
@@ -140,11 +102,21 @@ namespace VSSonarPlugins.Types
         /// <param name="rule">
         /// The rule.
         /// </param>
-        public void CreateRule(Rule rule)
+        public void AddRule(Rule rule)
         {
-            if (!this.IsRulePresent(rule.Key))
+            if (!this.Rules.ContainsKey(rule.ConfigKey))
             {
-                this.Rules.Add(rule);
+                this.Rules.Add(rule.ConfigKey, rule);
+            }
+
+            if (!string.IsNullOrEmpty(rule.InternalKey))
+            {
+                if (this.Rules.ContainsKey(rule.InternalKey))
+                {
+                    return;
+                }
+
+                this.RulesByIternalKey.Add(rule.InternalKey, rule);
             }
         }
     }

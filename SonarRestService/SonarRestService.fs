@@ -437,17 +437,17 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             newProfile.Language <- eachprofile.Language
             newProfile.Name <- eachprofile.Name
 
-            let profileRules = new System.Collections.Generic.List<Rule>()
+            let profileRules = new System.Collections.Generic.Dictionary<string, Rule>()
             let profileAlerts = new System.Collections.Generic.List<Alert>()
 
             for eachrule in eachprofile.Rules do
                 let newRule = new Rule()
                 newRule.Key <- eachrule.Key
                 newRule.Repo <- eachrule.Repo
+                newRule.ConfigKey <- eachrule.Key + ":" + eachrule.Repo
                 newRule.Severity <- (EnumHelper.asEnum<Severity>(eachrule.Severity)).Value
-                profileRules.Add(newRule)
-
-            newProfile.Rules <- profileRules
+                profileRules.Add(newRule.ConfigKey, newRule)
+                newProfile.AddRule(newRule)
 
             try
                 for eachalert in eachprofile.Alerts do
@@ -615,7 +615,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
         with
         | ex -> ()
 
-        profile.Rules.Add(newRule)  
+        profile.AddRule(newRule)
 
     let UpdateRuleInProfile(parsedDataRule:JsonRuleSearchResponse.Rule, rule : Rule, skipSeverity : bool) =
 
@@ -760,15 +760,11 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             with
             | ex -> ()
 
-        profile.Rules.Add(newRule)  
+        profile.AddRule(newRule)  
 
     let GetRulesFromSearchQuery(rules : JsonRuleSearchResponse.Rule [], profile : Profile, enabledStatus:bool) =
-        if profile.Rules = null then
-            profile.Rules <- new System.Collections.Generic.List<Rule>() 
-
         for parsedDataRule in rules do
             CreateRuleInProfile(parsedDataRule, profile, enabledStatus)
-
 
     interface ISonarRestService with
         member this.CreateRule(conf:ISonarConfiguration, rule:Rule, ruleTemplate:Rule) =
@@ -885,7 +881,6 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
         member this.GetRulesForProfile(conf:ISonarConfiguration , profile:Profile) = 
             if profile <> null then
-                profile.Rules <- new System.Collections.Generic.List<Rule>() 
                 let url = "/api/profiles/index?language=" + HttpUtility.UrlEncode(profile.Language) + "&name=" + HttpUtility.UrlEncode(profile.Name)
                 let reply = httpconnector.HttpSonarGetRequest(conf, url)
                 let data = JsonProfileAfter44.Parse(reply)
@@ -906,18 +901,17 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
                     newRule.Severity <- (EnumHelper.asEnum<Severity>(rule.Severity)).Value
 
-                    profile.Rules.Add(newRule)
-
-                for rule in profile.Rules do
                     let url = "/api/rules/search?rule_key=" + HttpUtility.UrlEncode(rule.Repo + ":" + rule.Key)
                     let reply = httpconnector.HttpSonarGetRequest(conf, url)
                     try
                         let rules = JsonRuleSearchResponse.Parse(reply)
                         if rules.Total = 1 then
                             // update values except for severity, since this is the default severity
-                            UpdateRuleInProfile(rules.Rules.[0], rule, true)
+                            UpdateRuleInProfile(rules.Rules.[0], newRule, true)
                     with
                     | ex -> ()
+
+                    profile.AddRule(newRule)
 
 
         member this.GetRuleUsingProfileAppId(conf:ISonarConfiguration, key:string) = 
@@ -927,7 +921,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 if rules.Total = 1 then
                     let profile = new Profile()
                     CreateRuleInProfile(rules.Rules.[0], profile, false)                
-                    profile.Rules.[0]
+                    profile.GetRule(key)
                 else
                     null
 
@@ -962,13 +956,11 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
                 let profileFast = (this :> ISonarRestService).GetEnabledRulesInProfile(conf, profile.Language, profile.Name)
 
-                profile.Rules <- new System.Collections.Generic.List<Rule>() 
-
                 let url = "/api/profiles/index?language=" + HttpUtility.UrlEncode(profile.Language) + "&name=" + HttpUtility.UrlEncode(profile.Name)
                 let reply = httpconnector.HttpSonarGetRequest(conf, url)
                 let data = JsonProfileAfter44.Parse(reply)
                 let rules = data.[0].Rules
-                for rule in profileFast.[0].Rules do
+                for rule in profileFast.[0].GetAllRules() do
 
                     let url = "/api/rules/show?key=" + HttpUtility.UrlEncode(rule.Key)
 
