@@ -137,6 +137,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.LocalAnalyserModule = new SonarLocalAnalyser(this.plugins, this.RestService, this.ConfigurationHelper, sqhelper, this.sonarQubeViewModel.NotificationManager);
             this.LocalAnalyserModule.StdOutEvent += this.UpdateOutputMessagesFromPlugin;
             this.LocalAnalyserModule.LocalAnalysisCompleted += this.UpdateLocalIssues;
+            this.LocalAnalyserModule.AssociateCommandCompeted += this.UpdateAssociateCommand;
 
             this.ShowFlyouts = false;
             this.SizeOfFlyout = 0;
@@ -173,10 +174,17 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         public Color BackGroundColor { get; set; }
 
+        /// <summary>Gets or sets a value indicating whether loading sonar data.</summary>
+        [AlsoNotifyFor("CanRunLocalAnalysis")]
+        public bool LoadingSonarData { get; set; }
+
         /// <summary>
         ///     Gets or sets a value indicating whether can run analysis.
         /// </summary>
         public bool CanRunAnalysis { get; set; }
+
+        /// <summary>Gets or sets the associating text tooltip.</summary>
+        public string AssociatingTextTooltip { get; set; }
 
         /// <summary>
         ///     Gets or sets the close flyout log viewer command.
@@ -216,7 +224,26 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <summary>
         ///     Gets or sets a value indicating whether is associated with project.
         /// </summary>
+        [AlsoNotifyFor("CanRunLocalAnalysis")]
         public bool IsAssociatedWithProject { get; set; }
+
+        /// <summary>Gets a value indicating whether can run local analysis.</summary>
+        public bool CanRunLocalAnalysis
+        {
+            get
+            {
+                if (this.LoadingSonarData)
+                {
+                    this.AssociatingTextTooltip = "Loading SonarQube profile Data";
+                }
+                else
+                {
+                    this.AssociatingTextTooltip = "";
+                }
+
+                return this.IsAssociatedWithProject && !this.LoadingSonarData;
+            }
+        }
 
         /// <summary>
         ///     Gets or sets the issues grid view.
@@ -376,6 +403,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             if (!string.IsNullOrEmpty(this.SourceWorkingDir) && Directory.Exists(this.SourceWorkingDir))
             {
                 this.CanRunAnalysis = true;
+                this.LoadingSonarData = true;
                 this.LocalAnalyserModule.AssociateWithProject(associatedProject, sonarCubeConfiguration);
             }
         }
@@ -802,6 +830,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         }
 
         public bool PermissionsAreNotAvailable { get; set; }
+
+        /// <summary>The update associate command.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The e.</param>
+        private void UpdateAssociateCommand(object sender, EventArgs e)
+        {
+            this.LoadingSonarData = false;
+        }
 
         private void OnOpenLogCommand()
         {

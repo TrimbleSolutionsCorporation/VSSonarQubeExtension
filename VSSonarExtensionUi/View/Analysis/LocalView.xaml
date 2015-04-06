@@ -56,7 +56,7 @@
                 <ScrollViewer>
                     <ItemsControl x:Name="LstBox" ItemsSource="{Binding OuputLogLines}" Background="#FFC2C2C2"
                                   BorderBrush="#FF000000" BorderThickness="1,1,1,1"
-                                  Grid.ColumnSpan="1" Grid.Row="1" Grid.RowSpan="1" VerticalAlignment="Stretch" />
+                                  Grid.ColumnSpan="1" Grid.Row="2" Grid.RowSpan="1" VerticalAlignment="Stretch" />
                 </ScrollViewer>
             </controls:Flyout>
         </controls:FlyoutsControl>
@@ -64,6 +64,7 @@
         <Grid DockPanel.Dock="Top">
             <Grid.RowDefinitions>
                 <RowDefinition Height="37" />
+                <RowDefinition Height="5" />
                 <RowDefinition Height="400*" />
                 <RowDefinition Height="3*" />
             </Grid.RowDefinitions>
@@ -148,7 +149,7 @@
                               Height="30"
                               Margin="0, 0, 0, 0"
                               ToolTip="Run File Analysis"
-                              IsChecked="{Binding FileAnalysisIsEnabled}" IsEnabled="{Binding CanRunAnalysis}">
+                              IsChecked="{Binding FileAnalysisIsEnabled}" IsEnabled="{Binding CanRunLocalAnalysis}">
                     <Rectangle Width="15"
                                Height="15"
                                Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}">
@@ -165,7 +166,7 @@
                         Margin="0, 0, 0, 0"
                         ToolTip="Run Incremental Analysis"
                         Style="{DynamicResource SquareButtonStyle}" Command="{Binding IncrementalCommand}"
-                        IsEnabled="{Binding CanRunAnalysis}">
+                        IsEnabled="{Binding CanRunLocalAnalysis}">
                     <Rectangle Width="15"
                                Height="15"
                                Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}">
@@ -182,7 +183,7 @@
                         Margin="0, 0, 0, 0"
                         ToolTip="Run Preview Analysis"
                         Style="{DynamicResource SquareButtonStyle}" Command="{Binding PreviewCommand}"
-                        IsEnabled="{Binding CanRunAnalysis}">
+                        IsEnabled="{Binding CanRunLocalAnalysis}">
                     <Rectangle Width="15"
                                Height="15"
                                Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}">
@@ -199,7 +200,7 @@
                         Margin="0, 0, 0, 0"
                         ToolTip="Run Full Analysis"
                         Style="{DynamicResource SquareButtonStyle}" Command="{Binding AnalysisCommand}"
-                        IsEnabled="{Binding CanRunAnalysis}">
+                        IsEnabled="{Binding CanRunLocalAnalysis}">
                     <Rectangle Width="15"
                                Height="15"
                                Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}">
@@ -216,7 +217,7 @@
                         Margin="0, 0, 0, 0"
                         ToolTip="Cancel Analysis"
                         Style="{DynamicResource SquareButtonStyle}" Command="{Binding StopLocalAnalysisCommand}"
-                        IsEnabled="{Binding CanRunAnalysis, Converter={StaticResource BooleanInverter}}">
+                        IsEnabled="{Binding CanRunLocalAnalysis, Converter={StaticResource BooleanInverter}}">
                     <Rectangle Width="15"
                                Height="15"
                                Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}">
@@ -233,7 +234,7 @@
                         Margin="0, 0, 0, 0"
                         ToolTip="Open Analysis Log"
                         Style="{DynamicResource SquareButtonStyle}" Command="{Binding OpenLogCommand}"
-                        IsEnabled="{Binding CanRunAnalysis}">
+                        IsEnabled="{Binding CanRunLocalAnalysis}">
                     <Rectangle Width="15"
                                Height="15"
                                Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}">
@@ -250,7 +251,7 @@
                         Margin="0, 0, 0, 0"
                         ToolTip="Go to previous issue"
                         Style="{DynamicResource SquareButtonStyle}" Command="{Binding GoToPrevIssueCommand}"
-                        IsEnabled="{Binding CanRunAnalysis}">
+                        IsEnabled="{Binding CanRunLocalAnalysis}">
                     <Rectangle Width="15"
                                Height="15"
                                Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}">
@@ -267,7 +268,7 @@
                         Margin="0, 0, 0, 0"
                         ToolTip="Go to next issue"
                         Style="{DynamicResource SquareButtonStyle}" Command="{Binding GoToNextIssueCommand}"
-                        IsEnabled="{Binding CanRunAnalysis}">
+                        IsEnabled="{Binding CanRunLocalAnalysis}">
                     <Rectangle Width="15"
                                Height="15"
                                Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}">
@@ -281,8 +282,12 @@
 
             </StackPanel>
 
-
-            <Border Grid.Row="1" BorderBrush="#FF7F9DB9" BorderThickness="1">
+            <controls:MetroProgressBar Grid.Row="1" IsIndeterminate="{Binding LoadingSonarData}"
+                                       Value="{Binding ElementName=horizSlider, Path=Value}"
+                                       ToolTip="{Binding AssociatingTextTooltip}"
+                                       Foreground="{DynamicResource AccentColorBrush}"/>
+            
+            <Border Grid.Row="2" BorderBrush="#FF7F9DB9" BorderThickness="1">
                 <ContentControl Content="{Binding IssuesGridView}" />
             </Border>
 

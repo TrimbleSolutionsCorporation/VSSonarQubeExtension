@@ -43,6 +43,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
     let assemblyRunningPath = Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString()
     let completionEvent = new DelegateEvent<System.EventHandler>()
     let stdOutEvent = new DelegateEvent<System.EventHandler>()
+    let associateCompletedEvent = new DelegateEvent<System.EventHandler>()
     let mutable profileUpdated = false
     let jsonReports : System.Collections.Generic.List<String> = new System.Collections.Generic.List<String>()
     let localissues : System.Collections.Generic.List<Issue> = new System.Collections.Generic.List<Issue>()
@@ -423,6 +424,9 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
         [<CLIEvent>]
         member x.StdOutEvent = stdOutEvent.Publish
 
+        [<CLIEvent>]
+        member x.AssociateCommandCompeted = associateCompletedEvent.Publish
+
         member x.RunProjectAnalysis(project : VsProjectItem, conf : ISonarConfiguration) =
             if profileUpdated then
                 let plugin = GetAPluginInListThatSupportSingleLanguage(project.Solution.SonarProject, conf)
@@ -453,6 +457,12 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                 try
                     let AddIssueToLocalIssues(c : Issue) =
                         if extension.IsIssueSupported(c, conf) then
+                            try
+                                let profile = cachedProfiles.[project.Name].[plug.GetLanguageKey(new VsFileItem(FileName = c.Component))]
+                                let rule = profile.GetRule(c.Rule)
+                                c.Debt <- rule.DebtRemFnCoeff
+                            with
+                            | ex -> ()
                             lock _lock (fun () -> localissues.Add(c))
 
                     issues |> PSeq.iter (fun c -> AddIssueToLocalIssues(c))
@@ -592,11 +602,16 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                                     )
                             with
                             | ex -> System.Diagnostics.Debug.WriteLine("cannot add profile: " + ex.Message + " : " + ex.StackTrace)
+
+                            )
+
+                        worker2.RunWorkerCompleted.Add(fun c ->
                             notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Completed update profile: " + profile.Name + " : " + profile.Language + " : " + (profilesCnt.ToString()) + " remaining"))
                             profilesCnt <- profilesCnt - 1
                             if profilesCnt = 0 then
                                 profileUpdated <- true
-                            )
+                                associateCompletedEvent.Trigger([|x; null|])
+                        )
 
                         worker2.RunWorkerAsync()
 
@@ -622,12 +637,8 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                             let lines = File.ReadAllLines(projectFile)
                             lines |> Seq.iter (fun line -> processLine(line))
 
-                let worker = new BackgroundWorker()
-
-                worker.DoWork.Add(fun c -> profileUpdated <- false
-                                           notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Start Update profile"))
-                                           GetQualityProfiles(conf, project))
-
-                worker.RunWorkerAsync()
+                profileUpdated <- false
+                notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Start Update profile"))
+                GetQualityProfiles(conf, project)
 
 

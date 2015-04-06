@@ -26,6 +26,7 @@ open VSSonarQubeCmdExecutor
 open System.Diagnostics
 open Microsoft.Build.Utilities
 open VSSonarPlugins.Types
+open System.ComponentModel
 
 type ISonarLocalAnalyser =     
   abstract member StopAllExecution : unit -> unit
@@ -42,6 +43,9 @@ type ISonarLocalAnalyser =
 
   abstract member AssociateWithProject : project:Resource * conf:ISonarConfiguration -> unit
  
+  [<CLIEvent>]
+  abstract member AssociateCommandCompeted : IDelegateEvent<System.EventHandler>
+
   [<CLIEvent>]
   abstract member LocalAnalysisCompleted : IDelegateEvent<System.EventHandler>
 
