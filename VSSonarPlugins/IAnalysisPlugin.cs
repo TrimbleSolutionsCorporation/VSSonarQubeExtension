@@ -85,5 +85,10 @@ namespace VSSonarPlugins
         /// <param name="project">The project.</param>
         /// <param name="configuration">The configuration.</param>
         void LaunchAnalysisOnProject(VsProjectItem project, ISonarConfiguration configuration);
+
+        /// <summary>The launch analysis on solution.</summary>
+        /// <param name="solution">The solution.</param>
+        /// <param name="configuration">The configuration.</param>
+        void LaunchAnalysisOnSolution(VsSolutionItem solution, ISonarConfiguration configuration);
     }
 }
