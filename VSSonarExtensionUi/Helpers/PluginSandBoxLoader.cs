@@ -23,6 +23,7 @@ namespace VSSonarExtensionUi.Helpers
     
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
+    using SonarRestService;
 
     /// <summary>
     ///     The assembly sand box loader.
@@ -142,7 +143,7 @@ namespace VSSonarExtensionUi.Helpers
             return null;
         }
 
-        public IPlugin LoadPlugin(ISonarConfiguration conf)
+        public IPlugin LoadPlugin(ISonarConfiguration conf, IConfigurationHelper helper, INotificationManager manager, IVsEnvironmentHelper vshelper)
         {
             foreach (var assembly in this.trustedAssembly)
             {
@@ -156,6 +157,13 @@ namespace VSSonarExtensionUi.Helpers
                         if (typeof(IAnalysisPlugin).IsAssignableFrom(type))
                         {
                             Debug.WriteLine("Can Cast Type In Assembly To: " + typeof(IAnalysisPlugin).FullName);
+                            var obj = type.GetConstructor(new[] { typeof(INotificationManager), typeof(IConfigurationHelper), typeof(ISonarRestService), typeof(IVsEnvironmentHelper) });
+                            if (obj != null)
+                            {
+                                object[] lobject = { manager, helper, new SonarRestService(new JsonSonarConnector()), vshelper };
+                                return (IPlugin)obj.Invoke(lobject);
+                            }
+
                             return (IPlugin)Activator.CreateInstance(type);
                         }
 

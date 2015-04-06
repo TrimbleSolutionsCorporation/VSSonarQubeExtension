@@ -63,6 +63,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         private IConfigurationHelper configurationHelper;
         private readonly INotificationManager notificationManager;
 
+        private readonly IVsEnvironmentHelper vshelper;
+
         #endregion
 
         #region Constructors and Destructors
@@ -98,6 +100,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.sqmodel = mainModel;
             this.sonarConf = conf;
             this.controller = controller;
+            this.vshelper = helper;
 
             this.MenuPlugins = new List<IMenuCommandPlugin>();
             this.AnalysisPlugins = new List<IAnalysisPlugin>();
@@ -239,7 +242,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 }
                 else
                 {
-                    IPlugin plugin = this.controller.IstallNewPlugin(filedialog.FileName, this.sonarConf);
+                    IPlugin plugin = this.controller.IstallNewPlugin(filedialog.FileName, this.sonarConf, this.configurationHelper, this.notificationManager, this.vshelper);
 
                     if (plugin != null)
                     {

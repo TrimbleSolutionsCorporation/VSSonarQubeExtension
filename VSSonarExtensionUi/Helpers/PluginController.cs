@@ -220,14 +220,18 @@ namespace VSSonarExtensionUi.Helpers
             return pluginsData;
         }
 
-        public IPlugin IstallNewPlugin(string fileName, ISonarConfiguration conf)
+        public IPlugin IstallNewPlugin(string fileName, 
+            ISonarConfiguration conf,
+            IConfigurationHelper helper,
+            INotificationManager manager,
+            IVsEnvironmentHelper vshelper)
         {
             var assembliesInFile = this.UnzipFiles(fileName, this.TempInstallPathFolder);
             var assembliesToTempFolder = this.GetAssembliesInTempFolder();
             var plugins = this.LoadPlugin(
                 assembliesInFile.ToArray(),
                 this.TempInstallPathFolder,
-                conf);
+                conf, helper, manager, vshelper);
 
             if (plugins != null)
             {
@@ -259,14 +263,17 @@ namespace VSSonarExtensionUi.Helpers
         public IPlugin LoadPlugin(
             string[] assemblies,
             string basePath, 
-            ISonarConfiguration conf)
+            ISonarConfiguration conf,
+            IConfigurationHelper helper,
+            INotificationManager manager,
+            IVsEnvironmentHelper vshelper)
         {
             try
             {
                 var loader = PluginSandBoxLoader.Sandbox(AppDomain.CurrentDomain, assemblies, this.CurrentDomainAssemblyResolve);
                 try
                 {
-                    var pluginDesc = loader.LoadPlugin(conf);
+                    var pluginDesc = loader.LoadPlugin(conf, helper, manager, vshelper);
 
                     foreach (string assembly in assemblies)
                     {
