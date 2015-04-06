@@ -400,7 +400,7 @@ namespace VSSonarExtensionUi.ViewModel
                 }
 
                 string isEnabled = this.configurationHelper.ReadSetting(
-                    Context.AnalysisGeneral, 
+                    Context.GlobalPropsId, 
                     plugDesc.Name, 
                     GlobalIds.PluginEnabledControlId).Value;
 

@@ -78,7 +78,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
         let IsSupported(plugin : IAnalysisPlugin, item : VsFileItem) = 
             let name = plugin.GetPluginDescription().Name
             try
-                let prop = vsinter.ReadSetting(Context.AnalysisGeneral, name, GlobalIds.PluginEnabledControlId)
+                let prop = vsinter.ReadSetting(Context.GlobalPropsId, name, GlobalIds.PluginEnabledControlId)
                 plugin.IsSupported(item) && prop.Value.Equals("true", StringComparison.CurrentCultureIgnoreCase)
             with
             | ex -> plugin.IsSupported(item)

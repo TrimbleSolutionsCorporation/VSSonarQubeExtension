@@ -375,14 +375,14 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 if (pluginDescription.Enabled)
                 {
                     this.configurationHelper.WriteOptionInApplicationData(
-                        Context.AnalysisGeneral,
+                        Context.GlobalPropsId,
                         pluginDescription.Name,
                         GlobalIds.PluginEnabledControlId,
                         "true");
                 }
                 else
                 {
-                    this.configurationHelper.WriteOptionInApplicationData(Context.AnalysisGeneral, pluginDescription.Name, GlobalIds.PluginEnabledControlId, "false");
+                    this.configurationHelper.WriteOptionInApplicationData(Context.GlobalPropsId, pluginDescription.Name, GlobalIds.PluginEnabledControlId, "false");
                 }
             }
         }
@@ -412,7 +412,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 var plugDesc = plugin.GetPluginDescription();
                 try
                 {
-                    string isEnabled = this.configurationHelper.ReadSetting(Context.AnalysisGeneral, plugDesc.Name, GlobalIds.PluginEnabledControlId).Value;
+                    string isEnabled = this.configurationHelper.ReadSetting(Context.GlobalPropsId, plugDesc.Name, GlobalIds.PluginEnabledControlId).Value;
                     if (isEnabled.Equals("true", StringComparison.CurrentCultureIgnoreCase))
                     {
                         plugDesc.Enabled = true;
@@ -424,7 +424,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 }
                 catch (Exception)
                 {
-                    this.configurationHelper.WriteOptionInApplicationData(Context.AnalysisGeneral, plugDesc.Name, GlobalIds.PluginEnabledControlId, "true");
+                    this.configurationHelper.WriteOptionInApplicationData(Context.GlobalPropsId, plugDesc.Name, GlobalIds.PluginEnabledControlId, "true");
                     plugDesc.Enabled = true;
                 }
 
