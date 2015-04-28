@@ -852,6 +852,17 @@ namespace VSSonarExtensionUi.ViewModel
             catch (Exception ex)
             {
                 this.Logger.WriteException(ex);
+
+                if (this.SelectedView == this.LocalViewModel && this.LocalViewModel.FileAnalysisIsEnabled) 
+                {
+                    var localRes = new Resource();
+                    localRes.Key = key;
+                    localRes.Scope = "FIL";
+                    string fileName = Path.GetFileName(fullName);
+                    localRes.Name = fileName;
+                    localRes.Lname = fileName;
+                    return localRes;
+                }
             }
 
             this.Logger.WriteMessage("Resource not found in Server");
@@ -1082,6 +1093,13 @@ namespace VSSonarExtensionUi.ViewModel
 
             this.ConnectionTooltip = "Not Connected";
             this.AssociatedProject = null;
+
+            this.LocalViewModel.IssuesGridView.AllIssues.Clear();
+            this.LocalViewModel.IssuesGridView.Issues.Clear();
+            this.ServerViewModel.IssuesGridView.AllIssues.Clear();
+            this.ServerViewModel.IssuesGridView.Issues.Clear();
+            this.IssuesSearchViewModel.IssuesGridView.Issues.Clear();
+            this.IssuesSearchViewModel.IssuesGridView.AllIssues.Clear();
         }
 
         /// <summary>The on refresh project list.</summary>
