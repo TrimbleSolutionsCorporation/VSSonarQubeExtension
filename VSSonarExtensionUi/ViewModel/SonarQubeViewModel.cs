@@ -466,7 +466,11 @@ namespace VSSonarExtensionUi.ViewModel
 
             this.InitMenus();
             this.InitViews();
-            this.InitConnection();
+
+            if (this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.IsConnectAtStartOn)
+            {
+                this.OnConnectToSonar(false);
+            }
 
             this.UpdateTheme(Colors.Black, Colors.White);
 
@@ -522,11 +526,22 @@ namespace VSSonarExtensionUi.ViewModel
             return this.VsHelper.AreWeRunningInVisualStudio();
         }
 
+        public void OnConnectToSonarCommand()
+        {
+            OnConnectToSonar(true);
+        }
+
         /// <summary>
         ///     The connect to sonar.
         /// </summary>
-        public void OnConnectToSonar()
+        public void OnConnectToSonar(bool useDispatcher)
         {
+            if (this.VsHelper != null)
+            {
+                this.OpenSolutionPath = this.VsHelper.ActiveSolutionPath();
+                this.OpenSolutionName = this.VsHelper.ActiveSolutionName();
+            }
+
             var bw = new BackgroundWorker { WorkerReportsProgress = true };
             bw.RunWorkerCompleted += delegate
                 {
@@ -538,7 +553,7 @@ namespace VSSonarExtensionUi.ViewModel
                 {
                     this.CanConnectEnabled = false;
                     this.IsExtensionBusy = true;
-                    this.TryToConnect();
+                    this.TryToConnect(useDispatcher);
                     if (!string.IsNullOrEmpty(this.OpenSolutionName))
                     {
                         this.AssociateProjectToSolution(this.OpenSolutionName, this.OpenSolutionPath);
@@ -856,19 +871,8 @@ namespace VSSonarExtensionUi.ViewModel
             this.ClearCacheCommand = new RelayCommand(this.OnClearCacheCommand);
 
             this.ConnectCommand = new RelayCommand(this.OnConnectCommand);
-            this.ConnectedToServerCommand = new RelayCommand(this.OnConnectToSonar);
+            this.ConnectedToServerCommand = new RelayCommand(this.OnConnectToSonarCommand);
             this.DisconnectToServerCommand = new RelayCommand(this.OnDisconnectToSonar);
-        }
-
-        /// <summary>
-        ///     The init connection.
-        /// </summary>
-        private void InitConnection()
-        {
-            if (this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.IsConnectAtStartOn)
-            {
-                this.OnConnectToSonar();
-            }
         }
 
         /// <summary>
@@ -1051,7 +1055,7 @@ namespace VSSonarExtensionUi.ViewModel
         {
             if (this.IsConnected)
             {
-                this.OnConnectToSonar();
+                this.OnConnectToSonar(true);
             }
             else
             {
@@ -1070,12 +1074,8 @@ namespace VSSonarExtensionUi.ViewModel
                 view.EndDataAssociation();
             }
 
-
-            if (this.VsHelper == null || !this.VsHelper.AreWeRunningInVisualStudio())
-            {
-                this.OpenSolutionPath = string.Empty;
-                this.OpenSolutionName = string.Empty;
-            }
+            this.OpenSolutionName = string.Empty;
+            this.OpenSolutionPath = string.Empty;
 
             this.AvailableProjects.Clear();
             this.SelectedProject = null;
@@ -1086,14 +1086,16 @@ namespace VSSonarExtensionUi.ViewModel
 
         /// <summary>The on refresh project list.</summary>
         /// <param name="projects">The projects.</param>
-        private void OnRefreshProjectList(IEnumerable<Resource> projects)
+        private void OnRefreshProjectList(IEnumerable<Resource> projects, bool useDispatcher)
         {
             this.IsConnected = true;
             this.IsConnectedButNotAssociated = false;
             this.IsAssociated = false;
 
-            Application.Current.Dispatcher.Invoke(
-                delegate
+            if (useDispatcher)
+            {
+                Application.Current.Dispatcher.Invoke(
+                    delegate
                     {
                         this.AvailableProjects.Clear();
                         foreach (Resource source in projects.OrderBy(i => i.Name))
@@ -1101,12 +1103,21 @@ namespace VSSonarExtensionUi.ViewModel
                             this.AvailableProjects.Add(source);
                         }
                     });
+            }
+            else
+            {
+                this.AvailableProjects.Clear();
+                foreach (Resource source in projects.OrderBy(i => i.Name))
+                {
+                    this.AvailableProjects.Add(source);
+                }
+            }
         }
 
         /// <summary>
         ///     The try to connect.
         /// </summary>
-        private void TryToConnect()
+        private void TryToConnect(bool useDispatcher)
         {
             try
             {
@@ -1133,7 +1144,7 @@ namespace VSSonarExtensionUi.ViewModel
                     this.SonarRestConnector.GetProjectsList(AuthtenticationHelper.AuthToken);
                 if (projects != null && projects.Count > 0)
                 {
-                    this.OnRefreshProjectList(projects);
+                    this.OnRefreshProjectList(projects, useDispatcher);
                 }
 
                 this.SonarVersion =
