@@ -38,6 +38,7 @@ type TraTests() =
     [<Test>]
     member test.``Should Return Key Correctly When Multi Module`` () =
         let translator = new SQKeyTranslator()
+        File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\MultiModuleTest\\sonar-project.properties")) |> should be True
         translator.CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\MultiModuleTest\\sonar-project.properties"));
         translator.Modules().Length |> should equal 2
         translator.GetProjectKey() |> should equal "AB:ProjectX_CPP"
@@ -54,6 +55,7 @@ type TraTests() =
     [<Test>]
     member test.``Should Return Path Correctly When Multi Module`` () =
         let translator = new SQKeyTranslator()
+        File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\MultiModuleTest\\sonar-project.properties")) |> should be True
         translator.CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\MultiModuleTest\\sonar-project.properties"));
         translator.Modules().Length |> should equal 2
         translator.GetProjectKey() |> should equal "AB:ProjectX_CPP"
@@ -64,6 +66,7 @@ type TraTests() =
     [<Test>]
     member test.``Should Return Key Correctly With Flat Structure`` () =
         let translator = new SQKeyTranslator()
+        File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject\\sonar-project.properties")) |> should be True
         translator.CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject\\sonar-project.properties"));
         translator.Modules().Length |> should equal 0
         translator.GetProjectKey() |> should equal "AB:ProjectX_CPP_Flat"
@@ -81,6 +84,7 @@ type TraTests() =
     [<Test>]
     member test.``Should Return Path Correctly With Flat Structure`` () =
         let translator = new SQKeyTranslator()
+        File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject\\sonar-project.properties")) |> should be True
         translator.CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject\\sonar-project.properties"));
         translator.Modules().Length |> should equal 0
         translator.GetProjectKey() |> should equal "AB:ProjectX_CPP_Flat"
@@ -92,6 +96,7 @@ type TraTests() =
     [<Test>]
     member test.``Should Return Key Correctly With Visual Studio BootStrapper`` () =
         let translator = new SQKeyTranslator()
+        File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\VisualBootStrapper\\sonar-project.properties")) |> should be True
         translator.CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\VisualBootStrapper\\sonar-project.properties"));
         translator.Modules().Length |> should equal 0
         translator.GetProjectKey() |> should equal "AB:ProjectX_CPP_BootStrapper"
@@ -110,6 +115,7 @@ type TraTests() =
     [<Test>]
     member test.``Should Return Path Correctly With Visual Studio BootStrapper`` () =
         let translator = new SQKeyTranslator()
+        File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\VisualBootStrapper\\sonar-project.properties")) |> should be True
         translator.CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\VisualBootStrapper\\sonar-project.properties"));
         translator.Modules().Length |> should equal 0
         translator.GetProjectKey() |> should equal "AB:ProjectX_CPP_BootStrapper"
@@ -121,6 +127,7 @@ type TraTests() =
     [<Test>]
     member test.``Should Return Key Correctly With Visual Studio BootStrapper False, but modules defined`` () =
         let translator = new SQKeyTranslator()
+        File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\ModulesDefinedAllInOnePropertiesFile\\sonar-project.properties")) |> should be True
         translator.CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\ModulesDefinedAllInOnePropertiesFile\\sonar-project.properties"));
         translator.Modules().Length |> should equal 4
         translator.GetProjectKey() |> should equal "cpp-multimodule-project"
@@ -139,6 +146,7 @@ type TraTests() =
     [<Test>]
     member test.``Should Return Path Correctly With Visual Studio BootStrapper False, but modules defined`` () =
         let translator = new SQKeyTranslator()
+        File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\ModulesDefinedAllInOnePropertiesFile\\sonar-project.properties")) |> should be True
         translator.CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\ModulesDefinedAllInOnePropertiesFile\\sonar-project.properties"));
         translator.Modules().Length |> should equal 4
         translator.GetProjectKey() |> should equal "cpp-multimodule-project"
