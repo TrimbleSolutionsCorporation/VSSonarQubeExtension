@@ -212,6 +212,10 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
     member val AnalysisIsRunning = false with get, set
     member val ProjectLookupRunning = Set.empty with get, set
 
+    member val SqTranslator : SQKeyTranslator = null with get, set
+    member val VsInter : IVsEnvironmentHelper = null with get, set
+
+
     member x.ProcessExecutionEventComplete(e : EventArgs) =
         let data = e :?> LocalAnalysisEventArgs
         let message = new LocalAnalysisEventArgs("LA: ", data.ErrorMessage, null)
@@ -393,6 +397,9 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                         let profile = cachedProfiles.[x.Project.Name].[plugin.GetLanguageKey(x.ItemInView)]
                         let issues = extension.ExecuteAnalysisOnFile(x.ItemInView, profile, x.Project, x.Conf)
 
+                        for issue in issues do
+                            issue.Component <- x.SqTranslator.TranslatePath(x.ItemInView, x.VsInter)
+
                         lock syncLock (
                             fun () ->
                                 localissues.AddRange(issues)
@@ -473,7 +480,13 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
 
             localissues
 
-        member x.AnalyseFile(itemInView : VsFileItem, project : Resource, onModifiedLinesOnly : bool, version : double, conf : ISonarConfiguration) =
+        member x.AnalyseFile(itemInView : VsFileItem,
+                             project : Resource,
+                             onModifiedLinesOnly : bool,
+                             version : double,
+                             conf : ISonarConfiguration,
+                             sqTranslator : SQKeyTranslator,
+                             vsInter : IVsEnvironmentHelper) =
             if profileUpdated then
                 x.CurrentAnalysisType <- AnalysisMode.File
                 x.Conf <- conf
@@ -482,6 +495,8 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                 x.Project <- project
                 x.ItemInView <- itemInView
                 x.OnModifyFiles <- onModifiedLinesOnly
+                x.SqTranslator <- sqTranslator
+                x.VsInter <- vsInter
 
                 if plugins = null then
                     raise(new ResourceNotSupportedException())
@@ -589,19 +604,22 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
 
                         worker2.DoWork.Add(fun c -> 
                             notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "updating profile: " + profile.Name + " : " + profile.Language))
-                            try
-                                restService.GetRulesForProfile(conf, profile)
-                                lock syncLockProfiles (
-                                    fun () -> 
+
+                            lock syncLockProfiles (
+                                fun () -> 
+                                    try
+                                        System.Diagnostics.Debug.WriteLine("Get Profile: " + profile.Name + " : " + profile.Language)
+                                        restService.GetRulesForProfile(conf, profile)
                                         if cachedProfiles.ContainsKey(project.Name) then
                                             cachedProfiles.[project.Name].Add(profile.Language, profile)
                                         else
                                             let entry = new System.Collections.Generic.Dictionary<string, Profile>()
                                             cachedProfiles.Add(project.Name, entry)
                                             cachedProfiles.[project.Name].Add(profile.Language, profile)
-                                    )
-                            with
-                            | ex -> System.Diagnostics.Debug.WriteLine("cannot add profile: " + ex.Message + " : " + ex.StackTrace)
+                                    with
+                                    | ex -> System.Diagnostics.Debug.WriteLine("cannot add profile: " + ex.Message + " : " + ex.StackTrace)
+                                )
+
 
                             )
 

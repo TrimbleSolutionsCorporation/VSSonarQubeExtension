@@ -218,7 +218,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="NSQAnalyser/NSonarQubeAnalyzer.exe">
+    <Content Include="NSQAnalyser\NSonarQubeAnalyzer.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>

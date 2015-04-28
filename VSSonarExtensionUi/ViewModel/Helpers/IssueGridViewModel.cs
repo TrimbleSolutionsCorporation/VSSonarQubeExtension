@@ -565,7 +565,8 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                     return;
                 }
 
-                this.Vsenvironmenthelper.OpenResourceInVisualStudio(this.model.OpenSolutionPath, filename, issue.Line);
+                var path = this.model.SonarKeyTranslator.TranslateKey(issue.Component, this.Vsenvironmenthelper);
+                this.Vsenvironmenthelper.OpenResourceInVisualStudio(this.model.OpenSolutionPath, path, issue.Line);
             }
         }
 

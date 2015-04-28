@@ -709,7 +709,9 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                             this.AssociatedProject, 
                             this.sonarQubeViewModel.AnalysisChangeLines, 
                             this.sonarQubeViewModel.SonarVersion,
-                            AuthtenticationHelper.AuthToken);
+                            AuthtenticationHelper.AuthToken,
+                            this.sonarQubeViewModel.SonarKeyTranslator,
+                            this.sonarQubeViewModel.VsHelper);
                         break;
                     case AnalysisTypes.ANALYSIS:
                         this.LocalAnalyserModule.RunFullAnalysis(

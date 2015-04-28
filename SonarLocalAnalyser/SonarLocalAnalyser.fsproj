@@ -49,6 +49,7 @@
   <Import Project="$(FSharpTargetsPath)" />
   <Import Project="$(MSBuildFolder)\AssemblyPatcherTask.targets" />
   <ItemGroup>
+    <Compile Include="SQKeyTranslator.fs" />
     <Compile Include="IAnalyser.fs" />
     <Compile Include="Analyser.fs" />
     <Compile Include="AssemblyInfo.fs" />

@@ -36,6 +36,7 @@ namespace VSSonarExtensionUi.ViewModel
     using VSSonarPlugins;
     using VSSonarPlugins.Helpers;
     using VSSonarPlugins.Types;
+    using SonarLocalAnalyser;
 
     /// <summary>
     ///     The changed event handler.
@@ -208,6 +209,11 @@ namespace VSSonarExtensionUi.ViewModel
         public bool IsConnected { get; set; }
 
         /// <summary>
+        ///     Gets or sets a key translator.
+        /// </summary>
+        public SQKeyTranslator SonarKeyTranslator { get; set; }
+
+        /// <summary>
         ///     Gets or sets a value indicating whether is connected but not associated.
         /// </summary>
         public bool IsConnectedButNotAssociated { get; set; }
@@ -342,12 +348,13 @@ namespace VSSonarExtensionUi.ViewModel
                 solutionName += ".sln";
             }
 
-            this.OpenSolutionName = solutionName;
-            this.OpenSolutionPath = solutionPath;
-            if (!this.IsConnected)
+            if (!this.IsConnected || (this.OpenSolutionName == solutionName && this.OpenSolutionPath == solutionPath))
             {
                 return;
             }
+
+            this.OpenSolutionName = solutionName;
+            this.OpenSolutionPath = solutionPath;
 
             if (this.IsConnected)
             {
@@ -362,6 +369,8 @@ namespace VSSonarExtensionUi.ViewModel
                             this.OnAssignProjectCommand();
                             this.IsConnectedButNotAssociated = false;
                             this.IsAssociated = true;
+                            this.SonarKeyTranslator = new SQKeyTranslator();
+                            this.SonarKeyTranslator.CreateConfiguration(Path.Combine(solutionPath, "sonar-project.properties"));
                             return;
                         }
                     }
@@ -810,25 +819,7 @@ namespace VSSonarExtensionUi.ViewModel
                 return null;
             }
 
-            var key = this.LocalViewModel.LocalAnalyserModule.GetResourceKey(this.VsHelper.VsFileItem(fullName, this.AssociatedProject, null), false);
-
-            try
-            {
-                if (this.configurationHelper.ReadSetting(
-                        Context.AnalysisProject,
-                        this.AssociatedProject.Key,
-                        "sonar.visualstudio.enable").Value.ToLower().Equals("true"))
-                {
-                    key =
-                        this.LocalViewModel.LocalAnalyserModule.GetResourceKey(
-                            this.VsHelper.VsFileItem(fullName, this.AssociatedProject, null),
-                            true);
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-            }
+            var key = this.SonarKeyTranslator.TranslatePath(this.VsHelper.VsFileItem(fullName, this.AssociatedProject, null), this.VsHelper);
 
             try
             {

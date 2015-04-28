@@ -14,9 +14,16 @@ namespace VSSonarQubeExtension
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
 
+    using VSSonarPlugins;
+
     /// <summary>The solution events listener.</summary>
     public class SolutionEventsListener : IVsSolutionEvents, IDisposable
     {
+        /// <summary>
+        ///     The environment.
+        /// </summary>
+        private readonly IVsEnvironmentHelper environment;
+
         /// <summary>The solution.</summary>
         private IVsSolution solution;
 
@@ -24,8 +31,9 @@ namespace VSSonarQubeExtension
         private uint solutionEventsCookie;
 
         /// <summary>Initializes a new instance of the <see cref="SolutionEventsListener"/> class.</summary>
-        public SolutionEventsListener()
+        public SolutionEventsListener(IVsEnvironmentHelper helper)
         {
+            this.environment = helper;
             this.InitNullEvents();
 
             this.solution = Package.GetGlobalService(typeof(SVsSolution)) as IVsSolution;
@@ -103,6 +111,21 @@ namespace VSSonarQubeExtension
         /// <returns>The <see cref="int"/>.</returns>
         int IVsSolutionEvents.OnAfterOpenSolution(object pUnkReserved, int fNewSolution)
         {
+            string solutionName = this.environment.ActiveSolutionName();
+            string solutionPath = this.environment.ActiveSolutionPath();
+
+            SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Solution Opened: " + solutionName + " : " + solutionPath);
+            SonarQubeViewModelFactory.SQViewModel.AssociateProjectToSolution(solutionName, solutionPath);
+
+            string text = this.environment.GetCurrentTextInView();
+            if (string.IsNullOrEmpty(text))
+            {
+                return VSConstants.S_OK;
+            }
+
+            string fileName = this.environment.ActiveFileFullPath();
+            SonarQubeViewModelFactory.SQViewModel.RefreshDataForResource(fileName);
+
             return VSConstants.S_OK;
         }
 

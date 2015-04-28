@@ -18,6 +18,5 @@
   <Assets>
     <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
     <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%|" />
-    <Asset d:Source="File" Path="vs2015\SQAnalyzer\NSonarQubeAnalyzer.exe" d:VsixSubPath="SQAnalyzer" Type="Microsoft.VisualStudio.Analyzer" />
   </Assets>
 </PackageManifest>

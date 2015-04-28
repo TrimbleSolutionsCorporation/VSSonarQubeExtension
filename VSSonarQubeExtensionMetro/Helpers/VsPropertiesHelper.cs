@@ -939,5 +939,24 @@ namespace VSSonarQubeExtension.Helpers
                 return "";
             }
         }
+
+
+        public VsProjectItem GetProjectByNameInSolution(string projectName)
+        {
+            if (this.environment == null) { return null; }
+
+            foreach (Project project in this.environment.Solution.Projects)
+            {
+                if (project.Name.ToLower().StartsWith(projectName.ToLower() + "."))
+                {
+                    var proToRet = new VsProjectItem();
+                    proToRet.ProjectName = project.Name;
+                    proToRet.ProjectFilePath = project.FullName;
+                    return proToRet;
+                }
+            }
+
+            return null;
+        }
     }
 }

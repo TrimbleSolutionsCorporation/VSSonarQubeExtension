@@ -37,6 +37,8 @@ namespace VSSonarQubeExtension
     using VSSonarExtensionUi.View.Helpers;
     using VSSonarExtensionUi.ViewModel;
 
+    using VSSonarPlugins;
+
     using VSSonarQubeExtension.Helpers;
     using VSSonarQubeExtension.StatusBar;
     using VSSonarQubeExtension.VSControls;
@@ -211,7 +213,7 @@ namespace VSSonarQubeExtension
                         SonarQubeViewModelFactory.SQViewModel.PluginRequest += this.LoadPluginIntoNewToolWindow;
                         this.CloseToolWindow();
 
-                        this.StartSolutionListeners();
+                        this.StartSolutionListeners(this.visualStudioInterface);
                     }
                     catch (Exception ex)
                     {
@@ -232,9 +234,9 @@ namespace VSSonarQubeExtension
 
         SolutionEventsListener listener = null;
 
-        private void StartSolutionListeners()
+        private void StartSolutionListeners(IVsEnvironmentHelper helper)
         {
-            listener = new SolutionEventsListener();
+            listener = new SolutionEventsListener(helper);
             var triedOnceAlready = false;
 
             listener.OnAfterOpenProject += () =>

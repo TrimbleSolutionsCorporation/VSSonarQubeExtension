@@ -289,6 +289,12 @@ namespace VSSonarPlugins
         {
             throw new NotImplementedException();
         }
+
+
+        public VsProjectItem GetProjectByNameInSolution(string projectName)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     /// <summary>
@@ -413,6 +419,8 @@ namespace VSSonarPlugins
         /// <param name="associatedProject">The associated project.</param>
         /// <returns>The <see cref="VsProjectItem"/>.</returns>
         VsProjectItem VsProjectItem(string projectFileName, Resource associatedProject);
+
+        VsProjectItem GetProjectByNameInSolution(string projectName);
 
         /// <summary>The get file real path for solution.</summary>
         /// <param name="fileInView">The file in view.</param>

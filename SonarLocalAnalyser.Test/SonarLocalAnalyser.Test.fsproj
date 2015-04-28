@@ -50,10 +50,47 @@
   <ItemGroup>
     <Compile Include="RunAnalysisTests.fs" />
     <Compile Include="SupportTests.fs" />
-    <Compile Include="KeyTests.fs" />
     <None Include="SonarLocalAnalyser.Test.licenseheader" />
+    <Compile Include="TranslatorTest.fs" />
+    <Compile Include="KeyTests.fs" />
     <None Include="packages.config" />
     <None Include="app.config" />
+    <None Include="TestData\SampleProjects\MultiModuleTest\sonar-project.properties">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\SampleProjects\MultiModuleTest\multimodule.sln">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\SampleProjects\MultiModuleTest\A\sonar-project.properties">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\SampleProjects\MultiModuleTest\A\1\sonar-project.properties">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\SampleProjects\MultiModuleTest\A\1\a\sonar-project.properties">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\SampleProjects\MultiModuleTest\A\1\b\sonar-project.properties">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\SampleProjects\MultiModuleTest\A\2\sonar-project.properties">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\SampleProjects\MultiModuleTest\B\sonar-project.properties">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    
+    <None Include="TestData\SampleProjects\FlatProject\sonar-project.properties">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    
+    <None Include="TestData\SampleProjects\VisualBootStrapper\sonar-project.properties">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>  
+
+    <None Include="TestData\SampleProjects\ModulesDefinedAllInOnePropertiesFile\sonar-project.properties">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>    
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Foq">
