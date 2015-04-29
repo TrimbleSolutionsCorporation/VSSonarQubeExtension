@@ -203,8 +203,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="NSQAnalyser/NSonarQubeAnalyzer.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="NSQAnalyser\SonarQube.CodeAnalysis.CSharp.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="NSQAnalyser\SonarQube.CodeAnalysis.CSharp.Extra.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <None Include="vs2012\source.extension.vsixmanifest" />
