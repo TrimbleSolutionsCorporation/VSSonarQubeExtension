@@ -589,6 +589,30 @@ namespace VSSonarExtensionUi.ViewModel
             Debug.WriteLine("Name Changed");
         }
 
+        public void RefreshDataForResource()
+        {
+            if (this.ResourceInEditor == null)
+            {
+                return;
+            }
+
+            IAnalysisViewModelBase analyser = this.SelectedView;
+            if (analyser != null)
+            {
+                try
+                {
+                    this.Logger.WriteMessage("RefreshDataForResource: Doc in View: " + this.DocumentInView);
+                    analyser.RefreshDataForResource(this.ResourceInEditor, this.DocumentInView);
+                }
+                catch (Exception ex)
+                {
+                    this.Logger.WriteMessage("Cannot find file in server: " + ex.Message);
+                    this.Logger.WriteException(ex);
+                    this.NotificationManager.ReportException(ex);
+                }
+            }
+        }
+
         /// <summary>The refresh data for resource.</summary>
         /// <param name="fullName">The full name.</param>
         public void RefreshDataForResource(string fullName)

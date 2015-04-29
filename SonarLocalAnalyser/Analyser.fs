@@ -619,8 +619,6 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                                     with
                                     | ex -> System.Diagnostics.Debug.WriteLine("cannot add profile: " + ex.Message + " : " + ex.StackTrace)
                                 )
-
-
                             )
 
                         worker2.RunWorkerCompleted.Add(fun c ->

@@ -839,6 +839,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         private void UpdateAssociateCommand(object sender, EventArgs e)
         {
             this.LoadingSonarData = false;
+
+            this.sonarQubeViewModel.RefreshDataForResource();
         }
 
         private void OnOpenLogCommand()
