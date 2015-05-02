@@ -28,6 +28,8 @@ namespace VSSonarQubeExtension.Helpers
     using VSSonarPlugins;
     using VSSonarPlugins.Helpers;
     using VSSonarPlugins.Types;
+    using System.Reflection;
+
 
     /// <summary>
     ///     The vs events.
@@ -93,7 +95,10 @@ namespace VSSonarQubeExtension.Helpers
 
             VSColorTheme.ThemeChanged += this.VSColorTheme_ThemeChanged;
 
-            SonarQubeViewModelFactory.StartupModelWithVsVersion(this.dte2.Version).AnalysisModeHasChange += this.AnalysisModeHasChange;
+            var extensionRunningPath = Directory.GetParent(Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", "")).ToString().Split('\\');
+            var uniqueId = this.dte2.Version + "." + extensionRunningPath[extensionRunningPath.Length - 1];
+
+            SonarQubeViewModelFactory.StartupModelWithVsVersion(uniqueId).AnalysisModeHasChange += this.AnalysisModeHasChange;
             SonarQubeViewModelFactory.SQViewModel.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.ConfigurationHasChanged +=
                 this.AnalysisModeHasChange;
         }
