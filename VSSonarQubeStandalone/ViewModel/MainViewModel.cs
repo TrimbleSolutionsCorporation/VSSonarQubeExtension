@@ -36,7 +36,7 @@ namespace VSSonarQubeStandalone.ViewModel
         /// </summary>
         public MainViewModel()
         {
-            this.SonarQubeView = new SonarQubeViewModel();
+            this.SonarQubeView = new SonarQubeViewModel("standalone");
         }
 
         /// <summary>
