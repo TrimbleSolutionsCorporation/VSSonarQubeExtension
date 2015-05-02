@@ -190,7 +190,7 @@ namespace VSSonarQubeExtension
                     var bar = this.GetService(typeof(SVsStatusbar)) as IVsStatusbar;
                     this.StatusBar = new VSSStatusBar(bar, this.dte2);
 
-                    SonarQubeViewModelFactory.SQViewModel.InitModelFromPackageInitialization(this.restService, this.visualStudioInterface, this.StatusBar, this, this.AssemblyDirectory);
+                    SonarQubeViewModelFactory.StartupModelWithVsVersion(this.dte2.Edition).InitModelFromPackageInitialization(this.restService, this.visualStudioInterface, this.StatusBar, this, this.AssemblyDirectory);
 
                     DColor defaultBackground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBackgroundColorKey);
                     DColor defaultForeground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowTextColorKey);

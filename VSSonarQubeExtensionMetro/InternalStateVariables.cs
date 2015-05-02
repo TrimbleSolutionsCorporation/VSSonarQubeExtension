@@ -82,11 +82,22 @@ namespace VSSonarQubeExtension
             {
                 if (model == null)
                 {
-                    model = new VSSonarExtensionUi.ViewModel.SonarQubeViewModel();
+                    model = new VSSonarExtensionUi.ViewModel.SonarQubeViewModel("");
                 }
 
                 return model;
             }
+        }
+
+
+        public static SonarQubeViewModel StartupModelWithVsVersion(string version)
+        {
+            if (model == null)
+            {
+                model = new VSSonarExtensionUi.ViewModel.SonarQubeViewModel(version);
+            }
+
+            return model;
         }
     }
 }

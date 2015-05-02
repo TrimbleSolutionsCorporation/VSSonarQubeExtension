@@ -30,13 +30,13 @@ namespace VSSonarExtensionUi.Helpers
         /// Initializes a new instance of the <see cref="ConfigurationHelper"/> class. 
         ///     Initializes a new instance of the <see cref="VsPropertiesHelper"/> class.
         /// </summary>
-        public ConfigurationHelper()
+        public ConfigurationHelper(string vsVersion)
         {
             this.ApplicationDataUserSettingsFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
-                                                   + "\\VSSonarExtension\\settings.cfg";
+                                                   + "\\VSSonarExtension\\settings.cfg." + vsVersion;
 
             this.LogForAnalysis = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
-                                  + "\\VSSonarExtension\\temp\\analysisLog.txt";
+                                  + "\\VSSonarExtension\\temp\\analysisLog.txt." + vsVersion;
 
             if (!Directory.Exists(Directory.GetParent(this.ApplicationDataUserSettingsFile).ToString()))
             {

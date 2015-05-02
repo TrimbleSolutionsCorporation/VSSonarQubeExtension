@@ -93,7 +93,7 @@ namespace VSSonarQubeExtension.Helpers
 
             VSColorTheme.ThemeChanged += this.VSColorTheme_ThemeChanged;
 
-            SonarQubeViewModelFactory.SQViewModel.AnalysisModeHasChange += this.AnalysisModeHasChange;
+            SonarQubeViewModelFactory.StartupModelWithVsVersion(this.dte2.Version).AnalysisModeHasChange += this.AnalysisModeHasChange;
             SonarQubeViewModelFactory.SQViewModel.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.ConfigurationHasChanged +=
                 this.AnalysisModeHasChange;
         }

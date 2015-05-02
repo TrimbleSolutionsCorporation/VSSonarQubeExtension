@@ -74,11 +74,11 @@ namespace VSSonarExtensionUi.ViewModel
         /// <summary>
         ///     Initializes a new instance of the <see cref="SonarQubeViewModel" /> class.
         /// </summary>
-        public SonarQubeViewModel()
+        public SonarQubeViewModel(string vsVersion)
         {
-            this.configurationHelper = new ConfigurationHelper();
+            this.configurationHelper = new ConfigurationHelper(vsVersion);
             this.SonarRestConnector = new SonarRestService(new JsonSonarConnector());
-            this.Logger = new VsSonarExtensionLogger(this);
+            this.Logger = new VsSonarExtensionLogger(this, vsVersion);
             this.VsHelper = new StandAloneVsHelper();
 
             this.IsExtensionBusy = false;

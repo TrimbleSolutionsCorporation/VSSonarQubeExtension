@@ -11,6 +11,8 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
     using System;
     using System.Diagnostics;
     using System.IO;
+    using System.Reflection;
+
 
     /// <summary>
     ///     The logger.
@@ -27,9 +29,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// <summary>
         ///     The user roaming file.
         /// </summary>
-        private readonly string userRoamingFile = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), 
-            "VSSonarExtension\\debug.log");
+        private readonly string userRoamingFile;
 
         #endregion
 
@@ -41,9 +41,10 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// <param name="model">
         /// The model.
         /// </param>
-        public VsSonarExtensionLogger(SonarQubeViewModel model)
+        public VsSonarExtensionLogger(SonarQubeViewModel model, string vsVersion)
         {
             this.model = model;
+            this.userRoamingFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "VSSonarExtension\\debug.log." + vsVersion);
 
             try
             {
