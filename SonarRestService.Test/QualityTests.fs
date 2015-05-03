@@ -6,6 +6,7 @@ open SonarRestService
 open Foq
 open System.IO
 
+open VSSonarPlugins
 open VSSonarPlugins.Types
 
 type QualityTests() =
@@ -53,7 +54,7 @@ type QualityTests() =
 
         let service = SonarRestService(mockHttpReq)
 
-        let profile = Profile()
+        let profile = Profile(service, conf)
         profile.Key <- "msbuild-sonar-way-77787"
         profile.Language <- "msbuild"
         (service :> ISonarRestService).GetRulesForProfileUsingRulesApp(conf, profile, true)
@@ -71,10 +72,10 @@ type QualityTests() =
 
         let service = SonarRestService(mockHttpReq)
 
-        let profile = Profile()
+        let profile = Profile(service, conf)
         profile.Name <- "Sonar way"
         profile.Language <- "cs"
-        (service :> ISonarRestService).GetRulesForProfile(conf, profile)
+        (service :> ISonarRestService).GetRulesForProfile(conf, profile, false)
         profile.GetAllRules().Count |> should equal 199
         profile.GetAllRules().[1].Params.Count |> should equal 1
 
@@ -89,7 +90,7 @@ type QualityTests() =
 
         let service = SonarRestService(mockHttpReq)
 
-        let profile = Profile()
+        let profile = Profile(service, conf)
         profile.Key <- "msbuild-sonar-way-77787"
         profile.Language <- "msbuild"
         let rule = (service :> ISonarRestService).GetRuleUsingProfileAppId(conf, "csharpsquid:S108")

@@ -8,31 +8,13 @@ open System.Management
 open Microsoft.FSharp.Collections
 open Microsoft.Build.Utilities
 open System.Runtime.InteropServices
+open VSSonarPlugins
 
-type ReturnCode =
-   | Ok = 0
-   | Timeout = 1
-   | NokAppSpecific = 2
-
-type IVSSonarQubeCmdExecutor = 
-  abstract member GetStdOut : list<string>
-  abstract member GetStdError : list<string>
-  abstract member GetErrorCode : ReturnCode
-  abstract member CancelExecution : ReturnCode
-  abstract member CancelExecutionAndSpanProcess : string [] -> ReturnCode
-  abstract member ResetData : unit -> unit
-
-  // no redirection of output
-  abstract member ExecuteCommand : string * string * Map<string, string> * string -> int
-  abstract member ExecuteCommandWait : string * string * Map<string, string> * string -> int
-
-  // with redirection of output
-  abstract member ExecuteCommand : string * string * Map<string, string> * (DataReceivedEventArgs -> unit) * (DataReceivedEventArgs -> unit) * string -> int
-
-  abstract member ExecuteCommand : program : string * args : string -> System.Collections.Generic.List<string>
-
-type VSSonarQubeCmdExecutor(logger : TaskLoggingHelper, timeout : int64) =
+type VSSonarQubeCmdExecutor(timeout : int64) =
     let addEnvironmentVariable (startInfo:ProcessStartInfo) a b = startInfo.EnvironmentVariables.Add(a, b)
+
+    let output : System.Collections.Generic.List<string> = new System.Collections.Generic.List<string>()
+    let error : System.Collections.Generic.List<string> = new System.Collections.Generic.List<string>()
 
     let KillPrograms(currentProcessName : string) =
         if not(String.IsNullOrEmpty(currentProcessName)) then
@@ -49,11 +31,13 @@ type VSSonarQubeCmdExecutor(logger : TaskLoggingHelper, timeout : int64) =
             with
             | ex -> ()
 
-    member val Logger = logger
+    let toMap dictionary = 
+        (dictionary :> seq<_>)
+        |> Seq.map (|KeyValue|)
+        |> Map.ofSeq
+
     member val stopWatch = Stopwatch.StartNew()
     member val proc : Process  = new Process() with get, set
-    member val output : string list = [] with get, set
-    member val error : string list = [] with get, set
     member val returncode : ReturnCode = ReturnCode.Ok with get, set
     member val cancelSignal : bool = false with get, set
 
@@ -84,9 +68,6 @@ type VSSonarQubeCmdExecutor(logger : TaskLoggingHelper, timeout : int64) =
             while not this.cancelSignal do
                 if this.stopWatch.ElapsedMilliseconds > timeout then
 
-                    if not(obj.ReferenceEquals(logger, null)) then
-                        logger.LogError(sprintf "Expired Timer: %x " this.stopWatch.ElapsedMilliseconds)
-
                     try
                         if this.killProcess(this.proc.Id) then
                             this.returncode <- ReturnCode.Ok
@@ -105,14 +86,14 @@ type VSSonarQubeCmdExecutor(logger : TaskLoggingHelper, timeout : int64) =
     member this.ProcessErrorDataReceived(e : DataReceivedEventArgs) =
         this.stopWatch.Restart()
         if not(String.IsNullOrWhiteSpace(e.Data)) then
-            this.error <- this.error @ [e.Data]
+            error.Add(e.Data)
             System.Diagnostics.Debug.WriteLine("ERROR:" + e.Data)
         ()
 
     member this.ProcessOutputDataReceived(e : DataReceivedEventArgs) =
         this.stopWatch.Restart()
         if not(String.IsNullOrWhiteSpace(e.Data)) then
-            this.output <- this.output @ [e.Data]
+            output.Add(e.Data)
             System.Diagnostics.Debug.WriteLine(e.Data)
         ()
 
@@ -124,18 +105,17 @@ type VSSonarQubeCmdExecutor(logger : TaskLoggingHelper, timeout : int64) =
             let tmp = mo.Get()
             Convert.ToInt32(mo.["ParentProcessId"])
 
-
     interface IVSSonarQubeCmdExecutor with
-        member this.GetStdOut =
-            this.output
+        member this.GetStdOut() =
+            output
 
-        member this.GetStdError =
-            this.error
+        member this.GetStdError() =
+            error
 
-        member this.GetErrorCode =
+        member this.GetErrorCode() =
             this.returncode
 
-        member this.CancelExecution =            
+        member this.CancelExecution() =            
             if this.proc.HasExited = false then
                 this.proc.Kill()
             this.cancelSignal <- true
@@ -152,8 +132,8 @@ type VSSonarQubeCmdExecutor(logger : TaskLoggingHelper, timeout : int64) =
             ReturnCode.Ok
 
         member this.ResetData() =
-            this.error <- []
-            this.output <- []
+            error.Clear()
+            output.Clear()
             ()
 
         member this.ExecuteCommand(program, args, env, wd) =
@@ -167,7 +147,7 @@ type VSSonarQubeCmdExecutor(logger : TaskLoggingHelper, timeout : int64) =
                                              RedirectStandardInput = true,
                                              CreateNoWindow = true,
                                              WorkingDirectory = wd)
-            env |> Map.iter (addEnvironmentVariable startInfo)
+            toMap env |> Map.iter (addEnvironmentVariable startInfo)
 
             this.proc <- new Process(StartInfo = startInfo)
             this.proc.ErrorDataReceived.Add(this.ProcessErrorDataReceived)
@@ -211,34 +191,7 @@ type VSSonarQubeCmdExecutor(logger : TaskLoggingHelper, timeout : int64) =
             proc.WaitForExit()
             data
 
-        member this.ExecuteCommand(program, args, env, outputHandler, errorHandler, workingDir) =        
-            this.Program <- program       
-            let startInfo = ProcessStartInfo(FileName = program,
-                                             Arguments = args,
-                                             WindowStyle = ProcessWindowStyle.Normal,
-                                             UseShellExecute = false,
-                                             RedirectStandardOutput = true,
-                                             RedirectStandardError = true,
-                                             RedirectStandardInput = true,
-                                             CreateNoWindow = true,
-                                             WorkingDirectory = workingDir)
-            env |> Map.iter (addEnvironmentVariable startInfo)
 
-            this.proc <- new Process(StartInfo = startInfo,
-                                     EnableRaisingEvents = true)
-            this.proc.OutputDataReceived.Add(outputHandler)
-            this.proc.ErrorDataReceived.Add(errorHandler)
-            let ret = this.proc.Start()
-
-            this.stopWatch.Restart()
-            Async.Start(this.TimerControl());
-
-            this.proc.BeginOutputReadLine()
-            this.proc.BeginErrorReadLine()
-            this.proc.WaitForExit()
-            this.proc.Id
-            this.cancelSignal <- true
-            this.proc.ExitCode
 
         member this.ExecuteCommandWait(program, args, env, wd) =
             this.Program <- program
@@ -248,7 +201,7 @@ type VSSonarQubeCmdExecutor(logger : TaskLoggingHelper, timeout : int64) =
                                              WindowStyle = ProcessWindowStyle.Hidden,
                                              WorkingDirectory = wd)
 
-            env |> Map.iter (addEnvironmentVariable startInfo)
+            toMap env |> Map.iter (addEnvironmentVariable startInfo)
 
             this.proc <- new Process(StartInfo = startInfo)
             let ret = this.proc.Start()

@@ -6,6 +6,7 @@ open SonarRestService
 open Foq
 open System.IO
 
+open VSSonarPlugins
 open VSSonarPlugins.Types
 
 type MetricsTests() =

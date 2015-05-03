@@ -58,11 +58,6 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\VSSonarQubeCmdExecutor\VSSonarQubeCmdExecutor.fsproj">
-      <Name>VSSonarQubeCmdExecutor</Name>
-      <Project>{9b154406-0af6-45a9-bf32-9c5c23822b6b}</Project>
-      <Private>True</Private>
-    </ProjectReference>
     <Reference Include="FSharp.Collections.ParallelSeq">
       <HintPath>..\packages\FSharp.Collections.ParallelSeq.1.0.2\lib\net40\FSharp.Collections.ParallelSeq.dll</HintPath>
       <Private>True</Private>
@@ -76,6 +71,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Numerics" />
     <ProjectReference Include="..\SonarRestService\SonarRestService.fsproj">
       <Name>SonarRestService</Name>

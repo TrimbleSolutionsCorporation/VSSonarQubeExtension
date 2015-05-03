@@ -144,6 +144,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
 
             this.ForeGroundColor = Colors.Black;
             this.BackGroundColor = Colors.White;
+
+            var dsds = new Process();
+            dsds.OutputDataReceived += this.aksjdkas;
+        }
+
+        private void aksjdkas(object sender, DataReceivedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

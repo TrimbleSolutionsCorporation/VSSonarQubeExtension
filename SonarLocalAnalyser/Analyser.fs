@@ -27,15 +27,166 @@ open CommonExtensions
 open System.Diagnostics
 open Microsoft.Build.Utilities
 open SonarRestService
-open VSSonarQubeCmdExecutor
 open FSharp.Collections.ParallelSeq
+open System.Management
 open System.Reflection
 open System.ComponentModel
-
+open System.Management
+open System.Runtime.InteropServices
 
 type LanguageType =
    | SingleLang = 0
    | MultiLang = 1
+
+type AnalyserCommandExec(logger : TaskLoggingHelper, timeout : int64) =
+    let addEnvironmentVariable (startInfo:ProcessStartInfo) a b = startInfo.EnvironmentVariables.Add(a, b)
+
+    let output : System.Collections.Generic.List<string> = new System.Collections.Generic.List<string>()
+    let error : System.Collections.Generic.List<string> = new System.Collections.Generic.List<string>()
+
+    let KillPrograms(currentProcessName : string) =
+        if not(String.IsNullOrEmpty(currentProcessName)) then
+            try
+                let processId = Process.GetCurrentProcess().Id
+                let processes = System.Diagnostics.Process.GetProcessesByName(currentProcessName)
+
+                for proc in processes do
+                    if processId <> proc.Id then
+                        try
+                            Process.GetProcessById(proc.Id).Kill()
+                        with
+                        | ex -> ()
+            with
+            | ex -> ()
+
+    let toMap dictionary = 
+        (dictionary :> seq<_>)
+        |> Seq.map (|KeyValue|)
+        |> Map.ofSeq
+
+    member val Logger = logger
+    member val stopWatch = Stopwatch.StartNew()
+    member val proc : Process  = new Process() with get, set
+    member val returncode : ReturnCode = ReturnCode.Ok with get, set
+    member val cancelSignal : bool = false with get, set
+
+    member val Program : string = "" with get, set
+
+    member this.killProcess(pid : int32) : bool =
+        let mutable didIkillAnybody = false
+        try
+            let procs = Process.GetProcesses()
+            for proc in procs do
+                if this.GetParentProcess(proc.Id) = pid then
+                    if this.killProcess(proc.Id) = true then
+                        didIkillAnybody <- true
+
+            try
+                let myProc = Process.GetProcessById(pid)
+                myProc.Kill()
+                didIkillAnybody <- true
+            with
+             | ex -> ()
+        with
+         | ex -> ()
+
+        didIkillAnybody
+
+    member this.TimerControl() =
+        async {
+            while not this.cancelSignal do
+                if this.stopWatch.ElapsedMilliseconds > timeout then
+
+                    if not(obj.ReferenceEquals(logger, null)) then
+                        logger.LogError(sprintf "Expired Timer: %x " this.stopWatch.ElapsedMilliseconds)
+
+                    try
+                        if this.killProcess(this.proc.Id) then
+                            this.returncode <- ReturnCode.Ok
+                        else
+                            this.returncode <- ReturnCode.NokAppSpecific
+                            //this.proc.Kill()
+                    with
+                     | ex -> ()
+
+                Thread.Sleep(1000)
+
+            if this.stopWatch.ElapsedMilliseconds > timeout then
+                this.returncode <- ReturnCode.Timeout
+        }
+
+    member this.ProcessErrorDataReceived(e : DataReceivedEventArgs) =
+        this.stopWatch.Restart()
+        if not(String.IsNullOrWhiteSpace(e.Data)) then
+            error.Add(e.Data)
+            System.Diagnostics.Debug.WriteLine("ERROR:" + e.Data)
+        ()
+
+    member this.ProcessOutputDataReceived(e : DataReceivedEventArgs) =
+        this.stopWatch.Restart()
+        if not(String.IsNullOrWhiteSpace(e.Data)) then
+            output.Add(e.Data)
+            System.Diagnostics.Debug.WriteLine(e.Data)
+        ()
+
+
+
+    member this.GetParentProcess(Id : int32) = 
+        let mutable parentPid = 0
+        use mo = new ManagementObject("win32_process.handle='" + Id.ToString() + "'")
+        let tmp = mo.Get()
+        Convert.ToInt32(mo.["ParentProcessId"])
+
+    member this.CancelExecution() =            
+        if this.proc.HasExited = false then
+            this.proc.Kill()
+        this.cancelSignal <- true
+        ReturnCode.Ok
+
+    member this.CancelExecutionAndSpanProcess(processNames : string []) =
+            
+        if this.proc.HasExited = false then
+            processNames |> Array.iter (fun name -> KillPrograms(name))
+            if this.proc.HasExited = false then
+                this.proc.Kill()
+
+        this.cancelSignal <- true
+        ReturnCode.Ok
+
+    member this.ResetData() =
+        error.Clear()
+        output.Clear()
+        ()
+
+    member this.ExecuteCommand(program, args, env, outputHandler, errorHandler, workingDir) =        
+        this.Program <- program       
+        let startInfo = ProcessStartInfo(FileName = program,
+                                            Arguments = args,
+                                            WindowStyle = ProcessWindowStyle.Normal,
+                                            UseShellExecute = false,
+                                            RedirectStandardOutput = true,
+                                            RedirectStandardError = true,
+                                            RedirectStandardInput = true,
+                                            CreateNoWindow = true,
+                                            WorkingDirectory = workingDir)
+        toMap env |> Map.iter (addEnvironmentVariable startInfo)
+
+        this.proc <- new Process(StartInfo = startInfo,
+                                    EnableRaisingEvents = true)
+        this.proc.OutputDataReceived.Add(fun c -> outputHandler(c))
+        this.proc.ErrorDataReceived.Add(errorHandler)
+        let ret = this.proc.Start()
+
+        this.stopWatch.Restart()
+        Async.Start(this.TimerControl());
+
+        this.proc.BeginOutputReadLine()
+        this.proc.BeginErrorReadLine()
+        this.proc.WaitForExit()
+        this.proc.Id
+        this.cancelSignal <- true
+        this.proc.ExitCode
+
 
 [<ComVisible(false)>]
 [<HostProtection(SecurityAction.LinkDemand, Synchronization = true, ExternalThreading = true)>]
@@ -53,7 +204,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
     let syncLock = new System.Object()
     let syncLockProfiles = new System.Object()
     let mutable profilesCnt = 0
-    let mutable exec : VSSonarQubeCmdExecutor = new VSSonarQubeCmdExecutor(null, int64(1000 * 60 * 60)) // TODO timeout to be passed as parameter
+    let mutable exec : AnalyserCommandExec = new AnalyserCommandExec(null, int64(1000 * 60 * 60)) // TODO timeout to be passed as parameter
 
     let initializationDone = 
         vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.ExcludedPluginsKey, Value = "devcockpit,pdfreport,report,scmactivity,views,jira,scmstats", Context = Context.AnalysisGeneral, Owner = OwnersId.AnalysisOwnerId), false, true)
@@ -304,7 +455,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                 let commandData = new LocalAnalysisEventArgs("CMD: ", message, null)
                 stdOutEvent.Trigger([|x; commandData|])               
         
-            let errorCode = (exec :> IVSSonarQubeCmdExecutor).ExecuteCommand(runnerexec, incrementalArgs, SetupEnvironment(x,  x.Project.ActivePlatform, x.Project.ActiveConfiguration), x.ProcessOutputDataReceived, x.ProcessOutputDataReceived, x.ProjectRoot)
+            let errorCode = exec.ExecuteCommand(runnerexec, incrementalArgs, SetupEnvironment(x,  x.Project.ActivePlatform, x.Project.ActiveConfiguration), x.ProcessOutputDataReceived, x.ProcessOutputDataReceived, x.ProjectRoot)
             if errorCode > 0 then
                 let errorInExecution = new LocalAnalysisEventArgs("LA", "Failed To Execute", new Exception("Error Code: " + errorCode.ToString()))
                 completionEvent.Trigger([|x; errorInExecution|])               
@@ -330,7 +481,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                 let commandData = new LocalAnalysisEventArgs("TODO SORT KEY", message, null)
                 stdOutEvent.Trigger([|x; commandData|])
           
-            let errorCode = (exec :> IVSSonarQubeCmdExecutor).ExecuteCommand(runnerexec, incrementalArgs, SetupEnvironment(x,  x.Project.ActivePlatform, x.Project.ActiveConfiguration), x.ProcessOutputDataReceived, x.ProcessOutputDataReceived, x.ProjectRoot)
+            let errorCode = exec.ExecuteCommand(runnerexec, incrementalArgs, SetupEnvironment(x,  x.Project.ActivePlatform, x.Project.ActiveConfiguration), x.ProcessOutputDataReceived, x.ProcessOutputDataReceived, x.ProjectRoot)
             if errorCode > 0 then
                 let errorInExecution = new LocalAnalysisEventArgs("LA", "Failed To Execute", new Exception("Error Code: " + errorCode.ToString()))
                 completionEvent.Trigger([|x; errorInExecution|])               
@@ -356,7 +507,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                 let commandData = new LocalAnalysisEventArgs("CMD: ", message, null)
                 stdOutEvent.Trigger([|x; commandData|])         
          
-            let errorCode = (exec :> IVSSonarQubeCmdExecutor).ExecuteCommand(runnerexec, incrementalArgs, SetupEnvironment(x,  x.Project.ActivePlatform, x.Project.ActiveConfiguration), x.ProcessOutputDataReceived, x.ProcessOutputDataReceived, x.ProjectRoot)
+            let errorCode = exec.ExecuteCommand(runnerexec, incrementalArgs, SetupEnvironment(x,  x.Project.ActivePlatform, x.Project.ActiveConfiguration), x.ProcessOutputDataReceived, x.ProcessOutputDataReceived, x.ProjectRoot)
             if errorCode > 0 then
                 let errorInExecution = new LocalAnalysisEventArgs("LA", "Failed To Execute", new Exception("Error Code: " + errorCode.ToString()))
                 completionEvent.Trigger([|x; errorInExecution|])               
@@ -410,7 +561,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
 
     member x.CancelExecution(thread : Thread) =
         if not(obj.ReferenceEquals(exec, null)) then
-            (exec :> IVSSonarQubeCmdExecutor).CancelExecution |> ignore
+            exec.CancelExecution |> ignore
         ()
                    
     member x.IsMultiLanguageAnalysis(res : Resource) =
@@ -571,7 +722,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
             else
                 if not(obj.ReferenceEquals(exec, null)) then
                     try
-                        (exec :> IVSSonarQubeCmdExecutor).CancelExecution |> ignore
+                        exec.CancelExecution |> ignore
                     with
                     | ex -> ()
 
@@ -609,7 +760,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                                 fun () -> 
                                     try
                                         System.Diagnostics.Debug.WriteLine("Get Profile: " + profile.Name + " : " + profile.Language)
-                                        restService.GetRulesForProfile(conf, profile)
+                                        restService.GetRulesForProfile(conf, profile, false)
                                         if cachedProfiles.ContainsKey(project.Name) then
                                             cachedProfiles.[project.Name].Add(profile.Language, profile)
                                         else

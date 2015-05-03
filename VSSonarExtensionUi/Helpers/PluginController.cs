@@ -317,10 +317,10 @@ namespace VSSonarExtensionUi.Helpers
                     if (typeof(IAnalysisPlugin).IsAssignableFrom(type))
                     {
                         Debug.WriteLine("Can Cast Type In Assembly To: " + typeof(IAnalysisPlugin).FullName);
-                        var obj = type.GetConstructor(new[] { typeof(INotificationManager), typeof(IConfigurationHelper), typeof(ISonarRestService), typeof(IVsEnvironmentHelper) });
+                        var obj = type.GetConstructor(new[] { typeof(INotificationManager), typeof(IConfigurationHelper), typeof(ISonarRestService), typeof(IVsEnvironmentHelper), typeof(IVSSonarQubeCmdExecutor) });
                         if (obj != null)
                         {
-                            object[] lobject = new object[] { manager, helper, new SonarRestService(new JsonSonarConnector()), vshelper };
+                            object[] lobject = new object[] { manager, helper, new SonarRestService(new JsonSonarConnector()), vshelper, new VSSonarQubeCmdExecutor.VSSonarQubeCmdExecutor(60000) };
                             return (IPlugin)obj.Invoke(lobject);
                         }
                         else

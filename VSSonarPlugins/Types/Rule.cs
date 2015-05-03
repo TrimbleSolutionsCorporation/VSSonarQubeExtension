@@ -62,6 +62,7 @@ namespace VSSonarPlugins.Types
         /// </summary>
         public Rule()
         {
+            this.IsParamsRetrivedFromServer = false;
             this.EnableSetDeafaults = true;
             this.Enabled = true;
 
@@ -367,6 +368,7 @@ namespace VSSonarPlugins.Types
         ///     Gets or sets the tags.
         /// </summary>
         public ObservableCollection<string> Tags { get; set; }
+        public bool IsParamsRetrivedFromServer { get; set; }
 
         #endregion
 

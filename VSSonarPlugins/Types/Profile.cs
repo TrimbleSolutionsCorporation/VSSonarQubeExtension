@@ -27,8 +27,13 @@ namespace VSSonarPlugins.Types
     [ImplementPropertyChanged]
     public class Profile
     {
-        public Profile()
+        private readonly ISonarRestService service;
+        private readonly ISonarConfiguration conf;
+
+        public Profile(ISonarRestService service, ISonarConfiguration conf)
         {
+            this.conf = conf;
+            this.service = service;
             this.Rules = new Dictionary<string, Rule>();
             this.RulesByIternalKey = new Dictionary<string, Rule>();
         }
@@ -74,13 +79,17 @@ namespace VSSonarPlugins.Types
         {
             try
             {
-                return this.Rules[internalKeyOrConfigKey];
+                var rule = this.Rules[internalKeyOrConfigKey];
+                this.UpdateRuleData(rule);
+                return rule;
             }
             catch (KeyNotFoundException)
             {
                 try
                 {
-                    return this.RulesByIternalKey[internalKeyOrConfigKey];
+                    var rule = this.RulesByIternalKey[internalKeyOrConfigKey];
+                    this.UpdateRuleData(rule);
+                    return rule;
                 }
                 catch (KeyNotFoundException)
                 {
@@ -88,6 +97,17 @@ namespace VSSonarPlugins.Types
                 }
             }
         }
+
+        private void UpdateRuleData(Rule rule)
+        {
+            if (rule.IsParamsRetrivedFromServer)
+            {
+                return;
+            }
+
+            this.service.UpdateRuleData(this.conf, rule);
+        }
+
 
         /// <summary>The get all rules.</summary>
         /// <returns>The <see cref="List"/>.</returns>
