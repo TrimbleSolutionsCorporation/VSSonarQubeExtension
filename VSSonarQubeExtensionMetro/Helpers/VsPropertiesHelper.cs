@@ -947,7 +947,7 @@ namespace VSSonarQubeExtension.Helpers
 
             foreach (Project project in this.environment.Solution.Projects)
             {
-                if (project.Name.ToLower().StartsWith(projectName.ToLower() + "."))
+                if (project.Name.ToLower().Equals(projectName.ToLower()))
                 {
                     var proToRet = new VsProjectItem();
                     proToRet.ProjectName = project.Name;

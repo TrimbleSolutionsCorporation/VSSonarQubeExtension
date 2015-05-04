@@ -195,40 +195,46 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="NSQAnalyser\Microsoft.CodeAnalysis.Analyzers.dll">
+    <Content Include="externalAnalysers\roslynDiagnostics\Microsoft.CodeAnalysis.Analyzers.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="NSQAnalyser\Microsoft.CodeAnalysis.CSharp.dll">
+    <Content Include="externalAnalysers\roslynDiagnostics\Microsoft.CodeAnalysis.CSharp.Desktop.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="NSQAnalyser\Microsoft.CodeAnalysis.Desktop.dll">
+    <Content Include="externalAnalysers\roslynDiagnostics\Microsoft.CodeAnalysis.CSharp.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="NSQAnalyser\Microsoft.CodeAnalysis.dll">
+    <Content Include="externalAnalysers\roslynDiagnostics\Microsoft.CodeAnalysis.Desktop.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="NSQAnalyser\SonarQube.CodeAnalysis.CSharp.dll">
+    <Content Include="externalAnalysers\roslynDiagnostics\Microsoft.CodeAnalysis.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="NSQAnalyser\SonarQube.CodeAnalysis.CSharp.Extra.dll">
+    <Content Include="externalAnalysers\roslynDiagnostics\Microsoft.Practices.ServiceLocation.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="NSQAnalyser\StyleCop.CSharp.dll">
+    <Content Include="externalAnalysers\roslynDiagnostics\SonarQube.CodeAnalysis.CSharp.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="NSQAnalyser\StyleCop.CSharp.Rules.dll">
+    <Content Include="externalAnalysers\roslynDiagnostics\SonarQube.CodeAnalysis.CSharp.Extra.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="NSQAnalyser\StyleCop.dll">
+    <Content Include="externalAnalysers\StyleCop\StyleCop.CSharp.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="NSQAnalyser\mssp7en.dll">
+    <Content Include="externalAnalysers\StyleCop\StyleCop.CSharp.Rules.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="NSQAnalyser\mssp7en.lex">
+    <Content Include="StyleCop.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="NSQAnalyser\StyleCop.VSPackage.dll">
+    <Content Include="externalAnalysers\StyleCop\mssp7en.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="externalAnalysers\StyleCop\mssp7en.lex">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="externalAnalysers\StyleCop\StyleCop.VSPackage.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <None Include="vs2015\source.extension.vsixmanifest">
@@ -240,20 +246,20 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="NSQAnalyser\System.Collections.Immutable.dll">
+    <Content Include="externalAnalysers\roslynDiagnostics\System.Collections.Immutable.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Resources\vsiximage.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="SonarRunner\bin\sonar-runner">
+    <Content Include="externalAnalysers\SonarRunner\bin\sonar-runner">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="SonarRunner\bin\sonar-runner.bat">
+    <Content Include="externalAnalysers\SonarRunner\bin\sonar-runner.bat">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="SonarRunner\conf\sonar-runner.properties">
+    <Content Include="externalAnalysers\SonarRunner\conf\sonar-runner.properties">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <None Include="VSSonarQubeExtensionMetro.licenseheader" />
@@ -265,7 +271,7 @@
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="SonarRunner\lib\sonar-runner-dist-2.4.jar">
+    <Content Include="externalAnalysers\SonarRunner\lib\sonar-runner-dist-2.4.jar">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Resource Include="Resources\sonarreviews.bmp" />

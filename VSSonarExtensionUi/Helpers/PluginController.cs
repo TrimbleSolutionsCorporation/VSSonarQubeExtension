@@ -194,7 +194,12 @@ namespace VSSonarExtensionUi.Helpers
                 {
                     if (file.EndsWith(".dll"))
                     {
-                        assemblies.Add(file, AppDomain.CurrentDomain.Load(File.ReadAllBytes(file)));
+                        try
+                        {
+                            assemblies.Add(file, AppDomain.CurrentDomain.Load(File.ReadAllBytes(file)));
+                        } catch (Exception ex) {
+                           System.Diagnostics.Debug.WriteLine("CannotLoad: " + file + " : " +  ex.Message);
+                        }                        
                     }
                 }
 
