@@ -79,18 +79,15 @@
     <None Include="TestData\SampleProjects\MultiModuleTest\B\sonar-project.properties">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    
     <None Include="TestData\SampleProjects\FlatProject\sonar-project.properties">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    
     <None Include="TestData\SampleProjects\VisualBootStrapper\sonar-project.properties">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>  
-
+    </None>
     <None Include="TestData\SampleProjects\ModulesDefinedAllInOnePropertiesFile\sonar-project.properties">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>    
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Foq">
@@ -99,6 +96,7 @@
     <Reference Include="FsUnit.NUnit">
       <HintPath>..\references\$(FSharpFolder)\FsUnit.NUnit.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.2.1502.0911\lib\net40\Moq.dll</HintPath>
       <Private>True</Private>
