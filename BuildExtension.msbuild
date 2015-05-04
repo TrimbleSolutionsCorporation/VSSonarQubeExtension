@@ -3,16 +3,16 @@
     <Import Project="configuration.props" Condition="'$(MSBuildFolder)'==''"/>
     <Import Project="$(MSBuildFolder)\TeklaNuget.tasks" Condition="'$(NugetRestoreTaskIncluded)'!='yes'"/>
     <ItemGroup>
-        <VSSonarQubeExtension Include="VSSonarQubeExtension.sln" />
+        <VSSonarQubeExtension2013 Include="VSSonarQubeExtension2013.sln" />
         <VSSonarQubeExtension2012 Include="VSSonarQubeExtension2012.sln" />
         <VSSonarQubeExtension2015 Include="VSSonarQubeExtension2015.sln" />
     </ItemGroup>
     
-    <Target Name="RestoreExtensionNuget"><NugetRestoreTask NugetExe="$(MSBuildFolder)\Nuget.exe" SolutionFile="VSSonarQubeExtension.sln"/></Target>
+    <Target Name="RestoreExtensionNuget"><NugetRestoreTask NugetExe="$(MSBuildFolder)\Nuget.exe" SolutionFile="VSSonarQubeExtension2013.sln"/></Target>
 
     <Target Name="BuildExtension" DependsOnTargets="RestoreExtensionNuget">
 		<MSBuild Projects="@(VSSonarQubeExtension2012)" Properties="Configuration=Release;VSVersion=11.0" BuildInParallel="true" StopOnFirstFailure="true" />    
-        <MSBuild Projects="@(VSSonarQubeExtension)" Properties="Configuration=Release;VSVersion=12.0" BuildInParallel="true" StopOnFirstFailure="true" />
+        <MSBuild Projects="@(VSSonarQubeExtension2013)" Properties="Configuration=Release;VSVersion=12.0" BuildInParallel="true" StopOnFirstFailure="true" />
 		<MSBuild Projects="@(VSSonarQubeExtension2015)" Properties="Configuration=Release;VSVersion=14.0" BuildInParallel="true" StopOnFirstFailure="true" />
     </Target>
     

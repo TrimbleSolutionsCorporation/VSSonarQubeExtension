@@ -21,7 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSSonarExtensionUi", "VSSon
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSSonarQubeStandalone", "VSSonarQubeStandalone\VSSonarQubeStandalone.csproj", "{B9B03BEF-2B09-43C3-A14E-E297E2100FE1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSSonarExtensionMetro", "VSSonarQubeExtensionMetro\VSSonarExtensionMetro.csproj", "{CDA074CC-04BC-4D9E-B285-5A2D47C001B9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSSonarExtensionMetroVs2013", "VSSonarQubeExtensionMetro\VSSonarExtensionMetroVs2013.csproj", "{CDA074CC-04BC-4D9E-B285-5A2D47C001B9}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "VSSonarQubeCmdExecutor", "VSSonarQubeCmdExecutor\VSSonarQubeCmdExecutor.fsproj", "{9B154406-0AF6-45A9-BF32-9C5C23822B6B}"
 EndProject

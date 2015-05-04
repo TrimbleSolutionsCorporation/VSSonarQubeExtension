@@ -11,7 +11,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>VSSonarQubeExtension</RootNamespace>
-    <AssemblyName>VSSonarQubeExtensionMetro</AssemblyName>
+    <AssemblyName>VSSonarExtensionMetroVs2013</AssemblyName>
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
@@ -207,7 +207,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="source.extension.vsixmanifest">
+    <None Include="VS2013\source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
     <None Include="app.config" />

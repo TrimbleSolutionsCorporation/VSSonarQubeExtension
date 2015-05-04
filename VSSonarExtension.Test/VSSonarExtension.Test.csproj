@@ -120,7 +120,7 @@
       <Project>{3311c918-b662-436d-8bc8-f38b447b1414}</Project>
       <Name>VSSonarPlugins</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VSSonarQubeExtensionMetro\VSSonarExtensionMetro.csproj">
+    <ProjectReference Include="..\VSSonarQubeExtensionMetro\VSSonarExtensionMetroVs2013.csproj">
       <Project>{cda074cc-04bc-4d9e-b285-5a2d47c001b9}</Project>
       <Name>VSSonarExtensionMetro</Name>
     </ProjectReference>
