@@ -743,7 +743,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             }
             catch (VSSonarExtension ex)
             {
-                UserExceptionMessageBox.ShowException("Analysis Failed: ", ex);
+                this.sonarQubeViewModel.NotificationManager.ReportMessage(new VSSonarPlugins.Message() { Id = "LocalViewModel", Data = "Analysis Failed: " + ex.Message });
+                this.sonarQubeViewModel.NotificationManager.ReportException(ex);
                 this.CanRunAnalysis = true;
                 this.sonarQubeViewModel.IsExtensionBusy = false;
             }
