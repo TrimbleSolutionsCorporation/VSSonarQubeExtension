@@ -338,7 +338,12 @@ namespace VSSonarExtensionUi.Helpers
                     if (typeof(IMenuCommandPlugin).IsAssignableFrom(type))
                     {
                         Debug.WriteLine("Can Cast Type In Assembly To: " + typeof(IMenuCommandPlugin).FullName);
-                        return (IPlugin)Activator.CreateInstance(type);
+                        var obj = type.GetConstructor(new[] { typeof(ISonarRestService) });
+                        if (obj != null)
+                        {
+                            object[] lobject = { new SonarRestService(new JsonSonarConnector()) };
+                            return (IPlugin)obj.Invoke(lobject);
+                        }
                     }
                 }
                 catch (Exception ex)
