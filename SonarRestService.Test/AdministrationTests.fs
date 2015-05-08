@@ -91,7 +91,7 @@ type AdministrationTests() =
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        (service :> ISonarRestService).GetServerInfo(conf) |> should equal 3.6
+        (service :> ISonarRestService).GetServerInfo(conf) |> should equal 3.6f
 
     [<Test>]
     member test.``Should Get Correct server version with 3,6`` () =
@@ -103,7 +103,7 @@ type AdministrationTests() =
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        (service :> ISonarRestService).GetServerInfo(conf) |> should equal 3.6
+        (service :> ISonarRestService).GetServerInfo(conf) |> should equal 3.6f
 
     [<Test>]
     member test.``Should Get Correct server version with 3.6-SNAPSHOT`` () =
@@ -115,7 +115,7 @@ type AdministrationTests() =
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        (service :> ISonarRestService).GetServerInfo(conf) |> should equal 3.6
+        (service :> ISonarRestService).GetServerInfo(conf) |> should equal 3.6f
 
     [<Test>]
     member test.``Should Get Correct server version with 3,6-SNAPSHOT`` () =
@@ -127,7 +127,7 @@ type AdministrationTests() =
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        (service :> ISonarRestService).GetServerInfo(conf) |> should equal 3.6
+        (service :> ISonarRestService).GetServerInfo(conf) |> should equal 3.6f
 
     [<Test>]
     member test.``Should Get Correct server version with 3.6.1`` () =
@@ -139,7 +139,7 @@ type AdministrationTests() =
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        (service :> ISonarRestService).GetServerInfo(conf) |> should equal 3.6
+        (service :> ISonarRestService).GetServerInfo(conf) |> should equal 3.6f
 
     [<Test>]
     member test.``Should Get Correct server version with 3.6.1-SNAPSHOT`` () =
@@ -151,7 +151,7 @@ type AdministrationTests() =
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        (service :> ISonarRestService).GetServerInfo(conf) |> should equal 3.6
+        (service :> ISonarRestService).GetServerInfo(conf) |> should equal 3.6f
 
     [<Test>]
     member test.``Get Properties`` () =
