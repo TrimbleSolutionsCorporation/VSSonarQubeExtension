@@ -979,13 +979,15 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             }
         }
 
-        private void ResetStatistics()
+        public void ResetStatistics()
         {
             this.NumberOfBlockers = 0;
             this.NumberOfCriticals = 0;
             this.NumberOfMajors = 0;
             this.NumberOfIssues = 0;
             this.TechnicalDebt = 0;
+
+            this.UpdateStatistics();
         }
 
         public long TechnicalDebt { get; set; }

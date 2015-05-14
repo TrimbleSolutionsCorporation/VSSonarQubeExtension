@@ -591,6 +591,16 @@ namespace VSSonarExtensionUi.ViewModel
 
         public void RefreshDataForResource()
         {
+            if (this.ServerViewModel != null)
+            {
+                this.ServerViewModel.ResetStats();
+            }
+
+            if (this.LocalViewModel != null)
+            {
+                this.LocalViewModel.ResetStats();
+            }
+
             if (this.ResourceInEditor == null)
             {
                 return;
@@ -629,10 +639,12 @@ namespace VSSonarExtensionUi.ViewModel
             {
                 this.LocalViewModel.IssuesGridView.AllIssues.Clear();
                 this.LocalViewModel.IssuesGridView.Issues.Clear();
+                this.LocalViewModel.ResetStats();
             }
 
             this.ServerViewModel.IssuesGridView.AllIssues.Clear();
             this.ServerViewModel.IssuesGridView.Issues.Clear();
+            this.ServerViewModel.ResetStats();
             this.ResourceInEditor = this.CreateAResourceForFileInEditor(fullName);
 
             if (this.ResourceInEditor == null)

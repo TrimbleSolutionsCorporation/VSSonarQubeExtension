@@ -17,8 +17,6 @@ namespace VSSonarExtensionUi.Helpers
     using System.IO;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.ComponentModel.Composition;
-    using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics;
     using System.Linq;
     using System.Reflection;

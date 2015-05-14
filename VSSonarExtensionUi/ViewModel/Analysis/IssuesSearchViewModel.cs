@@ -352,6 +352,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
 
         #region Public Methods and Operators
 
+        public void ResetStats()
+        {
+            if (this.IssuesGridView != null)
+            {
+                this.IssuesGridView.ResetStatistics();
+            }
+        }
+
         /// <summary>
         ///     The end data association.
         /// </summary>

@@ -72,6 +72,9 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             IVSSStatusBar statusBar, 
             IServiceProvider provider);
 
+        /// <summary>Reset Stats.</summary>
+        void ResetStats();
+
         #endregion
     }
 }
