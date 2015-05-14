@@ -202,10 +202,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="externalAnalysers\roslynDiagnostics\SonarQube.CodeAnalysis.CSharp.dll">
+    <Content Include="externalAnalysers\roslynDiagnostics\SonarQube.CSharp.CodeAnalysis.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="externalAnalysers\roslynDiagnostics\SonarQube.CodeAnalysis.CSharp.Extra.dll">
+    <Content Include="externalAnalysers\roslynDiagnostics\SonarQube.CSharp.CodeAnalysis.Extra.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <None Include="vs2012\source.extension.vsixmanifest" />
@@ -233,10 +233,10 @@
     <Content Include="externalAnalysers\roslynDiagnostics\Microsoft.Practices.ServiceLocation.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="externalAnalysers\roslynDiagnostics\SonarQube.CodeAnalysis.CSharp.dll">
+    <Content Include="externalAnalysers\roslynDiagnostics\SonarQube.CSharp.CodeAnalysis.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="externalAnalysers\roslynDiagnostics\SonarQube.CodeAnalysis.CSharp.Extra.dll">
+    <Content Include="externalAnalysers\roslynDiagnostics\SonarQube.CSharp.CodeAnalysis.Extra.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="externalAnalysers\roslynDiagnostics\System.Collections.Immutable.dll">
