@@ -219,6 +219,9 @@
     <Content Include="externalAnalysers\roslynDiagnostics\SonarQube.CodeAnalysis.CSharp.Extra.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="externalAnalysers\StyleCop\Settings.StyleCop">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="externalAnalysers\StyleCop\StyleCop.CSharp.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
