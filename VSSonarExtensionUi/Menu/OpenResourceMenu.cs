@@ -185,7 +185,7 @@ namespace VSSonarExtensionUi.Menu
             }
             catch (Exception ex)
             {
-                UserExceptionMessageBox.ShowException("Cannot Modify Status Of Issues", ex);
+                UserExceptionMessageBox.ShowException("Cannot Open Issue in Editor: " + ex.Message + " please check vs output log for detailed information", ex);
             }
         }
 

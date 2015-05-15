@@ -80,6 +80,7 @@ namespace VSSonarExtensionUi.ViewModel
             this.SonarRestConnector = new SonarRestService(new JsonSonarConnector());
             this.Logger = new VsSonarExtensionLogger(this, vsVersion);
             this.VsHelper = new StandAloneVsHelper();
+            this.SonarKeyTranslator = new SQKeyTranslator();
 
             this.IsExtensionBusy = false;
             this.IsConnected = false;

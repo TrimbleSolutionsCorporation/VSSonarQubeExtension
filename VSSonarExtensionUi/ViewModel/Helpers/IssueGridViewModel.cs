@@ -565,8 +565,19 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                     return;
                 }
 
-                var path = this.model.SonarKeyTranslator.TranslateKey(issue.Component, this.Vsenvironmenthelper);
-                this.Vsenvironmenthelper.OpenResourceInVisualStudio(this.model.OpenSolutionPath, path, issue.Line);
+
+                try
+                {
+                    var path = this.model.SonarKeyTranslator.TranslateKey(issue.Component, this.Vsenvironmenthelper);
+                    this.Vsenvironmenthelper.OpenResourceInVisualStudio(this.model.OpenSolutionPath, path, issue.Line);
+                }
+                catch (Exception ex)
+                {
+                    this.model.NotificationManager.ReportMessage(new Message() { Id = "OnInEditor", Data = ex.Message + " : " + issue.Component });
+                    this.model.NotificationManager.ReportMessage(new Message() { Id = "OnInEditor ", Data = "Solution = " + this.model.OpenSolutionPath });
+                    this.model.NotificationManager.ReportMessage(new Message() { Id = "OnInEditor", Data = "Project = " + this.model.AssociatedProject });
+                    this.model.NotificationManager.ReportException(ex);
+                }
             }
         }
 
