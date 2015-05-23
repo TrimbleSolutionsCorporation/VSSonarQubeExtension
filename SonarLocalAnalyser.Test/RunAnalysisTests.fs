@@ -38,14 +38,14 @@ type RunAnalysisTests() =
     [<Test>]
     member test.``Should throw exception when no plugin is found`` () =
         let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create(), Mock<ISonarConfiguration>().Create(), Mock<INotificationManager>().Create())
-        Assert.Throws<ResourceNotSupportedException>(fun c -> (analyser :> ISonarLocalAnalyser).GetResourceKey(new VsFileItem(), true) |> ignore)
+        Assert.Throws<ResourceNotSupportedException>(fun c -> (analyser :> ISonarLocalAnalyser).GetResourceKey(new VsFileItem(), true) |> ignore) |> ignore
 
     [<Test>]
     member test.``Should throw exception if No plugins are loaded and we give a good resource`` () =
         let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create(), Mock<ISonarConfiguration>().Create(), Mock<INotificationManager>().Create())
         let project = new Resource()
         project.Lang <- "c++"
-        Assert.Throws<ResourceNotSupportedException>(fun c -> ((analyser :> ISonarLocalAnalyser).GetResourceKey(new VsFileItem(), true)) |> ignore)
+        Assert.Throws<ResourceNotSupportedException>(fun c -> ((analyser :> ISonarLocalAnalyser).GetResourceKey(new VsFileItem(), true)) |> ignore) |> ignore 
 
     [<Test>]
     member test.``Should Return Key When Single language is set`` () =

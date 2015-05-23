@@ -11,6 +11,7 @@ namespace VSSonarExtensionUi.Helpers.Test.NonVSTests
 {
     using System;
     using System.IO;
+    using System.Reflection;
 
     using NUnit.Framework;
 
@@ -25,7 +26,7 @@ namespace VSSonarExtensionUi.Helpers.Test.NonVSTests
         /// <summary>
         /// The sample data path.
         /// </summary>
-        private readonly string sampleDataPath = Path.Combine(Environment.CurrentDirectory, "NonVSTests\\TestData");
+        private readonly string sampleDataPath = Path.Combine(Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString(), "NonVSTests\\TestData");
 
         /// <summary>
         /// The setup.

@@ -23,6 +23,8 @@ namespace VSSonarExtensionUi.Helpers.Test.NonVSTests
 
     using VSSonarPlugins.Helpers;
 
+    using System.Reflection;
+
     /// <summary>
     /// The vs sonar utils callbacks test.
     /// </summary>
@@ -32,7 +34,7 @@ namespace VSSonarExtensionUi.Helpers.Test.NonVSTests
         /// <summary>
         /// The sample data path.
         /// </summary>
-        private readonly string sampleDataPath = Path.Combine(Environment.CurrentDirectory, "NonVSTests\\TestData");
+        private readonly string sampleDataPath = Path.Combine(Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString(), "NonVSTests\\TestData");
 
         /// <summary>
         /// The s lf.
