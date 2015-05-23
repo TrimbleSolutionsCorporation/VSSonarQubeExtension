@@ -114,3 +114,5 @@ Backup*/
 UpgradeLog*.XML
 
 .sonar/
+*.unittest.report.xml
+*.coverage.xml
