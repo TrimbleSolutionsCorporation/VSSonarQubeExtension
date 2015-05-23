@@ -7,8 +7,11 @@ open System.IO
 
 open VSSonarPlugins
 open VSSonarPlugins.Types
+open System.Reflection
 
 type AdministrationTests() =
+   
+    let assemblyRunningPath = Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString()
 
     [<Test>]
     member test.``Should Get Users`` () =
@@ -16,7 +19,7 @@ type AdministrationTests() =
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), "/api/users/search") @>).Returns(File.ReadAllText("testdata/userList.txt"))
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), "/api/users/search") @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/userList.txt"))
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
@@ -29,7 +32,7 @@ type AdministrationTests() =
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), "/api/users/search") @>).Returns(File.ReadAllText("testdata/NonExistentPage.xml"))
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), "/api/users/search") @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/NonExistentPage.xml"))
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
@@ -67,7 +70,7 @@ type AdministrationTests() =
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), "/api/authentication/validate") @>).Returns(File.ReadAllText("testdata/NonExistentPage.xml"))
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), "/api/authentication/validate") @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/NonExistentPage.xml"))
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
@@ -150,7 +153,7 @@ type AdministrationTests() =
         let conf = ConnectionConfiguration("http://sonar", "jocs1", "jocs1")
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), "/api/properties") @>).Returns(File.ReadAllText("testdata/PropertiesResponse.txt"))
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), "/api/properties") @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/PropertiesResponse.txt"))
                 .Create()
 
         let service = SonarRestService(mockHttpReq)

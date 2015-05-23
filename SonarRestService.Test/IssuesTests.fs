@@ -7,16 +7,16 @@ open System.IO
 
 open VSSonarPlugins
 open VSSonarPlugins.Types
-
+open System.Reflection
 type IssuesTests() =
-
+    let assemblyRunningPath = Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString()
     [<Test>]
     member test.``Should Get Corret Number of Issues In Component`` () =
         let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1")
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText("testdata/issuessearchbycomponent.txt"))
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/issuessearchbycomponent.txt"))
                 .Create()
         let service = SonarRestService(mockHttpReq)
         let issues = (service :> ISonarRestService).GetIssuesInResource(conf, "groupid:projectid:directory/file.cpp")
@@ -28,9 +28,9 @@ type IssuesTests() =
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(conf, "/api/violations?resource=groupid:projectid:directory/file.cpp") @>).Returns(File.ReadAllText("testdata/vilationsReply.txt"))
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(conf, "/api/reviews?resources=groupid:projectid:directory/file.cpp") @>).Returns(File.ReadAllText("testdata/reviewByUser.txt"))
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(conf, "/api/issues/search?components=groupid:projectid:directory/file.cpp") @>).Returns(File.ReadAllText("testdata/NonExistentPage.xml"))
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(conf, "/api/violations?resource=groupid:projectid:directory/file.cpp") @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/vilationsReply.txt"))
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(conf, "/api/reviews?resources=groupid:projectid:directory/file.cpp") @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/reviewByUser.txt"))
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(conf, "/api/issues/search?components=groupid:projectid:directory/file.cpp") @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/NonExistentPage.xml"))
                 .Create()
         let service = SonarRestService(mockHttpReq)
         let issues = (service :> ISonarRestService).GetIssuesInResource(conf, "groupid:projectid:directory/file.cpp")
@@ -42,7 +42,7 @@ type IssuesTests() =
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText("testdata/issuesByUser.txt"))
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/issuesByUser.txt"))
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
@@ -55,8 +55,8 @@ type IssuesTests() =
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(conf, "/api/reviews?projects=groupid:projectid&assignees=login1") @>).Returns(File.ReadAllText("testdata/reviewByUser.txt"))
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(conf, "/api/issues/search?componentRoots=groupid:projectid&assignees=login1") @>).Returns(File.ReadAllText("testdata/NonExistentPage.xml"))
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(conf, "/api/reviews?projects=groupid:projectid&assignees=login1") @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/reviewByUser.txt"))
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(conf, "/api/issues/search?componentRoots=groupid:projectid&assignees=login1") @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/NonExistentPage.xml"))
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
@@ -69,7 +69,7 @@ type IssuesTests() =
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText("testdata/issuesByUser.txt"))
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/issuesByUser.txt"))
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
@@ -82,8 +82,8 @@ type IssuesTests() =
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(conf, "/api/reviews?assignees=login1") @>).Returns(File.ReadAllText("testdata/reviewByUser.txt"))
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(conf, "/api/issues/search?assignees=login1") @>).Returns(File.ReadAllText("testdata/NonExistentPage.xml"))
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(conf, "/api/reviews?assignees=login1") @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/reviewByUser.txt"))
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(conf, "/api/issues/search?assignees=login1") @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/NonExistentPage.xml"))
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
@@ -96,7 +96,7 @@ type IssuesTests() =
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText("testdata/issuessearchbycomponent.txt"))
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/issuessearchbycomponent.txt"))
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
@@ -109,9 +109,9 @@ type IssuesTests() =
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(conf, "/api/reviews?projects=project:id") @>).Returns(File.ReadAllText("testdata/reviewByUser.txt"))
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(conf, "/api/violations?resource=project:id&depth=-1") @>).Returns(File.ReadAllText("testdata/vilationsReply.txt"))               
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(conf, "/api/issues/search?componentRoots=project:id") @>).Returns(File.ReadAllText("testdata/NonExistentPage.xml"))
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(conf, "/api/reviews?projects=project:id") @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/reviewByUser.txt"))
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(conf, "/api/violations?resource=project:id&depth=-1") @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/vilationsReply.txt"))               
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(conf, "/api/issues/search?componentRoots=project:id") @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/NonExistentPage.xml"))
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
@@ -124,9 +124,9 @@ type IssuesTests() =
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(conf, "/api/violations?resource=filename") @>).Returns(File.ReadAllText("testdata/vilationsReply.txt"))
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(conf, "/api/reviews?resources=filename") @>).Returns(File.ReadAllText("testdata/reviewByUser.txt"))
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(conf, "/api/issues/search?components=filename") @>).Returns(File.ReadAllText("testdata/NonExistentPage.xml"))
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(conf, "/api/violations?resource=filename") @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/vilationsReply.txt"))
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(conf, "/api/reviews?resources=filename") @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/reviewByUser.txt"))
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(conf, "/api/issues/search?components=filename") @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/NonExistentPage.xml"))
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
@@ -139,11 +139,11 @@ type IssuesTests() =
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText("testdata/dryRunReport.txt"))
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/dryRunReport.txt"))
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        let issues = (service :> ISonarRestService).ParseReportOfIssuesOld("testdata/dryRunReport.txt")
+        let issues = (service :> ISonarRestService).ParseReportOfIssuesOld(assemblyRunningPath + "/testdata/dryRunReport.txt")
         Assert.That(issues.Count, Is.EqualTo(10))
 
 
@@ -153,11 +153,11 @@ type IssuesTests() =
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText("testdata/dryrunissues.txt"))
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/dryrunissues.txt"))
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        let issues = (service :> ISonarRestService).ParseDryRunReportOfIssues("testdata/dryrunissues.txt")
+        let issues = (service :> ISonarRestService).ParseDryRunReportOfIssues(assemblyRunningPath + "/testdata/dryrunissues.txt")
         Assert.That(issues.Count, Is.EqualTo(10))
 
     [<Test>]
@@ -166,10 +166,10 @@ type IssuesTests() =
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText("testdata/incrementalrun.txt"))
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/incrementalrun.txt"))
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        let issues = (service :> ISonarRestService).ParseReportOfIssues("testdata/incrementalrun.txt")
+        let issues = (service :> ISonarRestService).ParseReportOfIssues(assemblyRunningPath + "/testdata/incrementalrun.txt")
         Assert.That(issues.Count, Is.EqualTo(1))
 

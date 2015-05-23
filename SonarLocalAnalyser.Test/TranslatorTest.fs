@@ -41,7 +41,7 @@ type TraTests() =
         translator.CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\MultiModuleTest\\sonar-project.properties"));
         Assert.That(translator.Modules().Length, Is.EqualTo(2))
         Assert.That(translator.GetProjectKey(), Is.EqualTo("AB:ProjectX_CPP"))
-        Assert.That(translator.GetProjectKey(), Is.EqualTo("ProjectX_CPP"))
+        Assert.That(translator.GetProjectName(), Is.EqualTo("ProjectX_CPP"))
 
         let item = new VsFileItem()
         item.FileName <- "dup.cpp"
@@ -58,7 +58,7 @@ type TraTests() =
         translator.CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\MultiModuleTest\\sonar-project.properties"));
         Assert.That(translator.Modules().Length, Is.EqualTo(2))
         Assert.That(translator.GetProjectKey(), Is.EqualTo("AB:ProjectX_CPP"))
-        Assert.That(translator.GetProjectKey(), Is.EqualTo("ProjectX_CPP"))
+        Assert.That(translator.GetProjectName(), Is.EqualTo("ProjectX_CPP"))
         Assert.That(translator.TranslateKey("AB:ProjectX_CPP:A:1:a:dup.cpp", mockAVsinterface), Is.EqualTo(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\MultiModuleTest\\A\\1\\a\\dup.cpp")))
 
     [<Test>]
@@ -69,7 +69,7 @@ type TraTests() =
 
         Assert.That(translator.Modules().Length, Is.EqualTo(0))
         Assert.That(translator.GetProjectKey(), Is.EqualTo("AB:ProjectX_CPP_Flat"))
-        Assert.That(translator.GetProjectKey(), Is.EqualTo("ProjectX_CPP"))
+        Assert.That(translator.GetProjectName(), Is.EqualTo("ProjectX_CPP"))
 
         let item = new VsFileItem()
         item.FileName <- "dup.cpp"
@@ -87,7 +87,7 @@ type TraTests() =
         translator.CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject\\sonar-project.properties"));
         Assert.That(translator.Modules().Length, Is.EqualTo(0))
         Assert.That(translator.GetProjectKey(), Is.EqualTo("AB:ProjectX_CPP_Flat"))
-        Assert.That(translator.GetProjectKey(), Is.EqualTo("ProjectX_CPP"))
+        Assert.That(translator.GetProjectName(), Is.EqualTo("ProjectX_CPP"))
 
         Assert.That(translator.TranslateKey("AB:ProjectX_CPP_Flat:A/1/a/dup.cpp", mockAVsinterface), Is.EqualTo(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject\\A\\1\\a\\dup.cpp")))
 
@@ -99,7 +99,7 @@ type TraTests() =
         translator.CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\VisualBootStrapper\\sonar-project.properties"))
         Assert.That(translator.Modules().Length, Is.EqualTo(0))
         Assert.That(translator.GetProjectKey(), Is.EqualTo("AB:ProjectX_CPP_BootStrapper"))
-        Assert.That(translator.GetProjectKey(), Is.EqualTo("ProjectX_CPP"))
+        Assert.That(translator.GetProjectName(), Is.EqualTo("ProjectX_CPP"))
 
         let item = new VsFileItem()
         item.FileName <- "dup.cpp"
@@ -119,7 +119,7 @@ type TraTests() =
         translator.CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\VisualBootStrapper\\sonar-project.properties"));
         Assert.That(translator.Modules().Length, Is.EqualTo(0))
         Assert.That(translator.GetProjectKey(), Is.EqualTo("AB:ProjectX_CPP_BootStrapper"))
-        Assert.That(translator.GetProjectKey(), Is.EqualTo("ProjectX_CPP"))
+        Assert.That(translator.GetProjectName(), Is.EqualTo("ProjectX_CPP"))
 
         Assert.That(translator.TranslateKey("AB:ProjectX_CPP_BootStrapper:a1a:dup.cpp", mockAVsinterface), Is.EqualTo(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject\\A\\1\\a\\dup.cpp")))
 
@@ -131,7 +131,7 @@ type TraTests() =
         translator.CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\ModulesDefinedAllInOnePropertiesFile\\sonar-project.properties"));
         Assert.That(translator.Modules().Length, Is.EqualTo(4))
         Assert.That(translator.GetProjectKey(), Is.EqualTo("cpp-multimodule-project"))
-        Assert.That(translator.GetProjectKey(), Is.EqualTo("cpp-multimodule-project"))
+        Assert.That(translator.GetProjectName(), Is.EqualTo("cpp-multimodule-project"))
         let item = new VsFileItem()
         item.FileName <- "dup.cpp"
         item.FilePath <- Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\ModulesDefinedAllInOnePropertiesFile\\lib\\dup.cpp")

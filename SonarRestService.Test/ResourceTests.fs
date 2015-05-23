@@ -11,16 +11,16 @@ open VSSonarPlugins
 open VSSonarPlugins.Types
 open RestSharp
 open System.Collections.ObjectModel
-
+open System.Reflection
 type ResourceTests() =
-
+    let assemblyRunningPath = Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString()
     [<Test>]
     member test.``Should Get Resource Info Properly`` () =
         let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1")
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), "/api/resources?resource=filename") @>).Returns(File.ReadAllText("testdata/resourceresponse.txt"))
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), "/api/resources?resource=filename") @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/resourceresponse.txt"))
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
@@ -33,7 +33,7 @@ type ResourceTests() =
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), "/api/resources") @>).Returns(File.ReadAllText("testdata/listofprojects.txt"))
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), "/api/resources") @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/listofprojects.txt"))
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
@@ -48,7 +48,7 @@ type ResourceTests() =
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), "/api/resources?resource=resource&metrics=coverage_line_hits_data,conditions_by_line,covered_conditions_by_line") @>).Returns(File.ReadAllText("testdata/linecoveragesample.txt"))
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), "/api/resources?resource=resource&metrics=coverage_line_hits_data,conditions_by_line,covered_conditions_by_line") @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/linecoveragesample.txt"))
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
@@ -61,7 +61,7 @@ type ResourceTests() =
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), "/api/sources?resource=resource") @>).Returns(File.ReadAllText("testdata/sourceres.txt"))
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), "/api/sources?resource=resource") @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/sourceres.txt"))
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
@@ -75,7 +75,7 @@ type ResourceTests() =
         let mockIRestReponseHttpReq =
             Mock<IRestResponse>()
                 .Setup(fun x -> <@ x.StatusCode @>).Returns(Net.HttpStatusCode.OK)
-                .Setup(fun x -> <@ x.Content @>).Returns(File.ReadAllText("testdata/ResponseToAddCommentOldFormat.txt"))
+                .Setup(fun x -> <@ x.Content @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/ResponseToAddCommentOldFormat.txt"))
                 .Create()
 
         let mockIRestReponsePostHttpReq =
@@ -107,7 +107,7 @@ type ResourceTests() =
         let mockIRestReponsePostHttpReq =
             Mock<IRestResponse>()
                 .Setup(fun x -> <@ x.StatusCode @>).Returns(Net.HttpStatusCode.OK)
-                .Setup(fun x -> <@ x.Content @>).Returns(File.ReadAllText("testdata/commentsReply.txt"))
+                .Setup(fun x -> <@ x.Content @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/commentsReply.txt"))
                 .Create()
 
         let mockHttpReq =
@@ -133,7 +133,7 @@ type ResourceTests() =
         let mockIRestReponseHttpReq =
             Mock<IRestResponse>()
                 .Setup(fun x -> <@ x.StatusCode @>).Returns(Net.HttpStatusCode.OK)
-                .Setup(fun x -> <@ x.Content @>).Returns(File.ReadAllText("testdata/ResponseToAddCommentOldFormat.txt"))
+                .Setup(fun x -> <@ x.Content @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/ResponseToAddCommentOldFormat.txt"))
                 .Create()
 
         let mockIRestReponsePostHttpReq =
