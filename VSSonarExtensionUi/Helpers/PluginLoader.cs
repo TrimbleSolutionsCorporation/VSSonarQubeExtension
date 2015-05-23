@@ -1,5 +1,5 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="PluginLoader.cs" company="Copyright � 2014 Tekla Corporation. Tekla is a Trimble Company">
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="PluginLoader.cs" company="Copyright © 2014 Tekla Corporation. Tekla is a Trimble Company">
 //     Copyright (C) 2013 [Jorge Costa, Jorge.Costa@tekla.com]
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
