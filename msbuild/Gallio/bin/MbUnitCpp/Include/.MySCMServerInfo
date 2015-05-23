@@ -1,6 +1,0 @@
-SCMBranch=Structures
-SCMRepository=Structures/MSBuild/BuildTools/Gallio/bin/MbUnitCpp/Include
-SCMMainlineUUID={a5eb9c95-fdd8-40d3-b610-836f3dffaa1e}
-SCMBranchRepositoryID=28292
-mbunit.cpp;742987838;1;1384858082;|38535|254134
-mbunit.h;886939320;1;1384858082;|38536|254135

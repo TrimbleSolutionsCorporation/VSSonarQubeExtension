@@ -1,0 +1,193 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<test-results name="" total="19" errors="0" failures="6" not-run="6" inconclusive="0" ignored="0" skipped="0" invalid="6" date="2015-05-23" time="15:57:33">
+  <environment nunit-version="1.0.0.0" clr-version="4.0.30319.0" os-version="Microsoft Windows NT 6.3.9600.0" platform="Win32NT" cwd="D:\Development\SonarQube\VssonarExtension\VSSonarQubeExtension" machine-name="JOCS6" user="jocs" user-domain="TEKLAAD" />
+  <culture-info current-culture="fi-FI" current-uiculture="en-US" />
+  <test-suite type="Assembly" name="SonarLocalAnalyser.Test.dll" executed="True" result="Failure" success="False" time="0,540" asserts="39">
+    <properties>
+      <property name="_PID" value="14796" />
+      <property name="_APPDOMAIN" value="test-domain-" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+      <stack-trace />
+    </failure>
+    <results>
+      <test-suite type="TestSuite" name="SonarLocalAnalyser" executed="True" result="Failure" success="False" time="0,522" asserts="39">
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+          <stack-trace />
+        </failure>
+        <results>
+          <test-suite type="TestSuite" name="Test" executed="True" result="Failure" success="False" time="0,522" asserts="39">
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+              <stack-trace />
+            </failure>
+            <results>
+              <test-suite type="TestFixture" name="KeyTests" executed="True" result="Failure" success="False" time="0,377" asserts="1">
+                <failure>
+                  <message><![CDATA[One or more child tests had errors]]></message>
+                  <stack-trace />
+                </failure>
+                <results>
+                  <test-case name="Should Return Key Correctly" executed="True" result="Success" success="True" time="0,363" asserts="1" />
+                  <test-case name="Should throw exception if No plugins are loaded and we give a good resource" executed="True" result="Success" success="False" time="0,001" asserts="0">
+                    <properties>
+                      <property name="_SKIPREASON" value="Method has non-void return value, but no result is expected" />
+                    </properties>
+                    <failure>
+                      <message><![CDATA[Method has non-void return value, but no result is expected]]></message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                  <test-case name="Should throw exception when no plugin is found" executed="True" result="Success" success="False" time="0,000" asserts="0">
+                    <properties>
+                      <property name="_SKIPREASON" value="Method has non-void return value, but no result is expected" />
+                    </properties>
+                    <failure>
+                      <message><![CDATA[Method has non-void return value, but no result is expected]]></message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+              <test-suite type="TestFixture" name="RunAnalysisTests" executed="True" result="Failure" success="False" time="0,037" asserts="2">
+                <failure>
+                  <message><![CDATA[One or more child tests had errors]]></message>
+                  <stack-trace />
+                </failure>
+                <results>
+                  <test-case name="If Thread is Null then analysis is not running" executed="True" result="Success" success="True" time="0,016" asserts="1" />
+                  <test-case name="Should Return Key When Single language is set" executed="True" result="Success" success="True" time="0,021" asserts="1" />
+                  <test-case name="Should throw exception if No plugins are loaded and we give a good resource" executed="True" result="Success" success="False" time="0,000" asserts="0">
+                    <properties>
+                      <property name="_SKIPREASON" value="Method has non-void return value, but no result is expected" />
+                    </properties>
+                    <failure>
+                      <message><![CDATA[Method has non-void return value, but no result is expected]]></message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                  <test-case name="Should throw exception when no plugin is found" executed="True" result="Success" success="False" time="0,000" asserts="0">
+                    <properties>
+                      <property name="_SKIPREASON" value="Method has non-void return value, but no result is expected" />
+                    </properties>
+                    <failure>
+                      <message><![CDATA[Method has non-void return value, but no result is expected]]></message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+              <test-suite type="TestFixture" name="SupportTests" executed="True" result="Failure" success="False" time="0,036" asserts="2">
+                <failure>
+                  <message><![CDATA[One or more child tests had errors]]></message>
+                  <stack-trace />
+                </failure>
+                <results>
+                  <test-case name="Should allow multi language if lang is not defined" executed="True" result="Success" success="True" time="0,017" asserts="1" />
+                  <test-case name="Should not allow multi language if lang is defined" executed="True" result="Success" success="True" time="0,018" asserts="1" />
+                  <test-case name="Should throw exception if no plugins are loaded for multilanguage scenario" executed="True" result="Success" success="False" time="0,000" asserts="0">
+                    <properties>
+                      <property name="_SKIPREASON" value="Method has non-void return value, but no result is expected" />
+                    </properties>
+                    <failure>
+                      <message><![CDATA[Method has non-void return value, but no result is expected]]></message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                  <test-case name="Should throw exception project is not associated for multilanguage scenario" executed="True" result="Success" success="False" time="0,000" asserts="0">
+                    <properties>
+                      <property name="_SKIPREASON" value="Method has non-void return value, but no result is expected" />
+                    </properties>
+                    <failure>
+                      <message><![CDATA[Method has non-void return value, but no result is expected]]></message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+              <test-suite type="TestFixture" name="TraTests" executed="True" result="Failure" success="False" time="0,071" asserts="34">
+                <failure>
+                  <message><![CDATA[One or more child tests had errors]]></message>
+                  <stack-trace />
+                </failure>
+                <results>
+                  <test-case name="Should Return Key Correctly When Multi Module" executed="True" result="Failure" success="False" time="0,038" asserts="4">
+                    <failure>
+                      <message><![CDATA[  Expected string length 12 but was 15. Strings differ at index 0.
+  Expected: "ProjectX_CPP"
+  But was:  "AB:ProjectX_CPP"
+  -----------^
+]]></message>
+                      <stack-trace><![CDATA[at SonarLocalAnalyser.Test.TraTests.Should Return Key Correctly When Multi Module() in D:\Development\SonarQube\VssonarExtension\VSSonarQubeExtension\SonarLocalAnalyser.Test\TranslatorTest.fs:line 44
+]]></stack-trace>
+                    </failure>
+                  </test-case>
+                  <test-case name="Should Return Key Correctly With Flat Structure" executed="True" result="Failure" success="False" time="0,002" asserts="4">
+                    <failure>
+                      <message><![CDATA[  Expected string length 12 but was 20. Strings differ at index 0.
+  Expected: "ProjectX_CPP"
+  But was:  "AB:ProjectX_CPP_Flat"
+  -----------^
+]]></message>
+                      <stack-trace><![CDATA[at SonarLocalAnalyser.Test.TraTests.Should Return Key Correctly With Flat Structure() in D:\Development\SonarQube\VssonarExtension\VSSonarQubeExtension\SonarLocalAnalyser.Test\TranslatorTest.fs:line 72
+]]></stack-trace>
+                    </failure>
+                  </test-case>
+                  <test-case name="Should Return Key Correctly With Visual Studio BootStrapper" executed="True" result="Failure" success="False" time="0,002" asserts="4">
+                    <failure>
+                      <message><![CDATA[  Expected string length 12 but was 28. Strings differ at index 0.
+  Expected: "ProjectX_CPP"
+  But was:  "AB:ProjectX_CPP_BootStrapper"
+  -----------^
+]]></message>
+                      <stack-trace><![CDATA[at SonarLocalAnalyser.Test.TraTests.Should Return Key Correctly With Visual Studio BootStrapper() in D:\Development\SonarQube\VssonarExtension\VSSonarQubeExtension\SonarLocalAnalyser.Test\TranslatorTest.fs:line 102
+]]></stack-trace>
+                    </failure>
+                  </test-case>
+                  <test-case name="Should Return Key Correctly With Visual Studio BootStrapper False, but modules defined" executed="True" result="Success" success="True" time="0,012" asserts="5" />
+                  <test-case name="Should Return Path Correctly When Multi Module" executed="True" result="Failure" success="False" time="0,003" asserts="4">
+                    <failure>
+                      <message><![CDATA[  Expected string length 12 but was 15. Strings differ at index 0.
+  Expected: "ProjectX_CPP"
+  But was:  "AB:ProjectX_CPP"
+  -----------^
+]]></message>
+                      <stack-trace><![CDATA[at SonarLocalAnalyser.Test.TraTests.Should Return Path Correctly When Multi Module() in D:\Development\SonarQube\VssonarExtension\VSSonarQubeExtension\SonarLocalAnalyser.Test\TranslatorTest.fs:line 61
+]]></stack-trace>
+                    </failure>
+                  </test-case>
+                  <test-case name="Should Return Path Correctly With Flat Structure" executed="True" result="Failure" success="False" time="0,001" asserts="4">
+                    <failure>
+                      <message><![CDATA[  Expected string length 12 but was 20. Strings differ at index 0.
+  Expected: "ProjectX_CPP"
+  But was:  "AB:ProjectX_CPP_Flat"
+  -----------^
+]]></message>
+                      <stack-trace><![CDATA[at SonarLocalAnalyser.Test.TraTests.Should Return Path Correctly With Flat Structure() in D:\Development\SonarQube\VssonarExtension\VSSonarQubeExtension\SonarLocalAnalyser.Test\TranslatorTest.fs:line 90
+]]></stack-trace>
+                    </failure>
+                  </test-case>
+                  <test-case name="Should Return Path Correctly With Visual Studio BootStrapper" executed="True" result="Failure" success="False" time="0,001" asserts="4">
+                    <failure>
+                      <message><![CDATA[  Expected string length 12 but was 28. Strings differ at index 0.
+  Expected: "ProjectX_CPP"
+  But was:  "AB:ProjectX_CPP_BootStrapper"
+  -----------^
+]]></message>
+                      <stack-trace><![CDATA[at SonarLocalAnalyser.Test.TraTests.Should Return Path Correctly With Visual Studio BootStrapper() in D:\Development\SonarQube\VssonarExtension\VSSonarQubeExtension\SonarLocalAnalyser.Test\TranslatorTest.fs:line 122
+]]></stack-trace>
+                    </failure>
+                  </test-case>
+                  <test-case name="Should Return Path Correctly With Visual Studio BootStrapper False, but modules defined" executed="True" result="Success" success="True" time="0,004" asserts="5" />
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>

@@ -4,8 +4,6 @@
         <!-- Basic settings -->
         <ReferencesFolder        Condition="'$(ReferencesFolder)'==''">$(MSBuildThisFileDirectory)references</ReferencesFolder>
         <MSBuildFolder        Condition="'$(MSBuildFolder)'==''">$(MSBuildThisFileDirectory)msbuild</MSBuildFolder>
-        <GallioPath              Condition="'$(GallioPath)'==''">$(MSBuildFolder)\Gallio</GallioPath>
-        <OpenCoverPath           Condition="'$(OpenCoverPath)'==''">$(MSBuildFolder)\OpenCover</OpenCoverPath>
 
         
         <!-- Version settings -->

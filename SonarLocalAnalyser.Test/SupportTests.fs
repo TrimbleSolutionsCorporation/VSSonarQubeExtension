@@ -14,7 +14,6 @@
 namespace SonarLocalAnalyser.Test
 
 open NUnit.Framework
-open FsUnit
 open SonarLocalAnalyser
 open Foq
 open System.IO
@@ -26,22 +25,20 @@ open SonarRestService
 type SupportTests() =
 
     [<Test>]
-    [<ExpectedException>]
     member test.``Should throw exception if no plugins are loaded for multilanguage scenario`` () =
         let project = new Resource()
 
         let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create(), Mock<ISonarConfiguration>().Create(), Mock<INotificationManager>().Create())        
-        (analyser.IsMultiLanguageAnalysis(project)) |> should throw typeof<NoPluginInstalledException>
+        Assert.Throws<NoPluginInstalledException>(fun c -> (analyser.IsMultiLanguageAnalysis(project)) |> ignore)
 
     [<Test>]
-    [<ExpectedException>]
     member test.``Should throw exception project is not associated for multilanguage scenario`` () =
         let project = new Resource()
 
         let listofPlugins = new System.Collections.Generic.List<IAnalysisPlugin>()
         listofPlugins.Add(Mock<IAnalysisPlugin>().Create())                
         let analyser = new SonarLocalAnalyser(listofPlugins, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create(), Mock<ISonarConfiguration>().Create(), Mock<INotificationManager>().Create())        
-        (analyser.IsMultiLanguageAnalysis(null)) |> should throw typeof<ProjectNotAssociatedException>
+        Assert.Throws<ProjectNotAssociatedException>(fun c -> (analyser.IsMultiLanguageAnalysis(null)) |> ignore)
 
     [<Test>]
     member test.``Should allow multi language if lang is not defined`` () =
@@ -54,7 +51,7 @@ type SupportTests() =
         let listofPlugins = new System.Collections.Generic.List<IAnalysisPlugin>()
         listofPlugins.Add(Mock<IAnalysisPlugin>().Create())
         let analyser = new SonarLocalAnalyser(listofPlugins, Mock<ISonarRestService>().Create(), mockConfReq, Mock<ISonarConfiguration>().Create(), Mock<INotificationManager>().Create())
-        (analyser.IsMultiLanguageAnalysis(project)) |> should be True
+        Assert.That((analyser.IsMultiLanguageAnalysis(project)), Is.True)
 
     [<Test>]
     member test.``Should not allow multi language if lang is defined`` () =
@@ -68,5 +65,5 @@ type SupportTests() =
         let listofPlugins = new System.Collections.Generic.List<IAnalysisPlugin>()
         listofPlugins.Add(Mock<IAnalysisPlugin>().Create())
         let analyser = new SonarLocalAnalyser(listofPlugins, Mock<ISonarRestService>().Create(), mockConfReq, Mock<ISonarConfiguration>().Create(), Mock<INotificationManager>().Create())
-        (analyser.IsMultiLanguageAnalysis(project)) |> should be False
+        Assert.That((analyser.IsMultiLanguageAnalysis(project)), Is.False)
 

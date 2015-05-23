@@ -1,7 +1,0 @@
-SCMBranch=Structures
-SCMRepository=Structures/MSBuild/BuildTools/Gallio/bin/DLR/libs/IronRuby/lib/ruby/1.8/soap/header
-SCMMainlineUUID={a5eb9c95-fdd8-40d3-b610-836f3dffaa1e}
-SCMBranchRepositoryID=28262
-handler.rb;1849258709;1;1384858082;|38325|253924
-handlerset.rb;2891167442;1;1384858082;|38326|253925
-simplehandler.rb;2572462747;1;1384858082;|38327|253926

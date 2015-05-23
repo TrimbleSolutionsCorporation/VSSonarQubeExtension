@@ -1,6 +1,0 @@
-SCMBranch=Structures
-SCMRepository=Structures/MSBuild/BuildTools/Gallio/bin/RSpec/libs/rspec-1.2.7/lib/spec/rake
-SCMMainlineUUID={a5eb9c95-fdd8-40d3-b610-836f3dffaa1e}
-SCMBranchRepositoryID=28343
-spectask.rb;604795329;1;1384858082;|38819|254418
-verify_rcov.rb;2323621228;1;1384858082;|38820|254419

@@ -1,7 +1,0 @@
-SCMBranch=Structures
-SCMRepository=Structures/MSBuild/BuildTools/Gallio/bin/MSTest
-SCMMainlineUUID={a5eb9c95-fdd8-40d3-b610-836f3dffaa1e}
-SCMBranchRepositoryID=28294
-Readme.txt;2283113053;4294967295;1390387509;|38540|254139
-Gallio.MSTestAdapter.dll;3531775911;1;1384858082;|38538|254137
-Gallio.MSTestAdapter.plugin;3993994621;1;1384858082;|38539|254138

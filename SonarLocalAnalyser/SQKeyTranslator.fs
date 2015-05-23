@@ -6,12 +6,14 @@ open System.IO
 open System.Text
 
 type KeyLookUpType =
+   // the name
    | Module = 0
    | Flat = 1
    | VSBootStrapper = 2
 
 [<AllowNullLiteral>]
 type SonarModule() = 
+    // the name
     member val Name : string =  "" with get, set
     member val ProjectName : string = "" with get, set
     member val BaseDir : string = "" with get, set

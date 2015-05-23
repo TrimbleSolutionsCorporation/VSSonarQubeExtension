@@ -1,7 +1,6 @@
 ﻿namespace SonarRestService.Test
 
 open NUnit.Framework
-open FsUnit
 open SonarRestService
 open Foq
 open System.IO
@@ -21,4 +20,4 @@ type MetricsTests() =
                 .Create()
         let service = SonarRestService(mockHttpReq)
         let dups = (service :> ISonarRestService).GetDuplicationsDataInResource(conf, "groupid:projectid:directory/file.cpp")
-        dups.Count |> should equal 66
+        Assert.That(dups.Count, Is.EqualTo(66))

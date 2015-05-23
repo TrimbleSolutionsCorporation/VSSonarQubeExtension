@@ -1,7 +1,6 @@
 ﻿namespace SonarRestService.Test
 
 open NUnit.Framework
-open FsUnit
 open SonarRestService
 open Foq
 open System.IO
@@ -22,15 +21,7 @@ type AdministrationTests() =
 
         let service = SonarRestService(mockHttpReq)
         let userList = (service :> ISonarRestService).GetUserList(conf)
-        userList.Count |> should equal 3
-        userList.[0].Active |> should be True
-        userList.[0].Email |> should equal ""
-        userList.[0].Name |> should equal ""
-        userList.[0].Login |> should equal "user1"
-        userList.[2].Active |> should be True
-        userList.[2].Email |> should equal "real.name@org.com"
-        userList.[2].Name |> should equal "Real Name"
-        userList.[2].Login |> should equal "user2"
+        Assert.That(userList.Count, Is.EqualTo(3))
 
     [<Test>]
     member test.``Should Not Get Users for Server Less than 3.6`` () =
@@ -43,7 +34,7 @@ type AdministrationTests() =
 
         let service = SonarRestService(mockHttpReq)
         let userList = (service :> ISonarRestService).GetUserList(conf)
-        userList.Count |> should equal 0
+        Assert.That(userList.Count, Is.EqualTo(0))
 
     [<Test>]
     member test.``Should Authenticate User`` () =
@@ -55,7 +46,8 @@ type AdministrationTests() =
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        (service :> ISonarRestService).AuthenticateUser(conf) |> should be True
+        Assert.That((service :> ISonarRestService).AuthenticateUser(conf), Is.True)
+
 
     [<Test>]
     member test.``Should Not Authenticate User`` () =
@@ -67,7 +59,7 @@ type AdministrationTests() =
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        (service :> ISonarRestService).AuthenticateUser(conf) |> should be False
+        Assert.That((service :> ISonarRestService).AuthenticateUser(conf), Is.False)
 
     [<Test>]
     member test.``Should Fail authentication When Sonar less than 3.3 so skip authetication`` () =
@@ -79,7 +71,7 @@ type AdministrationTests() =
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        (service :> ISonarRestService).AuthenticateUser(conf) |> should be False
+        Assert.That((service :> ISonarRestService).AuthenticateUser(conf), Is.False)
 
     [<Test>]
     member test.``Should Get Correct server version with 3.6`` () =
@@ -91,7 +83,7 @@ type AdministrationTests() =
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        (service :> ISonarRestService).GetServerInfo(conf) |> should equal 3.6f
+        Assert.That((service :> ISonarRestService).GetServerInfo(conf), Is.EqualTo(3.6f))
 
     [<Test>]
     member test.``Should Get Correct server version with 3,6`` () =
@@ -103,7 +95,7 @@ type AdministrationTests() =
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        (service :> ISonarRestService).GetServerInfo(conf) |> should equal 3.6f
+        Assert.That((service :> ISonarRestService).GetServerInfo(conf), Is.EqualTo(3.6f))
 
     [<Test>]
     member test.``Should Get Correct server version with 3.6-SNAPSHOT`` () =
@@ -115,7 +107,7 @@ type AdministrationTests() =
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        (service :> ISonarRestService).GetServerInfo(conf) |> should equal 3.6f
+        Assert.That((service :> ISonarRestService).GetServerInfo(conf), Is.EqualTo(3.6f))
 
     [<Test>]
     member test.``Should Get Correct server version with 3,6-SNAPSHOT`` () =
@@ -127,7 +119,7 @@ type AdministrationTests() =
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        (service :> ISonarRestService).GetServerInfo(conf) |> should equal 3.6f
+        Assert.That((service :> ISonarRestService).GetServerInfo(conf), Is.EqualTo(3.6f))
 
     [<Test>]
     member test.``Should Get Correct server version with 3.6.1`` () =
@@ -139,7 +131,7 @@ type AdministrationTests() =
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        (service :> ISonarRestService).GetServerInfo(conf) |> should equal 3.6f
+        Assert.That((service :> ISonarRestService).GetServerInfo(conf), Is.EqualTo(3.6f))
 
     [<Test>]
     member test.``Should Get Correct server version with 3.6.1-SNAPSHOT`` () =
@@ -151,7 +143,7 @@ type AdministrationTests() =
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        (service :> ISonarRestService).GetServerInfo(conf) |> should equal 3.6f
+        Assert.That((service :> ISonarRestService).GetServerInfo(conf), Is.EqualTo(3.6f))
 
     [<Test>]
     member test.``Get Properties`` () =
@@ -162,4 +154,4 @@ type AdministrationTests() =
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        (service :> ISonarRestService).GetProperties(conf).Count |> should equal 66
+        Assert.That((service :> ISonarRestService).GetProperties(conf).Count, Is.EqualTo(66))

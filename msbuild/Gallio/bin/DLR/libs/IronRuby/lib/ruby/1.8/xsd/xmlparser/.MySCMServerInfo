@@ -1,8 +1,0 @@
-SCMBranch=Structures
-SCMRepository=Structures/MSBuild/BuildTools/Gallio/bin/DLR/libs/IronRuby/lib/ruby/1.8/xsd/xmlparser
-SCMMainlineUUID={a5eb9c95-fdd8-40d3-b610-836f3dffaa1e}
-SCMBranchRepositoryID=28285
-parser.rb;3344930185;1;1384858082;|38496|254095
-rexmlparser.rb;743408599;1;1384858082;|38497|254096
-xmlparser.rb;901398734;1;1384858082;|38498|254097
-xmlscanner.rb;1225964103;1;1384858082;|38499|254098

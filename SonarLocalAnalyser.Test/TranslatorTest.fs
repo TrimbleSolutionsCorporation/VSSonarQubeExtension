@@ -14,7 +14,6 @@
 namespace SonarLocalAnalyser.Test
 
 open NUnit.Framework
-open FsUnit
 open SonarLocalAnalyser
 open Foq
 open System.IO
@@ -38,11 +37,11 @@ type TraTests() =
     [<Test>]
     member test.``Should Return Key Correctly When Multi Module`` () =
         let translator = new SQKeyTranslator()
-        File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\MultiModuleTest\\sonar-project.properties")) |> should be True
+        Assert.That(File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\MultiModuleTest\\sonar-project.properties")), Is.True)
         translator.CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\MultiModuleTest\\sonar-project.properties"));
-        translator.Modules().Length |> should equal 2
-        translator.GetProjectKey() |> should equal "AB:ProjectX_CPP"
-        translator.GetProjectName() |> should equal "ProjectX_CPP"
+        Assert.That(translator.Modules().Length, Is.EqualTo(2))
+        Assert.That(translator.GetProjectKey(), Is.EqualTo("AB:ProjectX_CPP"))
+        Assert.That(translator.GetProjectKey(), Is.EqualTo("ProjectX_CPP"))
 
         let item = new VsFileItem()
         item.FileName <- "dup.cpp"
@@ -50,27 +49,27 @@ type TraTests() =
         item.Project <- new VsProjectItem()
         item.Project.Solution <- new VsSolutionItem()
         item.Project.Solution.SolutionPath <- Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject")
-        translator.TranslatePath(item, mockAVsinterface) |> should equal "AB:ProjectX_CPP:A:1:a:dup.cpp"
+        Assert.That(translator.TranslatePath(item, mockAVsinterface), Is.EqualTo("AB:ProjectX_CPP:A:1:a:dup.cpp"))
 
     [<Test>]
     member test.``Should Return Path Correctly When Multi Module`` () =
         let translator = new SQKeyTranslator()
-        File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\MultiModuleTest\\sonar-project.properties")) |> should be True
+        Assert.That(File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\MultiModuleTest\\sonar-project.properties")), Is.True)
         translator.CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\MultiModuleTest\\sonar-project.properties"));
-        translator.Modules().Length |> should equal 2
-        translator.GetProjectKey() |> should equal "AB:ProjectX_CPP"
-        translator.GetProjectName() |> should equal "ProjectX_CPP"
-
-        translator.TranslateKey("AB:ProjectX_CPP:A:1:a:dup.cpp", mockAVsinterface) |> should equal (Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\MultiModuleTest\\A\\1\\a\\dup.cpp"))
+        Assert.That(translator.Modules().Length, Is.EqualTo(2))
+        Assert.That(translator.GetProjectKey(), Is.EqualTo("AB:ProjectX_CPP"))
+        Assert.That(translator.GetProjectKey(), Is.EqualTo("ProjectX_CPP"))
+        Assert.That(translator.TranslateKey("AB:ProjectX_CPP:A:1:a:dup.cpp", mockAVsinterface), Is.EqualTo(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\MultiModuleTest\\A\\1\\a\\dup.cpp")))
 
     [<Test>]
     member test.``Should Return Key Correctly With Flat Structure`` () =
         let translator = new SQKeyTranslator()
-        File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject\\sonar-project.properties")) |> should be True
+        Assert.That(File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject\\sonar-project.properties")), Is.True)
         translator.CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject\\sonar-project.properties"));
-        translator.Modules().Length |> should equal 0
-        translator.GetProjectKey() |> should equal "AB:ProjectX_CPP_Flat"
-        translator.GetProjectName() |> should equal "ProjectX_CPP"
+
+        Assert.That(translator.Modules().Length, Is.EqualTo(0))
+        Assert.That(translator.GetProjectKey(), Is.EqualTo("AB:ProjectX_CPP_Flat"))
+        Assert.That(translator.GetProjectKey(), Is.EqualTo("ProjectX_CPP"))
 
         let item = new VsFileItem()
         item.FileName <- "dup.cpp"
@@ -79,28 +78,29 @@ type TraTests() =
         item.Project.Solution <- new VsSolutionItem()
         item.Project.Solution.SolutionPath <- Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject")
 
-        translator.TranslatePath(item, mockAVsinterface) |> should equal "AB:ProjectX_CPP_Flat:A/1/a/dup.cpp"
+        Assert.That(translator.TranslatePath(item, mockAVsinterface), Is.EqualTo("AB:ProjectX_CPP_Flat:A/1/a/dup.cpp"))
 
     [<Test>]
     member test.``Should Return Path Correctly With Flat Structure`` () =
         let translator = new SQKeyTranslator()
-        File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject\\sonar-project.properties")) |> should be True
+        Assert.That(File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject\\sonar-project.properties")), Is.True)
         translator.CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject\\sonar-project.properties"));
-        translator.Modules().Length |> should equal 0
-        translator.GetProjectKey() |> should equal "AB:ProjectX_CPP_Flat"
-        translator.GetProjectName() |> should equal "ProjectX_CPP"
+        Assert.That(translator.Modules().Length, Is.EqualTo(0))
+        Assert.That(translator.GetProjectKey(), Is.EqualTo("AB:ProjectX_CPP_Flat"))
+        Assert.That(translator.GetProjectKey(), Is.EqualTo("ProjectX_CPP"))
 
-        translator.TranslateKey("AB:ProjectX_CPP_Flat:A/1/a/dup.cpp", mockAVsinterface) |> should equal (Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject\\A\\1\\a\\dup.cpp"))
+        Assert.That(translator.TranslateKey("AB:ProjectX_CPP_Flat:A/1/a/dup.cpp", mockAVsinterface), Is.EqualTo(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject\\A\\1\\a\\dup.cpp")))
 
 
     [<Test>]
     member test.``Should Return Key Correctly With Visual Studio BootStrapper`` () =
         let translator = new SQKeyTranslator()
-        File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\VisualBootStrapper\\sonar-project.properties")) |> should be True
-        translator.CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\VisualBootStrapper\\sonar-project.properties"));
-        translator.Modules().Length |> should equal 0
-        translator.GetProjectKey() |> should equal "AB:ProjectX_CPP_BootStrapper"
-        translator.GetProjectName() |> should equal "ProjectX_CPP"
+        Assert.That(File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\VisualBootStrapper\\sonar-project.properties")), Is.True)
+        translator.CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\VisualBootStrapper\\sonar-project.properties"))
+        Assert.That(translator.Modules().Length, Is.EqualTo(0))
+        Assert.That(translator.GetProjectKey(), Is.EqualTo("AB:ProjectX_CPP_BootStrapper"))
+        Assert.That(translator.GetProjectKey(), Is.EqualTo("ProjectX_CPP"))
+
         let item = new VsFileItem()
         item.FileName <- "dup.cpp"
         item.FilePath <- Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\VisualBootStrapper\\A\\1\\a\\dup.cpp")
@@ -110,28 +110,28 @@ type TraTests() =
         item.Project.Solution <- new VsSolutionItem()
         item.Project.Solution.SolutionPath <- Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\VisualBootStrapper")
 
-        translator.TranslatePath(item, mockAVsinterface) |> should equal "AB:ProjectX_CPP_BootStrapper:a1a:dup.cpp"
+        Assert.That(translator.TranslatePath(item, mockAVsinterface), Is.EqualTo("AB:ProjectX_CPP_BootStrapper:a1a:dup.cpp"))
 
     [<Test>]
     member test.``Should Return Path Correctly With Visual Studio BootStrapper`` () =
         let translator = new SQKeyTranslator()
-        File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\VisualBootStrapper\\sonar-project.properties")) |> should be True
+        Assert.That(File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\VisualBootStrapper\\sonar-project.properties")), Is.True)
         translator.CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\VisualBootStrapper\\sonar-project.properties"));
-        translator.Modules().Length |> should equal 0
-        translator.GetProjectKey() |> should equal "AB:ProjectX_CPP_BootStrapper"
-        translator.GetProjectName() |> should equal "ProjectX_CPP"
+        Assert.That(translator.Modules().Length, Is.EqualTo(0))
+        Assert.That(translator.GetProjectKey(), Is.EqualTo("AB:ProjectX_CPP_BootStrapper"))
+        Assert.That(translator.GetProjectKey(), Is.EqualTo("ProjectX_CPP"))
 
-        translator.TranslateKey("AB:ProjectX_CPP_BootStrapper:a1a:dup.cpp", mockAVsinterface) |> should equal (Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject\\A\\1\\a\\dup.cpp"))
+        Assert.That(translator.TranslateKey("AB:ProjectX_CPP_BootStrapper:a1a:dup.cpp", mockAVsinterface), Is.EqualTo(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject\\A\\1\\a\\dup.cpp")))
 
 
     [<Test>]
     member test.``Should Return Key Correctly With Visual Studio BootStrapper False, but modules defined`` () =
         let translator = new SQKeyTranslator()
-        File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\ModulesDefinedAllInOnePropertiesFile\\sonar-project.properties")) |> should be True
+        Assert.That(File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\ModulesDefinedAllInOnePropertiesFile\\sonar-project.properties")), Is.True)
         translator.CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\ModulesDefinedAllInOnePropertiesFile\\sonar-project.properties"));
-        translator.Modules().Length |> should equal 4
-        translator.GetProjectKey() |> should equal "cpp-multimodule-project"
-        translator.GetProjectName() |> should equal "cpp-multimodule-project"
+        Assert.That(translator.Modules().Length, Is.EqualTo(4))
+        Assert.That(translator.GetProjectKey(), Is.EqualTo("cpp-multimodule-project"))
+        Assert.That(translator.GetProjectKey(), Is.EqualTo("cpp-multimodule-project"))
         let item = new VsFileItem()
         item.FileName <- "dup.cpp"
         item.FilePath <- Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\ModulesDefinedAllInOnePropertiesFile\\lib\\dup.cpp")
@@ -141,15 +141,15 @@ type TraTests() =
         item.Project.Solution <- new VsSolutionItem()
         item.Project.Solution.SolutionPath <- Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\ModulesDefinedAllInOnePropertiesFile")
 
-        translator.TranslatePath(item, mockAVsinterface) |> should equal "cpp-multimodule-project:lib:dup.cpp"
+        Assert.That(translator.TranslatePath(item, mockAVsinterface), Is.EqualTo("cpp-multimodule-project:lib:dup.cpp"))
 
     [<Test>]
     member test.``Should Return Path Correctly With Visual Studio BootStrapper False, but modules defined`` () =
         let translator = new SQKeyTranslator()
-        File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\ModulesDefinedAllInOnePropertiesFile\\sonar-project.properties")) |> should be True
+        Assert.That(File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\ModulesDefinedAllInOnePropertiesFile\\sonar-project.properties")), Is.True)
         translator.CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\ModulesDefinedAllInOnePropertiesFile\\sonar-project.properties"));
-        translator.Modules().Length |> should equal 4
-        translator.GetProjectKey() |> should equal "cpp-multimodule-project"
-        translator.GetProjectName() |> should equal "cpp-multimodule-project"
+        Assert.That(translator.Modules().Length, Is.EqualTo(4))
+        Assert.That(translator.GetProjectKey(), Is.EqualTo("cpp-multimodule-project"))
+        Assert.That(translator.GetProjectName(), Is.EqualTo("cpp-multimodule-project"))
 
-        translator.TranslateKey("cpp-multimodule-project:lib:dup.cpp", mockAVsinterface) |> should equal (Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\ModulesDefinedAllInOnePropertiesFile\\lib\\dup.cpp"))
+        Assert.That(translator.TranslateKey("cpp-multimodule-project:lib:dup.cpp", mockAVsinterface), Is.EqualTo((Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\ModulesDefinedAllInOnePropertiesFile\\lib\\dup.cpp"))))

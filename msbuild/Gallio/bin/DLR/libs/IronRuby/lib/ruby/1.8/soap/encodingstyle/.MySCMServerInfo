@@ -1,8 +1,0 @@
-SCMBranch=Structures
-SCMRepository=Structures/MSBuild/BuildTools/Gallio/bin/DLR/libs/IronRuby/lib/ruby/1.8/soap/encodingstyle
-SCMMainlineUUID={a5eb9c95-fdd8-40d3-b610-836f3dffaa1e}
-SCMBranchRepositoryID=28261
-aspDotNetHandler.rb;3383842275;1;1384858082;|38321|253920
-handler.rb;2266493336;1;1384858082;|38322|253921
-literalHandler.rb;914075255;1;1384858082;|38323|253922
-soapHandler.rb;699064580;1;1384858082;|38324|253923

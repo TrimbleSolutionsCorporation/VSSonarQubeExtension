@@ -1,6 +1,0 @@
-SCMBranch=Structures
-SCMRepository=Structures/MSBuild/BuildTools/Gallio/bin/DLR/libs/IronRuby/lib/IronRuby/test/unit
-SCMMainlineUUID={a5eb9c95-fdd8-40d3-b610-836f3dffaa1e}
-SCMBranchRepositoryID=28214
-autorunner.rb;4140618198;1;1384858081;|37985|253584
-testcase.rb;482289126;1;1384858081;|37986|253585

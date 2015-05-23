@@ -1,8 +1,0 @@
-SCMBranch=Structures
-SCMRepository=Structures/MSBuild/BuildTools/Gallio/bin/DLR/libs/IronRuby/lib/ruby/1.8/dl
-SCMMainlineUUID={a5eb9c95-fdd8-40d3-b610-836f3dffaa1e}
-SCMBranchRepositoryID=28222
-import.rb;3327693768;1;1384858081;|38078|253677
-struct.rb;1566586705;1;1384858081;|38079|253678
-types.rb;3803039660;1;1384858081;|38080|253679
-win32.rb;1930758294;1;1384858081;|38081|253680

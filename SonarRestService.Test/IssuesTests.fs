@@ -1,7 +1,6 @@
 ﻿namespace SonarRestService.Test
 
 open NUnit.Framework
-open FsUnit
 open SonarRestService
 open Foq
 open System.IO
@@ -21,7 +20,7 @@ type IssuesTests() =
                 .Create()
         let service = SonarRestService(mockHttpReq)
         let issues = (service :> ISonarRestService).GetIssuesInResource(conf, "groupid:projectid:directory/file.cpp")
-        issues.Count |> should equal 59
+        Assert.That(issues.Count, Is.EqualTo(59))
 
     [<Test>]
     member test.``Should Get Corret Number of Issues In Component Using the old Format`` () =
@@ -35,7 +34,7 @@ type IssuesTests() =
                 .Create()
         let service = SonarRestService(mockHttpReq)
         let issues = (service :> ISonarRestService).GetIssuesInResource(conf, "groupid:projectid:directory/file.cpp")
-        issues.Count |> should equal 30
+        Assert.That(issues.Count, Is.EqualTo(30))
   
     [<Test>]
     member test.``Should Get Issues in Project by user`` () =
@@ -48,7 +47,7 @@ type IssuesTests() =
 
         let service = SonarRestService(mockHttpReq)
         let issues = (service :> ISonarRestService).GetIssuesByAssigneeInProject(conf, "groupid:projectid:directory/file.cpp", "jocs1")
-        issues.Count |> should equal 2
+        Assert.That(issues.Count, Is.EqualTo(2))
 
     [<Test>]
     member test.``Should Get Issues In Project by user using old format`` () =
@@ -62,7 +61,7 @@ type IssuesTests() =
 
         let service = SonarRestService(mockHttpReq)
         let issues = (service :> ISonarRestService).GetIssuesByAssigneeInProject(conf, "groupid:projectid", "login1")
-        issues.Count |> should equal 5
+        Assert.That(issues.Count, Is.EqualTo(5))
 
     [<Test>]
     member test.``Should Get All Issues by user`` () =
@@ -75,7 +74,7 @@ type IssuesTests() =
 
         let service = SonarRestService(mockHttpReq)
         let issues = (service :> ISonarRestService).GetAllIssuesByAssignee(conf, "jocs1")
-        issues.Count |> should equal 2
+        Assert.That(issues.Count, Is.EqualTo(2))
 
     [<Test>]
     member test.``Should Get All Issues by user using old format`` () =
@@ -89,7 +88,7 @@ type IssuesTests() =
 
         let service = SonarRestService(mockHttpReq)
         let issues = (service :> ISonarRestService).GetAllIssuesByAssignee(conf, "login1")
-        issues.Count |> should equal 5
+        Assert.That(issues.Count, Is.EqualTo(5))
 
     [<Test>]
     member test.``Should Get All Issues In Project`` () =
@@ -102,7 +101,7 @@ type IssuesTests() =
 
         let service = SonarRestService(mockHttpReq)
         let issues = (service :> ISonarRestService).GetIssuesForProjects(conf, "project:id")
-        issues.Count |> should equal 59
+        Assert.That(issues.Count, Is.EqualTo(59))
 
     [<Test>]
     member test.``Should Get All Issues In Project using old format`` () =
@@ -117,7 +116,7 @@ type IssuesTests() =
 
         let service = SonarRestService(mockHttpReq)
         let issues = (service :> ISonarRestService).GetIssuesForProjects(conf, "project:id")
-        issues.Count |> should equal 30
+        Assert.That(issues.Count, Is.EqualTo(30))
 
     [<Test>]
     member test.``Should Get All Violations As Issues In Project using old format`` () =
@@ -132,7 +131,7 @@ type IssuesTests() =
 
         let service = SonarRestService(mockHttpReq)
         let issues = (service :> ISonarRestService).GetIssuesInResource(conf, "filename")
-        issues.Count |> should equal 30
+        Assert.That(issues.Count, Is.EqualTo(30))
 
     [<Test>]
     member test.``Should Parse Dry Run Reports Before 4.0`` () =
@@ -145,7 +144,7 @@ type IssuesTests() =
 
         let service = SonarRestService(mockHttpReq)
         let issues = (service :> ISonarRestService).ParseReportOfIssuesOld("testdata/dryRunReport.txt")
-        issues.Count |> should equal 10
+        Assert.That(issues.Count, Is.EqualTo(10))
 
 
     [<Test>]
@@ -159,7 +158,7 @@ type IssuesTests() =
 
         let service = SonarRestService(mockHttpReq)
         let issues = (service :> ISonarRestService).ParseDryRunReportOfIssues("testdata/dryrunissues.txt")
-        issues.Count |> should equal 10
+        Assert.That(issues.Count, Is.EqualTo(10))
 
     [<Test>]
     member test.``Should Parse issue with sonar 4.2`` () =
@@ -172,5 +171,5 @@ type IssuesTests() =
 
         let service = SonarRestService(mockHttpReq)
         let issues = (service :> ISonarRestService).ParseReportOfIssues("testdata/incrementalrun.txt")
-        issues.Count |> should equal 1
+        Assert.That(issues.Count, Is.EqualTo(1))
 

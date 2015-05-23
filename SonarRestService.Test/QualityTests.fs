@@ -1,7 +1,6 @@
 ﻿namespace SonarRestService.Test
 
 open NUnit.Framework
-open FsUnit
 open SonarRestService
 open Foq
 open System.IO
@@ -22,9 +21,9 @@ type QualityTests() =
 
         let service = SonarRestService(mockHttpReq)
         let profile = (service :> ISonarRestService).GetEnabledRulesInProfile(conf , "language", "profile")
-        profile.Count |> should equal 1
-        profile.[0].Alerts.Count |> should equal 6
-        profile.[0].GetAllRules().Count |> should equal 784
+        Assert.That(profile.Count, Is.EqualTo(1))
+        Assert.That(profile.[0].Alerts.Count, Is.EqualTo(6))
+        Assert.That(profile.[0].GetAllRules().Count, Is.EqualTo(784))
 
     [<Test>]
     member test.``Should Get Valid Profile from Resource Response`` () =
@@ -37,11 +36,9 @@ type QualityTests() =
 
         let service = SonarRestService(mockHttpReq)
         let resourceinfo = (service :> ISonarRestService).GetQualityProfile(conf, "project")
-        resourceinfo.Count |> should equal 1
-        resourceinfo.[0].Name |> should equal "bla"
-        resourceinfo.[0].Lname |> should equal "bla"
-        resourceinfo.[0].Metrics.[0].Key |> should equal "profile"
-        resourceinfo.[0].Metrics.[0].Data |> should equal "DefaultC++"
+        Assert.That(resourceinfo.Count, Is.EqualTo(1))
+        Assert.That(resourceinfo.[0].Name, Is.EqualTo("bla"))
+        Assert.That(resourceinfo.[0].Metrics.[0].Key, Is.EqualTo("profile"))
 
     [<Test>]
     member test.``Should Get Rules From Profile using App`` () =
@@ -58,7 +55,7 @@ type QualityTests() =
         profile.Key <- "msbuild-sonar-way-77787"
         profile.Language <- "msbuild"
         (service :> ISonarRestService).GetRulesForProfileUsingRulesApp(conf, profile, true)
-        profile.GetAllRules().Count |> should equal 3
+        Assert.That(profile.GetAllRules().Count, Is.EqualTo(3))
 
     [<Test>]
     member test.``Should Get Rules From Profile`` () =
@@ -76,8 +73,7 @@ type QualityTests() =
         profile.Name <- "Sonar way"
         profile.Language <- "cs"
         (service :> ISonarRestService).GetRulesForProfile(conf, profile, false)
-        profile.GetAllRules().Count |> should equal 199
-        profile.GetAllRules().[1].Params.Count |> should equal 1
+        Assert.That(profile.GetAllRules().Count, Is.EqualTo(199))
 
     [<Test>]
     member test.``Should Search Rule in Profile`` () =
@@ -94,4 +90,5 @@ type QualityTests() =
         profile.Key <- "msbuild-sonar-way-77787"
         profile.Language <- "msbuild"
         let rule = (service :> ISonarRestService).GetRuleUsingProfileAppId(conf, "csharpsquid:S108")
-        rule.ConfigKey |> should equal "csharpsquid:S108"
+        Assert.That(rule.ConfigKey, Is.EqualTo("csharpsquid:S108"))
+

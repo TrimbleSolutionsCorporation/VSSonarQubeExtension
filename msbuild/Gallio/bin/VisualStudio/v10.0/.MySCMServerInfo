@@ -1,9 +1,0 @@
-SCMBranch=Structures
-SCMRepository=Structures/MSBuild/BuildTools/Gallio/bin/VisualStudio/v10.0
-SCMMainlineUUID={a5eb9c95-fdd8-40d3-b610-836f3dffaa1e}
-SCMBranchRepositoryID=28356
-Gallio.VisualStudio.Shell100.addin;925032600;1;1384858082;|38865|254464
-Gallio.VisualStudio.Shell100.dll;2682681929;1;1384858082;|38866|254465
-Gallio.VisualStudio.Shell100.plugin;1686666567;1;1384858082;|38867|254466
-Gallio.VisualStudio.Tip100.dll;1349209027;1;1384858082;|38868|254467
-Gallio.VisualStudio.Tip100.plugin;2239224755;1;1384858082;|38869|254468
