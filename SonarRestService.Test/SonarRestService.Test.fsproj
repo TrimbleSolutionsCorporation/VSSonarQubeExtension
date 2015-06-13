@@ -13,6 +13,8 @@
     <Name>SonarRestService.Test</Name>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -166,4 +168,11 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildFolder)\NunitRunnerTask.Targets" />
+  <Import Project="..\packages\NunitRunnerTask.2.0.7\build\NunitRunnerTask.targets" Condition="Exists('..\packages\NunitRunnerTask.2.0.7\build\NunitRunnerTask.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\NunitRunnerTask.2.0.7\build\NunitRunnerTask.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NunitRunnerTask.2.0.7\build\NunitRunnerTask.targets'))" />
+  </Target>
 </Project>
