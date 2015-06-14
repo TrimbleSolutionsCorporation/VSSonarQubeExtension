@@ -95,9 +95,15 @@ namespace VSSonarQubeExtension.Helpers
 
             VSColorTheme.ThemeChanged += this.VSColorTheme_ThemeChanged;
 
-            var extensionRunningPath = Directory.GetParent(Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", "")).ToString().Split('\\');
-            var uniqueId = this.dte2.Version + "." + extensionRunningPath[extensionRunningPath.Length - 1];
+            var extensionRunningPath = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", "").ToString();
 
+            var uniqueId = this.dte2.Version;
+
+            if (extensionRunningPath.ToLower().Contains(this.dte2.Version + "exp"))
+            {
+                uniqueId += "Exp";
+            }
+                        
             SonarQubeViewModelFactory.StartupModelWithVsVersion(uniqueId).AnalysisModeHasChange += this.AnalysisModeHasChange;
             SonarQubeViewModelFactory.SQViewModel.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.ConfigurationHasChanged +=
                 this.AnalysisModeHasChange;
