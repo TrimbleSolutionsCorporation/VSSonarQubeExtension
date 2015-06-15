@@ -209,18 +209,28 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
     let initializationDone = 
         vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.ExcludedPluginsKey, Value = "devcockpit,pdfreport,report,scmactivity,views,jira,scmstats", Context = Context.AnalysisGeneral, Owner = OwnersId.AnalysisOwnerId), false, true)
 
-        let javaExists = File.Exists(vsinter.ReadSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.JavaExecutableKey).Value)
+
+        let javaExists = 
+            try
+                File.Exists(vsinter.ReadSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.JavaExecutableKey).Value)
+            with
+            | _ -> false
 
         if File.Exists("C:\Program Files (x86)\Java\jre8\bin\java.exe") then
             vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.JavaExecutableKey, Value = @"C:\Program Files (x86)\Java\jre8\bin\java.exe", Context = Context.AnalysisGeneral, Owner = OwnersId.AnalysisOwnerId), false, javaExists)
         else
             vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.JavaExecutableKey, Value = @"C:\Program Files (x86)\Java\jre7\bin\java.exe", Context = Context.AnalysisGeneral, Owner = OwnersId.AnalysisOwnerId), false, javaExists)
 
-        let runnerexecExists = File.Exists(vsinter.ReadSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.RunnerExecutableKey).Value)        
+        let skipIfExists =
+            try
+                File.Exists(vsinter.ReadSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.RunnerExecutableKey).Value)
+            with
+            | _ -> false
+
         vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.RunnerExecutableKey,
                                                      Value = Path.Combine(assemblyRunningPath, "externalAnalysers", "SonarRunner", "bin", "sonar-runner.bat"),
                                                      Context = Context.AnalysisGeneral,
-                                                     Owner = OwnersId.AnalysisOwnerId), false, runnerexecExists)
+                                                     Owner = OwnersId.AnalysisOwnerId), false, skipIfExists)
 
         vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.IsDebugAnalysisOnKey, Value = "false", Context = Context.AnalysisGeneral, Owner = OwnersId.AnalysisOwnerId), false, true)
         vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.LocalAnalysisTimeoutKey, Value = "10", Context = Context.AnalysisGeneral, Owner = OwnersId.AnalysisOwnerId), false, true)
