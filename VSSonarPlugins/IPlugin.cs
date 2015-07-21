@@ -77,5 +77,9 @@ namespace VSSonarPlugins
         /// <param name="project">The project.</param>
         /// <param name="configuration">The configuration.</param>
         void AssociateProject(Resource project, ISonarConfiguration configuration);
+
+        IList<string> DllLocations();
+
+        void SetDllLocation(string path);
     }
 }

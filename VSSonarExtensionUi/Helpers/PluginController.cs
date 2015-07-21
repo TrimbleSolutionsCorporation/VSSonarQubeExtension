@@ -184,43 +184,56 @@ namespace VSSonarExtensionUi.Helpers
             var folder = this.PluginsFolder;
             var pluginsData = new List<IPlugin>();
 
-                var assemblies = new Dictionary<string, Assembly>();
-                if (!Directory.Exists(folder))
-                {
-                    Directory.CreateDirectory(folder);
-                }
-                var files = Directory.GetFiles(folder);
-                foreach (var file in files)
-                {
-                    if (file.EndsWith(".dll"))
-                    {
-                        try
-                        {
-                            assemblies.Add(file, AppDomain.CurrentDomain.Load(File.ReadAllBytes(file)));
-                        } catch (Exception ex) {
-                           System.Diagnostics.Debug.WriteLine("CannotLoad: " + file + " : " +  ex.Message);
-                        }                        
-                    }
-                }
-
-                foreach (var assembly in assemblies)
+            var assemblies = new Dictionary<string, Assembly>();
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+            var files = Directory.GetFiles(folder);
+            foreach (var file in files)
+            {
+                if (file.EndsWith(".dll"))
                 {
                     try
                     {
-                        var plugin = this.LoadPlugin(assembly.Value, manager, helper, vshelper);
-                        if (plugin != null)
-                        {
-                            pluginsData.Add(plugin);
-                        }
-                    }
-                    catch (Exception ex)
+                        assemblies.Add(file, AppDomain.CurrentDomain.Load(File.ReadAllBytes(file)));
+                    } catch (Exception ex) {
+                        System.Diagnostics.Debug.WriteLine("CannotLoad: " + file + " : " +  ex.Message);
+                    }                        
+                }
+            }
+
+            foreach (var assembly in assemblies)
+            {
+                try
+                {
+                    var plugin = this.LoadPlugin(assembly.Value, manager, helper, vshelper);
+
+                    if (plugin != null)
                     {
-                        Debug.WriteLine(ex.Message);
-                        File.Delete(assembly.Key);
+                        var references = assembly.Value.GetReferencedAssemblies();
+
+                        foreach (var assemblyref in references)
+                        {
+                            var fileName = assemblyref.Name + ".dll";
+                            var file = Path.Combine(this.PluginsFolder, fileName);
+
+                            if (File.Exists(file))
+                            {
+                                plugin.SetDllLocation(file);
+                            }
+                        }
+
+                        plugin.SetDllLocation(assembly.Key);
+                        pluginsData.Add(plugin);
                     }
                 }
-
-
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                    File.Delete(assembly.Key);
+                }
+            }
 
             return pluginsData;
         }
@@ -233,18 +246,24 @@ namespace VSSonarExtensionUi.Helpers
         {
             var assembliesInFile = this.UnzipFiles(fileName, this.TempInstallPathFolder);
             var assembliesToTempFolder = this.GetAssembliesInTempFolder();
-            var plugins = this.LoadPlugin(
+            var plugin = this.LoadPlugin(
                 assembliesInFile.ToArray(),
                 this.TempInstallPathFolder,
                 conf, helper, manager, vshelper);
 
-            if (plugins != null)
+            if (plugin != null)
             {
                 Directory.Delete(this.TempInstallPathFolder, true);
                 this.UnzipFiles(fileName, this.PluginsFolder);
             }
 
-            return plugins;
+            foreach (string path in assembliesInFile)
+            {
+                var file = Path.GetFileName(path);
+                plugin.SetDllLocation(Path.Combine(this.PluginsFolder, file));
+            }
+
+            return plugin;
         }
 
         /// <summary>
@@ -388,8 +407,46 @@ namespace VSSonarExtensionUi.Helpers
         /// <returns>
         /// The <see cref="bool"/>.
         /// </returns>
-        public bool RemovePlugin(IPlugin selectedPlugin)
+        public bool RemovePlugin(IPlugin selectedPlugin, IList<IPlugin> installedPlugins)
         {
+            bool removedOk = true;
+            foreach (var path in selectedPlugin.DllLocations())
+            {
+                if (IsReferencedByOtherPlugins(selectedPlugin, installedPlugins, path))
+                {
+                    try
+                    {
+                        File.Delete(path);
+                    }
+                    catch (Exception ex)
+                    {
+                        removedOk = false;
+                    }
+                }
+            }
+
+            return removedOk;
+        }
+
+        private static bool IsReferencedByOtherPlugins(IPlugin selectedPlugin, IList<IPlugin> installedPlugins, string path)
+        {
+            foreach (var plugin in installedPlugins)
+            {
+                if (plugin.GetPluginDescription().Name.Equals(selectedPlugin.GetPluginDescription().Name))
+                {
+                    continue;
+                }
+
+                foreach (var pathOfInstalled in plugin.DllLocations())
+                {
+                    if (pathOfInstalled.Equals(path))
+                    {
+                        return false;
+                        continue;
+                    }
+                }
+            }
+
             return true;
         }
 

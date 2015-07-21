@@ -74,7 +74,7 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="bool"/>.
         /// </returns>
-        bool RemovePlugin(IPlugin selectedPlugin);
+        bool RemovePlugin(IPlugin selectedPlugin, IList<IPlugin> installedPlugins);
 
 
         List<IPlugin> LoadPluginsFromPluginFolder(INotificationManager manager, IConfigurationHelper helper, IVsEnvironmentHelper vshelper);

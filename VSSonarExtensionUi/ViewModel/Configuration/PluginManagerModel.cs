@@ -64,6 +64,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         private readonly INotificationManager notificationManager;
 
         private readonly IVsEnvironmentHelper vshelper;
+        private IList<IPlugin> Plugins;
 
         #endregion
 
@@ -102,6 +103,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.controller = controller;
             this.vshelper = helper;
 
+            this.Plugins = new List<IPlugin>();
             this.MenuPlugins = new List<IMenuCommandPlugin>();
             this.AnalysisPlugins = new List<IAnalysisPlugin>();
 
@@ -261,6 +263,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                             var pluginDesc = menuPlugin.GetPluginDescription();
                             pluginDesc.Enabled = true;
                             this.PluginList.Add(pluginDesc);
+                            this.Plugins.Add(plugin);
                         }
                         catch(Exception ex)
                         {
@@ -279,6 +282,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                                 var pluginDesc = analysisPlugin.GetPluginDescription();
                                 pluginDesc.Enabled = true;
                                 this.PluginList.Add(pluginDesc);
+                                this.Plugins.Add(plugin);
                             }
                             catch (Exception ex1)
                             {
@@ -305,17 +309,19 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             var plugin = this.AnalysisPlugins.SingleOrDefault(s => s.GetPluginDescription().Name.Equals(this.SelectedPlugin.Name));
             if (plugin != null)
             {
-                this.controller.RemovePlugin((IPlugin)plugin);
+                this.controller.RemovePlugin((IPlugin)plugin, this.Plugins);
                 this.AnalysisPlugins.Remove(plugin);
                 this.PluginList.Remove(this.SelectedPlugin);
+                this.Plugins.Remove(plugin);
                 return;
             }
 
             var menuPlugin = this.MenuPlugins.SingleOrDefault(s => s.GetPluginDescription().Name.Equals(this.SelectedPlugin.Name));
             if (menuPlugin != null)
             {
-                this.controller.RemovePlugin((IPlugin)plugin);
+                this.controller.RemovePlugin((IPlugin)menuPlugin, this.Plugins);
                 this.MenuPlugins.Remove(menuPlugin);
+                this.Plugins.Remove(menuPlugin);
                 this.PluginList.Remove(this.SelectedPlugin);
                 this.sqmodel.RemoveMenuPlugin(menuPlugin);
             }
@@ -436,6 +442,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                     var plugindata = (IAnalysisPlugin)plugin;
                     this.AnalysisPlugins.Add(plugindata);
                     this.PluginList.Add(plugDesc);
+                    this.Plugins.Add(plugin);
                 }
                 catch (Exception ex)
                 {
@@ -445,6 +452,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                         var plugindata = (IMenuCommandPlugin)plugin;
                         this.MenuPlugins.Add(plugindata);
                         this.PluginList.Add(plugDesc);
+                        this.Plugins.Add(plugin);
                     }
                     catch (Exception ex1)
                     {
@@ -491,53 +499,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         }
 
         public IPluginControlOption PluginController { get; set; }
-
-        /// <summary>
-        /// The update plugin in list of plugins.
-        /// </summary>
-        /// <param name="plugin">
-        /// The plugin.
-        /// </param>
-        /// <param name="pluginWillBeRemovedInNextRestart">
-        /// The plugin will be removed in next restart.
-        /// </param>
-        /// <returns>
-        /// The <see cref="bool"/>.
-        /// </returns>
-        private bool UpdatePluginInListOfPlugins(PluginDescription plugin, string pluginWillBeRemovedInNextRestart)
-        {
-            bool present = false;
-            var newList = new ObservableCollection<PluginDescription>();
-            foreach (PluginDescription pluginDescription in this.PluginList)
-            {
-                if (pluginDescription.Name.Equals(plugin.Name))
-                {
-                    var updatedDescription = new PluginDescription
-                                                 {
-                                                     Name = pluginDescription.Name, 
-                                                     Enabled = pluginDescription.Enabled, 
-                                                     Status = pluginWillBeRemovedInNextRestart, 
-                                                     SupportedExtensions = pluginDescription.SupportedExtensions, 
-                                                     Version = pluginDescription.Version
-                                                 };
-
-                    newList.Add(updatedDescription);
-                    present = true;
-                }
-                else
-                {
-                    newList.Add(pluginDescription);
-                }
-            }
-
-            this.PluginList.Clear();
-            foreach (PluginDescription pluginDescription in newList)
-            {
-                this.PluginList.Add(pluginDescription);
-            }
-
-            return present;
-        }
 
         #endregion
     }
