@@ -39,7 +39,7 @@ namespace VSSonarPlugins
     /// <summary>
     ///     The Plugin interface. INotificationManager and IConfigurationHelper are injected during instantioation
     /// </summary>
-    public interface IPlugin
+    public interface IPlugin : IDisposable
     {
         /// <summary>The get use plugin control options.</summary>
         /// <param name="project">The project.</param>

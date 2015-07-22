@@ -309,6 +309,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             var plugin = this.AnalysisPlugins.SingleOrDefault(s => s.GetPluginDescription().Name.Equals(this.SelectedPlugin.Name));
             if (plugin != null)
             {
+                plugin.Dispose();
                 this.controller.RemovePlugin((IPlugin)plugin, this.Plugins);
                 this.AnalysisPlugins.Remove(plugin);
                 this.PluginList.Remove(this.SelectedPlugin);
