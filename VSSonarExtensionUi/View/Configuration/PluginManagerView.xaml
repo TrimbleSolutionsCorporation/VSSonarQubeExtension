@@ -54,7 +54,7 @@
                     <RowDefinition Height="25" />
                     <RowDefinition Height="40" />
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="2" Text="Info - Restart after installation" ></TextBlock>
+                <TextBlock Grid.Row="2" Text="Info" ></TextBlock>
                 <TextBlock Grid.Row="3" Text="{Binding SelectedItem.SupportedExtensions, ElementName=Plugins, FallbackValue=extension}" HorizontalAlignment="Right"/>
                 <TextBlock TextWrapping="Wrap" Grid.Row="4" Text="{Binding SelectedItem.Description, ElementName=Plugins, FallbackValue=description}" HorizontalAlignment="Right"/>
                 <TextBlock Grid.Row="5" Text="{Binding SelectedItem.Version, ElementName=Plugins, FallbackValue=version}" HorizontalAlignment="Right"/>

@@ -77,7 +77,9 @@ namespace VSSonarPlugins
         bool RemovePlugin(IPlugin selectedPlugin, IList<IPlugin> installedPlugins);
 
 
-        List<IPlugin> LoadPluginsFromPluginFolder(INotificationManager manager, IConfigurationHelper helper, IVsEnvironmentHelper vshelper);
+        List<IPlugin> LoadPluginsFromPluginFolder(INotificationManager manager, IConfigurationHelper helper, IVsEnvironmentHelper vshelper, IEnumerable<string> files);
+
+        List<string> DeployPlugin(string fileName);
         #endregion
     }
 }

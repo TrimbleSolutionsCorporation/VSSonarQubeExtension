@@ -107,7 +107,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.MenuPlugins = new List<IMenuCommandPlugin>();
             this.AnalysisPlugins = new List<IAnalysisPlugin>();
 
-            this.InitPluginList(helper);
+            this.InitPluginList(helper, null);
             this.InitCommanding();
         }
 
@@ -244,53 +244,16 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 }
                 else
                 {
-                    IPlugin plugin = this.controller.IstallNewPlugin(filedialog.FileName, this.sonarConf, this.configurationHelper, this.notificationManager, this.vshelper);
+                    var files = this.controller.DeployPlugin(filedialog.FileName);
 
-                    if (plugin != null)
+                    try
                     {
-                        try
+                        if (!this.InitPluginList(this.vshelper, files))
                         {
-                            IMenuCommandPlugin menuPlugin = (IMenuCommandPlugin)plugin;
-                            foreach (var pluginI in this.MenuPlugins)
-                            {
-                                if (pluginI.GetPluginDescription().Name.Equals(menuPlugin.GetPluginDescription().Name))
-                                {
-                                    return;
-                                }
-                            }
-                            this.MenuPlugins.Add(menuPlugin);
-                            this.sqmodel.AddANewMenu(menuPlugin);
-                            var pluginDesc = menuPlugin.GetPluginDescription();
-                            pluginDesc.Enabled = true;
-                            this.PluginList.Add(pluginDesc);
-                            this.Plugins.Add(plugin);
-                        }
-                        catch(Exception ex)
-                        {
-                            Debug.WriteLine(ex.Message);
-                            try
-                            {
-                                IAnalysisPlugin analysisPlugin = (IAnalysisPlugin)plugin;
-                                foreach (var pluginI in this.AnalysisPlugins)
-                                {
-                                    if (pluginI.GetPluginDescription().Name.Equals(analysisPlugin.GetPluginDescription().Name))
-                                    {
-                                        return;
-                                    }
-                                }
-                                this.AnalysisPlugins.Add(analysisPlugin);
-                                var pluginDesc = analysisPlugin.GetPluginDescription();
-                                pluginDesc.Enabled = true;
-                                this.PluginList.Add(pluginDesc);
-                                this.Plugins.Add(plugin);
-                            }
-                            catch (Exception ex1)
-                            {
-                                Debug.WriteLine(ex1.Message);
-                            }
+                            UserExceptionMessageBox.ShowException("Cannot Install Plugin", new Exception("Error Loading Plugin"), this.controller.GetErrorData());
                         }
                     }
-                    else
+                    catch(Exception  ex)
                     {
                         UserExceptionMessageBox.ShowException(
                             "Cannot Install Plugin", 
@@ -415,9 +378,11 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         ///     The init plugin list.
         /// </summary>
-        private void InitPluginList(IVsEnvironmentHelper visualStudioHelper)
+        private bool InitPluginList(IVsEnvironmentHelper visualStudioHelper, IEnumerable<string> files)
         {
-            foreach (var plugin in this.controller.LoadPluginsFromPluginFolder(this.notificationManager, this.configurationHelper, visualStudioHelper))
+            bool loaded = false;
+
+            foreach (var plugin in this.controller.LoadPluginsFromPluginFolder(this.notificationManager, this.configurationHelper, visualStudioHelper, files))
             {
                 var plugDesc = plugin.GetPluginDescription();
                 try
@@ -444,6 +409,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                     this.AnalysisPlugins.Add(plugindata);
                     this.PluginList.Add(plugDesc);
                     this.Plugins.Add(plugin);
+                    loaded = true;
                 }
                 catch (Exception ex)
                 {
@@ -454,13 +420,16 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                         this.MenuPlugins.Add(plugindata);
                         this.PluginList.Add(plugDesc);
                         this.Plugins.Add(plugin);
+                        loaded = true;
                     }
                     catch (Exception ex1)
                     {
                         Debug.WriteLine(ex1.Message);
                     }
-                }                
+                }
             }
+
+            return loaded;
         }
 
         /// <summary>

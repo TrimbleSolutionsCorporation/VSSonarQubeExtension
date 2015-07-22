@@ -179,7 +179,7 @@ namespace VSSonarExtensionUi.Helpers
             return this.ErrorMessage;
         }
 
-        public List<IPlugin> LoadPluginsFromPluginFolder(INotificationManager manager, IConfigurationHelper helper, IVsEnvironmentHelper vshelper)
+        public List<IPlugin> LoadPluginsFromPluginFolder(INotificationManager manager, IConfigurationHelper helper, IVsEnvironmentHelper vshelper, IEnumerable<string> files)
         {
             var folder = this.PluginsFolder;
             var pluginsData = new List<IPlugin>();
@@ -189,7 +189,12 @@ namespace VSSonarExtensionUi.Helpers
             {
                 Directory.CreateDirectory(folder);
             }
-            var files = Directory.GetFiles(folder);
+
+            if (files == null || files.Count<string>() == 0)
+            {
+                files = Directory.GetFiles(folder);
+            }
+
             foreach (var file in files)
             {
                 if (file.EndsWith(".dll"))
@@ -237,6 +242,12 @@ namespace VSSonarExtensionUi.Helpers
 
             return pluginsData;
         }
+
+        public List<string> DeployPlugin(string fileName)
+        {
+            return this.UnzipFiles(fileName, this.PluginsFolder);
+        }
+
 
         public IPlugin IstallNewPlugin(string fileName, 
             ISonarConfiguration conf,
