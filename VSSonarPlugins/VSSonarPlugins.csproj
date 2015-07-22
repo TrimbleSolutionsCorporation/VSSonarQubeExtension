@@ -61,6 +61,7 @@
     <Compile Include="Helpers\VSSonarUtilsCallbacks.cs" />
     <Compile Include="Helpers\VSSonarUtilsDifferenceHelpers.cs" />
     <Compile Include="IMenuCommandPlugin.cs" />
+    <Compile Include="IIssueTrackerPlugin.cs" />
     <Compile Include="IVSSonarQubeCmdExecutor.cs" />
     <Compile Include="IPluginControlOption.cs" />
     <Compile Include="ISonarRestService.cs" />
