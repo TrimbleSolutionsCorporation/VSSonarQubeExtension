@@ -241,7 +241,7 @@
     <Content Include="externalAnalysers\roslynDiagnostics\Microsoft.CodeAnalysis.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="externalAnalysers\roslynDiagnostics\System.Collections.Immutable.dll">
+    <Content Include="System.Collections.Immutable.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="externalAnalysers\StyleCop\Settings.StyleCop">

@@ -215,7 +215,7 @@
     <Content Include="externalAnalysers\roslynDiagnostics\SonarQube.CSharp.CodeAnalysis.Extra.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="externalAnalysers\roslynDiagnostics\System.Collections.Immutable.dll">
+    <Content Include="System.Collections.Immutable.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="externalAnalysers\StyleCop\StyleCop.CSharp.dll">
