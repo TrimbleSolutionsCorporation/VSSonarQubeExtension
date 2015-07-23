@@ -178,7 +178,7 @@
         $(OutputPath)\VSSonarExtensionUi.dll;
         $(OutputPath)\VSSonarPlugins.dll;
         $(OutputPath)\VSSonarQubeStandalone.exe;
-		$(OutputPath)\FSharp.Core.dll;
+		$(OutputPath)\..\FSharp.Core.dll;
     </PackageFiles>
   </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
