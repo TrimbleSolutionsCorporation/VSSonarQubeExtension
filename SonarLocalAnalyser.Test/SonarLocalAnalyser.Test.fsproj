@@ -90,10 +90,12 @@
     <None Include="TestData\SampleProjects\ModulesDefinedAllInOnePropertiesFile\sonar-project.properties">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Foq.Usage.fsx" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Foq">
-      <HintPath>..\references\$(FSharpFolder)\Foq.dll</HintPath>
+      <HintPath>..\packages\Foq.1.7.1\Lib\net45\Foq.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="Moq">
