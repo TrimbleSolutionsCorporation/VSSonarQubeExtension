@@ -65,6 +65,9 @@
     <CodeAnalysisIgnoreGeneratedCode>false</CodeAnalysisIgnoreGeneratedCode>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FSharp.Data">
+      <HintPath>..\packages\FSharp.Data.2.2.5\lib\net40\FSharp.Data.dll</HintPath>
+    </Reference>
     <Reference Include="MahApps.Metro, Version=1.1.2.0, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\MahApps.Metro.1.1.2.0\lib\net45\MahApps.Metro.dll</HintPath>
@@ -109,10 +112,8 @@
       <HintPath>..\packages\MahApps.Metro.1.1.2.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FSharp.Data">
-      <HintPath>..\References\$(FSharpFolder)\FSharp.Data.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -270,14 +271,6 @@
     <ProjectReference Include="..\DifferenceEngine\DifferenceEngine.csproj">
       <Project>{8AE4897A-EA74-49B1-BA55-D892C27AF9C9}</Project>
       <Name>DifferenceEngine</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ExtensionHelpers\ExtensionHelpers.csproj">
-      <Project>{82914BC7-EEE5-49E7-AC2B-A7451A7A797D}</Project>
-      <Name>ExtensionHelpers</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ExtensionTypes\ExtensionTypes.csproj">
-      <Project>{75A39A9B-06B2-4249-9D3C-C2319951BC53}</Project>
-      <Name>ExtensionTypes</Name>
     </ProjectReference>
     <ProjectReference Include="..\SonarLocalAnalyser\SonarLocalAnalyser.fsproj">
       <Project>{a7d09c0c-efc5-4662-83b6-dae14e68c94c}</Project>
