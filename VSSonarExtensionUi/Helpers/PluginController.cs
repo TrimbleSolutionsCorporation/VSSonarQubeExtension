@@ -190,12 +190,14 @@ namespace VSSonarExtensionUi.Helpers
                 Directory.CreateDirectory(folder);
             }
 
-            if (files == null || files.Count<string>() == 0)
+            var filesToUse = Directory.GetFiles(folder);
+
+            if (files != null && files.Any())
             {
-                files = Directory.GetFiles(folder);
+                filesToUse = files.ToArray();
             }
 
-            foreach (var file in files)
+            foreach (var file in filesToUse)
             {
                 if (file.EndsWith(".dll"))
                 {
@@ -453,7 +455,6 @@ namespace VSSonarExtensionUi.Helpers
                     if (pathOfInstalled.Equals(path))
                     {
                         return false;
-                        continue;
                     }
                 }
             }

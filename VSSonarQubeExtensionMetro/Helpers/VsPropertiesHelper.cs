@@ -918,6 +918,7 @@ namespace VSSonarQubeExtension.Helpers
                 var solutionConfiguration2 = (EnvDTE80.SolutionConfiguration2)this.environment.Solution.SolutionBuild.ActiveConfiguration;
                 return solutionConfiguration2.Name;
             } catch (Exception ex) {
+                Debug.WriteLine(ex.Message);
                 return "";
             }
         }
@@ -936,6 +937,7 @@ namespace VSSonarQubeExtension.Helpers
             }
             catch (Exception ex)
             {
+                Debug.WriteLine(ex.Message);
                 return "";
             }
         }
