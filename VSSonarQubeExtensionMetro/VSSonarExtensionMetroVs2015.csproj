@@ -76,7 +76,7 @@
     </Reference>
     <Reference Include="Microsoft.CodeAnalysis, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.CodeAnalysis.Common.1.0.0-rc2\lib\net45\Microsoft.CodeAnalysis.dll</HintPath>
+      <HintPath>..\packages\Microsoft.CodeAnalysis.Common.1.0.0\lib\net45\Microsoft.CodeAnalysis.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.Editor, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
@@ -130,7 +130,7 @@
       <HintPath>..\References\$(FSharpFolder)\FSharp.Data.dll</HintPath>
     </Reference>
     <Reference Include="System.Reflection.Metadata">
-      <HintPath>..\packages\System.Reflection.Metadata.1.0.18-beta\lib\portable-net45+win8\System.Reflection.Metadata.dll</HintPath>
+      <HintPath>..\packages\System.Reflection.Metadata.1.0.21\lib\portable-net45+win8\System.Reflection.Metadata.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xaml" />
@@ -202,25 +202,19 @@
     <Content Include="externalAnalysers\roslynDiagnostics\Microsoft.CodeAnalysis.Analyzers.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="externalAnalysers\roslynDiagnostics\Microsoft.CodeAnalysis.CSharp.Desktop.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
     <Content Include="externalAnalysers\roslynDiagnostics\Microsoft.CodeAnalysis.CSharp.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="externalAnalysers\roslynDiagnostics\Microsoft.CodeAnalysis.Desktop.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="externalAnalysers\roslynDiagnostics\Microsoft.CodeAnalysis.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="externalAnalysers\roslynDiagnostics\Microsoft.Practices.ServiceLocation.dll">
+    <Content Include="externalAnalysers\roslynDiagnostics\SonarLint.Common.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="externalAnalysers\roslynDiagnostics\SonarQube.CSharp.CodeAnalysis.dll">
+    <Content Include="externalAnalysers\roslynDiagnostics\SonarLint.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="externalAnalysers\roslynDiagnostics\SonarQube.CSharp.CodeAnalysis.Extra.dll">
+    <Content Include="externalAnalysers\roslynDiagnostics\SonarLint.Extra.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="externalAnalysers\StyleCop\Settings.StyleCop">

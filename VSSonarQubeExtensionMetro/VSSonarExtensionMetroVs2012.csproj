@@ -14,7 +14,7 @@
     <AssemblyName>VSSonarExtensionMetroVs2012</AssemblyName>
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>    
+    </AssemblyOriginatorKeyFile>
     <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -103,15 +103,15 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="Microsoft.CodeAnalysis, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.CodeAnalysis.Common.1.0.0-rc2\lib\net45\Microsoft.CodeAnalysis.dll</HintPath>
-    </Reference>    
+      <HintPath>..\packages\Microsoft.CodeAnalysis.Common.1.0.0\lib\net45\Microsoft.CodeAnalysis.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.1.2.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="FSharp.Data">
       <HintPath>..\References\$(FSharpFolder)\FSharp.Data.dll</HintPath>
-    </Reference>	
+    </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
@@ -152,7 +152,7 @@
     <Compile Include="StatusBar\IVSStatusBar.cs" />
     <Compile Include="StatusBar\VSSStatusBar.cs" />
     <Compile Include="VSControls\GuidList.cs" />
-	<Compile Include="SolutionEventsListener.cs" />
+    <Compile Include="SolutionEventsListener.cs" />
     <Compile Include="PckResources\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -178,10 +178,13 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="externalAnalysers\roslynDiagnostics\SonarQube.CSharp.CodeAnalysis.dll">
+    <Content Include="externalAnalysers\roslynDiagnostics\SonarLint.Common.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="externalAnalysers\roslynDiagnostics\SonarQube.CSharp.CodeAnalysis.Extra.dll">
+    <Content Include="externalAnalysers\roslynDiagnostics\SonarLint.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="externalAnalysers\roslynDiagnostics\SonarLint.Extra.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <None Include="vs2012\source.extension.vsixmanifest" />
@@ -194,25 +197,10 @@
     <Content Include="externalAnalysers\roslynDiagnostics\Microsoft.CodeAnalysis.Analyzers.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="externalAnalysers\roslynDiagnostics\Microsoft.CodeAnalysis.CSharp.Desktop.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
     <Content Include="externalAnalysers\roslynDiagnostics\Microsoft.CodeAnalysis.CSharp.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="externalAnalysers\roslynDiagnostics\Microsoft.CodeAnalysis.Desktop.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
     <Content Include="externalAnalysers\roslynDiagnostics\Microsoft.CodeAnalysis.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="externalAnalysers\roslynDiagnostics\Microsoft.Practices.ServiceLocation.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="externalAnalysers\roslynDiagnostics\SonarQube.CSharp.CodeAnalysis.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="externalAnalysers\roslynDiagnostics\SonarQube.CSharp.CodeAnalysis.Extra.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="System.Collections.Immutable.dll">
@@ -306,11 +294,11 @@
     <ProjectReference Include="..\VSSonarPlugins\VSSonarPlugins.csproj">
       <Project>{3311C918-B662-436D-8BC8-F38B447B1414}</Project>
       <Name>VSSonarPlugins</Name>
-    </ProjectReference>   
+    </ProjectReference>
     <ProjectReference Include="..\VSSonarQubeCmdExecutor\VSSonarQubeCmdExecutor.fsproj">
       <Project>{9b154406-0af6-45a9-bf32-9c5c23822b6b}</Project>
       <Name>VSSonarQubeCmdExecutor</Name>
-    </ProjectReference>    
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

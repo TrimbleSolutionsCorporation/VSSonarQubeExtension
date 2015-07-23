@@ -71,7 +71,7 @@
     </Reference>
     <Reference Include="Microsoft.CodeAnalysis, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.CodeAnalysis.Common.1.0.0-rc2\lib\net45\Microsoft.CodeAnalysis.dll</HintPath>
+      <HintPath>..\packages\Microsoft.CodeAnalysis.Common.1.0.0\lib\net45\Microsoft.CodeAnalysis.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.Editor, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
@@ -106,13 +106,18 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="PresentationFramework.Aero" />
     <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable, Version=1.1.37.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\System.Collections.Immutable.1.1.36\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Reflection.Metadata">
-      <HintPath>..\packages\System.Reflection.Metadata.1.0.18-beta\lib\portable-net45+win8\System.Reflection.Metadata.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Reflection.Metadata, Version=1.0.22.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\System.Reflection.Metadata.1.0.21\lib\portable-net45+win8\System.Reflection.Metadata.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="FSharp.Data">
@@ -194,14 +199,17 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
+    <Content Include="externalAnalysers\roslynDiagnostics\SonarLint.Common.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="externalAnalysers\roslynDiagnostics\SonarLint.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="externalAnalysers\roslynDiagnostics\SonarLint.Extra.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="LICENSE.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="externalAnalysers\roslynDiagnostics\SonarQube.CSharp.CodeAnalysis.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="externalAnalysers\roslynDiagnostics\SonarQube.CSharp.CodeAnalysis.Extra.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Resources\vsiximage.png">
@@ -220,22 +228,7 @@
     <Content Include="externalAnalysers\roslynDiagnostics\Microsoft.CodeAnalysis.Analyzers.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="externalAnalysers\roslynDiagnostics\Microsoft.CodeAnalysis.CSharp.Desktop.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
     <Content Include="externalAnalysers\roslynDiagnostics\Microsoft.CodeAnalysis.CSharp.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="externalAnalysers\roslynDiagnostics\Microsoft.CodeAnalysis.Desktop.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="externalAnalysers\roslynDiagnostics\Microsoft.Practices.ServiceLocation.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="externalAnalysers\roslynDiagnostics\SonarQube.CSharp.CodeAnalysis.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="externalAnalysers\roslynDiagnostics\SonarQube.CSharp.CodeAnalysis.Extra.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="externalAnalysers\roslynDiagnostics\Microsoft.CodeAnalysis.dll">
