@@ -7,20 +7,15 @@
 // as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
 //
 // This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
-// of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. 
+// of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 // You should have received a copy of the GNU Lesser General Public License along with this program; if not, write to the Free
 // Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 // --------------------------------------------------------------------------------------------------------------------
-namespace VSSonarExtensionUi.Helpers
+namespace VSSonarExtensionUi.PluginManager
 {
     using System;
-    using System.IO;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Diagnostics;
-    using System.Linq;
     using System.Reflection;
-    using System.Windows;
     using VSSonarPlugins;
 
     /// <summary>
@@ -28,16 +23,10 @@ namespace VSSonarExtensionUi.Helpers
     /// </summary>
     public class PluginLoader : IPluginLoader
     {
-        #region Fields
-
         /// <summary>
         ///     The error data.
         /// </summary>
         private string errorData;
-
-        #endregion
-
-        #region Public Methods and Operators
 
         /// <summary>
         ///     The get error data.
@@ -49,8 +38,6 @@ namespace VSSonarExtensionUi.Helpers
         {
             return this.errorData;
         }
-
-
 
         public IPlugin LoadPlugin(Assembly assembly)
         {
@@ -72,6 +59,12 @@ namespace VSSonarExtensionUi.Helpers
                         Debug.WriteLine("Can Cast Type In Assembly To: " + typeof(IMenuCommandPlugin).FullName);
                         return (IPlugin)Activator.CreateInstance(type);
                     }
+
+                    if (typeof(ISourceVersionPlugin).IsAssignableFrom(type))
+                    {
+                        Debug.WriteLine("Can Cast Type In Assembly To: " + typeof(ISourceVersionPlugin).FullName);
+                        return (IPlugin)Activator.CreateInstance(type);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -84,7 +77,5 @@ namespace VSSonarExtensionUi.Helpers
 
             return null;
         }
-
-        #endregion
     }
 }

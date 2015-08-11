@@ -11,7 +11,7 @@
 // You should have received a copy of the GNU Lesser General Public License along with this program; if not, write to the Free
 // Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 // --------------------------------------------------------------------------------------------------------------------
-namespace VSSonarExtensionUi.Helpers
+namespace VSSonarExtensionUi.PluginManager
 {
     using System;
     using System.Collections.Generic;
@@ -21,9 +21,7 @@ namespace VSSonarExtensionUi.Helpers
     using System.IO.Compression;
     using System.Linq;
     using System.Reflection;
-    using System.Security;
-    using System.Security.Permissions;
-    
+
     using SonarRestService;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
@@ -377,11 +375,21 @@ namespace VSSonarExtensionUi.Helpers
                             return (IPlugin)obj.Invoke(lobject);
                         }
                     }
+
+                    if (typeof(ISourceVersionPlugin).IsAssignableFrom(type))
+                    {
+                        Debug.WriteLine("Can Cast Type In Assembly To: " + typeof(ISourceVersionPlugin).FullName);
+                        var plugin = System.Activator.CreateInstance(type);
+                        if (plugin != null)
+                        {
+                            return (IPlugin)plugin;
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
                     Debug.WriteLine(
-                        "Cannot Cast Type In Assembly To: " + typeof(IAnalysisPlugin).FullName + "\r\n" + ex.Message + "\r\n" + ex.StackTrace);
+                        "Cannot Cast Type: " + ex.Message + "\r\n" + ex.StackTrace);
                     Debug.WriteLine(ex.InnerException.Message + " : " + ex.InnerException.StackTrace);
                 }
             }

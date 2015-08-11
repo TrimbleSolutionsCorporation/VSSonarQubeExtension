@@ -37,6 +37,7 @@ namespace VSSonarExtensionUi.ViewModel
     using VSSonarPlugins.Helpers;
     using VSSonarPlugins.Types;
     using SonarLocalAnalyser;
+    using PluginManager;
 
     /// <summary>
     ///     The changed event handler.

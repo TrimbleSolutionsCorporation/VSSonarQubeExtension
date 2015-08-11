@@ -106,6 +106,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.Plugins = new List<IPlugin>();
             this.MenuPlugins = new List<IMenuCommandPlugin>();
             this.AnalysisPlugins = new List<IAnalysisPlugin>();
+            this.SourceCodePlugins = new List<ISourceVersionPlugin>();
 
             this.InitPluginList(helper, null);
             this.InitCommanding();
@@ -403,30 +404,36 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                     plugDesc.Enabled = true;
                 }
 
-                try
+                var plugindata = plugin as IAnalysisPlugin;
+                if (plugindata != null)
                 {
-                    var plugindata = (IAnalysisPlugin)plugin;
                     this.AnalysisPlugins.Add(plugindata);
                     this.PluginList.Add(plugDesc);
                     this.Plugins.Add(plugin);
                     loaded = true;
+                    continue;                    
                 }
-                catch (Exception ex)
+
+                var pluginMenu = plugin as IMenuCommandPlugin;
+                if (pluginMenu != null)
                 {
-                    Debug.WriteLine(ex.Message);
-                    try
-                    {
-                        var plugindata = (IMenuCommandPlugin)plugin;
-                        this.MenuPlugins.Add(plugindata);
-                        this.PluginList.Add(plugDesc);
-                        this.Plugins.Add(plugin);
-                        loaded = true;
-                    }
-                    catch (Exception ex1)
-                    {
-                        Debug.WriteLine(ex1.Message);
-                    }
+                    this.MenuPlugins.Add(pluginMenu);
+                    this.PluginList.Add(plugDesc);
+                    this.Plugins.Add(plugin);
+                    loaded = true;
+                    continue;
                 }
+
+                var pluginSourceControl = plugin as ISourceVersionPlugin;
+                if (pluginSourceControl != null)
+                {
+                    this.SourceCodePlugins.Add(pluginSourceControl);
+                    this.PluginList.Add(plugDesc);
+                    this.Plugins.Add(plugin);
+                    loaded = true;
+                    continue;
+                }
+
             }
 
             return loaded;
@@ -469,6 +476,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         }
 
         public IPluginControlOption PluginController { get; set; }
+        public List<ISourceVersionPlugin> SourceCodePlugins { get; private set; }
 
         #endregion
     }

@@ -126,9 +126,9 @@
     <Compile Include="Helpers\ConnectionConfigurationHelpers.cs" />
     <Compile Include="Helpers\PaginatedObservableCollection.cs" />
     <Compile Include="Helpers\PasswordHelper.cs" />
-    <Compile Include="Helpers\PluginController.cs" />
-    <Compile Include="Helpers\PluginLoader.cs" />
-    <Compile Include="Helpers\PluginSandBoxLoader.cs" />
+    <Compile Include="PluginManager\PluginController.cs" />
+    <Compile Include="PluginManager\PluginLoader.cs" />
+    <Compile Include="PluginManager\PluginSandBoxLoader.cs" />
     <Compile Include="Helpers\TextBoxBehaviour.cs" />
     <Compile Include="Menu\OpenResourceMenu.cs" />
     <Compile Include="SampleData\DatagridSampleData\DatagridSampleData.xaml.cs">
