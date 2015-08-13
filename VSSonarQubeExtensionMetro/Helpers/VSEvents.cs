@@ -111,7 +111,7 @@ namespace VSSonarQubeExtension.Helpers
 
         private void ProjectHasBuild(string project, string projectconfig, string platform, string solutionconfig, bool success)
         {
-            if (!success || SonarQubeViewModelFactory.SQViewModel.AssociatedProject == null)
+            if (!success || SonarQubeViewModelFactory.SQViewModel.AssociationModule.AssociatedProject == null)
             {
                 return;
             }
@@ -125,7 +125,7 @@ namespace VSSonarQubeExtension.Helpers
                     string outputPath = projectDte.ConfigurationManager.ActiveConfiguration.Properties.Item("OutputPath").Value.ToString();
                     string assemblyName = projectDte.Properties.Item("AssemblyName").Value.ToString();
 
-                    var projectItem = this.environment.VsProjectItem(projectDte.FullName, SonarQubeViewModelFactory.SQViewModel.AssociatedProject);
+                    var projectItem = this.environment.VsProjectItem(projectDte.FullName, SonarQubeViewModelFactory.SQViewModel.AssociationModule.AssociatedProject);
 
                     if (Path.IsPathRooted(outputPath))
                     {

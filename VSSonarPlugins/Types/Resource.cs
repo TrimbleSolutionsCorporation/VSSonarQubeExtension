@@ -26,6 +26,7 @@ namespace VSSonarPlugins.Types
         /// </summary>
         public Resource()
         {
+            this.BranchResources = new List<Resource>();
         }
 
         /// <summary>
@@ -97,5 +98,13 @@ namespace VSSonarPlugins.Types
         /// Gets or sets the solution root.
         /// </summary>
         public string SolutionRoot { get; set; }
+
+        public bool Default { get; set; }
+
+        public bool IsBranch { get; set; }
+
+        public string BranchName { get; set; }
+
+        public List<Resource> BranchResources { get; set; }
     }
 }

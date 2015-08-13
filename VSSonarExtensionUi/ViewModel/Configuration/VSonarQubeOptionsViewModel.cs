@@ -18,15 +18,12 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using GalaSoft.MvvmLight.Command;
 
     using PropertyChanged;
-
-    using SonarRestService;
-
-    using VSSonarExtensionUi.Helpers;
-    using VSSonarExtensionUi.ViewModel.Helpers;
+    using Helpers;
 
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-    using PluginManager;
+    using Model.PluginManager;
+    using Model.Helpers;
 
     /// <summary>
     ///     The plugins options model.

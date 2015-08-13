@@ -1,11 +1,11 @@
 ﻿<ResourceDictionary
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:helpers="clr-namespace:VSSonarExtensionUi.Helpers"
+	xmlns:helpers="clr-namespace:VSSonarExtensionUi.Model.Helpers"
     xmlns:system="clr-namespace:System;assembly=mscorlib"
 	xmlns:extensionTypes="clr-namespace:VSSonarPlugins.Types;assembly=VSSonarPlugins"
 	xmlns:themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
-	xmlns:converters="clr-namespace:VSSonarExtensionUi.Converters">
+	xmlns:converters="clr-namespace:VSSonarExtensionUi.Model.Converters">
 
     <helpers:BindingProxy x:Key="Proxy" Data="{Binding}" />
     <converters:ActivityToBrushConverter x:Key="BrushConverter"/>

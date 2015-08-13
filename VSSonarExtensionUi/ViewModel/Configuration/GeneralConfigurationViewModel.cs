@@ -16,20 +16,18 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
     using CredentialManagement;
 
-    
+
 
     using GalaSoft.MvvmLight.Command;
 
     using PropertyChanged;
 
-    using SonarRestService;
-
-    using VSSonarExtensionUi.View.Helpers;
-    using VSSonarExtensionUi.ViewModel.Helpers;
+    using View.Helpers;
+    using Helpers;
 
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-    using VSSonarExtensionUi.Helpers;
+    using Model.Helpers;
 
     /// <summary>
     ///     The sonar configuration view viewModel.

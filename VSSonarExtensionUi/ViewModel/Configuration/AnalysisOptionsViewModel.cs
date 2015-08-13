@@ -264,17 +264,29 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 OwnersId.AnalysisOwnerId,
                 GlobalAnalysisIds.ExcludedPluginsKey).Value;
 
-            this.DebugIsChecked = bool.Parse(this.configurationHelper.ReadSetting(
-                Context.AnalysisGeneral,
-                OwnersId.AnalysisOwnerId,
-                GlobalAnalysisIds.IsDebugAnalysisOnKey).Value);
+            try
+            {
+                this.DebugIsChecked = bool.Parse(this.configurationHelper.ReadSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId,    GlobalAnalysisIds.IsDebugAnalysisOnKey).Value);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
 
-            this.TimeoutValue =
-                int.Parse(
-                    this.configurationHelper.ReadSetting(
-                        Context.AnalysisGeneral,
-                        OwnersId.AnalysisOwnerId,
-                        GlobalAnalysisIds.LocalAnalysisTimeoutKey).Value);
+            try
+            {
+                this.TimeoutValue =
+                    int.Parse(
+                        this.configurationHelper.ReadSetting(
+                            Context.AnalysisGeneral,
+                            OwnersId.AnalysisOwnerId,
+                            GlobalAnalysisIds.LocalAnalysisTimeoutKey).Value);
+            }
+            catch (Exception ex)
+            {
+                this.TimeoutValue = 60000;
+                Debug.WriteLine(ex.Message);
+            }
 
             if (this.Project != null)
             {

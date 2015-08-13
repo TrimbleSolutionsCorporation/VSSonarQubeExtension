@@ -51,6 +51,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Association\AssociationModelTests.cs" />
+    <Compile Include="Association\StandAloneVsHelper.cs" />
     <Compile Include="ConnectionConfigurationHelpersTests.cs" />
     <Compile Include="NonVSTests\ReadWriteToApplicationDataTests.cs" />
     <Compile Include="NonVSTests\VSSonarUtilsCallbacksTest.cs" />

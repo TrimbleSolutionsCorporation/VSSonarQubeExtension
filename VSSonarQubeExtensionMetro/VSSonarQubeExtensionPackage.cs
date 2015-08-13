@@ -251,7 +251,7 @@ namespace VSSonarQubeExtension
 
             listener.OnAfterOpenProject += () =>
             {
-                if (!SonarQubeViewModelFactory.SQViewModel.IsAssociated && !triedOnceAlready)
+                if (!SonarQubeViewModelFactory.SQViewModel.AssociationModule.IsAssociated && !triedOnceAlready)
                 {
                     triedOnceAlready = true;
                     string solutionName = this.visualStudioInterface.ActiveSolutionName();
@@ -332,8 +332,8 @@ namespace VSSonarQubeExtension
             var plugin = SonarQubeViewModelFactory.SQViewModel.InUsePlugin;
             this.ShowToolWindow(
                 plugin.Value.GetUserControl(
-                VSSonarExtensionUi.Helpers.AuthtenticationHelper.AuthToken,
-                SonarQubeViewModelFactory.SQViewModel.AssociatedProject,
+                VSSonarExtensionUi.Model.Helpers.AuthtenticationHelper.AuthToken,
+                SonarQubeViewModelFactory.SQViewModel.AssociationModule.AssociatedProject,
                 SonarQubeViewModelFactory.SQViewModel.VsHelper),
                 plugin.Key,
                 plugin.Value.GetPluginDescription().Name);

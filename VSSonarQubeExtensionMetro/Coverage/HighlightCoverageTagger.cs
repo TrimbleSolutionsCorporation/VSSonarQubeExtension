@@ -23,7 +23,7 @@ namespace VSSonarQubeExtension.Coverage
     using Microsoft.VisualStudio.Text;
     using Microsoft.VisualStudio.Text.Tagging;
 
-    using VSSonarExtensionUi.Cache;
+    using VSSonarExtensionUi.Model.Cache;
 
     using VSSonarQubeExtension.Helpers;
     using System.Diagnostics;

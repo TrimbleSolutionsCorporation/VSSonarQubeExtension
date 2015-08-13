@@ -23,24 +23,21 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using System.Windows.Input;
     using System.Windows.Media;
 
-    
+
 
     using GalaSoft.MvvmLight.Command;
 
     using PropertyChanged;
 
     using SonarLocalAnalyser;
-
-    using SonarRestService;
-
-    using VSSonarExtensionUi.Helpers;
-    using VSSonarExtensionUi.View.Helpers;
-    using VSSonarExtensionUi.ViewModel.Helpers;
+    using View.Helpers;
+    using Helpers;
 
     using VSSonarPlugins;
 
     using Application = System.Windows.Application;
     using VSSonarPlugins.Types;
+    using Model.Helpers;
 
     /// <summary>
     ///     The analysis types.
@@ -486,7 +483,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 return;
             }
 
-            if (!this.sonarQubeViewModel.IsAssociated)
+            if (!this.sonarQubeViewModel.AssociationModule.IsAssociated)
             {
                 return;
             }

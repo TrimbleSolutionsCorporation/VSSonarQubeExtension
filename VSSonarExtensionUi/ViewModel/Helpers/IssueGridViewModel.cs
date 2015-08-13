@@ -20,18 +20,12 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
     using System.Windows;
     using System.Windows.Input;
     using System.Windows.Media;
-
-    
-
     using GalaSoft.MvvmLight.Command;
-
     using PropertyChanged;
-
-    using VSSonarExtensionUi.Helpers;
-    using VSSonarExtensionUi.Menu;
-
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
+    using Model.Helpers;
+    using Model.Menu;
 
     /// <summary>
     ///     The issue grid view viewModel.
@@ -568,14 +562,14 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
 
                 try
                 {
-                    var path = this.model.SonarKeyTranslator.TranslateKey(issue.Component, this.Vsenvironmenthelper);
-                    this.Vsenvironmenthelper.OpenResourceInVisualStudio(this.model.OpenSolutionPath, path, issue.Line);
+                    var path = this.model.SonarKeyTranslator.TranslateKey(issue.Component, this.Vsenvironmenthelper, this.model.SelectedBranch.BranchName);
+                    this.Vsenvironmenthelper.OpenResourceInVisualStudio(this.model.AssociationModule.OpenSolutionPath, path, issue.Line);
                 }
                 catch (Exception ex)
                 {
                     this.model.NotificationManager.ReportMessage(new Message() { Id = "OnInEditor", Data = ex.Message + " : " + issue.Component });
-                    this.model.NotificationManager.ReportMessage(new Message() { Id = "OnInEditor ", Data = "Solution = " + this.model.OpenSolutionPath });
-                    this.model.NotificationManager.ReportMessage(new Message() { Id = "OnInEditor", Data = "Project = " + this.model.AssociatedProject });
+                    this.model.NotificationManager.ReportMessage(new Message() { Id = "OnInEditor ", Data = "Solution = " + this.model.AssociationModule.OpenSolutionPath });
+                    this.model.NotificationManager.ReportMessage(new Message() { Id = "OnInEditor", Data = "Project = " + this.model.AssociationModule.AssociatedProject });
                     this.model.NotificationManager.ReportException(ex);
                 }
             }

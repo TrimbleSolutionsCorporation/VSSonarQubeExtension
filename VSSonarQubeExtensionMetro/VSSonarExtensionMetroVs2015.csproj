@@ -226,6 +226,12 @@
     <Content Include="externalAnalysers\StyleCop\StyleCop.CSharp.Rules.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="NativeBinaries\amd64\git2-4a30c53.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="NativeBinaries\x86\git2-4a30c53.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="StyleCop.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>

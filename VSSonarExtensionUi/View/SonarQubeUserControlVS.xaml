@@ -14,7 +14,6 @@
 
     <UserControl.Resources>
         <ResourceDictionary>
-
                        
             <ResourceDictionary.MergedDictionaries>
 				<ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/Styles.xaml" />
@@ -42,10 +41,21 @@
             </DataTemplate>
 
         	<DataTemplate x:Key="ProjectSelectionComboBoxDataTemplate">
-        		<StackPanel>
-                    <TextBlock Text="{Binding Name}"></TextBlock>
+                <StackPanel>
+                    <TextBlock Text="{Binding BranchName}">
+                    <TextBlock.Style>
+                        <Style>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Default}" Value="True">
+                                <Setter Property="TextBlock.Foreground" Value="Red" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+
+                    </TextBlock>
                 </StackPanel>
-        	</DataTemplate>
+            </DataTemplate>
             
         </ResourceDictionary>
     </UserControl.Resources>
@@ -66,9 +76,10 @@
             <RowDefinition Height="5" />
 		</Grid.RowDefinitions>
 		<Menu x:Name="MainMenuIssues" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
-			<MenuItem Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" x:Name="ToolsMenu" Header="Menu" Width="auto" HorizontalAlignment="Center" VerticalAlignment="Center" >
-            <MenuItem Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" x:Name="OptionsMenu" Header="Properties" Command="{Binding LaunchExtensionPropertiesCommand}"/>
-			</MenuItem>
+            <MenuItem Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" x:Name="ToolsMenu" Header="Menu" Width="auto" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                <MenuItem Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" x:Name="OptionsMenu" Header="Configuration" Command="{Binding LaunchExtensionPropertiesCommand}"/>
+                <MenuItem Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" x:Name="AssociationMenu" Header="Project Association" Width="auto" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding StartAssociationWindowCommand}"/>
+            </MenuItem>
             <MenuItem x:Name="PluginsMenu" Header="Tools" ItemsSource="{Binding ToolsProvidedByPlugins}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <MenuItem.ItemContainerStyle>
                     <Style TargetType="{x:Type MenuItem}">
@@ -80,26 +91,24 @@
                     </Style>
                 </MenuItem.ItemContainerStyle>
             </MenuItem>
-            <ComboBox Width="200" 
+            <ComboBox Width="300" 
                       Style="{DynamicResource VirtualisedMetroComboBox}"
                       TextSearch.TextPath="Name"
-                      controls:TextBoxHelper.Watermark="Project"
+                      controls:TextBoxHelper.Watermark="Branch"
                       IsEditable="True"
-                      SelectedItem="{Binding SelectedProject, Mode=TwoWay}"
-                      ItemsSource="{Binding AvailableProjects}"                   
+                      IsEnabled="{Binding IsBranchSelectionEnabled}"
+                      SelectedItem="{Binding SelectedBranch, Mode=TwoWay}"
+                      ItemsSource="{Binding AvailableBranches}"                   
                       MaxDropDownHeight="125"
                       ItemTemplate="{DynamicResource ProjectSelectionComboBoxDataTemplate}"
-                      />
-            <Button Style="{DynamicResource MyMetroButton}"
-                    Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                    Content="Associate" Command="{Binding AssignProjectCommand}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-		</Menu>
+                      />            
+        </Menu>
        
 		<StatusBar Grid.Row="2" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}">
             <StatusBarItem HorizontalAlignment="Left">
-                <TextBlock Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Text="{Binding ResourceInEditor.Key}"></TextBlock>
+                <TextBlock Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Text="{Binding StatusMessage}"></TextBlock>
             </StatusBarItem>
+          
             <StatusBarItem HorizontalAlignment="Right">
 				<StackPanel Orientation="Horizontal">
                     

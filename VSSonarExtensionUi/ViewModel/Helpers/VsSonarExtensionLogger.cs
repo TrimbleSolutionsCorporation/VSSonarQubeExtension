@@ -17,7 +17,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
     /// <summary>
     ///     The logger.
     /// </summary>
-    public class VsSonarExtensionLogger
+    public class VsSonarExtensionLogger : IVsSonarExtensionLogger
     {
         #region Fields
 

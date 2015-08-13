@@ -1,0 +1,353 @@
+﻿<Association:AssociationViewModel xmlns:Association="clr-namespace:VSSonarExtensionUi.ViewModel.Association" xmlns:Command="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight" xmlns:Types="clr-namespace:VSSonarPlugins.Types;assembly=VSSonarPlugins" xmlns:System="clr-namespace:System;assembly=mscorlib" BackGroundColor="#FF8C86BF" ForeGroundColor="#FF2F499A" Header="Pede vitae">
+	<Association:AssociationViewModel.AssignProjectCommand>
+		<Command:RelayCommand/>
+	</Association:AssociationViewModel.AssignProjectCommand>
+	<Association:AssociationViewModel.AvailableProjects>
+		<Types:Resource ActiveConfiguration="Per iaculis dolor" ActivePlatform="Enim parturient vestibulum" Date="08/12/2015 14:06:18" Id="48" Key="Vestibulum nam cras" Lname="Vestibulum quisque nunc" Lang="Curae curabitur" NonSafeKey="Non elementum inceptos adipiscing" Name="Aliquam integer adipiscing parturient duis" Qualifier="Sed dis" SolutionRoot="Sed interdum" Scope="Class vestibulum amet" Version="Maecenas vivamus ante">
+			<Types:Resource.Metrics>
+				<Types:Metric Data="Bibendum dictumst" FormatedValue="Praesent etiam fusce accumsan arcu" Key="Donec phasellus aliquam aliquet">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Hac eget" FormatedValue="Diam lorem aenean eleifend" Key="Adipiscing blandit est">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Convallis elit mus" FormatedValue="Parturient conubia mauris" Key="Leo morbi consequat commodo">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Nec vestibulum euismod feugiat" FormatedValue="Nulla egestas" Key="Cubilia dapibus facilisi vestibulum faucibus">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Proin augue" FormatedValue="Dignissim gravida" Key="Nullam habitant">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+			</Types:Resource.Metrics>
+		</Types:Resource>
+		<Types:Resource ActiveConfiguration="Volutpat quis" ActivePlatform="Adipiscing maecenas urna magna montes" Date="08/12/2015 14:06:18" Id="28" Key="Erat vestibulum aptent" Lname="Fames lobortis auctor" Lang="Posuere nascetur sit" NonSafeKey="Aliquam vehicula hac integer" Name="Lacinia eros nibh sem" Qualifier="Fermentum laoreet natoque" SolutionRoot="Massa cras" Scope="Adipiscing facilisis congue" Version="Parturient potenti nisi cursus">
+			<Types:Resource.Metrics>
+				<Types:Metric Data="Ligula ipsum" FormatedValue="Vestibulum libero fringilla pharetra felis" Key="Vestibulum dictum nisl lectus">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Sociosqu adipiscing parturient luctus" FormatedValue="Pretium sagittis litora vel senectus" Key="Placerat pulvinar nunc habitasse">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Odio vestibulum sodales magnis" FormatedValue="Lacus vestibulum sed" Key="Justo nam suscipit rhoncus">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Quam dis" FormatedValue="Vestibulum hendrerit ultrices lorem" Key="Orci adipiscing torquent pede parturient">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Mauris mollis viverra" FormatedValue="Himenaeos est" Key="Vestibulum mattis">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+			</Types:Resource.Metrics>
+		</Types:Resource>
+		<Types:Resource ActiveConfiguration="Tempor adipiscing donec" ActivePlatform="Etiam tempus nibh" Date="08/12/2015 14:06:18" Id="15" Key="Imperdiet duis praesent accumsan quisque" Lname="Vestibulum morbi vivamus neque amet" Lang="Aliquet blandit" NonSafeKey="Iaculis lacinia vulputate interdum" Name="Parturient metus nunc bibendum" Qualifier="Arcu aliquam" SolutionRoot="Tortor curabitur fusce lorem vel" Scope="Ante netus malesuada" Version="Nostra penatibus nulla commodo diam">
+			<Types:Resource.Metrics>
+				<Types:Metric Data="Vestibulum leo purus eleifend facilisi" FormatedValue="Porta dictumst ornare elit" Key="Conubia eget">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Porttitor tincidunt tristique mus primis" FormatedValue="Dapibus erat platea" Key="Enim cubilia">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Egestas sapien semper velit" FormatedValue="Risus rutrum nec venenatis faucibus" Key="Adipiscing ultricies">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Sem euismod curae vestibulum taciti" FormatedValue="Sed sociis" Key="Non vitae class per parturient">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Gravida vestibulum" FormatedValue="Inceptos sit tellus eros" Key="Habitant feugiat">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+			</Types:Resource.Metrics>
+		</Types:Resource>
+		<Types:Resource ActiveConfiguration="Vestibulum aliquam integer nunc" ActivePlatform="Lorem non magna quisque" Date="08/12/2015 14:06:18" Id="97" Key="Nisi nisl" Lname="Morbi consequat turpis nunc parturient" Lang="Elementum aenean facilisis" NonSafeKey="Lacus nec" Name="Nam laoreet phasellus" Qualifier="Convallis varius dignissim proin augue" SolutionRoot="Per massa malesuada penatibus" Scope="Nulla lobortis" Version="Mauris natoque nascetur">
+			<Types:Resource.Metrics>
+				<Types:Metric Data="Fermentum sed" FormatedValue="Placerat odio pulvinar dolor" Key="Pharetra vestibulum">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Posuere sociosqu" FormatedValue="Auctor sagittis senectus" Key="Orci fames nullam aptent fringilla">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Adipiscing pede hac" FormatedValue="Est felis congue vestibulum pretium" Key="Dis potenti suscipit">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Sodales leo quam quis" FormatedValue="Torquent ultrices rhoncus dictum" Key="Habitasse cursus">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Himenaeos viverra mus imperdiet duis" FormatedValue="Cras ipsum justo parturient vestibulum" Key="Urna lectus hendrerit">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+			</Types:Resource.Metrics>
+		</Types:Resource>
+		<Types:Resource ActiveConfiguration="Inceptos lacinia" ActivePlatform="Parturient non" Date="08/12/2015 14:06:18" Id="32" Key="Porttitor metus" Lname="Tincidunt sit tristique" Lang="Morbi neque aliquet" NonSafeKey="Iaculis habitant adipiscing" Name="Sed sem vehicula libero ligula" Qualifier="Vivamus ante aliquam vestibulum vestibulum" SolutionRoot="Dignissim vestibulum" Scope="Adipiscing vel amet parturient" Version="Blandit ultricies">
+			<Types:Resource.Metrics>
+				<Types:Metric Data="Vestibulum litora commodo" FormatedValue="Adipiscing sed parturient vestibulum vulputate" Key="Nam venenatis">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Maecenas mauris adipiscing est praesent" FormatedValue="Curabitur luctus magnis mattis" Key="Dis volutpat">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Mollis eget accumsan elit" FormatedValue="Arcu parturient diam nulla dapibus" Key="Conubia hac netus cubilia">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Bibendum vestibulum consequat porta erat" FormatedValue="Vestibulum enim mus nec euismod" Key="Leo phasellus egestas montes">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Eros ornare facilisi faucibus" FormatedValue="Eleifend gravida" Key="Nostra feugiat dictumst convallis">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+			</Types:Resource.Metrics>
+		</Types:Resource>
+		<Types:Resource ActiveConfiguration="Fames curabitur parturient" ActivePlatform="Felis hac ipsum" Date="08/12/2015 14:06:18" Id="35" Key="Laoreet purus interdum vestibulum risus" Lname="Platea velit nascetur facilisis fermentum" Lang="Sem pulvinar sit" NonSafeKey="Taciti torquent aliquet" Name="Natoque elementum adipiscing lobortis per" Qualifier="Placerat posuere sed" SolutionRoot="Ultrices phasellus" Scope="Pharetra fringilla parturient" Version="Vestibulum habitasse nibh vitae">
+			<Types:Resource.Metrics>
+				<Types:Metric Data="Himenaeos imperdiet malesuada senectus" FormatedValue="Sagittis vel hendrerit" Key="Primis rutrum potenti">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Nam parturient porttitor" FormatedValue="Sapien donec etiam vestibulum adipiscing" Key="Class curae penatibus pretium rhoncus">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Sodales vestibulum viverra morbi aliquam" FormatedValue="Vestibulum semper sociosqu" Key="Sed fusce lorem">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Dis est" FormatedValue="Tincidunt nulla tristique" Key="Integer nisi sociis">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Venenatis suscipit vulputate dolor nunc" FormatedValue="Proin ultricies vivamus aliquam augue" Key="Adipiscing nisl quisque">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+			</Types:Resource.Metrics>
+		</Types:Resource>
+		<Types:Resource ActiveConfiguration="Duis risus nunc" ActivePlatform="Congue velit" Date="08/12/2015 14:06:18" Id="59" Key="Vestibulum justo leo lacus" Lname="Parturient mus vehicula" Lang="Maecenas nec" NonSafeKey="Gravida auctor interdum" Name="Vestibulum tellus adipiscing odio consequat" Qualifier="Vestibulum tempor volutpat magna" SolutionRoot="Sed amet cursus iaculis lacinia" Scope="Blandit vestibulum commodo lorem" Version="Massa non conubia convallis">
+			<Types:Resource.Metrics>
+				<Types:Metric Data="Tortor turpis" FormatedValue="Per praesent tempus accumsan" Key="Cubilia dapibus dignissim elementum">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Pede aenean sed sem neque" FormatedValue="Morbi bibendum dictumst varius" Key="Egestas orci metus">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Adipiscing parturient vestibulum" FormatedValue="Porta quam" Key="Netus eleifend nulla facilisi euismod">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Sit adipiscing nullam urna" FormatedValue="Mauris purus" Key="Facilisis quis vestibulum">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Parturient inceptos cras" FormatedValue="Faucibus nam aptent habitant" Key="Fermentum feugiat vel fringilla">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+			</Types:Resource.Metrics>
+		</Types:Resource>
+		<Types:Resource ActiveConfiguration="Mattis nunc venenatis" ActivePlatform="Vulputate vestibulum ipsum" Date="08/12/2015 14:06:18" Id="65" Key="Laoreet dictum" Lname="Curae arcu dis" Lang="Nascetur elit donec himenaeos" NonSafeKey="Adipiscing parturient felis" Name="Ante lectus vitae class" Qualifier="Natoque posuere est" SolutionRoot="Sit justo" Scope="Habitasse diam lobortis eget hendrerit" Version="Etiam fusce libero pharetra hac">
+			<Types:Resource.Metrics>
+				<Types:Metric Data="Mus potenti erat morbi" FormatedValue="Pulvinar lorem leo ligula" Key="Enim placerat">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Non magnis" FormatedValue="Vestibulum luctus pretium rhoncus sodales" Key="Vestibulum nec litora sagittis nulla">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Augue per malesuada suscipit" FormatedValue="Eros proin sociosqu" Key="Imperdiet senectus adipiscing viverra">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Torquent ultrices quisque dolor" FormatedValue="Porttitor tincidunt" Key="Nibh nisi aliquam integer penatibus">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Nisl sem ultricies" FormatedValue="Vestibulum tristique volutpat vestibulum" Key="Vehicula sed fames vivamus parturient">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+			</Types:Resource.Metrics>
+		</Types:Resource>
+		<Types:Resource ActiveConfiguration="Elit enim" ActivePlatform="Curae platea placerat vestibulum" Date="08/12/2015 14:06:18" Id="62" Key="Odio aliquam maecenas lacus" Lname="Lorem consequat aliquet vestibulum" Lang="Parturient blandit" NonSafeKey="Vitae class pharetra" Name="Praesent curabitur accumsan phasellus" Qualifier="Massa dictumst mauris metus" SolutionRoot="Vestibulum primis" Scope="Adipiscing magna bibendum" Version="Orci morbi eleifend">
+			<Types:Resource.Metrics>
+				<Types:Metric Data="Vestibulum faucibus habitant vel nam" FormatedValue="Convallis cubilia" Key="Commodo conubia neque facilisi vestibulum">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Parturient nulla vestibulum porta" FormatedValue="Adipiscing quis netus inceptos" Key="Pede dapibus quam">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Est duis vestibulum interdum" FormatedValue="Egestas dis cras dignissim" Key="Urna mollis montes sed">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Feugiat risus nunc amet" FormatedValue="Parturient euismod purus" Key="Hac nostra adipiscing">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Eget ornare" FormatedValue="Velit nascetur" Key="Lobortis ante arcu diam">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+			</Types:Resource.Metrics>
+		</Types:Resource>
+		<Types:Resource ActiveConfiguration="Proin sem adipiscing parturient augue" ActivePlatform="Dolor sit vel vestibulum nam" Date="08/12/2015 14:06:18" Id="45" Key="Elementum leo facilisis erat fermentum" Lname="Rutrum nibh" Lang="Donec adipiscing" NonSafeKey="Nulla maecenas" Name="Mus gravida eros" Qualifier="Nec senectus" SolutionRoot="Cras fames vestibulum praesent felis" Scope="Pulvinar fringilla sagittis nisi" Version="Sapien sociosqu semper">
+			<Types:Resource.Metrics>
+				<Types:Metric Data="Ultrices sociis habitasse" FormatedValue="Parturient torquent non vestibulum nisl" Key="Suscipit iaculis">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Adipiscing lorem per vehicula laoreet" FormatedValue="Nunc vestibulum" Key="Etiam lacinia hendrerit fusce">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Orci himenaeos pretium" FormatedValue="Sed odio potenti" Key="Volutpat morbi natoque posuere parturient">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Malesuada quis" FormatedValue="Taciti imperdiet rhoncus" Key="Pede vestibulum quam">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Urna penatibus porttitor tincidunt tristique" FormatedValue="Vestibulum tempus tortor" Key="Tellus tempor">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+			</Types:Resource.Metrics>
+		</Types:Resource>
+	</Association:AssociationViewModel.AvailableProjects>
+	<Association:AssociationViewModel.SelectedProject>
+		<Types:Resource ActiveConfiguration="Non magnis porttitor mattis nisl" ActivePlatform="Ultrices nunc odio mauris vehicula" Date="08/12/2015 14:06:18" Id="10" Key="Adipiscing duis ultricies sed turpis" Lname="Vulputate nunc" Lang="Est magna ante hac" NonSafeKey="Dapibus adipiscing torquent parturient" Name="Varius parturient ipsum dis venenatis" Qualifier="Lorem accumsan curabitur" SolutionRoot="Volutpat per orci egestas" Scope="Justo amet lacus" Version="Arcu leo sodales aenean">
+			<Types:Resource.Metrics>
+				<Types:Metric Data="Eleifend phasellus" FormatedValue="Dictumst mauris" Key="Bibendum massa metus diam">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Adipiscing elit aptent nec consequat" FormatedValue="Vestibulum eget nullam faucibus" Key="Vestibulum viverra mus facilisi">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Convallis auctor enim" FormatedValue="Aliquam integer" Key="Parturient habitant inceptos">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Adipiscing elementum" FormatedValue="Vestibulum dignissim quisque" Key="Vestibulum non interdum congue">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Neque parturient facilisis vestibulum" FormatedValue="Dictum lectus morbi lobortis" Key="Erat cursus">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Fringilla pharetra aliquam placerat sem" FormatedValue="Per sed vivamus ligula nascetur" Key="Fermentum libero">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Hendrerit nam sed dis" FormatedValue="Nulla porta vel litora habitasse" Key="Aliquet netus pulvinar sit blandit">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Sociosqu himenaeos" FormatedValue="Luctus conubia senectus adipiscing cubilia" Key="Sagittis purus commodo vestibulum">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Hac leo" FormatedValue="Nibh est vestibulum risus" Key="Parturient eros vestibulum">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+				<Types:Metric Data="Suscipit penatibus" FormatedValue="Malesuada velit nisi nec" Key="Imperdiet mus">
+					<Types:Metric.Val>
+						<System:Decimal/>
+					</Types:Metric.Val>
+				</Types:Metric>
+			</Types:Resource.Metrics>
+		</Types:Resource>
+	</Association:AssociationViewModel.SelectedProject>
+</Association:AssociationViewModel>

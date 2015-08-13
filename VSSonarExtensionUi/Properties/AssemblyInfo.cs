@@ -1,4 +1,5 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+﻿using System.Runtime.CompilerServices;
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="AssemblyInfo.cs" company="Copyright © 2014 Tekla Corporation. Tekla is a Trimble Company">
 //     Copyright (C) 2014 [Jorge Costa, Jorge.Costa@tekla.com]
 // </copyright>
@@ -47,3 +48,6 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("4.0.0.0")]
 [assembly: AssemblyFileVersion("4.0.0.0")]
+[assembly: InternalsVisibleTo("VSSonarExtensionUi.Tests")]
+[assembly: InternalsVisibleTo("VSSonarExtensionUi.Explorables")]
+

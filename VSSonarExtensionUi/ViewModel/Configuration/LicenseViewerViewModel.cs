@@ -12,20 +12,12 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Windows.Media;
-
-    
-
     using GalaSoft.MvvmLight.Command;
-
     using PropertyChanged;
-
-    using SonarRestService;
-
-    using VSSonarExtensionUi.ViewModel.Helpers;
-
+    using Helpers;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-    using VSSonarExtensionUi.Helpers;
+    using Model.Helpers;
 
     /// <summary>
     /// The license viewer view model.

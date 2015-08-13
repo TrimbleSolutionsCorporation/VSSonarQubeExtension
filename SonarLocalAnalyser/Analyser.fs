@@ -384,7 +384,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
     member val AnalysisIsRunning = false with get, set
     member val ProjectLookupRunning = Set.empty with get, set
 
-    member val SqTranslator : SQKeyTranslator = null with get, set
+    member val SqTranslator : ISQKeyTranslator = null with get, set
     member val VsInter : IVsEnvironmentHelper = null with get, set
 
 
@@ -570,7 +570,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                         let issues = extension.ExecuteAnalysisOnFile(x.ItemInView, profile, x.Project, x.Conf)
 
                         for issue in issues do
-                            issue.Component <- x.SqTranslator.TranslatePath(x.ItemInView, x.VsInter)
+                            issue.Component <- (x.SqTranslator :> ISQKeyTranslator).TranslatePath(x.ItemInView, x.VsInter)
 
                         lock syncLock (
                             fun () ->
@@ -657,7 +657,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                              onModifiedLinesOnly : bool,
                              version : double,
                              conf : ISonarConfiguration,
-                             sqTranslator : SQKeyTranslator,
+                             sqTranslator : ISQKeyTranslator,
                              vsInter : IVsEnvironmentHelper) =
             if profileUpdated then
                 x.CurrentAnalysisType <- AnalysisMode.File

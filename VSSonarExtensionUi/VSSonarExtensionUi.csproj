@@ -116,37 +116,40 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cache\EditorData.cs" />
-    <Compile Include="Cache\ModelEditorCache.cs" />
-    <Compile Include="Converters\ColorToBrushConverter.cs" />
-    <Compile Include="Converters\InverseBooleanConverter.cs" />
-    <Compile Include="Converters\ConfigurableBooleanToVisibilityConverter.cs" />
-    <Compile Include="Converters\UrlToImageSourceConverter.cs" />
-    <Compile Include="Helpers\ConfigurationHelper.cs" />
-    <Compile Include="Helpers\ConnectionConfigurationHelpers.cs" />
-    <Compile Include="Helpers\PaginatedObservableCollection.cs" />
-    <Compile Include="Helpers\PasswordHelper.cs" />
-    <Compile Include="PluginManager\PluginController.cs" />
-    <Compile Include="PluginManager\PluginLoader.cs" />
-    <Compile Include="PluginManager\PluginSandBoxLoader.cs" />
-    <Compile Include="Helpers\TextBoxBehaviour.cs" />
-    <Compile Include="Menu\OpenResourceMenu.cs" />
+    <Compile Include="Model\Association\AssociationModel.cs" />
+    <Compile Include="Model\Cache\EditorData.cs" />
+    <Compile Include="Model\Cache\ModelEditorCache.cs" />
+    <Compile Include="Model\Converters\ColorToBrushConverter.cs" />
+    <Compile Include="Model\Converters\InverseBooleanConverter.cs" />
+    <Compile Include="Model\Converters\ConfigurableBooleanToVisibilityConverter.cs" />
+    <Compile Include="Model\Converters\UrlToImageSourceConverter.cs" />
+    <Compile Include="Model\Helpers\ConfigurationHelper.cs" />
+    <Compile Include="Model\Helpers\ConnectionConfigurationHelpers.cs" />
+    <Compile Include="Model\Helpers\PaginatedObservableCollection.cs" />
+    <Compile Include="Model\Helpers\PasswordHelper.cs" />
+    <Compile Include="Model\Helpers\SourceControlModel.cs" />
+    <Compile Include="ViewModel\Association\AssociationViewModel.cs" />
+    <Compile Include="Model\PluginManager\PluginController.cs" />
+    <Compile Include="Model\PluginManager\PluginLoader.cs" />
+    <Compile Include="Model\PluginManager\PluginSandBoxLoader.cs" />
+    <Compile Include="Model\Helpers\TextBoxBehaviour.cs" />
+    <Compile Include="Model\Menu\OpenResourceMenu.cs" />
     <Compile Include="SampleData\DatagridSampleData\DatagridSampleData.xaml.cs">
       <DependentUpon>DatagridSampleData.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converters\ActivityToBrushConverter.cs" />
-    <Compile Include="Helpers\BindingProxy.cs" />
-    <Compile Include="Helpers\IDataModel.cs" />
-    <Compile Include="Helpers\IFilter.cs" />
-    <Compile Include="Helpers\IFilterCommand.cs" />
-    <Compile Include="Helpers\IFilterOption.cs" />
-    <Compile Include="Helpers\IssueFilter.cs" />
-    <Compile Include="Helpers\ItemsChangeObservableCollection.cs" />
-    <Compile Include="Menu\IMenuItem.cs" />
-    <Compile Include="Menu\ChangeStatusHandler.cs" />
-    <Compile Include="Menu\ShowHideIssueColumn.cs" />
+    <Compile Include="Model\Converters\ActivityToBrushConverter.cs" />
+    <Compile Include="Model\Helpers\BindingProxy.cs" />
+    <Compile Include="Model\Helpers\IDataModel.cs" />
+    <Compile Include="Model\Helpers\IFilter.cs" />
+    <Compile Include="Model\Helpers\IFilterCommand.cs" />
+    <Compile Include="Model\Helpers\IFilterOption.cs" />
+    <Compile Include="Model\Helpers\IssueFilter.cs" />
+    <Compile Include="Model\Helpers\ItemsChangeObservableCollection.cs" />
+    <Compile Include="Model\Menu\IMenuItem.cs" />
+    <Compile Include="Model\Menu\ChangeStatusHandler.cs" />
+    <Compile Include="Model\Menu\ShowHideIssueColumn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Helpers\AsyncObservableCollection.cs" />
+    <Compile Include="Model\Helpers\AsyncObservableCollection.cs" />
     <Compile Include="ViewModel\Configuration\NotifyCationManager.cs" />
     <Compile Include="ViewModel\Configuration\VSonarQubeOptionsViewModel.cs" />
     <Compile Include="ViewModel\Configuration\AnalysisOptionsViewModel.cs" />
@@ -160,9 +163,12 @@
     <Compile Include="ViewModel\Analysis\ServerViewModel.cs" />
     <Compile Include="ViewModel\Analysis\LocalViewModel.cs" />
     <Compile Include="ViewModel\Configuration\GeneralConfigurationViewModel.cs" />
+    <Compile Include="ViewModel\Helpers\IVsSonarExtensionLogger.cs" />
     <Compile Include="ViewModel\Helpers\VsSonarExtensionLogger.cs" />
-    <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\SonarQubeViewModel.cs" />
+    <Compile Include="View\Association\AssociationView.xaml.cs">
+      <DependentUpon>AssociationView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Configuration\VSonarQubeOptionsView.xaml.cs">
       <DependentUpon>VSonarQubeOptionsView.xaml</DependentUpon>
     </Compile>
@@ -209,6 +215,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <DesignData Include="SampleData\AssociationViewModelSampleData.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </DesignData>
     <Page Include="SampleData\DatagridSampleData\DatagridSampleData.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -240,6 +250,10 @@
     <Page Include="Styles\MetroWPFTemplate.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Association\AssociationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Configuration\VSonarQubeOptionsView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -301,8 +315,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Helpers\ExtensionHelpers.licenseheader" />
+    <None Include="Model\Helpers\ExtensionHelpers.licenseheader" />
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\VSSonarExtensionUi.ViewModel.Association.AssociationViewModel.datasource" />
     <None Include="VSSonarExtensionUi.licenseheader" />
   </ItemGroup>
   <ItemGroup>

@@ -664,46 +664,53 @@ namespace VSSonarQubeExtension.Helpers
         /// <returns>The <see cref="VsFileItem"/>.</returns>
         public VsFileItem VsFileItem(string filename, Resource associatedProject, Resource fileResource)
         {
-            if (string.IsNullOrEmpty(filename))
+            try
+            {
+                if (string.IsNullOrEmpty(filename))
+                {
+                    return null;
+                }
+
+                string driveLetter = filename.Substring(0, 1);
+                ProjectItem item = this.environment.Solution.FindProjectItem(filename);
+
+                if (item == null)
+                {
+                    return null;
+                }
+
+                string documentName = item.Document.Name;
+                string documentPath = driveLetter + this.GetProperFilePathCapitalization(item.Document.FullName).Substring(1);
+                string projectName = item.ContainingProject.Name;
+                string projectPath = driveLetter + this.GetProperFilePathCapitalization(item.ContainingProject.FullName).Substring(1);
+                string solutionName = this.ActiveSolutionName();
+                string solutionPath = driveLetter + this.ActiveSolutionPath().Substring(1);
+                var itemToReturn = new VsFileItem
+                {
+                    FileName = documentName,
+                    FilePath = documentPath,
+                    SonarResource = fileResource,
+                    Project =
+                        new VsProjectItem
+                        {
+                            ProjectName = projectName,
+                            ProjectFilePath = projectPath,
+                            Solution =
+                                new VsSolutionItem
+                                {
+                                    SolutionName = solutionName,
+                                    SolutionPath = solutionPath,
+                                    SonarProject = associatedProject
+                                }
+                        }
+                };
+
+                return itemToReturn;
+            }
+            catch (Exception ex)
             {
                 return null;
             }
-
-            string driveLetter = filename.Substring(0, 1);
-            ProjectItem item = this.environment.Solution.FindProjectItem(filename);
-
-            if (item == null)
-            {
-                return null;
-            }
-
-            string documentName = item.Document.Name;
-            string documentPath = driveLetter + this.GetProperFilePathCapitalization(item.Document.FullName).Substring(1);
-            string projectName = item.ContainingProject.Name;
-            string projectPath = driveLetter + this.GetProperFilePathCapitalization(item.ContainingProject.FullName).Substring(1);
-            string solutionName = this.ActiveSolutionName();
-            string solutionPath = driveLetter + this.ActiveSolutionPath().Substring(1);
-            var itemToReturn = new VsFileItem
-            {
-                FileName = documentName,
-                FilePath = documentPath,
-                SonarResource = fileResource,
-                Project =
-                    new VsProjectItem
-                    {
-                        ProjectName = projectName,
-                        ProjectFilePath = projectPath,
-                        Solution =
-                            new VsSolutionItem
-                            {
-                                SolutionName = solutionName,
-                                SolutionPath = solutionPath,
-                                SonarProject = associatedProject
-                            }
-                    }
-            };
-
-            return itemToReturn;
         }
 
 
