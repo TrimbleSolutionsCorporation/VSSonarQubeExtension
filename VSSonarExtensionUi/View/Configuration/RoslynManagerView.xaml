@@ -1,0 +1,101 @@
+﻿<UserControl x:Class="VSSonarExtensionUi.View.Configuration.RoslynManagerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:VSSonarExtensionUi.View.Configuration"
+             xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             mc:Ignorable="d" Height="530" Width="600"> 
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/Styles.xaml" />
+                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/MenuItemStyles.xaml"/>
+                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/DataGridStyles.xaml"/>
+                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/MetroDataGrid.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedSingleRowTabControl.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+
+                <ResourceDictionary Source="pack://application:,,,/VSSonarExtensionUi;component/Resources/Icons.xaml" />
+                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/ButtonStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+
+
+            <DataTemplate x:Key="ProjectSelectionComboBoxDataTemplate">
+                <StackPanel>
+                    <TextBlock Text="{Binding Name}">
+                    </TextBlock>
+                </StackPanel>
+            </DataTemplate>
+
+            <Style x:Key="IssuesGridRowStyle" TargetType="{x:Type DataGridRow}" BasedOn="{StaticResource RowStyleWithAlternation}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsBranch}" Value="True">
+                        <Setter Property="Foreground" Value="Red" />
+                    </DataTrigger>
+                </Style.Triggers>
+
+            </Style>
+
+            <Style x:Key="DataGridColumnHeaderStyle" TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource DefaultDataGridColumnHeaderStyle}" >
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <UserControl.Background>
+        <SolidColorBrush Color="{Binding BackGroundColor, FallbackValue=Black}" />
+    </UserControl.Background>
+
+    <UserControl.Foreground>
+        <SolidColorBrush Color="{Binding ForeGroundColor, FallbackValue=White}" />
+    </UserControl.Foreground>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="111*"/>
+            <RowDefinition Height="166*"/>
+        </Grid.RowDefinitions>
+        <ComboBox Grid.Row="0"
+                      Style="{DynamicResource VirtualisedMetroComboBox}"
+                      TextSearch.TextPath="Name"
+                      controls:TextBoxHelper.Watermark="Name"
+                      IsEditable="True"
+                      IsEnabled="{Binding IsBranchSelectionEnabled}"
+                      SelectedItem="{Binding SelectedDiagnostic, Mode=TwoWay}"
+                      ItemsSource="{Binding AvailableDllDiagnostics}"                   
+                      MaxDropDownHeight="125"
+                      ItemTemplate="{DynamicResource ProjectSelectionComboBoxDataTemplate}" Margin="0,0,379,0"/>
+
+        <DataGrid x:Name="MainProjects" BorderBrush="Black"
+                  ItemsSource="{Binding AvailableChecksInDll}" Grid.Row="1"
+                  ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}"   AutoGenerateColumns="False"       
+                    RowStyle="{DynamicResource IssuesGridRowStyle}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Name}" MinWidth="100" x:Name="NameTemplateCol" Header="Name" CanUserSort="True" SortMemberPath="Line" IsReadOnly="True" Visibility="{Binding Data.LineVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
+            </DataGrid.Columns>                  
+            
+        </DataGrid>
+
+
+        <TabControl x:Name="tabControl" Grid.Row="2" TabStripPlacement="Left">
+            <TabControl.Resources>
+                <Style TargetType="TabItem" BasedOn="{StaticResource MetroTabItem}">
+                    <Setter Property="controls:ControlsHelper.HeaderFontSize" Value="12" />
+                    <Setter Property="controls:TabControlHelper.IsUnderlined" Value="True" />
+                </Style>
+            </TabControl.Resources>            
+            <TabItem Header="Properties">
+            </TabItem>
+            <TabItem Header="Import Log">
+                <TextBlock x:Name="ErrorLog" Text="{Binding SelectedDiagnostic.ErrorMessage}" Grid.Row="2"/>
+            </TabItem>
+        </TabControl>
+
+    </Grid>
+</UserControl>

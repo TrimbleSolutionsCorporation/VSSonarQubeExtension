@@ -28,21 +28,18 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
     using PropertyChanged;
 
-    using SonarLocalAnalyser;
-
-    using SonarRestService;
-
-    using VSSonarExtensionUi.View.Helpers;
-    using VSSonarExtensionUi.ViewModel.Helpers;
+    using View.Helpers;
+    using Helpers;
 
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
+    using Model.Helpers;
 
     /// <summary>
     ///     The dummy options controller.
     /// </summary>
     [ImplementPropertyChanged]
-    public class AnalysisOptionsViewModel : IViewModelBase, IOptionsViewModelBase
+    public class AnalysisOptionsViewModel : IOptionsViewModelBase, IOptionsModelBase
     {
         #region Static Fields
 

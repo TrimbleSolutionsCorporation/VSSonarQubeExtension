@@ -17,10 +17,9 @@
         public void CreateResourcePathFileIsNull()
         {
             AssociationModel associationModel;
-            Resource resource;
             associationModel =
               new AssociationModel(null, null, null, null, null, null);
-            Assert.That(associationModel.CreateResourcePathFile((string)null, (Resource)null), Is.Null);
+            Assert.That(associationModel.CreateResourcePathFile(null, null), Is.Null);
         }
 
         [Test]

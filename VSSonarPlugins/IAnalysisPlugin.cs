@@ -13,12 +13,19 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarPlugins
 {
+    using Microsoft.CodeAnalysis.Diagnostics;
     using System;
+    using System.Collections.Generic;
     using System.Windows.Controls;
     using System.Windows.Documents;
 
-    
+
     using VSSonarPlugins.Types;
+
+    public interface IRoslynPlugin
+    {
+        void SetDiagnostics(List<DiagnosticAnalyzer> diagnostics);
+    }
 
     /// <summary>
     /// The Plugin interface.

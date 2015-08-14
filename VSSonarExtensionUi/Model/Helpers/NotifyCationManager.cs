@@ -7,10 +7,10 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace VSSonarExtensionUi.ViewModel.Configuration
+namespace VSSonarExtensionUi.Model.Helpers
 {
     using System;
-
+    using ViewModel;
     using VSSonarPlugins;
 
     /// <summary>The notify cation manager.</summary>

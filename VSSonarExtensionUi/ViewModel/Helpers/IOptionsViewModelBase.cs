@@ -1,5 +1,5 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IOptionsViewModelBase.cs" company="Copyright � 2014 Tekla Corporation. Tekla is a Trimble Company">
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="IViewModelBase.cs" company="Copyright © 2014 Tekla Corporation. Tekla is a Trimble Company">
 //     Copyright (C) 2014 [Jorge Costa, Jorge.Costa@tekla.com]
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -14,60 +14,12 @@
 
 namespace VSSonarExtensionUi.ViewModel.Helpers
 {
-    using System;
-
-    
-
-    using SonarRestService;
-
-    using VSSonarPlugins;
-    using VSSonarPlugins.Types;
+    using System.Windows.Media;
 
     /// <summary>
-    /// The OptionsViewModelBase interface.
+    ///     The ViewModelBase interface.
     /// </summary>
-    public interface IOptionsViewModelBase
+    public interface IOptionsViewModelBase : IViewModelBase
     {
-        #region Public Methods and Operators
-
-        /// <summary>
-        /// The init data association.
-        /// </summary>
-        /// <param name="associatedProject">
-        /// The associated project.
-        /// </param>
-        /// <param name="userConnectionConfig">
-        /// The user connection config.
-        /// </param>
-        /// <param name="workingDir">
-        /// The working dir.
-        /// </param>
-        void RefreshPropertiesInView(Resource associatedProject);
-
-        /// <summary>
-        /// The update services.
-        /// </summary>
-        /// <param name="restServiceIn">
-        /// The rest service in.
-        /// </param>
-        /// <param name="vsenvironmenthelperIn">
-        /// The vsenvironmenthelper in.
-        /// </param>
-        /// <param name="statusBar">
-        /// The status bar.
-        /// </param>
-        /// <param name="provider">
-        /// The provider.
-        /// </param>
-        void UpdateServices(
-            ISonarRestService restServiceIn,
-            IVsEnvironmentHelper vsenvironmenthelperIn,
-            IConfigurationHelper configurationHelper,
-            IVSSStatusBar statusBar,
-            IServiceProvider provider);
-
-        #endregion
-
-        void SaveCurrentViewToDisk(IConfigurationHelper configurationHelper);
     }
 }

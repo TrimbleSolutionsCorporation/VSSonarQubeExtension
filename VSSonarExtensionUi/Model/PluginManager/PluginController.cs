@@ -66,6 +66,7 @@ namespace VSSonarExtensionUi.Model.PluginManager
         /// <summary>The load all assemblies from extension folder.</summary>
         private void LoadAllAssembliesFromExtensionFolder()
         {
+            return;
             var assemblyRunningPath = Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString();
 
             foreach (var dll in Directory.GetFiles(assemblyRunningPath, "*.dll"))

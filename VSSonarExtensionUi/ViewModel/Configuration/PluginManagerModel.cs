@@ -19,7 +19,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using System.Windows.Input;
     using System.Windows.Media;
 
-    
+
 
     using GalaSoft.MvvmLight.Command;
 
@@ -35,12 +35,13 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using Application = System.Windows.Application;
     using UserControl = System.Windows.Controls.UserControl;
     using VSSonarPlugins.Types;
+    using Model.Helpers;
 
     /// <summary>
     ///     The dummy options controller.
     /// </summary>
     [ImplementPropertyChanged]
-    public class PluginManagerModel : IViewModelBase, IOptionsViewModelBase
+    public class PluginManagerModel : IOptionsViewModelBase, IOptionsModelBase
     {
         #region Fields
 

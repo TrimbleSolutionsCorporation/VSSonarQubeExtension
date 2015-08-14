@@ -183,7 +183,6 @@ type AnalyserCommandExec(logger : TaskLoggingHelper, timeout : int64) =
         this.proc.BeginOutputReadLine()
         this.proc.BeginErrorReadLine()
         this.proc.WaitForExit()
-        this.proc.Id
         this.cancelSignal <- true
         this.proc.ExitCode
 
@@ -207,6 +206,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
     let mutable exec : AnalyserCommandExec = new AnalyserCommandExec(null, int64(1000 * 60 * 60)) // TODO timeout to be passed as parameter
 
     let initializationDone = 
+
         vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.ExcludedPluginsKey, Value = "devcockpit,pdfreport,report,scmactivity,views,jira,scmstats", Context = Context.AnalysisGeneral, Owner = OwnersId.AnalysisOwnerId), false, true)
 
 
@@ -548,7 +548,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                 let errorInExecution = new LocalAnalysisEventArgs("Local Analyser", "Cannot Run Analyis: Not Supported: ", new ResourceNotSupportedException())
                 completionEvent.Trigger([|x; errorInExecution|])
                 x.AnalysisIsRunning <- false
-            else   
+            else
                 let GetSourceFromServer() = 
                     try
                         let keyOfItem = (x :> ISonarLocalAnalyser).GetResourceKey(x.ItemInView, true)
@@ -570,7 +570,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                         let issues = extension.ExecuteAnalysisOnFile(x.ItemInView, profile, x.Project, x.Conf)
 
                         for issue in issues do
-                            issue.Component <- (x.SqTranslator :> ISQKeyTranslator).TranslatePath(x.ItemInView, x.VsInter)
+                            issue.Component <- x.SqTranslator.TranslatePath(x.ItemInView, x.VsInter)
 
                         lock syncLock (
                             fun () ->

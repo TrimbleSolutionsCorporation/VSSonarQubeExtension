@@ -23,7 +23,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     /// The license viewer view model.
     /// </summary>
     [ImplementPropertyChanged]
-    public class LicenseViewerViewModel : IViewModelBase, IOptionsViewModelBase
+    public class LicenseViewerViewModel : IOptionsViewModelBase, IOptionsModelBase
     {
         #region Fields
 

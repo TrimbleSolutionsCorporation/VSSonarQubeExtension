@@ -460,7 +460,7 @@ namespace VSSonarExtensionUi.ViewModel
 
             this.AssociationModule.UpdateServices(restServiceIn, vsenvironmenthelperIn, statusBar, provider);
             this.VSonarQubeOptionsViewData.UpdateServices(restServiceIn, vsenvironmenthelperIn, statusBar, provider);
-            foreach (IOptionsViewModelBase view in this.VSonarQubeOptionsViewData.AvailableOptions)
+            foreach (IOptionsModelBase view in this.VSonarQubeOptionsViewData.AvailableOptionsModels)
             {
                 view.UpdateServices(restServiceIn, vsenvironmenthelperIn, this.configurationHelper, statusBar, provider);
             }

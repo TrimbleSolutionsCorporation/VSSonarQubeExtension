@@ -24,12 +24,13 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using VSSonarPlugins.Types;
     using Model.PluginManager;
     using Model.Helpers;
+    using Model.Configuration;
 
     /// <summary>
     ///     The plugins options model.
     /// </summary>
     [ImplementPropertyChanged]
-    public class VSonarQubeOptionsViewModel : IViewModelBase
+    public class VSonarQubeOptionsViewModel : IOptionsViewModelBase
     {
         #region Constructors and Destructors
 
@@ -85,7 +86,12 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         ///     Gets the available plugins collection.
         /// </summary>
-        public ObservableCollection<IOptionsViewModelBase> AvailableOptions { get; set; }
+        public ObservableCollection<IOptionsViewModelBase> AvailableOptionsViews { get; set; }
+
+        /// <summary>
+        ///     Gets the available plugins collection.
+        /// </summary>
+        public ObservableCollection<IOptionsModelBase> AvailableOptionsModels { get; set; }
 
         /// <summary>
         ///     Gets or sets the back ground color.
@@ -159,10 +165,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
         /// <summary>Gets or sets the configuration helper.</summary>
         public IConfigurationHelper ConfigurationHelper { get; set; }
-
-        #endregion
-
-        #region Public Methods and Operators
+        public RoslynManagerModel RoslynModel { get; private set; }
+        internal RoslynManagerViewModel RoslynViewModel { get; private set; }
 
         /// <summary>The update services.</summary>
         /// <param name="restServiceIn">The rest service in.</param>
@@ -183,7 +187,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public void RefreshPropertiesInView(Resource selectedProject)
         {
             this.Project = selectedProject;
-            foreach (var availableOption in this.AvailableOptions)
+            foreach (var availableOption in this.AvailableOptionsModels)
             {
                 availableOption.RefreshPropertiesInView(selectedProject);
             }
@@ -239,7 +243,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.BackGroundColor = background;
             this.ForeGroundColor = foreground;
 
-            foreach (IViewModelBase view in this.AvailableOptions)
+            foreach (IViewModelBase view in this.AvailableOptionsViews)
             {
                 view.UpdateColours(background, foreground);
             }
@@ -287,7 +291,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>The init models.</summary>
         private void InitModels()
         {
-            this.AvailableOptions = new ObservableCollection<IOptionsViewModelBase>();
+            this.AvailableOptionsViews = new ObservableCollection<IOptionsViewModelBase>();
+            this.AvailableOptionsModels = new ObservableCollection<IOptionsModelBase>();
 
             this.GeneralConfigurationViewModel = new GeneralConfigurationViewModel(
                 this, 
@@ -300,8 +305,12 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 this, 
                 this.ConfigurationHelper);
 
-            this.AvailableOptions.Add(this.GeneralConfigurationViewModel);
-            this.AvailableOptions.Add(this.AnalysisOptionsViewModel);
+            this.AvailableOptionsViews.Add(this.GeneralConfigurationViewModel);
+            this.AvailableOptionsViews.Add(this.AnalysisOptionsViewModel);
+
+            this.AvailableOptionsModels.Add(this.GeneralConfigurationViewModel);
+            this.AvailableOptionsModels.Add(this.AnalysisOptionsViewModel);
+
             this.SelectedOption = this.GeneralConfigurationViewModel;
         }
 
@@ -318,8 +327,20 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 manager,
                 helper);
             this.LicenseManager = new LicenseViewerViewModel(this.PluginManager, this.ConfigurationHelper);
-            this.AvailableOptions.Add(this.PluginManager);
-            this.AvailableOptions.Add(this.LicenseManager);
+
+            this.RoslynModel = new RoslynManagerModel(this.PluginManager.AnalysisPlugins, manager, this.ConfigurationHelper);
+            this.RoslynViewModel = new RoslynManagerViewModel(this.RoslynModel);
+
+            this.AvailableOptionsViews.Add(this.PluginManager);
+            this.AvailableOptionsViews.Add(this.LicenseManager);
+            this.AvailableOptionsViews.Add(this.RoslynViewModel);
+
+            this.AvailableOptionsModels.Add(this.PluginManager);
+            this.AvailableOptionsModels.Add(this.LicenseManager);
+            this.AvailableOptionsModels.Add(this.RoslynModel);
+
+            // sync checks to plugins
+            this.RoslynModel.SyncDiagnosticsInPlugins();
         }
 
         /// <summary>
@@ -344,7 +365,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         private void OnSaveAndExitCommand()
         {
-            foreach (var option in this.AvailableOptions)
+            foreach (var option in this.AvailableOptionsModels)
             {
                 option.SaveCurrentViewToDisk(this.ConfigurationHelper);
             }

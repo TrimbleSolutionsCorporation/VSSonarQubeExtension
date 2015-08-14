@@ -15,6 +15,7 @@
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>eb415dba</NuGetPackageImportStamp>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -97,6 +98,8 @@
       <HintPath>..\packages\System.Collections.Immutable.1.1.37-beta-23019\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
     </Reference>
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Reflection.Metadata, Version=1.0.22.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -119,6 +122,8 @@
     <Compile Include="Model\Association\AssociationModel.cs" />
     <Compile Include="Model\Cache\EditorData.cs" />
     <Compile Include="Model\Cache\ModelEditorCache.cs" />
+    <Compile Include="Model\Configuration\RoslynManagerModel.cs" />
+    <Compile Include="Model\Configuration\VSSonarExtensionDiagnostic.cs" />
     <Compile Include="Model\Converters\ColorToBrushConverter.cs" />
     <Compile Include="Model\Converters\InverseBooleanConverter.cs" />
     <Compile Include="Model\Converters\ConfigurableBooleanToVisibilityConverter.cs" />
@@ -150,24 +155,29 @@
     <Compile Include="Model\Menu\ShowHideIssueColumn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\Helpers\AsyncObservableCollection.cs" />
-    <Compile Include="ViewModel\Configuration\NotifyCationManager.cs" />
+    <Compile Include="Model\Helpers\NotifyCationManager.cs" />
+    <Compile Include="ViewModel\Configuration\RoslynManagerViewModel.cs" />
     <Compile Include="ViewModel\Configuration\VSonarQubeOptionsViewModel.cs" />
     <Compile Include="ViewModel\Configuration\AnalysisOptionsViewModel.cs" />
-    <Compile Include="ViewModel\Helpers\IOptionsViewModelBase.cs" />
+    <Compile Include="Model\Helpers\IOptionsModelBase.cs" />
     <Compile Include="ViewModel\Helpers\IAnalysisViewModelBase.cs" />
     <Compile Include="ViewModel\Helpers\IssueGridViewModel.cs" />
     <Compile Include="ViewModel\Analysis\IssuesSearchViewModel.cs" />
-    <Compile Include="ViewModel\Helpers\IViewModelBase.cs" />
+    <Compile Include="ViewModel\Helpers\IOptionsViewModelBase.cs" />
     <Compile Include="ViewModel\Configuration\LicenseViewerViewModel.cs" />
     <Compile Include="ViewModel\Configuration\PluginManagerModel.cs" />
     <Compile Include="ViewModel\Analysis\ServerViewModel.cs" />
     <Compile Include="ViewModel\Analysis\LocalViewModel.cs" />
     <Compile Include="ViewModel\Configuration\GeneralConfigurationViewModel.cs" />
+    <Compile Include="ViewModel\Helpers\IViewModelBase.cs" />
     <Compile Include="ViewModel\Helpers\IVsSonarExtensionLogger.cs" />
     <Compile Include="ViewModel\Helpers\VsSonarExtensionLogger.cs" />
     <Compile Include="ViewModel\SonarQubeViewModel.cs" />
     <Compile Include="View\Association\AssociationView.xaml.cs">
       <DependentUpon>AssociationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Configuration\RoslynManagerView.xaml.cs">
+      <DependentUpon>RoslynManagerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Configuration\VSonarQubeOptionsView.xaml.cs">
       <DependentUpon>VSonarQubeOptionsView.xaml</DependentUpon>
@@ -252,6 +262,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\Association\AssociationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Configuration\RoslynManagerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

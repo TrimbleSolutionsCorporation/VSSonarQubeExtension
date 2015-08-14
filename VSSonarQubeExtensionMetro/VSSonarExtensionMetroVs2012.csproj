@@ -195,13 +195,16 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="externalAnalysers\roslynDiagnostics\Microsoft.CodeAnalysis.Analyzers.dll">
+    <Content Include="Microsoft.CodeAnalysis.CSharp.Analyzers.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="externalAnalysers\roslynDiagnostics\Microsoft.CodeAnalysis.CSharp.dll">
+    <Content Include="Microsoft.CodeAnalysis.Analyzers.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="externalAnalysers\roslynDiagnostics\Microsoft.CodeAnalysis.dll">
+    <Content Include="Microsoft.CodeAnalysis.CSharp.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Microsoft.CodeAnalysis.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="System.Collections.Immutable.dll">
