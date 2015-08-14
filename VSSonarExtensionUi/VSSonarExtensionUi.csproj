@@ -117,6 +117,9 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="WindowsBase" />
+    <Reference Include="System.ObjectModel" />
+    <Reference Include="System.RunTime" />
+    
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\Association\AssociationModel.cs" />

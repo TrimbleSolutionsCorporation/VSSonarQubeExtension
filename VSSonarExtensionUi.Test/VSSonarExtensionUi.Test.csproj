@@ -106,6 +106,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.ObjectModel" />
+    <Reference Include="System.RunTime" />
+
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Association\AssociationModelTests.cs" />

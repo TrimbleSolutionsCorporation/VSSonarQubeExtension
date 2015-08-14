@@ -73,6 +73,10 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
+        <Reference Include="System.ObjectModel" />
+        <Reference Include="System.ComponentModel" />
+    <Reference Include="System.RunTime" />
+
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
