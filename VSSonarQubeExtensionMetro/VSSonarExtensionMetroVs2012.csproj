@@ -196,21 +196,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="Microsoft.CodeAnalysis.CSharp.Analyzers.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Microsoft.CodeAnalysis.Analyzers.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Microsoft.CodeAnalysis.CSharp.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Microsoft.CodeAnalysis.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="System.Collections.Immutable.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
     <Content Include="externalAnalysers\StyleCop\StyleCop.CSharp.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
