@@ -22,7 +22,7 @@ namespace VSSonarQubeExtension
     using System.Runtime.InteropServices;
     using System.Windows.Controls;
     using System.IO;
-
+    using Microsoft.CodeAnalysis.Diagnostics;
     using EnvDTE;
 
     using EnvDTE80;
@@ -207,6 +207,25 @@ namespace VSSonarQubeExtension
 
                     SonarQubeViewModelFactory.SQViewModel.UpdateTheme(ToMediaColor(defaultBackground), ToMediaColor(defaultForeground));
 
+
+                    // force analysis to come to vsix
+                    var i = 0;
+                    var data = "";
+                    foreach (var item in SonarQubeViewModelFactory.StartupModelWithVsVersion(uniqueId).VSonarQubeOptionsViewData.RoslynModel.ExtensionDiagnostics)
+                    {
+                        i += item.Value.AvailableChecks.Count;
+
+                        foreach (var check in item.Value.AvailableChecks)
+                        {
+
+
+                            DiagnosticAnalyzer analyser = check;
+                            data += analyser.ToString();
+                        }
+                    }
+
+                    this.StatusBar.DisplayMessage("checks : " + i);
+                    
                     try
                     {
                         var outWindow = GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
@@ -224,6 +243,7 @@ namespace VSSonarQubeExtension
                         this.CloseToolWindow();
 
                         this.StartSolutionListeners(this.visualStudioInterface);
+
                     }
                     catch (Exception ex)
                     {
