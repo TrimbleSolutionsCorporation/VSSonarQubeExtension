@@ -7,7 +7,7 @@
     xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
     xmlns:viewconfiguration="clr-namespace:VSSonarExtensionUi.View.Configuration"
     xmlns:configuration="clr-namespace:VSSonarExtensionUi.ViewModel.Configuration"
-    Title="VSSonarQube Options" Width="800" Height="600" ResizeMode="NoResize">
+    Title="VSSonarQube Options" Width="1000" Height="600" ResizeMode="NoResize">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -29,7 +29,7 @@
             <DataTemplate DataType="{x:Type configuration:RoslynManagerViewModel}">
                 <viewconfiguration:RoslynManagerView />
             </DataTemplate>
-            
+
             <DataTemplate DataType="{x:Type configuration:AnalysisOptionsViewModel}">
                 <viewconfiguration:AnalysisOptionsView />
             </DataTemplate>
@@ -52,7 +52,7 @@
     <Window.Foreground>
         <SolidColorBrush Color="{Binding ForeGroundColor, FallbackValue=Black}" />
     </Window.Foreground>
-        
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="540" />
@@ -60,7 +60,7 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition MinWidth="200" Width="200" MaxWidth="200"/>
-            <ColumnDefinition MinWidth="600" Width="200" MaxWidth="200" />
+            <ColumnDefinition MinWidth="800" Width="200" MaxWidth="200" />
         </Grid.ColumnDefinitions>
 
         <ListBox x:Name="OptionsListBox"
@@ -105,12 +105,12 @@
                 Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
                 Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"
                 x:Name="ResetAllChanges" Content="Reset All Changes" Grid.Column="2" Command="{Binding ResetAllChangesCommand}" />
-                
+
             <Button
                 Style="{StaticResource MyMetroButton}"
                 Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
                 Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"
-                Content="Cancel and Exit" Grid.Column="4" Command="{Binding CancelAndExitCommand}" />
+                Content="Cancel and Exit" Grid.Column="3" Command="{Binding CancelAndExitCommand}" Grid.ColumnSpan="2" Margin="372,0,8,0" />
         </Grid>
     </Grid>
 </controls:MetroWindow>

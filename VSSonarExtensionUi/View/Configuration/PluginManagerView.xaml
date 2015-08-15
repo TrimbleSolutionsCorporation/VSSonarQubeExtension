@@ -6,7 +6,7 @@
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:command="http://www.galasoft.ch/mvvmlight"
     x:Class="VSSonarExtensionUi.View.Configuration.PluginManagerView"
-    mc:Ignorable="d" Height="530" Width="600">
+    mc:Ignorable="d" Height="530" Width="800">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -40,7 +40,7 @@
     <Grid>
         <Grid Height="auto">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="90*"/>
+                <ColumnDefinition Width="200"/>
                 <ColumnDefinition Width="319*"/>
             </Grid.ColumnDefinitions>
             <UserControl Grid.Column="1" BorderBrush="Black" Content="{Binding OptionsInView}" />

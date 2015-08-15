@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 
     x:Class="VSSonarExtensionUi.View.Configuration.AnalysisOptionsView" 
-             mc:Ignorable="d" Height="530" Width="600" >
+             mc:Ignorable="d" Height="530" Width="800" >
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
