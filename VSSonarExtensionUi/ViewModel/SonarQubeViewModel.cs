@@ -542,7 +542,10 @@ namespace VSSonarExtensionUi.ViewModel
         {
             if (this.SelectedBranch != null)
             {
-                this.AssociationModule.AssociatedProject = this.SelectedBranch;
+                this.LocalViewModel.AssociatedProject = this.SelectedBranch;
+                this.ServerViewModel.AssociatedProject = this.SelectedBranch;
+                this.IssuesSearchViewModel.AssociatedProject = this.SelectedBranch;
+                this.AssociationModule.UpdateBranchSelection(this.SelectedBranch);                
                 this.RefreshDataForResource(this.DocumentInView);
             }
         }

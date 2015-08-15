@@ -540,6 +540,12 @@
             }
         }
 
+        internal void UpdateBranchSelection(Resource selectedBranch)
+        {
+            this.keyTranslator.SetProjectKey(selectedBranch.Key);
+            this.AssociatedProject = selectedBranch;
+        }
+
         internal void UpdateServices(ISonarRestService restServiceIn, IVsEnvironmentHelper vsenvironmenthelperIn, IVSSStatusBar statusBar, IServiceProvider provider)
         {
             this.VsHelper = vsenvironmenthelperIn;

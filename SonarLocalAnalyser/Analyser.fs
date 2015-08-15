@@ -565,17 +565,24 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                
                 let extension = plugin.GetLocalAnalysisExtension(x.Conf)
                 if extension <> null then
-                    if cachedProfiles.[x.Project.Name].ContainsKey(plugin.GetLanguageKey(x.ItemInView)) then
-                        let profile = cachedProfiles.[x.Project.Name].[plugin.GetLanguageKey(x.ItemInView)]
-                        let issues = extension.ExecuteAnalysisOnFile(x.ItemInView, profile, x.Project, x.Conf)
+                    try
+                        if cachedProfiles.ContainsKey(x.Project.Name) then
+                            if cachedProfiles.[x.Project.Name].ContainsKey(plugin.GetLanguageKey(x.ItemInView)) then
+                                let profile = cachedProfiles.[x.Project.Name].[plugin.GetLanguageKey(x.ItemInView)]
+                                let issues = extension.ExecuteAnalysisOnFile(x.ItemInView, profile, x.Project, x.Conf)
 
-                        for issue in issues do
-                            issue.Component <- x.SqTranslator.TranslatePath(x.ItemInView, x.VsInter)
+                                for issue in issues do
+                                    issue.Component <- x.SqTranslator.TranslatePath(x.ItemInView, x.VsInter)
 
-                        lock syncLock (
-                            fun () ->
-                                localissues.AddRange(issues)
-                            )
+                                lock syncLock (
+                                    fun () ->
+                                        localissues.AddRange(issues)
+                                    )
+                        else
+                            (x :> ISonarLocalAnalyser).AssociateWithProject(x.Project, x.Conf)
+
+                    with
+                    | ex -> ()
 
                 completionEvent.Trigger([|x; null|])
                 x.AnalysisIsRunning <- false

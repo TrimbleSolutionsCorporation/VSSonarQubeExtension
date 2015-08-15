@@ -31,6 +31,7 @@ type ISQKeyTranslator =
   abstract member GetLookupType : unit -> KeyLookUpType
   abstract member SetLookupType : key:KeyLookUpType -> unit
   abstract member SetProjectKeyAndBaseDir : key:string * path:string -> unit
+  abstract member SetProjectKey : key:string -> unit  
   abstract member GetModules : unit -> List<SonarModule>  
   abstract member TranslateKey : key:string * vshelper:IVsEnvironmentHelper * branch:string -> string
   abstract member TranslatePath : key:VsFileItem * vshelper:IVsEnvironmentHelper -> string
@@ -192,6 +193,10 @@ type SQKeyTranslator() =
     interface ISQKeyTranslator with
         member this.SetProjectKeyAndBaseDir(key:string, path:string) =
             projectBaseDir <- path
+            projectKey <- key
+            ()
+
+        member this.SetProjectKey(key:string) =
             projectKey <- key
             ()
 
