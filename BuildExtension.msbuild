@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" >
     <Import Project="configuration.props" Condition="'$(MSBuildFolder)'==''"/>
-    <Import Project="$(MSBuildFolder)\TeklaNuget.tasks" Condition="'$(NugetRestoreTaskIncluded)'!='yes'"/>
+    <Import Project="configuration.props" Condition="'$(MSBuildFolder)'==''"/>
+    <Import Project="$(MSBuildFolder)\MSBuild.ExtensionPack.tasks"/>
+    
     <ItemGroup>
+        <Files2012 Include="$(MSBuildThisFileDirectory)BuildDrop\vs12\*.dll"/>
         <VSSonarQubeExtension2013 Include="VSSonarQubeExtension2013.sln" />
         <VSSonarQubeExtension2012 Include="VSSonarQubeExtension2012.sln" />
         <VSSonarQubeExtension2015 Include="VSSonarQubeExtension2015.sln" />
@@ -17,5 +20,8 @@
     </Target>
     
     <Target Name="Build" DependsOnTargets="BuildExtension">
+    	<MSBuild.ExtensionPack.Compression.Zip TaskAction="AddFiles" CompressFiles="@(Files2012)" ZipFileName="$(MSBuildThisFileDirectory)BuildDrop\vs12\VSSonarExtensionMetroVs2012.vsix" RemoveRoot="$(ExtensionOutputPath)" />
     </Target>
+    
+    
 </Project>
