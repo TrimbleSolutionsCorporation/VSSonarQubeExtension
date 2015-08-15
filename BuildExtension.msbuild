@@ -5,7 +5,7 @@
     <Import Project="$(MSBuildFolder)\MSBuild.ExtensionPack.tasks"/>
     
     <ItemGroup>
-        <Files2012 Include="$(MSBuildThisFileDirectory)BuildDrop\vs12\*.dll"/>
+        <Files Include="$(MSBuildThisFileDirectory)BuildDrop\vs12\*.dll" />
         <VSSonarQubeExtension2013 Include="VSSonarQubeExtension2013.sln" />
         <VSSonarQubeExtension2012 Include="VSSonarQubeExtension2012.sln" />
         <VSSonarQubeExtension2015 Include="VSSonarQubeExtension2015.sln" />
@@ -15,12 +15,10 @@
 
     <Target Name="BuildExtension" DependsOnTargets="RestoreExtensionNuget">
 		<MSBuild Projects="@(VSSonarQubeExtension2012)" Properties="Configuration=Release;VSVersion=11.0" BuildInParallel="true" StopOnFirstFailure="true" />    
-        <MSBuild Projects="@(VSSonarQubeExtension2013)" Properties="Configuration=Release;VSVersion=12.0" BuildInParallel="true" StopOnFirstFailure="true" />
-		<MSBuild Projects="@(VSSonarQubeExtension2015)" Properties="Configuration=Release;VSVersion=14.0" BuildInParallel="true" StopOnFirstFailure="true" />
     </Target>
     
     <Target Name="Build" DependsOnTargets="BuildExtension">
-    	<MSBuild.ExtensionPack.Compression.Zip TaskAction="AddFiles" CompressFiles="@(Files2012)" ZipFileName="$(MSBuildThisFileDirectory)BuildDrop\vs12\VSSonarExtensionMetroVs2012.vsix" RemoveRoot="$(ExtensionOutputPath)" />
+    	<MSBuild.ExtensionPack.Compression.Zip TaskAction="AddFiles" CompressFiles="@(Files)" ZipFileName="$(MSBuildThisFileDirectory)BuildDrop\vs12\VSSonarExtensionMetroVs2012.vsix" RemoveRoot="$(ExtensionOutputPath)" />
     </Target>
     
     
