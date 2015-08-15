@@ -22,12 +22,25 @@
     <Target Name="Build" DependsOnTargets="BuildExtension">
 	    <ItemGroup>
 	      <Files2012 Include="$(MSBuildThisFileDirectory)BuildDrop\vs12\*.dll" />
+	      <Files2013 Include="$(MSBuildThisFileDirectory)BuildDrop\vs13\*.dll" />
+	      <Files2015 Include="$(MSBuildThisFileDirectory)BuildDrop\vs15\*.dll" />
 	    </ItemGroup>
     	<MSBuild.ExtensionPack.Compression.Zip
     		TaskAction="AddFiles" 
     		CompressFiles="@(Files2012)" 
     		ZipFileName="$(MSBuildThisFileDirectory)BuildDrop\vs12\VSSonarExtensionMetroVs2012.vsix" 
-    		RemoveRoot="$(ExtensionOutputPath)" />
+    		RemoveRoot="$(MSBuildThisFileDirectory)BuildDrop\vs12" />
+    	<MSBuild.ExtensionPack.Compression.Zip
+    		TaskAction="AddFiles" 
+    		CompressFiles="@(Files2013)" 
+    		ZipFileName="$(MSBuildThisFileDirectory)BuildDrop\vs13\VSSonarExtensionMetroVs2013.vsix" 
+    		RemoveRoot="$(MSBuildThisFileDirectory)BuildDrop\vs13" />    		
+    	<MSBuild.ExtensionPack.Compression.Zip
+    		TaskAction="AddFiles" 
+    		CompressFiles="@(Files2015)" 
+    		ZipFileName="$(MSBuildThisFileDirectory)BuildDrop\vs15\VSSonarExtensionMetroVs2015.vsix" 
+    		RemoveRoot="$(MSBuildThisFileDirectory)BuildDrop\vs15" />    		
+    		
     </Target>
     
     
