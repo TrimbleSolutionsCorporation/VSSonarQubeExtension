@@ -30,6 +30,7 @@ type ISQKeyTranslator =
   abstract member GetSources : unit -> string
   abstract member GetLookupType : unit -> KeyLookUpType
   abstract member SetLookupType : key:KeyLookUpType -> unit
+  abstract member SetProjectKeyAndBaseDir : key:string * path:string -> unit
   abstract member GetModules : unit -> List<SonarModule>  
   abstract member TranslateKey : key:string * vshelper:IVsEnvironmentHelper * branch:string -> string
   abstract member TranslatePath : key:VsFileItem * vshelper:IVsEnvironmentHelper -> string
@@ -189,6 +190,11 @@ type SQKeyTranslator() =
                     UpdateModule("", based, lines, curreModule)
 
     interface ISQKeyTranslator with
+        member this.SetProjectKeyAndBaseDir(key:string, path:string) =
+            projectBaseDir <- path
+            projectKey <- key
+            ()
+
         member this.CreateConfiguration(file : string) = 
             if File.Exists(file) then
                 ProcessModules(file, null)
@@ -258,7 +264,7 @@ type SQKeyTranslator() =
 
         member this.TranslateKey(key : string, vshelper : IVsEnvironmentHelper, branchIn:string) =
             let branch =
-                if branchIn = "" then
+                if branchIn = "" || key.Contains(branchIn) then
                     ""
                 else
                     branchIn + ":"

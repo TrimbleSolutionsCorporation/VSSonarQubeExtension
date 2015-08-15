@@ -79,6 +79,8 @@
                 var data = string.Join(";", ExtensionDiagnostics.Select(m => m.Value.Path).ToArray());
                 confHelper.WriteOptionInApplicationData(Context.AnalysisGeneral, ID, PATHKEY, data, true, false);
             }
+
+            this.SyncDiagnosticsInPlugins();
         }
 
         private List<DiagnosticAnalyzer> CombineDiagnostics()

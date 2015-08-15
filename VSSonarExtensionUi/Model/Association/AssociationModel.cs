@@ -64,6 +64,11 @@
         /// </summary>
         public Resource AssociatedProject { get; set; }
 
+        public void OnAssociatedProjectChanged()
+        {
+        }
+
+
         public Resource SelectedProject { get; set; }
 
         /// <summary>
@@ -158,6 +163,7 @@
                     });
 
                 this.AssociatedProject.SolutionRoot = this.OpenSolutionPath;
+                this.keyTranslator.SetProjectKeyAndBaseDir(this.AssociatedProject.Key, this.OpenSolutionPath);
             }
 
             this.configurationHelper.SyncSettings();
@@ -197,6 +203,13 @@
                 return null;
             }
 
+            var vsitem = this.VsHelper.VsFileItem(fullName, project, null);
+            if (vsitem == null)
+            {
+                this.keyTranslator.SetLookupType(KeyLookUpType.Invalid);
+                return null;
+            }
+
             if (this.keyTranslator.GetLookupType() == KeyLookUpType.Invalid)
             {
                 foreach (KeyLookUpType type in Enum.GetValues(typeof(KeyLookUpType)))
@@ -204,12 +217,6 @@
                     if (type != KeyLookUpType.Invalid)
                     {
                         this.keyTranslator.SetLookupType(type);
-                        var vsitem = this.VsHelper.VsFileItem(fullName, project, null);
-                        if (vsitem == null)
-                        {
-                            this.keyTranslator.SetLookupType(KeyLookUpType.Invalid);
-                            return null;
-                        }
 
                         var key = this.keyTranslator.TranslatePath(vsitem, this.VsHelper);
                         if (!string.IsNullOrEmpty(key))

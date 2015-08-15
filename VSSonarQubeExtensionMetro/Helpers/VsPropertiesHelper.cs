@@ -679,8 +679,8 @@ namespace VSSonarQubeExtension.Helpers
                     return null;
                 }
 
-                string documentName = item.Document.Name;
-                string documentPath = driveLetter + this.GetProperFilePathCapitalization(item.Document.FullName).Substring(1);
+                string documentName = Path.GetFileName(filename);
+                string documentPath = driveLetter + this.GetProperFilePathCapitalization(filename).Substring(1);
                 string projectName = item.ContainingProject.Name;
                 string projectPath = driveLetter + this.GetProperFilePathCapitalization(item.ContainingProject.FullName).Substring(1);
                 string solutionName = this.ActiveSolutionName();
