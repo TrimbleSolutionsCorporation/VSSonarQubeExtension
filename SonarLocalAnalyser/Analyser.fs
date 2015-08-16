@@ -774,7 +774,8 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
         member x.AssociateWithProject(project : Resource, conf:ISonarConfiguration) =
             let GetQualityProfiles(conf:ISonarConfiguration, project:Resource) =
                 if cachedProfiles.ContainsKey(project.Name) then
-                    ()
+                    profileUpdated <- true
+                    associateCompletedEvent.Trigger([|x; null|])
                 else
                     let profiles = restService.GetQualityProfilesForProject(conf, project.Key)
                     profilesCnt <- profiles.Count - 1
