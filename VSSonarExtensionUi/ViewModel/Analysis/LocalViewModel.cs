@@ -704,9 +704,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </param>
         private void RunLocalAnalysis(AnalysisTypes analysis)
         {
-            this.OuputLogLines.Clear();
-            this.AllLog.Clear();
-            this.OutputLog = string.Empty;
             this.PermissionsAreNotAvailable = false;
             try
             {
@@ -727,18 +724,27 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                             this.sonarQubeViewModel.VsHelper);
                         break;
                     case AnalysisTypes.ANALYSIS:
+                        this.OuputLogLines.Clear();
+                        this.AllLog.Clear();
+                        this.OutputLog = string.Empty;
                         this.LocalAnalyserModule.RunFullAnalysis(
                             this.AssociatedProject, 
                             this.sonarQubeViewModel.SonarVersion,
                             AuthtenticationHelper.AuthToken);
                         break;
                     case AnalysisTypes.INCREMENTAL:
+                        this.OuputLogLines.Clear();
+                        this.AllLog.Clear();
+                        this.OutputLog = string.Empty;
                         this.LocalAnalyserModule.RunIncrementalAnalysis(
                             this.AssociatedProject, 
                             this.sonarQubeViewModel.SonarVersion,
                             AuthtenticationHelper.AuthToken);
                         break;
                     case AnalysisTypes.PREVIEW:
+                        this.OuputLogLines.Clear();
+                        this.AllLog.Clear();
+                        this.OutputLog = string.Empty;
                         this.LocalAnalyserModule.RunPreviewAnalysis(
                             this.AssociatedProject, 
                             this.sonarQubeViewModel.SonarVersion,
