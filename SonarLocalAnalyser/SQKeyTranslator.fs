@@ -269,15 +269,18 @@ type SQKeyTranslator() =
 
         member this.TranslateKey(key : string, vshelper : IVsEnvironmentHelper, branchIn:string) =
             let branch =
-                if branchIn = "" || key.Contains(branchIn) then
-                    ""
+                if branchIn = "" || projectKey.Contains(branchIn) then
+                    if projectKey.Contains(branchIn) then
+                        ":"
+                    else
+                        ""
                 else
-                    branchIn + ":"
+                    ":" + branchIn + ":"
 
             if lookupType = KeyLookUpType.Flat then
-                Path.Combine(projectBaseDir, key.Replace(projectKey + ":" + branch, "").Replace('/', Path.DirectorySeparatorChar))
+                Path.Combine(projectBaseDir, key.Replace(projectKey + branch, "").Replace('/', Path.DirectorySeparatorChar))
             elif lookupType = KeyLookUpType.Module then
-                let keyWithoutProjectKey = key.Replace(projectKey + ":" + branch, "")
+                let keyWithoutProjectKey = key.Replace(projectKey + branch, "")
                 let allModulesPresentInKey =  keyWithoutProjectKey.Split(':')
                 let modulesPresentInKey =  Array.sub allModulesPresentInKey 0 (allModulesPresentInKey.Length-1)
 
@@ -288,7 +291,7 @@ type SQKeyTranslator() =
                 Path.Combine(currPath, allModulesPresentInKey.[allModulesPresentInKey.Length-1].Replace('/', Path.DirectorySeparatorChar))
 
             elif lookupType = KeyLookUpType.VSBootStrapper then
-                let keyWithoutProjectKey = key.Replace(projectKey + ":" + branch, "")
+                let keyWithoutProjectKey = key.Replace(projectKey + branch, "")
                 let allModulesPresentInKey =  keyWithoutProjectKey.Split(':')
             
                 let project = Directory.GetParent(vshelper.GetProjectByNameInSolution(allModulesPresentInKey.[0]).ProjectFilePath).ToString()
