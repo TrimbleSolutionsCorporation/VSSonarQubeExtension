@@ -461,6 +461,11 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             return string.Empty;
         }
 
+        public object GetAvailableModel()
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
     }

@@ -64,5 +64,10 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 this.AvailableChecksInDll.Add(interpretation);
             }
         }
+
+        public object GetAvailableModel()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

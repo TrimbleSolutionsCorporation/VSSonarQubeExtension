@@ -119,9 +119,9 @@
     <Reference Include="WindowsBase" />
     <Reference Include="System.ObjectModel" />
     <Reference Include="System.RunTime" />
-    
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\Analysis\IssuesSearchModel.cs" />
     <Compile Include="Model\Association\AssociationModel.cs" />
     <Compile Include="Model\Cache\EditorData.cs" />
     <Compile Include="Model\Cache\ModelEditorCache.cs" />
@@ -163,7 +163,7 @@
     <Compile Include="ViewModel\Configuration\VSonarQubeOptionsViewModel.cs" />
     <Compile Include="ViewModel\Configuration\AnalysisOptionsViewModel.cs" />
     <Compile Include="Model\Helpers\IOptionsModelBase.cs" />
-    <Compile Include="ViewModel\Helpers\IAnalysisViewModelBase.cs" />
+    <Compile Include="Model\Analysis\IAnalysisModelBase.cs" />
     <Compile Include="ViewModel\Helpers\IssueGridViewModel.cs" />
     <Compile Include="ViewModel\Analysis\IssuesSearchViewModel.cs" />
     <Compile Include="ViewModel\Helpers\IOptionsViewModelBase.cs" />

@@ -36,6 +36,7 @@ namespace VSSonarExtensionUi.ViewModel
     using Model.Association;
     using Model.PluginManager;
     using Model.Cache;
+    using Model.Analysis;
 
     /// <summary>
     ///     The changed event handler.
@@ -240,11 +241,6 @@ namespace VSSonarExtensionUi.ViewModel
         public List<Issue> Issues { get; set; }
 
         /// <summary>
-        ///     Gets or sets the issues search view viewModel.
-        /// </summary>
-        public IssuesSearchViewModel IssuesSearchViewModel { get; set; }
-
-        /// <summary>
         ///     Gets or sets the launch extension properties command.
         /// </summary>
         public RelayCommand LaunchExtensionPropertiesCommand { get; set; }
@@ -273,7 +269,15 @@ namespace VSSonarExtensionUi.ViewModel
         /// <summary>
         ///     Gets or sets the selected view.
         /// </summary>
-        public IAnalysisViewModelBase SelectedView { get; set; }
+        public IAnalysisModelBase SelectedModel { get; set; }
+
+        /// <summary>
+        /// Gets or sets the selected view.
+        /// </summary>
+        /// <value>
+        /// The selected view.
+        /// </value>
+        public IViewModelBase SelectedViewModel { get; set; }
 
         /// <summary>
         ///     Gets or sets the server address.
@@ -293,7 +297,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// <summary>
         ///     Gets or sets the sonar qube views.
         /// </summary>
-        public ObservableCollection<IAnalysisViewModelBase> SonarQubeViews { get; set; }
+        public ObservableCollection<IAnalysisModelBase> SonarQubeModels { get; set; }
 
         /// <summary>
         ///     Gets or sets the sonar rest connector.
@@ -366,7 +370,7 @@ namespace VSSonarExtensionUi.ViewModel
         {
             this.AssociationModule.ClearProjectAssociation();
 
-            foreach (IAnalysisViewModelBase sonarQubeView in this.SonarQubeViews)
+            foreach (IAnalysisModelBase sonarQubeView in this.SonarQubeModels)
             {
                 sonarQubeView.EndDataAssociation();
             }
@@ -443,7 +447,7 @@ namespace VSSonarExtensionUi.ViewModel
             this.VSonarQubeOptionsViewData.InitPuginSystem(vsenvironmenthelperIn, this.PluginControl, this.NotificationManager);
 
             this.InitMenus();
-            this.InitViews();
+            this.InitViewsAndModels();
             this.SourceControlProvider.UpdatePlugins(this.VSonarQubeOptionsViewData.PluginManager.SourceCodePlugins);
 
             if (this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.IsConnectAtStartOn)
@@ -453,7 +457,7 @@ namespace VSSonarExtensionUi.ViewModel
 
             this.UpdateTheme(Colors.Black, Colors.White);
 
-            foreach (IAnalysisViewModelBase view in this.SonarQubeViews)
+            foreach (IAnalysisModelBase view in this.SonarQubeModels)
             {
                 view.UpdateServices(restServiceIn, vsenvironmenthelperIn, this.configurationHelper, statusBar, provider);
             }
@@ -485,7 +489,7 @@ namespace VSSonarExtensionUi.ViewModel
                 return new List<Issue>();
             }
 
-            IAnalysisViewModelBase view = this.SelectedView;
+            IAnalysisModelBase view = this.SelectedModel;
 
             if (view == null)
             {
@@ -516,13 +520,13 @@ namespace VSSonarExtensionUi.ViewModel
         /// </summary>
         public void OnIssuesChangeEvent()
         {
-            this.SelectedView.OnAnalysisModeHasChange(EventArgs.Empty);
+            this.SelectedModel.OnAnalysisModeHasChange(EventArgs.Empty);
         }
 
         /// <summary>
         ///     The on selected view changed.
         /// </summary>
-        public void OnSelectedViewChanged()
+        public void OnSelectedViewModelChanged()
         {
             this.configurationHelper.WriteSetting(
                 new SonarQubeProperties
@@ -530,7 +534,7 @@ namespace VSSonarExtensionUi.ViewModel
                         Context = Context.UIProperties, 
                         Key = "SelectedView", 
                         Owner = OwnersId.ApplicationOwnerId, 
-                        Value = this.SelectedView.Header
+                        Value = this.SelectedViewModel.Header
                     }, true);
 
             this.OnAnalysisModeHasChange(EventArgs.Empty);
@@ -546,7 +550,7 @@ namespace VSSonarExtensionUi.ViewModel
                 {
                     this.LocalViewModel.AssociatedProject = this.SelectedBranch;
                     this.ServerViewModel.AssociatedProject = this.SelectedBranch;
-                    this.IssuesSearchViewModel.AssociatedProject = this.SelectedBranch;
+                    this.IssuesSearchModel.AssociatedProject = this.SelectedBranch;
                 }
 
                 this.AssociationModule.UpdateBranchSelection(this.SelectedBranch);                
@@ -558,9 +562,9 @@ namespace VSSonarExtensionUi.ViewModel
         {
             this.VSonarQubeOptionsViewData.RefreshPropertiesInView(this.AssociationModule.AssociatedProject);
 
-            if (this.SonarQubeViews != null)
+            if (this.SonarQubeModels != null)
             {
-                foreach (var view in this.SonarQubeViews)
+                foreach (var view in this.SonarQubeModels)
                 {
                     view.InitDataAssociation(this.AssociationModule.AssociatedProject, AuthtenticationHelper.AuthToken, this.AssociationModule.OpenSolutionPath);
                 }
@@ -584,7 +588,7 @@ namespace VSSonarExtensionUi.ViewModel
                 return;
             }
 
-            IAnalysisViewModelBase analyser = this.SelectedView;
+            IAnalysisModelBase analyser = this.SelectedModel;
             if (analyser != null)
             {
                 try
@@ -626,7 +630,7 @@ namespace VSSonarExtensionUi.ViewModel
 
             this.ResourceInEditor = this.AssociationModule.CreateAValidResourceFromServer(fullName, this.AssociationModule.AssociatedProject);
             if (this.ResourceInEditor == null &&
-                this.SelectedView == this.LocalViewModel &&
+                this.SelectedModel == this.LocalViewModel &&
                 this.LocalViewModel.FileAnalysisIsEnabled)
             {
                 this.ResourceInEditor = this.AssociationModule.CreateResourcePathFile(fullName, this.AssociationModule.AssociatedProject);
@@ -638,7 +642,7 @@ namespace VSSonarExtensionUi.ViewModel
                 return;
             }
            
-            IAnalysisViewModelBase analyser = this.SelectedView;
+            IAnalysisModelBase analyser = this.SelectedModel;
             if (analyser != null)
             {
                 try
@@ -659,7 +663,7 @@ namespace VSSonarExtensionUi.ViewModel
 
         public void ProjectHasBuild(VsProjectItem project)
         {
-            IAnalysisViewModelBase analyser = this.SelectedView;
+            IAnalysisModelBase analyser = this.SelectedModel;
             if (analyser != null)
             {
                 analyser.TriggerAProjectAnalysis(project);
@@ -683,7 +687,7 @@ namespace VSSonarExtensionUi.ViewModel
             this.BackGroundColor = background;
             this.ForeGroundColor = foreground;
 
-            foreach (IAnalysisViewModelBase view in this.SonarQubeViews)
+            foreach (IViewModelBase view in this.SonarQubeViews)
             {
                 view.UpdateColours(background, foreground);
             }
@@ -840,7 +844,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// <summary>
         ///     The init views.
         /// </summary>
-        private void InitViews()
+        private void InitViewsAndModels()
         {
             this.ServerViewModel = new ServerViewModel(
                 this, 
@@ -849,23 +853,31 @@ namespace VSSonarExtensionUi.ViewModel
                 this.SonarRestConnector, 
                 AuthtenticationHelper.AuthToken);
             this.LocalViewModel = new LocalViewModel(this, this.VSonarQubeOptionsViewData.PluginManager.AnalysisPlugins, this.SonarRestConnector, this.VsHelper, this.configurationHelper, AuthtenticationHelper.AuthToken);
-            this.IssuesSearchViewModel = new IssuesSearchViewModel(this, this.VsHelper, this.SonarRestConnector, this.configurationHelper);
 
-            this.SonarQubeViews = new ObservableCollection<IAnalysisViewModelBase>
+            this.IssuesSearchModel = new IssuesSearchModel(this, this.configurationHelper, this.SonarRestConnector);
+            
+            this.SonarQubeModels = new ObservableCollection<IAnalysisModelBase>
                                       {
                                           this.ServerViewModel, 
                                           this.LocalViewModel, 
-                                          this.IssuesSearchViewModel
+                                          this.IssuesSearchModel
+                                      };
+
+            this.SonarQubeViews = new ObservableCollection<IViewModelBase>
+                                      {
+                                          this.ServerViewModel,
+                                          this.LocalViewModel,
+                                          this.IssuesSearchModel.IssuesSearchViewModel
                                       };
 
             try
             {
                 string view = this.configurationHelper.ReadSetting(Context.UIProperties, OwnersId.ApplicationOwnerId, "SelectedView").Value;
 
-                foreach (IAnalysisViewModelBase analysisViewModelBase in
+                foreach (IViewModelBase analysisViewModelBase in
                     this.SonarQubeViews.Where(analysisViewModelBase => analysisViewModelBase.Header.Equals(view)))
                 {
-                    this.SelectedView = analysisViewModelBase;
+                    this.SelectedModel = analysisViewModelBase.GetAvailableModel() as IAnalysisModelBase;
                 }
             }
             catch (Exception ex)
@@ -916,7 +928,7 @@ namespace VSSonarExtensionUi.ViewModel
             this.SelectedBranch = null;
             this.AssociationModule.Disconnect();
 
-            foreach (IAnalysisViewModelBase view in this.SonarQubeViews)
+            foreach (IAnalysisModelBase view in this.SonarQubeModels)
             {
                 view.EndDataAssociation();
             }
@@ -925,8 +937,8 @@ namespace VSSonarExtensionUi.ViewModel
             this.LocalViewModel.IssuesGridView.Issues.Clear();
             this.ServerViewModel.IssuesGridView.AllIssues.Clear();
             this.ServerViewModel.IssuesGridView.Issues.Clear();
-            this.IssuesSearchViewModel.IssuesGridView.Issues.Clear();
-            this.IssuesSearchViewModel.IssuesGridView.AllIssues.Clear();
+            this.IssuesSearchModel.IssuesSearchViewModel.IssuesGridView.Issues.Clear();
+            this.IssuesSearchModel.IssuesSearchViewModel.IssuesGridView.AllIssues.Clear();
 
             this.ConnectionTooltip = "Not Connected";
             this.StatusMessage = "";
@@ -1015,7 +1027,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// <returns>The <see cref="Dictionary"/>.</returns>
         public Dictionary<int, CoverageElement> GetCoverageInEditor(string buffer)
         {
-            if (this.SelectedView == this.ServerViewModel)
+            if (this.SelectedModel == this.ServerViewModel)
             {
                 return this.ServerViewModel.GetCoverageInEditor(buffer);
             }
@@ -1023,10 +1035,69 @@ namespace VSSonarExtensionUi.ViewModel
             return new Dictionary<int, CoverageElement>();
         }
 
+        /// <summary>
+        /// Gets the available model.
+        /// </summary>
+        /// <returns></returns>
+        public object GetAvailableModel()
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the notification manager.
+        /// </summary>
+        /// <value>
+        /// The notification manager.
+        /// </value>
         public NotifyCationManager NotificationManager { get; internal set; }
+
+        /// <summary>
+        /// Gets the association module.
+        /// </summary>
+        /// <value>
+        /// The association module.
+        /// </value>
         public AssociationModel AssociationModule { get; internal set; }
+
+        /// <summary>
+        /// Gets the sonar key translator.
+        /// </summary>
+        /// <value>
+        /// The sonar key translator.
+        /// </value>
         public ISQKeyTranslator SonarKeyTranslator { get; internal set; }
+
+        /// <summary>
+        /// Gets the source control provider.
+        /// </summary>
+        /// <value>
+        /// The source control provider.
+        /// </value>
         internal ISourceControlProvider SourceControlProvider { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the status message.
+        /// </summary>
+        /// <value>
+        /// The status message.
+        /// </value>
         public string StatusMessage { get; set; }
+
+        /// <summary>
+        /// Gets the issues search model.
+        /// </summary>
+        /// <value>
+        /// The issues search model.
+        /// </value>
+        public IssuesSearchModel IssuesSearchModel { get; private set; }
+
+        /// <summary>
+        /// Gets the sonar qube views.
+        /// </summary>
+        /// <value>
+        /// The sonar qube views.
+        /// </value>
+        public ObservableCollection<IViewModelBase> SonarQubeViews { get; private set; }
     }
 }

@@ -6,23 +6,20 @@
 //   The AnalysisViewModelBase interface.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-namespace VSSonarExtensionUi.ViewModel.Helpers
+namespace VSSonarExtensionUi.Model.Analysis
 {
     using System;
     using System.Collections.Generic;
 
-    using SonarRestService;
-
+    using ViewModel.Helpers;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
 
     /// <summary>
     /// The AnalysisViewModelBase interface.
     /// </summary>
-    public interface IAnalysisViewModelBase : IViewModelBase
+    public interface IAnalysisModelBase
     {
-        #region Public Methods and Operators
-
         /// <summary>The trigger a project analysis.</summary>
         /// <param name="project">The project.</param>
         void TriggerAProjectAnalysis(VsProjectItem project);
@@ -74,7 +71,5 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
 
         /// <summary>Reset Stats.</summary>
         void ResetStats();
-
-        #endregion
     }
 }

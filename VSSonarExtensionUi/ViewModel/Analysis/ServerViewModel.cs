@@ -31,12 +31,13 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using VSSonarPlugins.Types;
     using VSSonarPlugins.Helpers;
     using Model.Cache;
+    using Model.Analysis;
 
     /// <summary>
     ///     The server view model.
     /// </summary>
     [ImplementPropertyChanged]
-    public class ServerViewModel : IAnalysisViewModelBase
+    public class ServerViewModel : IAnalysisModelBase, IViewModelBase
     {
         #region Constructors and Destructors
 
@@ -503,6 +504,11 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                     this.sonarQubeViewModel.NotificationManager.ReportException(ex);
                 }
             }
+        }
+
+        public object GetAvailableModel()
+        {
+            throw new NotImplementedException();
         }
 
         public SortedSet<string> AlreadyOpenDiffs { get; set; }

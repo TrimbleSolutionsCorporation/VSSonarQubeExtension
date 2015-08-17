@@ -114,5 +114,10 @@
             this.BackGroundColor = background;
             this.ForeGroundColor = foreground;
         }
+
+        public object GetAvailableModel()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

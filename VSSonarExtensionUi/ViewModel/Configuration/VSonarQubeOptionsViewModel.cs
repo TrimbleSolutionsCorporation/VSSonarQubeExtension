@@ -374,6 +374,11 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.OnRequestClose(this, "Exit");
         }
 
+        public object GetAvailableModel()
+        {
+            return null;
+        }
+
         #endregion
 
     }

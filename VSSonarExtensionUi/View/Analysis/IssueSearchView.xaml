@@ -55,26 +55,10 @@
                                  Height="{Binding SizeOfFlyout}" DockPanel.Dock="Top">
             <controls:Flyout Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
                              Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                             IsOpen="{Binding ShowFlyouts}" Height="{Binding SizeOfFlyout}" Header="" Position="Top">
+                             IsOpen="{Binding ShowFlyouts, FallbackValue=True}" Height="{Binding SizeOfFlyout}" Header="" Position="Top">
                 <ScrollViewer x:Name="ControlPanel">
                     <StackPanel>
-                        <Grid Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="20*" />
-                                <RowDefinition Height="20*" />
-                                <RowDefinition Height="20*" />
-                                <RowDefinition Height="20*" />
-                                <RowDefinition Height="20*" />
-                                <RowDefinition Height="20*" />
-                                <RowDefinition Height="20*" />
-                                <RowDefinition Height="20*" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="20*" />
-                                <ColumnDefinition Width="20*" />
-                            </Grid.ColumnDefinitions>
-
-                            <Expander Header="Users" Grid.Row="5" Grid.ColumnSpan="2"
+                        <Expander Header="Users" Grid.Row="5" Grid.ColumnSpan="2"
                                       Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
                                 <Grid
                                     Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
@@ -107,11 +91,9 @@
                                               MaxDropDownHeight="101"
                                               Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
                                               ItemTemplate="{DynamicResource UserSelectionComboBoxDataTemplate}" />
-                                    <CheckBox Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"
+                                    <CheckBox Grid.Row="0" Grid.Column="2" Margin="4,0,-4,0"
                                               IsChecked="{Binding IsReporterChecked}" />
-                                    <CheckBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"
+                                    <CheckBox Grid.Row="1" Grid.Column="2" Margin="4,0,-4,0"
                                               IsChecked="{Binding IsAssigneeChecked}" />
                                 </Grid>
                             </Expander>
@@ -262,11 +244,11 @@
                                 </Grid>
                             </Expander>
 
-                            <Expander Header="Creation Date" Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0"
+                            <Expander Header="Date" Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0"
                                       Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
                                 <Grid
                                     Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                    Height="55">
+                                    Height="60">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="25" />
                                         <RowDefinition Height="25" />
@@ -285,15 +267,41 @@
                                         Content="Before" />
                                     <DatePicker SelectedDate="{Binding CreatedSinceDate}" Grid.Row="0" Grid.Column="1" />
                                     <DatePicker SelectedDate="{Binding CreatedBeforeDate}" Grid.Row="1" Grid.Column="1" />
-                                    <CheckBox Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"
+                                    <CheckBox Grid.Row="0" Grid.Column="2" Margin="4,0,-4,0"
                                               IsChecked="{Binding IsDateSinceChecked}" />
-                                    <CheckBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"
+                                    <CheckBox Grid.Row="1" Grid.Column="2" Margin="4,0,-4,0"
                                               IsChecked="{Binding IsDateBeforeChecked}" />
                                 </Grid>
                             </Expander>
-                        </Grid>
+
+                        <Expander Header="Gate" Grid.Row="5" Grid.ColumnSpan="2"
+                                      Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
+                                <Grid
+                                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                    Height="25">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="25" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="60" />
+                                        <ColumnDefinition Width="20*" />
+                                        <ColumnDefinition Width="25" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Content="Gate" />
+                                    <ComboBox Grid.Row="0" Grid.Column="1" IsTextSearchEnabled="True"
+                                              SelectedItem="{Binding SelectedActionPlan, Mode=TwoWay}"
+                                              ItemsSource="{Binding AvailableActionPlans}"
+                                              MaxDropDownHeight="101"
+                                              Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                              ItemTemplate="{DynamicResource UserSelectionComboBoxDataTemplate}" />
+                                    <CheckBox Grid.Row="0" Grid.Column="2" Margin="4,0,-4,0"
+                                              IsChecked="{Binding IsReporterChecked}" />
+                                </Grid>
+                            </Expander>
+
+
                     </StackPanel>
                 </ScrollViewer>
             </controls:Flyout>

@@ -38,6 +38,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using Application = System.Windows.Application;
     using VSSonarPlugins.Types;
     using Model.Helpers;
+    using Model.Analysis;
 
     /// <summary>
     ///     The analysis types.
@@ -74,7 +75,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     ///     The local view viewModel.
     /// </summary>
     [ImplementPropertyChanged]
-    public class LocalViewModel : IAnalysisViewModelBase
+    public class LocalViewModel : IAnalysisModelBase, IViewModelBase
     {
         #region Fields
 
@@ -881,6 +882,11 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             File.WriteAllLines(this.ConfigurationHelper.UserLogForAnalysisFile(), this.AllLog);
 
             this.Vsenvironmenthelper.OpenResourceInVisualStudio(this.ConfigurationHelper.UserLogForAnalysisFile(), 0, this.sonarQubeViewModel.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserDefinedEditor);
+        }
+
+        public object GetAvailableModel()
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

@@ -476,6 +476,11 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             }
         }
 
+        public object GetAvailableModel()
+        {
+            throw new NotImplementedException();
+        }
+
         public IPluginControlOption PluginController { get; set; }
         public List<ISourceVersionPlugin> SourceCodePlugins { get; private set; }
 
