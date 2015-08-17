@@ -18,6 +18,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
     using Model.Helpers;
+    using System.Diagnostics;
 
     /// <summary>
     /// The license viewer view model.
@@ -53,14 +54,20 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.pluginModel = plugincontroller;
             this.confHelper = helper;
 
+            this.ForeGroundColor = Colors.Black;
+            this.ForeGroundColor = Colors.Black;
             this.AvailableLicenses = new ObservableCollection<VsLicense>();
-            this.GetLicensesFromServer();
-
-            this.GenerateTokenCommand = new RelayCommand(this.OnGenerateTokenCommand, () => this.SelectedLicense != null);
             this.RefreshCommand = new RelayCommand(this.GetLicensesFromServer);
+            this.GenerateTokenCommand = new RelayCommand(this.OnGenerateTokenCommand, () => this.SelectedLicense != null);
 
-            this.ForeGroundColor = Colors.Black;
-            this.ForeGroundColor = Colors.Black;
+            try
+            {
+                this.GetLicensesFromServer();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
         }
 
         #endregion
