@@ -55,17 +55,13 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="IssueGridViewModel"/> class.
+        /// Initializes a new instance of the <see cref="IssueGridViewModel" /> class.
         /// </summary>
-        /// <param name="model">
-        /// The viewModel.
-        /// </param>
-        /// <param name="rowContextMenu">
-        /// The row Context Menu.
-        /// </param>
-        /// <param name="gridId">
-        /// The grid Id.
-        /// </param>
+        /// <param name="model">The viewModel.</param>
+        /// <param name="rowContextMenu">The row Context Menu.</param>
+        /// <param name="gridId">The grid Id.</param>
+        /// <param name="showSqaleRating">if set to <c>true</c> [show sqale rating].</param>
+        /// <param name="helper">The helper.</param>
         public IssueGridViewModel(SonarQubeViewModel model, bool rowContextMenu, string gridId, bool showSqaleRating, IConfigurationHelper helper)
         {
             this.dataGridOptionsKey += gridId;
@@ -631,7 +627,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// <param name="listOfIssues">
         /// The list of issues.
         /// </param>
-        public void UpdateIssues(List<Issue> listOfIssues)
+        public void UpdateIssues(IEnumerable<Issue> listOfIssues)
         {
             Application.Current.Dispatcher.Invoke(
                 delegate
@@ -1283,6 +1279,11 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, this.dataGridOptionsKey, propertyInfo.Name + "Visible", "true");
                 i++;
             }
+        }
+
+        public object GetAvailableModel()
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

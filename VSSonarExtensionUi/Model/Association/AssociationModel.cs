@@ -20,7 +20,7 @@
     using System.Threading;
 
     [ImplementPropertyChanged]
-    public class AssociationModel
+    public class AssociationModel : IOptionsModelBase
     {
         private readonly ISQKeyTranslator keyTranslator;
         private readonly IVsSonarExtensionLogger logger;
@@ -552,6 +552,21 @@
             this.StatusBar = statusBar;
             this.Provider = provider;
             this.SonarService = restServiceIn;
+        }
+
+        public void RefreshPropertiesInView(Resource associatedProject)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateServices(ISonarRestService restServiceIn, IVsEnvironmentHelper vsenvironmenthelperIn, IConfigurationHelper configurationHelper, IVSSStatusBar statusBar, IServiceProvider provider)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SaveCurrentViewToDisk(IConfigurationHelper configurationHelper)
+        {
+            throw new NotImplementedException();
         }
     }
 }

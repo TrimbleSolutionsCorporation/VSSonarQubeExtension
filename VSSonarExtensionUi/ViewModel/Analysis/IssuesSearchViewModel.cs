@@ -7,7 +7,7 @@
 // as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
 //
 // This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
-// of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. 
+// of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 // You should have received a copy of the GNU Lesser General Public License along with this program; if not, write to the Free
 // Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 // --------------------------------------------------------------------------------------------------------------------
@@ -15,115 +15,77 @@
 namespace VSSonarExtensionUi.ViewModel.Analysis
 {
     using System;
-    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Globalization;
-    using System.Linq;
     using System.Windows;
     using System.Windows.Input;
     using System.Windows.Media;
 
     using GalaSoft.MvvmLight.Command;
-
+    using Helpers;
+    using Model.Analysis;
     using PropertyChanged;
 
-    using SonarRestService;
-
-    using VSSonarExtensionUi.ViewModel.Helpers;
-
-    using VSSonarPlugins;
     using VSSonarPlugins.Types;
 
     /// <summary>
-    ///     The issues search view model.
+    /// The issues search view model.
     /// </summary>
     [ImplementPropertyChanged]
-    public class IssuesSearchViewModel : IAnalysisViewModelBase
+    public class IssuesSearchViewModel : IViewModelBase
     {
-        #region Constants
-
         /// <summary>
         ///     The issues filter view model key.
         /// </summary>
         private const string IssuesFilterViewModelKey = "IssuesFilterViewModel";
 
-        #endregion
-
-        #region Fields
+        /// <summary>
+        /// The search model
+        /// </summary>
+        private readonly IssuesSearchModel searchModel;
 
         /// <summary>
-        ///     The sonar qube view model.
+        /// Initializes a new instance of the <see cref="IssuesSearchViewModel"/> class.
         /// </summary>
-        private readonly SonarQubeViewModel sonarQubeViewModel;
-
-        /// <summary>
-        ///     The rest service.
-        /// </summary>
-        private ISonarRestService restService;
-
-        /// <summary>
-        ///     The show flyouts.
-        /// </summary>
-        private bool showFlyouts;
-
-        /// <summary>
-        ///     The vs helper.
-        /// </summary>
-        private IVsEnvironmentHelper visualStudioHelper;
-
-        /// <summary>The configuration helper.</summary>
-        private IConfigurationHelper configurationHelper;
-
-        #endregion
-
-        #region Constructors and Destructors
-
-        /// <summary>Initializes a new instance of the <see cref="IssuesSearchViewModel"/> class.</summary>
-        /// <param name="sonarQubeViewModel">The sonar qube view model.</param>
-        /// <param name="visualStudioHelper">The visual studio helper.</param>
-        /// <param name="restService">The rest service.</param>
-        /// <param name="configurationHelper">The configuration Helper.</param>
-        public IssuesSearchViewModel(SonarQubeViewModel sonarQubeViewModel, IVsEnvironmentHelper visualStudioHelper, ISonarRestService restService, IConfigurationHelper configurationHelper)
+        /// <param name="searchModel">The search model.</param>
+        public IssuesSearchViewModel(IssuesSearchModel searchModel)
         {
-            this.configurationHelper = configurationHelper;
-            this.visualStudioHelper = visualStudioHelper;
-            this.restService = restService;
-            this.sonarQubeViewModel = sonarQubeViewModel;
-            this.Header = "Issues";
-            this.SonarVersion = 4.5;
+            this.searchModel = searchModel;
+            this.Header = "Issues Search";
+            this.AvailableActionPlans = new ObservableCollection<SonarActionPlan>();
             this.UsersList = new ObservableCollection<User>();
-            this.IssuesGridView = new IssueGridViewModel(sonarQubeViewModel, true, "SearchView", false, this.configurationHelper);
+            this.IssuesGridView = new IssueGridViewModel(this.searchModel.SonarQubeViewModel, true, "SearchView", false, this.searchModel.ConfigurationHelper);
 
             this.InitCommanding();
 
             this.ForeGroundColor = Colors.Black;
             this.BackGroundColor = Colors.White;
+            this.CreatedBeforeDate = DateTime.Now;
+            this.CreatedSinceDate = DateTime.Now;
         }
 
-        #endregion
-
-        #region Public Events
+        /// <summary>
+        /// Gets or sets the available gates.
+        /// </summary>
+        /// <value>
+        /// The available gates.
+        /// </value>
+        public ObservableCollection<SonarActionPlan> AvailableActionPlans { get; set; }
 
         /// <summary>
-        ///     The analysis mode has change.
+        /// Gets or sets the selected gate.
         /// </summary>
-        public event ChangedEventHandler IssuesReadyForCollecting;
-
-        #endregion
-
-        #region Public Properties
+        /// <value>
+        /// The selected gate.
+        /// </value>
+        public SonarActionPlan SelectedActionPlan { get; set; }
 
         /// <summary>
         ///     Gets or sets the assignee in filter.
         /// </summary>
         public User Assignee { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the associated project.
-        /// </summary>
-        public Resource AssociatedProject { get; set; }
 
         /// <summary>
         ///     Gets or sets the back ground color.
@@ -139,11 +101,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         ///     Gets the close flyout issue search command.
         /// </summary>
         public RelayCommand CloseFlyoutIssueSearchCommand { get; private set; }
-
-        /// <summary>
-        ///     Gets or sets the configuration.
-        /// </summary>
-        public ISonarConfiguration Configuration { get; set; }
 
         /// <summary>
         ///     Gets or sets the created before date.
@@ -307,26 +264,9 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public Resource ResourceInEditor { get; set; }
 
         /// <summary>
-        ///     Gets or sets the service provier.
-        /// </summary>
-        public IServiceProvider ServiceProvier { get; set; }
-
-        /// <summary>
         ///     Gets or sets a value indicating whether show flyouts.
         /// </summary>
-        public bool ShowFlyouts
-        {
-            get
-            {
-                return this.showFlyouts;
-            }
-
-            set
-            {
-                this.showFlyouts = value;
-                this.SizeOfFlyout = value ? 150 : 0;
-            }
-        }
+        public bool ShowFlyouts { get; set; }
 
         /// <summary>
         ///     Gets the size of flyout.
@@ -334,251 +274,90 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public int SizeOfFlyout { get; private set; }
 
         /// <summary>
-        ///     Gets the sonar version.
-        /// </summary>
-        public double SonarVersion { get; private set; }
-
-        /// <summary>
-        ///     Gets or sets the status bar.
-        /// </summary>
-        public IVSSStatusBar StatusBar { get; set; }
-
-        /// <summary>
         ///     Gets or sets the users list.
         /// </summary>
         public ObservableCollection<User> UsersList { get; set; }
 
-        #endregion
-
-        #region Public Methods and Operators
-
-        public void ResetStats()
-        {
-            if (this.IssuesGridView != null)
-            {
-                this.IssuesGridView.ResetStatistics();
-            }
-        }
-
         /// <summary>
-        ///     The end data association.
+        /// Called when [show flyouts changed].
         /// </summary>
-        public void EndDataAssociation()
+        public void OnShowFlyoutsChanged()
         {
-            this.IssuesGridView.Issues.Clear();
-            this.AssociatedProject = null;
-            this.CanQUeryIssues = false;
+            this.SizeOfFlyout = this.ShowFlyouts ? 150 : 0;
         }
 
-        /// <summary>
-        /// The get issues for resource.
-        /// </summary>
-        /// <param name="file">
-        /// The file.
-        /// </param>
-        /// <param name="fileContent">
-        /// The file content.
-        /// </param>
-        /// <returns>
-        /// The
-        ///     <see>
-        ///         <cref>List</cref>
-        ///     </see>
-        ///     .
-        /// </returns>
-        public List<Issue> GetIssuesForResource(Resource file, string fileContent)
-        {
-            if (this.CanQUeryIssues)
-            {
-                return
-                    this.IssuesGridView.Issues.Where(
-                        issue =>
-                        this.IssuesGridView.IsNotFiltered(issue) && file.Key.Equals(issue.Component)).ToList();
-            }
-
-            return new List<Issue>();
-        }
-
-        /// <summary>
-        /// The init data association.
-        /// </summary>
-        /// <param name="associatedProject">
-        /// The associated project.
-        /// </param>
-        /// <param name="sonarCubeConfiguration">
-        /// The sonar cube configuration.
-        /// </param>
-        /// <param name="workingDir">
-        /// The working dir.
-        /// </param>
-        public void InitDataAssociation(Resource associatedProject, ISonarConfiguration sonarCubeConfiguration, string workingDir)
-        {
-            this.AssociatedProject = associatedProject;
-            this.Configuration = sonarCubeConfiguration;
-            this.CanQUeryIssues = true;
-            this.sonarQubeViewModel.IsExtensionBusy = false;
-
-            List<User> usortedList = this.restService.GetUserList(sonarCubeConfiguration);
-            if (usortedList != null && usortedList.Count > 0)
-            {
-                this.UsersList = new ObservableCollection<User>(usortedList.OrderBy(i => i.Login));
-            }
-        }
-
-        /// <summary>
-        /// The on changed.
-        /// </summary>
-        /// <param name="e">
-        /// The e.
-        /// </param>
-        public void OnAnalysisModeHasChange(EventArgs e)
-        {
-            if (this.IssuesReadyForCollecting != null)
-            {
-                this.IssuesReadyForCollecting(this, e);
-            }
-        }
-
-        /// <summary>
-        ///     The on selected view changed.
-        /// </summary>
-        public void OnSelectedViewChanged()
-        {
-            this.OnAnalysisModeHasChange(EventArgs.Empty);
-            Debug.WriteLine("Name Changed");
-        }
-
-        /// <summary>
-        /// The refresh data for resource.
-        /// </summary>
-        /// <param name="fullName">
-        /// The full name.
-        /// </param>
-        /// <param name="documentInView">
-        /// The document in view.
-        /// </param>
-        public void RefreshDataForResource(Resource fullName, string documentInView)
-        {
-            this.DocumentInView = documentInView;
-            this.ResourceInEditor = fullName;
-            this.OnSelectedViewChanged();
-        }
-
-        /// <summary>
-        ///     The retrieve issues using current filter.
-        /// </summary>
-        public void RetrieveIssuesUsingCurrentFilter()
-        {
-            this.SaveFilterToDisk();
-
-            if (this.SonarVersion < 3.6)
-            {
-                this.IssuesGridView.UpdateIssues(this.restService.GetIssuesForProjects(this.Configuration, this.AssociatedProject.Key));
-                return;
-            }
-
-            string request = "?componentRoots=" + this.AssociatedProject.Key;
-
-            if (this.IsAssigneeChecked)
-            {
-                request += "&assignees=" + this.Assignee.Login;
-            }
-
-            if (this.IsReporterChecked)
-            {
-                request += "&reporters=" + this.Reporter.Login;
-            }
-
-            if (this.IsDateBeforeChecked)
-            {
-                request += "&createdBefore=" + Convert.ToString(this.CreatedBeforeDate.Year) + "-" + Convert.ToString(this.CreatedBeforeDate.Month)
-                           + "-" + Convert.ToString(this.CreatedBeforeDate.Day);
-            }
-
-            if (this.IsDateSinceChecked)
-            {
-                request += "&createdAfter=" + Convert.ToString(this.CreatedSinceDate.Year) + "-" + Convert.ToString(this.CreatedSinceDate.Month) + "-"
-                           + Convert.ToString(this.CreatedSinceDate.Day);
-            }
-
-            request += this.FilterSeverities();
-            request += this.FilterStatus();
-            request += this.FilterResolutions();
-
-            this.IssuesGridView.UpdateIssues(this.restService.GetIssues(this.Configuration, request, this.AssociatedProject.Key));
-        }
 
         /// <summary>
         ///     The save filter to disk.
         /// </summary>
         public void SaveFilterToDisk()
         {
-            if (this.visualStudioHelper != null)
+            if (this.searchModel.ConfigurationHelper != null)
             {
-                this.configurationHelper.WriteOptionInApplicationData(
+                this.searchModel.ConfigurationHelper.WriteOptionInApplicationData(
                     Context.UIProperties,
                     IssuesFilterViewModelKey,
                     "IsStatusOpenChecked",
                     this.IsStatusOpenChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
+                this.searchModel.ConfigurationHelper.WriteOptionInApplicationData(
                     Context.UIProperties,
                     IssuesFilterViewModelKey,
                     "IsStatusClosedChecked",
                     this.IsStatusClosedChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
+                this.searchModel.ConfigurationHelper.WriteOptionInApplicationData(
                     Context.UIProperties,
                     IssuesFilterViewModelKey,
                     "IsStatusResolvedChecked",
                     this.IsStatusResolvedChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
+                this.searchModel.ConfigurationHelper.WriteOptionInApplicationData(
                     Context.UIProperties,
                     IssuesFilterViewModelKey,
                     "IsStatusConfirmedChecked",
                     this.IsStatusConfirmedChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
+                this.searchModel.ConfigurationHelper.WriteOptionInApplicationData(
                     Context.UIProperties,
                     IssuesFilterViewModelKey,
                     "IsStatusReopenedChecked",
                     this.IsStatusReopenedChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
+                this.searchModel.ConfigurationHelper.WriteOptionInApplicationData(
                     Context.UIProperties,
                     IssuesFilterViewModelKey,
                     "IsBlockerChecked",
                     this.IsBlockerChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
+                this.searchModel.ConfigurationHelper.WriteOptionInApplicationData(
                     Context.UIProperties,
                     IssuesFilterViewModelKey,
                     "IsCriticalChecked",
                     this.IsCriticalChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
+                this.searchModel.ConfigurationHelper.WriteOptionInApplicationData(
                     Context.UIProperties,
                     IssuesFilterViewModelKey,
                     "IsMajaorChecked",
                     this.IsMajaorChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
+                this.searchModel.ConfigurationHelper.WriteOptionInApplicationData(
                     Context.UIProperties,
                     IssuesFilterViewModelKey,
                     "IsMinorChecked",
                     this.IsMinorChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
+                this.searchModel.ConfigurationHelper.WriteOptionInApplicationData(
                     Context.UIProperties,
                     IssuesFilterViewModelKey,
                     "IsInfoChecked",
                     this.IsInfoChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
+                this.searchModel.ConfigurationHelper.WriteOptionInApplicationData(
                     Context.UIProperties,
                     IssuesFilterViewModelKey,
                     "IsFalsePositiveChecked",
                     this.IsFalsePositiveChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
+                this.searchModel.ConfigurationHelper.WriteOptionInApplicationData(
                     Context.UIProperties,
                     IssuesFilterViewModelKey,
                     "IsRemovedChecked",
                     this.IsRemovedChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
+                this.searchModel.ConfigurationHelper.WriteOptionInApplicationData(
                     Context.UIProperties,
                     IssuesFilterViewModelKey,
-                    "IsFixedChecked", 
+                    "IsFixedChecked",
                     this.IsFixedChecked.ToString(CultureInfo.InvariantCulture));
             }
         }
@@ -600,38 +379,23 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.IssuesGridView.UpdateColours(background, foreground);
         }
 
-        /// <summary>The update services.</summary>
-        /// <param name="restServiceIn">The rest service in.</param>
-        /// <param name="vsenvironmenthelperIn">The vsenvironmenthelper in.</param>
-        /// <param name="configurationHelperIn">The configuration Helper.</param>
-        /// <param name="statusBar">The status bar.</param>
-        /// <param name="provider">The provider.</param>
-        public void UpdateServices(
-            ISonarRestService restServiceIn, 
-            IVsEnvironmentHelper vsenvironmenthelperIn,
-            IConfigurationHelper configurationHelperIn,
-            IVSSStatusBar statusBar, 
-            IServiceProvider provider)
+        /// <summary>
+        ///     The on selected view changed.
+        /// </summary>
+        public void OnSelectedViewChanged()
         {
-            this.restService = restServiceIn;
-            this.visualStudioHelper = vsenvironmenthelperIn;
-            this.configurationHelper = configurationHelperIn;
-            this.StatusBar = statusBar;
-            this.ServiceProvier = provider;
-
-            this.IssuesGridView.Vsenvironmenthelper = vsenvironmenthelperIn;
-            this.IssuesGridView.UpdateVsService(this.visualStudioHelper);
+            this.searchModel.OnAnalysisModeHasChange(EventArgs.Empty);
+            Debug.WriteLine("Name Changed");
         }
 
-        /// <summary>The trigger a project analysis.</summary>
-        /// <param name="project">The project.</param>
-        public void TriggerAProjectAnalysis(VsProjectItem project)
+        /// <summary>
+        /// Gets the available model.
+        /// </summary>
+        /// <returns></returns>
+        public object GetAvailableModel()
         {
+            return this.searchModel;
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     The get filter resolutions.
@@ -795,23 +559,23 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         private void OnGetAllIssuesInProject()
         {
             this.CanQUeryIssues = false;
-            this.sonarQubeViewModel.IsExtensionBusy = true;
+            this.searchModel.SonarQubeViewModel.IsExtensionBusy = true;
 
             var bw = new BackgroundWorker { WorkerReportsProgress = true };
 
             bw.RunWorkerCompleted += delegate
-                {
-                    Application.Current.Dispatcher.Invoke(
-                        delegate
-                            {
-                                this.OnSelectedViewChanged();
-                                this.CanQUeryIssues = true;
-                                this.sonarQubeViewModel.IsExtensionBusy = false;
-                            });
-                };
+            {
+                Application.Current.Dispatcher.Invoke(
+                    delegate
+                    {
+                        this.OnSelectedViewChanged();
+                        this.CanQUeryIssues = true;
+                        this.searchModel.SonarQubeViewModel.IsExtensionBusy = false;
+                    });
+            };
 
             bw.DoWork +=
-                delegate { this.IssuesGridView.UpdateIssues(this.restService.GetIssuesForProjects(this.Configuration, this.AssociatedProject.Key)); };
+                delegate { this.IssuesGridView.UpdateIssues(this.searchModel.GetAllIssuesInProject()); };
 
             bw.RunWorkerAsync();
         }
@@ -822,23 +586,19 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         private void OnGetAllIssuesSinceLastAnalysisCommand()
         {
             this.CanQUeryIssues = false;
-            this.sonarQubeViewModel.IsExtensionBusy = true;
+            this.searchModel.SonarQubeViewModel.IsExtensionBusy = true;
             var bw = new BackgroundWorker { WorkerReportsProgress = true };
             bw.RunWorkerCompleted += delegate
                 {
                     this.CanQUeryIssues = true;
-                    this.sonarQubeViewModel.IsExtensionBusy = false;
+                    this.searchModel.SonarQubeViewModel.IsExtensionBusy = false;
                     this.OnSelectedViewChanged();
                 };
 
             bw.DoWork +=
                 delegate
                     {
-                        this.IssuesGridView.UpdateIssues(
-                            this.restService.GetIssuesForProjectsCreatedAfterDate(
-                                this.Configuration, 
-                                this.AssociatedProject.Key, 
-                                this.AssociatedProject.Date));
+                        this.IssuesGridView.UpdateIssues(this.searchModel.GetIssuesSinceSinceDate(this.searchModel.AssociatedProject.Date));
                     };
 
             bw.RunWorkerAsync();
@@ -850,19 +610,19 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         private void OnGetAllMyIssuesCommand()
         {
             this.CanQUeryIssues = false;
-            this.sonarQubeViewModel.IsExtensionBusy = true;
+            this.searchModel.SonarQubeViewModel.IsExtensionBusy = true;
             var bw = new BackgroundWorker { WorkerReportsProgress = true };
             bw.RunWorkerCompleted += delegate
                 {
                     this.CanQUeryIssues = true;
-                    this.sonarQubeViewModel.IsExtensionBusy = false;
+                    this.searchModel.SonarQubeViewModel.IsExtensionBusy = false;
                     this.OnSelectedViewChanged();
                 };
 
             bw.DoWork +=
                 delegate
                     {
-                        this.IssuesGridView.UpdateIssues(this.restService.GetAllIssuesByAssignee(this.Configuration, this.Configuration.Username));
+                        this.IssuesGridView.UpdateIssues(this.searchModel.GetUserIssues(this.searchModel.Configuration.Username));
                     };
 
             bw.RunWorkerAsync();
@@ -886,12 +646,12 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         private void OnGetIssuesByFilterCommand()
         {
             this.CanQUeryIssues = false;
-            this.sonarQubeViewModel.IsExtensionBusy = true;
+            this.searchModel.SonarQubeViewModel.IsExtensionBusy = true;
             var bw = new BackgroundWorker { WorkerReportsProgress = true };
             bw.RunWorkerCompleted += delegate
                 {
                     this.CanQUeryIssues = true;
-                    this.sonarQubeViewModel.IsExtensionBusy = false;
+                    this.searchModel.SonarQubeViewModel.IsExtensionBusy = false;
                     this.OnSelectedViewChanged();
                 };
 
@@ -906,12 +666,12 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         private void OnGetMyIssuesInProjectCommand()
         {
             this.CanQUeryIssues = false;
-            this.sonarQubeViewModel.IsExtensionBusy = true;
+            this.searchModel.SonarQubeViewModel.IsExtensionBusy = true;
             var bw = new BackgroundWorker { WorkerReportsProgress = true };
             bw.RunWorkerCompleted += delegate
                 {
                     this.CanQUeryIssues = true;
-                    this.sonarQubeViewModel.IsExtensionBusy = false;
+                    this.searchModel.SonarQubeViewModel.IsExtensionBusy = false;
                     this.OnSelectedViewChanged();
                 };
 
@@ -919,12 +679,48 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 delegate
                     {
                         this.IssuesGridView.UpdateIssues(
-                            this.restService.GetIssuesByAssigneeInProject(this.Configuration, this.AssociatedProject.Key, this.Configuration.Username));
+                            this.searchModel.GetUserIssuesInProject(this.searchModel.Configuration.Username));
                     };
 
             bw.RunWorkerAsync();
         }
 
-        #endregion
+        /// <summary>
+        ///     The retrieve issues using current filter.
+        /// </summary>
+        private void RetrieveIssuesUsingCurrentFilter()
+        {
+            this.SaveFilterToDisk();
+
+            string request = string.Empty;
+
+            if (this.IsAssigneeChecked)
+            {
+                request += "&assignees=" + this.Assignee.Login;
+            }
+
+            if (this.IsReporterChecked)
+            {
+                request += "&reporters=" + this.Reporter.Login;
+            }
+
+            if (this.IsDateBeforeChecked)
+            {
+                request += "&createdBefore=" + Convert.ToString(this.CreatedBeforeDate.Year) + "-" + Convert.ToString(this.CreatedBeforeDate.Month)
+                           + "-" + Convert.ToString(this.CreatedBeforeDate.Day);
+            }
+
+            if (this.IsDateSinceChecked)
+            {
+                request += "&createdAfter=" + Convert.ToString(this.CreatedSinceDate.Year) + "-" + Convert.ToString(this.CreatedSinceDate.Month) + "-"
+                           + Convert.ToString(this.CreatedSinceDate.Day);
+            }
+
+            request += this.FilterSeverities();
+            request += this.FilterStatus();
+            request += this.FilterResolutions();
+
+            this.IssuesGridView.UpdateIssues(this.searchModel.GetIssuesUsingFilter(request));
+        }
     }
 }

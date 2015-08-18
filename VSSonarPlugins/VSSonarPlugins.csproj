@@ -100,7 +100,6 @@
       <HintPath>..\packages\Microsoft.Composition.1.0.27\lib\portable-net45+win8+wp8+wpa81\System.Composition.TypedParts.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    
     <Reference Include="System.Core" />
     <Reference Include="System.RunTime" />
     <Reference Include="System.Reflection.Metadata, Version=1.0.21.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -126,6 +125,7 @@
     <Compile Include="IPluginControlOption.cs" />
     <Compile Include="ISonarRestService.cs" />
     <Compile Include="IVSSStatusBar.cs" />
+    <Compile Include="Types\SonarGate.cs" />
     <Compile Include="Types\Alert.cs" />
     <Compile Include="Types\BranchCoverage.cs" />
     <Compile Include="Types\Characteristic.cs" />

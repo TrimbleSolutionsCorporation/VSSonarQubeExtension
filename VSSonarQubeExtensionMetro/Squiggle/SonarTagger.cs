@@ -97,7 +97,7 @@ namespace VSSonarQubeExtension.Squiggle
             {
                 SonarQubeViewModelFactory.SQViewModel.ServerViewModel.IssuesReadyForCollecting += this.IssuesListChanged;
                 SonarQubeViewModelFactory.SQViewModel.LocalViewModel.IssuesReadyForCollecting += this.IssuesListChanged;
-                SonarQubeViewModelFactory.SQViewModel.IssuesSearchViewModel.IssuesReadyForCollecting += this.IssuesListChanged;
+                SonarQubeViewModelFactory.SQViewModel.IssuesSearchModel.IssuesReadyForCollecting += this.IssuesListChanged;
             }
             catch (Exception ex)
             {
@@ -240,7 +240,7 @@ namespace VSSonarQubeExtension.Squiggle
                 {
                     SonarQubeViewModelFactory.SQViewModel.ServerViewModel.IssuesReadyForCollecting -= this.IssuesListChanged;
                     SonarQubeViewModelFactory.SQViewModel.LocalViewModel.IssuesReadyForCollecting -= this.IssuesListChanged;
-                    SonarQubeViewModelFactory.SQViewModel.IssuesSearchViewModel.IssuesReadyForCollecting -= this.IssuesListChanged;
+                    SonarQubeViewModelFactory.SQViewModel.IssuesSearchModel.IssuesReadyForCollecting -= this.IssuesListChanged;
 
                     this.SourceBuffer = null;
                 }

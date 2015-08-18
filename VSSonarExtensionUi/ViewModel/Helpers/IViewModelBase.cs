@@ -2,7 +2,9 @@
 
 namespace VSSonarExtensionUi.ViewModel.Helpers
 {
-
+    /// <summary>
+    /// View Model Base for views
+    /// </summary>
     public interface IViewModelBase
     {
         /// <summary>
@@ -30,5 +32,11 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// The foreground.
         /// </param>
         void UpdateColours(Color background, Color foreground);
+
+        /// <summary>
+        /// Gets the available model, TODO: needs to be removed after viewmodels are split into models and view models
+        /// </summary>
+        /// <returns></returns>
+        object GetAvailableModel();
     }
 }
