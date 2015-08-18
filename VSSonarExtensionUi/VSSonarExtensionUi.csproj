@@ -43,8 +43,10 @@
       <SpecificVersion>True</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FSharp.Data">
-      <HintPath>..\packages\FSharp.Data.2.2.5\lib\net40\FSharp.Data.dll</HintPath>
+    <Reference Include="FSharp.Data, Version=$(TargetFSharpDataVersion), Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\References\$(TargetFSharpCoreVersion)\FSharp.Data.dll</HintPath>
+      <Private>True</Private>
+      <SpecificVersion>True</SpecificVersion>
     </Reference>
     <Reference Include="GalaSoft.MvvmLight">
       <HintPath>..\packages\MvvmLightLibs.5.1.1.0\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
