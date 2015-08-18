@@ -119,5 +119,7 @@
         List<Issue> ParseDryRunReportOfIssues(string path);
 
         List<DuplicationData> GetDuplicationsDataInResource(ISonarConfiguration conf, string resourceKey);
+
+        List<SonarActionPlan> GetAvailableActionPlan(ISonarConfiguration conf, string resourceKey);
     }
 }

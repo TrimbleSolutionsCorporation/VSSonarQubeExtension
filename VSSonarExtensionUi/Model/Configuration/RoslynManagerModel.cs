@@ -63,7 +63,10 @@
                 try
                 {
                     var roslynPlugin = plugin as IRoslynPlugin;
-                    roslynPlugin.SetDiagnostics(this.CombineDiagnostics());
+                    if (roslynPlugin != null)
+                    {
+                        roslynPlugin.SetDiagnostics(this.CombineDiagnostics());
+                    }
                 }
                 catch (Exception ex)
                 {

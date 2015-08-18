@@ -1048,6 +1048,30 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
             projects
 
+        member this.GetAvailableActionPlan(conf : ISonarConfiguration, resourceKey : string) = 
+            let url =  "/api/action_plans/search?project=" + resourceKey
+            let plans = new System.Collections.Generic.List<SonarActionPlan>()
+            let reply = httpconnector.HttpSonarGetRequest(conf, url)
+            let plansDat = JsonActionPlan.Parse(reply)
+            for entry in plansDat.ActionPlans do
+                let plan = new SonarActionPlan()
+                plan.Name <- entry.Name
+                plan.CreatedAt <- entry.CreatedAt
+                plan.UpdatedAt <- entry.UpdatedAt
+                
+                match entry.DeadLine with
+                | Some x -> plan.DeadLine <- x
+                | _ -> ()            
+                    
+                plan.Key <- entry.Key
+                plan.Project <- entry.Project
+                plan.UserLogin <- entry.UserLogin
+                plan.TotalIssues <- entry.TotalIssues
+                plan.UnresolvedIssues <- entry.UnresolvedIssues
+                
+                plans.Add(plan)
+            plans
+
         member this.GetIssues(newConf : ISonarConfiguration, query : string, project : string) = 
             let url =  "/api/issues/search" + query + "&pageSize=200"
             let oldurlreview = "/api/reviews?projects="+ project

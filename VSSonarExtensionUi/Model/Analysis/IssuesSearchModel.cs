@@ -55,11 +55,6 @@ namespace VSSonarExtensionUi.Model.Analysis
         public event ChangedEventHandler IssuesReadyForCollecting;
 
         /// <summary>
-        ///     Gets the sonar version.
-        /// </summary>
-        public double SonarVersion { get; private set; }
-
-        /// <summary>
         ///     Gets or sets the configuration.
         /// </summary>
         public ISonarConfiguration Configuration { get; set; }
@@ -198,10 +193,10 @@ namespace VSSonarExtensionUi.Model.Analysis
                 this.IssuesSearchViewModel.UsersList = new ObservableCollection<User>(usortedList.OrderBy(i => i.Login));
             }
 
-            List<SonarActionPlan> usortedListofPlan = this.RestService.GetAvailableActionPlan(sonarCubeConfiguration, associatedProject);
+            List<SonarActionPlan> usortedListofPlan = this.RestService.GetAvailableActionPlan(sonarCubeConfiguration, associatedProject.Key);
             if (usortedListofPlan != null && usortedListofPlan.Count > 0)
             {
-                this.IssuesSearchViewModel.AvailableActionPlans = new ObservableCollection<SonarActionPlan>(usortedListofPlan.OrderBy(i => i.Login));
+                this.IssuesSearchViewModel.AvailableActionPlans = new ObservableCollection<SonarActionPlan>(usortedListofPlan.OrderBy(i => i.Name));
             }
 
         }
@@ -291,7 +286,7 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// <returns>all issues for requested filter</returns>
         public IEnumerable<Issue> GetIssuesUsingFilter(string filter)
         {
-            if (this.SonarVersion < 3.6)
+            if (this.SonarQubeViewModel.SonarVersion < 3.6)
             {
                 return this.RestService.GetIssuesForProjects(this.Configuration, this.AssociatedProject.Key);
             }

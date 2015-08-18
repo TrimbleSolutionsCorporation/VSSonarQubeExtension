@@ -277,6 +277,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         ///     Gets or sets the users list.
         /// </summary>
         public ObservableCollection<User> UsersList { get; set; }
+        public bool IsActionPlanSelected { get; private set; }
 
         /// <summary>
         /// Called when [show flyouts changed].
@@ -428,6 +429,27 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             }
 
             return "&resolutions=" + str.Substring(0, str.Length - 1);
+        }
+
+        /// <summary>
+        /// Filters the action plans.
+        /// </summary>
+        /// <returns></returns>
+        private string FilterActionPlans()
+        {
+            string str = string.Empty;
+
+            if (this.IsActionPlanSelected)
+            {
+                str += this.SelectedActionPlan.Key;
+            }
+
+            if (string.IsNullOrEmpty(str))
+            {
+                return string.Empty;
+            }
+
+            return "&actionPlans=" + str;
         }
 
         /// <summary>
@@ -719,6 +741,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             request += this.FilterSeverities();
             request += this.FilterStatus();
             request += this.FilterResolutions();
+            request += this.FilterActionPlans();
 
             this.IssuesGridView.UpdateIssues(this.searchModel.GetIssuesUsingFilter(request));
         }

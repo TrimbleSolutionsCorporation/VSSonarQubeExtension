@@ -92,3 +92,19 @@ type QualityTests() =
         let rule = (service :> ISonarRestService).GetRuleUsingProfileAppId(conf, "csharpsquid:S108")
         Assert.That(rule.ConfigKey, Is.EqualTo("csharpsquid:S108"))
 
+    [<Test>]
+    member test.``Should GetActionPlans`` () =
+        let conf = ConnectionConfiguration("http://sonar", "user", "user")
+       
+        let mockHttpReq =
+            Mock<IHttpSonarConnector>()
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/actionPlanData.txt"))
+                .Create()
+
+        let service = SonarRestService(mockHttpReq)
+
+        let gates = (service :> ISonarRestService).GetAvailableActionPlan(conf, "tekla.structures.core:Common")
+        Assert.That(gates.Count, Is.EqualTo(2))
+        Assert.That(gates.[0].Name, Is.EqualTo("Version 3.6"))
+        Assert.That(gates.[1].Name, Is.EqualTo("Version 3.5"))
+

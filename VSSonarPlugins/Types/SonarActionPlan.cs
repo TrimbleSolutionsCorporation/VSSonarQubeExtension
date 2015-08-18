@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace VSSonarExtensionUi.ViewModel.Analysis
+﻿namespace VSSonarPlugins.Types
 {
+    using System;
+
     /// <summary>
     /// Action Plan
     /// </summary>
@@ -13,7 +13,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <value>
         /// The key.
         /// </value>
-        public string Key { get; set; }
+        public Guid Key { get; set; }
 
         /// <summary>
         /// Gets or sets the name.
@@ -53,7 +53,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <value>
         /// The dead line.
         /// </value>
-        public string DeadLine { get; set; }
+        public DateTime DeadLine { get; set; }
 
         /// <summary>
         /// Gets or sets the total issues.

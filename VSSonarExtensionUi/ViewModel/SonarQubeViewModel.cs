@@ -878,6 +878,7 @@ namespace VSSonarExtensionUi.ViewModel
                     this.SonarQubeViews.Where(analysisViewModelBase => analysisViewModelBase.Header.Equals(view)))
                 {
                     this.SelectedModel = analysisViewModelBase.GetAvailableModel() as IAnalysisModelBase;
+                    this.SelectedViewModel = analysisViewModelBase;
                 }
             }
             catch (Exception ex)

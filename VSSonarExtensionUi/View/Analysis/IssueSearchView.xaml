@@ -274,22 +274,22 @@
                                 </Grid>
                             </Expander>
 
-                        <Expander Header="Gate" Grid.Row="5" Grid.ColumnSpan="2"
+                        <Expander Header="Action Plan" Grid.Row="5" Grid.ColumnSpan="2"
                                       Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
                                 <Grid
                                     Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
                                     Height="25">
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="25" />
+                                        <RowDefinition Height="30" />
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="60" />
+                                        <ColumnDefinition Width="100" />
                                         <ColumnDefinition Width="20*" />
                                         <ColumnDefinition Width="25" />
                                     </Grid.ColumnDefinitions>
                                     <Label
                                         Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                        Content="Gate" />
+                                        Content="Action Plan" />
                                     <ComboBox Grid.Row="0" Grid.Column="1" IsTextSearchEnabled="True"
                                               SelectedItem="{Binding SelectedActionPlan, Mode=TwoWay}"
                                               ItemsSource="{Binding AvailableActionPlans}"
@@ -297,7 +297,7 @@
                                               Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
                                               ItemTemplate="{DynamicResource UserSelectionComboBoxDataTemplate}" />
                                     <CheckBox Grid.Row="0" Grid.Column="2" Margin="4,0,-4,0"
-                                              IsChecked="{Binding IsReporterChecked}" />
+                                              IsChecked="{Binding IsActionPlanSelected}" />
                                 </Grid>
                             </Expander>
 

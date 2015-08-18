@@ -70,6 +70,11 @@
 
         public void OnSelectedProjectChanged()
         {
+            if (this.SelectedProject == null)
+            {
+                return;
+            }
+
             if (this.SelectedProject.IsBranch)
             {
                 var branch = this.model.CurrentBranch();
