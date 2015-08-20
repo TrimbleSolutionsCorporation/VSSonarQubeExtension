@@ -25,15 +25,13 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using System.Windows.Media;
 
     using GalaSoft.MvvmLight.Command;
-
-    using PropertyChanged;
-
-    using View.Helpers;
     using Helpers;
-
+    using Model.Helpers;
+    using PropertyChanged;
+    using SonarLocalAnalyser;
+    using View.Helpers;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-    using Model.Helpers;
 
     /// <summary>
     ///     The dummy options controller.
@@ -58,28 +56,38 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         private readonly VSonarQubeOptionsViewModel viewModel;
 
         /// <summary>
+        /// The configuration helper
+        /// </summary>
+        private readonly IConfigurationHelper configurationHelper;
+
+        /// <summary>
         ///     The vsenvironmenthelper.
         /// </summary>
         private IVsEnvironmentHelper vsenvironmenthelper;
 
-        private IConfigurationHelper configurationHelper;
+        /// <summary>
+        /// The associated project
+        /// </summary>
+        private Resource associatedProject;
+
+        /// <summary>
+        /// The user sonar configuration
+        /// </summary>
+        private ISonarConfiguration userSonarConfig;
 
         #endregion
 
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AnalysisOptionsViewModel"/> class.
+        /// Initializes a new instance of the <see cref="AnalysisOptionsViewModel" /> class.
         /// </summary>
-        /// <param name="vsenvironmenthelper">
-        /// The Vsenvironmenthelper.
-        /// </param>
-        /// <param name="viewModel">
-        /// The view Model.
-        /// </param>
-        public AnalysisOptionsViewModel(IVsEnvironmentHelper vsenvironmenthelper, VSonarQubeOptionsViewModel viewModel, IConfigurationHelper configurationHelper)
+        /// <param name="viewModel">The view Model.</param>
+        /// <param name="configurationHelper">The configuration helper.</param>
+        public AnalysisOptionsViewModel(
+            VSonarQubeOptionsViewModel viewModel, 
+            IConfigurationHelper configurationHelper)
         {
-            this.vsenvironmenthelper = vsenvironmenthelper;
             this.configurationHelper = configurationHelper;
             this.viewModel = viewModel;
             this.TimeoutValue = 10;
@@ -88,6 +96,9 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.BackGroundColor = Colors.White;
             this.BrowseForJavaTrigger = new RelayCommand(this.OnBrowseForJavaTrigger);
             this.BrowseForSonarRunnerQubeTrigger = new RelayCommand(this.OnBrowseForSonarRunnerQubeTrigger);
+
+            SonarQubeViewModel.RegisterNewViewModelInPool(this);
+            SonarQubeViewModel.RegisterNewModelInPool(this);
         }
 
         #endregion
@@ -127,11 +138,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         ///     Gets or sets a value indicating whether debug is checked.
         /// </summary>
         public bool DebugIsChecked { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the excluded plugins.
-        /// </summary>
-        //public string ExcludedPlugins { get; set; }
 
         /// <summary>
         ///     Gets or sets the fore ground color.
@@ -174,6 +180,30 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public string SourceEncoding { get; set; }
 
         /// <summary>
+        /// Gets or sets the sonar qube binary.
+        /// </summary>
+        /// <value>
+        /// The sonar qube binary.
+        /// </value>
+        public string SonarQubeBinary { get; set; }
+
+        /// <summary>
+        /// Gets or sets the java binary.
+        /// </summary>
+        /// <value>
+        /// The java binary.
+        /// </value>
+        public string JavaBinary { get; set; }
+
+        /// <summary>
+        /// Gets or sets the excluded plugins.
+        /// </summary>
+        /// <value>
+        /// The excluded plugins.
+        /// </value>
+        public string ExcludedPlugins { get; set; }
+
+        /// <summary>
         ///     Gets or sets the timeout value.
         /// </summary>
         [AlsoNotifyFor("TimeoutValueString")]
@@ -190,6 +220,14 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             }
         }
 
+        /// <summary>
+        /// Gets or sets the project.
+        /// </summary>
+        /// <value>
+        /// The project.
+        /// </value>
+        private Resource Project { get; set; }
+
         #endregion
 
         #region Public Methods and Operators
@@ -197,54 +235,54 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         /// The update services.
         /// </summary>
-        /// <param name="restServiceIn">
-        /// The rest service in.
-        /// </param>
-        /// <param name="vsenvironmenthelperIn">
-        /// The vsenvironmenthelper in.
-        /// </param>
-        /// <param name="statusBar">
-        /// The status bar.
-        /// </param>
-        /// <param name="provider">
-        /// The provider.
-        /// </param>
+        /// <param name="vsenvironmenthelperIn">The vsenvironmenthelper in.</param>
+        /// <param name="statusBar">The status bar.</param>
+        /// <param name="provider">The provider.</param>
         public void UpdateServices(
-            ISonarRestService restServiceIn,
             IVsEnvironmentHelper vsenvironmenthelperIn,
-            IConfigurationHelper configurationHelper,
             IVSSStatusBar statusBar,
             IServiceProvider provider)
         {
-            this.configurationHelper = configurationHelper;
             this.vsenvironmenthelper = vsenvironmenthelperIn;
         }
 
-        public void SaveCurrentViewToDisk(IConfigurationHelper conf)
+        /// <summary>
+        /// Gets the view model.
+        /// </summary>
+        /// <returns>
+        /// returns view model
+        /// </returns>
+        public object GetViewModel()
+        {
+            return this;
+        }
+
+        /// <summary>
+        /// Saves the data.
+        /// </summary>
+        public void SaveData()
         {
             // general props
-            conf.WriteOptionInApplicationData(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.JavaExecutableKey, this.JavaBinary);
-            conf.WriteOptionInApplicationData(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.RunnerExecutableKey, this.SonarQubeBinary);
-            conf.WriteOptionInApplicationData(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.ExcludedPluginsKey, this.ExcludedPlugins);
-            conf.WriteOptionInApplicationData(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.IsDebugAnalysisOnKey, this.DebugIsChecked.ToString());
-            conf.WriteOptionInApplicationData(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.LocalAnalysisTimeoutKey, this.TimeoutValue.ToString());
+            this.configurationHelper.WriteOptionInApplicationData(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.JavaExecutableKey, this.JavaBinary);
+            this.configurationHelper.WriteOptionInApplicationData(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.RunnerExecutableKey, this.SonarQubeBinary);
+            this.configurationHelper.WriteOptionInApplicationData(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.ExcludedPluginsKey, this.ExcludedPlugins);
+            this.configurationHelper.WriteOptionInApplicationData(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.IsDebugAnalysisOnKey, this.DebugIsChecked.ToString());
+            this.configurationHelper.WriteOptionInApplicationData(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.LocalAnalysisTimeoutKey, this.TimeoutValue.ToString());
 
             if (this.Project != null)
             {
-                conf.WriteOptionInApplicationData(Context.AnalysisProject, this.Project.Key, GlobalAnalysisIds.SonarSourceKey, this.SourceDir);
-                conf.WriteOptionInApplicationData(Context.AnalysisProject, this.Project.Key, GlobalAnalysisIds.SourceEncodingKey, this.SourceEncoding);
+                this.configurationHelper.WriteOptionInApplicationData(Context.AnalysisProject, this.Project.Key, GlobalAnalysisIds.SonarSourceKey, this.SourceDir);
+                this.configurationHelper.WriteOptionInApplicationData(Context.AnalysisProject, this.Project.Key, GlobalAnalysisIds.SourceEncodingKey, this.SourceEncoding);
             }
         }
 
         /// <summary>
         /// The refresh properties in view.
         /// </summary>
-        /// <param name="associatedProject">
-        /// The associated project.
-        /// </param>
-        public void RefreshPropertiesInView(Resource associatedProject)
+        /// <param name="associatedProjectIn">The associated project in.</param>
+        public void ReloadDataFromDisk(Resource associatedProjectIn)
         {
-            this.Project = associatedProject;
+            this.Project = associatedProjectIn;
 
             this.JavaBinary = this.configurationHelper.ReadSetting(
                 Context.AnalysisGeneral,
@@ -291,8 +329,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             }
         }
 
-        private Resource Project { get; set; }
-
         /// <summary>
         ///     Gets or sets a value indicating whether browse for java trigger.
         /// </summary>
@@ -338,25 +374,22 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         /// The set options.
         /// </summary>
-        /// <param name="options">
-        /// The options.
-        /// </param>
         public void SetGeneralOptions()
         {
             this.SonarQubeBinary =
-                configurationHelper.ReadSetting(
+                this.configurationHelper.ReadSetting(
                     Context.AnalysisGeneral,
                     OwnersId.AnalysisOwnerId,
                     GlobalAnalysisIds.RunnerExecutableKey).Value;
 
             this.JavaBinary =
-                configurationHelper.ReadSetting(
+                this.configurationHelper.ReadSetting(
                     Context.AnalysisGeneral,
                     OwnersId.AnalysisOwnerId,
                     GlobalAnalysisIds.JavaExecutableKey).Value;
 
             this.ExcludedPlugins =
-                configurationHelper.ReadSetting(
+                this.configurationHelper.ReadSetting(
                     Context.AnalysisGeneral,
                     OwnersId.AnalysisOwnerId,
                     GlobalAnalysisIds.ExcludedPluginsKey).Value;
@@ -364,7 +397,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             try
             {
                 string timeout =
-                    configurationHelper.ReadSetting(
+                    this.configurationHelper.ReadSetting(
                         Context.AnalysisGeneral,
                         OwnersId.AnalysisOwnerId,
                         GlobalAnalysisIds.LocalAnalysisTimeoutKey).Value;
@@ -379,7 +412,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             try
             {
                 var debugCheck =
-                    configurationHelper.ReadSetting(
+                    this.configurationHelper.ReadSetting(
                         Context.AnalysisGeneral,
                         OwnersId.AnalysisOwnerId,
                         GlobalAnalysisIds.IsDebugAnalysisOnKey).Value;
@@ -391,10 +424,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 this.DebugIsChecked = false;
             }
         }
-
-        public string SonarQubeBinary { get; set; }
-
-        public string JavaBinary { get; set; }
 
         /// <summary>
         /// The update colours.
@@ -411,11 +440,44 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.ForeGroundColor = foreground;
         }
 
+
+        /// <summary>
+        /// Gets the available model, TODO: needs to be removed after viewmodels are split into models and view models
+        /// </summary>
+        /// <returns>
+        /// returns optinal model
+        /// </returns>
+        public object GetAvailableModel()
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// Associates the with new project.
+        /// </summary>
+        /// <param name="config">The configuration.</param>
+        /// <param name="project">The project.</param>
+        /// <param name="workDir">The work dir.</param>
+        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workDir)
+        {
+            this.SourceDir = workDir;
+            this.userSonarConfig = config;
+            this.associatedProject = project;
+        }
+
+        /// <summary>
+        /// The end data association.
+        /// </summary>
+        public void EndDataAssociation()
+        {
+            this.SourceDir = string.Empty;
+            this.userSonarConfig = null;
+            this.associatedProject = null;
+        }
+
         #endregion
 
         #region Methods
-
-        public string ExcludedPlugins { get; set; }
 
         /// <summary>
         /// The get general project option from dictionary.
@@ -461,12 +523,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             return string.Empty;
         }
 
-        public object GetAvailableModel()
-        {
-            throw new NotImplementedException();
-        }
-
         #endregion
-
     }
 }

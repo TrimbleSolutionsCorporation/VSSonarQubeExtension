@@ -35,6 +35,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             {
                 AvailableDllDiagnostics.Add(item.Value);
             }
+
+            SonarQubeViewModel.RegisterNewViewModelInPool(this);
         }
 
         public VSSonarExtensionDiagnostic SelectedDiagnostic { get; set; }

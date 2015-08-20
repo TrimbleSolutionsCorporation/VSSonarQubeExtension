@@ -1271,6 +1271,53 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
             responseMap
 
+        member this.PlanIssues(newConf : ISonarConfiguration, issues : System.Collections.IList, planid : string) =
+            let responseMap = new System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>()
+            for issueobj in issues do
+                let issue = issueobj :?> Issue
+                let parameters = Map.empty.Add("issue", issue.Key.ToString()).Add("plan", planid)
+                let data = httpconnector.HttpSonarPostRequest(newConf, "/api/issues/plan", parameters)
+                responseMap.Add(issue.Key.ToString(), data.StatusCode)
+
+            responseMap
+
+        member this.CreateNewPlan(newConf : ISonarConfiguration, projectId : string, plan : SonarActionPlan) =
+
+            let responseMap = new System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>()
+            let mutable parameters = Map.empty.Add("name", HttpUtility.UrlEncode(plan.Name))
+                                      .Add("project", projectId)
+                                      .Add("description", HttpUtility.UrlEncode(plan.Description))
+
+            if plan.DeadLine > DateTime.Now then
+                parameters <- parameters.Add("deadLine", plan.DeadLine.Year.ToString() + "-" + plan.DeadLine.Month.ToString() + "-" + plan.DeadLine.Day.ToString())
+
+            let reply = httpconnector.HttpSonarPostRequest(newConf, "/api/action_plans/create", parameters)
+
+            let plansDat = JsonarPlan.Parse(reply.Content)
+            let plan = new SonarActionPlan()
+            plan.Name <- plansDat.ActionPlan.Name
+            plan.CreatedAt <- plansDat.ActionPlan.CreatedAt
+            plan.UpdatedAt <- plansDat.ActionPlan.UpdatedAt
+                
+            if not(obj.ReferenceEquals(plansDat.ActionPlan.JsonValue.TryGetProperty("deadLine"), null)) then
+                plan.DeadLine <- plansDat.ActionPlan.DeadLine
+                    
+            plan.Key <- plansDat.ActionPlan.Key
+            plan.Project <- plansDat.ActionPlan.Project
+            plan.UserLogin <- plansDat.ActionPlan.UserLogin
+            plan
+
+
+        member this.UnPlanIssues(newConf : ISonarConfiguration, issues : System.Collections.IList) =
+            let responseMap = new System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>()
+            for issueobj in issues do
+                let issue = issueobj :?> Issue
+                let parameters = Map.empty.Add("issue", issue.Key.ToString())
+                let data = httpconnector.HttpSonarPostRequest(newConf, "/api/issues/plan", parameters)
+                responseMap.Add(issue.Key.ToString(), data.StatusCode)
+
+            responseMap
+                        
         member this.ResolveIssues(newConf : ISonarConfiguration, issues : System.Collections.IList, comment : string) =
             let responseMap = new System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>()
 

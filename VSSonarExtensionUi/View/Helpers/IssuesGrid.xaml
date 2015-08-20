@@ -36,10 +36,10 @@
                         <MenuItem 
                          Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
                          Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"                            
-                            Header="{Binding CommandText}" Command="{Binding AssociatedCommand}" IsEnabled="{Binding IsEnabled}"/>
+                            Header="{Binding CommandText}" Command="{Binding ExecuteCommand}" IsEnabled="{Binding IsEnabled}"/>
                         <HierarchicalDataTemplate.ItemContainerStyle>
                             <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource MenuItemStyle}">
-                                <Setter Property="Command" Value="{Binding AssociatedCommand}"/>
+                                <Setter Property="Command" Value="{Binding ExecuteCommand}"/>
                                 <Setter Property="Foreground" Value="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"/>
                                 <Setter Property="Background" Value="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"/>
                             </Style>
@@ -60,12 +60,12 @@
                         <MenuItem 
                             Foreground="Black"
                             Background="White"                             
-                            Header="{Binding CommandText}" Command="{Binding AssociatedCommand}" IsEnabled="{Binding IsEnabled}"/>
+                            Header="{Binding CommandText}" Command="{Binding ExecuteCommand}" IsEnabled="{Binding IsEnabled}"/>
                         <HierarchicalDataTemplate.ItemContainerStyle>
                             <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource MenuItemStyle}">
                                 <Setter Property="Foreground" Value="Black"/>
                                 <Setter Property="Background" Value="White"/>
-                                <Setter Property="Command" Value="{Binding AssociatedCommand}"/>
+                                <Setter Property="Command" Value="{Binding ExecuteCommand}"/>
                             </Style>
                         </HierarchicalDataTemplate.ItemContainerStyle>
                     </HierarchicalDataTemplate>

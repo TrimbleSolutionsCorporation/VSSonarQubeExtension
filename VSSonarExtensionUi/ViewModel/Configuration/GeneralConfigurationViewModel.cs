@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="GeneralConfigurationViewModel.cs" company="">
-//   
+//
 // </copyright>
 // <summary>
 //   The sonar configuration view viewModel.
@@ -15,22 +15,18 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using System.Windows.Media;
 
     using CredentialManagement;
-
-
-
     using GalaSoft.MvvmLight.Command;
-
-    using PropertyChanged;
-
-    using View.Helpers;
     using Helpers;
-
+    using Model.Helpers;
+    using PropertyChanged;
+    using SonarLocalAnalyser;
+    using View.Helpers;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-    using Model.Helpers;
+    
 
     /// <summary>
-    ///     The sonar configuration view viewModel.
+    /// The sonar configuration view viewModel.
     /// </summary>
     [ImplementPropertyChanged]
     public class GeneralConfigurationViewModel : IOptionsViewModelBase, IOptionsModelBase
@@ -38,61 +34,69 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         #region Fields
 
         /// <summary>
-        ///     The sq view model.
-        /// </summary>
-        private readonly SonarQubeViewModel sonarQubeViewModel;
-
-        /// <summary>
         ///     The viewModel.
         /// </summary>
         private readonly VSonarQubeOptionsViewModel viewModel;
 
         /// <summary>
+        /// The configuration helper
+        /// </summary>
+        private readonly IConfigurationHelper configurationHelper;
+
+        /// <summary>
         ///     The rest service.
         /// </summary>
-        private ISonarRestService restService;
+        private readonly ISonarRestService restService;
+
+        /// <summary>
+        /// The notification manager
+        /// </summary>
+        private readonly INotificationManager notificationManager;
 
         /// <summary>
         ///     The visual studio helper.
         /// </summary>
         private IVsEnvironmentHelper visualStudioHelper;
 
-        private IConfigurationHelper configurationHelper;
+        /// <summary>
+        /// The user configuration
+        /// </summary>
+        private ISonarConfiguration userConfig;
 
-        #endregion
+        /// <summary>
+        /// The associated project
+        /// </summary>
+        private Resource associatedProject;
+
+        /// <summary>
+        /// The source dir
+        /// </summary>
+        private string sourceDir;
+
+        #endregion Fields
 
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GeneralConfigurationViewModel"/> class.
+        /// Initializes a new instance of the <see cref="GeneralConfigurationViewModel" /> class.
         /// </summary>
-        /// <param name="viewModel">
-        /// The view model.
-        /// </param>
-        /// <param name="restService">
-        /// The rest service.
-        /// </param>
-        /// <param name="helper">
-        /// The helper.
-        /// </param>
-        /// <param name="sonarQubeViewModel">
-        /// The sonar qube view model.
-        /// </param>
+        /// <param name="viewModel">The view model.</param>
+        /// <param name="restService">The rest service.</param>
+        /// <param name="configurationHelper">The configuration helper.</param>
+        /// <param name="notificationManager">The notification manager.</param>
         public GeneralConfigurationViewModel(
-            VSonarQubeOptionsViewModel viewModel, 
-            ISonarRestService restService, 
-            IVsEnvironmentHelper helper, 
-            SonarQubeViewModel sonarQubeViewModel,
-            IConfigurationHelper configurationHelper)
+            VSonarQubeOptionsViewModel viewModel,
+            ISonarRestService restService,
+            IConfigurationHelper configurationHelper,
+            INotificationManager notificationManager)
         {
             this.Header = "General Settings";
-            this.UserName = "";
-            this.Password = "";
+            this.UserName = string.Empty;
+            this.Password = string.Empty;
             this.viewModel = viewModel;
             this.restService = restService;
             this.configurationHelper = configurationHelper;
-            this.visualStudioHelper = helper;
-            this.sonarQubeViewModel = sonarQubeViewModel;
+            this.notificationManager = notificationManager;
 
             this.ClearCacheCommand = new RelayCommand(this.OnClearCacheCommand);
             this.TestConnectionCommand = new RelayCommand<object>(this.OnTestAndSavePassword);
@@ -102,10 +106,14 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.ForeGroundColor = Colors.Black;
 
             this.GetCredentials();
-            this.RefreshPropertiesInView(null);
+            this.ReloadDataFromDisk(null);
+
+            // register model
+            SonarQubeViewModel.RegisterNewModelInPool(this);
+            SonarQubeViewModel.RegisterNewViewModelInPool(this);
         }
 
-        #endregion
+        #endregion Constructors and Destructors
 
         #region Public Events
 
@@ -114,7 +122,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         public event ChangedEventHandler ConfigurationHasChanged;
 
-        #endregion
+        #endregion Public Events
 
         #region Public Properties
 
@@ -159,21 +167,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public bool IsConnectAtStartOn { get; set; }
 
         /// <summary>
-        /// The on is connect at star on changed.
-        /// </summary>
-        public void OnIsConnectAtStarOnChanged()
-        {
-            this.configurationHelper.WriteSetting(
-                new SonarQubeProperties
-                    {
-                        Context = Context.GlobalPropsId,
-                        Key = "AutoConnectAtStart",
-                        Owner = OwnersId.ApplicationOwnerId,
-                        Value = this.IsConnectAtStartOn ? "true" : "false"
-                    });
-        }
-
-        /// <summary>
         ///     Gets or sets the password.
         /// </summary>
         public string Password { get; set; }
@@ -199,27 +192,37 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public string UserDefinedEditor { get; set; }
 
         /// <summary>
-        ///     Gets or sets the user name.
+        /// Gets or sets the user name.
         /// </summary>
+        /// <value>
+        /// The name of the user.
+        /// </value>
         public string UserName { get; set; }
 
-        #endregion
+        #endregion Public Properties
 
         #region Public Methods and Operators
 
         /// <summary>
+        /// The on is connect at star on changed.
+        /// </summary>
+        public void OnIsConnectAtStarOnChanged()
+        {
+            this.configurationHelper.WriteSetting(
+                new SonarQubeProperties
+                {
+                    Context = Context.GlobalPropsId,
+                    Key = "AutoConnectAtStart",
+                    Owner = OwnersId.ApplicationOwnerId,
+                    Value = this.IsConnectAtStartOn ? "true" : "false"
+                });
+        }
+
+        /// <summary>
         /// The init data association.
         /// </summary>
-        /// <param name="associatedProject">
-        /// The associated project.
-        /// </param>
-        /// <param name="userConnectionConfig">
-        /// The user connection config.
-        /// </param>
-        /// <param name="workingDir">
-        /// The working dir.
-        /// </param>
-        public void RefreshPropertiesInView(Resource associatedProject)
+        /// <param name="associatedProjectIn">The associated project in.</param>
+        public void ReloadDataFromDisk(Resource associatedProjectIn)
         {
             try
             {
@@ -230,7 +233,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             {
                 Debug.WriteLine(ex.Message);
                 this.IsConnectAtStartOn = true;
-                this.configurationHelper.WriteSetting(new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.IsConnectAtStartOn, this.IsConnectAtStartOn ? "true" : "false"));
+                this.configurationHelper.WriteSetting(
+                    new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.IsConnectAtStartOn, this.IsConnectAtStartOn ? "true" : "false"));
             }
 
             try
@@ -285,12 +289,12 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public void OnExtensionDebugModeEnabledChanged()
         {
             var prp = new SonarQubeProperties
-                          {
-                              Context = Context.GlobalPropsId,
-                              Owner = OwnersId.ApplicationOwnerId,
-                              Key = "ExtensionDebugModeEnabled",
-                              Value = this.ExtensionDebugModeEnabled ? "TRUE" : "FALSE"
-                          };
+            {
+                Context = Context.GlobalPropsId,
+                Owner = OwnersId.ApplicationOwnerId,
+                Key = "ExtensionDebugModeEnabled",
+                Value = this.ExtensionDebugModeEnabled ? "TRUE" : "FALSE"
+            };
 
             this.configurationHelper.WriteSetting(prp);
         }
@@ -320,42 +324,79 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         }
 
         /// <summary>
-        /// The update services.
+        /// Updates the services.
         /// </summary>
-        /// <param name="restServiceIn">
-        /// The rest service in.
-        /// </param>
-        /// <param name="vsenvironmenthelperIn">
-        /// The vsenvironmenthelper in.
-        /// </param>
-        /// <param name="statusBar">
-        /// The status bar.
-        /// </param>
-        /// <param name="provider">
-        /// The provider.
-        /// </param>
-        public void UpdateServices(
-            ISonarRestService restServiceIn, 
-            IVsEnvironmentHelper vsenvironmenthelperIn, 
-            IConfigurationHelper  configurationHelper,
-            IVSSStatusBar statusBar, 
-            IServiceProvider provider)
+        /// <param name="vsenvironmenthelperIn">The vsenvironmenthelper in.</param>
+        /// <param name="statusBar">The status bar.</param>
+        /// <param name="provider">The provider.</param>
+        public void UpdateServices(IVsEnvironmentHelper vsenvironmenthelperIn, IVSSStatusBar statusBar, IServiceProvider provider)
         {
-            this.restService = restServiceIn;
             this.visualStudioHelper = vsenvironmenthelperIn;
-            this.configurationHelper = configurationHelper;
         }
 
-        public void SaveCurrentViewToDisk(IConfigurationHelper configurationHelper)
+        /// <summary>
+        /// Associates the with new project.
+        /// </summary>
+        /// <param name="config">The configuration.</param>
+        /// <param name="project">The project.</param>
+        /// <param name="workingDir">The working dir.</param>
+        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workingDir)
         {
-            this.configurationHelper.WriteSetting(new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, "ServerAddress", this.ServerAddress));
-            this.configurationHelper.WriteSetting(new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.IsConnectAtStartOn, this.IsConnectAtStartOn ? "true" : "false"));
-            this.configurationHelper.WriteSetting(new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.UserDefinedEditor, this.UserDefinedEditor));
-            this.configurationHelper.WriteSetting(new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.ExtensionDebugModeEnabled, this.ExtensionDebugModeEnabled ? "true" : "false"));
-            this.configurationHelper.WriteSetting(new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.DisableEditorTags, this.DisableEditorTags ? "true" : "false"));
+            this.sourceDir = workingDir;
+            this.associatedProject = project;
+            this.userConfig = config;
         }
 
-        #endregion
+        /// <summary>
+        /// Gets the view model.
+        /// </summary>
+        /// <returns>
+        /// returns view model
+        /// </returns>
+        public object GetViewModel()
+        {
+            return this;
+        }
+
+        /// <summary>
+        /// Gets the available model, TODO: needs to be removed after viewmodels are split into models and view models
+        /// </summary>
+        /// <returns>
+        /// returns optinal model
+        /// </returns>
+        public object GetAvailableModel()
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// The end data association.
+        /// </summary>
+        public void EndDataAssociation()
+        {
+            this.sourceDir = string.Empty;
+            this.associatedProject = null;
+            this.userConfig = null;
+        }
+
+        /// <summary>
+        /// Saves the data.
+        /// </summary>
+        public void SaveData()
+        {
+            this.configurationHelper.WriteSetting(
+                new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, "ServerAddress", this.ServerAddress));
+            this.configurationHelper.WriteSetting(
+                new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.IsConnectAtStartOn, this.IsConnectAtStartOn ? "true" : "false"));
+            this.configurationHelper.WriteSetting(
+                new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.UserDefinedEditor, this.UserDefinedEditor));
+            this.configurationHelper.WriteSetting(
+                new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.ExtensionDebugModeEnabled, this.ExtensionDebugModeEnabled ? "true" : "false"));
+            this.configurationHelper.WriteSetting(
+                new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.DisableEditorTags, this.DisableEditorTags ? "true" : "false"));
+        }
+
+        #endregion Public Methods and Operators
 
         #region Methods
 
@@ -398,7 +439,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                     {
                         this.UserName = cm.Username;
                         this.ServerAddress = address;
-                        this.Password = ConnectionConfiguration.ConvertToUnsecureString(cm.SecurePassword); 
+                        this.Password = ConnectionConfiguration.ConvertToUnsecureString(cm.SecurePassword);
                     }
                 }
             }
@@ -413,7 +454,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         private void OnClearCacheCommand()
         {
-            this.sonarQubeViewModel.ServerViewModel.ClearCache();
+            this.notificationManager.ClearCache();
         }
 
         /// <summary>
@@ -436,7 +477,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </param>
         private void OnTestAndSavePassword(object obj)
         {
-            if (String.IsNullOrEmpty(this.ServerAddress))
+            if (string.IsNullOrEmpty(this.ServerAddress))
             {
                 this.StatusMessage = "Failed: Address not set";
                 return;
@@ -480,20 +521,15 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         {
             this.configurationHelper.WriteSetting(new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, "ServerAddress", this.ServerAddress));
             var cm = new Credential
-                         {
-                             Target = "VSSonarQubeExtension", 
-                             PersistanceType = PersistanceType.Enterprise, 
-                             Username = userName, 
-                             SecurePassword = ConnectionConfiguration.ConvertToSecureString(password)
-                         };
+            {
+                Target = "VSSonarQubeExtension",
+                PersistanceType = PersistanceType.Enterprise,
+                Username = userName,
+                SecurePassword = ConnectionConfiguration.ConvertToSecureString(password)
+            };
             cm.Save();
         }
-
-        public object GetAvailableModel()
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion
+        
+        #endregion Methods
     }
 }

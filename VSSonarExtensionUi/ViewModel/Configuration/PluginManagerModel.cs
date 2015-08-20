@@ -9,33 +9,25 @@
 namespace VSSonarExtensionUi.ViewModel.Configuration
 {
     using System;
-    using System.Linq;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
     using System.Windows.Forms;
     using System.Windows.Input;
     using System.Windows.Media;
 
-
-
     using GalaSoft.MvvmLight.Command;
-
-    using PropertyChanged;
-
-    using SonarRestService;
-
-    using VSSonarExtensionUi.View.Helpers;
-    using VSSonarExtensionUi.ViewModel.Helpers;
-
-    using VSSonarPlugins;
-
-    using Application = System.Windows.Application;
-    using UserControl = System.Windows.Controls.UserControl;
-    using VSSonarPlugins.Types;
+    using Helpers;
     using Model.Helpers;
+    using PropertyChanged;
+    using SonarLocalAnalyser;
+    using View.Helpers;
+    using VSSonarPlugins;
+    using VSSonarPlugins.Types;
+    using UserControl = System.Windows.Controls.UserControl;
 
     /// <summary>
     ///     The dummy options controller.
@@ -56,61 +48,73 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         private readonly ObservableCollection<PluginDescription> pluginList = new ObservableCollection<PluginDescription>();
 
         /// <summary>
-        ///     The viewModel.
+        /// The notification manager
         /// </summary>
-        private readonly VSonarQubeOptionsViewModel viewModel;
-        private readonly SonarQubeViewModel sqmodel;
-        private readonly ISonarConfiguration sonarConf;
-        private IConfigurationHelper configurationHelper;
         private readonly INotificationManager notificationManager;
 
+        /// <summary>
+        /// The vshelper
+        /// </summary>
         private readonly IVsEnvironmentHelper vshelper;
-        private IList<IPlugin> Plugins;
+
+        /// <summary>
+        /// The configuration helper
+        /// </summary>
+        private readonly IConfigurationHelper configurationHelper;
+
+        /// <summary>
+        /// The plugins
+        /// </summary>
+        private readonly IList<IPlugin> plugins = new List<IPlugin>();
+
+        /// <summary>
+        /// The sonar conf
+        /// </summary>
+        private ISonarConfiguration sonarConf;
+
+        /// <summary>
+        /// The associated project
+        /// </summary>
+        private Resource associatedProject;
+
+        /// <summary>
+        /// The source dir
+        /// </summary>
+        private string sourceDir;
 
         #endregion
 
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PluginManagerModel"/> class.
+        /// Initializes a new instance of the <see cref="PluginManagerModel" /> class.
         /// </summary>
-        /// <param name="controller">
-        /// The controller.
-        /// </param>
-        /// <param name="conf">
-        /// The conf.
-        /// </param>
-        /// <param name="visualStudioHelper">
-        /// The visual Studio Helper.
-        /// </param>
-        /// <param name="viewModel">
-        /// The viewModel.
-        /// </param>
+        /// <param name="controller">The controller.</param>
+        /// <param name="configurationHelper">The configuration helper.</param>
+        /// <param name="notifyManager">The notify manager.</param>
+        /// <param name="helper">The helper.</param>
         public PluginManagerModel(
             IPluginController controller, 
-            ISonarConfiguration conf, 
             IConfigurationHelper configurationHelper,
-            VSonarQubeOptionsViewModel viewModel, 
-            SonarQubeViewModel mainModel,
             INotificationManager notifyManager,
             IVsEnvironmentHelper helper)
         {
             this.notificationManager = notifyManager;
             this.Header = "Plugin Manager";
             this.configurationHelper = configurationHelper;
-            this.viewModel = viewModel;
-            this.sqmodel = mainModel;
-            this.sonarConf = conf;
             this.controller = controller;
             this.vshelper = helper;
 
-            this.Plugins = new List<IPlugin>();
+            this.plugins = new List<IPlugin>();
             this.MenuPlugins = new List<IMenuCommandPlugin>();
             this.AnalysisPlugins = new List<IAnalysisPlugin>();
             this.SourceCodePlugins = new List<ISourceVersionPlugin>();
 
             this.InitPluginList(helper, null);
             this.InitCommanding();
+
+            SonarQubeViewModel.RegisterNewModelInPool(this);
+            SonarQubeViewModel.RegisterNewViewModelInPool(this);
         }
 
         #endregion
@@ -207,6 +211,30 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         public ICommand SelectionChangedCommand { get; set; }
 
+        /// <summary>
+        /// Gets or sets the plugin controller.
+        /// </summary>
+        /// <value>
+        /// The plugin controller.
+        /// </value>
+        public IPluginControlOption PluginController { get; set; }
+
+        /// <summary>
+        /// Gets the source code plugins.
+        /// </summary>
+        /// <value>
+        /// The source code plugins.
+        /// </value>
+        public List<ISourceVersionPlugin> SourceCodePlugins { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the project.
+        /// </summary>
+        /// <value>
+        /// The project.
+        /// </value>
+        private Resource Project { get; set; }
+
         #endregion
 
         #region Public Methods and Operators
@@ -214,21 +242,22 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         /// The init data association.
         /// </summary>
-        /// <param name="associatedProject">
-        /// The associated project.
-        /// </param>
-        /// <param name="userConnectionConfig">
-        /// The user connection config.
-        /// </param>
-        /// <param name="workingDir">
-        /// The working dir.
-        /// </param>
-        public void RefreshPropertiesInView(Resource associatedProject)
+        /// <param name="associatedProjectIn">The associated project in.</param>
+        public void ReloadDataFromDisk(Resource associatedProjectIn)
         {
-            this.Project = associatedProject;
+            this.Project = associatedProjectIn;
         }
 
-        private Resource Project { get; set; }
+        /// <summary>
+        /// Gets the view model.
+        /// </summary>
+        /// <returns>
+        /// returns view model
+        /// </returns>
+        public object GetViewModel()
+        {
+            return this;
+        }
 
         /// <summary>
         ///     Gets or sets a value indicating whether install new plugin.
@@ -255,8 +284,9 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                             UserExceptionMessageBox.ShowException("Cannot Install Plugin", new Exception("Error Loading Plugin"), this.controller.GetErrorData());
                         }
                     }
-                    catch(Exception  ex)
+                    catch (Exception ex)
                     {
+                        Debug.WriteLine(ex.Message);
                         UserExceptionMessageBox.ShowException(
                             "Cannot Install Plugin", 
                             new Exception("Error Loading Plugin"), 
@@ -275,21 +305,21 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             if (plugin != null)
             {
                 plugin.Dispose();
-                this.controller.RemovePlugin((IPlugin)plugin, this.Plugins);
+                this.controller.RemovePlugin((IPlugin)plugin, this.plugins);
                 this.AnalysisPlugins.Remove(plugin);
                 this.PluginList.Remove(this.SelectedPlugin);
-                this.Plugins.Remove(plugin);
+                this.plugins.Remove(plugin);
                 return;
             }
 
             var menuPlugin = this.MenuPlugins.SingleOrDefault(s => s.GetPluginDescription().Name.Equals(this.SelectedPlugin.Name));
             if (menuPlugin != null)
             {
-                this.controller.RemovePlugin((IPlugin)menuPlugin, this.Plugins);
+                this.controller.RemovePlugin((IPlugin)menuPlugin, this.plugins);
                 this.MenuPlugins.Remove(menuPlugin);
-                this.Plugins.Remove(menuPlugin);
+                this.plugins.Remove(menuPlugin);
                 this.PluginList.Remove(this.SelectedPlugin);
-                this.sqmodel.RemoveMenuPlugin(menuPlugin);
+                this.notificationManager.RemoveMenuPlugin(menuPlugin);
             }
         }
 
@@ -316,29 +346,21 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         /// The update services.
         /// </summary>
-        /// <param name="restServiceIn">
-        /// The rest service in.
-        /// </param>
-        /// <param name="vsenvironmenthelperIn">
-        /// The vsenvironmenthelper in.
-        /// </param>
-        /// <param name="statusBar">
-        /// The status bar.
-        /// </param>
-        /// <param name="provider">
-        /// The provider.
-        /// </param>
+        /// <param name="vsenvironmenthelperIn">The vsenvironmenthelper in.</param>
+        /// <param name="statusBar">The status bar.</param>
+        /// <param name="provider">The provider.</param>
         public void UpdateServices(
-            ISonarRestService restServiceIn, 
             IVsEnvironmentHelper vsenvironmenthelperIn, 
-            IConfigurationHelper configurationHelper,
             IVSSStatusBar statusBar, 
             IServiceProvider provider)
         {
-            this.configurationHelper = configurationHelper;
+            // does not access vs services
         }
 
-        public void SaveCurrentViewToDisk(IConfigurationHelper configurationHelper)
+        /// <summary>
+        /// Saves the data.
+        /// </summary>
+        public void SaveData()
         {
             if (this.PluginController != null)
             {
@@ -362,6 +384,40 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             }
         }
 
+        /// <summary>
+        /// Gets the available model, TODO: needs to be removed after viewmodels are split into models and view models
+        /// </summary>
+        /// <returns>
+        /// returns optinal model
+        /// </returns>
+        public object GetAvailableModel()
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// Associates the with new project.
+        /// </summary>
+        /// <param name="config">The configuration.</param>
+        /// <param name="project">The project.</param>
+        /// <param name="workDir">The work dir.</param>
+        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workDir)
+        {
+            this.sourceDir = workDir;
+            this.sonarConf = config;
+            this.associatedProject = project;
+        }
+
+        /// <summary>
+        /// The end data association.
+        /// </summary>
+        public void EndDataAssociation()
+        {
+            this.sonarConf = null;
+            this.associatedProject = null;
+            this.sourceDir = string.Empty;
+        }
+
         #endregion
 
         #region Methods
@@ -378,8 +434,11 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         }
 
         /// <summary>
-        ///     The init plugin list.
+        /// The init plugin list.
         /// </summary>
+        /// <param name="visualStudioHelper">The visual studio helper.</param>
+        /// <param name="files">The files.</param>
+        /// <returns>true on ok</returns>
         private bool InitPluginList(IVsEnvironmentHelper visualStudioHelper, IEnumerable<string> files)
         {
             bool loaded = false;
@@ -410,7 +469,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 {
                     this.AnalysisPlugins.Add(plugindata);
                     this.PluginList.Add(plugDesc);
-                    this.Plugins.Add(plugin);
+                    this.plugins.Add(plugin);
                     loaded = true;
                     continue;                    
                 }
@@ -420,7 +479,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 {
                     this.MenuPlugins.Add(pluginMenu);
                     this.PluginList.Add(plugDesc);
-                    this.Plugins.Add(plugin);
+                    this.plugins.Add(plugin);
                     loaded = true;
                     continue;
                 }
@@ -430,11 +489,10 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 {
                     this.SourceCodePlugins.Add(pluginSourceControl);
                     this.PluginList.Add(plugDesc);
-                    this.Plugins.Add(plugin);
+                    this.plugins.Add(plugin);
                     loaded = true;
                     continue;
                 }
-
             }
 
             return loaded;
@@ -475,14 +533,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 this.OptionsInView = null;
             }
         }
-
-        public object GetAvailableModel()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IPluginControlOption PluginController { get; set; }
-        public List<ISourceVersionPlugin> SourceCodePlugins { get; private set; }
 
         #endregion
     }

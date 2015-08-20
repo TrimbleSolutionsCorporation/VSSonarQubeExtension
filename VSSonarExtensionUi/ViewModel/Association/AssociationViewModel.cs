@@ -22,6 +22,8 @@
             this.Header = "Association Dialog";
             this.BackGroundColor = Colors.White;
             this.ForeGroundColor = Colors.Black;
+
+            SonarQubeViewModel.RegisterNewViewModelInPool(this);
         }
 
         public AssociationViewModel(AssociationModel model)
@@ -30,6 +32,8 @@
             this.AssignProjectCommand = new RelayCommand(this.OnAssignProjectCommand);
             this.AvailableProjects = new ObservableCollection<Resource>();
             this.Header = "Association Dialog";
+
+            SonarQubeViewModel.RegisterNewViewModelInPool(this);
         }
 
         /// <summary>

@@ -12,7 +12,7 @@ type QualityTests() =
     let assemblyRunningPath = Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString()
     [<Test>]
     member test.``Should Get A correct Quality Profile`` () =
-        let conf = ConnectionConfiguration("host", "user", "password")
+        let conf = ConnectionConfiguration("host", "user", "password", 4.5)
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
@@ -27,7 +27,7 @@ type QualityTests() =
 
     [<Test>]
     member test.``Should Get Valid Profile from Resource Response`` () =
-        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1")
+        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1", 4.5)
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
@@ -42,7 +42,7 @@ type QualityTests() =
 
     [<Test>]
     member test.``Should Get Rules From Profile using App`` () =
-        let conf = ConnectionConfiguration("http://sonar", "user", "pass")
+        let conf = ConnectionConfiguration("http://sonar", "user", "pass", 4.5)
        
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
@@ -59,7 +59,7 @@ type QualityTests() =
 
     [<Test>]
     member test.``Should Get Rules From Profile`` () =
-        let conf = ConnectionConfiguration("http://sonar", "user", "user")
+        let conf = ConnectionConfiguration("http://sonar", "user", "user", 4.5)
        
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
@@ -77,7 +77,7 @@ type QualityTests() =
 
     [<Test>]
     member test.``Should Search Rule in Profile`` () =
-        let conf = ConnectionConfiguration("http://sonar", "user", "pass")
+        let conf = ConnectionConfiguration("http://sonar", "user", "pass", 4.5)
        
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
@@ -94,7 +94,7 @@ type QualityTests() =
 
     [<Test>]
     member test.``Should GetActionPlans`` () =
-        let conf = ConnectionConfiguration("http://sonar", "user", "user")
+        let conf = ConnectionConfiguration("http://sonar", "user", "user", 4.5)
        
         let mockHttpReq =
             Mock<IHttpSonarConnector>()

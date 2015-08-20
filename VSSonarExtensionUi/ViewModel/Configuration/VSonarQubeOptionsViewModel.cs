@@ -16,36 +16,71 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using System.Windows.Media;
 
     using GalaSoft.MvvmLight.Command;
-
-    using PropertyChanged;
     using Helpers;
 
+    using Model.Configuration;
+    using Model.Helpers;
+    using Model.PluginManager;
+    using PropertyChanged;
+
+    using SonarLocalAnalyser;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-    using Model.PluginManager;
-    using Model.Helpers;
-    using Model.Configuration;
+
 
     /// <summary>
     ///     The plugins options model.
     /// </summary>
     [ImplementPropertyChanged]
-    public class VSonarQubeOptionsViewModel : IOptionsViewModelBase
+    public class VSonarQubeOptionsViewModel : IOptionsViewModelBase, IModelBase
     {
+        /// <summary>
+        /// The configuration helper
+        /// </summary>
+        private readonly IConfigurationHelper configurationHelper;
+
+        /// <summary>
+        /// The rest service
+        /// </summary>
+        private readonly ISonarRestService restService;
+
+        /// <summary>
+        /// The notification manager
+        /// </summary>
+        private readonly INotificationManager notificationManager;
+
+        /// <summary>
+        /// The vsenvironmenthelper
+        /// </summary>
+        private IVsEnvironmentHelper vsenvironmenthelper;
+
+        /// <summary>
+        /// The project
+        /// </summary>
+        private Resource project;
+
         #region Constructors and Destructors
 
-        /// <summary>Initializes a new instance of the <see cref="VSonarQubeOptionsViewModel"/> class.</summary>
-        /// <param name="model">The model.</param>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VSonarQubeOptionsViewModel" /> class.
+        /// </summary>
+        /// <param name="service">The service.</param>
         /// <param name="configurationHelper">The configuration helper.</param>
+        /// <param name="notifier">The notifier.</param>
         public VSonarQubeOptionsViewModel(
-            SonarQubeViewModel model, 
-            IConfigurationHelper configurationHelper)
+            ISonarRestService service,
+            IConfigurationHelper configurationHelper,
+            INotificationManager notifier)
         {
-            this.model = model;
-            this.ConfigurationHelper = configurationHelper;
+            this.notificationManager = notifier;
+            this.restService = service;
+            this.configurationHelper = configurationHelper;
 
             this.InitModels();
             this.InitCommanding();
+
+            SonarQubeViewModel.RegisterNewModelInPool(this);
+            SonarQubeViewModel.RegisterNewViewModelInPool(this);
         }
 
         #endregion
@@ -56,15 +91,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         ///     The request close.
         /// </summary>
         public event Action<object, object> RequestClose;
-
-        #endregion
-
-        #region Fields
-
-        /// <summary>
-        ///     The model.
-        /// </summary>
-        private readonly SonarQubeViewModel model;
 
         #endregion
 
@@ -84,13 +110,19 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public ICommand ResetAllChangesCommand { get; set; }
 
         /// <summary>
-        ///     Gets the available plugins collection.
+        /// Gets or sets the available options views.
         /// </summary>
+        /// <value>
+        /// The available options views.
+        /// </value>
         public ObservableCollection<IOptionsViewModelBase> AvailableOptionsViews { get; set; }
 
         /// <summary>
-        ///     Gets the available plugins collection.
+        /// Gets or sets the available options models.
         /// </summary>
+        /// <value>
+        /// The available options models.
+        /// </value>
         public ObservableCollection<IOptionsModelBase> AvailableOptionsModels { get; set; }
 
         /// <summary>
@@ -129,8 +161,11 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public UserControl OptionsInView { get; set; }
 
         /// <summary>
-        ///     The plugin manager.
+        /// Gets or sets the plugin manager.
         /// </summary>
+        /// <value>
+        /// The plugin manager.
+        /// </value>
         public PluginManagerModel PluginManager { get; set; }
 
         /// <summary>
@@ -139,13 +174,11 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public UserControl PluginsManagerOptionsFrame { get; set; }
 
         /// <summary>
-        ///     The project.
+        /// Gets or sets the save and exit command.
         /// </summary>
-        private Resource Project { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the save and exit command.
-        /// </summary>
+        /// <value>
+        /// The save and exit command.
+        /// </value>
         public RelayCommand SaveAndExitCommand { get; set; }
 
         /// <summary>
@@ -159,38 +192,57 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public GeneralConfigurationViewModel GeneralConfigurationViewModel { get; set; }
 
         /// <summary>
-        ///     Gets or sets the vsenvironmenthelper.
+        /// Gets the roslyn model.
         /// </summary>
-        public IVsEnvironmentHelper Vsenvironmenthelper { get; set; }
-
-        /// <summary>Gets or sets the configuration helper.</summary>
-        public IConfigurationHelper ConfigurationHelper { get; set; }
+        /// <value>
+        /// The roslyn model.
+        /// </value>
         public RoslynManagerModel RoslynModel { get; private set; }
+
+        /// <summary>
+        /// Gets the roslyn view model.
+        /// </summary>
+        /// <value>
+        /// The roslyn view model.
+        /// </value>
         internal RoslynManagerViewModel RoslynViewModel { get; private set; }
 
-        /// <summary>The update services.</summary>
-        /// <param name="restServiceIn">The rest service in.</param>
+        /// <summary>
+        /// The update services.
+        /// </summary>
         /// <param name="vsenvironmenthelperIn">The vsenvironmenthelper in.</param>
         /// <param name="statusBar">The status bar.</param>
         /// <param name="provider">The provider.</param>
         public void UpdateServices(
-            ISonarRestService restServiceIn, 
             IVsEnvironmentHelper vsenvironmenthelperIn, 
             IVSSStatusBar statusBar, 
             IServiceProvider provider)
         {
-            this.Vsenvironmenthelper = vsenvironmenthelperIn;
+            this.vsenvironmenthelper = vsenvironmenthelperIn;
         }
 
-        /// <summary>The refresh general properties.</summary>
-        /// <param name="selectedProject"></param>
+        /// <summary>
+        /// The refresh general properties.
+        /// </summary>
+        /// <param name="selectedProject">The selected project.</param>
         public void RefreshPropertiesInView(Resource selectedProject)
         {
-            this.Project = selectedProject;
+            this.project = selectedProject;
             foreach (var availableOption in this.AvailableOptionsModels)
             {
-                availableOption.RefreshPropertiesInView(selectedProject);
+                availableOption.ReloadDataFromDisk(selectedProject);
             }
+        }
+
+        /// <summary>
+        /// Gets the view model.
+        /// </summary>
+        /// <returns>
+        /// returns view model
+        /// </returns>
+        public object GetViewModel()
+        {
+            return this;
         }
 
         /// <summary>
@@ -219,7 +271,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         public void EndDataAssociation()
         {
-            this.Project = null;
+            this.project = null;
         }
 
         /// <summary>The update colours.</summary>
@@ -229,6 +281,59 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         {
             this.BackGroundColor = background;
             this.ForeGroundColor = foreground;
+        }
+
+        /// <summary>
+        /// The init pugin system.
+        /// </summary>
+        /// <param name="helper">The helper.</param>
+        /// <param name="plugincontroller">The plugincontroller.</param>
+        /// <param name="manager">The manager.</param>
+        public void InitPuginSystem(IVsEnvironmentHelper helper, PluginController plugincontroller, INotificationManager manager)
+        {
+            this.PluginManager = new PluginManagerModel(
+                plugincontroller,
+                this.configurationHelper,
+                manager,
+                helper);
+
+            this.LicenseManager = new LicenseViewerViewModel(this.PluginManager, this.configurationHelper);
+
+            this.RoslynModel = new RoslynManagerModel(this.PluginManager.AnalysisPlugins, manager, this.configurationHelper);
+            this.RoslynViewModel = new RoslynManagerViewModel(this.RoslynModel);
+
+            this.AvailableOptionsViews.Add(this.PluginManager);
+            this.AvailableOptionsViews.Add(this.LicenseManager);
+            this.AvailableOptionsViews.Add(this.RoslynViewModel);
+
+            this.AvailableOptionsModels.Add(this.PluginManager);
+            this.AvailableOptionsModels.Add(this.LicenseManager);
+            this.AvailableOptionsModels.Add(this.RoslynModel);
+
+            // sync checks to plugins
+            this.RoslynModel.SyncDiagnosticsInPlugins();
+        }
+
+        /// <summary>
+        /// Gets the available model, TODO: needs to be removed after viewmodels are split into models and view models
+        /// </summary>
+        /// <returns>
+        /// returns optinal model
+        /// </returns>
+        public object GetAvailableModel()
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// Associates the with new project.
+        /// </summary>
+        /// <param name="config">The configuration.</param>
+        /// <param name="projectIn">The project in.</param>
+        /// <param name="workingDir">The working dir.</param>
+        public void AssociateWithNewProject(ISonarConfiguration config, Resource projectIn, string workingDir)
+        {
+            this.project = projectIn;
         }
 
         #endregion
@@ -283,8 +388,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
-                this.ConfigurationHelper.DeleteSettingsFile();
-                this.Vsenvironmenthelper.RestartVisualStudio();
+                this.configurationHelper.DeleteSettingsFile();
+                this.vsenvironmenthelper.RestartVisualStudio();
             }
         }
 
@@ -296,14 +401,12 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
             this.GeneralConfigurationViewModel = new GeneralConfigurationViewModel(
                 this, 
-                this.model.SonarRestConnector, 
-                this.Vsenvironmenthelper, 
-                this.model, 
-                this.ConfigurationHelper);
+                this.restService, 
+                this.configurationHelper,
+                this.notificationManager);
             this.AnalysisOptionsViewModel = new AnalysisOptionsViewModel(
-                this.Vsenvironmenthelper, 
                 this, 
-                this.ConfigurationHelper);
+                this.configurationHelper);
 
             this.AvailableOptionsViews.Add(this.GeneralConfigurationViewModel);
             this.AvailableOptionsViews.Add(this.AnalysisOptionsViewModel);
@@ -314,41 +417,12 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.SelectedOption = this.GeneralConfigurationViewModel;
         }
 
-        /// <summary>The init pugin system.</summary>
-        /// <param name="helper">The helper.</param>
-        public void InitPuginSystem(IVsEnvironmentHelper helper, PluginController plugincontroller, INotificationManager manager)
-        {
-            this.PluginManager = new PluginManagerModel(
-                plugincontroller,
-                AuthtenticationHelper.AuthToken,
-                this.ConfigurationHelper,
-                this,
-                this.model,
-                manager,
-                helper);
-            this.LicenseManager = new LicenseViewerViewModel(this.PluginManager, this.ConfigurationHelper);
-
-            this.RoslynModel = new RoslynManagerModel(this.PluginManager.AnalysisPlugins, manager, this.ConfigurationHelper);
-            this.RoslynViewModel = new RoslynManagerViewModel(this.RoslynModel);
-
-            this.AvailableOptionsViews.Add(this.PluginManager);
-            this.AvailableOptionsViews.Add(this.LicenseManager);
-            this.AvailableOptionsViews.Add(this.RoslynViewModel);
-
-            this.AvailableOptionsModels.Add(this.PluginManager);
-            this.AvailableOptionsModels.Add(this.LicenseManager);
-            this.AvailableOptionsModels.Add(this.RoslynModel);
-
-            // sync checks to plugins
-            this.RoslynModel.SyncDiagnosticsInPlugins();
-        }
-
         /// <summary>
         ///     The on apply command.
         /// </summary>
         private void OnApplyCommand()
         {
-            this.ConfigurationHelper.SyncSettings();
+            this.configurationHelper.SyncSettings();
         }
 
         /// <summary>
@@ -356,7 +430,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         private void OnCancelAndExitCommand()
         {
-            this.ConfigurationHelper.ClearNonSavedSettings();
+            this.configurationHelper.ClearNonSavedSettings();
             this.OnRequestClose(this, "Exit");
         }
 
@@ -367,19 +441,13 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         {
             foreach (var option in this.AvailableOptionsModels)
             {
-                option.SaveCurrentViewToDisk(this.ConfigurationHelper);
+                option.SaveData();
             }
 
-            this.ConfigurationHelper.SyncSettings();
+            this.configurationHelper.SyncSettings();
             this.OnRequestClose(this, "Exit");
         }
 
-        public object GetAvailableModel()
-        {
-            return null;
-        }
-
         #endregion
-
     }
 }

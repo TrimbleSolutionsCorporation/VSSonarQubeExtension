@@ -17,36 +17,84 @@ namespace VSSonarExtensionUi.Model.Analysis
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
+    using Helpers;
+
+    using SonarLocalAnalyser;
     using ViewModel;
     using ViewModel.Analysis;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
+    
 
     /// <summary>
     /// Search model for issues, viewmodel IssuesSearchViewModel
     /// </summary>
-    public class IssuesSearchModel : IAnalysisModelBase
+    public class IssuesSearchModel : IAnalysisModelBase, IModelBase
     {
+        /// <summary>
+        /// The configuration helper
+        /// </summary>
+        private readonly IConfigurationHelper configurationHelper;
+
+        /// <summary>
+        /// The rest service
+        /// </summary>
+        private readonly ISonarRestService restService;
+
+        /// <summary>
+        /// The issues search view model
+        /// </summary>
+        private readonly IssuesSearchViewModel issuesSearchViewModel;
+
+        /// <summary>
+        /// The notificationmanager
+        /// </summary>
+        private readonly INotificationManager notificationmanager;
+
         /// <summary>
         ///     The vs helper.
         /// </summary>
         private IVsEnvironmentHelper visualStudioHelper;
 
         /// <summary>
+        /// The status bar
+        /// </summary>
+        private IVSSStatusBar statusBar;
+
+        /// <summary>
+        /// The service provier
+        /// </summary>
+        private IServiceProvider serviceProvier;
+
+        /// <summary>
+        /// The associated project
+        /// </summary>
+        private Resource associatedProject;
+
+        /// <summary>
+        /// The user conf
+        /// </summary>
+        private ISonarConfiguration userConf;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="IssuesSearchModel" /> class.
         /// </summary>
-        /// <param name="model">The model.</param>
         /// <param name="configurationHelper">The configuration helper.</param>
         /// <param name="restService">The rest service.</param>
+        /// <param name="manager">The manager.</param>
+        /// <param name="translator">The translator.</param>
         public IssuesSearchModel(
-            SonarQubeViewModel model,
             IConfigurationHelper configurationHelper,
-            ISonarRestService restService)
+            ISonarRestService restService,
+            INotificationManager manager,
+            ISQKeyTranslator translator)
         {
-            this.SonarQubeViewModel = model;
-            this.ConfigurationHelper = configurationHelper;
-            this.RestService = restService;
-            this.IssuesSearchViewModel = new IssuesSearchViewModel(this);
+            this.notificationmanager = manager;
+            this.configurationHelper = configurationHelper;
+            this.restService = restService;
+            this.issuesSearchViewModel = new IssuesSearchViewModel(this, manager, this.configurationHelper, restService, translator);
+
+            SonarQubeViewModel.RegisterNewModelInPool(this);
         }
 
         /// <summary>
@@ -55,71 +103,19 @@ namespace VSSonarExtensionUi.Model.Analysis
         public event ChangedEventHandler IssuesReadyForCollecting;
 
         /// <summary>
-        ///     Gets or sets the configuration.
+        /// The update services.
         /// </summary>
-        public ISonarConfiguration Configuration { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the status bar.
-        /// </summary>
-        public IVSSStatusBar StatusBar { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the service provier.
-        /// </summary>
-        public IServiceProvider ServiceProvier { get; set; }
-
-        /// <summary>
-        /// Gets the sonar qube view model.
-        /// </summary>
-        /// <value>
-        /// The sonar qube view model.
-        /// </value>
-        public SonarQubeViewModel SonarQubeViewModel { get; private set; }
-
-        /// <summary>
-        /// Gets the configuration helper.
-        /// </summary>
-        /// <value>
-        /// The configuration helper.
-        /// </value>
-        public IConfigurationHelper ConfigurationHelper { get; private set; }
-
-        /// <summary>
-        ///     Gets or sets the associated project.
-        /// </summary>
-        public Resource AssociatedProject { get; set; }
-
-        /// <summary>
-        /// Gets the rest service.
-        /// </summary>
-        /// <value>
-        /// The rest service.
-        /// </value>
-        public ISonarRestService RestService { get; private set; }
-        public IssuesSearchViewModel IssuesSearchViewModel { get; private set; }
-
-        /// <summary>The update services.</summary>
-        /// <param name="restServiceIn">The rest service in.</param>
         /// <param name="vsenvironmenthelperIn">The vsenvironmenthelper in.</param>
-        /// <param name="configurationHelperIn">The configuration Helper.</param>
-        /// <param name="statusBar">The status bar.</param>
+        /// <param name="statusBarIn">The status bar in.</param>
         /// <param name="provider">The provider.</param>
         public void UpdateServices(
-            ISonarRestService restServiceIn,
             IVsEnvironmentHelper vsenvironmenthelperIn,
-            IConfigurationHelper configurationHelperIn,
-            IVSSStatusBar statusBar,
+            IVSSStatusBar statusBarIn,
             IServiceProvider provider)
         {
-            this.RestService = restServiceIn;
             this.visualStudioHelper = vsenvironmenthelperIn;
-            this.ConfigurationHelper = configurationHelperIn;
-            this.StatusBar = statusBar;
-            this.ServiceProvier = provider;
-
-            this.IssuesSearchViewModel.IssuesGridView.Vsenvironmenthelper = vsenvironmenthelperIn;
-            this.IssuesSearchViewModel.IssuesGridView.UpdateVsService(this.visualStudioHelper);
+            this.statusBar = statusBarIn;
+            this.serviceProvier = provider;
         }
 
         /// <summary>
@@ -140,12 +136,12 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// </returns>
         public List<Issue> GetIssuesForResource(Resource file, string fileContent)
         {
-            if (this.IssuesSearchViewModel.CanQUeryIssues)
+            if (this.issuesSearchViewModel.CanQUeryIssues)
             {
                 return
-                    this.IssuesSearchViewModel.IssuesGridView.Issues.Where(
+                    this.issuesSearchViewModel.IssuesGridView.Issues.Where(
                         issue =>
-                        this.IssuesSearchViewModel.IssuesGridView.IsNotFiltered(issue) && file.Key.Equals(issue.Component)).ToList();
+                        this.issuesSearchViewModel.IssuesGridView.IsNotFiltered(issue) && file.Key.Equals(issue.Component)).ToList();
             }
 
             return new List<Issue>();
@@ -163,42 +159,35 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// </summary>
         public void EndDataAssociation()
         {
-            this.IssuesSearchViewModel.IssuesGridView.Issues.Clear();
-            this.AssociatedProject = null;
-            this.IssuesSearchViewModel.CanQUeryIssues = false;
+            this.issuesSearchViewModel.IssuesGridView.Issues.Clear();
+            this.associatedProject = null;
+            this.issuesSearchViewModel.CanQUeryIssues = false;
         }
 
         /// <summary>
         /// The init data association.
         /// </summary>
-        /// <param name="associatedProject">
-        /// The associated project.
-        /// </param>
-        /// <param name="sonarCubeConfiguration">
-        /// The sonar cube configuration.
-        /// </param>
-        /// <param name="workingDir">
-        /// The working dir.
-        /// </param>
-        public void InitDataAssociation(Resource associatedProject, ISonarConfiguration sonarCubeConfiguration, string workingDir)
+        /// <param name="config">The configuration.</param>
+        /// <param name="project">The project.</param>
+        /// <param name="workingDir">The working dir.</param>
+        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workingDir)
         {
-            this.AssociatedProject = associatedProject;
-            this.Configuration = sonarCubeConfiguration;
-            this.IssuesSearchViewModel.CanQUeryIssues = true;
-            this.SonarQubeViewModel.IsExtensionBusy = false;
+            this.associatedProject = project;
+            this.userConf = config;
+            this.issuesSearchViewModel.CanQUeryIssues = true;
+            this.notificationmanager.EndedWorking();
 
-            List<User> usortedList = this.RestService.GetUserList(sonarCubeConfiguration);
+            List<User> usortedList = this.restService.GetUserList(config);
             if (usortedList != null && usortedList.Count > 0)
             {
-                this.IssuesSearchViewModel.UsersList = new ObservableCollection<User>(usortedList.OrderBy(i => i.Login));
+                this.issuesSearchViewModel.UsersList = new ObservableCollection<User>(usortedList.OrderBy(i => i.Login));
             }
 
-            List<SonarActionPlan> usortedListofPlan = this.RestService.GetAvailableActionPlan(sonarCubeConfiguration, associatedProject.Key);
+            List<SonarActionPlan> usortedListofPlan = this.restService.GetAvailableActionPlan(config, this.associatedProject.Key);
             if (usortedListofPlan != null && usortedListofPlan.Count > 0)
             {
-                this.IssuesSearchViewModel.AvailableActionPlans = new ObservableCollection<SonarActionPlan>(usortedListofPlan.OrderBy(i => i.Name));
+                this.issuesSearchViewModel.AvailableActionPlans = new ObservableCollection<SonarActionPlan>(usortedListofPlan.OrderBy(i => i.Name));
             }
-
         }
 
         /// <summary>
@@ -226,9 +215,9 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// </param>
         public void RefreshDataForResource(Resource fullName, string documentInView)
         {
-            this.IssuesSearchViewModel.DocumentInView = documentInView;
-            this.IssuesSearchViewModel.ResourceInEditor = fullName;
-            this.IssuesSearchViewModel.OnSelectedViewChanged();
+            this.issuesSearchViewModel.DocumentInView = documentInView;
+            this.issuesSearchViewModel.ResourceInEditor = fullName;
+            this.issuesSearchViewModel.OnSelectedViewChanged();
         }
 
         /// <summary>
@@ -236,9 +225,9 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// </summary>
         public void ResetStats()
         {
-            if (this.IssuesSearchViewModel.IssuesGridView != null)
+            if (this.issuesSearchViewModel.IssuesGridView != null)
             {
-                this.IssuesSearchViewModel.IssuesGridView.ResetStatistics();
+                this.issuesSearchViewModel.IssuesGridView.ResetStatistics();
             }
         }
 
@@ -248,37 +237,85 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// <returns>all issues in project</returns>
         public IEnumerable<Issue> GetAllIssuesInProject()
         {
-            return this.RestService.GetIssuesForProjects(this.Configuration, this.AssociatedProject.Key);
+            return this.restService.GetIssuesForProjects(this.userConf, this.associatedProject.Key);
         }
 
         /// <summary>
         /// Gets the user issues in project.
         /// </summary>
         /// <param name="userName">Name of the user.</param>
-        /// <returns></returns>
+        /// <returns>
+        /// returs all issues in project
+        /// </returns>
         public IEnumerable<Issue> GetUserIssuesInProject(string userName)
         {
-            return this.RestService.GetIssuesByAssigneeInProject(this.Configuration, this.AssociatedProject.Key, userName);
+            return this.restService.GetIssuesByAssigneeInProject(this.userConf, this.associatedProject.Key, userName);
+        }
+
+        /// <summary>
+        /// Gets the user issues in project.
+        /// </summary>
+        /// <returns>
+        /// returs all issues in project for current user
+        /// </returns>
+        public IEnumerable<Issue> GetCurrentUserIssuesInProject()
+        {
+            return this.restService.GetIssuesByAssigneeInProject(this.userConf, this.associatedProject.Key, this.userConf.Username);
         }
 
         /// <summary>
         /// Gets the user issues in project.
         /// </summary>
         /// <param name="userName">Name of the user.</param>
-        /// <returns></returns>
+        /// <returns>
+        /// returns all users issues
+        /// </returns>
         public IEnumerable<Issue> GetUserIssues(string userName)
         {
-            return this.RestService.GetAllIssuesByAssignee(this.Configuration, userName);
+            return this.restService.GetAllIssuesByAssignee(this.userConf, userName);
         }
 
+        /// <summary>
+        /// Gets the current user issues.
+        /// </summary>
+        /// <returns>gets current logged user issues</returns>
+        public IEnumerable<Issue> GetCurrentUserIssues()
+        {
+            return this.restService.GetAllIssuesByAssignee(this.userConf, this.userConf.Username);
+        }
+
+        /// <summary>
+        /// Gets the view model.
+        /// </summary>
+        /// <returns>
+        /// returns view model
+        /// </returns>
+        public object GetViewModel()
+        {
+            return this.issuesSearchViewModel;
+        }
+
+        /// <summary>
+        /// Gets the issues since since date.
+        /// </summary>
+        /// <param name="date">The date.</param>
+        /// <returns>
+        /// returns issues since a date
+        /// </returns>
         public IEnumerable<Issue> GetIssuesSinceSinceDate(DateTime date)
         {
-            return this.RestService.GetIssuesForProjectsCreatedAfterDate(
-                                this.Configuration,
-                                this.AssociatedProject.Key, date);
+            return this.restService.GetIssuesForProjectsCreatedAfterDate(this.userConf, this.associatedProject.Key, date);
         }
 
-                                    
+        /// <summary>
+        /// Gets the issues since last project date.
+        /// </summary>
+        /// <returns>returns issues since last project update date</returns>
+        public IEnumerable<Issue> GetIssuesSinceLastProjectDate()
+        {
+            return this.restService.GetIssuesForProjectsCreatedAfterDate(this.userConf, this.associatedProject.Key, this.associatedProject.Date);
+        }
+
         /// <summary>
         /// The retrieve issues using current filter.
         /// </summary>
@@ -286,13 +323,22 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// <returns>all issues for requested filter</returns>
         public IEnumerable<Issue> GetIssuesUsingFilter(string filter)
         {
-            if (this.SonarQubeViewModel.SonarVersion < 3.6)
+            if (AuthtenticationHelper.AuthToken.SonarVersion < 3.6)
             {
-                return this.RestService.GetIssuesForProjects(this.Configuration, this.AssociatedProject.Key);
+                return this.restService.GetIssuesForProjects(this.userConf, this.associatedProject.Key);
             }
 
-            string request = "?componentRoots=" + this.AssociatedProject.Key + filter;
-            return this.RestService.GetIssues(this.Configuration, request, this.AssociatedProject.Key);
+            string request = "?componentRoots=" + this.associatedProject.Key + filter;
+            return this.restService.GetIssues(this.userConf, request, this.associatedProject.Key);
+        }
+
+        /// <summary>
+        /// Clears the issues.
+        /// </summary>
+        public void ClearIssues()
+        {
+            this.issuesSearchViewModel.IssuesGridView.Issues.Clear();
+            this.issuesSearchViewModel.IssuesGridView.AllIssues.Clear();
         }
     }
 }

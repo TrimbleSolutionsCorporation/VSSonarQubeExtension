@@ -12,9 +12,7 @@
 // Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarExtensionUi.Model.Helpers
-{  
-    using SonarRestService;
-
+{
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
 
@@ -28,23 +26,31 @@ namespace VSSonarExtensionUi.Model.Helpers
         /// </summary>
         public static string ErrorMessage { get; set; }
 
+        /// <summary>
+        /// Gets the authentication token.
+        /// </summary>
+        /// <value>
+        /// The authentication token.
+        /// </value>
         public static ISonarConfiguration AuthToken { get; private set; }
 
-        public static void ResetConnection() {
+        /// <summary>
+        /// Resets the connection.
+        /// </summary>
+        public static void ResetConnection()
+        {
             AuthToken = null;
         }
 
         /// <summary>
         /// The get connection configuration.
         /// </summary>
-        /// <param name="properties">
-        /// The properties.
-        /// </param>
-        /// <param name="service">
-        /// The service.
-        /// </param>
+        /// <param name="service">The service.</param>
+        /// <param name="address">The address.</param>
+        /// <param name="userName">Name of the user.</param>
+        /// <param name="password">The password.</param>
         /// <returns>
-        /// The <see cref="ConnectionConfiguration"/>.
+        /// The <see cref="ConnectionConfiguration" />.
         /// </returns>
         public static bool EstablishAConnection(ISonarRestService service, string address, string userName, string password)
         {
@@ -55,12 +61,15 @@ namespace VSSonarExtensionUi.Model.Helpers
 
             ErrorMessage = string.Empty;
 
-            AuthToken = new ConnectionConfiguration(address, userName, password);
-            if (!service.AuthenticateUser(AuthToken))
+            var token = new ConnectionConfiguration(address, userName, password, 4.5);
+            if (!service.AuthenticateUser(token))
             {
                 ErrorMessage = "Authentication Failed, Check User, Password and Hostname";
                 return false;
             }
+
+            token.SonarVersion = service.GetServerInfo(token);
+            AuthToken = token;
 
             return true;
         }

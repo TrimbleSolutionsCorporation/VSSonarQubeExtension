@@ -51,11 +51,6 @@ namespace VSSonarQubeExtension
         private OleMenuCommand sonarReviewsCommand;
 
         /// <summary>
-        /// Gets or sets the rest service.
-        /// </summary>
-        private ISonarRestService restService;
-
-        /// <summary>
         /// The visual studio interface.
         /// </summary>
         private IVsEnvironmentHelper visualStudioInterface;
@@ -64,25 +59,38 @@ namespace VSSonarQubeExtension
         /// Gets or sets the vs events.
         /// </summary>
         public VsEvents VsEvents { get; set; }
-
-
     }
 
+    /// <summary>
+    /// model factory
+    /// </summary>
     internal class SonarQubeViewModelFactory
     {
+        /// <summary>
+        /// The model
+        /// </summary>
         private static SonarQubeViewModel model;
 
+        /// <summary>
+        /// Prevents a default instance of the <see cref="SonarQubeViewModelFactory"/> class from being created.
+        /// </summary>
         private SonarQubeViewModelFactory()
         {
         }
 
+        /// <summary>
+        /// Gets the sq view model.
+        /// </summary>
+        /// <value>
+        /// The sq view model.
+        /// </value>
         public static SonarQubeViewModel SQViewModel
         {
             get
             {
                 if (model == null)
                 {
-                    model = new VSSonarExtensionUi.ViewModel.SonarQubeViewModel("");
+                    model = new SonarQubeViewModel(string.Empty);
                 }
 
                 return model;
@@ -90,6 +98,11 @@ namespace VSSonarQubeExtension
         }
 
 
+        /// <summary>
+        /// Startups the model with vs version.
+        /// </summary>
+        /// <param name="version">The version.</param>
+        /// <returns>returns model</returns>
         public static SonarQubeViewModel StartupModelWithVsVersion(string version)
         {
             if (model == null)

@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="OpenResourceMenu.cs" company="Copyright © 2014 Tekla Corporation. Tekla is a Trimble Company">
+// <copyright file="ChangeStatusHandler.cs" company="Copyright © 2014 Tekla Corporation. Tekla is a Trimble Company">
 //     Copyright (C) 2014 [Jorge Costa, Jorge.Costa@tekla.com]
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -11,76 +11,61 @@
 // You should have received a copy of the GNU Lesser General Public License along with this program; if not, write to the Free
 // Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 // --------------------------------------------------------------------------------------------------------------------
-
 namespace VSSonarExtensionUi.Model.Menu
 {
     using System;
     using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Windows;
     using System.Windows.Input;
 
-
-
     using GalaSoft.MvvmLight.Command;
-
+    using SonarLocalAnalyser;
     using View.Helpers;
     using ViewModel;
     using ViewModel.Helpers;
 
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-    using SonarLocalAnalyser;
 
     /// <summary>
     ///     The issue handler menu.
     /// </summary>
-    internal class OpenResourceMenu : IMenuItem
+    internal class ChangeStatusMenu : IMenuItem
     {
-        #region Fields
-
         /// <summary>
-        /// The model.
+        ///     The model.
         /// </summary>
         private readonly IssueGridViewModel model;
 
         /// <summary>
-        /// The rest.
+        ///     The rest.
         /// </summary>
         private readonly ISonarRestService rest;
 
         /// <summary>
-        /// The config.
+        /// The manager
+        /// </summary>
+        private readonly  INotificationManager manager;
+
+        /// <summary>
+        ///     The config.
         /// </summary>
         private ISonarConfiguration config;
-
-        /// <summary>
-        /// The vs helper.
-        /// </summary>
-        private IVsEnvironmentHelper visualStudioHelper;
-
-        /// <summary>
-        /// The associated project
-        /// </summary>
-        private Resource associatedProject;
-
-        /// <summary>
-        /// The source dir
-        /// </summary>
-        private string sourceDir;
-
-        #endregion
 
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="OpenResourceMenu" /> class.
         /// Initializes a new instance of the <see cref="ChangeStatusMenu" /> class.
         /// </summary>
         /// <param name="rest">The rest.</param>
         /// <param name="model">The model.</param>
-        private OpenResourceMenu(ISonarRestService rest, IssueGridViewModel model)
+        /// <param name="notmanager">The notmanager.</param>
+        private ChangeStatusMenu(ISonarRestService rest, IssueGridViewModel model, INotificationManager notmanager)
         {
             this.model = model;
             this.rest = rest;
+            this.manager = notmanager;
             this.ExecuteCommand = new RelayCommand(this.OnAssociateCommand);
             this.SubItems = new ObservableCollection<IMenuItem>();
 
@@ -93,22 +78,22 @@ namespace VSSonarExtensionUi.Model.Menu
         #region Public Properties
 
         /// <summary>
-        /// Gets or sets the associated command.
+        ///     Gets or sets the associated command.
         /// </summary>
         public ICommand ExecuteCommand { get; set; }
 
         /// <summary>
-        /// Gets or sets the command text.
+        ///     Gets or sets the command text.
         /// </summary>
         public string CommandText { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether is enabled.
+        ///     Gets or sets a value indicating whether is enabled.
         /// </summary>
         public bool IsEnabled { get; set; }
 
         /// <summary>
-        /// Gets or sets the sub items.
+        ///     Gets or sets the sub items.
         /// </summary>
         public ObservableCollection<IMenuItem> SubItems { get; set; }
 
@@ -121,15 +106,17 @@ namespace VSSonarExtensionUi.Model.Menu
         /// </summary>
         /// <param name="rest">The rest.</param>
         /// <param name="model">The model.</param>
+        /// <param name="notmanager">The notmanager.</param>
         /// <returns>
         /// The <see cref="IMenuItem" />.
         /// </returns>
-        public static IMenuItem MakeMenu(ISonarRestService rest, IssueGridViewModel model)
+        public static IMenuItem MakeMenu(ISonarRestService rest, IssueGridViewModel model, INotificationManager notmanager)
         {
-            var topLel = new OpenResourceMenu(rest, model) { CommandText = "Open", IsEnabled = false };
+            var topLel = new ChangeStatusMenu(rest, model, notmanager) { CommandText = "Status", IsEnabled = false };
 
-            topLel.SubItems.Add(new OpenResourceMenu(rest, model) { CommandText = "Visual Studio", IsEnabled = true });
-            topLel.SubItems.Add(new OpenResourceMenu(rest, model) { CommandText = "Browser", IsEnabled = true });
+            topLel.SubItems.Add(new ChangeStatusMenu(rest, model, notmanager) { CommandText = "Confirm", IsEnabled = true });
+            topLel.SubItems.Add(new ChangeStatusMenu(rest, model, notmanager) { CommandText = "Fix", IsEnabled = true });
+            topLel.SubItems.Add(new ChangeStatusMenu(rest, model, notmanager) { CommandText = "False Positive", IsEnabled = true });
             return topLel;
         }
 
@@ -141,7 +128,7 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <param name="provider">The provider.</param>
         public void UpdateServices(IVsEnvironmentHelper vsenvironmenthelperIn, IVSSStatusBar statusBar, IServiceProvider provider)
         {
-            this.visualStudioHelper = vsenvironmenthelperIn;
+            // menu not accessing services
         }
 
         /// <summary>
@@ -153,8 +140,6 @@ namespace VSSonarExtensionUi.Model.Menu
         public void AssociateWithNewProject(ISonarConfiguration configIn, Resource project, string workingDir)
         {
             this.config = configIn;
-            this.associatedProject = project;
-            this.sourceDir = workingDir;
         }
 
         /// <summary>
@@ -163,8 +148,6 @@ namespace VSSonarExtensionUi.Model.Menu
         public void EndDataAssociation()
         {
             this.config = null;
-            this.associatedProject = null;
-            this.sourceDir = string.Empty;
         }
 
         /// <summary>
@@ -178,41 +161,65 @@ namespace VSSonarExtensionUi.Model.Menu
             return null;
         }
 
-
         #endregion
 
         #region Methods
 
         /// <summary>
-        /// The on associate command.
+        ///     The on associate command.
         /// </summary>
         private void OnAssociateCommand()
         {
             try
             {
-                if (this.CommandText.Equals("Browser"))
+                if (this.CommandText.Equals("False Positive"))
                 {
-                    foreach (var issueobj in this.model.SelectedItems)
-                    {
-                        var issue = issueobj as Issue;
-                        if (issue == null)
-                        {
-                            continue;
-                        }
+                    var bw = new BackgroundWorker { WorkerReportsProgress = false };
+                    bw.RunWorkerCompleted += delegate { Application.Current.Dispatcher.Invoke(delegate { this.manager.EndedWorking(); }); };
 
-                        var resources = this.rest.GetResourcesData(this.config, issue.Component);
-                        this.visualStudioHelper.NavigateToResource(this.config.Hostname + "/resource/index/" + resources[0].Id);
-                    }
+                    bw.DoWork += delegate
+                        {
+                            this.manager.StartedWorking("Marking Issues as False Posiive");
+                            this.rest.MarkIssuesAsFalsePositive(this.config, this.model.SelectedItems, string.Empty);
+                            this.model.RefreshView();
+                        };
+
+                    bw.RunWorkerAsync();
                 }
 
-                if (this.CommandText.Equals("Visual Studio"))
+                if (this.CommandText.Equals("Confirm"))
                 {
-                    this.model.OnOpenInVsCommand(this.model.SelectedItems);
+                    var bw = new BackgroundWorker { WorkerReportsProgress = false };
+                    bw.RunWorkerCompleted += delegate { Application.Current.Dispatcher.Invoke(delegate { this.manager.EndedWorking(); }); };
+
+                    bw.DoWork += delegate
+                    {
+                        this.manager.StartedWorking("Confirming Issues");
+                        this.rest.ConfirmIssues(this.config, this.model.SelectedItems, string.Empty);
+                        this.model.RefreshView();
+                    };
+
+                    bw.RunWorkerAsync();
+                }
+
+                if (this.CommandText.Equals("Fix"))
+                {
+                    var bw = new BackgroundWorker { WorkerReportsProgress = false };
+                    bw.RunWorkerCompleted += delegate { Application.Current.Dispatcher.Invoke(delegate { this.manager.EndedWorking(); }); };
+
+                    bw.DoWork += delegate
+                    {
+                        this.manager.StartedWorking("Marking issues as fixed");
+                        this.rest.ResolveIssues(this.config, this.model.SelectedItems, string.Empty);
+                        this.model.RefreshView();
+                    };
+
+                    bw.RunWorkerAsync();
                 }
             }
             catch (Exception ex)
             {
-                UserExceptionMessageBox.ShowException("Cannot Open Issue in Editor: " + ex.Message + " please check vs output log for detailed information", ex);
+                UserExceptionMessageBox.ShowException("Cannot Modify Status Of Issues", ex);
             }
         }
 

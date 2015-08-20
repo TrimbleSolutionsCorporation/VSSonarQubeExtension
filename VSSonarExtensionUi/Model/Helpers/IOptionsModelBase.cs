@@ -22,48 +22,17 @@ namespace VSSonarExtensionUi.Model.Helpers
     /// <summary>
     /// The OptionsViewModelBase interface.
     /// </summary>
-    public interface IOptionsModelBase
+    public interface IOptionsModelBase : IModelBase
     {
-        #region Public Methods and Operators
+        /// <summary>
+        /// Reloads the data from disk.
+        /// </summary>
+        /// <param name="associatedProject">The associated project.</param>
+        void ReloadDataFromDisk(Resource associatedProject);
 
         /// <summary>
-        /// The init data association.
+        /// Saves the data.
         /// </summary>
-        /// <param name="associatedProject">
-        /// The associated project.
-        /// </param>
-        /// <param name="userConnectionConfig">
-        /// The user connection config.
-        /// </param>
-        /// <param name="workingDir">
-        /// The working dir.
-        /// </param>
-        void RefreshPropertiesInView(Resource associatedProject);
-
-        /// <summary>
-        /// The update services.
-        /// </summary>
-        /// <param name="restServiceIn">
-        /// The rest service in.
-        /// </param>
-        /// <param name="vsenvironmenthelperIn">
-        /// The vsenvironmenthelper in.
-        /// </param>
-        /// <param name="statusBar">
-        /// The status bar.
-        /// </param>
-        /// <param name="provider">
-        /// The provider.
-        /// </param>
-        void UpdateServices(
-            ISonarRestService restServiceIn,
-            IVsEnvironmentHelper vsenvironmenthelperIn,
-            IConfigurationHelper configurationHelper,
-            IVSSStatusBar statusBar,
-            IServiceProvider provider);
-
-        #endregion
-
-        void SaveCurrentViewToDisk(IConfigurationHelper configurationHelper);
+        void SaveData();
     }
 }

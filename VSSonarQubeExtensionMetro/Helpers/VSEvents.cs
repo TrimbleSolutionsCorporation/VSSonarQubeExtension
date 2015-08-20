@@ -161,7 +161,7 @@ namespace VSSonarQubeExtension.Helpers
                 }
                 catch (Exception ex)
                 {
-                    SonarQubeViewModelFactory.SQViewModel.NotificationManager.ReportException(ex);
+                    SonarQubeViewModelFactory.SQViewModel.Logger.ReportException(ex);
                 }
             }
         }
@@ -212,7 +212,7 @@ namespace VSSonarQubeExtension.Helpers
             }
             catch (Exception ex)
             {
-                SonarQubeViewModelFactory.SQViewModel.NotificationManager.ReportException(ex);
+                SonarQubeViewModelFactory.SQViewModel.Logger.ReportException(ex);
             }
 
             return default(T);
@@ -265,7 +265,7 @@ namespace VSSonarQubeExtension.Helpers
             }
             catch (Exception ex)
             {
-                SonarQubeViewModelFactory.SQViewModel.NotificationManager.ReportException(ex);
+                SonarQubeViewModelFactory.SQViewModel.Logger.ReportException(ex);
             }
         }
 
@@ -370,7 +370,7 @@ namespace VSSonarQubeExtension.Helpers
             }
             catch (Exception ex)
             {
-                SonarQubeViewModelFactory.SQViewModel.NotificationManager.ReportException(ex);
+                SonarQubeViewModelFactory.SQViewModel.Logger.ReportException(ex);
             }
         }
 

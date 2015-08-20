@@ -709,6 +709,7 @@ namespace VSSonarQubeExtension.Helpers
             }
             catch (Exception ex)
             {
+                Debug.WriteLine(ex.Message);
                 return null;
             }
         }

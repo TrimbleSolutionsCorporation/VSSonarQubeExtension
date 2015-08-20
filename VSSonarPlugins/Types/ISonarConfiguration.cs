@@ -33,6 +33,20 @@ namespace VSSonarPlugins.Types
         /// </summary>
         string Password { get; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is ok.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is ok; otherwise, <c>false</c>.
+        /// </value>
         bool IsOk { get; set; }
+
+        /// <summary>
+        /// Gets the sonar version.
+        /// </summary>
+        /// <value>
+        /// The sonar version.
+        /// </value>
+        double SonarVersion { get; }
     }
 }

@@ -1,42 +1,30 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="SonarQubeViewModel.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The changed event handler.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-namespace VSSonarExtensionUi.ViewModel
+﻿namespace VSSonarExtensionUi.ViewModel
 {
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Diagnostics;
-    using System.IO;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Media;
 
-    using GalaSoft.MvvmLight.Command;
-
-    using PropertyChanged;
-
-    using SonarRestService;
-    using View.Configuration;
     using Analysis;
     using Configuration;
+    using GalaSoft.MvvmLight.Command;
     using Helpers;
-
+    using Model.Analysis;
+    using Model.Association;
+    using Model.Cache;
+    using Model.Helpers;
+    using Model.PluginManager;
+    using PropertyChanged;
+    using SonarLocalAnalyser;
+    using SonarRestService;
+    using View.Configuration;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-    using SonarLocalAnalyser;
-    using Model.Helpers;
-    using Model.Association;
-    using Model.PluginManager;
-    using Model.Cache;
-    using Model.Analysis;
 
     /// <summary>
     ///     The changed event handler.
@@ -55,44 +43,82 @@ namespace VSSonarExtensionUi.ViewModel
     [ImplementPropertyChanged]
     public class SonarQubeViewModel : IViewModelBase
     {
-        #region Fields
+        /// <summary>
+        /// The model pool
+        /// </summary>
+        private static List<IModelBase> modelPool = new List<IModelBase>();
+
+        /// <summary>
+        /// The view model pool
+        /// </summary>
+        private static List<IViewModelBase> viewModelPool = new List<IViewModelBase>();
 
         /// <summary>
         ///     The analysisPlugin control.
         /// </summary>
-        public readonly PluginController PluginControl = new PluginController();
+        private readonly PluginController pluginController = new PluginController();
 
         /// <summary>
         ///     The menu item plugins.
         /// </summary>
         private readonly Dictionary<int, IMenuCommandPlugin> menuItemPlugins = new Dictionary<int, IMenuCommandPlugin>();
 
-        #endregion
+        /// <summary>The configuration helper.</summary>
+        private readonly IConfigurationHelper configurationHelper;
+
+        /// <summary>
+        /// The vs version
+        /// </summary>
+        private readonly string vsversion;
+
+        /// <summary>
+        /// The notification manager
+        /// </summary>
+        private readonly INotificationManager notificationManager;
+
+        /// <summary>
+        /// The sonar key translator
+        /// </summary>
+        private readonly SQKeyTranslator sonarKeyTranslator;
+
+        /// <summary>
+        /// The source control provider
+        /// </summary>
+        private readonly SourceControlModel sourceControlProvider;
+
+        /// <summary>
+        /// The sonar rest connector
+        /// </summary>
+        private readonly SonarRestService sonarRestConnector;
 
         #region Constructors and Destructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SonarQubeViewModel"/> class.
+        /// </summary>
         public SonarQubeViewModel()
         {
+            this.notificationManager = new NotifyCationManager(this, "standalone");
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="SonarQubeViewModel" /> class. Plugins are initialized in InitModelFromPackageInitialization below
+        /// Initializes a new instance of the <see cref="SonarQubeViewModel" /> class. Plugins are initialized in InitModelFromPackageInitialization below
         /// </summary>
-        public SonarQubeViewModel(string vsVersion)
+        /// <param name="vsverionIn">The vs version.</param>
+        public SonarQubeViewModel(string vsverionIn)
         {
+            this.vsversion = vsverionIn;
             this.ToolsProvidedByPlugins = new ObservableCollection<MenuItem>();
             this.AvailableBranches = new List<Resource>();
 
-            this.configurationHelper = new ConfigurationHelper(vsVersion);
-            this.SonarKeyTranslator = new SQKeyTranslator();
-            this.SonarRestConnector = new SonarRestService(new JsonSonarConnector());
-            this.Logger = new VsSonarExtensionLogger(this, vsVersion);
-            this.VSonarQubeOptionsViewData = new VSonarQubeOptionsViewModel(this, this.configurationHelper);
+            this.notificationManager = new NotifyCationManager(this, vsverionIn);
+            this.configurationHelper = new ConfigurationHelper(vsverionIn);
+            this.sonarKeyTranslator = new SQKeyTranslator();
+            this.sonarRestConnector = new SonarRestService(new JsonSonarConnector());
+            this.VSonarQubeOptionsViewData = new VSonarQubeOptionsViewModel(this.sonarRestConnector, this.configurationHelper, this.notificationManager);
             this.VSonarQubeOptionsViewData.ResetUserData();
-            this.SourceControlProvider = new SourceControlModel();
+            this.sourceControlProvider = new SourceControlModel();
 
-            this.AssociationModule = new AssociationModel(this.SonarKeyTranslator, this.Logger, this.SonarRestConnector, this.configurationHelper, this.SourceControlProvider, this);
-
-            this.SonarVersion = 4.5;
             this.CanConnectEnabled = true;
             this.ConnectionTooltip = "Not Connected";
             this.BackGroundColor = Colors.White;
@@ -102,22 +128,25 @@ namespace VSSonarExtensionUi.ViewModel
             this.InitCommands();
         }
 
-        public SonarQubeViewModel(string vsVersion, IConfigurationHelper helper)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SonarQubeViewModel" /> class.
+        /// </summary>
+        /// <param name="vsverionIn">The vsverion in.</param>
+        /// <param name="helper">The helper.</param>
+        public SonarQubeViewModel(string vsverionIn, IConfigurationHelper helper)
         {
+            this.vsversion = vsverionIn;
             this.ToolsProvidedByPlugins = new ObservableCollection<MenuItem>();
             this.AvailableBranches = new List<Resource>();
 
             this.configurationHelper = helper;
-            this.SonarKeyTranslator = new SQKeyTranslator();
-            this.SonarRestConnector = new SonarRestService(new JsonSonarConnector());
-            this.Logger = new VsSonarExtensionLogger(this, vsVersion);
-            this.VSonarQubeOptionsViewData = new VSonarQubeOptionsViewModel(this, this.configurationHelper);
+            this.notificationManager = new NotifyCationManager(this, vsverionIn);
+            this.sonarKeyTranslator = new SQKeyTranslator();
+            this.sonarRestConnector = new SonarRestService(new JsonSonarConnector());
+            this.VSonarQubeOptionsViewData = new VSonarQubeOptionsViewModel(this.sonarRestConnector, this.configurationHelper, this.notificationManager);
             this.VSonarQubeOptionsViewData.ResetUserData();
-            this.SourceControlProvider = new SourceControlModel();
+            this.sourceControlProvider = new SourceControlModel();
 
-            this.AssociationModule = new AssociationModel(this.SonarKeyTranslator, this.Logger, this.SonarRestConnector, this.configurationHelper, this.SourceControlProvider, this);
-
-            this.SonarVersion = 4.5;
             this.CanConnectEnabled = true;
             this.ConnectionTooltip = "Not Connected";
             this.BackGroundColor = Colors.White;
@@ -177,10 +206,28 @@ namespace VSSonarExtensionUi.ViewModel
         /// </summary>
         public bool IsConnected { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is branch selection enabled.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is branch selection enabled; otherwise, <c>false</c>.
+        /// </value>
         public bool IsBranchSelectionEnabled { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets the available branches.
+        /// </summary>
+        /// <value>
+        /// The available branches.
+        /// </value>
         public List<Resource> AvailableBranches { get; set; }
 
+        /// <summary>
+        /// Gets or sets the selected branch.
+        /// </summary>
+        /// <value>
+        /// The selected branch.
+        /// </value>
         public Resource SelectedBranch { get; set; }
 
         /// <summary>
@@ -208,6 +255,12 @@ namespace VSSonarExtensionUi.ViewModel
         /// </summary>
         public RelayCommand DisconnectToServerCommand { get; set; }
 
+        /// <summary>
+        /// Gets or sets the start association window command.
+        /// </summary>
+        /// <value>
+        /// The start association window command.
+        /// </value>
         public RelayCommand StartAssociationWindowCommand { get; set; }
 
         /// <summary>
@@ -249,11 +302,6 @@ namespace VSSonarExtensionUi.ViewModel
         ///     Gets or sets the local view viewModel.
         /// </summary>
         public LocalViewModel LocalViewModel { get; set; }
-
-        /// <summary>
-        /// Gets or sets the logger.
-        /// </summary>
-        public VsSonarExtensionLogger Logger { get; set; }
 
         /// <summary>
         ///     Gets or sets a value indicating whether refresh theme.
@@ -300,16 +348,6 @@ namespace VSSonarExtensionUi.ViewModel
         public ObservableCollection<IAnalysisModelBase> SonarQubeModels { get; set; }
 
         /// <summary>
-        ///     Gets or sets the sonar rest connector.
-        /// </summary>
-        public ISonarRestService SonarRestConnector { get; set; }
-
-        /// <summary>
-        ///     Gets the sonar version.
-        /// </summary>
-        public double SonarVersion { get; internal set; }
-
-        /// <summary>
         ///     Gets or sets the status bar.
         /// </summary>
         public IVSSStatusBar StatusBar { get; set; }
@@ -339,9 +377,76 @@ namespace VSSonarExtensionUi.ViewModel
         /// </summary>
         public IVsEnvironmentHelper VsHelper { get; set; }
 
+        /// <summary>Gets or sets the extension folder.</summary>
+        public string ExtensionFolder { get; set; }
+
+        /// <summary>
+        /// Gets the association module.
+        /// </summary>
+        /// <value>
+        /// The association module.
+        /// </value>
+        public AssociationModel AssociationModule { get; internal set; }
+
+        /// <summary>
+        /// Gets or sets the status message.
+        /// </summary>
+        /// <value>
+        /// The status message.
+        /// </value>
+        public string StatusMessage { get; set; }
+
+        /// <summary>
+        /// Gets the issues search model.
+        /// </summary>
+        /// <value>
+        /// The issues search model.
+        /// </value>
+        public IssuesSearchModel IssuesSearchModel { get; private set; }
+
+        /// <summary>
+        /// Gets the sonar qube views.
+        /// </summary>
+        /// <value>
+        /// The sonar qube views.
+        /// </value>
+        public ObservableCollection<IViewModelBase> SonarQubeViews { get; private set; }
+
+        /// <summary>
+        /// Gets the logger.
+        /// </summary>
+        /// <value>
+        /// The logger.
+        /// </value>
+        public INotificationManager Logger
+        {
+            get
+            {
+                return this.notificationManager;
+            }
+        }
+
         #endregion
 
         #region Public Methods and Operators
+
+        /// <summary>
+        /// Registers the new model in pool.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        public static void RegisterNewModelInPool(IModelBase model)
+        {
+            modelPool.Add(model);
+        }
+
+        /// <summary>
+        /// Registers the new view model in pool.
+        /// </summary>
+        /// <param name="viewModel">The view model.</param>
+        public static void RegisterNewViewModelInPool(IViewModelBase viewModel)
+        {
+            viewModelPool.Add(viewModel);
+        }
 
         /// <summary>The associate project to solution.</summary>
         /// <param name="solutionName">The solution Name.</param>
@@ -368,14 +473,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// </summary>
         public void ClearProjectAssociation()
         {
-            this.AssociationModule.ClearProjectAssociation();
-
-            foreach (IAnalysisModelBase sonarQubeView in this.SonarQubeModels)
-            {
-                sonarQubeView.EndDataAssociation();
-            }
-
-            this.VSonarQubeOptionsViewData.EndDataAssociation();
+            this.EndAssociation();
         }
 
         /// <summary>The execute plugin.</summary>
@@ -424,31 +522,34 @@ namespace VSSonarExtensionUi.ViewModel
             }
         }
 
-        /// <summary>The extension data viewModel update.</summary>
-        /// <param name="restServiceIn">The rest service in.</param>
+        /// <summary>
+        /// The extension data viewModel update.
+        /// </summary>
         /// <param name="vsenvironmenthelperIn">The vsenvironmenthelper in.</param>
         /// <param name="statusBar">The status bar.</param>
         /// <param name="provider">The provider.</param>
         /// <param name="extensionFolder">The extension Folder.</param>
         public void InitModelFromPackageInitialization(
-            ISonarRestService restServiceIn, 
             IVsEnvironmentHelper vsenvironmenthelperIn, 
             IVSSStatusBar statusBar, 
             IServiceProvider provider, 
             string extensionFolder)
         {
             this.ServiceProvider = provider;
-            this.SonarRestConnector = restServiceIn;
             this.VsHelper = vsenvironmenthelperIn;
             this.StatusBar = statusBar;
             this.ExtensionFolder = extensionFolder;
-            this.NotificationManager = new NotifyCationManager(this, this.VsHelper);
 
-            this.VSonarQubeOptionsViewData.InitPuginSystem(vsenvironmenthelperIn, this.PluginControl, this.NotificationManager);
+            // register notificaton manager, since all messages will be show also for initialization
+            (this.notificationManager as IModelBase).UpdateServices(this.VsHelper, this.StatusBar, this.ServiceProvider);
+
+            this.AssociationModule = new AssociationModel(this.notificationManager, this.sonarRestConnector, this.configurationHelper, this.sourceControlProvider, this.sonarKeyTranslator, this);
+
+            this.VSonarQubeOptionsViewData.InitPuginSystem(vsenvironmenthelperIn, this.pluginController, this.notificationManager);
 
             this.InitMenus();
             this.InitViewsAndModels();
-            this.SourceControlProvider.UpdatePlugins(this.VSonarQubeOptionsViewData.PluginManager.SourceCodePlugins);
+            this.sourceControlProvider.UpdatePlugins(this.VSonarQubeOptionsViewData.PluginManager.SourceCodePlugins);
 
             if (this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.IsConnectAtStartOn)
             {
@@ -457,35 +558,24 @@ namespace VSSonarExtensionUi.ViewModel
 
             this.UpdateTheme(Colors.Black, Colors.White);
 
-            foreach (IAnalysisModelBase view in this.SonarQubeModels)
-            {
-                view.UpdateServices(restServiceIn, vsenvironmenthelperIn, this.configurationHelper, statusBar, provider);
-            }
-
-            this.AssociationModule.UpdateServices(restServiceIn, vsenvironmenthelperIn, statusBar, provider);
-            this.VSonarQubeOptionsViewData.UpdateServices(restServiceIn, vsenvironmenthelperIn, statusBar, provider);
-            foreach (IOptionsModelBase view in this.VSonarQubeOptionsViewData.AvailableOptionsModels)
-            {
-                view.UpdateServices(restServiceIn, vsenvironmenthelperIn, this.configurationHelper, statusBar, provider);
-            }
+            this.UpdateServices();
         }
 
-        /// <summary>Gets or sets the extension folder.</summary>
-        public string ExtensionFolder { get; set; }
-
-        /// <summary>The get issues in editor.</summary>
+        /// <summary>
+        /// The get issues in editor.
+        /// </summary>
         /// <param name="fileResource">The file Resource.</param>
         /// <param name="fileContent">The file Content.</param>
-        /// <returns>The<see>
-        ///         <cref>List</cref>
-        ///     </see>
-        ///     .</returns>
+        /// <returns>
+        /// The<see><cref>List</cref></see>
+        /// .
+        /// </returns>
         public List<Issue> GetIssuesInEditor(Resource fileResource, string fileContent)
         {
-            this.Logger.WriteMessage("Return issues for resource: " + fileResource);
+            this.notificationManager.WriteMessage("Return issues for resource: " + fileResource);
             if (this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.DisableEditorTags)
             {
-                this.Logger.WriteMessage("Return issues for resource, tags disabled");
+                this.notificationManager.WriteMessage("Return issues for resource, tags disabled");
                 return new List<Issue>();
             }
 
@@ -510,9 +600,12 @@ namespace VSSonarExtensionUi.ViewModel
             return this.VsHelper.AreWeRunningInVisualStudio();
         }
 
+        /// <summary>
+        /// Called when [connect to sonar command].
+        /// </summary>
         public void OnConnectToSonarCommand()
         {
-            OnConnectToSonar(true);
+            this.OnConnectToSonar(true);
         }
 
         /// <summary>
@@ -537,40 +630,46 @@ namespace VSSonarExtensionUi.ViewModel
                         Value = this.SelectedViewModel.Header
                     }, true);
 
+            foreach (IAnalysisModelBase model in this.SonarQubeModels)
+            {
+                var modelBase = model as IModelBase;
+
+                if (modelBase.GetViewModel().Equals(this.SelectedViewModel))
+                {
+                    this.SelectedModel = model;
+                }
+            }
+
             this.OnAnalysisModeHasChange(EventArgs.Empty);
             Debug.WriteLine("Name Changed");
         }
 
 
+        /// <summary>
+        /// Called when [selected branch changed].
+        /// </summary>
         public void OnSelectedBranchChanged()
         {
             if (this.SelectedBranch != null)
             {
-                if (this.LocalViewModel != null)
-                {
-                    this.LocalViewModel.AssociatedProject = this.SelectedBranch;
-                    this.ServerViewModel.AssociatedProject = this.SelectedBranch;
-                    this.IssuesSearchModel.AssociatedProject = this.SelectedBranch;
-                }
-
-                this.AssociationModule.UpdateBranchSelection(this.SelectedBranch);                
+                this.AssociationModule.UpdateBranchSelection(this.SelectedBranch);
+                this.UpdateAssociationData();
                 this.RefreshDataForResource(this.DocumentInView);
             }
         }
 
-        internal void SyncSettings()
+        /// <summary>
+        /// Synchronizes the settings.
+        /// </summary>
+        public void SyncSettings()
         {
             this.VSonarQubeOptionsViewData.RefreshPropertiesInView(this.AssociationModule.AssociatedProject);
-
-            if (this.SonarQubeModels != null)
-            {
-                foreach (var view in this.SonarQubeModels)
-                {
-                    view.InitDataAssociation(this.AssociationModule.AssociatedProject, AuthtenticationHelper.AuthToken, this.AssociationModule.OpenSolutionPath);
-                }
-            }
+            this.UpdateAssociationData();
         }
 
+        /// <summary>
+        /// Refreshes the data for resource.
+        /// </summary>
         public void RefreshDataForResource()
         {
             if (this.ServerViewModel != null)
@@ -593,23 +692,25 @@ namespace VSSonarExtensionUi.ViewModel
             {
                 try
                 {
-                    this.Logger.WriteMessage("RefreshDataForResource: Doc in View: " + this.DocumentInView);
+                    this.notificationManager.WriteMessage("RefreshDataForResource: Doc in View: " + this.DocumentInView);
                     analyser.RefreshDataForResource(this.ResourceInEditor, this.DocumentInView);
                 }
                 catch (Exception ex)
                 {
-                    this.Logger.WriteMessage("Cannot find file in server: " + ex.Message);
-                    this.Logger.WriteException(ex);
-                    this.NotificationManager.ReportException(ex);
+                    this.notificationManager.WriteMessage("Cannot find file in server: " + ex.Message);
+                    this.notificationManager.WriteException(ex);
+                    this.notificationManager.ReportException(ex);
                 }
             }
         }
 
-        /// <summary>The refresh data for resource.</summary>
+        /// <summary>
+        /// The refresh data for resource.
+        /// </summary>
         /// <param name="fullName">The full name.</param>
         public void RefreshDataForResource(string fullName)
         {
-            this.Logger.WriteMessage("Refresh Data For File: " + fullName);
+            this.notificationManager.WriteMessage("Refresh Data For File: " + fullName);
             if (string.IsNullOrEmpty(fullName) || this.AssociationModule.AssociatedProject == null)
             {
                 return;
@@ -619,13 +720,11 @@ namespace VSSonarExtensionUi.ViewModel
             this.ResourceInEditor = null;
             if (this.LocalViewModel.FileAnalysisIsEnabled)
             {
-                this.LocalViewModel.IssuesGridView.AllIssues.Clear();
-                this.LocalViewModel.IssuesGridView.Issues.Clear();
+                this.LocalViewModel.ClearIssues();
                 this.LocalViewModel.ResetStats();
             }
 
-            this.ServerViewModel.IssuesGridView.AllIssues.Clear();
-            this.ServerViewModel.IssuesGridView.Issues.Clear();
+            this.ServerViewModel.ClearIssues();
             this.ServerViewModel.ResetStats();
 
             this.ResourceInEditor = this.AssociationModule.CreateAValidResourceFromServer(fullName, this.AssociationModule.AssociatedProject);
@@ -647,20 +746,24 @@ namespace VSSonarExtensionUi.ViewModel
             {
                 try
                 {
-                    this.Logger.WriteMessage("RefreshDataForResource: Doc in View: " + this.DocumentInView);
+                    this.notificationManager.WriteMessage("RefreshDataForResource: Doc in View: " + this.DocumentInView);
                     analyser.RefreshDataForResource(this.ResourceInEditor, this.DocumentInView);
                     this.StatusMessage = this.ResourceInEditor.Key;
                 }
                 catch (Exception ex)
                 {
                     this.StatusMessage = "Cannot find file in server: " + ex.Message;
-                    this.Logger.WriteMessage("Cannot find file in server: " + ex.Message);
-                    this.Logger.WriteException(ex);
-                    this.NotificationManager.ReportException(ex);
+                    this.notificationManager.WriteMessage("Cannot find file in server: " + ex.Message);
+                    this.notificationManager.WriteException(ex);
+                    this.notificationManager.ReportException(ex);
                 }
             }
         }
 
+        /// <summary>
+        /// Projects the has build.
+        /// </summary>
+        /// <param name="project">The project.</param>
         public void ProjectHasBuild(VsProjectItem project)
         {
             IAnalysisModelBase analyser = this.SelectedModel;
@@ -696,7 +799,7 @@ namespace VSSonarExtensionUi.ViewModel
 
             this.RefreshTheme = true;
 
-            if (this.PluginControl == null)
+            if (this.pluginController == null)
             {
                 return;
             }
@@ -708,38 +811,12 @@ namespace VSSonarExtensionUi.ViewModel
 
         #region Methods
 
-        /// <summary>The on changed.</summary>
-        /// <param name="e">The e.</param>
-        protected virtual void OnAnalysisModeHasChange(EventArgs e)
-        {
-            if (this.AnalysisModeHasChange != null)
-            {
-                this.AnalysisModeHasChange(this, e);
-            }
-        }
-
-        /// <summary>The on plugin request.</summary>
-        /// <param name="e">The e.</param>
-        protected virtual void OnPluginRequest(EventArgs e)
-        {
-            if (this.PluginRequest != null)
-            {
-                this.PluginRequest(this, e);
-            }
-        }
-
-        /// <summary>The on remove plugin request.</summary>
-        /// <param name="e">The e.</param>
-        protected virtual void OnRemovePluginRequest(EventArgs e)
-        {
-            if (this.RemovePluginRequest != null)
-            {
-                this.RemovePluginRequest(this, e);
-            }
-        }
-
-        /// <summary>The get first free id.</summary>
-        /// <returns>The <see cref="int"/>.</returns>
+        /// <summary>
+        /// The get first free id.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="int" />.
+        /// </returns>
         public int GetFirstFreeId()
         {
             int i = 0;
@@ -787,7 +864,7 @@ namespace VSSonarExtensionUi.ViewModel
                 if (menu.Header.Equals(plugDescRemove.Name))
                 {
                     this.ToolsProvidedByPlugins.Remove(menu);
-                    KeyValuePair<int, IMenuCommandPlugin> selectMenu = InUsePlugin;
+                    KeyValuePair<int, IMenuCommandPlugin> selectMenu = this.InUsePlugin;
                     foreach (var menuCheck in this.menuItemPlugins)
                     {
                         if (menuCheck.Value.GetPluginDescription().Name.Equals(plugDescRemove.Name))
@@ -809,6 +886,76 @@ namespace VSSonarExtensionUi.ViewModel
         }
 
         /// <summary>
+        /// The closed window.
+        /// </summary>
+        /// <param name="fullName">The full name.</param>
+        public void ClosedWindow(string fullName)
+        {
+            if (this.ServerViewModel != null)
+            {
+                this.ServerViewModel.UpdateOpenDiffWindowList(fullName);
+            }
+        }
+
+        /// <summary>
+        /// The get coverage in editor.
+        /// </summary>
+        /// <param name="buffer">The buffer.</param>
+        /// <returns>
+        /// The <see cref="Dictionary" />.
+        /// </returns>
+        public Dictionary<int, CoverageElement> GetCoverageInEditor(string buffer)
+        {
+            if (this.SelectedModel == this.ServerViewModel)
+            {
+                return this.ServerViewModel.GetCoverageInEditor(buffer);
+            }
+
+            return new Dictionary<int, CoverageElement>();
+        }
+
+        /// <summary>
+        /// Gets the available model.
+        /// </summary>
+        /// <returns>
+        /// returns optinal model
+        /// </returns>
+        public object GetAvailableModel()
+        {
+            return null;
+        }
+
+        /// <summary>The on changed.</summary>
+        /// <param name="e">The e.</param>
+        protected virtual void OnAnalysisModeHasChange(EventArgs e)
+        {
+            if (this.AnalysisModeHasChange != null)
+            {
+                this.AnalysisModeHasChange(this, e);
+            }
+        }
+
+        /// <summary>The on plugin request.</summary>
+        /// <param name="e">The e.</param>
+        protected virtual void OnPluginRequest(EventArgs e)
+        {
+            if (this.PluginRequest != null)
+            {
+                this.PluginRequest(this, e);
+            }
+        }
+
+        /// <summary>The on remove plugin request.</summary>
+        /// <param name="e">The e.</param>
+        protected virtual void OnRemovePluginRequest(EventArgs e)
+        {
+            if (this.RemovePluginRequest != null)
+            {
+                this.RemovePluginRequest(this, e);
+            }
+        }
+
+        /// <summary>
         ///     The init commands.
         /// </summary>
         private void InitCommands()
@@ -824,6 +971,9 @@ namespace VSSonarExtensionUi.ViewModel
             this.StartAssociationWindowCommand = new RelayCommand(this.OnStartAssociationWindowCommand);
         }
 
+        /// <summary>
+        /// Called when [start association window command].
+        /// </summary>
         private void OnStartAssociationWindowCommand()
         {
             this.AssociationModule.ShowAssociationWindow();
@@ -847,14 +997,24 @@ namespace VSSonarExtensionUi.ViewModel
         private void InitViewsAndModels()
         {
             this.ServerViewModel = new ServerViewModel(
-                this, 
                 this.VsHelper, 
                 this.configurationHelper, 
-                this.SonarRestConnector, 
-                AuthtenticationHelper.AuthToken);
-            this.LocalViewModel = new LocalViewModel(this, this.VSonarQubeOptionsViewData.PluginManager.AnalysisPlugins, this.SonarRestConnector, this.VsHelper, this.configurationHelper, AuthtenticationHelper.AuthToken);
+                this.sonarRestConnector,
+                this.notificationManager,
+                this.sonarKeyTranslator);
 
-            this.IssuesSearchModel = new IssuesSearchModel(this, this.configurationHelper, this.SonarRestConnector);
+            this.LocalViewModel = new LocalViewModel(
+                this.VSonarQubeOptionsViewData.PluginManager.AnalysisPlugins,
+                this.sonarRestConnector,
+                this.configurationHelper,
+                this.notificationManager,
+                this.sonarKeyTranslator);
+
+            this.IssuesSearchModel = new IssuesSearchModel(
+                this.configurationHelper,
+                this.sonarRestConnector, 
+                this.notificationManager, 
+                this.sonarKeyTranslator);
             
             this.SonarQubeModels = new ObservableCollection<IAnalysisModelBase>
                                       {
@@ -865,9 +1025,9 @@ namespace VSSonarExtensionUi.ViewModel
 
             this.SonarQubeViews = new ObservableCollection<IViewModelBase>
                                       {
-                                          this.ServerViewModel,
-                                          this.LocalViewModel,
-                                          this.IssuesSearchModel.IssuesSearchViewModel
+                                          this.ServerViewModel.GetViewModel() as IViewModelBase,
+                                          this.LocalViewModel.GetViewModel() as IViewModelBase,
+                                          this.IssuesSearchModel.GetViewModel() as IViewModelBase
                                       };
 
             try
@@ -928,26 +1088,34 @@ namespace VSSonarExtensionUi.ViewModel
             this.AvailableBranches.Clear();
             this.SelectedBranch = null;
             this.AssociationModule.Disconnect();
+            this.EndAssociation();
 
-            foreach (IAnalysisModelBase view in this.SonarQubeModels)
-            {
-                view.EndDataAssociation();
-            }
-                     
-            this.LocalViewModel.IssuesGridView.AllIssues.Clear();
-            this.LocalViewModel.IssuesGridView.Issues.Clear();
-            this.ServerViewModel.IssuesGridView.AllIssues.Clear();
-            this.ServerViewModel.IssuesGridView.Issues.Clear();
-            this.IssuesSearchModel.IssuesSearchViewModel.IssuesGridView.Issues.Clear();
-            this.IssuesSearchModel.IssuesSearchViewModel.IssuesGridView.AllIssues.Clear();
+            this.LocalViewModel.ClearIssues();
+            this.ServerViewModel.ClearIssues();
+            this.IssuesSearchModel.ClearIssues();
 
             this.ConnectionTooltip = "Not Connected";
-            this.StatusMessage = "";
+            this.StatusMessage = string.Empty;
         }
 
         /// <summary>
-        ///     The connect to sonar.
+        /// Ends the association.
         /// </summary>
+        private void EndAssociation()
+        {
+            this.AssociationModule.ClearProjectAssociation();
+            this.VSonarQubeOptionsViewData.EndDataAssociation();
+
+            foreach (var item in modelPool)
+            {
+                item.EndDataAssociation();
+            }
+        }
+
+        /// <summary>
+        /// The connect to sonar.
+        /// </summary>
+        /// <param name="useDispatcher">if set to <c>true</c> [use dispatcher].</param>
         private void OnConnectToSonar(bool useDispatcher)
         {
             if (this.VsHelper == null)
@@ -974,8 +1142,9 @@ namespace VSSonarExtensionUi.ViewModel
         }
 
         /// <summary>
-        ///     The try to connect.
+        /// The try to connect.
         /// </summary>
+        /// <param name="useDispatcher">if set to <c>true</c> [use dispatcher].</param>
         private void TryToConnect(bool useDispatcher)
         {
             try
@@ -987,7 +1156,7 @@ namespace VSSonarExtensionUi.ViewModel
                     return;
                 }
 
-                this.StatusMessage = "";
+                this.StatusMessage = string.Empty;
 
                 this.IsConnected = true;
                 this.AssociationModule.IsConnectedButNotAssociated = true;
@@ -995,14 +1164,11 @@ namespace VSSonarExtensionUi.ViewModel
 
                 this.ConnectionTooltip = "Authenticated, but no associated";
                 this.AssociationModule.RefreshProjectList(useDispatcher);
-
-                this.SonarVersion =
-                    this.SonarRestConnector.GetServerInfo(AuthtenticationHelper.AuthToken);
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                this.NotificationManager.ReportException(ex);
+                this.notificationManager.ReportException(ex);
                 this.ConnectionTooltip = "No Connection";
                 this.AssociationModule.Disconnect();
             }
@@ -1010,95 +1176,44 @@ namespace VSSonarExtensionUi.ViewModel
 
         #endregion
 
-        /// <summary>The configuration helper.</summary>
-        private readonly IConfigurationHelper configurationHelper;
-
-        /// <summary>The closed window.</summary>
-        /// <param name="fullName">The full name.</param>
-        public void ClosedWindow(string fullName)
+        /// <summary>
+        /// Updates the services.
+        /// </summary>
+        private void UpdateServices()
         {
-            if (this.ServerViewModel != null)
+            foreach (IModelBase model in modelPool)
             {
-                this.ServerViewModel.UpdateOpenDiffWindowList(fullName);
+                model.UpdateServices(this.VsHelper, this.StatusBar, this.ServiceProvider);
             }
         }
 
-        /// <summary>The get coverage in editor.</summary>
-        /// <param name="buffer">The buffer.</param>
-        /// <returns>The <see cref="Dictionary"/>.</returns>
-        public Dictionary<int, CoverageElement> GetCoverageInEditor(string buffer)
+        /// <summary>
+        /// Updates the services.
+        /// </summary>
+        private void UpdateAssociationData()
         {
-            if (this.SelectedModel == this.ServerViewModel)
+            var listToRemo = new List<IModelBase>();
+
+            foreach (IModelBase model in modelPool)
             {
-                return this.ServerViewModel.GetCoverageInEditor(buffer);
+                try
+                {
+                    model.AssociateWithNewProject(
+                        AuthtenticationHelper.AuthToken,
+                        this.AssociationModule.AssociatedProject,
+                        this.AssociationModule.OpenSolutionPath);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                    listToRemo.Add(model);
+                }
             }
 
-            return new Dictionary<int, CoverageElement>();
+            foreach (var item in listToRemo)
+            {
+                modelPool.Remove(item);
+            }
         }
-
-        /// <summary>
-        /// Gets the available model.
-        /// </summary>
-        /// <returns></returns>
-        public object GetAvailableModel()
-        {
-            return null;
-        }
-
-        /// <summary>
-        /// Gets the notification manager.
-        /// </summary>
-        /// <value>
-        /// The notification manager.
-        /// </value>
-        public NotifyCationManager NotificationManager { get; internal set; }
-
-        /// <summary>
-        /// Gets the association module.
-        /// </summary>
-        /// <value>
-        /// The association module.
-        /// </value>
-        public AssociationModel AssociationModule { get; internal set; }
-
-        /// <summary>
-        /// Gets the sonar key translator.
-        /// </summary>
-        /// <value>
-        /// The sonar key translator.
-        /// </value>
-        public ISQKeyTranslator SonarKeyTranslator { get; internal set; }
-
-        /// <summary>
-        /// Gets the source control provider.
-        /// </summary>
-        /// <value>
-        /// The source control provider.
-        /// </value>
-        internal ISourceControlProvider SourceControlProvider { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the status message.
-        /// </summary>
-        /// <value>
-        /// The status message.
-        /// </value>
-        public string StatusMessage { get; set; }
-
-        /// <summary>
-        /// Gets the issues search model.
-        /// </summary>
-        /// <value>
-        /// The issues search model.
-        /// </value>
-        public IssuesSearchModel IssuesSearchModel { get; private set; }
-
-        /// <summary>
-        /// Gets the sonar qube views.
-        /// </summary>
-        /// <value>
-        /// The sonar qube views.
-        /// </value>
-        public ObservableCollection<IViewModelBase> SonarQubeViews { get; private set; }
     }
 }

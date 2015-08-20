@@ -23,8 +23,15 @@ namespace VSSonarExtensionUi.Model.Helpers
     /// </summary>
     public class ConfigurationHelper : IConfigurationHelper
     {
+        /// <summary>
+        /// The tempproperties
+        /// </summary>
+        private readonly List<SonarQubeProperties> tempproperties = new List<SonarQubeProperties>();
+
+        /// <summary>
+        /// The properties
+        /// </summary>
         private List<SonarQubeProperties> properties = new List<SonarQubeProperties>();
-        private List<SonarQubeProperties> tempproperties = new List<SonarQubeProperties>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConfigurationHelper"/> class. 

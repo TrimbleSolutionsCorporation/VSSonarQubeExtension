@@ -24,108 +24,100 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
 
     using GalaSoft.MvvmLight.Command;
 
-    using PropertyChanged;
     using Helpers;
 
-    using VSSonarPlugins;
-    using VSSonarPlugins.Types;
-    using VSSonarPlugins.Helpers;
-    using Model.Cache;
     using Model.Analysis;
+    using Model.Cache;
+    using Model.Helpers;
+    using PropertyChanged;
+    using SonarLocalAnalyser;
+    using VSSonarPlugins;
+    using VSSonarPlugins.Helpers;
+    using VSSonarPlugins.Types;
 
     /// <summary>
     ///     The server view model.
     /// </summary>
     [ImplementPropertyChanged]
-    public class ServerViewModel : IAnalysisModelBase, IViewModelBase
+    public class ServerViewModel : IAnalysisModelBase, IViewModelBase, IModelBase
     {
-        #region Constructors and Destructors
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="ServerViewModel" /> class.
-        /// </summary>
-        /// <param name="sonarQubeViewModel">
-        ///     The sonar Qube View Model.
-        /// </param>
-        /// <param name="vsenvironmenthelper">
-        ///     The vsenvironmenthelper.
-        /// </param>
-        /// <param name="restservice">
-        ///     The restservice.
-        /// </param>
-        /// <param name="config">
-        ///     The config.
-        /// </param>
-        public ServerViewModel(
-            SonarQubeViewModel sonarQubeViewModel,
-            IVsEnvironmentHelper vsenvironmenthelper,
-            IConfigurationHelper configurationHelper,
-            ISonarRestService restservice,
-            ISonarConfiguration config)
-        {
-            this.sonarQubeViewModel = sonarQubeViewModel;
-            this.vsenvironmenthelper = vsenvironmenthelper;
-            this.configurationHelper = configurationHelper;
-            this.restservice = restservice;
-            this.config = config;
-
-            this.Header = "Server Analysis";
-            this.AlreadyOpenDiffs = new SortedSet<string>();
-            this.IssuesGridView = new IssueGridViewModel(sonarQubeViewModel, true, "ServerView", true, this.configurationHelper);
-            this.InitCommanding();
-
-            this.ForeGroundColor = Colors.Black;
-            this.BackGroundColor = Colors.White;
-        }
-
-        #endregion
-
-        public void UpdateOpenDiffWindowList(string fullName)
-        {
-            string[] delimiters = { "vs." };
-
-            var files = fullName.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
-
-            if (files.Count() != 2)
-            {
-                return;
-            }
-
-            if (this.AlreadyOpenDiffs.Contains(files[1].Trim().Replace("local.", "")))
-            {
-                this.AlreadyOpenDiffs.Remove(files[1].Trim().Replace("local.", ""));
-                this.vsenvironmenthelper.ClearDiffFile(files[0].Trim(), files[1].Trim());
-            }
-        }
-
-        #region Fields
-
-        /// <summary>
-        ///     The config.
-        /// </summary>
-        private readonly ISonarConfiguration config;
-
         /// <summary>
         ///     The local editor cache.
         /// </summary>
         private readonly ModelEditorCache localEditorCache = new ModelEditorCache();
 
         /// <summary>
-        ///     The sonar qube view model.
-        /// </summary>
-        private readonly SonarQubeViewModel sonarQubeViewModel;
-
-        /// <summary>
         ///     The restservice.
         /// </summary>
-        private ISonarRestService restservice;
+        private readonly ISonarRestService restservice;
+
+        /// <summary>
+        /// The configuration helper
+        /// </summary>
+        private readonly IConfigurationHelper configurationHelper;
+
+        /// <summary>
+        /// The notification man
+        /// </summary>
+        private readonly INotificationManager notificationMan;
 
         /// <summary>
         ///     The vsenvironmenthelper.
         /// </summary>
         private IVsEnvironmentHelper vsenvironmenthelper;
 
-        private IConfigurationHelper configurationHelper;
+        /// <summary>
+        /// The status bar
+        /// </summary>
+        private IVSSStatusBar statusBar;
+
+        /// <summary>
+        /// The service provier
+        /// </summary>
+        private IServiceProvider serviceProvier;
+
+        /// <summary>
+        /// The associated project
+        /// </summary>
+        private Resource associatedProject;
+
+        /// <summary>
+        ///     The config.
+        /// </summary>
+        private ISonarConfiguration userConfiguration;
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ServerViewModel" /> class.
+        /// </summary>
+        /// <param name="vsenvironmenthelper">The vsenvironmenthelper.</param>
+        /// <param name="configurationHelper">The configuration helper.</param>
+        /// <param name="restservice">The restservice.</param>
+        /// <param name="notificationManager">The notification manager.</param>
+        public ServerViewModel(
+            IVsEnvironmentHelper vsenvironmenthelper,
+            IConfigurationHelper configurationHelper,
+            ISonarRestService restservice,
+            INotificationManager notificationManager,
+            ISQKeyTranslator translator)
+        {
+            this.notificationMan = notificationManager;
+            this.vsenvironmenthelper = vsenvironmenthelper;
+            this.configurationHelper = configurationHelper;
+            this.restservice = restservice;
+
+            this.Header = "Server Analysis";
+            this.AlreadyOpenDiffs = new SortedSet<string>();
+            this.IssuesGridView = new IssueGridViewModel(true, "ServerView", true, this.configurationHelper, this.restservice, this.notificationMan, translator);
+            this.InitCommanding();
+
+            this.ForeGroundColor = Colors.Black;
+            this.BackGroundColor = Colors.White;
+
+            // register model
+            SonarQubeViewModel.RegisterNewModelInPool(this);
+        }
 
         #endregion
 
@@ -144,11 +136,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         #endregion
 
         #region Public Properties
-
-        /// <summary>
-        ///     Gets or sets the associated project.
-        /// </summary>
-        public Resource AssociatedProject { get; set; }
 
         /// <summary>
         ///     Gets or sets the back ground color.
@@ -170,8 +157,20 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         public ICommand DisplaySourceDiffCommand { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the go to previous issue command.
+        /// </summary>
+        /// <value>
+        /// The go to previous issue command.
+        /// </value>
         public ICommand GoToPrevIssueCommand { get; set; }
 
+        /// <summary>
+        /// Gets or sets the go to next issue command.
+        /// </summary>
+        /// <value>
+        /// The go to next issue command.
+        /// </value>
         public ICommand GoToNextIssueCommand { get; set; }
 
         /// <summary>
@@ -205,25 +204,69 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public Resource ResourceInEditor { get; set; }
 
         /// <summary>
-        ///     Gets or sets the service provier.
+        /// Gets or sets the already open diffs.
         /// </summary>
-        public IServiceProvider ServiceProvier { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the status bar.
-        /// </summary>
-        public IVSSStatusBar StatusBar { get; set; }
+        /// <value>
+        /// The already open diffs.
+        /// </value>
+        public SortedSet<string> AlreadyOpenDiffs { get; set; }
 
         #endregion
 
         #region Public Methods and Operators
 
+
+        /// <summary>
+        /// Updates the open difference window list.
+        /// </summary>
+        /// <param name="fullName">The full name.</param>
+        public void UpdateOpenDiffWindowList(string fullName)
+        {
+            string[] delimiters = { "vs." };
+
+            var files = fullName.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+
+            if (files.Count() != 2)
+            {
+                return;
+            }
+
+            if (this.AlreadyOpenDiffs.Contains(files[1].Trim().Replace("local.", string.Empty)))
+            {
+                this.AlreadyOpenDiffs.Remove(files[1].Trim().Replace("local.", string.Empty));
+                this.vsenvironmenthelper.ClearDiffFile(files[0].Trim(), files[1].Trim());
+            }
+        }
+
+        /// <summary>
+        /// Reset Stats.
+        /// </summary>
         public void ResetStats()
         {
             if (this.IssuesGridView != null)
             {
                 this.IssuesGridView.ResetStatistics();
             }
+        }
+
+        /// <summary>
+        /// Clears the issues.
+        /// </summary>
+        public void ClearIssues()
+        {
+            this.IssuesGridView.AllIssues.Clear();
+            this.IssuesGridView.Issues.Clear();
+        }
+
+        /// <summary>
+        /// Gets the view model.
+        /// </summary>
+        /// <returns>
+        /// returns view model
+        /// </returns>
+        public object GetViewModel()
+        {
+            return this;
         }
 
         /// <summary>
@@ -234,10 +277,24 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.localEditorCache.ClearData();
         }
 
-        /// <summary>The trigger a project analysis.</summary>
+        /// <summary>
+        /// The trigger a project analysis.
+        /// </summary>
         /// <param name="project">The project.</param>
         public void TriggerAProjectAnalysis(VsProjectItem project)
         {
+            // server analysis does not trigger project
+        }
+
+        /// <summary>
+        /// Gets the available model, TODO: needs to be removed after viewmodels are split into models and view models
+        /// </summary>
+        /// <returns>
+        /// returns optinal model
+        /// </returns>
+        public object GetAvailableModel()
+        {
+            return null;
         }
 
         /// <summary>
@@ -246,7 +303,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public void EndDataAssociation()
         {
             this.IsRunningInVisualStudio = false;
-            this.AssociatedProject = null;
+            this.associatedProject = null;
         }
 
         /// <summary>
@@ -266,7 +323,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             if (this.CoverageInEditorEnabled)
             {
-                this.sonarQubeViewModel.Logger.WriteMessage("Requested Coverage - Coverge enabled");
+                this.notificationMan.WriteMessage("Requested Coverage - Coverge enabled");
                 return this.localEditorCache.GetCoverageDataForResource(this.ResourceInEditor, currentSourceBuffer);
             }
 
@@ -295,30 +352,26 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             {
                 return new List<Issue>();
             }
+
             this.IssuesGridView.RefreshStatistics();
             var issuesWithModifiedData = this.localEditorCache.GetIssuesForResource(this.ResourceInEditor, fileContent);
             return issuesWithModifiedData.Where(issue => this.IssuesGridView.IsNotFiltered(issue)).ToList();
         }
 
         /// <summary>
-        ///     The init data association.
+        /// The init data association.
         /// </summary>
-        /// <param name="associatedProject">
-        ///     The associated project.
-        /// </param>
-        /// <param name="userConnectionConfig">
-        ///     The user connection config.
-        /// </param>
-        /// <param name="workingDir">
-        ///     The working dir.
-        /// </param>
-        public void InitDataAssociation(Resource associatedProject, ISonarConfiguration userConnectionConfig, string workingDir)
+        /// <param name="userConnectionConfig">The user connection config.</param>
+        /// <param name="associatedProjectIn">The associated project in.</param>
+        /// <param name="workingDir">The working dir.</param>
+        public void AssociateWithNewProject(ISonarConfiguration userConnectionConfig, Resource associatedProjectIn, string workingDir)
         {
-            this.AssociatedProject = associatedProject;
+            this.userConfiguration = userConnectionConfig;
+            this.associatedProject = associatedProjectIn;
             this.Configuration = userConnectionConfig;
-            if (this.sonarQubeViewModel.VsHelper != null)
+            if (this.vsenvironmenthelper != null)
             {
-                this.IsRunningInVisualStudio = this.sonarQubeViewModel.VsHelper.AreWeRunningInVisualStudio();
+                this.IsRunningInVisualStudio = this.vsenvironmenthelper.AreWeRunningInVisualStudio();
             }
             else
             {
@@ -336,11 +389,11 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             if (this.IssuesReadyForCollecting != null)
             {
-                this.sonarQubeViewModel.Logger.WriteMessage("Trigger issues update");
+                this.notificationMan.WriteMessage("Trigger issues update");
                 this.IssuesReadyForCollecting(this, e);
                 if (this.CoverageWasModified != null)
                 {
-                    this.sonarQubeViewModel.Logger.WriteMessage("Trigger Coverage Update");
+                    this.notificationMan.WriteMessage("Trigger Coverage Update");
                     this.CoverageWasModified(this, e);
                 }
             }
@@ -352,7 +405,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public void OnCoverageInEditorEnabledChanged()
         {
             this.OnCoverageWasModified(EventArgs.Empty);
-            this.sonarQubeViewModel.Logger.WriteMessage("CoverageInEditorEnabled Changed");
+            this.notificationMan.WriteMessage("CoverageInEditorEnabled Changed");
         }
 
         /// <summary>
@@ -361,7 +414,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public void OnSelectedViewChanged()
         {
             this.OnAnalysisModeHasChange(EventArgs.Empty);
-            this.sonarQubeViewModel.Logger.WriteMessage("OnSelectedViewChanged Changed");
+            this.notificationMan.WriteMessage("OnSelectedViewChanged Changed");
         }
 
         /// <summary>
@@ -377,9 +430,9 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             this.DocumentInView = documentInView;
             this.ResourceInEditor = res;
-            var newCoverage = this.restservice.GetCoverageInResource(this.config, this.ResourceInEditor.Key);
-            var newSource = VsSonarUtils.GetLinesFromSource(this.restservice.GetSourceForFileResource(this.config, this.ResourceInEditor.Key), "\r\n");
-            var newIssues = this.restservice.GetIssuesInResource(this.config, this.ResourceInEditor.Key);
+            var newCoverage = this.restservice.GetCoverageInResource(this.userConfiguration, this.ResourceInEditor.Key);
+            var newSource = VsSonarUtils.GetLinesFromSource(this.restservice.GetSourceForFileResource(this.userConfiguration, this.ResourceInEditor.Key), "\r\n");
+            var newIssues = this.restservice.GetIssuesInResource(this.userConfiguration, this.ResourceInEditor.Key);
 
             this.IssuesGridView.Issues.Clear();
             this.IssuesGridView.AllIssues.Clear();
@@ -391,6 +444,22 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
 
             this.localEditorCache.UpdateResourceData(this.ResourceInEditor, newCoverage, newIssues, newSource);
             this.OnSelectedViewChanged();
+        }
+
+        /// <summary>
+        /// The update services.
+        /// </summary>
+        /// <param name="vsenvironmenthelperIn">The vsenvironmenthelper in.</param>
+        /// <param name="statusBarIn">The status bar in.</param>
+        /// <param name="provider">The provider.</param>
+        public void UpdateServices(
+            IVsEnvironmentHelper vsenvironmenthelperIn,
+            IVSSStatusBar statusBarIn,
+            IServiceProvider provider)
+        {
+            this.vsenvironmenthelper = vsenvironmenthelperIn;
+            this.statusBar = statusBarIn;
+            this.serviceProvier = provider;
         }
 
         /// <summary>
@@ -410,66 +479,38 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.IssuesGridView.UpdateColours(background, foreground);
         }
 
+        /// <summary>
+        /// The on coverage was modified.
+        /// </summary>
+        /// <param name="e">The e.</param>
+        protected virtual void OnCoverageWasModified(EventArgs e)
+        {
+            if (this.CoverageWasModified != null)
+            {
+                this.notificationMan.WriteMessage("Triggering Event: OnCoverageWasModified");
+                this.CoverageWasModified(this, e);
+            }
+        }
+
+        /// <summary>
+        /// Called when [go to next issue command].
+        /// </summary>
         private void OnGoToNextIssueCommand()
         {
             this.IssuesGridView.GoToNextIssue();
         }
 
+        /// <summary>
+        /// Called when [go to previous issue command].
+        /// </summary>
         private void OnGoToPrevIssueCommand()
         {
             this.IssuesGridView.GoToPrevIssue();
         }
 
-        /// <summary>
-        ///     The update services.
-        /// </summary>
-        /// <param name="restServiceIn">
-        ///     The rest service in.
-        /// </param>
-        /// <param name="vsenvironmenthelperIn">
-        ///     The vsenvironmenthelper in.
-        /// </param>
-        /// <param name="statusBar">
-        ///     The status bar.
-        /// </param>
-        /// <param name="provider">
-        ///     The provider.
-        /// </param>
-        public void UpdateServices(
-            ISonarRestService restServiceIn,
-            IVsEnvironmentHelper vsenvironmenthelperIn,
-            IConfigurationHelper configurationHelper,
-            IVSSStatusBar statusBar,
-            IServiceProvider provider)
-        {
-            this.configurationHelper = configurationHelper;
-            this.restservice = restServiceIn;
-            this.vsenvironmenthelper = vsenvironmenthelperIn;
-            this.StatusBar = statusBar;
-            this.ServiceProvier = provider;
-            this.IssuesGridView.Vsenvironmenthelper = vsenvironmenthelperIn;
-
-            this.IssuesGridView.UpdateVsService(this.vsenvironmenthelper);
-        }
-
         #endregion
 
         #region Methods
-
-        /// <summary>
-        ///     The on coverage was modified.
-        /// </summary>
-        /// <param name="e">
-        ///     The e.
-        /// </param>
-        protected virtual void OnCoverageWasModified(EventArgs e)
-        {
-            if (this.CoverageWasModified != null)
-            {
-                this.sonarQubeViewModel.Logger.WriteMessage("Triggering Event: OnCoverageWasModified");
-                this.CoverageWasModified(this, e);
-            }
-        }
 
         /// <summary>
         ///     The init commanding.
@@ -501,17 +542,10 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 }
                 catch (Exception ex)
                 {
-                    this.sonarQubeViewModel.NotificationManager.ReportException(ex);
+                    this.notificationMan.ReportException(ex);
                 }
             }
         }
-
-        public object GetAvailableModel()
-        {
-            throw new NotImplementedException();
-        }
-
-        public SortedSet<string> AlreadyOpenDiffs { get; set; }
 
         #endregion
     }

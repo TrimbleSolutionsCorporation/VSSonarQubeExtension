@@ -16,20 +16,21 @@ namespace VSSonarExtensionUi.Model.Menu
 {
     using System.Collections.ObjectModel;
     using System.Windows.Input;
-
+    using Helpers;
     using VSSonarPlugins;
+    using VSSonarPlugins.Types;
 
     /// <summary>
     ///     The MenuItem interface.
     /// </summary>
-    public interface IMenuItem
+    public interface IMenuItem : IModelBase
     {
         #region Public Properties
 
         /// <summary>
         ///     Gets or sets the associated command.
         /// </summary>
-        ICommand AssociatedCommand { get; set; }
+        ICommand ExecuteCommand { get; set; }
 
         /// <summary>
         ///     Gets or sets the command text.
@@ -45,8 +46,6 @@ namespace VSSonarExtensionUi.Model.Menu
         ///     Gets or sets the sub items.
         /// </summary>
         ObservableCollection<IMenuItem> SubItems { get; set; }
-
-        void UpdateServices(IVsEnvironmentHelper vsHelper);
 
         #endregion
     }

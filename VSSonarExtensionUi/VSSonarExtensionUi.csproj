@@ -135,9 +135,11 @@
     <Compile Include="Model\Converters\UrlToImageSourceConverter.cs" />
     <Compile Include="Model\Helpers\ConfigurationHelper.cs" />
     <Compile Include="Model\Helpers\ConnectionConfigurationHelpers.cs" />
+    <Compile Include="Model\Helpers\IModelBase.cs" />
     <Compile Include="Model\Helpers\PaginatedObservableCollection.cs" />
     <Compile Include="Model\Helpers\PasswordHelper.cs" />
     <Compile Include="Model\Helpers\SourceControlModel.cs" />
+    <Compile Include="Model\Menu\PlanMenu.cs" />
     <Compile Include="ViewModel\Association\AssociationViewModel.cs" />
     <Compile Include="Model\PluginManager\PluginController.cs" />
     <Compile Include="Model\PluginManager\PluginLoader.cs" />
@@ -156,7 +158,7 @@
     <Compile Include="Model\Helpers\IssueFilter.cs" />
     <Compile Include="Model\Helpers\ItemsChangeObservableCollection.cs" />
     <Compile Include="Model\Menu\IMenuItem.cs" />
-    <Compile Include="Model\Menu\ChangeStatusHandler.cs" />
+    <Compile Include="Model\Menu\ChangeStatusMenu.cs" />
     <Compile Include="Model\Menu\ShowHideIssueColumn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\Helpers\AsyncObservableCollection.cs" />
@@ -205,6 +207,9 @@
     <Compile Include="View\Configuration\PluginManagerView.xaml.cs">
       <DependentUpon>PluginManagerView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\Helpers\PromptUserForNewPlan.xaml.cs">
+      <DependentUpon>PromptUserForNewPlan.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Helpers\PromptUserData.xaml.cs">
       <DependentUpon>PromptUserData.xaml</DependentUpon>
     </Compile>
@@ -213,6 +218,9 @@
     </Compile>
     <Compile Include="View\Configuration\GeneralConfigurationView.xaml.cs">
       <DependentUpon>GeneralConfigurationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Helpers\QuestionUser.xaml.cs">
+      <DependentUpon>QuestionUser.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SonarQubeUserControlVS.xaml.cs">
       <DependentUpon>SonarQubeUserControlVS.xaml</DependentUpon>
@@ -302,6 +310,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="View\Helpers\PromptUserForNewPlan.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="View\Helpers\PromptUserData.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -315,6 +327,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\Configuration\GeneralConfigurationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Helpers\QuestionUser.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

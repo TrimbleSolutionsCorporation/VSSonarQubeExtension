@@ -185,13 +185,12 @@ namespace VSSonarQubeExtension
                 try
                 {
                     this.visualStudioInterface = new VsPropertiesHelper(this.dte2, this);
-                    this.restService = new SonarRestService(new JsonSonarConnector());
                     this.VsEvents = new VsEvents(this.visualStudioInterface, this.dte2, this);
                     var bar = this.GetService(typeof(SVsStatusbar)) as IVsStatusbar;
                     this.StatusBar = new VSSStatusBar(bar, this.dte2);
 
 
-                    var extensionRunningPath = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", "").ToString();
+                    var extensionRunningPath = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty).ToString();
 
                     var uniqueId = this.dte2.Version;
 
@@ -200,7 +199,7 @@ namespace VSSonarQubeExtension
                         uniqueId += "Exp";
                     }
 
-                    SonarQubeViewModelFactory.StartupModelWithVsVersion(uniqueId).InitModelFromPackageInitialization(this.restService, this.visualStudioInterface, this.StatusBar, this, this.AssemblyDirectory);
+                    SonarQubeViewModelFactory.StartupModelWithVsVersion(uniqueId).InitModelFromPackageInitialization(this.visualStudioInterface, this.StatusBar, this, this.AssemblyDirectory);
 
                     DColor defaultBackground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBackgroundColorKey);
                     DColor defaultForeground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowTextColorKey);
@@ -210,7 +209,7 @@ namespace VSSonarQubeExtension
 
                     // force analysis to come to vsix
                     var i = 0;
-                    var data = "";
+                    var data = string.Empty;
                     foreach (var item in SonarQubeViewModelFactory.StartupModelWithVsVersion(uniqueId).VSonarQubeOptionsViewData.RoslynModel.ExtensionDiagnostics)
                     {
                         i += item.Value.AvailableChecks.Count;

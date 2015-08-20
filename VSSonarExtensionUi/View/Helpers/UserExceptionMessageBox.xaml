@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-	xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+	         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              mc:Ignorable="d" 
              x:Class="VSSonarExtensionUi.View.Helpers.UserExceptionMessageBox"
              Title="Exception Found" Height="300" Width="800" Background="{Binding BackGroundColor}" Foreground="{Binding ForeGroundColor, FallbackValue=Black}">
@@ -29,7 +29,7 @@
                     <RowDefinition Height="30"/>
                 </Grid.RowDefinitions>
                 <TextBox x:Name="ErrorMessage" TextWrapping="Wrap" Height="50" />
-                <Button Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="Close" Click="ButtonBase_OnClick"  />
+                <Button Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="Close" Click="ButtonBaseOnClick"  />
             </Grid>
             <Expander Header="Exception StackTrace">
 				<Grid>

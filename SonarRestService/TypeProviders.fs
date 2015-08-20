@@ -65,6 +65,8 @@ type JsonActionPlan = JsonProvider<"""
 }
 """>
 
+type JsonarPlan = JsonProvider<"""{"actionPlan":{"key":"2deb9b4c-105f-4a68-a9a4-7017ffaeaf6f","name":"asdsa3432","status":"OPEN","project":"sonar.training:SonarTraining:feature_improve-coverage","desc":"fdadfasdfsad","userLogin":"jocs","deadLine":"2015-08-22T00:00:00+0300","fDeadLine":"22 Aug 2015","createdAt":"2015-08-20T12:38:54+0300","fCreatedAt":"20 Aug 2015","updatedAt":"2015-08-20T12:38:54+0300","fUpdatedAt":"20 Aug 2015"}}""">
+
 type JsonRuleSearchResponse = JsonProvider<""" {
   "total": 641,
   "p": 1,

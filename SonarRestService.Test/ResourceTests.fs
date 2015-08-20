@@ -16,7 +16,7 @@ type ResourceTests() =
     let assemblyRunningPath = Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString()
     [<Test>]
     member test.``Should Get Resource Info Properly`` () =
-        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1")
+        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1", 4.5)
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
@@ -29,7 +29,7 @@ type ResourceTests() =
 
     [<Test>]
     member test.``Should Get Valid List of Resources for project List`` () =
-        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1")
+        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1", 4.5)
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
@@ -44,7 +44,7 @@ type ResourceTests() =
 
     [<Test>]
     member test.``Should Get Valid List of Coverage`` () =
-        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1")
+        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1", 4.5)
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
@@ -57,7 +57,7 @@ type ResourceTests() =
 
     [<Test>]
     member test.``Should Get Valid Source Data`` () =
-        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1")
+        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1", 4.5)
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
@@ -70,7 +70,7 @@ type ResourceTests() =
 
     [<Test>]
     member test.``Should PutComment Correctly On Sonar Less than 3.6 Review Attached`` () =
-        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1")
+        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1", 4.5)
 
         let mockIRestReponseHttpReq =
             Mock<IRestResponse>()
@@ -102,7 +102,7 @@ type ResourceTests() =
 
     [<Test>]
     member test.``Should PutComment Correctly On Sonar Higher than 3.6`` () =
-        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1")
+        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1", 4.5)
 
         let mockIRestReponsePostHttpReq =
             Mock<IRestResponse>()
@@ -128,7 +128,7 @@ type ResourceTests() =
 
     [<Test>]
     member test.``Should PutComment Correctly On Sonar Less than 3.6 No Review Attached`` () =
-        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1")
+        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1", 4.5)
 
         let mockIRestReponseHttpReq =
             Mock<IRestResponse>()
@@ -158,7 +158,7 @@ type ResourceTests() =
 
     //[<Test>]
     member test.``GetTypes`` () =
-        let conf = ConnectionConfiguration("http://sonar:80", "jocs1", "jocs1")
+        let conf = ConnectionConfiguration("http://sonar:80", "jocs1", "jocs1", 4.5)
 
         let jsonHttp = new JsonSonarConnector()
         let url = "/api/violations?resource=tekla.structures.core:Common:libgeometry/vector_utilities.cpp"
@@ -167,7 +167,7 @@ type ResourceTests() =
 
     //[<Test>]
     member test.``PutTypes`` () =
-        let conf = ConnectionConfiguration("http://sonar:80", "jocs1", "jocs1")
+        let conf = ConnectionConfiguration("http://sonar:80", "jocs1", "jocs1", 4.5)
 
         let jsonHttp = new JsonSonarConnector()
         let parameters = Map.empty.Add("id", Convert.ToString(812)).Add("comment", "commenttest")

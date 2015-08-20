@@ -6,6 +6,9 @@
     using System.Net;
     using Types;
 
+    /// <summary>
+    /// sonar rest service
+    /// </summary>
     public interface ISonarRestService
     {
         /// <summary>
@@ -14,7 +17,7 @@
         /// <param name="config">The configuration.</param>
         /// <param name="projectKey">The project key.</param>
         /// <param name="userId">The user identifier.</param>
-        /// <returns></returns>
+        /// <returns>returns list of issues</returns>
         List<Issue> GetIssuesByAssigneeInProject(ISonarConfiguration config, string projectKey, string userId);
 
         /// <summary>
@@ -55,6 +58,47 @@
 
         Dictionary<string, HttpStatusCode> AssignIssuesToUser(ISonarConfiguration newConf, List<Issue> issues, User user, string comment);
 
+        /// <summary>
+        /// Plans the issues.
+        /// </summary>
+        /// <param name="newConf">The new conf.</param>
+        /// <param name="issues">The issues.</param>
+        /// <param name="planId">The plan identifier.</param>
+        /// <returns>status code</returns>
+        Dictionary<string, HttpStatusCode> PlanIssues(ISonarConfiguration newConf, IList issues, string planId);
+
+        /// <summary>
+        /// Creates the new plan.
+        /// </summary>
+        /// <param name="newConf">The new conf.</param>
+        /// <param name="projectId">The project identifier.</param>
+        /// <param name="plan">The plan.</param>
+        /// <returns>
+        /// created action plan
+        /// </returns>
+        SonarActionPlan CreateNewPlan(ISonarConfiguration newConf, string projectId, SonarActionPlan plan);
+
+        /// <summary>
+        /// Uns the plan issues.
+        /// </summary>
+        /// <param name="newConf">The new conf.</param>
+        /// <param name="issues">The issues.</param>
+        /// <returns>status of operation</returns>
+        Dictionary<string, HttpStatusCode> UnPlanIssues(ISonarConfiguration newConf, IList issues);
+
+        /// <summary>
+        /// Gets the available action plan.
+        /// </summary>
+        /// <param name="conf">The conf.</param>
+        /// <param name="resourceKey">The resource key.</param>
+        /// <returns>returns actions plans</returns>
+        List<SonarActionPlan> GetAvailableActionPlan(ISonarConfiguration conf, string resourceKey);
+
+        /// <summary>
+        /// Gets the user list.
+        /// </summary>
+        /// <param name="conf">The conf.</param>
+        /// <returns></returns>
         List<User> GetUserList(ISonarConfiguration conf);
 
         bool AuthenticateUser(ISonarConfiguration conf);
@@ -105,7 +149,7 @@
 
         List<string> CreateRule(ISonarConfiguration conf, Rule rule, Rule templateRule);
 
-        // might be remove in the future
+        // TODO: might be remove in the future
         List<Profile> GetProfilesUsingRulesApp(ISonarConfiguration conf);
 
         void GetRulesForProfileUsingRulesApp(ISonarConfiguration conf, Profile profile, bool active);
@@ -120,6 +164,5 @@
 
         List<DuplicationData> GetDuplicationsDataInResource(ISonarConfiguration conf, string resourceKey);
 
-        List<SonarActionPlan> GetAvailableActionPlan(ISonarConfiguration conf, string resourceKey);
     }
 }

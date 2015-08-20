@@ -16,29 +16,23 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Windows.Forms;
     using System.Windows.Input;
     using System.Windows.Media;
 
-
-
     using GalaSoft.MvvmLight.Command;
-
-    using PropertyChanged;
-
-    using SonarLocalAnalyser;
-    using View.Helpers;
     using Helpers;
 
-    using VSSonarPlugins;
-
-    using Application = System.Windows.Application;
-    using VSSonarPlugins.Types;
-    using Model.Helpers;
     using Model.Analysis;
+    using Model.Helpers;
+    using PropertyChanged;
+    using SonarLocalAnalyser;
+    using View.Helpers;
+    using VSSonarPlugins;
+    using VSSonarPlugins.Types;
+    using Application = System.Windows.Application;
 
     /// <summary>
     ///     The analysis types.
@@ -72,59 +66,110 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     }
 
     /// <summary>
-    ///     The local view viewModel.
+    /// The local view viewModel.
     /// </summary>
     [ImplementPropertyChanged]
-    public class LocalViewModel : IAnalysisModelBase, IViewModelBase
+    public class LocalViewModel : IAnalysisModelBase, IViewModelBase, IModelBase
     {
         #region Fields
 
         /// <summary>
-        ///     The sonar qube view viewModel.
+        /// The plugins
         /// </summary>
-        private readonly SonarQubeViewModel sonarQubeViewModel;
+        private readonly List<IAnalysisPlugin> plugins = new List<IAnalysisPlugin>();
 
-        private readonly List<IAnalysisPlugin> plugins;
+        /// <summary>
+        /// The rest service
+        /// </summary>
+        private readonly ISonarRestService restService;
+
+        /// <summary>
+        /// The configuration helper
+        /// </summary>
+        private readonly IConfigurationHelper configurationHelper;
+
+        /// <summary>
+        /// The local analyser module
+        /// </summary>
+        private readonly ISonarLocalAnalyser localAnalyserModule;
+
+        /// <summary>
+        /// The notification manager
+        /// </summary>
+        private readonly INotificationManager notificationManager;
+
+        /// <summary>
+        /// The key translator
+        /// </summary>
+        private readonly ISQKeyTranslator keyTranslator;
 
         /// <summary>
         ///     The show flyouts.
         /// </summary>
         private bool showFlyouts;
 
+        /// <summary>
+        /// The vsenvironmenthelper
+        /// </summary>
+        private IVsEnvironmentHelper vsenvironmenthelper;
+
+        /// <summary>
+        /// The status bar
+        /// </summary>
+        private IVSSStatusBar statusBar;
+
+        /// <summary>
+        /// The service provier
+        /// </summary>
+        private IServiceProvider serviceProvier;
+
+        /// <summary>
+        /// The user conf
+        /// </summary>
+        private ISonarConfiguration userConf;
+
+        /// <summary>
+        /// The resource path in view
+        /// </summary>
+        private string resourceNameInView;
+
+        /// <summary>
+        /// The resource in view
+        /// </summary>
+        private Resource resourceInView;
+
+        /// <summary>
+        /// The associated project
+        /// </summary>
+        private Resource associatedProject;
+
         #endregion
 
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LocalViewModel"/> class.
+        /// Initializes a new instance of the <see cref="LocalViewModel" /> class.
         /// </summary>
-        /// <param name="sonarQubeViewModel">
-        /// The sonar qube view viewModel.
-        /// </param>
-        /// <param name="plugins">
-        /// The plugins.
-        /// </param>
-        /// <param name="service">
-        /// The service.
-        /// </param>
-        /// <param name="helper">
-        /// The helper.
-        /// </param>
+        /// <param name="pluginsIn">The plugins in. TODO they must be also updatetable</param>
+        /// <param name="service">The service.</param>
+        /// <param name="configurationHelper">The configuration helper.</param>
+        /// <param name="notificationManager">The notification manager.</param>
+        /// <param name="translator">The translator.</param>
         public LocalViewModel(
-            SonarQubeViewModel sonarQubeViewModelIn, 
             List<IAnalysisPlugin> pluginsIn, 
             ISonarRestService service, 
-            IVsEnvironmentHelper helper,
             IConfigurationHelper configurationHelper,
-            ISonarConfiguration sqhelper)
+            INotificationManager notificationManager,
+            ISQKeyTranslator translator)
         {
-            this.RestService = service;
-            this.Vsenvironmenthelper = helper;
-            this.ConfigurationHelper = configurationHelper;
-            this.sonarQubeViewModel = sonarQubeViewModelIn;
+            this.keyTranslator = translator;
+            this.notificationManager = notificationManager;
+            this.restService = service;
+            this.configurationHelper = configurationHelper;
+
             this.plugins = pluginsIn;
             this.Header = "Local Analysis";
-            this.IssuesGridView = new IssueGridViewModel(sonarQubeViewModel, false, "LocalView", false, this.ConfigurationHelper);
+            this.IssuesGridView = new IssueGridViewModel(false, "LocalView", false, this.configurationHelper, service, notificationManager, translator);
             this.OuputLogLines = new PaginatedObservableCollection<string>(300);
             this.AllLog = new List<string>();
 
@@ -132,10 +177,10 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.InitCommanding();
             this.InitFileAnalysis();
 
-            this.LocalAnalyserModule = new SonarLocalAnalyser(this.plugins, this.RestService, this.ConfigurationHelper, sqhelper, this.sonarQubeViewModel.NotificationManager);
-            this.LocalAnalyserModule.StdOutEvent += this.UpdateOutputMessagesFromPlugin;
-            this.LocalAnalyserModule.LocalAnalysisCompleted += this.UpdateLocalIssues;
-            this.LocalAnalyserModule.AssociateCommandCompeted += this.UpdateAssociateCommand;
+            this.localAnalyserModule = new SonarLocalAnalyser(this.plugins, this.restService, this.configurationHelper, this.notificationManager);
+            this.localAnalyserModule.StdOutEvent += this.UpdateOutputMessagesFromPlugin;
+            this.localAnalyserModule.LocalAnalysisCompleted += this.UpdateLocalIssues;
+            this.localAnalyserModule.AssociateCommandCompeted += this.UpdateAssociateCommand;
 
             this.ShowFlyouts = false;
             this.SizeOfFlyout = 0;
@@ -143,13 +188,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.ForeGroundColor = Colors.Black;
             this.BackGroundColor = Colors.White;
 
-            var dsds = new Process();
-            dsds.OutputDataReceived += this.aksjdkas;
-        }
-
-        private void aksjdkas(object sender, DataReceivedEventArgs e)
-        {
-            throw new NotImplementedException();
+            // register model
+            SonarQubeViewModel.RegisterNewModelInPool(this);
         }
 
         #endregion
@@ -169,11 +209,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         ///     Gets or sets the analysis command.
         /// </summary>
         public ICommand AnalysisCommand { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the associated project.
-        /// </summary>
-        public Resource AssociatedProject { get; set; }
 
         /// <summary>
         ///     Gets or sets the back ground color.
@@ -196,11 +231,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         ///     Gets or sets the close flyout log viewer command.
         /// </summary>
         public ICommand CloseFlyoutLogViewerCommand { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the document in view.
-        /// </summary>
-        public Resource DocumentInView { get; set; }
 
         /// <summary>
         ///     Gets or sets a value indicating whether file analysis is enabled.
@@ -244,7 +274,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 }
                 else
                 {
-                    this.AssociatingTextTooltip = "";
+                    this.AssociatingTextTooltip = string.Empty;
                 }
 
                 return this.IsAssociatedWithProject && !this.LoadingSonarData;
@@ -257,11 +287,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public IssueGridViewModel IssuesGridView { get; set; }
 
         /// <summary>
-        ///     Gets or sets the local analyser module.
-        /// </summary>
-        public ISonarLocalAnalyser LocalAnalyserModule { get; set; }
-
-        /// <summary>
         ///     Gets or sets the open source dir command.
         /// </summary>
         public ICommand OpenSourceDirCommand { get; set; }
@@ -271,6 +296,12 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         public PaginatedObservableCollection<string> OuputLogLines { get; set; }
 
+        /// <summary>
+        /// Gets or sets all log.
+        /// </summary>
+        /// <value>
+        /// All log.
+        /// </value>
         public List<string> AllLog { get; set; }
 
         /// <summary>
@@ -284,19 +315,12 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public ICommand PreviewCommand { get; set; }
 
         /// <summary>
-        ///     Gets or sets the resource in editor.
+        /// Gets or sets a value indicating whether [permissions are not available].
         /// </summary>
-        public string ResourceInEditor { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the rest service.
-        /// </summary>
-        public ISonarRestService RestService { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the service provier.
-        /// </summary>
-        public IServiceProvider ServiceProvier { get; set; }
+        /// <value>
+        /// <c>true</c> if [permissions are not available]; otherwise, <c>false</c>.
+        /// </value>
+        public bool PermissionsAreNotAvailable { get; set; }
 
         /// <summary>
         ///     Gets or sets a value indicating whether show flyouts.
@@ -326,32 +350,41 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public string SourceWorkingDir { get; set; }
 
         /// <summary>
-        ///     Gets or sets the status bar.
-        /// </summary>
-        public IVSSStatusBar StatusBar { get; set; }
-
-        /// <summary>
         ///     Gets or sets the stop local analysis command.
         /// </summary>
         public ICommand StopLocalAnalysisCommand { get; set; }
 
+        /// <summary>
+        /// Gets or sets the open log command.
+        /// </summary>
+        /// <value>
+        /// The open log command.
+        /// </value>
         public ICommand OpenLogCommand { get; set; }
 
+        /// <summary>
+        /// Gets or sets the go to previous issue command.
+        /// </summary>
+        /// <value>
+        /// The go to previous issue command.
+        /// </value>
         public ICommand GoToPrevIssueCommand { get; set; }
 
-        public ICommand GoToNextIssueCommand { get; set; }
-
         /// <summary>
-        ///     Gets or sets the vsenvironmenthelper.
+        /// Gets or sets the go to next issue command.
         /// </summary>
-        public IVsEnvironmentHelper Vsenvironmenthelper { get; set; }
-
-        public IConfigurationHelper ConfigurationHelper { get; set; }
+        /// <value>
+        /// The go to next issue command.
+        /// </value>
+        public ICommand GoToNextIssueCommand { get; set; }
 
         #endregion
 
         #region Public Methods and Operators
 
+        /// <summary>
+        /// Reset Stats.
+        /// </summary>
         public void ResetStats()
         {
             if (this.IssuesGridView != null)
@@ -365,7 +398,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         public void EndDataAssociation()
         {
-            this.AssociatedProject = null;
+            this.associatedProject = null;
             this.CanRunAnalysis = false;
             this.IsAssociatedWithProject = false;
         }
@@ -398,19 +431,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <summary>
         /// The init data association.
         /// </summary>
-        /// <param name="associatedProject">
-        /// The associated project.
-        /// </param>
-        /// <param name="sonarCubeConfiguration">
-        /// The sonar cube configuration.
-        /// </param>
-        /// <param name="workingDir">
-        /// The working dir.
-        /// </param>
-        public void InitDataAssociation(Resource associatedProject, ISonarConfiguration sonarCubeConfiguration, string workingDir)
+        /// <param name="config">The configuration.</param>
+        /// <param name="project">The project.</param>
+        /// <param name="workingDir">The working dir.</param>
+        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workingDir)
         {
-            this.AssociatedProject = associatedProject;
-            this.IsAssociatedWithProject = this.AssociatedProject != null;
+            this.userConf = config;
+            this.associatedProject = project;
+            this.IsAssociatedWithProject = this.associatedProject != null;
 
             this.SourceWorkingDir = workingDir;
 
@@ -418,7 +446,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             {
                 this.CanRunAnalysis = true;
                 this.LoadingSonarData = true;
-                this.LocalAnalyserModule.AssociateWithProject(associatedProject, sonarCubeConfiguration);
+                this.localAnalyserModule.AssociateWithProject(project, config);
             }
         }
 
@@ -427,10 +455,9 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         public void OnAnalysisCommand()
         {
-            this.FileAnalysisIsEnabled = false;
-            this.sonarQubeViewModel.IsExtensionBusy = true;
+            this.FileAnalysisIsEnabled = false;            
+            this.notificationManager.StartedWorking("Running Full Analysis");
             this.CanRunAnalysis = false;
-            this.sonarQubeViewModel.BusyToolTip = "Running Full Analysis";
             this.RunLocalAnalysis(AnalysisTypes.ANALYSIS);
         }
 
@@ -455,7 +482,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             if (this.CanRunAnalysis)
             {
-                this.ConfigurationHelper.WriteOptionInApplicationData(Context.AnalysisGeneral,
+                this.configurationHelper.WriteOptionInApplicationData(
+                    Context.AnalysisGeneral,
                     "SonarOptionsGeneral", 
                     "FileAnalysisIsEnabled", 
                     this.FileAnalysisIsEnabled ? "TRUE" : "FALSE");
@@ -469,8 +497,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             this.CanRunAnalysis = false;
             this.FileAnalysisIsEnabled = false;
-            this.sonarQubeViewModel.IsExtensionBusy = true;
-            this.sonarQubeViewModel.BusyToolTip = "Running Incremental Analysis";
+            this.notificationManager.StartedWorking("Running Incremental Analysis");
             this.RunLocalAnalysis(AnalysisTypes.INCREMENTAL);
         }
 
@@ -479,20 +506,9 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         public void OnPreviewCommand()
         {
-            if (!this.sonarQubeViewModel.IsConnected)
-            {
-                return;
-            }
-
-            if (!this.sonarQubeViewModel.AssociationModule.IsAssociated)
-            {
-                return;
-            }
-
             this.FileAnalysisIsEnabled = false;
-            this.sonarQubeViewModel.IsExtensionBusy = true;
+            this.notificationManager.StartedWorking("Running Preview Analysis");
             this.CanRunAnalysis = false;
-            this.sonarQubeViewModel.BusyToolTip = "Running Preview Analysis";
             this.RunLocalAnalysis(AnalysisTypes.PREVIEW);
         }
 
@@ -507,21 +523,16 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <summary>
         /// The refresh data for resource.
         /// </summary>
-        /// <param name="fullName">
-        /// The full name.
-        /// </param>
-        /// <param name="documentInView">
-        /// The document in view.
-        /// </param>
-        public void RefreshDataForResource(Resource fullName, string documentInView)
+        /// <param name="resourceFile">The resource file.</param>
+        /// <param name="resourceName">Name of the resource.</param>
+        public void RefreshDataForResource(Resource resourceFile, string resourceName)
         {
-            this.DocumentInView = fullName;
-            this.ResourceInEditor = documentInView;
+            this.resourceInView = resourceFile;
+            this.resourceNameInView = resourceName;
 
             if (this.FileAnalysisIsEnabled)
             {
-                this.sonarQubeViewModel.IsExtensionBusy = true;
-                this.sonarQubeViewModel.BusyToolTip = "Running File Analysis";
+                this.notificationManager.StartedWorking("Running File Analysis");
                 this.RunLocalAnalysis(AnalysisTypes.FILE);
             }
             else
@@ -548,34 +559,39 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         }
 
         /// <summary>
+        /// Clears the issues.
+        /// </summary>
+        public void ClearIssues()
+        {
+            this.IssuesGridView.AllIssues.Clear();
+            this.IssuesGridView.Issues.Clear();
+        }
+
+        /// <summary>
         /// The update services.
         /// </summary>
-        /// <param name="restServiceIn">
-        /// The rest service in.
-        /// </param>
-        /// <param name="vsenvironmenthelperIn">
-        /// The vsenvironmenthelper in.
-        /// </param>
-        /// <param name="statusBar">
-        /// The status bar.
-        /// </param>
-        /// <param name="provider">
-        /// The provider.
-        /// </param>
+        /// <param name="vsenvironmenthelperIn">The vsenvironmenthelper in.</param>
+        /// <param name="statusBarIn">The status bar in.</param>
+        /// <param name="provider">The provider.</param>
         public void UpdateServices(
-            ISonarRestService restServiceIn, 
             IVsEnvironmentHelper vsenvironmenthelperIn,
-            IConfigurationHelper configurationHelper,
-            IVSSStatusBar statusBar, 
+            IVSSStatusBar statusBarIn, 
             IServiceProvider provider)
         {
-            this.RestService = restServiceIn;
-            this.Vsenvironmenthelper = vsenvironmenthelperIn;
-            this.StatusBar = statusBar;
-            this.ServiceProvier = provider;
-            this.IssuesGridView.Vsenvironmenthelper = vsenvironmenthelperIn;
+            this.vsenvironmenthelper = vsenvironmenthelperIn;
+            this.statusBar = statusBarIn;
+            this.serviceProvier = provider;
+        }
 
-            this.IssuesGridView.UpdateVsService(this.Vsenvironmenthelper);
+        /// <summary>
+        /// Gets the view model.
+        /// </summary>
+        /// <returns>
+        /// returns view model
+        /// </returns>
+        public object GetViewModel()
+        {
+            return this;
         }
 
         /// <summary>The trigger a project analysis.</summary>
@@ -584,8 +600,19 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             if (this.FileAnalysisIsEnabled)
             {
-                this.LocalAnalyserModule.RunProjectAnalysis(project, AuthtenticationHelper.AuthToken);
+                this.localAnalyserModule.RunProjectAnalysis(project, AuthtenticationHelper.AuthToken);
             }
+        }
+
+        /// <summary>
+        /// Gets the available model, TODO: needs to be removed after viewmodels are split into models and view models
+        /// </summary>
+        /// <returns>
+        /// returns optinal model
+        /// </returns>
+        public object GetAvailableModel()
+        {
+            return null;
         }
 
         #endregion
@@ -610,11 +637,17 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.CloseFlyoutLogViewerCommand = new RelayCommand(this.OnCloseFlyoutLogViewerCommand);
         }
 
+        /// <summary>
+        /// Called when [go to next issue command].
+        /// </summary>
         private void OnGoToNextIssueCommand()
         {
             this.IssuesGridView.GoToNextIssue();
         }
 
+        /// <summary>
+        /// Called when [go to previous issue command].
+        /// </summary>
         private void OnGoToPrevIssueCommand()
         {
             this.IssuesGridView.GoToPrevIssue();
@@ -627,7 +660,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             try
             {
-                var option = this.ConfigurationHelper.ReadSetting(Context.AnalysisGeneral, "SonarOptionsGeneral", "FileAnalysisIsEnabled");
+                var option = this.configurationHelper.ReadSetting(Context.AnalysisGeneral, "SonarOptionsGeneral", "FileAnalysisIsEnabled");
                 this.FileAnalysisIsEnabled = option.Value.Equals("TRUE");
             }
             catch (Exception)
@@ -668,7 +701,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 {
                     try
                     {
-                        this.sonarQubeViewModel.AssociateProjectToSolution(
+                        this.notificationManager.AssociateProjectToSolution(
                             Path.GetFileName(filedialog.FileName),
                             Directory.GetParent(filedialog.FileName).ToString());
                     }
@@ -689,12 +722,12 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         private void OnStopLocalAnalysisCommand()
         {
-            if (this.LocalAnalyserModule == null)
+            if (this.localAnalyserModule == null)
             {
                 return;
             }
 
-            this.LocalAnalyserModule.StopAllExecution();
+            this.localAnalyserModule.StopAllExecution();
         }
 
         /// <summary>
@@ -708,63 +741,66 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.PermissionsAreNotAvailable = false;
             try
             {
-                this.AssociatedProject.ActiveConfiguration = this.Vsenvironmenthelper.ActiveConfiguration();
-                this.AssociatedProject.ActivePlatform = this.Vsenvironmenthelper.ActivePlatform();
-                this.AssociatedProject.SolutionRoot = this.SourceWorkingDir;
+                this.associatedProject.ActiveConfiguration = this.vsenvironmenthelper.ActiveConfiguration();
+                this.associatedProject.ActivePlatform = this.vsenvironmenthelper.ActivePlatform();
+                this.associatedProject.SolutionRoot = this.SourceWorkingDir;
+
                 switch (analysis)
                 {
                     case AnalysisTypes.FILE:
-                        var itemInView = this.Vsenvironmenthelper.VsFileItem(this.sonarQubeViewModel.DocumentInView, this.AssociatedProject, this.DocumentInView);
-                        this.LocalAnalyserModule.AnalyseFile(
+                        var itemInView = this.vsenvironmenthelper.VsFileItem(this.resourceNameInView, this.associatedProject, this.resourceInView);
+                        this.localAnalyserModule.AnalyseFile(
                             itemInView, 
-                            this.AssociatedProject, 
-                            this.sonarQubeViewModel.AnalysisChangeLines, 
-                            this.sonarQubeViewModel.SonarVersion,
+                            this.associatedProject,
+                            this.notificationManager.AnalysisChangeLines, 
+                            this.userConf.SonarVersion,
                             AuthtenticationHelper.AuthToken,
-                            this.sonarQubeViewModel.SonarKeyTranslator,
-                            this.sonarQubeViewModel.VsHelper);
+                            this.keyTranslator,
+                            this.vsenvironmenthelper);
                         break;
                     case AnalysisTypes.ANALYSIS:
                         this.OuputLogLines.Clear();
                         this.AllLog.Clear();
                         this.OutputLog = string.Empty;
-                        this.LocalAnalyserModule.RunFullAnalysis(
-                            this.AssociatedProject, 
-                            this.sonarQubeViewModel.SonarVersion,
+                        this.localAnalyserModule.RunFullAnalysis(
+                            this.associatedProject, 
+                            this.userConf.SonarVersion,
                             AuthtenticationHelper.AuthToken);
                         break;
                     case AnalysisTypes.INCREMENTAL:
                         this.OuputLogLines.Clear();
                         this.AllLog.Clear();
                         this.OutputLog = string.Empty;
-                        this.LocalAnalyserModule.RunIncrementalAnalysis(
-                            this.AssociatedProject, 
-                            this.sonarQubeViewModel.SonarVersion,
+                        this.localAnalyserModule.RunIncrementalAnalysis(
+                            this.associatedProject, 
+                            this.userConf.SonarVersion,
                             AuthtenticationHelper.AuthToken);
                         break;
                     case AnalysisTypes.PREVIEW:
                         this.OuputLogLines.Clear();
                         this.AllLog.Clear();
                         this.OutputLog = string.Empty;
-                        this.LocalAnalyserModule.RunPreviewAnalysis(
-                            this.AssociatedProject, 
-                            this.sonarQubeViewModel.SonarVersion,
+                        this.localAnalyserModule.RunPreviewAnalysis(
+                            this.associatedProject, 
+                            this.userConf.SonarVersion,
                             AuthtenticationHelper.AuthToken);
                         break;
+                    default:
+                        throw new NotImplementedException();
                 }
             }
             catch (VSSonarExtension ex)
             {
-                this.sonarQubeViewModel.NotificationManager.ReportMessage(new VSSonarPlugins.Message() { Id = "LocalViewModel", Data = "Analysis Failed: " + ex.Message });
-                this.sonarQubeViewModel.NotificationManager.ReportException(ex);
+                this.notificationManager.ReportMessage(new VSSonarPlugins.Message() { Id = "LocalViewModel", Data = "Analysis Failed: " + ex.Message });
+                this.notificationManager.ReportException(ex);
                 this.CanRunAnalysis = true;
-                this.sonarQubeViewModel.IsExtensionBusy = false;
+                this.notificationManager.EndedWorking();
             }
             catch (Exception ex)
             {
-                UserExceptionMessageBox.ShowException("Critical Error: Please Report This Error: cwd: " + this.SourceWorkingDir + " AssociatedProject: " + this.AssociatedProject, ex);
+                UserExceptionMessageBox.ShowException("Critical Error: Please Report This Error: cwd: " + this.SourceWorkingDir + " AssociatedProject: " + this.associatedProject, ex);
                 this.CanRunAnalysis = true;
-                this.sonarQubeViewModel.IsExtensionBusy = false;
+                this.notificationManager.EndedWorking();
             }
         }
 
@@ -780,7 +816,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         private void UpdateLocalIssues(object sender, EventArgs e)
         {
             this.CanRunAnalysis = true;
-            this.sonarQubeViewModel.IsExtensionBusy = false;
+            this.notificationManager.EndedWorking();
 
             if (this.PermissionsAreNotAvailable)
             {
@@ -814,9 +850,9 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                         () =>
                             {
                                 this.IssuesGridView.UpdateIssues(
-                                    this.LocalAnalyserModule.GetIssues(
+                                    this.localAnalyserModule.GetIssues(
                                         AuthtenticationHelper.AuthToken, 
-                                        this.AssociatedProject));
+                                        this.associatedProject));
                                 this.OnSelectedViewChanged();
                             });
                 }
@@ -843,7 +879,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             var exceptionMsg = (LocalAnalysisEventArgs)e;
             Application.Current.Dispatcher.Invoke(() => this.OuputLogLines.Insert(0, exceptionMsg.ErrorMessage));
             this.AllLog.Add(exceptionMsg.ErrorMessage);
-            this.Vsenvironmenthelper.WriteToVisualStudioOutput(exceptionMsg.ErrorMessage);
+            this.vsenvironmenthelper.WriteToVisualStudioOutput(exceptionMsg.ErrorMessage);
 
             if (exceptionMsg.ErrorMessage.Contains(
                 "You're not authorized to execute a dry run analysis. Please contact your SonarQube administrator."))
@@ -852,8 +888,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             }
         }
 
-        public bool PermissionsAreNotAvailable { get; set; }
-
         /// <summary>The update associate command.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The e.</param>
@@ -861,12 +895,15 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             this.LoadingSonarData = false;
 
-            this.sonarQubeViewModel.RefreshDataForResource();
+            this.notificationManager.RefreshDataForResource();
         }
 
+        /// <summary>
+        /// Called when [open log command].
+        /// </summary>
         private void OnOpenLogCommand()
         {
-            var logFile = this.ConfigurationHelper.UserLogForAnalysisFile();
+            var logFile = this.configurationHelper.UserLogForAnalysisFile();
             var logFolder = Directory.GetParent(logFile).ToString();
 
             if (File.Exists(logFile))
@@ -874,19 +911,17 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 File.Delete(logFile);
             }
 
-            if(!Directory.Exists(logFolder))
+            if (!Directory.Exists(logFolder))
             {
                 Directory.CreateDirectory(logFolder);
             }
 
-            File.WriteAllLines(this.ConfigurationHelper.UserLogForAnalysisFile(), this.AllLog);
+            File.WriteAllLines(this.configurationHelper.UserLogForAnalysisFile(), this.AllLog);
 
-            this.Vsenvironmenthelper.OpenResourceInVisualStudio(this.ConfigurationHelper.UserLogForAnalysisFile(), 0, this.sonarQubeViewModel.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserDefinedEditor);
-        }
-
-        public object GetAvailableModel()
-        {
-            throw new NotImplementedException();
+            this.vsenvironmenthelper.OpenResourceInVisualStudio(
+                this.configurationHelper.UserLogForAnalysisFile(),
+                0,
+                this.notificationManager.UserDefinedEditor);
         }
 
         #endregion

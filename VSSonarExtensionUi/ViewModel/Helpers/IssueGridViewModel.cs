@@ -1,12 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IssueGridViewModel.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The issue grid view viewModel.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-namespace VSSonarExtensionUi.ViewModel.Helpers
+﻿namespace VSSonarExtensionUi.ViewModel.Helpers
 {
     using System;
     using System.Collections;
@@ -21,17 +13,21 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
     using System.Windows.Input;
     using System.Windows.Media;
     using GalaSoft.MvvmLight.Command;
-    using PropertyChanged;
-    using VSSonarPlugins;
-    using VSSonarPlugins.Types;
+
     using Model.Helpers;
     using Model.Menu;
+    using PropertyChanged;
+
+    using SonarLocalAnalyser;
+    using VSSonarPlugins;
+    using VSSonarPlugins.Types;
+    
 
     /// <summary>
-    ///     The issue grid view viewModel.
+    /// The issue grid view viewModel.
     /// </summary>
     [ImplementPropertyChanged]
-    public class IssueGridViewModel : IViewModelBase, IDataModel, IFilterCommand, IFilterOption
+    public class IssueGridViewModel : IViewModelBase, IDataModel, IFilterCommand, IFilterOption, IModelBase
     {
         #region Fields
 
@@ -46,9 +42,54 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         private readonly IFilter filter;
 
         /// <summary>
-        ///     The viewModel.
+        /// The configuration helper
         /// </summary>
-        private readonly SonarQubeViewModel model;
+        private readonly IConfigurationHelper configurationHelper;
+
+        /// <summary>
+        /// The rest service
+        /// </summary>
+        private readonly ISonarRestService restService;
+
+        /// <summary>
+        /// The notification manager
+        /// </summary>
+        private readonly INotificationManager notificationManager;
+
+        /// <summary>
+        /// The key translator
+        /// </summary>
+        private readonly ISQKeyTranslator keyTranslator;
+
+        /// <summary>
+        /// The statusbar
+        /// </summary>
+        private IVSSStatusBar statusbar;
+
+        /// <summary>
+        /// The provider
+        /// </summary>
+        private IServiceProvider provider;
+
+        /// <summary>
+        /// The vsenvironmenthelper
+        /// </summary>
+        private IVsEnvironmentHelper vsenvironmenthelper;
+
+        /// <summary>
+        /// The associated project
+        /// </summary>
+        private Resource associatedProject;
+
+        /// <summary>
+        /// The sonar configuration
+        /// </summary>
+        private ISonarConfiguration sonarConfiguration;
+
+        /// <summary>
+        /// The source work dir
+        /// </summary>
+        private string sourceWorkDir;
 
         #endregion
 
@@ -57,16 +98,27 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// <summary>
         /// Initializes a new instance of the <see cref="IssueGridViewModel" /> class.
         /// </summary>
-        /// <param name="model">The viewModel.</param>
         /// <param name="rowContextMenu">The row Context Menu.</param>
         /// <param name="gridId">The grid Id.</param>
         /// <param name="showSqaleRating">if set to <c>true</c> [show sqale rating].</param>
         /// <param name="helper">The helper.</param>
-        public IssueGridViewModel(SonarQubeViewModel model, bool rowContextMenu, string gridId, bool showSqaleRating, IConfigurationHelper helper)
+        /// <param name="restServiceIn">The rest service in.</param>
+        /// <param name="notManager">The not manager.</param>
+        /// <param name="keyTranslatorIn">The key translator in.</param>
+        public IssueGridViewModel(
+            bool rowContextMenu,
+            string gridId,
+            bool showSqaleRating,
+            IConfigurationHelper helper,
+            ISonarRestService restServiceIn,
+            INotificationManager notManager,
+            ISQKeyTranslator keyTranslatorIn)
         {
+            this.keyTranslator = keyTranslatorIn;
+            this.notificationManager = notManager;
+            this.restService = restServiceIn;
+
             this.dataGridOptionsKey += gridId;
-            this.model = model;
-            this.Vsenvironmenthelper = model.VsHelper;
             this.configurationHelper = helper;
             this.AllIssues = new AsyncObservableCollection<Issue>();
             this.Issues = new AsyncObservableCollection<Issue>();
@@ -96,6 +148,10 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.BackGroundColor = Colors.White;
 
             this.ShowSqaleRating = showSqaleRating;
+
+            // register model
+            SonarQubeViewModel.RegisterNewModelInPool(this);
+            SonarQubeViewModel.RegisterNewViewModelInPool(this);
         }
 
         #endregion
@@ -474,16 +530,135 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         public bool ViolationIdVisible { get; set; }
 
         /// <summary>
-        ///     Gets or sets the vsenvironmenthelper.
+        /// Gets or sets the index of the selected.
         /// </summary>
-        public IVsEnvironmentHelper Vsenvironmenthelper { get; set; }
-
+        /// <value>
+        /// The index of the selected.
+        /// </value>
         public int SelectedIndex { get; set; }
+
+        /// <summary>
+        /// Gets or sets the technical debt.
+        /// </summary>
+        /// <value>
+        /// The technical debt.
+        /// </value>
+        public long TechnicalDebt { get; set; }
+
+        /// <summary>
+        /// Gets or sets the number of issues.
+        /// </summary>
+        /// <value>
+        /// The number of issues.
+        /// </value>
+        public int NumberOfIssues { get; set; }
+
+        /// <summary>
+        /// Gets or sets the number of majors.
+        /// </summary>
+        /// <value>
+        /// The number of majors.
+        /// </value>
+        public int NumberOfMajors { get; set; }
+
+        /// <summary>
+        /// Gets or sets the number of criticals.
+        /// </summary>
+        /// <value>
+        /// The number of criticals.
+        /// </value>
+        public int NumberOfCriticals { get; set; }
+
+        /// <summary>
+        /// Gets or sets the number of blockers.
+        /// </summary>
+        /// <value>
+        /// The number of blockers.
+        /// </value>
+        public int NumberOfBlockers { get; set; }
+
+        /// <summary>
+        /// Gets or sets the technical debt string.
+        /// </summary>
+        /// <value>
+        /// The technical debt string.
+        /// </value>
+        public string TechnicalDebtStr { get; set; }
+
+        /// <summary>
+        /// Gets or sets the number of issues string.
+        /// </summary>
+        /// <value>
+        /// The number of issues string.
+        /// </value>
+        public string NumberOfIssuesStr { get; set; }
+
+        /// <summary>
+        /// Gets or sets the number of majors string.
+        /// </summary>
+        /// <value>
+        /// The number of majors string.
+        /// </value>
+        public string NumberOfMajorsStr { get; set; }
+
+        /// <summary>
+        /// Gets or sets the number of criticals string.
+        /// </summary>
+        /// <value>
+        /// The number of criticals string.
+        /// </value>
+        public string NumberOfCriticalsStr { get; set; }
+
+        /// <summary>
+        /// Gets or sets the number of blockers string.
+        /// </summary>
+        /// <value>
+        /// The number of blockers string.
+        /// </value>
+        public string NumberOfBlockersStr { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [show sqale rating].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [show sqale rating]; otherwise, <c>false</c>.
+        /// </value>
+        public bool ShowSqaleRating { get; set; }
+
+        /// <summary>
+        /// Gets or sets the sqale rating.
+        /// </summary>
+        /// <value>
+        /// The sqale rating.
+        /// </value>
+        public string SqaleRating { get; set; }
+
+        /// <summary>
+        /// Gets or sets the sqale rating string.
+        /// </summary>
+        /// <value>
+        /// The sqale rating string.
+        /// </value>
+        public string SqaleRatingStr { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [debt visible].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [debt visible]; otherwise, <c>false</c>.
+        /// </value>
+        public bool DebtVisible { get; set; }
+
+        /// <summary>Gets or sets the debt index.</summary>
+        public int DebtIndex { get; set; }
 
         #endregion
 
         #region Public Methods and Operators
 
+        /// <summary>
+        /// Goes to next issue.
+        /// </summary>
         public void GoToNextIssue()
         {
             if (this.SelectedIndex < this.Issues.Count)
@@ -494,6 +669,9 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.OnOpenInVsCommand(this.SelectedItems);
         }
 
+        /// <summary>
+        /// Goes to previous issue.
+        /// </summary>
         public void GoToPrevIssue()
         {
             if (this.SelectedIndex > 0)
@@ -502,6 +680,20 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             }
 
             this.OnOpenInVsCommand(this.SelectedItems);
+        }
+
+        /// <summary>
+        /// Resets the statistics.
+        /// </summary>
+        public void ResetStatistics()
+        {
+            this.NumberOfBlockers = 0;
+            this.NumberOfCriticals = 0;
+            this.NumberOfMajors = 0;
+            this.NumberOfIssues = 0;
+            this.TechnicalDebt = 0;
+
+            this.UpdateStatistics();
         }
 
         /// <summary>
@@ -540,17 +732,17 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 try
                 {
                     List<Resource> resources =
-                        this.model.SonarRestConnector.GetResourcesData(
+                        this.restService.GetResourcesData(
                             AuthtenticationHelper.AuthToken, 
                             issue.Component);
                     filename = resources[0].Name;
                 }
                 catch (Exception ex)
                 {
-                    this.model.NotificationManager.ReportException(ex);
+                    this.notificationManager.ReportException(ex);
                 }
 
-                if (this.Vsenvironmenthelper == null)
+                if (this.vsenvironmenthelper == null)
                 {
                     return;
                 }
@@ -558,15 +750,15 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
 
                 try
                 {
-                    var path = this.model.SonarKeyTranslator.TranslateKey(issue.Component, this.Vsenvironmenthelper, this.model.SelectedBranch.BranchName);
-                    this.Vsenvironmenthelper.OpenResourceInVisualStudio(this.model.AssociationModule.OpenSolutionPath, path, issue.Line);
+                    var path = this.keyTranslator.TranslateKey(issue.Component, this.vsenvironmenthelper, this.associatedProject.BranchName);
+                    this.vsenvironmenthelper.OpenResourceInVisualStudio(this.sourceWorkDir, path, issue.Line);
                 }
                 catch (Exception ex)
                 {
-                    this.model.NotificationManager.ReportMessage(new Message() { Id = "OnInEditor", Data = ex.Message + " : " + issue.Component });
-                    this.model.NotificationManager.ReportMessage(new Message() { Id = "OnInEditor ", Data = "Solution = " + this.model.AssociationModule.OpenSolutionPath });
-                    this.model.NotificationManager.ReportMessage(new Message() { Id = "OnInEditor", Data = "Project = " + this.model.AssociationModule.AssociatedProject });
-                    this.model.NotificationManager.ReportException(ex);
+                    this.notificationManager.ReportMessage(new Message() { Id = "OnInEditor", Data = ex.Message + " : " + issue.Component });
+                    this.notificationManager.ReportMessage(new Message() { Id = "OnInEditor ", Data = "Solution = " + this.sourceWorkDir });
+                    this.notificationManager.ReportMessage(new Message() { Id = "OnInEditor", Data = "Project = " + this.sourceWorkDir });
+                    this.notificationManager.ReportException(ex);
                 }
             }
         }
@@ -652,9 +844,106 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.RefreshView();
         }
 
+        /// <summary>
+        /// Refreshes the statistics.
+        /// </summary>
+        public void RefreshStatistics()
+        {
+            if (this.Issues == null || !this.Issues.Any())
+            {
+                return;
+            }
+
+            this.ResetStatistics();
+            foreach (Issue issue in this.Issues)
+            {
+                this.PopulateStatistics(issue);
+            }
+
+            this.UpdateStatistics();
+        }
+   
+        /// <summary>
+        /// Updates the services.
+        /// </summary>
+        /// <param name="vsenvironmenthelperIn">The vsenvironmenthelper in.</param>
+        /// <param name="statusBar">The status bar.</param>
+        /// <param name="providerIn">The provider in.</param>
+        public void UpdateServices(IVsEnvironmentHelper vsenvironmenthelperIn, IVSSStatusBar statusBar, IServiceProvider providerIn)
+        {
+            this.vsenvironmenthelper = vsenvironmenthelperIn;
+            this.statusbar = statusBar;
+            this.provider = providerIn;
+        }
+
+        /// <summary>
+        /// Gets the view model.
+        /// </summary>
+        /// <returns>
+        /// returns view model
+        /// </returns>
+        public object GetViewModel()
+        {
+            return this;
+        }
+
+        /// <summary>
+        /// Gets the available model, TODO: needs to be removed after viewmodels are split into models and view models
+        /// </summary>
+        /// <returns>
+        /// returns optinal model
+        /// </returns>
+        public object GetAvailableModel()
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// Associates the with new project.
+        /// </summary>
+        /// <param name="config">The configuration.</param>
+        /// <param name="project">The project.</param>
+        /// <param name="workingDir">The working dir.</param>
+        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workingDir)
+        {
+            this.sourceWorkDir = workingDir;
+            this.sonarConfiguration = config;
+            this.associatedProject = project;
+        }
+
+        /// <summary>
+        /// The end data association.
+        /// </summary>
+        public void EndDataAssociation()
+        {
+            this.sourceWorkDir = string.Empty;
+            this.sonarConfiguration = null;
+            this.associatedProject = null;
+        }
+
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Gets the value for option.
+        /// </summary>
+        /// <param name="helper">The helper.</param>
+        /// <param name="key">The key.</param>
+        /// <param name="defaultvalue">The defaultvalue.</param>
+        /// <param name="owner">The owner.</param>
+        /// <returns>return value for option</returns>
+        private static string GetValueForOption(IConfigurationHelper helper, string key, string defaultvalue, string owner)
+        {
+            try
+            {
+                return helper.ReadSetting(Context.UIProperties, owner, key).Value;
+            }
+            catch (Exception)
+            {
+                return defaultvalue;
+            }
+        }
 
         /// <summary>
         ///     The clear filter.
@@ -673,12 +962,12 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 }
                 catch (Exception ex)
                 {
-                    this.model.Logger.WriteMessage("Filter Failed: " + ex.Message);
+                    this.notificationManager.ReportMessage(new Message { Data = "Filter Failed: " + ex.Message });
                     this.Issues.Add(issue);
                 }
             }
 
-            this.model.OnIssuesChangeEvent();
+            this.notificationManager.OnIssuesUpdated();
         }
 
         /// <summary>
@@ -715,15 +1004,9 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         {
             var menu = new ObservableCollection<IMenuItem>
                            {
-                               ChangeStatusHandler.MakeMenu(
-                                   AuthtenticationHelper.AuthToken, 
-                                   this.model.SonarRestConnector, 
-                                   this, this.model), 
-                               OpenResourceMenu.MakeMenu(
-                                   AuthtenticationHelper.AuthToken, 
-                                   this.model.SonarRestConnector, 
-                                   this.Vsenvironmenthelper, 
-                                   this)
+                               ChangeStatusMenu.MakeMenu(this.restService, this, this.notificationManager), 
+                               OpenResourceMenu.MakeMenu(this.restService, this),
+                               PlanMenu.MakeMenu(this.restService, this, this.notificationManager)
                            };
 
             return menu;
@@ -755,19 +1038,6 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.ClearFilterTermStatusCommand = new RelayCommand<object>(this.OnClearFilterTermStatusCommand);
             this.FilterApplyCommand = new RelayCommand(this.OnFilterApplyCommand);
             this.FilterClearAllCommand = new RelayCommand<object>(this.OnFilterClearAllCommand);
-        }
-
-        public void UpdateVsService(IVsEnvironmentHelper service)
-        {
-            if (this.ContextMenuItems == null)
-            {
-                return;
-            }
-
-            foreach (var menu in this.ContextMenuItems)
-            {
-                menu.UpdateServices(service);
-            }
         }
 
         /// <summary>
@@ -889,9 +1159,6 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// <summary>
         /// The on filter apply command.
         /// </summary>
-        /// <param name="obj">
-        /// The obj.
-        /// </param>
         private void OnFilterApplyCommand()
         {
             if (this.AllIssues == null || !this.AllIssues.Any())
@@ -913,31 +1180,18 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 }
                 catch (Exception ex)
                 {
-                    this.model.Logger.WriteMessage("Filter Failed: " + ex.Message);
+                    this.notificationManager.WriteMessage("Filter Failed: " + ex.Message);
                     this.Issues.Add(issue);
                 }
             }
 
             this.UpdateStatistics();
-            this.model.OnIssuesChangeEvent();
+            this.notificationManager.OnIssuesUpdated();
         }
 
-        public void RefreshStatistics()
-        {
-            if (this.Issues == null || !this.Issues.Any())
-            {
-                return;
-            }
-
-            this.ResetStatistics();
-            foreach (Issue issue in this.Issues)
-            {
-                this.PopulateStatistics(issue);
-            }
-
-            this.UpdateStatistics();
-        }
-
+        /// <summary>
+        /// Updates the statistics.
+        /// </summary>
         private void UpdateStatistics()
         {
             this.NumberOfIssuesStr = "Issues: " + this.NumberOfIssues;
@@ -945,13 +1199,12 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.NumberOfCriticalsStr = "Criticals: " + this.NumberOfCriticals;
             this.NumberOfMajorsStr = "Majors: " + this.NumberOfMajors;
             this.TechnicalDebtStr = "Debt: " + this.TechnicalDebt + " mn";
-
-            if (this.ShowSqaleRating)
-            {
-                //this.SqaleRatingStr = "Rating: " + this.SqaleRating;
-            }
         }
 
+        /// <summary>
+        /// Populates the statistics.
+        /// </summary>
+        /// <param name="issue">The issue.</param>
         private void PopulateStatistics(Issue issue)
         {
             this.NumberOfIssues++;
@@ -963,6 +1216,8 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 case Severity.CRITICAL: this.NumberOfCriticals++;
                     break;
                 case Severity.MAJOR: this.NumberOfMajors++;
+                    break;
+                default:
                     break;
             }
 
@@ -979,48 +1234,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 }
             }
         }
-
-        public void ResetStatistics()
-        {
-            this.NumberOfBlockers = 0;
-            this.NumberOfCriticals = 0;
-            this.NumberOfMajors = 0;
-            this.NumberOfIssues = 0;
-            this.TechnicalDebt = 0;
-
-            this.UpdateStatistics();
-        }
-
-        public long TechnicalDebt { get; set; }
-
-        public int NumberOfIssues { get; set; }
-
-        public int NumberOfMajors { get; set; }
-
-        public int NumberOfCriticals { get; set; }
-
-        public int NumberOfBlockers { get; set; }
-
-        public string TechnicalDebtStr { get; set; }
-
-        public string NumberOfIssuesStr { get; set; }
-
-        public string NumberOfMajorsStr { get; set; }
-
-        public string NumberOfCriticalsStr { get; set; }
-
-        public string NumberOfBlockersStr { get; set; }
-
-        public bool ShowSqaleRating { get; set; }
-
-        public string SqaleRating { get; set; }
-        public string SqaleRatingStr { get; set; }
-        /// <summary>Gets or sets a value indicating whether debt visible.</summary>
-        public bool DebtVisible { get; set; }
-
-        /// <summary>Gets or sets the debt index.</summary>
-        public int DebtIndex { get; set; }
-
+        
         /// <summary>
         /// The on filter clear all command.
         /// </summary>
@@ -1051,35 +1265,22 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             }
             catch (Exception ex)
             {
-                this.model.NotificationManager.ReportException(ex);
+                this.notificationManager.ReportException(ex);
             }
         }
 
         /// <summary>
-        ///     The on mouse event command.
+        /// The on mouse event command.
         /// </summary>
         private void OnMouseEventCommand()
         {
         }
 
-        private static string GetValueForOption(IConfigurationHelper helper, string key, string defaultvalue, string owner)
-        {
-            try
-            {
-                return helper.ReadSetting(Context.UIProperties, owner, key).Value;
-            }
-            catch (Exception)
-            {
-                return defaultvalue;
-            }
-        }
-
         /// <summary>
         /// The read window options.
         /// </summary>
-        /// <param name="options">
-        /// The options.
-        /// </param>
+        /// <param name="options">The options.</param>
+        /// <param name="owner">The owner.</param>
         private void ReadWindowOptions(IConfigurationHelper options, string owner)
         {
             try
@@ -1137,7 +1338,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
 
             this.CreationDateIndex = 3;
             this.CloseDateIndex = 4;
-            this.EffortToFixIndex = 5;            
+            this.EffortToFixIndex = 5;
             this.ProjectIndex = 6;
             this.UpdateDateIndex = 7;
             this.StatusIndex = 8;
@@ -1179,71 +1380,88 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 return;
             }
 
-            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, 
+            this.configurationHelper.WriteOptionInApplicationData(
+                Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "ComponentIndex", 
                 this.ComponentIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, 
+            this.configurationHelper.WriteOptionInApplicationData(
+                Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "LineIndex", 
                 this.LineIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, 
+            this.configurationHelper.WriteOptionInApplicationData(
+                Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "AssigneeIndex", 
                 this.AssigneeIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, 
+            this.configurationHelper.WriteOptionInApplicationData(
+                Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "MessageIndex", 
                 this.MessageIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, 
+            this.configurationHelper.WriteOptionInApplicationData(
+                Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "StatusIndex", 
                 this.StatusIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, 
+            this.configurationHelper.WriteOptionInApplicationData(
+                Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "SeverityIndex", 
                 this.SeverityIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, 
+            this.configurationHelper.WriteOptionInApplicationData(
+                Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "RuleIndex", 
                 this.RuleIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, 
+            this.configurationHelper.WriteOptionInApplicationData(
+                Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "CreationDateIndex", 
                 this.CreationDateIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, 
+            this.configurationHelper.WriteOptionInApplicationData(
+                Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "ProjectIndex", 
                 this.ProjectIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, 
+            this.configurationHelper.WriteOptionInApplicationData(
+                Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "ResolutionIndex", 
                 this.ResolutionIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, 
+            this.configurationHelper.WriteOptionInApplicationData(
+                Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "EffortToFixIndex", 
                 this.EffortToFixIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, 
+            this.configurationHelper.WriteOptionInApplicationData(
+                Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "UpdateDateIndex", 
                 this.UpdateDateIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, 
+            this.configurationHelper.WriteOptionInApplicationData(
+                Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "CloseDateIndex", 
                 this.CloseDateIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, 
+            this.configurationHelper.WriteOptionInApplicationData(
+                Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "KeyIndex", 
                 this.KeyIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, 
+            this.configurationHelper.WriteOptionInApplicationData(
+                Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "IdIndex", 
                 this.IdIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, 
+            this.configurationHelper.WriteOptionInApplicationData(
+                Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "IsNewIndex", 
                 this.IsNewIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, 
+            this.configurationHelper.WriteOptionInApplicationData(
+                Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "ViolationIdIndex", 
                 this.ViolationIdIndex.ToString(CultureInfo.InvariantCulture));
@@ -1272,7 +1490,8 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             int i = 0;
             foreach (PropertyInfo propertyInfo in typeof(Issue).GetProperties())
             {
-                this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, 
+                this.configurationHelper.WriteOptionInApplicationData(
+                    Context.UIProperties, 
                     this.dataGridOptionsKey, 
                     propertyInfo.Name + "Index", 
                     i.ToString(CultureInfo.InvariantCulture));
@@ -1281,13 +1500,6 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             }
         }
 
-        public object GetAvailableModel()
-        {
-            throw new NotImplementedException();
-        }
-
         #endregion
-
-        public readonly IConfigurationHelper configurationHelper;
     }
 }

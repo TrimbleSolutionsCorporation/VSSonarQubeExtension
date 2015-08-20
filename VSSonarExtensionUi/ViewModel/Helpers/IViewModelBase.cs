@@ -1,7 +1,7 @@
-﻿using System.Windows.Media;
-
-namespace VSSonarExtensionUi.ViewModel.Helpers
+﻿namespace VSSonarExtensionUi.ViewModel.Helpers
 {
+    using System.Windows.Media;
+
     /// <summary>
     /// View Model Base for views
     /// </summary>
@@ -36,7 +36,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// <summary>
         /// Gets the available model, TODO: needs to be removed after viewmodels are split into models and view models
         /// </summary>
-        /// <returns></returns>
+        /// <returns>returns optinal model</returns>
         object GetAvailableModel();
     }
 }

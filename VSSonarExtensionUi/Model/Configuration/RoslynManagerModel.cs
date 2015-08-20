@@ -1,38 +1,170 @@
 ﻿namespace VSSonarExtensionUi.Model.Configuration
 {
-    using Microsoft.CodeAnalysis.Diagnostics;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Reflection;
+
     using Helpers;
+    using Microsoft.CodeAnalysis.Diagnostics;
+    using SonarLocalAnalyser;
+    using ViewModel;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
 
+    /// <summary>
+    /// Roslyn manager model
+    /// </summary>
     public class RoslynManagerModel : IOptionsModelBase
     {
-        const string ID = "RoslynManagerModel";
-        const string PATHKEY = "RoslynDllPaths";
-        
-        private readonly string pluginsRunningPath = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", "");
-        private readonly string extensionRunningPath = Directory.GetParent(Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", "")).ToString();
-        private IConfigurationHelper confHelper;
+        /// <summary>
+        /// The identifier
+        /// </summary>
+        private const string ID = "RoslynManagerModel";
+
+        /// <summary>
+        /// The pathkey
+        /// </summary>
+        private const string PATHKEY = "RoslynDllPaths";
+
+        /// <summary>
+        /// The plugins
+        /// </summary>
         private readonly IEnumerable<IAnalysisPlugin> plugins;
+
+        /// <summary>
+        /// The notification manager
+        /// </summary>
         private readonly INotificationManager notificationManager;
 
-        public Dictionary<string, VSSonarExtensionDiagnostic> ExtensionDiagnostics { get; private set; }
+        /// <summary>
+        /// The plugins running path
+        /// </summary>
+        private readonly string pluginsRunningPath = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty);
 
-        public RoslynManagerModel(IEnumerable<IAnalysisPlugin> pluginsIn, INotificationManager notificationManagerIn, IConfigurationHelper vsHelperIn)
+        /// <summary>
+        /// The extension running path
+        /// </summary>
+        private readonly string extensionRunningPath = Directory.GetParent(Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty)).ToString();
+
+        /// <summary>
+        /// The conf helper
+        /// </summary>
+        private readonly IConfigurationHelper confHelper;
+
+        /// <summary>
+        /// The user conf
+        /// </summary>
+        private ISonarConfiguration userConf;
+
+        /// <summary>
+        /// The associated project
+        /// </summary>
+        private Resource associatedProject;
+
+        /// <summary>
+        /// The source dir
+        /// </summary>
+        private string sourceDir;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RoslynManagerModel" /> class.
+        /// </summary>
+        /// <param name="pluginsIn">The plugins in.</param>
+        /// <param name="notificationManagerIn">The notification manager in.</param>
+        /// <param name="configHelper">The configuration helper.</param>
+        public RoslynManagerModel(
+            IEnumerable<IAnalysisPlugin> pluginsIn,
+            INotificationManager notificationManagerIn,
+            IConfigurationHelper configHelper)
         {
-            this.confHelper = vsHelperIn;
+            this.confHelper = configHelper;
             this.plugins = pluginsIn;
             this.notificationManager = notificationManagerIn;
             this.ExtensionDiagnostics = new Dictionary<string, VSSonarExtensionDiagnostic>();
             this.InitializedInstalledDiagnostics();
+
+            // register model
+            SonarQubeViewModel.RegisterNewModelInPool(this);
         }
 
+        /// <summary>
+        /// Gets the extension diagnostics.
+        /// </summary>
+        /// <value>
+        /// The extension diagnostics.
+        /// </value>
+        public Dictionary<string, VSSonarExtensionDiagnostic> ExtensionDiagnostics { get; private set; }
+
+        /// <summary>
+        /// Reloads the data from disk.
+        /// </summary>
+        /// <param name="associatedProjectIn">The associated project in.</param>
+        public void ReloadDataFromDisk(Resource associatedProjectIn)
+        {
+            // does not save data to disk
+        }
+
+        /// <summary>
+        /// Updates the services.
+        /// </summary>
+        /// <param name="vsenvironmenthelperIn">The vsenvironmenthelper in.</param>
+        /// <param name="statusBar">The status bar.</param>
+        /// <param name="provider">The provider.</param>
+        public void UpdateServices(IVsEnvironmentHelper vsenvironmenthelperIn, IVSSStatusBar statusBar, IServiceProvider provider)
+        {
+            // does not access visual studio services
+        }
+
+        /// <summary>
+        /// Gets the view model.
+        /// </summary>
+        /// <returns>
+        /// returns view model
+        /// </returns>
+        public object GetViewModel()
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// The end data association.
+        /// </summary>
+        public void EndDataAssociation()
+        {
+            this.userConf = null;
+            this.associatedProject = null;
+            this.sourceDir = string.Empty;
+        }
+
+        /// <summary>
+        /// Saves the data.
+        /// </summary>
+        public void SaveData()
+        {
+            this.SyncSettings();
+        }
+
+        /// <summary>
+        /// Associates the with new project.
+        /// </summary>
+        /// <param name="config">The configuration.</param>
+        /// <param name="project">The project.</param>
+        /// <param name="workDir">The work dir.</param>
+        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workDir)
+        {
+            this.sourceDir = workDir;
+            this.userConf = config;
+            this.associatedProject = project;
+        }
+
+        /// <summary>
+        /// Adds the new roslyn pack.
+        /// </summary>
+        /// <param name="dllPath">The DLL path.</param>
+        /// <returns>true if ok</returns>
         public bool AddNewRoslynPack(string dllPath)
         {
             var name = Path.GetFileName(dllPath);
@@ -43,9 +175,8 @@
             }
 
             try
-            {
-                
-                ExtensionDiagnostics.Add(name, new VSSonarExtensionDiagnostic(name, dllPath));
+            {                
+                this.ExtensionDiagnostics.Add(name, new VSSonarExtensionDiagnostic(name, dllPath));
             }
             catch (Exception ex)
             {
@@ -56,6 +187,9 @@
             return true;
         }
 
+        /// <summary>
+        /// Synchronizes the diagnostics in plugins.
+        /// </summary>
         public void SyncDiagnosticsInPlugins()
         {
             foreach (var plugin in this.plugins)
@@ -75,17 +209,24 @@
             }
         }
 
+        /// <summary>
+        /// Synchronizes the settings.
+        /// </summary>
         private void SyncSettings()
         {
             if (this.confHelper != null)
             {
-                var data = string.Join(";", ExtensionDiagnostics.Select(m => m.Value.Path).ToArray());
-                confHelper.WriteOptionInApplicationData(Context.AnalysisGeneral, ID, PATHKEY, data, true, false);
+                var data = string.Join(";", this.ExtensionDiagnostics.Select(m => m.Value.Path).ToArray());
+                this.confHelper.WriteOptionInApplicationData(Context.AnalysisGeneral, ID, PATHKEY, data, true, false);
             }
 
             this.SyncDiagnosticsInPlugins();
         }
 
+        /// <summary>
+        /// Combines the diagnostics.
+        /// </summary>
+        /// <returns>returns diagnostics</returns>
         private List<DiagnosticAnalyzer> CombineDiagnostics()
         {
             var listData = new List<DiagnosticAnalyzer>();
@@ -98,6 +239,9 @@
             return listData;
         }
 
+        /// <summary>
+        /// Initializeds the installed diagnostics.
+        /// </summary>
         private void InitializedInstalledDiagnostics()
         {
             if (this.confHelper != null)
@@ -112,7 +256,7 @@
                         if (File.Exists(item))
                         {
                             var name = Path.GetFileName(item);
-                            ExtensionDiagnostics.Add(name, new VSSonarExtensionDiagnostic(name, item));
+                            this.ExtensionDiagnostics.Add(name, new VSSonarExtensionDiagnostic(name, item));
                         }
                     }
                 }
@@ -124,26 +268,19 @@
 
             if (!this.ExtensionDiagnostics.Any())
             {
-                ExtensionDiagnostics.Add("SonarLint.dll", new VSSonarExtensionDiagnostic("SonarLint.dll",
-                    Path.Combine(extensionRunningPath, "externalAnalysers\\roslynDiagnostics", "SonarLint.dll")));
-                ExtensionDiagnostics.Add("SonarLint.Extra.dll", new VSSonarExtensionDiagnostic("SonarLint.dll",
-                    Path.Combine(extensionRunningPath, "externalAnalysers\\roslynDiagnostics", "SonarLint.Extra.dll")));
+                this.ExtensionDiagnostics.Add(
+                    "SonarLint.dll",
+                    new VSSonarExtensionDiagnostic(
+                        "SonarLint.dll",
+                        Path.Combine(this.extensionRunningPath, "externalAnalysers\\roslynDiagnostics", "SonarLint.dll")));
+
+                this.ExtensionDiagnostics.Add(
+                    "SonarLint.Extra.dll",
+                    new VSSonarExtensionDiagnostic(
+                        "SonarLint.dll",
+                        Path.Combine(this.extensionRunningPath, "externalAnalysers\\roslynDiagnostics", "SonarLint.Extra.dll")));
             }
 
-            this.SyncSettings();
-        }
-
-        public void RefreshPropertiesInView(Resource associatedProject)
-        {
-        }
-
-        public void UpdateServices(ISonarRestService restServiceIn, IVsEnvironmentHelper vsenvironmenthelperIn, IConfigurationHelper configurationHelper, IVSSStatusBar statusBar, IServiceProvider provider)
-        {
-            this.confHelper = configurationHelper;
-        }
-
-        public void SaveCurrentViewToDisk(IConfigurationHelper configurationHelper)
-        {
             this.SyncSettings();
         }
     }

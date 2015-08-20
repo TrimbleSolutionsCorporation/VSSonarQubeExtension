@@ -13,12 +13,10 @@ namespace VSSonarExtensionUi.Model.Menu
     using System.Collections.ObjectModel;
     using System.Windows.Input;
 
-    
-
     using GalaSoft.MvvmLight.Command;
-
-    using VSSonarExtensionUi.ViewModel.Helpers;
-
+    using SonarLocalAnalyser;
+    using ViewModel;
+    using ViewModel.Helpers;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
 
@@ -76,8 +74,10 @@ namespace VSSonarExtensionUi.Model.Menu
             this.model = model;
             this.CommandText = "Columns";
             this.IsEnabled = true;
-            this.AssociatedCommand = new RelayCommand(this.OnAssociateCommand);
+            this.ExecuteCommand = new RelayCommand(this.OnAssociateCommand);
             this.SubItems = new ObservableCollection<IMenuItem>();
+
+            SonarQubeViewModel.RegisterNewModelInPool(this);
         }
 
         #endregion
@@ -87,7 +87,7 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <summary>
         ///     Gets or sets the associated command.
         /// </summary>
-        public ICommand AssociatedCommand { get; set; }
+        public ICommand ExecuteCommand { get; set; }
 
         /// <summary>
         ///     Gets or sets the command text.
@@ -104,13 +104,28 @@ namespace VSSonarExtensionUi.Model.Menu
         /// </summary>
         public ObservableCollection<IMenuItem> SubItems { get; set; }
 
-        public void UpdateServices(IVsEnvironmentHelper vsHelper)
-        {
-        }
-
         #endregion
 
         #region Public Methods and Operators
+
+        /// <summary>
+        /// The refresh menu items status.
+        /// </summary>
+        /// <param name="contextMenuItems">
+        /// The context menu items.
+        /// </param>
+        /// <param name="b">
+        /// The b.
+        /// </param>
+        public static void RefreshMenuItemsStatus(ObservableCollection<IMenuItem> contextMenuItems, bool b)
+        {
+            foreach (IMenuItem contextMenuItem in contextMenuItems)
+            {
+                if (contextMenuItem is ShowHideIssueColumn)
+                {
+                }
+            }
+        }
 
         /// <summary>
         /// The make menu.
@@ -166,22 +181,44 @@ namespace VSSonarExtensionUi.Model.Menu
         }
 
         /// <summary>
-        /// The refresh menu items status.
+        /// Gets the view model.
         /// </summary>
-        /// <param name="contextMenuItems">
-        /// The context menu items.
-        /// </param>
-        /// <param name="b">
-        /// The b.
-        /// </param>
-        public static void RefreshMenuItemsStatus(ObservableCollection<IMenuItem> contextMenuItems, bool b)
+        /// <returns>
+        /// returns view model
+        /// </returns>
+        public object GetViewModel()
         {
-            foreach (IMenuItem contextMenuItem in contextMenuItems)
-            {
-                if (contextMenuItem is ShowHideIssueColumn)
-                {
-                }
-            }
+            return this;
+        }
+
+        /// <summary>
+        /// Updates the services.
+        /// </summary>
+        /// <param name="vsenvironmenthelperIn">The vsenvironmenthelper in.</param>
+        /// <param name="statusBar">The status bar.</param>
+        /// <param name="provider">The provider.</param>
+        public void UpdateServices(IVsEnvironmentHelper vsenvironmenthelperIn, IVSSStatusBar statusBar, IServiceProvider provider)
+        {
+            // menu not accessing services
+        }
+
+        /// <summary>
+        /// Associates the with new project.
+        /// </summary>
+        /// <param name="config">The configuration.</param>
+        /// <param name="project">The project.</param>
+        /// <param name="workingDir">The working dir.</param>
+        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workingDir)
+        {
+            // menu not accessing services
+        }
+
+        /// <summary>
+        /// The end data association.
+        /// </summary>
+        public void EndDataAssociation()
+        {
+            // menu not accessing services
         }
 
         #endregion

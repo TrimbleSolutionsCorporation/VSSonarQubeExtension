@@ -11,14 +11,16 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Diagnostics;
     using System.Windows.Media;
+
     using GalaSoft.MvvmLight.Command;
-    using PropertyChanged;
     using Helpers;
+    using Model.Helpers;
+    using PropertyChanged;
+    using SonarLocalAnalyser;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-    using Model.Helpers;
-    using System.Diagnostics;
 
     /// <summary>
     /// The license viewer view model.
@@ -26,29 +28,39 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     [ImplementPropertyChanged]
     public class LicenseViewerViewModel : IOptionsViewModelBase, IOptionsModelBase
     {
-        #region Fields
-
         /// <summary>
         /// The plugins.
         /// </summary>
         private readonly PluginManagerModel pluginModel;
 
+        /// <summary>
+        /// The conf helper
+        /// </summary>
         private readonly IConfigurationHelper confHelper;
 
-        #endregion
-
-        #region Constructors and Destructors
+        /// <summary>
+        /// The associated project
+        /// </summary>
+        private Resource associatedProject;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LicenseViewerViewModel"/> class.
+        /// The sonar configuration
         /// </summary>
-        /// <param name="plugincontroller">
-        /// The plugincontroller.
-        /// </param>
-        /// <param name="configuration">
-        /// The configuration.
-        /// </param>
-        public LicenseViewerViewModel(PluginManagerModel plugincontroller, IConfigurationHelper helper)
+        private ISonarConfiguration sonarConfig;
+
+        /// <summary>
+        /// The source dir
+        /// </summary>
+        private string sourceDir;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LicenseViewerViewModel" /> class.
+        /// </summary>
+        /// <param name="plugincontroller">The plugincontroller.</param>
+        /// <param name="helper">The helper.</param>
+        public LicenseViewerViewModel(
+            PluginManagerModel plugincontroller,
+            IConfigurationHelper helper)
         {
             this.Header = "License Manager";
             this.pluginModel = plugincontroller;
@@ -68,11 +80,11 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             {
                 Debug.WriteLine(ex.Message);
             }
+
+            // register model so it can be updated
+            SonarQubeViewModel.RegisterNewModelInPool(this);
+            SonarQubeViewModel.RegisterNewViewModelInPool(this);
         }
-
-        #endregion
-
-        #region Public Properties
 
         /// <summary>
         ///     Gets or sets the available licenses.
@@ -94,6 +106,12 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         public RelayCommand GenerateTokenCommand { get; set; }
 
+        /// <summary>
+        /// Gets or sets the refresh command.
+        /// </summary>
+        /// <value>
+        /// The refresh command.
+        /// </value>
         public System.Windows.Input.ICommand RefreshCommand { get; set; }
 
         /// <summary>
@@ -111,68 +129,161 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         public VsLicense SelectedLicense { get; set; }
 
-        #endregion
-
-        #region Public Methods and Operators
-
         /// <summary>
-        /// The update services.
+        /// The refresh licenses.
         /// </summary>
-        /// <param name="restServiceIn">
-        /// The rest service in.
-        /// </param>
-        /// <param name="vsenvironmenthelperIn">
-        /// The vsenvironmenthelper in.
-        /// </param>
-        /// <param name="statusBar">
-        /// The status bar.
-        /// </param>
-        /// <param name="provider">
-        /// The provider.
-        /// </param>
-        public void UpdateServices(
-            ISonarRestService restServiceIn,
-            IVsEnvironmentHelper vsenvironmenthelperIn,
-            IConfigurationHelper configurationHelper,
-            IVSSStatusBar statusBar,
-            IServiceProvider provider)
-        {
-        }
-
-        public void SaveCurrentViewToDisk(IConfigurationHelper configurationHelper)
-        {
-        }
-
-        /// <summary>
-        ///     The refresh licenses.
-        /// </summary>
-        /// <returns>
-        ///     The
-        ///     <see>
-        ///         <cref>ObservableCollection</cref>
-        ///     </see>
-        ///     .
-        /// </returns>
         public void GetLicensesFromServer()
         {
             this.AvailableLicenses.Clear();
-
-            var licenses = new ObservableCollection<VsLicense>();
 
             if (this.pluginModel != null)
             {
                 foreach (var plugin in this.pluginModel.AnalysisPlugins)
                 {
-                    GetLicenceForPlugin(this.AvailableLicenses, plugin);
+                    this.GetLicenceForPlugin(this.AvailableLicenses, plugin);
                 }
 
                 foreach (var plugin in this.pluginModel.MenuPlugins)
                 {
-                    GetLicenceForPlugin(this.AvailableLicenses, plugin);
+                    this.GetLicenceForPlugin(this.AvailableLicenses, plugin);
                 }
             }
         }
 
+        /// <summary>
+        /// The init data association.
+        /// </summary>
+        /// <param name="associatedProjectIn">The associated project in.</param>
+        public void ReloadDataFromDisk(Resource associatedProjectIn)
+        {
+            // does not refresh data
+        }
+
+        /// <summary>
+        /// The refresh data for resource.
+        /// </summary>
+        /// <param name="fullName">The full name.</param>
+        public void RefreshDataForResource(Resource fullName)
+        {
+            // does not refresh data
+        }
+
+        /// <summary>
+        /// The save and close.
+        /// </summary>
+        public void SaveAndClose()
+        {
+            // does not save data
+        }
+
+        /// <summary>
+        /// Gets the view model.
+        /// </summary>
+        /// <returns>
+        /// returns view model
+        /// </returns>
+        public object GetViewModel()
+        {
+            return this;
+        }
+
+        /// <summary>
+        /// The update colours.
+        /// </summary>
+        /// <param name="background">
+        /// The background.
+        /// </param>
+        /// <param name="foreground">
+        /// The foreground.
+        /// </param>
+        public void UpdateColours(Color background, Color foreground)
+        {
+            this.BackGroundColor = background;
+            this.ForeGroundColor = foreground;
+        }
+
+        /// <summary>
+        /// Gets the available model, TODO: needs to be removed after viewmodels are split into models and view models
+        /// </summary>
+        /// <returns>
+        /// returns optinal model
+        /// </returns>
+        public object GetAvailableModel()
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// Saves the data.
+        /// </summary>
+        public void SaveData()
+        {
+            // does not save data
+        }
+
+        /// <summary>
+        /// Updates the services.
+        /// </summary>
+        /// <param name="vsenvironmenthelperIn">The vsenvironmenthelper in.</param>
+        /// <param name="statusBar">The status bar.</param>
+        /// <param name="provider">The provider.</param>
+        public void UpdateServices(IVsEnvironmentHelper vsenvironmenthelperIn, IVSSStatusBar statusBar, IServiceProvider provider)
+        {
+            // does not access visual studio services
+        }
+
+        /// <summary>
+        /// Associates the with new project.
+        /// </summary>
+        /// <param name="config">The configuration.</param>
+        /// <param name="project">The project.</param>
+        /// <param name="workDir">The work dir.</param>
+        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workDir)
+        {
+            this.sonarConfig = config;
+            this.associatedProject = project;
+            this.sourceDir = workDir;
+        }
+
+        /// <summary>
+        /// The end data association.
+        /// </summary>
+        public void EndDataAssociation()
+        {
+            this.sonarConfig = null;
+            this.associatedProject = null;
+            this.sourceDir = string.Empty;
+        }
+
+        /// <summary>
+        /// The on generate token command.
+        /// </summary>
+        private void OnGenerateTokenCommand()
+        {
+            foreach (var plugin in this.pluginModel.AnalysisPlugins)
+            {
+                string key = plugin.GetPluginDescription().Name;
+                if (this.SelectedLicense.ProductId.Contains(key))
+                {
+                    this.GeneratedToken = plugin.GenerateTokenId(AuthtenticationHelper.AuthToken);
+                }
+            }
+
+            foreach (var plugin in this.pluginModel.MenuPlugins)
+            {
+                string key = plugin.GetPluginDescription().Name;
+                if (this.SelectedLicense.ProductId.Contains(key))
+                {
+                    this.GeneratedToken = plugin.GenerateTokenId(AuthtenticationHelper.AuthToken);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the licence for plugin.
+        /// </summary>
+        /// <param name="licenses">The licenses.</param>
+        /// <param name="plugin">The plugin.</param>
         private void GetLicenceForPlugin(ObservableCollection<VsLicense> licenses, IPlugin plugin)
         {
             if (AuthtenticationHelper.AuthToken == null)
@@ -201,88 +312,5 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 }
             }
         }
-
-        /// <summary>
-        /// The init data association.
-        /// </summary>
-        /// <param name="associatedProject">
-        /// The associated project.
-        /// </param>
-        /// <param name="userConnectionConfig">
-        /// The user connection config.
-        /// </param>
-        /// <param name="workingDir">
-        /// The working dir.
-        /// </param>
-        public void RefreshPropertiesInView(Resource associatedProject)
-        {
-        }
-
-        /// <summary>
-        /// The refresh data for resource.
-        /// </summary>
-        /// <param name="fullName">
-        /// The full name.
-        /// </param>
-        public void RefreshDataForResource(Resource fullName)
-        {
-        }
-
-        /// <summary>
-        /// The save and close.
-        /// </summary>
-        public void SaveAndClose()
-        {
-        }
-
-        /// <summary>
-        /// The update colours.
-        /// </summary>
-        /// <param name="background">
-        /// The background.
-        /// </param>
-        /// <param name="foreground">
-        /// The foreground.
-        /// </param>
-        public void UpdateColours(Color background, Color foreground)
-        {
-            this.BackGroundColor = background;
-            this.ForeGroundColor = foreground;
-        }
-
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// The on generate token command.
-        /// </summary>
-        private void OnGenerateTokenCommand()
-        {
-            foreach (var plugin in this.pluginModel.AnalysisPlugins)
-            {
-                string key = plugin.GetPluginDescription().Name;
-                if (this.SelectedLicense.ProductId.Contains(key))
-                {
-                    this.GeneratedToken = plugin.GenerateTokenId(AuthtenticationHelper.AuthToken);
-                }
-            }
-
-            foreach (var plugin in this.pluginModel.MenuPlugins)
-            {
-                string key = plugin.GetPluginDescription().Name;
-                if (this.SelectedLicense.ProductId.Contains(key))
-                {
-                    this.GeneratedToken = plugin.GenerateTokenId(AuthtenticationHelper.AuthToken);
-                }
-            }
-        }
-
-        public object GetAvailableModel()
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion
     }
 }

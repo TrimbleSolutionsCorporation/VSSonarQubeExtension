@@ -113,13 +113,9 @@ namespace VSSonarExtensionUi.View.Helpers
         /// <summary>
         /// The button base_ on click.
         /// </summary>
-        /// <param name="sender">
-        /// The sender.
-        /// </param>
-        /// <param name="e">
-        /// The e.
-        /// </param>
-        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The e.</param>
+        private void ButtonBaseOnClick(object sender, RoutedEventArgs e)
         {
             this.Close();
         }

@@ -13,7 +13,7 @@ type MetricsTests() =
     let assemblyRunningPath = Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString()
     [<Test>]
     member test.``Should Get Corret Duplications From Data`` () =
-        let conf = ConnectionConfiguration("http://sonar", "jocs1", "jocs1")
+        let conf = ConnectionConfiguration("http://sonar", "jocs1", "jocs1", 4.5)
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()

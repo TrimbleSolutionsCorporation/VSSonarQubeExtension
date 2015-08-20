@@ -15,7 +15,7 @@ type AdministrationTests() =
 
     [<Test>]
     member test.``Should Get Users`` () =
-        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1")
+        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1", 4.5)
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
@@ -28,7 +28,7 @@ type AdministrationTests() =
 
     [<Test>]
     member test.``Should Not Get Users for Server Less than 3.6`` () =
-        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1")
+        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1", 4.5)
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
@@ -41,7 +41,7 @@ type AdministrationTests() =
 
     [<Test>]
     member test.``Should Authenticate User`` () =
-        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1")
+        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1", 4.5)
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
@@ -54,7 +54,7 @@ type AdministrationTests() =
 
     [<Test>]
     member test.``Should Not Authenticate User`` () =
-        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1")
+        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1", 4.5)
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
@@ -66,7 +66,7 @@ type AdministrationTests() =
 
     [<Test>]
     member test.``Should Fail authentication When Sonar less than 3.3 so skip authetication`` () =
-        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1")
+        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1", 4.5)
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
@@ -78,7 +78,7 @@ type AdministrationTests() =
 
     [<Test>]
     member test.``Should Get Correct server version with 3.6`` () =
-        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1")
+        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1", 4.5)
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
@@ -90,7 +90,7 @@ type AdministrationTests() =
 
     [<Test>]
     member test.``Should Get Correct server version with 3,6`` () =
-        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1")
+        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1", 4.5)
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
@@ -102,7 +102,7 @@ type AdministrationTests() =
 
     [<Test>]
     member test.``Should Get Correct server version with 3.6-SNAPSHOT`` () =
-        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1")
+        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1", 4.5)
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
@@ -114,7 +114,7 @@ type AdministrationTests() =
 
     [<Test>]
     member test.``Should Get Correct server version with 3,6-SNAPSHOT`` () =
-        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1")
+        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1", 4.5)
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
@@ -126,7 +126,7 @@ type AdministrationTests() =
 
     [<Test>]
     member test.``Should Get Correct server version with 3.6.1`` () =
-        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1")
+        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1", 4.5)
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
@@ -138,7 +138,7 @@ type AdministrationTests() =
 
     [<Test>]
     member test.``Should Get Correct server version with 3.6.1-SNAPSHOT`` () =
-        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1")
+        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1", 4.5)
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
@@ -150,7 +150,7 @@ type AdministrationTests() =
 
     [<Test>]
     member test.``Get Properties`` () =
-        let conf = ConnectionConfiguration("http://sonar", "jocs1", "jocs1")
+        let conf = ConnectionConfiguration("http://sonar", "jocs1", "jocs1", 4.5)
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
                 .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), "/api/properties") @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/PropertiesResponse.txt"))

@@ -55,22 +55,19 @@ namespace VSSonarPlugins.Types
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConnectionConfiguration"/> class.
+        /// Initializes a new instance of the <see cref="ConnectionConfiguration" /> class.
         /// </summary>
-        /// <param name="hostname">
-        /// The hostname.
-        /// </param>
-        /// <param name="username">
-        /// The username.
-        /// </param>
-        /// <param name="password">
-        /// The password.
-        /// </param>
-        public ConnectionConfiguration(string hostname, string username, string password)
+        /// <param name="hostname">The hostname.</param>
+        /// <param name="username">The username.</param>
+        /// <param name="password">The password.</param>
+        /// <param name="sonarVersion">The sonar version.</param>
+        public ConnectionConfiguration(string hostname, string username, string password, double sonarVersion)
         {
             this.hostname = hostname;
             this.password = password;
             this.username = username;
+            this.SonarVersion = sonarVersion;
+
             this.IsOk = true;
             if (password == null)
             {
@@ -118,6 +115,22 @@ namespace VSSonarPlugins.Types
                 return this.username;
             }
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is ok.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is ok; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsOk { get; set; }
+
+        /// <summary>
+        /// Gets the sonar version.
+        /// </summary>
+        /// <value>
+        /// The sonar version.
+        /// </value>
+        public double SonarVersion { get; set; }
 
         #endregion
 
@@ -183,8 +196,5 @@ namespace VSSonarPlugins.Types
         }
 
         #endregion
-
-
-        public bool IsOk { get; set; }
     }
 }

@@ -12,7 +12,7 @@ type IssuesTests() =
     let assemblyRunningPath = Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString()
     [<Test>]
     member test.``Should Get Corret Number of Issues In Component`` () =
-        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1")
+        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1", 4.5)
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
@@ -24,7 +24,7 @@ type IssuesTests() =
 
     [<Test>]
     member test.``Should Get Corret Number of Issues In Component Using the old Format`` () =
-        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1")
+        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1", 4.5)
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
@@ -38,7 +38,7 @@ type IssuesTests() =
   
     [<Test>]
     member test.``Should Get Issues in Project by user`` () =
-        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1")
+        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1", 4.5)
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
@@ -51,7 +51,7 @@ type IssuesTests() =
 
     [<Test>]
     member test.``Should Get Issues In Project by user using old format`` () =
-        let conf = ConnectionConfiguration("http://localhost:9000", "login1", "password")
+        let conf = ConnectionConfiguration("http://localhost:9000", "login1", "password", 4.5)
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
@@ -65,7 +65,7 @@ type IssuesTests() =
 
     [<Test>]
     member test.``Should Get All Issues by user`` () =
-        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1")
+        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1", 4.5)
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
@@ -78,7 +78,7 @@ type IssuesTests() =
 
     [<Test>]
     member test.``Should Get All Issues by user using old format`` () =
-        let conf = ConnectionConfiguration("http://localhost:9000", "login1", "password")
+        let conf = ConnectionConfiguration("http://localhost:9000", "login1", "password", 4.5)
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
@@ -92,7 +92,7 @@ type IssuesTests() =
 
     [<Test>]
     member test.``Should Get All Issues In Project`` () =
-        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1")
+        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1", 4.5)
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
@@ -105,7 +105,7 @@ type IssuesTests() =
 
     [<Test>]
     member test.``Should Get All Issues In Project using old format`` () =
-        let conf = ConnectionConfiguration("http://localhost:9000", "login1", "password")
+        let conf = ConnectionConfiguration("http://localhost:9000", "login1", "password", 4.5)
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
@@ -120,7 +120,7 @@ type IssuesTests() =
 
     [<Test>]
     member test.``Should Get All Violations As Issues In Project using old format`` () =
-        let conf = ConnectionConfiguration("http://localhost:9000", "login1", "password")
+        let conf = ConnectionConfiguration("http://localhost:9000", "login1", "password", 4.5)
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
@@ -135,7 +135,7 @@ type IssuesTests() =
 
     [<Test>]
     member test.``Should Parse Dry Run Reports Before 4.0`` () =
-        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1")
+        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1", 4.5)
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
@@ -149,7 +149,7 @@ type IssuesTests() =
 
     [<Test>]
     member test.``Should Parse Dry Run Reports Before 3.7`` () =
-        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1")
+        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1", 4.5)
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
@@ -162,7 +162,7 @@ type IssuesTests() =
 
     [<Test>]
     member test.``Should Parse issue with sonar 4.2`` () =
-        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1")
+        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1", 4.5)
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()

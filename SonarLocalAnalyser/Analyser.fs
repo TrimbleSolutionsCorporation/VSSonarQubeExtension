@@ -189,7 +189,7 @@ type AnalyserCommandExec(logger : TaskLoggingHelper, timeout : int64) =
 
 [<ComVisible(false)>]
 [<HostProtection(SecurityAction.LinkDemand, Synchronization = true, ExternalThreading = true)>]
-type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugin>, restService : ISonarRestService, vsinter : IConfigurationHelper, sconf : ISonarConfiguration, notificationManager : INotificationManager) =
+type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugin>, restService : ISonarRestService, vsinter : IConfigurationHelper, notificationManager : INotificationManager) =
     let assemblyRunningPath = Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString()
     let completionEvent = new DelegateEvent<System.EventHandler>()
     let stdOutEvent = new DelegateEvent<System.EventHandler>()
