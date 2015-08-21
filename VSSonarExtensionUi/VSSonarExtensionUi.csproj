@@ -178,8 +178,6 @@
     <Compile Include="ViewModel\Analysis\LocalViewModel.cs" />
     <Compile Include="ViewModel\Configuration\GeneralConfigurationViewModel.cs" />
     <Compile Include="ViewModel\Helpers\IViewModelBase.cs" />
-    <Compile Include="ViewModel\Helpers\IVsSonarExtensionLogger.cs" />
-    <Compile Include="ViewModel\Helpers\VsSonarExtensionLogger.cs" />
     <Compile Include="ViewModel\SonarQubeViewModel.cs" />
     <Compile Include="View\Association\AssociationView.xaml.cs">
       <DependentUpon>AssociationView.xaml</DependentUpon>
