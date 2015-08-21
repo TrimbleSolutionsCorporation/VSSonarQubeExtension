@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace VSSonarPlugins.Types
+﻿namespace VSSonarPlugins.Types
 {
+    using System;
+
     /// <summary>
     /// Blame Line Hunk
     /// </summary>
@@ -39,26 +38,21 @@ namespace VSSonarPlugins.Types
         /// The line.
         /// </value>
         public int Line { get; set; }
-    }
-
-    /// <summary>
-    /// blame information
-    /// </summary>
-    public interface IBlameInformation
-    {
-        /// <summary>
-        /// Adds the blame line.
-        /// </summary>
-        /// <param name="line">The line.</param>
-        /// <param name="author">The author.</param>
-        /// <param name="dateModified">The date modified.</param>
-        void AddBlameLine(int line, string author, DateTime dateModified);
 
         /// <summary>
-        /// Gets the blame by line.
+        /// Gets or sets the summary.
         /// </summary>
-        /// <param name="line">The line.</param>
-        /// <returns></returns>
-        BlameLine GetBlameByLine(int line);
+        /// <value>
+        /// The summary.
+        /// </value>
+        public string Summary { get; set; }
+
+        /// <summary>
+        /// Gets or sets the unique identifier.
+        /// </summary>
+        /// <value>
+        /// The unique identifier.
+        /// </value>
+        public string Guid { get; set; }
     }
 }

@@ -8,15 +8,6 @@ namespace VSSonarPlugins
     public interface ISourceVersionPlugin : IPlugin
     {
         /// <summary>
-        /// get history for a resource file
-        /// </summary>
-        /// <param name="path">The path.</param>
-        /// <returns>
-        /// Blame Info.
-        /// </returns>
-        IBlameInformation GetHistory(string path);
-
-        /// <summary>
         /// Gets the blame by line.
         /// </summary>
         /// <param name="filePath">The file path.</param>

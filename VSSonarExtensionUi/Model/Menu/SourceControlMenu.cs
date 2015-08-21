@@ -12,6 +12,7 @@
     using Association;
     using System.Collections.Generic;
     using SonarLocalAnalyser;
+    using View.Helpers;
 
 
     /// <summary>
@@ -48,7 +49,15 @@
         /// The user conf
         /// </summary>
         private ISonarConfiguration userConf;
+
+        /// <summary>
+        /// The vshelper
+        /// </summary>
         private IVsEnvironmentHelper vshelper;
+
+        /// <summary>
+        /// The assign project
+        /// </summary>
         private Resource assignProject;
 
         /// <summary>
@@ -106,6 +115,7 @@
         {
             var topLel = new SourceControlMenu(rest, model, manager, translator) { CommandText = "Source Control", IsEnabled = false };
             topLel.SubItems.Add(new SourceControlMenu(rest, model, manager, translator) { CommandText = "assign to committer", IsEnabled = true });
+            topLel.SubItems.Add(new SourceControlMenu(rest, model, manager, translator) { CommandText = "show commit message", IsEnabled = true });
             return topLel;
         }
 
@@ -158,6 +168,11 @@
         /// </summary>
         private void OnSourceControlCommand()
         {
+            if (this.model.SelectedItems == null || this.model.SelectedItems.Count == 0)
+            {
+                return;
+            }
+
             try
             {
                 if (this.CommandText.Equals("assign to committer"))
@@ -169,11 +184,30 @@
                     {
                         this.AssignIssueToUser(users, issue as Issue);
                     }
+
+                    return;
+                }
+
+                if (this.CommandText.Equals("show commit message"))
+                {
+                    var issue = this.model.SelectedItems[0] as Issue;
+
+                    var translatedPath = this.tranlator.TranslateKey(issue.Component, this.vshelper, this.assignProject.BranchName);
+
+                    var blameLine = this.sourceControl.GetBlameByLine(translatedPath, issue.Line);
+
+                    if (blameLine != null)
+                    {
+                        string message = string.Format("Author:\t\t {0}\r\nEmail:\t\t {1}\r\nCommit Date:\t {2}\r\nHash:\t\t {3}", blameLine.Author, blameLine.Email, blameLine.Date, blameLine.Guid);
+                        string summary = blameLine.Summary;
+
+                        MessageDisplayBox.DisplayMessage(message, summary);
+                    }                                       
                 }
             }
             catch (Exception ex)
             {
-                this.manager.ReportMessage(new Message { Id = "SourceControlMenu", Data = "Failed to assign issues" });
+                this.manager.ReportMessage(new Message { Id = "SourceControlMenu", Data = "Failed to perform operation: " + ex.Message });
                 this.manager.ReportException(ex);
                 throw;
             }

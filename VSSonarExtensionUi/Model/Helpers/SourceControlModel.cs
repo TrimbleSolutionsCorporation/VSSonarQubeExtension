@@ -12,15 +12,6 @@
     public interface ISourceControlProvider
     {
         /// <summary>
-        /// Gets the history.
-        /// </summary>
-        /// <param name="filePath">The file path.</param>
-        /// <returns>
-        /// Complete blame information for path.
-        /// </returns>
-        IBlameInformation GetHistory(string filePath);
-
-        /// <summary>
         /// Gets the blame by line.
         /// </summary>
         /// <param name="filePath">The file path.</param>
@@ -105,23 +96,6 @@
             }
 
             return this.supportedPlugin.GetBranch();
-        }
-
-        /// <summary>
-        /// Gets the history.
-        /// </summary>
-        /// <param name="filePath">The file path.</param>
-        /// <returns>
-        /// Complete blame information for path.
-        /// </returns>
-        IBlameInformation ISourceControlProvider.GetHistory(string filePath)
-        {
-            if (this.supportedPlugin == null)
-            {
-                return null;
-            }
-
-            return this.supportedPlugin.GetHistory(filePath);
         }
 
         /// <summary>

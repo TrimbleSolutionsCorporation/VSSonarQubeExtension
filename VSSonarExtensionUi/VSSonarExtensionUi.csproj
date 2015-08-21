@@ -220,6 +220,9 @@
     <Compile Include="View\Configuration\GeneralConfigurationView.xaml.cs">
       <DependentUpon>GeneralConfigurationView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\Helpers\MessageDisplayBox.xaml.cs">
+      <DependentUpon>MessageDisplayBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Helpers\QuestionUser.xaml.cs">
       <DependentUpon>QuestionUser.xaml</DependentUpon>
     </Compile>
@@ -330,6 +333,10 @@
     <Page Include="View\Configuration\GeneralConfigurationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Helpers\MessageDisplayBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="View\Helpers\QuestionUser.xaml">
       <SubType>Designer</SubType>
