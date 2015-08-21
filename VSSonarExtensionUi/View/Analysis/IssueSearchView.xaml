@@ -62,7 +62,7 @@
                                       Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
                                 <Grid
                                     Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                    Height="50">
+                                    Height="55">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="25" />
                                         <RowDefinition Height="25" />
@@ -79,18 +79,28 @@
                                         Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
                                         Grid.Row="1" Grid.Column="0"
                                         Content="Assignee" />
-                                    <ComboBox Grid.Row="0" Grid.Column="1" IsTextSearchEnabled="True"
-                                              SelectedItem="{Binding Reporter, Mode=TwoWay}"
-                                              ItemsSource="{Binding UsersList}"
-                                              MaxDropDownHeight="101"
-                                              Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                              ItemTemplate="{DynamicResource UserSelectionComboBoxDataTemplate}" />
-                                    <ComboBox Grid.Row="1" Grid.Column="1" IsTextSearchEnabled="True"
-                                              SelectedItem="{Binding Assignee, Mode=TwoWay}"
-                                              ItemsSource="{Binding UsersList}"
-                                              MaxDropDownHeight="101"
-                                              Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                              ItemTemplate="{DynamicResource UserSelectionComboBoxDataTemplate}" />
+                                        <ComboBox Grid.Row="0" Grid.Column="1" 
+                                          Style="{DynamicResource VirtualisedMetroComboBox}"
+                                          TextSearch.TextPath="Name"
+                                          controls:TextBoxHelper.Watermark="Type name"
+                                          IsEditable="True"
+                                          SelectedItem="{Binding Reporter, Mode=TwoWay}"
+                                          ItemsSource="{Binding UsersList}"
+                                          MaxDropDownHeight="125"
+                                          ItemTemplate="{DynamicResource UserSelectionComboBoxDataTemplate}">
+                                        </ComboBox>
+
+                                        <ComboBox Grid.Row="1" Grid.Column="1" 
+                                          Style="{DynamicResource VirtualisedMetroComboBox}"
+                                          TextSearch.TextPath="Name"
+                                          controls:TextBoxHelper.Watermark="Type name"
+                                          IsEditable="True"
+                                          SelectedItem="{Binding Assignee, Mode=TwoWay}"
+                                          ItemsSource="{Binding UsersList}"
+                                          MaxDropDownHeight="125"
+                                          ItemTemplate="{DynamicResource UserSelectionComboBoxDataTemplate}">
+                                        </ComboBox>
+                                    
                                     <CheckBox Grid.Row="0" Grid.Column="2" Margin="4,0,-4,0"
                                               IsChecked="{Binding IsReporterChecked}" />
                                     <CheckBox Grid.Row="1" Grid.Column="2" Margin="4,0,-4,0"

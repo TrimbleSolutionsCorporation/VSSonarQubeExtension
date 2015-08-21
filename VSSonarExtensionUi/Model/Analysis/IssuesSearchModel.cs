@@ -197,7 +197,7 @@ namespace VSSonarExtensionUi.Model.Analysis
             List<User> usortedList = this.restService.GetUserList(config);
             if (usortedList != null && usortedList.Count > 0)
             {
-                this.issuesSearchViewModel.UsersList = new ObservableCollection<User>(usortedList.OrderBy(i => i.Login));
+                this.issuesSearchViewModel.UsersList = new ObservableCollection<User>(usortedList.OrderBy(i => i.Name));
             }
 
             List<SonarActionPlan> usortedListofPlan = this.restService.GetAvailableActionPlan(config, this.associatedProject.Key);
