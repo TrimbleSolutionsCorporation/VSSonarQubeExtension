@@ -140,6 +140,7 @@
     <Compile Include="Model\Helpers\PasswordHelper.cs" />
     <Compile Include="Model\Helpers\SourceControlModel.cs" />
     <Compile Include="Model\Menu\PlanMenu.cs" />
+    <Compile Include="Model\Menu\SourceControlMenu.cs" />
     <Compile Include="ViewModel\Association\AssociationViewModel.cs" />
     <Compile Include="Model\PluginManager\PluginController.cs" />
     <Compile Include="Model\PluginManager\PluginLoader.cs" />

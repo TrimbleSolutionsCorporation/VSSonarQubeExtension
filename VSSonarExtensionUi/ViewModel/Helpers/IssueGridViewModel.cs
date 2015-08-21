@@ -1004,9 +1004,10 @@
         {
             var menu = new ObservableCollection<IMenuItem>
                            {
-                               ChangeStatusMenu.MakeMenu(this.restService, this, this.notificationManager), 
+                               ChangeStatusMenu.MakeMenu(this.restService, this, this.notificationManager),
                                OpenResourceMenu.MakeMenu(this.restService, this),
-                               PlanMenu.MakeMenu(this.restService, this, this.notificationManager)
+                               PlanMenu.MakeMenu(this.restService, this, this.notificationManager),
+                               SourceControlMenu.MakeMenu(this.restService, this, this.notificationManager, this.keyTranslator)
                            };
 
             return menu;

@@ -1,8 +1,6 @@
 ﻿namespace VSSonarExtensionUi.Model.Helpers
 {
     using System;
-
-    using SonarLocalAnalyser;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
 
@@ -28,6 +26,7 @@
         /// <param name="config">The configuration.</param>
         /// <param name="project">The project.</param>
         /// <param name="workingDir">The working dir.</param>
+        /// <param name="sourceModel">The source model.</param>
         void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workingDir, ISourceControlProvider sourceModel);
 
         /// <summary>
