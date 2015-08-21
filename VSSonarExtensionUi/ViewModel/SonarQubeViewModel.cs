@@ -626,7 +626,7 @@
         /// </summary>
         public void OnSelectedBranchChanged()
         {
-            if (this.SelectedBranch != null)
+            if (this.SelectedBranch != null && this.AssociationModule != null)
             {
                 this.AssociationModule.UpdateBranchSelection(this.SelectedBranch);
                 this.RefreshDataForResource(this.DocumentInView);
