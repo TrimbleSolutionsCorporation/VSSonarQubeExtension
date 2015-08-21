@@ -19,6 +19,8 @@ namespace VSSonarExtensionUi.Model.Menu
     using ViewModel.Helpers;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
+    using Helpers;
+    using Association;
 
     /// <summary>
     ///     The show hide issue column.
@@ -77,7 +79,7 @@ namespace VSSonarExtensionUi.Model.Menu
             this.ExecuteCommand = new RelayCommand(this.OnAssociateCommand);
             this.SubItems = new ObservableCollection<IMenuItem>();
 
-            SonarQubeViewModel.RegisterNewModelInPool(this);
+            AssociationModel.RegisterNewModelInPool(this);
         }
 
         #endregion
@@ -208,7 +210,8 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <param name="config">The configuration.</param>
         /// <param name="project">The project.</param>
         /// <param name="workingDir">The working dir.</param>
-        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workingDir)
+        /// <param name="provider">The provider.</param>
+        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workingDir, ISourceControlProvider provider)
         {
             // menu not accessing services
         }

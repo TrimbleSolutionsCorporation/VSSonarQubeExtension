@@ -21,6 +21,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using SonarLocalAnalyser;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
+    using Model.Association;
 
     /// <summary>
     /// The license viewer view model.
@@ -82,7 +83,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             }
 
             // register model so it can be updated
-            SonarQubeViewModel.RegisterNewModelInPool(this);
+            AssociationModel.RegisterNewModelInPool(this);
             SonarQubeViewModel.RegisterNewViewModelInPool(this);
         }
 
@@ -238,7 +239,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="config">The configuration.</param>
         /// <param name="project">The project.</param>
         /// <param name="workDir">The work dir.</param>
-        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workDir)
+        /// <param name="provider">The provider.</param>
+        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workDir, ISourceControlProvider provider)
         {
             this.sonarConfig = config;
             this.associatedProject = project;

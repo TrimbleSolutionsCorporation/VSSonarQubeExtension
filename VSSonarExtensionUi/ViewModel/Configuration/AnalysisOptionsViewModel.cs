@@ -32,6 +32,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using View.Helpers;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
+    using Model.Association;
 
     /// <summary>
     ///     The dummy options controller.
@@ -98,7 +99,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.BrowseForSonarRunnerQubeTrigger = new RelayCommand(this.OnBrowseForSonarRunnerQubeTrigger);
 
             SonarQubeViewModel.RegisterNewViewModelInPool(this);
-            SonarQubeViewModel.RegisterNewModelInPool(this);
+            AssociationModel.RegisterNewModelInPool(this);
         }
 
         #endregion
@@ -458,7 +459,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="config">The configuration.</param>
         /// <param name="project">The project.</param>
         /// <param name="workDir">The work dir.</param>
-        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workDir)
+        /// <param name="provider">The provider.</param>
+        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workDir, ISourceControlProvider provider)
         {
             this.SourceDir = workDir;
             this.userSonarConfig = config;

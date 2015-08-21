@@ -27,6 +27,8 @@ namespace VSSonarExtensionUi.Model.Menu
 
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
+    using Helpers;
+    using Association;
 
     /// <summary>
     /// The issue handler menu.
@@ -92,7 +94,7 @@ namespace VSSonarExtensionUi.Model.Menu
 
             if (registerPool)
             {
-                SonarQubeViewModel.RegisterNewModelInPool(this);
+                AssociationModel.RegisterNewModelInPool(this);
             }            
         }
 
@@ -160,7 +162,8 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <param name="configIn">The configuration in.</param>
         /// <param name="project">The project.</param>
         /// <param name="workingDir">The working dir.</param>
-        public void AssociateWithNewProject(ISonarConfiguration configIn, Resource project, string workingDir)
+        /// <param name="provider">The provider.</param>
+        public void AssociateWithNewProject(ISonarConfiguration configIn, Resource project, string workingDir, ISourceControlProvider provider)
         {
             this.sourceDir = workingDir;
             this.associatedProject = project;
@@ -176,7 +179,7 @@ namespace VSSonarExtensionUi.Model.Menu
                         foreach (var item in this.rest.GetAvailableActionPlan(this.config, project.Key))
                         {
                             var menu = new PlanMenu(this.rest, this.model, this.manager, false) { CommandText = item.Name, IsEnabled = true };
-                            menu.AssociateWithNewProject(configIn, project, workingDir);
+                            menu.AssociateWithNewProject(configIn, project, workingDir, provider);
                             this.SubItems.Add(menu);
                         }
                     });

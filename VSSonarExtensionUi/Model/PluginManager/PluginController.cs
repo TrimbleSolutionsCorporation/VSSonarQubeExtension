@@ -362,8 +362,7 @@ namespace VSSonarExtensionUi.Model.PluginManager
                         else
                         {
                             return (IPlugin)Activator.CreateInstance(type);
-                        }
-                        
+                        }                        
                     }
 
                     if (typeof(IMenuCommandPlugin).IsAssignableFrom(type))
@@ -380,10 +379,11 @@ namespace VSSonarExtensionUi.Model.PluginManager
                     if (typeof(ISourceVersionPlugin).IsAssignableFrom(type))
                     {
                         Debug.WriteLine("Can Cast Type In Assembly To: " + typeof(ISourceVersionPlugin).FullName);
-                        var plugin = System.Activator.CreateInstance(type);
-                        if (plugin != null)
+                        var obj = type.GetConstructor(new[] { typeof(INotificationManager) });
+                        if (obj != null)
                         {
-                            return (IPlugin)plugin;
+                            object[] lobject = { manager };
+                            return (IPlugin)obj.Invoke(lobject);
                         }
                     }
                 }

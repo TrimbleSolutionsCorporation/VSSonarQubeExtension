@@ -33,6 +33,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
     using Application = System.Windows.Application;
+    using Model.Association;
 
     /// <summary>
     ///     The analysis types.
@@ -189,7 +190,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.BackGroundColor = Colors.White;
 
             // register model
-            SonarQubeViewModel.RegisterNewModelInPool(this);
+            AssociationModel.RegisterNewModelInPool(this);
         }
 
         #endregion
@@ -398,6 +399,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         public void EndDataAssociation()
         {
+            this.ClearIssues();
             this.associatedProject = null;
             this.CanRunAnalysis = false;
             this.IsAssociatedWithProject = false;
@@ -434,7 +436,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <param name="config">The configuration.</param>
         /// <param name="project">The project.</param>
         /// <param name="workingDir">The working dir.</param>
-        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workingDir)
+        /// <param name="provider">The provider.</param>
+        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workingDir, ISourceControlProvider provider)
         {
             this.userConf = config;
             this.associatedProject = project;
@@ -563,6 +566,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         public void ClearIssues()
         {
+            this.IssuesGridView.ResetStatistics();
             this.IssuesGridView.AllIssues.Clear();
             this.IssuesGridView.Issues.Clear();
         }

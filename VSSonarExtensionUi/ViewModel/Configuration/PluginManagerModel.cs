@@ -28,6 +28,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
     using UserControl = System.Windows.Controls.UserControl;
+    using Model.Association;
 
     /// <summary>
     ///     The dummy options controller.
@@ -113,7 +114,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.InitPluginList(helper, null);
             this.InitCommanding();
 
-            SonarQubeViewModel.RegisterNewModelInPool(this);
+            AssociationModel.RegisterNewModelInPool(this);
             SonarQubeViewModel.RegisterNewViewModelInPool(this);
         }
 
@@ -401,7 +402,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="config">The configuration.</param>
         /// <param name="project">The project.</param>
         /// <param name="workDir">The work dir.</param>
-        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workDir)
+        /// <param name="provider">The provider.</param>
+        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workDir, ISourceControlProvider provider)
         {
             this.sourceDir = workDir;
             this.sonarConf = config;

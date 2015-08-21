@@ -16,7 +16,10 @@ namespace VSSonarExtensionUi.Model.Analysis
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.IO;
     using System.Linq;
+
+    using Association;
     using Helpers;
 
     using SonarLocalAnalyser;
@@ -25,6 +28,7 @@ namespace VSSonarExtensionUi.Model.Analysis
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
     
+
 
     /// <summary>
     /// Search model for issues, viewmodel IssuesSearchViewModel
@@ -52,6 +56,11 @@ namespace VSSonarExtensionUi.Model.Analysis
         private readonly INotificationManager notificationmanager;
 
         /// <summary>
+        /// The key translator
+        /// </summary>
+        private readonly ISQKeyTranslator keyTranslator;
+
+        /// <summary>
         ///     The vs helper.
         /// </summary>
         private IVsEnvironmentHelper visualStudioHelper;
@@ -77,6 +86,11 @@ namespace VSSonarExtensionUi.Model.Analysis
         private ISonarConfiguration userConf;
 
         /// <summary>
+        /// The source model
+        /// </summary>
+        private ISourceControlProvider sourceModel;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="IssuesSearchModel" /> class.
         /// </summary>
         /// <param name="configurationHelper">The configuration helper.</param>
@@ -89,12 +103,13 @@ namespace VSSonarExtensionUi.Model.Analysis
             INotificationManager manager,
             ISQKeyTranslator translator)
         {
+            this.keyTranslator = translator;
             this.notificationmanager = manager;
             this.configurationHelper = configurationHelper;
             this.restService = restService;
             this.issuesSearchViewModel = new IssuesSearchViewModel(this, manager, this.configurationHelper, restService, translator);
 
-            SonarQubeViewModel.RegisterNewModelInPool(this);
+            AssociationModel.RegisterNewModelInPool(this);
         }
 
         /// <summary>
@@ -159,7 +174,7 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// </summary>
         public void EndDataAssociation()
         {
-            this.issuesSearchViewModel.IssuesGridView.Issues.Clear();
+            this.ClearIssues();
             this.associatedProject = null;
             this.issuesSearchViewModel.CanQUeryIssues = false;
         }
@@ -170,8 +185,10 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// <param name="config">The configuration.</param>
         /// <param name="project">The project.</param>
         /// <param name="workingDir">The working dir.</param>
-        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workingDir)
+        /// <param name="sourceModelIn">The source model in.</param>
+        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workingDir, ISourceControlProvider sourceModelIn)
         {
+            this.sourceModel = sourceModelIn;
             this.associatedProject = project;
             this.userConf = config;
             this.issuesSearchViewModel.CanQUeryIssues = true;
@@ -320,8 +337,11 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// The retrieve issues using current filter.
         /// </summary>
         /// <param name="filter">The filter.</param>
-        /// <returns>all issues for requested filter</returns>
-        public IEnumerable<Issue> GetIssuesUsingFilter(string filter)
+        /// <param name="filterSSCM">if set to <c>true</c> [filter SSCM].</param>
+        /// <returns>
+        /// all issues for requested filter
+        /// </returns>
+        public IEnumerable<Issue> GetIssuesUsingFilter(string filter, bool filterSSCM)
         {
             if (AuthtenticationHelper.AuthToken.SonarVersion < 3.6)
             {
@@ -329,7 +349,15 @@ namespace VSSonarExtensionUi.Model.Analysis
             }
 
             string request = "?componentRoots=" + this.associatedProject.Key + filter;
-            return this.restService.GetIssues(this.userConf, request, this.associatedProject.Key);
+            var issues = this.restService.GetIssues(this.userConf, request, this.associatedProject.Key);
+
+            if (!filterSSCM)
+            {
+                return issues;
+            }
+
+
+            return this.FilterIssuesBySSCM(issues);
         }
 
         /// <summary>
@@ -337,8 +365,93 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// </summary>
         public void ClearIssues()
         {
+            this.issuesSearchViewModel.IssuesGridView.ResetStatistics();
             this.issuesSearchViewModel.IssuesGridView.Issues.Clear();
             this.issuesSearchViewModel.IssuesGridView.AllIssues.Clear();
+        }
+
+
+        /// <summary>
+        /// Filters the issues by SSCM.
+        /// </summary>
+        /// <param name="issues">The issues.</param>
+        /// <returns>Returns all filtered issues</returns>
+        private IEnumerable<Issue> FilterIssuesBySSCM(List<Issue> issues)
+        {
+            var filteredIssues = new List<Issue>();
+
+            foreach (var issue in issues)
+            {
+                var issueFiltered = this.FilterIssuesBySSCM(issue);
+                if (issueFiltered != null)
+                {
+                    filteredIssues.Add(issueFiltered);
+                }
+            }
+
+            return filteredIssues;
+        }
+
+        /// <summary>
+        /// Filters the issues by SSCM.
+        /// </summary>
+        /// <param name="issue">The issue.</param>
+        /// <returns>
+        /// Returns issue.
+        /// </returns>
+        private Issue FilterIssuesBySSCM(Issue issue)
+        {
+            // file level issues are returned regardless
+            if (issue.Line == 0)
+            {
+                return issue;
+            }
+
+            var translatedPath = this.keyTranslator.TranslateKey(issue.Component, this.visualStudioHelper, this.associatedProject.BranchName);
+
+            if (!File.Exists(translatedPath))
+            {
+                var message = "Search Model Failed : Translator Failed:  Key : " + issue.Component + " - Path : " + translatedPath + " - KeyType : " + this.keyTranslator.GetLookupType().ToString();
+                this.notificationmanager.ReportMessage(new Message { Id = "IssuesSearchModel", Data = message });
+                return null;
+            }
+
+            try
+            {
+                var blameLine = this.sourceModel.GetBlameByLine(translatedPath, issue.Line);
+                if (blameLine != null)
+                {
+                    if (blameLine.Date < this.issuesSearchViewModel.CreatedSinceDate)
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    this.notificationmanager.ReportMessage(
+                        new Message
+                        {
+                            Id = "IssuesSearchModel",
+                            Data = "Blame Failed, Filtering Not Available. Check if a compatible source control plugin is available"
+                        });
+
+                    return issue;
+                }
+            }
+            catch (Exception ex)
+            {
+                this.notificationmanager.ReportMessage(
+                    new Message
+                    {
+                        Id = "IssuesSearchModel",
+                        Data = "Blame thorw exception, please report: " + ex.Message
+                    });
+
+                this.notificationmanager.ReportException(ex);
+                return issue;
+            }
+            
+            return issue;
         }
     }
 }

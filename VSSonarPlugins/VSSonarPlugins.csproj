@@ -115,6 +115,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Types\BlameInformation.cs" />
     <Compile Include="Helpers\VSSonarUtils.cs" />
     <Compile Include="Helpers\VSSonarUtilsCallbacks.cs" />
     <Compile Include="Helpers\VSSonarUtilsDifferenceHelpers.cs" />

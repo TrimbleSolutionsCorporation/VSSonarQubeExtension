@@ -275,7 +275,7 @@ namespace VSSonarQubeExtension.Helpers
         private void SolutionClosed()
         {
             SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Solution Closed");
-            SonarQubeViewModelFactory.SQViewModel.ClearProjectAssociation();            
+            SonarQubeViewModelFactory.SQViewModel.ClearProjectAssociation();        
         }
 
         /// <summary>

@@ -34,6 +34,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using VSSonarPlugins;
     using VSSonarPlugins.Helpers;
     using VSSonarPlugins.Types;
+    using Model.Association;
 
     /// <summary>
     ///     The server view model.
@@ -116,7 +117,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.BackGroundColor = Colors.White;
 
             // register model
-            SonarQubeViewModel.RegisterNewModelInPool(this);
+            AssociationModel.RegisterNewModelInPool(this);
         }
 
         #endregion
@@ -254,6 +255,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         public void ClearIssues()
         {
+            this.IssuesGridView.ResetStatistics();
             this.IssuesGridView.AllIssues.Clear();
             this.IssuesGridView.Issues.Clear();
         }
@@ -302,6 +304,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         public void EndDataAssociation()
         {
+            this.ClearIssues();
             this.IsRunningInVisualStudio = false;
             this.associatedProject = null;
         }
@@ -364,7 +367,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <param name="userConnectionConfig">The user connection config.</param>
         /// <param name="associatedProjectIn">The associated project in.</param>
         /// <param name="workingDir">The working dir.</param>
-        public void AssociateWithNewProject(ISonarConfiguration userConnectionConfig, Resource associatedProjectIn, string workingDir)
+        /// <param name="provider">The provider.</param>
+        public void AssociateWithNewProject(ISonarConfiguration userConnectionConfig, Resource associatedProjectIn, string workingDir, ISourceControlProvider provider)
         {
             this.userConfiguration = userConnectionConfig;
             this.associatedProject = associatedProjectIn;

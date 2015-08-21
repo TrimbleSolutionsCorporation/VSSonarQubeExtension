@@ -200,6 +200,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public bool IsBlockerChecked { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this instance is filter by SSCM checked.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is filter by SSCM checked; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsFilterBySSCMChecked { get; set; }
+
+        /// <summary>
         ///     Gets or sets a value indicating whether is critical checked.
         /// </summary>
         public bool IsCriticalChecked { get; set; }
@@ -775,7 +783,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             request += this.FilterResolutions();
             request += this.FilterActionPlans();
 
-            this.IssuesGridView.UpdateIssues(this.searchModel.GetIssuesUsingFilter(request));
+            this.IssuesGridView.UpdateIssues(this.searchModel.GetIssuesUsingFilter(request, this.IsFilterBySSCMChecked));
+            
         }
     }
 }

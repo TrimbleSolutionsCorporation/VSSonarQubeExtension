@@ -21,7 +21,8 @@
     using SonarLocalAnalyser;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-    
+    using Model.Association;
+
 
     /// <summary>
     /// The issue grid view viewModel.
@@ -150,7 +151,7 @@
             this.ShowSqaleRating = showSqaleRating;
 
             // register model
-            SonarQubeViewModel.RegisterNewModelInPool(this);
+            AssociationModel.RegisterNewModelInPool(this);
             SonarQubeViewModel.RegisterNewViewModelInPool(this);
         }
 
@@ -728,37 +729,35 @@
 
             foreach (Issue issue in selectedItemsList)
             {
-                string filename = issue.Component;
-                try
-                {
-                    List<Resource> resources =
-                        this.restService.GetResourcesData(
-                            AuthtenticationHelper.AuthToken, 
-                            issue.Component);
-                    filename = resources[0].Name;
-                }
-                catch (Exception ex)
-                {
-                    this.notificationManager.ReportException(ex);
-                }
-
                 if (this.vsenvironmenthelper == null)
                 {
                     return;
                 }
 
+                var translatedPath = string.Empty;
 
                 try
                 {
-                    var path = this.keyTranslator.TranslateKey(issue.Component, this.vsenvironmenthelper, this.associatedProject.BranchName);
-                    this.vsenvironmenthelper.OpenResourceInVisualStudio(this.sourceWorkDir, path, issue.Line);
+                    translatedPath = this.keyTranslator.TranslateKey(issue.Component, this.vsenvironmenthelper, this.associatedProject.BranchName);
+                    this.vsenvironmenthelper.OpenResourceInVisualStudio(this.sourceWorkDir, translatedPath, issue.Line);
                 }
                 catch (Exception ex)
                 {
                     this.notificationManager.ReportMessage(new Message() { Id = "OnInEditor", Data = ex.Message + " : " + issue.Component });
                     this.notificationManager.ReportMessage(new Message() { Id = "OnInEditor ", Data = "Solution = " + this.sourceWorkDir });
                     this.notificationManager.ReportMessage(new Message() { Id = "OnInEditor", Data = "Project = " + this.sourceWorkDir });
+                    this.notificationManager.ReportMessage(new Message() { Id = "OnInEditor", Data = "Translated Path = " + translatedPath });
                     this.notificationManager.ReportException(ex);
+
+                    try
+                    {
+                        this.restService.GetResourcesData(AuthtenticationHelper.AuthToken, issue.Component);
+                    }
+                    catch (Exception exConnection)
+                    {
+                        this.notificationManager.ReportMessage(new Message() { Id = "OnInEditor : Failed to get Data For Resource", Data = exConnection.Message + " : " + issue.Component });
+                        this.notificationManager.ReportException(exConnection);
+                    }
                 }
             }
         }
@@ -904,7 +903,8 @@
         /// <param name="config">The configuration.</param>
         /// <param name="project">The project.</param>
         /// <param name="workingDir">The working dir.</param>
-        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workingDir)
+        /// <param name="provider">The provider.</param>
+        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workingDir, ISourceControlProvider provider)
         {
             this.sourceWorkDir = workingDir;
             this.sonarConfiguration = config;
@@ -1163,6 +1163,7 @@
         {
             if (this.AllIssues == null || !this.AllIssues.Any())
             {
+                this.ResetStatistics();
                 return;
             }
 

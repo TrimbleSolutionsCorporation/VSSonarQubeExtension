@@ -254,8 +254,9 @@
                                         <RowDefinition Height="25" />
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="50" />
+                                        <ColumnDefinition Width="120" />
                                         <ColumnDefinition Width="60*" />
+                                        <ColumnDefinition Width="25" />
                                         <ColumnDefinition Width="25" />
                                     </Grid.ColumnDefinitions>
                                     <Label
@@ -265,12 +266,17 @@
                                         Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
                                         Grid.Row="1" Grid.Column="0"
                                         Content="Before" />
+                              
                                     <DatePicker SelectedDate="{Binding CreatedSinceDate}" Grid.Row="0" Grid.Column="1" />
                                     <DatePicker SelectedDate="{Binding CreatedBeforeDate}" Grid.Row="1" Grid.Column="1" />
                                     <CheckBox Grid.Row="0" Grid.Column="2" Margin="4,0,-4,0"
-                                              IsChecked="{Binding IsDateSinceChecked}" />
+                                              IsChecked="{Binding IsDateSinceChecked}" ToolTip="Check to enable" />
+                                    <CheckBox Grid.Row="0" Grid.Column="3" Margin="4,0,-4,0"
+                                              IsChecked="{Binding IsFilterBySSCMChecked}"
+                                              ToolTip="Configured Source Control information will be used to remove all issues are in a line that was modified before the defined start date" />                                    
                                     <CheckBox Grid.Row="1" Grid.Column="2" Margin="4,0,-4,0"
-                                              IsChecked="{Binding IsDateBeforeChecked}" />
+                                              IsChecked="{Binding IsDateBeforeChecked}"
+                                              ToolTip="Check to enable" />
                                 </Grid>
                             </Expander>
 

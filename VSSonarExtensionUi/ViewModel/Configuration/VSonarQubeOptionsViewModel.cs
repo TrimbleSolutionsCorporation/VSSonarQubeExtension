@@ -26,6 +26,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using SonarLocalAnalyser;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
+    using Model.Association;
 
 
     /// <summary>
@@ -79,7 +80,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.InitModels();
             this.InitCommanding();
 
-            SonarQubeViewModel.RegisterNewModelInPool(this);
+            AssociationModel.RegisterNewModelInPool(this);
             SonarQubeViewModel.RegisterNewViewModelInPool(this);
         }
 
@@ -222,19 +223,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         }
 
         /// <summary>
-        /// The refresh general properties.
-        /// </summary>
-        /// <param name="selectedProject">The selected project.</param>
-        public void RefreshPropertiesInView(Resource selectedProject)
-        {
-            this.project = selectedProject;
-            foreach (var availableOption in this.AvailableOptionsModels)
-            {
-                availableOption.ReloadDataFromDisk(selectedProject);
-            }
-        }
-
-        /// <summary>
         /// Gets the view model.
         /// </summary>
         /// <returns>
@@ -331,9 +319,15 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="config">The configuration.</param>
         /// <param name="projectIn">The project in.</param>
         /// <param name="workingDir">The working dir.</param>
-        public void AssociateWithNewProject(ISonarConfiguration config, Resource projectIn, string workingDir)
+        /// <param name="provider">The provider.</param>
+        public void AssociateWithNewProject(ISonarConfiguration config, Resource projectIn, string workingDir, ISourceControlProvider provider)
         {
             this.project = projectIn;
+
+            foreach (var availableOption in this.AvailableOptionsModels)
+            {
+                availableOption.ReloadDataFromDisk(projectIn);
+            }
         }
 
         #endregion

@@ -13,6 +13,7 @@
     using ViewModel;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
+    using Association;
 
     /// <summary>
     /// Roslyn manager model
@@ -87,7 +88,7 @@
             this.InitializedInstalledDiagnostics();
 
             // register model
-            SonarQubeViewModel.RegisterNewModelInPool(this);
+            AssociationModel.RegisterNewModelInPool(this);
         }
 
         /// <summary>
@@ -153,7 +154,7 @@
         /// <param name="config">The configuration.</param>
         /// <param name="project">The project.</param>
         /// <param name="workDir">The work dir.</param>
-        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workDir)
+        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workDir, ISourceControlProvider sourceModelIn)
         {
             this.sourceDir = workDir;
             this.userConf = config;

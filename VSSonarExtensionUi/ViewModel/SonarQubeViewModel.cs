@@ -41,13 +41,8 @@
     ///     The sonar qube view viewModel.
     /// </summary>
     [ImplementPropertyChanged]
-    public class SonarQubeViewModel : IViewModelBase
+    public class SonarQubeViewModel
     {
-        /// <summary>
-        /// The model pool
-        /// </summary>
-        private static List<IModelBase> modelPool = new List<IModelBase>();
-
         /// <summary>
         /// The view model pool
         /// </summary>
@@ -63,7 +58,9 @@
         /// </summary>
         private readonly Dictionary<int, IMenuCommandPlugin> menuItemPlugins = new Dictionary<int, IMenuCommandPlugin>();
 
-        /// <summary>The configuration helper.</summary>
+        /// <summary>
+        /// The configuration helper.
+        /// </summary>
         private readonly IConfigurationHelper configurationHelper;
 
         /// <summary>
@@ -80,11 +77,6 @@
         /// The sonar key translator
         /// </summary>
         private readonly SQKeyTranslator sonarKeyTranslator;
-
-        /// <summary>
-        /// The source control provider
-        /// </summary>
-        private readonly SourceControlModel sourceControlProvider;
 
         /// <summary>
         /// The sonar rest connector
@@ -117,7 +109,6 @@
             this.sonarRestConnector = new SonarRestService(new JsonSonarConnector());
             this.VSonarQubeOptionsViewData = new VSonarQubeOptionsViewModel(this.sonarRestConnector, this.configurationHelper, this.notificationManager);
             this.VSonarQubeOptionsViewData.ResetUserData();
-            this.sourceControlProvider = new SourceControlModel();
 
             this.CanConnectEnabled = true;
             this.ConnectionTooltip = "Not Connected";
@@ -145,7 +136,6 @@
             this.sonarRestConnector = new SonarRestService(new JsonSonarConnector());
             this.VSonarQubeOptionsViewData = new VSonarQubeOptionsViewModel(this.sonarRestConnector, this.configurationHelper, this.notificationManager);
             this.VSonarQubeOptionsViewData.ResetUserData();
-            this.sourceControlProvider = new SourceControlModel();
 
             this.CanConnectEnabled = true;
             this.ConnectionTooltip = "Not Connected";
@@ -304,12 +294,6 @@
         public LocalViewModel LocalViewModel { get; set; }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether refresh theme.
-        /// </summary>
-        [AlsoNotifyFor("BackGroundColor", "ForeGroundColor")]
-        public bool RefreshTheme { get; set; }
-
-        /// <summary>
         ///     Gets or sets the resource in editor.
         /// </summary>
         public Resource ResourceInEditor { get; set; }
@@ -431,15 +415,6 @@
         #region Public Methods and Operators
 
         /// <summary>
-        /// Registers the new model in pool.
-        /// </summary>
-        /// <param name="model">The model.</param>
-        public static void RegisterNewModelInPool(IModelBase model)
-        {
-            modelPool.Add(model);
-        }
-
-        /// <summary>
         /// Registers the new view model in pool.
         /// </summary>
         /// <param name="viewModel">The view model.</param>
@@ -473,7 +448,11 @@
         /// </summary>
         public void ClearProjectAssociation()
         {
-            this.EndAssociation();
+            this.AvailableBranches.Clear();
+            this.SelectedBranch = null;
+            this.StatusMessage = string.Empty;
+            this.ConnectionTooltip = "Connected but not associated";
+            this.AssociationModule.EndAssociationAndClearData();
         }
 
         /// <summary>The execute plugin.</summary>
@@ -542,23 +521,20 @@
 
             // register notificaton manager, since all messages will be show also for initialization
             (this.notificationManager as IModelBase).UpdateServices(this.VsHelper, this.StatusBar, this.ServiceProvider);
-
-            this.AssociationModule = new AssociationModel(this.notificationManager, this.sonarRestConnector, this.configurationHelper, this.sourceControlProvider, this.sonarKeyTranslator, this);
-
             this.VSonarQubeOptionsViewData.InitPuginSystem(vsenvironmenthelperIn, this.pluginController, this.notificationManager);
-
             this.InitMenus();
             this.InitViewsAndModels();
-            this.sourceControlProvider.UpdatePlugins(this.VSonarQubeOptionsViewData.PluginManager.SourceCodePlugins);
 
+            // start association module after all models are started
+            this.AssociationModule = new AssociationModel(this.notificationManager, this.sonarRestConnector, this.configurationHelper, this.sonarKeyTranslator, this);
+            this.AssociationModule.UpdateServicesInModels(this.VsHelper, this.StatusBar, this.ServiceProvider);
+            this.UpdateTheme(Colors.Black, Colors.White);
+
+            // try to connect to start to sonar if on start is on
             if (this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.IsConnectAtStartOn)
             {
                 this.OnConnectToSonar(false);
             }
-
-            this.UpdateTheme(Colors.Black, Colors.White);
-
-            this.UpdateServices();
         }
 
         /// <summary>
@@ -653,18 +629,8 @@
             if (this.SelectedBranch != null)
             {
                 this.AssociationModule.UpdateBranchSelection(this.SelectedBranch);
-                this.UpdateAssociationData();
                 this.RefreshDataForResource(this.DocumentInView);
             }
-        }
-
-        /// <summary>
-        /// Synchronizes the settings.
-        /// </summary>
-        public void SyncSettings()
-        {
-            this.VSonarQubeOptionsViewData.RefreshPropertiesInView(this.AssociationModule.AssociatedProject);
-            this.UpdateAssociationData();
         }
 
         /// <summary>
@@ -790,21 +756,10 @@
             this.BackGroundColor = background;
             this.ForeGroundColor = foreground;
 
-            foreach (IViewModelBase view in this.SonarQubeViews)
+            foreach (var view in viewModelPool)
             {
                 view.UpdateColours(background, foreground);
             }
-
-            this.VSonarQubeOptionsViewData.UpdateTheme(background, foreground);
-
-            this.RefreshTheme = true;
-
-            if (this.pluginController == null)
-            {
-                return;
-            }
-
-            this.VSonarQubeOptionsViewData.PluginManager.UpdateColours(background, foreground);
         }
 
         #endregion
@@ -912,17 +867,6 @@
             }
 
             return new Dictionary<int, CoverageElement>();
-        }
-
-        /// <summary>
-        /// Gets the available model.
-        /// </summary>
-        /// <returns>
-        /// returns optinal model
-        /// </returns>
-        public object GetAvailableModel()
-        {
-            return null;
         }
 
         /// <summary>The on changed.</summary>
@@ -1052,7 +996,6 @@
         /// </summary>
         private void LaunchExtensionProperties()
         {
-            this.VSonarQubeOptionsViewData.RefreshPropertiesInView(this.AssociationModule.AssociatedProject);
             var window = new VSonarQubeOptionsView(this.VSonarQubeOptionsViewData);
             window.ShowDialog();
         }
@@ -1085,31 +1028,9 @@
         /// </summary>
         private void OnDisconnectToSonar()
         {
-            this.AvailableBranches.Clear();
-            this.SelectedBranch = null;
-            this.AssociationModule.Disconnect();
-            this.EndAssociation();
-
-            this.LocalViewModel.ClearIssues();
-            this.ServerViewModel.ClearIssues();
-            this.IssuesSearchModel.ClearIssues();
-
+            this.ClearProjectAssociation();
+            this.AssociationModule.Disconnect();           
             this.ConnectionTooltip = "Not Connected";
-            this.StatusMessage = string.Empty;
-        }
-
-        /// <summary>
-        /// Ends the association.
-        /// </summary>
-        private void EndAssociation()
-        {
-            this.AssociationModule.ClearProjectAssociation();
-            this.VSonarQubeOptionsViewData.EndDataAssociation();
-
-            foreach (var item in modelPool)
-            {
-                item.EndDataAssociation();
-            }
         }
 
         /// <summary>
@@ -1175,45 +1096,5 @@
         }
 
         #endregion
-
-        /// <summary>
-        /// Updates the services.
-        /// </summary>
-        private void UpdateServices()
-        {
-            foreach (IModelBase model in modelPool)
-            {
-                model.UpdateServices(this.VsHelper, this.StatusBar, this.ServiceProvider);
-            }
-        }
-
-        /// <summary>
-        /// Updates the services.
-        /// </summary>
-        private void UpdateAssociationData()
-        {
-            var listToRemo = new List<IModelBase>();
-
-            foreach (IModelBase model in modelPool)
-            {
-                try
-                {
-                    model.AssociateWithNewProject(
-                        AuthtenticationHelper.AuthToken,
-                        this.AssociationModule.AssociatedProject,
-                        this.AssociationModule.OpenSolutionPath);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.Message);
-                    listToRemo.Add(model);
-                }
-            }
-
-            foreach (var item in listToRemo)
-            {
-                modelPool.Remove(item);
-            }
-        }
     }
 }

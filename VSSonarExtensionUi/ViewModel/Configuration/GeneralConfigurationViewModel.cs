@@ -23,7 +23,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using View.Helpers;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-    
+    using Model.Association;
+
 
     /// <summary>
     /// The sonar configuration view viewModel.
@@ -109,7 +110,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.ReloadDataFromDisk(null);
 
             // register model
-            SonarQubeViewModel.RegisterNewModelInPool(this);
+            AssociationModel.RegisterNewModelInPool(this);
             SonarQubeViewModel.RegisterNewViewModelInPool(this);
         }
 
@@ -340,7 +341,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="config">The configuration.</param>
         /// <param name="project">The project.</param>
         /// <param name="workingDir">The working dir.</param>
-        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workingDir)
+        /// <param name="provider">The provider.</param>
+        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workingDir, ISourceControlProvider provider)
         {
             this.sourceDir = workingDir;
             this.associatedProject = project;

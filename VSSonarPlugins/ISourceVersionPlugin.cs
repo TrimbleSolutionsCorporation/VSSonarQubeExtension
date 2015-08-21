@@ -1,15 +1,6 @@
 namespace VSSonarPlugins
 {
-    using System.Collections.Generic;
-    using VSSonarPlugins.Types;
-
-    public interface ISourceControlProvider
-    {
-        IList<string> GetHistory(Resource item);
-        string GetBranch(string basePath);
-
-        void UpdatePlugins(IList<ISourceVersionPlugin> plugins);
-    }
+    using Types;
 
     /// <summary>
     /// source control provider
@@ -19,18 +10,42 @@ namespace VSSonarPlugins
         /// <summary>
         /// get history for a resource file
         /// </summary>
-        /// <typeparam name="string"></typeparam>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        IList<string> GetHistory(Resource item);
+        /// <param name="path">The path.</param>
+        /// <returns>
+        /// Blame Info.
+        /// </returns>
+        IBlameInformation GetHistory(string path);
+
+        /// <summary>
+        /// Gets the blame by line.
+        /// </summary>
+        /// <param name="filePath">The file path.</param>
+        /// <param name="line">The line.</param>
+        /// <returns>
+        /// Returns Blame data for line
+        /// </returns>
+        BlameLine GetBlameByLine(string filePath, int line);
 
         /// <summary>
         /// get current branch
         /// </summary>
-        /// <param name="basePath"></param>
-        /// <returns></returns>
-        string GetBranch(string basePath);
+        /// <returns>
+        /// current branch
+        /// </returns>
+        string GetBranch();
 
-        bool IsSupported(string basePath);
+        /// <summary>
+        /// Determines whether the specified base path is supported.
+        /// </summary>
+        /// <returns>
+        /// returns if plugin supports current system.
+        /// </returns>
+        bool IsSupported();
+
+        /// <summary>
+        /// Sets the source dir.
+        /// </summary>
+        /// <param name="basePath">The base path.</param>
+        void InitializeRepository(string basePath);
     }
 }

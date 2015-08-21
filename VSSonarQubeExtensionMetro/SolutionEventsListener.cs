@@ -143,6 +143,8 @@ namespace VSSonarQubeExtension
         /// <returns>The <see cref="int"/>.</returns>
         int IVsSolutionEvents.OnBeforeCloseSolution(object pUnkReserved)
         {
+            SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Solution Closed");
+            SonarQubeViewModelFactory.SQViewModel.ClearProjectAssociation();
             return VSConstants.S_OK;
         }
 

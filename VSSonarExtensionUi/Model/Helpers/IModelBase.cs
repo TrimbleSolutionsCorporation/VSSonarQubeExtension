@@ -28,7 +28,7 @@
         /// <param name="config">The configuration.</param>
         /// <param name="project">The project.</param>
         /// <param name="workingDir">The working dir.</param>
-        void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workingDir);
+        void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workingDir, ISourceControlProvider sourceModel);
 
         /// <summary>
         /// The end data association.

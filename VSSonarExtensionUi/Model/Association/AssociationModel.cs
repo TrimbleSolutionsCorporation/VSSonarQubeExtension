@@ -24,8 +24,13 @@
     /// Generates associations with sonar projects
     /// </summary>
     [ImplementPropertyChanged]
-    public class AssociationModel : IModelBase
+    public class AssociationModel
     {
+        /// <summary>
+        /// The model pool
+        /// </summary>
+        private static List<IModelBase> modelPool = new List<IModelBase>();
+
         /// <summary>
         /// The logger
         /// </summary>
@@ -40,11 +45,6 @@
         /// The association view model
         /// </summary>
         private readonly AssociationViewModel associationViewModel;
-
-        /// <summary>
-        /// The source control
-        /// </summary>
-        private readonly ISourceControlProvider sourceControl;
 
         /// <summary>
         /// The model
@@ -67,19 +67,22 @@
         private IVsEnvironmentHelper vshelper;
 
         /// <summary>
+        /// The source control
+        /// </summary>
+        private ISourceControlProvider sourceControl;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="AssociationModel" /> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="service">The service.</param>
         /// <param name="configurationHelper">The configuration helper.</param>
-        /// <param name="sourceControl">The source control.</param>
         /// <param name="translator">The translator.</param>
         /// <param name="model">The model.</param>
         public AssociationModel(
             INotificationManager logger,
             ISonarRestService service,
             IConfigurationHelper configurationHelper,
-            ISourceControlProvider sourceControl,
             ISQKeyTranslator translator,
             SonarQubeViewModel model)
         {
@@ -88,12 +91,9 @@
             this.configurationHelper = configurationHelper;
             this.logger = logger;
             this.sonarService = service;
-            this.sourceControl = sourceControl;
 
             // start view model
             this.associationViewModel = new AssociationViewModel(this);
-
-            SonarQubeViewModel.RegisterNewModelInPool(this);
         }
 
         /// <summary>
@@ -136,11 +136,26 @@
         public bool IsConnectedButNotAssociated { get; set; }
 
         /// <summary>
-        /// Called when [associated project changed].
+        /// Gets the source control.
         /// </summary>
-        public void OnAssociatedProjectChanged()
+        /// <value>
+        /// The source control.
+        /// </value>
+        public ISourceControlProvider SourceControl
         {
-            // not applicable
+            get
+            {
+                return this.sourceControl;
+            }
+        }
+
+        /// <summary>
+        /// Registers the new model in pool.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        public static void RegisterNewModelInPool(IModelBase model)
+        {
+            modelPool.Add(model);
         }
 
         /// <summary>
@@ -224,7 +239,7 @@
             }
 
             this.configurationHelper.SyncSettings();
-            this.model.SyncSettings();
+            this.UpdateAssociationData();
             return true;
         }
 
@@ -234,7 +249,12 @@
         /// <returns>return current branch</returns>
         public string CurrentBranch()
         {
-            return this.sourceControl.GetBranch(this.OpenSolutionPath);
+            if (this.SourceControl == null)
+            {
+                return string.Empty;
+            }
+
+            return this.SourceControl.GetBranch();
         }
 
         /// <summary>
@@ -318,39 +338,29 @@
         /// <param name="vsenvironmenthelperIn">The vsenvironmenthelper in.</param>
         /// <param name="statusBar">The status bar.</param>
         /// <param name="provider">The provider.</param>
-        public void UpdateServices(IVsEnvironmentHelper vsenvironmenthelperIn, IVSSStatusBar statusBar, IServiceProvider provider)
+        public void UpdateServicesInModels(IVsEnvironmentHelper vsenvironmenthelperIn, IVSSStatusBar statusBar, IServiceProvider provider)
         {
             this.vshelper = vsenvironmenthelperIn;
-        }
-
-        /// <summary>
-        /// Associates the with new project.
-        /// </summary>
-        /// <param name="config">The configuration.</param>
-        /// <param name="project">The project.</param>
-        /// <param name="workingDir">The working dir.</param>
-        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workingDir)
-        {
-            // TODO to be removed
+            foreach (IModelBase model in modelPool)
+            {
+                model.UpdateServices(vsenvironmenthelperIn, statusBar, provider);
+            }
         }
 
         /// <summary>
         /// The end data association.
         /// </summary>
-        public void EndDataAssociation()
+        public void EndAssociationAndClearData()
         {
-            // not applicable
-        }
+            this.OpenSolutionName = null;
+            this.OpenSolutionPath = null;
+            this.IsConnectedButNotAssociated = this.model.IsConnected;
+            this.IsAssociated = !this.model.IsConnected;
 
-        /// <summary>
-        /// Gets the view model.
-        /// </summary>
-        /// <returns>
-        /// returns view model
-        /// </returns>
-        public object GetViewModel()
-        {
-            return this.associationViewModel;
+            foreach (var item in modelPool)
+            {
+                item.EndDataAssociation();
+            }
         }
 
         /// <summary>
@@ -367,6 +377,9 @@
 
             this.OpenSolutionName = solutionName;
             this.OpenSolutionPath = solutionPath;
+
+            // create a new source control provider for solution
+            this.sourceControl = new SourceControlModel(this.model.VSonarQubeOptionsViewData.PluginManager.SourceCodePlugins, this.OpenSolutionPath);
 
             if (this.model.IsConnected)
             {
@@ -407,6 +420,7 @@
                                 this.IsAssociated = true;
                                 this.CreateConfiguration(Path.Combine(solutionPath, "sonar-project.properties"));
                             }
+
                             return;
                         }
 
@@ -463,6 +477,7 @@
         {
             this.keyTranslator.SetProjectKey(selectedBranch.Key);
             this.AssociatedProject = selectedBranch;
+            this.UpdateAssociationData();
         }
 
         /// <summary>
@@ -477,17 +492,6 @@
             this.associationViewModel.SelectedProject = null;
             this.AssociatedProject = null;
             this.keyTranslator.SetLookupType(KeyLookUpType.Invalid);
-        }
-
-        /// <summary>
-        /// Clears the project association.
-        /// </summary>
-        public void ClearProjectAssociation()
-        {
-            this.OpenSolutionName = null;
-            this.OpenSolutionPath = null;
-            this.IsConnectedButNotAssociated = this.model.IsConnected;
-            this.IsAssociated = !this.model.IsConnected;
         }
 
         /// <summary>Generates a resource name from a given solution, it will bring Associtation View
@@ -540,7 +544,7 @@
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                sourceKey = sourceKey + ":" + this.sourceControl.GetBranch(solutionPath).Replace("/", "_");
+                sourceKey = sourceKey + ":" + this.SourceControl.GetBranch().Replace("/", "_");
                 try
                 {
                     return string.IsNullOrEmpty(sourceKey) ? null : this.sonarService.GetResourcesData(AuthtenticationHelper.AuthToken, sourceKey)[0];
@@ -703,6 +707,36 @@
             this.logger.WriteMessage("Resource not found in Server");
 
             return null;
+        }
+
+        /// <summary>
+        /// Updates the services.
+        /// </summary>
+        private void UpdateAssociationData()
+        {
+            var listToRemo = new List<IModelBase>();
+
+            foreach (IModelBase model in modelPool)
+            {
+                try
+                {
+                    model.AssociateWithNewProject(
+                        AuthtenticationHelper.AuthToken,
+                        this.AssociatedProject,
+                        this.OpenSolutionPath,
+                        this.SourceControl);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                    listToRemo.Add(model);
+                }
+            }
+
+            foreach (var item in listToRemo)
+            {
+                modelPool.Remove(item);
+            }
         }
     }
 }
