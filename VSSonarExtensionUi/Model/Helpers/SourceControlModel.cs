@@ -58,6 +58,12 @@
             this.basePath = basePath;
             this.plugins = sourceControlPlugins;
 
+            if (string.IsNullOrEmpty(basePath))
+            {
+                this.supportedPlugin = null;
+                return;
+            }
+
             foreach (var plugin in sourceControlPlugins)
             {
                 plugin.InitializeRepository(basePath); 

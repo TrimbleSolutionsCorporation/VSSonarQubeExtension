@@ -145,6 +145,12 @@
         {
             get
             {
+                if (this.sourceControl == null)
+                {
+                    // create a new source control provider for solution
+                    this.sourceControl = new SourceControlModel(this.model.VSonarQubeOptionsViewData.PluginManager.SourceCodePlugins, this.OpenSolutionPath);
+                }
+
                 return this.sourceControl;
             }
         }
@@ -163,7 +169,9 @@
         /// </summary>
         /// <param name="projectIn">The project in.</param>
         /// <param name="branchProject">The branch project.</param>
-        /// <returns>ok if assign</returns>
+        /// <returns>
+        /// Ok if assign.
+        /// </returns>
         public bool AssignASonarProjectToSolution(Resource projectIn, Resource branchProject)
         {
             var project = projectIn;
@@ -249,11 +257,6 @@
         /// <returns>return current branch</returns>
         public string CurrentBranch()
         {
-            if (this.SourceControl == null)
-            {
-                return string.Empty;
-            }
-
             return this.SourceControl.GetBranch();
         }
 
