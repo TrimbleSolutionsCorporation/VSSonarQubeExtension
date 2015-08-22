@@ -7,20 +7,17 @@ VSSonarQubeExtension
 
 This is a Extension for Visual Studio to interact wiht SonarQube (TM).
 
+# Installation
+Use the Visual Studio Extension Manager and search for VSSonarExtension, Visual Studio 2012, 2013 and 2015 are supported.
+
 # Getting Started
-
-Use vs2013, and install [vssdk](http://msdn.microsoft.com/en-us/library/bb166441.aspx) 2013 in your developer machine. After this open VSSonarQubeExtension.sln and happy coding. Submit pull request if you have bug fixes or improvments.
-
 All information on configuration and usage will be found in the wiki pages. [Home](https://github.com/jmecosta/VSSonarQubeExtension/wiki)
 
-# Installation
+# Getting Involved
 
-**When using VS2010 or VS2012, you will need to install http://www.microsoft.com/en-us/download/details.aspx?id=40764** Also IE 10 or above is required before installing the shell integrated environment
+Versions of Visual Studio 2012, 2013 and 2015 can be used. There is one solution for each version. VS Extensability part is kept in separe project for each version. 
 
-
-Use the Visual Studio Extension Manager and search for VSSonarExtension
-
-
+Submit pull request if you have bug fixes or improvements.
 
 # License
 
