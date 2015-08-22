@@ -8,71 +8,8 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarPlugins
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
+    using Types;
 
-    using VSSonarPlugins.Types;
-
-    /// <summary>The ConfigurationHelper interface.</summary>
-    public interface IConfigurationHelper
-    {
-        /// <summary>The write configuration.</summary>
-        /// <param name="context">The context.</param>
-        /// <param name="owner">The owner.</param>
-        /// <param name="key">The key.</param>
-        /// <returns>The <see cref="SonarQubeProperties"/>.</returns>
-        SonarQubeProperties ReadSetting(Context context, string owner, string key);
-
-        /// <summary>The read settings.</summary>
-        /// <param name="context">The context.</param>
-        /// <param name="owner">The owner.</param>
-        /// <returns>The <see cref="IEnumerable"/>.</returns>
-        IEnumerable<SonarQubeProperties> ReadSettings(Context context, string owner);
-
-        /// <summary>The write setting.</summary>
-        /// <param name="prop">The prop.</param>
-        /// <param name="sync">The sync.</param>
-        /// <param name="skipIfExist">The skip if exist.</param>
-        void WriteSetting(SonarQubeProperties prop, bool sync = false, bool skipIfExist = false);
-
-        /// <summary>The sync settings.</summary>
-        void SyncSettings();
-
-        /// <summary>The clear non saved settings.</summary>
-        void ClearNonSavedSettings();
-
-        /// <summary>The delete settings file.</summary>
-        void DeleteSettingsFile();
-
-        /// <summary>
-        ///     The get user app data configuration file.
-        /// </summary>
-        /// <returns>
-        ///     The <see cref="string" />.
-        /// </returns>
-        string UserAppDataConfigurationFile();
-
-        /// <summary>The user log for analysis file.</summary>
-        /// <returns>The <see cref="string"/>.</returns>
-        string UserLogForAnalysisFile();
-
-        /// <summary>The write option in application data.</summary>
-        /// <param name="context">The context.</param>
-        /// <param name="owner">The owner.</param>
-        /// <param name="key">The key.</param>
-        /// <param name="value">The value.</param>
-        /// <param name="sync">The sync.</param>
-        /// <param name="skipIfExist">The skip if exist.</param>
-        void WriteOptionInApplicationData(
-            Context context, 
-            string owner, 
-            string key, 
-            string value, 
-            bool sync = false, 
-            bool skipIfExist = false);
-    }
-    
     /// <summary>
     ///     The VsPropertiesHelper interface.
     /// </summary>
@@ -100,11 +37,13 @@ namespace VSSonarPlugins
         /// <param name="url">The url.</param>
         void NavigateToResource(string url);
 
-        /// <summary>The open resource in visual studio.</summary>
-        /// <param name="workfolder"></param>
+        /// <summary>
+        /// The open resource in visual studio.
+        /// </summary>
+        /// <param name="workfolder">The workfolder.</param>
         /// <param name="filename">The filename.</param>
         /// <param name="line">The line.</param>
-        /// <param name="editorCommandExec"></param>
+        /// <param name="editorCommandExec">The editor command execute.</param>
         void OpenResourceInVisualStudio(
             string workfolder, 
             string filename, 
@@ -181,13 +120,27 @@ namespace VSSonarPlugins
         /// <summary>The restart visual studio.</summary>
         void RestartVisualStudio();
 
-        /// <summary>The get vs project item.</summary>
+        /// <summary>
+        /// The get vs project item.
+        /// </summary>
         /// <param name="filename">The filename.</param>
-        /// <param name="associatedProject"></param>
-        /// <param name="projectResource"></param>
-        /// <returns>The <see cref="Types.VsProjectItem"/>.</returns>
+        /// <param name="associatedProject">The associated project.</param>
+        /// <param name="fileResource">The file resource.</param>
+        /// <returns>
+        /// The <see cref="Types.VsProjectItem" />.
+        /// </returns>
         VsFileItem VsFileItem(string filename, Resource associatedProject, Resource fileResource);
 
+        /// <summary>
+        /// Vses the file item.
+        /// </summary>
+        /// <param name="fullPath">The full path.</param>
+        /// <param name="projectFullPath">The project full path.</param>
+        /// <param name="associatedProject">The associated project.</param>
+        /// <param name="fileResource">The file resource.</param>
+        /// <returns>
+        /// The <see cref="Types.VsProjectItem" />.
+        /// </returns>
         VsFileItem VsFileItem(string fullPath, string projectFullPath, Resource associatedProject, Resource fileResource);
 
         /// <summary>The vs project item.</summary>
@@ -196,6 +149,11 @@ namespace VSSonarPlugins
         /// <returns>The <see cref="VsProjectItem"/>.</returns>
         VsProjectItem VsProjectItem(string projectFileName, Resource associatedProject);
 
+        /// <summary>
+        /// Gets the project by name in solution.
+        /// </summary>
+        /// <param name="projectName">Name of the project.</param>
+        /// <returns>The <see cref="VsProjectItem"/>.</returns>
         VsProjectItem GetProjectByNameInSolution(string projectName);
 
         /// <summary>The get file real path for solution.</summary>
