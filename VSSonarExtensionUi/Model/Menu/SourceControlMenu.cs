@@ -241,8 +241,10 @@
                         }
                     }
                 }
-
-                this.manager.ReportMessage(new Message { Id = "SourceControlMenu : ", Data = "Cannot assign issue to: " + blameLine.Author + " user does not exist in SonarQube" });
+                else
+                {
+                    this.manager.ReportMessage(new Message { Id = "SourceControlMenu : ", Data = "Cannot assign issue: source control information not available" });
+                }                
             }
             catch (Exception ex)
             {
