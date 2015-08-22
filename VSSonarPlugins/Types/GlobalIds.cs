@@ -47,9 +47,9 @@ namespace VSSonarPlugins.Types
     }
 
     /// <summary>
-    ///     The global ids.
+    /// The global ids.
     /// </summary>
-    public class GlobalIds
+    public static class GlobalIds
     {
         /// <summary>
         ///     The excluded plugins.
@@ -69,8 +69,10 @@ namespace VSSonarPlugins.Types
         public static readonly string DisableEditorTags = "DisableEditorTags";
     }
 
-    /// <summary>The owners id.</summary>
-    public class OwnersId
+    /// <summary>
+    /// The owners id.
+    /// </summary>
+    public static class OwnersId
     {
         /// <summary>The application owner id.</summary>
         public static readonly string ApplicationOwnerId = "ExtensionControl";
@@ -82,8 +84,10 @@ namespace VSSonarPlugins.Types
         public static readonly string PluginGeneralOwnerId = "PluginGeneral";
     }
 
-    /// <summary>The global analysis ids.</summary>
-    public class GlobalAnalysisIds
+    /// <summary>
+    /// The global analysis ids.
+    /// </summary>
+    public static class GlobalAnalysisIds
     {
         /// <summary>The excluded plugins key.</summary>
         public static readonly string ExcludedPluginsKey = "ExcludedPluginsKey";
@@ -111,5 +115,15 @@ namespace VSSonarPlugins.Types
 
         /// <summary>The fx cop path key.</summary>
         public static readonly string FxCopPathKey = "FxCopPath";
+
+        /// <summary>
+        /// The local analysis project analysis enabled key
+        /// </summary>
+        public static readonly string LocalAnalysisProjectAnalysisEnabledKey = "AnalysisOnProject";
+
+        /// <summary>
+        /// The local analysis solution analysis enabled key
+        /// </summary>
+        public static readonly string LocalAnalysisSolutionAnalysisEnabledKey = "AnalysisOnSolution";
     }
 }

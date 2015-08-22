@@ -92,6 +92,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.configurationHelper = configurationHelper;
             this.viewModel = viewModel;
             this.TimeoutValue = 10;
+            this.IsSolutionAnalysisChecked = true;
+            this.IsProjectAnalysisChecked = true;
             this.Header = "Analysis Options";
             this.ForeGroundColor = Colors.Black;
             this.BackGroundColor = Colors.White;
@@ -154,6 +156,22 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         ///     Gets or sets a value indicating whether is solution open.
         /// </summary>
         public bool IsSolutionOpen { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is solution analysis checked.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is solution analysis checked; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsSolutionAnalysisChecked { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is project analysis checked.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is project analysis checked; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsProjectAnalysisChecked { get; set; }
 
         /// <summary>
         ///     Gets or sets the language.
@@ -269,6 +287,16 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.configurationHelper.WriteOptionInApplicationData(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.ExcludedPluginsKey, this.ExcludedPlugins);
             this.configurationHelper.WriteOptionInApplicationData(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.IsDebugAnalysisOnKey, this.DebugIsChecked.ToString());
             this.configurationHelper.WriteOptionInApplicationData(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.LocalAnalysisTimeoutKey, this.TimeoutValue.ToString());
+            this.configurationHelper.WriteOptionInApplicationData(
+                Context.AnalysisGeneral,
+                OwnersId.AnalysisOwnerId,
+                GlobalAnalysisIds.LocalAnalysisProjectAnalysisEnabledKey,
+                this.IsProjectAnalysisChecked.ToString());
+            this.configurationHelper.WriteOptionInApplicationData(
+                Context.AnalysisGeneral,
+                OwnersId.AnalysisOwnerId,
+                GlobalAnalysisIds.LocalAnalysisSolutionAnalysisEnabledKey,
+                this.IsSolutionAnalysisChecked.ToString());
 
             if (this.Project != null)
             {
@@ -299,6 +327,27 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 Context.AnalysisGeneral,
                 OwnersId.AnalysisOwnerId,
                 GlobalAnalysisIds.ExcludedPluginsKey).Value;
+
+
+            try
+            {
+                this.IsProjectAnalysisChecked = bool.Parse(
+                    this.configurationHelper.ReadSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.LocalAnalysisProjectAnalysisEnabledKey).Value);
+            }
+            catch (Exception)
+            {
+                this.IsProjectAnalysisChecked = true;
+            }
+
+            try
+            {
+                this.IsSolutionAnalysisChecked = bool.Parse(
+                    this.configurationHelper.ReadSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.LocalAnalysisSolutionAnalysisEnabledKey).Value);
+            }
+            catch (Exception)
+            {
+                this.IsSolutionAnalysisChecked = true;
+            }
 
             try
             {

@@ -34,6 +34,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using VSSonarPlugins.Types;
     using Application = System.Windows.Application;
     using Model.Association;
+    using System.Diagnostics;
 
     /// <summary>
     ///     The analysis types.
@@ -144,6 +145,11 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         private Resource associatedProject;
 
+        /// <summary>
+        /// The project build cache
+        /// </summary>
+        private readonly Dictionary<string, DateTime> projectBuildCache = new Dictionary<string, DateTime>();
+
         #endregion
 
         #region Constructors and Destructors
@@ -173,7 +179,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.IssuesGridView = new IssueGridViewModel(false, "LocalView", false, this.configurationHelper, service, notificationManager, translator);
             this.OuputLogLines = new PaginatedObservableCollection<string>(300);
             this.AllLog = new List<string>();
-
 
             this.InitCommanding();
             this.InitFileAnalysis();
@@ -602,9 +607,28 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <param name="project">The project.</param>
         public void TriggerAProjectAnalysis(VsProjectItem project)
         {
-            if (this.FileAnalysisIsEnabled)
+            if (this.FileAnalysisIsEnabled && this.WasAssemblyUpdated(project))
             {
-                this.localAnalyserModule.RunProjectAnalysis(project, AuthtenticationHelper.AuthToken);
+                var isProjectAnalysisOn = true;
+
+                try
+                {
+                    isProjectAnalysisOn = bool.Parse(
+                        this.configurationHelper.ReadSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.LocalAnalysisProjectAnalysisEnabledKey).Value);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
+
+                if (isProjectAnalysisOn)
+                {
+                    this.localAnalyserModule.RunProjectAnalysis(project, AuthtenticationHelper.AuthToken);
+                }
+                else
+                {
+                    this.notificationManager.ReportMessage(new VSSonarPlugins.Message { Id = "LocalViewModel", Data = "Project Analysis Is Disabled, Enable in Options" });
+                }                
             }
         }
 
@@ -754,9 +778,9 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                     case AnalysisTypes.FILE:
                         var itemInView = this.vsenvironmenthelper.VsFileItem(this.resourceNameInView, this.associatedProject, this.resourceInView);
                         this.localAnalyserModule.AnalyseFile(
-                            itemInView, 
+                            itemInView,
                             this.associatedProject,
-                            this.notificationManager.AnalysisChangeLines, 
+                            this.notificationManager.AnalysisChangeLines,
                             this.userConf.SonarVersion,
                             AuthtenticationHelper.AuthToken,
                             this.keyTranslator,
@@ -767,7 +791,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                         this.AllLog.Clear();
                         this.OutputLog = string.Empty;
                         this.localAnalyserModule.RunFullAnalysis(
-                            this.associatedProject, 
+                            this.associatedProject,
                             this.userConf.SonarVersion,
                             AuthtenticationHelper.AuthToken);
                         break;
@@ -776,7 +800,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                         this.AllLog.Clear();
                         this.OutputLog = string.Empty;
                         this.localAnalyserModule.RunIncrementalAnalysis(
-                            this.associatedProject, 
+                            this.associatedProject,
                             this.userConf.SonarVersion,
                             AuthtenticationHelper.AuthToken);
                         break;
@@ -785,7 +809,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                         this.AllLog.Clear();
                         this.OutputLog = string.Empty;
                         this.localAnalyserModule.RunPreviewAnalysis(
-                            this.associatedProject, 
+                            this.associatedProject,
                             this.userConf.SonarVersion,
                             AuthtenticationHelper.AuthToken);
                         break;
@@ -793,16 +817,10 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                         throw new NotImplementedException();
                 }
             }
-            catch (VSSonarExtension ex)
+            catch (Exception ex)
             {
                 this.notificationManager.ReportMessage(new VSSonarPlugins.Message() { Id = "LocalViewModel", Data = "Analysis Failed: " + ex.Message });
                 this.notificationManager.ReportException(ex);
-                this.CanRunAnalysis = true;
-                this.notificationManager.EndedWorking();
-            }
-            catch (Exception ex)
-            {
-                UserExceptionMessageBox.ShowException("Critical Error: Please Report This Error: cwd: " + this.SourceWorkingDir + " AssociatedProject: " + this.associatedProject, ex);
                 this.CanRunAnalysis = true;
                 this.notificationManager.EndedWorking();
             }
@@ -926,6 +944,46 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 this.configurationHelper.UserLogForAnalysisFile(),
                 0,
                 this.notificationManager.UserDefinedEditor);
+        }
+
+        /// <summary>
+        /// Wases the assembly updated.
+        /// </summary>
+        /// <param name="project">The project.</param>
+        /// <returns>True if Assemly has been modified</returns>
+        private bool WasAssemblyUpdated(VsProjectItem project)
+        {
+            if (this.projectBuildCache.ContainsKey(project.OutputPath))
+            {
+                var lastUpdateTime = this.projectBuildCache[project.OutputPath];
+                var currentUpdateTime = this.GetUpdateTimeFromAssembly(project.OutputPath);
+
+                if (currentUpdateTime > lastUpdateTime)
+                {
+                    this.projectBuildCache.Remove(project.OutputPath);
+                    this.projectBuildCache.Add(project.OutputPath, currentUpdateTime);
+                    return true;
+                }
+            }
+            else
+            {
+                var currentUpdateTime = this.GetUpdateTimeFromAssembly(project.OutputPath);
+                this.projectBuildCache.Add(project.OutputPath, currentUpdateTime);
+                return true;
+            }
+
+            this.notificationManager.ReportMessage(new VSSonarPlugins.Message { Id = "LocalViewModel", Data = "Project output is Updated" });
+            return false;
+        }
+
+        /// <summary>
+        /// Gets the update time from assembly.
+        /// </summary>
+        /// <param name="outputPath">The output path.</param>
+        /// <returns>Returns time of updated assembly.</returns>
+        private DateTime GetUpdateTimeFromAssembly(string outputPath)
+        {
+            return File.GetLastWriteTime(outputPath);
         }
 
         #endregion

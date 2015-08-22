@@ -40,6 +40,8 @@
 						<RowDefinition Height="30"/>
 						<RowDefinition Height="30"/>
 						<RowDefinition Height="30"/>
+						<RowDefinition Height="30"/>
+						<RowDefinition Height="30"/>                        
 					</Grid.RowDefinitions>
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="77*"/>
@@ -83,8 +85,13 @@
                 Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"   Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" Content="{Binding ProjectVersion}"  />
 					<TextBox Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding SourceDir}"  TextWrapping="Wrap" IsEnabled="{Binding IsSolutionOpen}"/>                        
 					<TextBox Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding SourceEncoding}"  TextWrapping="Wrap" IsEnabled="{Binding IsSolutionOpen}"/>
+					
+                    <Label Grid.Row="10" Grid.Column="0" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}" Content="Enable Project Analysis:" ToolTip="If checked, after each build the extension will run analysis on dll"/>
+                    <CheckBox IsChecked="{Binding IsProjectAnalysisChecked}" Grid.Row="10" Grid.Column="2" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"    />
+                    <Label Grid.Row="11" Grid.Column="0" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}" Content="Enable Solution Analysis:" ToolTip="If checked, after each solution is build the extension will run solution wide analysis"/>
+                    <CheckBox IsChecked="{Binding IsSolutionAnalysisChecked}" Grid.Row="11" Grid.Column="2" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"    />
 
-				</Grid>
+                </Grid>
 			</StackPanel>
 		</ScrollViewer>
 	</Grid>

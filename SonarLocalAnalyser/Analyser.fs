@@ -582,7 +582,9 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                             (x :> ISonarLocalAnalyser).AssociateWithProject(x.Project, x.Conf)
 
                     with
-                    | ex -> ()
+                    | ex -> 
+                        notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Failed to analyse file : " + x.ItemInView.FilePath + " : " + ex.Message))
+                        notificationManager.ReportException(ex)
 
                 completionEvent.Trigger([|x; null|])
                 x.AnalysisIsRunning <- false
