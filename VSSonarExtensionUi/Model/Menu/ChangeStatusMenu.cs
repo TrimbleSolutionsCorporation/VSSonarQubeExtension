@@ -19,19 +19,17 @@ namespace VSSonarExtensionUi.Model.Menu
     using System.Windows;
     using System.Windows.Input;
 
+    using Association;
     using GalaSoft.MvvmLight.Command;
-    using SonarLocalAnalyser;
+    using Helpers;
     using View.Helpers;
-    using ViewModel;
     using ViewModel.Helpers;
-
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-    using Helpers;
-    using Association;
+
 
     /// <summary>
-    ///     The issue handler menu.
+    /// The issue handler menu.
     /// </summary>
     internal class ChangeStatusMenu : IMenuItem
     {
@@ -48,7 +46,7 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <summary>
         /// The manager
         /// </summary>
-        private readonly  INotificationManager manager;
+        private readonly INotificationManager manager;
 
         /// <summary>
         ///     The config.
@@ -177,52 +175,86 @@ namespace VSSonarExtensionUi.Model.Menu
             {
                 if (this.CommandText.Equals("False Positive"))
                 {
-                    var bw = new BackgroundWorker { WorkerReportsProgress = false };
-                    bw.RunWorkerCompleted += delegate { Application.Current.Dispatcher.Invoke(delegate { this.manager.EndedWorking(); }); };
+                    using (var bw = new BackgroundWorker { WorkerReportsProgress = false })
+                    {
+                        bw.RunWorkerCompleted += delegate { Application.Current.Dispatcher.Invoke(delegate { this.manager.EndedWorking(); }); };
 
-                    bw.DoWork += delegate
-                        {
-                            this.manager.StartedWorking("Marking Issues as False Posiive");
-                            this.rest.MarkIssuesAsFalsePositive(this.config, this.model.SelectedItems, string.Empty);
-                            this.model.RefreshView();
-                        };
+                        bw.DoWork += delegate
+                            {
+                                this.manager.StartedWorking("Marking Issues as False Posiive");
+                                var replies = this.rest.MarkIssuesAsFalsePositive(this.config, this.model.SelectedItems, string.Empty);
+                                this.VerifyChangeStatusReplies(replies, "Mark Issues as False Positive");
+                                this.model.RefreshView();
+                            };
 
-                    bw.RunWorkerAsync();
+                        bw.RunWorkerAsync(); 
+                    }
                 }
 
                 if (this.CommandText.Equals("Confirm"))
                 {
-                    var bw = new BackgroundWorker { WorkerReportsProgress = false };
-                    bw.RunWorkerCompleted += delegate { Application.Current.Dispatcher.Invoke(delegate { this.manager.EndedWorking(); }); };
-
-                    bw.DoWork += delegate
+                    using (var bw = new BackgroundWorker { WorkerReportsProgress = false })
                     {
-                        this.manager.StartedWorking("Confirming Issues");
-                        this.rest.ConfirmIssues(this.config, this.model.SelectedItems, string.Empty);
-                        this.model.RefreshView();
-                    };
+                        bw.RunWorkerCompleted += delegate { Application.Current.Dispatcher.Invoke(delegate { this.manager.EndedWorking(); }); };
 
-                    bw.RunWorkerAsync();
+                        bw.DoWork += delegate
+                        {
+                            this.manager.StartedWorking("Confirming Issues");
+                            var replies = this.rest.ConfirmIssues(this.config, this.model.SelectedItems, string.Empty);
+                            this.VerifyChangeStatusReplies(replies, "Confirm Issues");
+                            this.model.RefreshView();
+                        };
+
+                        bw.RunWorkerAsync();
+                    }
                 }
 
                 if (this.CommandText.Equals("Fix"))
                 {
-                    var bw = new BackgroundWorker { WorkerReportsProgress = false };
-                    bw.RunWorkerCompleted += delegate { Application.Current.Dispatcher.Invoke(delegate { this.manager.EndedWorking(); }); };
-
-                    bw.DoWork += delegate
+                    using (var bw = new BackgroundWorker { WorkerReportsProgress = false })
                     {
-                        this.manager.StartedWorking("Marking issues as fixed");
-                        this.rest.ResolveIssues(this.config, this.model.SelectedItems, string.Empty);
-                        this.model.RefreshView();
-                    };
+                        bw.RunWorkerCompleted += delegate { Application.Current.Dispatcher.Invoke(delegate { this.manager.EndedWorking(); }); };
 
-                    bw.RunWorkerAsync();
+                        bw.DoWork += delegate
+                        {
+                            this.manager.StartedWorking("Marking issues as fixed");
+                            var replies = this.rest.ResolveIssues(this.config, this.model.SelectedItems, string.Empty);
+
+                            this.VerifyChangeStatusReplies(replies, "Mark Issues As Fixed");
+
+                            this.model.RefreshView();
+                        };
+
+                        bw.RunWorkerAsync();
+                    }
                 }
             }
             catch (Exception ex)
             {
                 UserExceptionMessageBox.ShowException("Cannot Modify Status Of Issues", ex);
+            }
+        }
+
+        /// <summary>
+        /// Verifies the change status replies.
+        /// </summary>
+        /// <param name="replies">The replies.</param>
+        /// <param name="message">The message.</param>
+        private void VerifyChangeStatusReplies(System.Collections.Generic.Dictionary<string, System.Net.HttpStatusCode> replies, string message)
+        {
+            bool operationOk = true;
+            foreach (var reply in replies)
+            {
+                this.manager.ReportMessage(new Message { Id = "ChangeStatusMenu", Data = message + " : " + reply.Key + " : " + reply.Value });
+                if (reply.Value != System.Net.HttpStatusCode.OK)
+                {
+                    operationOk = false;
+                }
+            }
+
+            if (!operationOk)
+            {
+                MessageDisplayBox.DisplayMessage(message + " Failed For Some or All Issues", "Make sure you have permissions, see VSSonarOutput window for more details");
             }
         }
 
