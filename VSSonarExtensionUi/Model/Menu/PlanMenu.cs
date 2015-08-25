@@ -146,6 +146,15 @@ namespace VSSonarExtensionUi.Model.Menu
         }
 
         /// <summary>
+        /// Refreshes the menu data for menu that have options that
+        /// are context dependent on the selected issues.
+        /// </summary>
+        public void RefreshMenuData()
+        {
+            // not necessary
+        }
+
+        /// <summary>
         /// Updates the services.
         /// </summary>
         /// <param name="vsenvironmenthelperIn">The vsenvironmenthelper in.</param>
@@ -163,7 +172,8 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <param name="project">The project.</param>
         /// <param name="workingDir">The working dir.</param>
         /// <param name="provider">The provider.</param>
-        public void AssociateWithNewProject(ISonarConfiguration configIn, Resource project, string workingDir, ISourceControlProvider provider)
+        /// <param name="sourcePlugin">The source plugin.</param>
+        public void AssociateWithNewProject(ISonarConfiguration configIn, Resource project, string workingDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin)
         {
             this.sourceDir = workingDir;
             this.associatedProject = project;
@@ -179,7 +189,7 @@ namespace VSSonarExtensionUi.Model.Menu
                         foreach (var item in this.rest.GetAvailableActionPlan(this.config, project.Key))
                         {
                             var menu = new PlanMenu(this.rest, this.model, this.manager, false) { CommandText = item.Name, IsEnabled = true };
-                            menu.AssociateWithNewProject(configIn, project, workingDir, provider);
+                            menu.AssociateWithNewProject(configIn, project, workingDir, provider, sourcePlugin);
                             this.SubItems.Add(menu);
                         }
                     });

@@ -43,7 +43,11 @@ namespace VSSonarPlugins.Types
 
         /// <summary>The menu plugin properties.</summary>
         [Description("MenuPluginProperties")]
-        MenuPluginProperties
+        MenuPluginProperties,
+
+        /// <summary>The issue tracker plugin properties.</summary>
+        [Description("IssueTrackerProps")]
+        IssueTrackerProps
     }
 
     /// <summary>

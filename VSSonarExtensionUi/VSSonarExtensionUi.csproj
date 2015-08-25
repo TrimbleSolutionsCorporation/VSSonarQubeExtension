@@ -139,6 +139,7 @@
     <Compile Include="Model\Helpers\PaginatedObservableCollection.cs" />
     <Compile Include="Model\Helpers\PasswordHelper.cs" />
     <Compile Include="Model\Helpers\SourceControlModel.cs" />
+    <Compile Include="Model\Menu\IssueTrackerMenu.cs" />
     <Compile Include="Model\Menu\PlanMenu.cs" />
     <Compile Include="Model\Menu\SourceControlMenu.cs" />
     <Compile Include="ViewModel\Association\AssociationViewModel.cs" />

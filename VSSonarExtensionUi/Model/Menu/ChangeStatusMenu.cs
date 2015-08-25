@@ -138,7 +138,8 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <param name="project">The project.</param>
         /// <param name="workingDir">The working dir.</param>
         /// <param name="provider">The provider.</param>
-        public void AssociateWithNewProject(ISonarConfiguration configIn, Resource project, string workingDir, ISourceControlProvider provider)
+        /// <param name="sourcePlugin">The source plugin.</param>
+        public void AssociateWithNewProject(ISonarConfiguration configIn, Resource project, string workingDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin)
         {
             this.config = configIn;
         }
@@ -160,6 +161,15 @@ namespace VSSonarExtensionUi.Model.Menu
         public object GetViewModel()
         {
             return null;
+        }
+
+        /// <summary>
+        /// Refreshes the menu data for menu that have options that
+        /// are context dependent on the selected issues.
+        /// </summary>
+        public void RefreshMenuData()
+        {
+            // not necessary
         }
 
         #endregion

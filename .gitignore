@@ -112,3 +112,4 @@ UpgradeLog*.XML
 *.unittest.report.xml
 *.coverage.xml
 *.unittest.report.nunit2.xml
+Settings.StyleCop

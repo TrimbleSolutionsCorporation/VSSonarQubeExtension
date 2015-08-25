@@ -386,6 +386,17 @@ namespace VSSonarExtensionUi.Model.PluginManager
                             return (IPlugin)obj.Invoke(lobject);
                         }
                     }
+
+                    if (typeof(IIssueTrackerPlugin).IsAssignableFrom(type))
+                    {
+                        Debug.WriteLine("Can Cast Type In Assembly To: " + typeof(IIssueTrackerPlugin).FullName);
+                        var obj = type.GetConstructor(new[] { typeof(INotificationManager) });
+                        if (obj != null)
+                        {
+                            object[] lobject = { manager };
+                            return (IPlugin)obj.Invoke(lobject);
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {

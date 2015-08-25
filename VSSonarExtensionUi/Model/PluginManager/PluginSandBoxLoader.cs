@@ -129,18 +129,33 @@ namespace VSSonarExtensionUi.Model.PluginManager
                             var plugin = (IMenuCommandPlugin)Activator.CreateInstance(type);
                             return plugin.GetPluginDescription();
                         }
+
+                        if (typeof(ISourceVersionPlugin).IsAssignableFrom(type))
+                        {
+                            Debug.WriteLine("Can Cast Type In Assembly To: " + typeof(ISourceVersionPlugin).FullName);
+                            var plugin = (ISourceVersionPlugin)Activator.CreateInstance(type);
+                            return plugin.GetPluginDescription();
+                        }
+
+
+                        if (typeof(IIssueTrackerPlugin).IsAssignableFrom(type))
+                        {
+                            Debug.WriteLine("Can Cast Type In Assembly To: " + typeof(IIssueTrackerPlugin).FullName);
+                            var plugin = (IIssueTrackerPlugin)Activator.CreateInstance(type);
+                            return plugin.GetPluginDescription();
+                        }
+
+
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine(
-                            "Cannot Cast Type In Assembly To: " + typeof(IAnalysisPlugin).FullName + "\r\n" + ex.Message + "\r\n" + ex.StackTrace);
                         Debug.WriteLine(ex.InnerException.Message + " : " + ex.InnerException.StackTrace);
                         throw;
                     }
                 }
             }
 
-            return null;
+            return new PluginDescription();
         }
 
         public IPlugin LoadPlugin(ISonarConfiguration conf, IConfigurationHelper helper, INotificationManager manager, IVsEnvironmentHelper vshelper)
@@ -178,11 +193,33 @@ namespace VSSonarExtensionUi.Model.PluginManager
                                 return (IPlugin)obj.Invoke(lobject);
                             }
                         }
+
+                        if (typeof(ISourceVersionPlugin).IsAssignableFrom(type))
+                        {
+                            Debug.WriteLine("Can Cast Type In Assembly To: " + typeof(ISourceVersionPlugin).FullName);
+
+                            var obj = type.GetConstructor(new[] { typeof(INotificationManager) });
+                            if (obj != null)
+                            {
+                                object[] lobject = { manager };
+                                return (IPlugin)obj.Invoke(lobject);
+                            }
+                        }
+
+                        if (typeof(IIssueTrackerPlugin).IsAssignableFrom(type))
+                        {
+                            Debug.WriteLine("Can Cast Type In Assembly To: " + typeof(IIssueTrackerPlugin).FullName);
+
+                            var obj = type.GetConstructor(new[] { typeof(INotificationManager) });
+                            if (obj != null)
+                            {
+                                object[] lobject = { manager };
+                                return (IPlugin)obj.Invoke(lobject);
+                            }
+                        }
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine(
-                            "Cannot Cast Type In Assembly To: " + typeof(IAnalysisPlugin).FullName + "\r\n" + ex.Message + "\r\n" + ex.StackTrace);
                         Debug.WriteLine(ex.InnerException.Message + " : " + ex.InnerException.StackTrace);
                         throw;
                     }

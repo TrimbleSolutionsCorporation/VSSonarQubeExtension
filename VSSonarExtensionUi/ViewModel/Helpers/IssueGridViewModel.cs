@@ -91,6 +91,7 @@
         /// The source work dir
         /// </summary>
         private string sourceWorkDir;
+        private IMenuItem issueTrackerMenu;
 
         #endregion
 
@@ -903,8 +904,9 @@
         /// <param name="config">The configuration.</param>
         /// <param name="project">The project.</param>
         /// <param name="workingDir">The working dir.</param>
-        /// <param name="provider">The provider.</param>
-        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workingDir, ISourceControlProvider provider)
+        /// <param name="providerIn">The provider in.</param>
+        /// <param name="sourcePlugin">The source plugin.</param>
+        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workingDir, ISourceControlProvider providerIn, IIssueTrackerPlugin sourcePlugin)
         {
             this.sourceWorkDir = workingDir;
             this.sonarConfiguration = config;
@@ -1007,7 +1009,8 @@
                                ChangeStatusMenu.MakeMenu(this.restService, this, this.notificationManager),
                                OpenResourceMenu.MakeMenu(this.restService, this),
                                PlanMenu.MakeMenu(this.restService, this, this.notificationManager),
-                               SourceControlMenu.MakeMenu(this.restService, this, this.notificationManager, this.keyTranslator)
+                               SourceControlMenu.MakeMenu(this.restService, this, this.notificationManager, this.keyTranslator),
+                               IssueTrackerMenu.MakeMenu(this.restService, this, this.notificationManager, this.keyTranslator)
                            };
 
             return menu;
@@ -1276,6 +1279,10 @@
         /// </summary>
         private void OnMouseEventCommand()
         {
+            foreach (var item in this.ContextMenuItems)
+            {
+                item.RefreshMenuData();
+            }
         }
 
         /// <summary>

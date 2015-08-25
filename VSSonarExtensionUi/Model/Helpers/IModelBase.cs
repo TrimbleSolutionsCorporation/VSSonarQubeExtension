@@ -23,11 +23,17 @@
         /// <summary>
         /// Associates the with new project.
         /// </summary>
-        /// <param name="config">The configuration.</param>
+        /// <param name="configIn">The configuration in.</param>
         /// <param name="project">The project.</param>
         /// <param name="workingDir">The working dir.</param>
         /// <param name="sourceModel">The source model.</param>
-        void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workingDir, ISourceControlProvider sourceModel);
+        /// <param name="sourcePlugin">The source plugin.</param>
+        void AssociateWithNewProject(
+            ISonarConfiguration configIn,
+            Resource project,
+            string workingDir,
+            ISourceControlProvider sourceModel,
+            IIssueTrackerPlugin sourcePlugin);
 
         /// <summary>
         /// The end data association.

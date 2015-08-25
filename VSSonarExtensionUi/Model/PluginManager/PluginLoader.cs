@@ -65,12 +65,16 @@ namespace VSSonarExtensionUi.Model.PluginManager
                         Debug.WriteLine("Can Cast Type In Assembly To: " + typeof(ISourceVersionPlugin).FullName);
                         return (IPlugin)Activator.CreateInstance(type);
                     }
+
+                    if (typeof(IIssueTrackerPlugin).IsAssignableFrom(type))
+                    {
+                        Debug.WriteLine("Can Cast Type In Assembly To: " + typeof(IIssueTrackerPlugin).FullName);
+                        return (IPlugin)Activator.CreateInstance(type);
+                    }
                 }
                 catch (Exception ex)
                 {
                     this.errorData += ex.Message;
-                    Debug.WriteLine(
-                        "Cannot Cast Type In Assembly To: " + typeof(IAnalysisPlugin).FullName + "\r\n" + ex.Message + "\r\n" + ex.StackTrace);
                     Debug.WriteLine(ex.InnerException.Message + " : " + ex.InnerException.StackTrace);
                 }
             }

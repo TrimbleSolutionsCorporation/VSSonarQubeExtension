@@ -154,7 +154,9 @@
         /// <param name="config">The configuration.</param>
         /// <param name="project">The project.</param>
         /// <param name="workDir">The work dir.</param>
-        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workDir, ISourceControlProvider sourceModelIn)
+        /// <param name="sourceModelIn">The source model in.</param>
+        /// <param name="sourcePlugin">The source plugin.</param>
+        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workDir, ISourceControlProvider sourceModelIn, IIssueTrackerPlugin sourcePlugin)
         {
             this.sourceDir = workDir;
             this.userConf = config;

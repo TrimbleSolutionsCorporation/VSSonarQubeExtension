@@ -51,7 +51,7 @@ type RunAnalysisTests() =
     member test.``Should Return Key When Single language is set`` () =
         let project = new Resource()
         let vsItem = new VsFileItem(FileName = "fileName", FilePath = "filePath")
-        let pluginDescription = new PluginDescription()
+        let mutable pluginDescription = new PluginDescription()
         pluginDescription.Name <- "TestPlugin"
 
         let mockAVsinterface =

@@ -186,7 +186,7 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// <param name="project">The project.</param>
         /// <param name="workingDir">The working dir.</param>
         /// <param name="sourceModelIn">The source model in.</param>
-        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workingDir, ISourceControlProvider sourceModelIn)
+        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workingDir, ISourceControlProvider sourceModelIn, IIssueTrackerPlugin sourcePlugin)
         {
             this.sourceModel = sourceModelIn;
             this.associatedProject = project;

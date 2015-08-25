@@ -233,7 +233,9 @@
         /// <param name="config">The configuration.</param>
         /// <param name="project">The project.</param>
         /// <param name="workingDir">The working dir.</param>
-        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workingDir, ISourceControlProvider provider)
+        /// <param name="provider">The provider.</param>
+        /// <param name="sourcePlugin">The source plugin.</param>
+        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workingDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin)
         {
             // not needed
         }

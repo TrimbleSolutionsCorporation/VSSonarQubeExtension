@@ -155,6 +155,15 @@
             }
         }
 
+        public IIssueTrackerPlugin IssueTrackerPlugin
+        {
+            get
+            {
+                // create a new source control provider for solution
+                return this.model.VSonarQubeOptionsViewData.PluginManager.GetIssueTrackerPlugin();
+            }
+        }
+
         /// <summary>
         /// Registers the new model in pool.
         /// </summary>
@@ -719,6 +728,14 @@
         {
             var listToRemo = new List<IModelBase>();
 
+            // associate
+            this.model.VSonarQubeOptionsViewData.PluginManager.AssociateWithNewProject(
+                AuthtenticationHelper.AuthToken,
+                this.AssociatedProject,
+                this.OpenSolutionPath,
+                this.SourceControl,
+                this.IssueTrackerPlugin);
+
             foreach (IModelBase model in modelPool)
             {
                 try
@@ -727,7 +744,8 @@
                         AuthtenticationHelper.AuthToken,
                         this.AssociatedProject,
                         this.OpenSolutionPath,
-                        this.SourceControl);
+                        this.SourceControl,
+                        this.IssueTrackerPlugin);
                 }
                 catch (Exception ex)
                 {

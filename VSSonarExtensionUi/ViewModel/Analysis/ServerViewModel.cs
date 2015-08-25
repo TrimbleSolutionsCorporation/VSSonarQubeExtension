@@ -368,7 +368,13 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <param name="associatedProjectIn">The associated project in.</param>
         /// <param name="workingDir">The working dir.</param>
         /// <param name="provider">The provider.</param>
-        public void AssociateWithNewProject(ISonarConfiguration userConnectionConfig, Resource associatedProjectIn, string workingDir, ISourceControlProvider provider)
+        /// <param name="sourcePlugin">The source plugin.</param>
+        public void AssociateWithNewProject(
+            ISonarConfiguration userConnectionConfig,
+            Resource associatedProjectIn,
+            string workingDir,
+            ISourceControlProvider provider,
+            IIssueTrackerPlugin sourcePlugin)
         {
             this.userConfiguration = userConnectionConfig;
             this.associatedProject = associatedProjectIn;

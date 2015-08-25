@@ -29,6 +29,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using VSSonarPlugins.Types;
     using UserControl = System.Windows.Controls.UserControl;
     using Model.Association;
+    using System.Text;
 
     /// <summary>
     ///     The dummy options controller.
@@ -110,11 +111,11 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.MenuPlugins = new List<IMenuCommandPlugin>();
             this.AnalysisPlugins = new List<IAnalysisPlugin>();
             this.SourceCodePlugins = new List<ISourceVersionPlugin>();
+            this.IssueTrackerPlugins = new List<IIssueTrackerPlugin>();
 
             this.InitPluginList(helper, null);
             this.InitCommanding();
 
-            AssociationModel.RegisterNewModelInPool(this);
             SonarQubeViewModel.RegisterNewViewModelInPool(this);
         }
 
@@ -142,9 +143,46 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public List<IAnalysisPlugin> AnalysisPlugins { get; private set; }
 
         /// <summary>
+        /// Gets the issue tracker plugins.
+        /// </summary>
+        /// <value>
+        /// The issue tracker plugins.
+        /// </value>
+        public List<IIssueTrackerPlugin> IssueTrackerPlugins { get; private set; }
+
+        /// <summary>
         ///     Gets or sets the back ground color.
         /// </summary>
         public Color BackGroundColor { get; set; }
+
+        /// <summary>
+        /// Gets the issue tracker plugin.
+        /// </summary>
+        /// <returns>enabled plugin</returns>
+        public IIssueTrackerPlugin GetIssueTrackerPlugin()
+        {
+            IIssueTrackerPlugin pluginOut = null;
+
+            int cnt = 0;
+            var builder = new StringBuilder();
+            foreach (IPlugin plugin in this.IssueTrackerPlugins)
+            {
+                if (plugin.GetPluginDescription().Enabled)
+                {
+                    pluginOut = plugin as IIssueTrackerPlugin;
+                    builder.AppendLine("Plugin Enabled: " + plugin.GetPluginDescription().Name);
+                    cnt++;
+                }
+            }
+
+            if (cnt != 1)
+            {
+                MessageDisplayBox.DisplayMessage("More than on issue tracker plugin is enabled, make sure only one pluing is enabled", builder.ToString());
+                return null;
+            }
+
+            return pluginOut;
+        }
 
         /// <summary>
         ///     Gets or sets a value indicating whether changes are required.
@@ -363,9 +401,19 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         public void SaveData()
         {
-            if (this.PluginController != null)
+            if (this.associatedProject == null)
             {
-                this.PluginController.SaveDataInUi(this.Project, this.configurationHelper);
+                return;
+            }
+
+            foreach (var plugin in this.plugins)
+            {
+                var option = plugin.GetPluginControlOptions(this.associatedProject, this.sonarConf);
+
+                if (option != null)
+                {
+                    option.SaveDataInUi(this.Project, this.configurationHelper);
+                }
             }
 
             foreach (var pluginDescription in this.pluginList)
@@ -373,14 +421,18 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 if (pluginDescription.Enabled)
                 {
                     this.configurationHelper.WriteOptionInApplicationData(
-                        Context.GlobalPropsId,
+                        Context.IssueTrackerProps,
+                        this.associatedProject.Name,
                         pluginDescription.Name,
-                        GlobalIds.PluginEnabledControlId,
                         "true");
                 }
                 else
                 {
-                    this.configurationHelper.WriteOptionInApplicationData(Context.GlobalPropsId, pluginDescription.Name, GlobalIds.PluginEnabledControlId, "false");
+                    this.configurationHelper.WriteOptionInApplicationData(
+                        Context.IssueTrackerProps,
+                        this.associatedProject.Name,
+                        pluginDescription.Name,
+                        "false");
                 }
             }
         }
@@ -403,11 +455,43 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="project">The project.</param>
         /// <param name="workDir">The work dir.</param>
         /// <param name="provider">The provider.</param>
-        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workDir, ISourceControlProvider provider)
+        /// <param name="sourcePlugin">The source plugin.</param>
+        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin)
         {
             this.sourceDir = workDir;
             this.sonarConf = config;
             this.associatedProject = project;
+
+            foreach (var plugin in this.plugins)
+            {
+                var plugDesc = plugin.GetPluginDescription();
+                try
+                {
+                    string isEnabled = this.configurationHelper.ReadSetting(Context.IssueTrackerProps, project.Name, plugDesc.Name).Value;
+                    if (isEnabled.Equals("true", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        plugDesc.Enabled = true;
+                    }
+                    else
+                    {
+                        plugDesc.Enabled = false;
+                    }
+                }
+                catch (Exception)
+                {
+                    this.configurationHelper.WriteOptionInApplicationData(Context.IssueTrackerProps, project.Name, plugDesc.Name, "true");
+                    plugDesc.Enabled = true;
+                }
+
+                try
+                {
+                    plugin.AssociateProject(project, config);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
+            }
         }
 
         /// <summary>
@@ -447,30 +531,11 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
             foreach (var plugin in this.controller.LoadPluginsFromPluginFolder(this.notificationManager, this.configurationHelper, visualStudioHelper, files))
             {
-                var plugDesc = plugin.GetPluginDescription();
-                try
-                {
-                    string isEnabled = this.configurationHelper.ReadSetting(Context.GlobalPropsId, plugDesc.Name, GlobalIds.PluginEnabledControlId).Value;
-                    if (isEnabled.Equals("true", StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        plugDesc.Enabled = true;
-                    }
-                    else
-                    {
-                        plugDesc.Enabled = false;
-                    }
-                }
-                catch (Exception)
-                {
-                    this.configurationHelper.WriteOptionInApplicationData(Context.GlobalPropsId, plugDesc.Name, GlobalIds.PluginEnabledControlId, "true");
-                    plugDesc.Enabled = true;
-                }
-
                 var plugindata = plugin as IAnalysisPlugin;
                 if (plugindata != null)
                 {
                     this.AnalysisPlugins.Add(plugindata);
-                    this.PluginList.Add(plugDesc);
+                    this.PluginList.Add(plugindata.GetPluginDescription());
                     this.plugins.Add(plugin);
                     loaded = true;
                     continue;                    
@@ -480,7 +545,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 if (pluginMenu != null)
                 {
                     this.MenuPlugins.Add(pluginMenu);
-                    this.PluginList.Add(plugDesc);
+                    this.PluginList.Add(pluginMenu.GetPluginDescription());
                     this.plugins.Add(plugin);
                     loaded = true;
                     continue;
@@ -490,7 +555,17 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 if (pluginSourceControl != null)
                 {
                     this.SourceCodePlugins.Add(pluginSourceControl);
-                    this.PluginList.Add(plugDesc);
+                    this.PluginList.Add(pluginSourceControl.GetPluginDescription());
+                    this.plugins.Add(plugin);
+                    loaded = true;
+                    continue;
+                }
+
+                var pluginIssueTracker = plugin as IIssueTrackerPlugin;
+                if (pluginIssueTracker != null)
+                {
+                    this.IssueTrackerPlugins.Add(pluginIssueTracker);
+                    this.PluginList.Add(pluginIssueTracker.GetPluginDescription());
                     this.plugins.Add(plugin);
                     loaded = true;
                     continue;
@@ -505,34 +580,29 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         private void OnSelectionChangeCommand()
         {
-            if (this.SelectedPlugin != null)
-            {
-                this.PluginIsSelected = true;
+            this.PluginIsSelected = true;
 
-                foreach (IAnalysisPlugin plugin in this.AnalysisPlugins)
+            foreach (IPlugin plugin in this.plugins)
+            {
+                var plugDesc = plugin.GetPluginDescription();
+                if (plugDesc.Name.Equals(this.SelectedPlugin.Name))
                 {
-                    var plugDesc = plugin.GetPluginDescription();
-                    if (plugDesc.Name.Equals(this.SelectedPlugin.Name))
+                    try
                     {
-                        try
+                        this.PluginController = plugin.GetPluginControlOptions(this.Project, this.sonarConf);
+                        if (this.PluginController != null)
                         {
-                            this.PluginController = plugin.GetPluginControlOptions(this.Project, this.sonarConf);
                             this.OptionsInView = this.PluginController.GetOptionControlUserInterface();
+                            this.PluginController.RefreshDataInUi(this.Project, this.configurationHelper);
                         }
-                        catch (Exception ex)
-                        {
-                            Debug.WriteLine(ex.Message);
-                        }
-
-                        this.PluginController.RefreshDataInUi(this.Project, this.configurationHelper);
-                        return;
                     }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.Message);
+                    }
+
+                    return;
                 }
-            }
-            else
-            {
-                this.PluginIsSelected = false;
-                this.OptionsInView = null;
             }
         }
 

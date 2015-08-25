@@ -126,11 +126,21 @@
         /// <param name="project">The project.</param>
         /// <param name="workingDir">The working dir.</param>
         /// <param name="sourceModel">The source model.</param>
-        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workingDir, ISourceControlProvider sourceModel)
+        /// <param name="sourcePlugin">The source plugin.</param>
+        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workingDir, ISourceControlProvider sourceModel, IIssueTrackerPlugin sourcePlugin)
         {
             this.sourceControl = sourceModel;
             this.userConf = config;
             this.assignProject = project;
+        }
+
+        /// <summary>
+        /// Refreshes the menu data for menu that have options that
+        /// are context dependent on the selected issues.
+        /// </summary>
+        public void RefreshMenuData()
+        {
+            // not necessary
         }
 
         /// <summary>

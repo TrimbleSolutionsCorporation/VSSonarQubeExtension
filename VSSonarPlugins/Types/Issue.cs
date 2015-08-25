@@ -145,6 +145,14 @@ namespace VSSonarPlugins.Types
         public int ViolationId { get; set; }
 
         /// <summary>
+        /// Gets or sets the issue tracker identifier.
+        /// </summary>
+        /// <value>
+        /// The issue tracker identifier.
+        /// </value>
+        public string IssueTrackerId { get; set; }
+
+        /// <summary>
         /// Gets or sets the comments.
         /// </summary>
         public List<Comment> Comments { get; set; }
