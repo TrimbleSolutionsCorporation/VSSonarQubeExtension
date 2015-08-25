@@ -1,8 +1,0 @@
-Microsoft (R) Build Engine version 4.0.30319.36242
-[Microsoft .NET Framework, version 4.0.30319.0]
-Copyright (C) Microsoft Corporation. All rights reserved.
-
-MSBUILD : error MSB1008: Only one project can be specified.
-Switch: og
-
-For switch syntax, type "MSBuild /help"
