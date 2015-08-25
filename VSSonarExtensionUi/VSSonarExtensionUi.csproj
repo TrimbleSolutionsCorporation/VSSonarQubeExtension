@@ -125,6 +125,7 @@
   <ItemGroup>
     <Compile Include="Model\Analysis\IssuesSearchModel.cs" />
     <Compile Include="Model\Association\AssociationModel.cs" />
+    <Compile Include="ViewModel\Configuration\IPluginManager.cs" />
     <Compile Include="Model\Cache\EditorData.cs" />
     <Compile Include="Model\Cache\ModelEditorCache.cs" />
     <Compile Include="Model\Configuration\RoslynManagerModel.cs" />

@@ -19,6 +19,7 @@
     using VSSonarPlugins;
     using VSSonarPlugins.Helpers;
     using VSSonarPlugins.Types;
+    using ViewModel.Configuration;
 
     /// <summary>
     /// Generates associations with sonar projects
@@ -35,6 +36,11 @@
         /// The logger
         /// </summary>
         private readonly INotificationManager logger;
+
+        /// <summary>
+        /// The plugin manager
+        /// </summary>
+        private readonly IPluginManager pluginManager;
 
         /// <summary>
         /// The configuration helper
@@ -78,15 +84,18 @@
         /// <param name="service">The service.</param>
         /// <param name="configurationHelper">The configuration helper.</param>
         /// <param name="translator">The translator.</param>
+        /// <param name="pluginManager">The plugin manager.</param>
         /// <param name="model">The model.</param>
         public AssociationModel(
             INotificationManager logger,
             ISonarRestService service,
             IConfigurationHelper configurationHelper,
             ISQKeyTranslator translator,
+            IPluginManager pluginManager,
             SonarQubeViewModel model)
         {
             this.keyTranslator = translator;
+            this.pluginManager = pluginManager;
             this.model = model;
             this.configurationHelper = configurationHelper;
             this.logger = logger;
@@ -148,7 +157,7 @@
                 if (this.sourceControl == null)
                 {
                     // create a new source control provider for solution
-                    this.sourceControl = new SourceControlModel(this.model.VSonarQubeOptionsViewData.PluginManager.SourceCodePlugins, this.OpenSolutionPath);
+                    this.sourceControl = new SourceControlModel(this.pluginManager.SourceCodePlugins, this.OpenSolutionPath);
                 }
 
                 return this.sourceControl;
@@ -160,7 +169,7 @@
             get
             {
                 // create a new source control provider for solution
-                return this.model.VSonarQubeOptionsViewData.PluginManager.GetIssueTrackerPlugin();
+                return this.pluginManager.GetIssueTrackerPlugin();
             }
         }
 
@@ -391,7 +400,7 @@
             this.OpenSolutionPath = solutionPath;
 
             // create a new source control provider for solution
-            this.sourceControl = new SourceControlModel(this.model.VSonarQubeOptionsViewData.PluginManager.SourceCodePlugins, this.OpenSolutionPath);
+            this.sourceControl = new SourceControlModel(this.pluginManager.SourceCodePlugins, this.OpenSolutionPath);
 
             if (this.model.IsConnected)
             {
@@ -729,7 +738,7 @@
             var listToRemo = new List<IModelBase>();
 
             // associate
-            this.model.VSonarQubeOptionsViewData.PluginManager.AssociateWithNewProject(
+            this.pluginManager.AssociateWithNewProject(
                 AuthtenticationHelper.AuthToken,
                 this.AssociatedProject,
                 this.OpenSolutionPath,

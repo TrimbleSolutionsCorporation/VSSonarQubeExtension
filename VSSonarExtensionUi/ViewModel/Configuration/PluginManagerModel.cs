@@ -15,6 +15,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Text;
     using System.Windows.Forms;
     using System.Windows.Input;
     using System.Windows.Media;
@@ -23,19 +24,16 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using Helpers;
     using Model.Helpers;
     using PropertyChanged;
-    using SonarLocalAnalyser;
     using View.Helpers;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
     using UserControl = System.Windows.Controls.UserControl;
-    using Model.Association;
-    using System.Text;
 
     /// <summary>
     ///     The dummy options controller.
     /// </summary>
     [ImplementPropertyChanged]
-    public class PluginManagerModel : IOptionsViewModelBase, IOptionsModelBase
+    public class PluginManagerModel : IOptionsViewModelBase, IOptionsModelBase, IPluginManager
     {
         #region Fields
 
@@ -156,35 +154,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public Color BackGroundColor { get; set; }
 
         /// <summary>
-        /// Gets the issue tracker plugin.
-        /// </summary>
-        /// <returns>enabled plugin</returns>
-        public IIssueTrackerPlugin GetIssueTrackerPlugin()
-        {
-            IIssueTrackerPlugin pluginOut = null;
-
-            int cnt = 0;
-            var builder = new StringBuilder();
-            foreach (IPlugin plugin in this.IssueTrackerPlugins)
-            {
-                if (plugin.GetPluginDescription().Enabled)
-                {
-                    pluginOut = plugin as IIssueTrackerPlugin;
-                    builder.AppendLine("Plugin Enabled: " + plugin.GetPluginDescription().Name);
-                    cnt++;
-                }
-            }
-
-            if (cnt != 1)
-            {
-                MessageDisplayBox.DisplayMessage("More than on issue tracker plugin is enabled, make sure only one pluing is enabled", builder.ToString());
-                return null;
-            }
-
-            return pluginOut;
-        }
-
-        /// <summary>
         ///     Gets or sets a value indicating whether changes are required.
         /// </summary>
         public bool ChangesAreRequired { get; set; }
@@ -264,7 +233,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <value>
         /// The source code plugins.
         /// </value>
-        public List<ISourceVersionPlugin> SourceCodePlugins { get; private set; }
+        public IList<ISourceVersionPlugin> SourceCodePlugins { get; private set; }
 
         /// <summary>
         /// Gets or sets the project.
@@ -277,6 +246,36 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         #endregion
 
         #region Public Methods and Operators
+
+
+        /// <summary>
+        /// Gets the issue tracker plugin.
+        /// </summary>
+        /// <returns>enabled plugin</returns>
+        public IIssueTrackerPlugin GetIssueTrackerPlugin()
+        {
+            IIssueTrackerPlugin pluginOut = null;
+
+            int cnt = 0;
+            var builder = new StringBuilder();
+            foreach (IPlugin plugin in this.IssueTrackerPlugins)
+            {
+                if (plugin.GetPluginDescription().Enabled)
+                {
+                    pluginOut = plugin as IIssueTrackerPlugin;
+                    builder.AppendLine("Plugin Enabled: " + plugin.GetPluginDescription().Name);
+                    cnt++;
+                }
+            }
+
+            if (cnt != 1)
+            {
+                MessageDisplayBox.DisplayMessage("More than on issue tracker plugin is enabled, make sure only one pluing is enabled", builder.ToString());
+                return null;
+            }
+
+            return pluginOut;
+        }
 
         /// <summary>
         /// The init data association.

@@ -526,7 +526,14 @@
             this.InitViewsAndModels();
 
             // start association module after all models are started
-            this.AssociationModule = new AssociationModel(this.notificationManager, this.sonarRestConnector, this.configurationHelper, this.sonarKeyTranslator, this);
+            this.AssociationModule = new AssociationModel(
+                this.notificationManager,
+                this.sonarRestConnector,
+                this.configurationHelper,
+                this.sonarKeyTranslator,
+                this.VSonarQubeOptionsViewData.PluginManager,
+                this);
+
             this.AssociationModule.UpdateServicesInModels(this.VsHelper, this.StatusBar, this.ServiceProvider);
             this.UpdateTheme(Colors.Black, Colors.White);
 

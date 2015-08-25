@@ -10,6 +10,7 @@
     using ViewModel.Helpers;
     using ViewModel;
     using Model.Helpers;
+    using ViewModel.Configuration;
 
     [TestFixture]
     class AssociationModelTests
@@ -19,7 +20,7 @@
         {
             AssociationModel associationModel;
             associationModel =
-              new AssociationModel(null, null, null, null, null);
+              new AssociationModel(null, null, null, null, null, null);
             Assert.That(associationModel.CreateResourcePathFile(null, null), Is.Null);
         }
 
@@ -29,7 +30,7 @@
             AssociationModel associationModel;
             Resource resource;
             StandAloneVsHelper s0 = new StandAloneVsHelper();
-            associationModel = new AssociationModel(null, null, null, null, null);
+            associationModel = new AssociationModel(null, null, null, null, null, null);
             associationModel.UpdateServicesInModels(s0, null, null);
             Assert.Throws<NotImplementedException>(() => resource = associationModel.CreateResourcePathFile((string)null, (Resource)null));
         }
@@ -42,11 +43,12 @@
             var mockRest = new Mock<ISonarRestService>();
             var mockLogger = new Mock<INotificationManager>();
             var mockConfiguration = new Mock<IConfigurationHelper>();
+            var mockPlugin = new Mock<IPluginManager>();
             var mockSourceProvider = new Mock<ISourceControlProvider>();
             var mockVsHelper = new Mock<IVsEnvironmentHelper>();
             
             AssociationModel associationModel;            
-            associationModel = new AssociationModel(mockLogger.Object, mockRest.Object, mockConfiguration.Object, mockTranslator.Object, null);
+            associationModel = new AssociationModel(mockLogger.Object, mockRest.Object, mockConfiguration.Object, mockTranslator.Object, mockPlugin.Object, null);
             associationModel.UpdateServicesInModels(mockVsHelper.Object, null, null);
 
             Assert.That(associationModel.AssignASonarProjectToSolution(null, null), Is.False);
@@ -59,11 +61,12 @@
             var mockRest = new Mock<ISonarRestService>();
             var mockLogger = new Mock<INotificationManager>();
             var mockConfiguration = new Mock<IConfigurationHelper>();
+            var mockPlugin = new Mock<IPluginManager>();
             var mockSourceProvider = new Mock<ISourceControlProvider>();
             var mockVsHelper = new Mock<IVsEnvironmentHelper>();
 
             AssociationModel associationModel;
-            associationModel = new AssociationModel(mockLogger.Object, mockRest.Object, mockConfiguration.Object, mockTranslator.Object, new SonarQubeViewModel("test"));
+            associationModel = new AssociationModel(mockLogger.Object, mockRest.Object, mockConfiguration.Object, mockTranslator.Object, mockPlugin.Object, new SonarQubeViewModel("test"));
             associationModel.UpdateServicesInModels(mockVsHelper.Object, null, null);
 
             Assert.That(associationModel.AssignASonarProjectToSolution(new Resource() { IsBranch = true}, null), Is.False);
@@ -76,6 +79,7 @@
             var mockTranslator = new Mock<ISQKeyTranslator>();
             var mockRest = new Mock<ISonarRestService>();
             var mockLogger = new Mock<INotificationManager>();
+            var mockPlugin = new Mock<IPluginManager>();
             var mockConfiguration = new Mock<IConfigurationHelper>();
             var mockSourceProvider = new Mock<ISourceControlProvider>();
             var mockVsHelper = new Mock<IVsEnvironmentHelper>();
@@ -84,7 +88,7 @@
             var mockObj = mockConfiguration.Object;
 
             AssociationModel associationModel;
-            associationModel = new AssociationModel(mockLogger.Object, mockRest.Object, mockObj, mockTranslator.Object, new SonarQubeViewModel("test", mockObj));
+            associationModel = new AssociationModel(mockLogger.Object, mockRest.Object, mockObj, mockTranslator.Object, mockPlugin.Object, new SonarQubeViewModel("test", mockObj));
             associationModel.UpdateServicesInModels(mockVsHelper.Object, null, null);
 
             Assert.That(associationModel.AssignASonarProjectToSolution(new Resource() { IsBranch = false }, null), Is.True);
@@ -98,6 +102,7 @@
             var mockRest = new Mock<ISonarRestService>();
             var mockLogger = new Mock<INotificationManager>();
             var mockConfiguration = new Mock<IConfigurationHelper>();
+            var mockPlugin = new Mock<IPluginManager>();
             var mockSourceProvider = new Mock<ISourceControlProvider>();
             var mockVsHelper = new Mock<IVsEnvironmentHelper>();
 
@@ -105,7 +110,7 @@
             var mockObj = mockConfiguration.Object;
 
             AssociationModel associationModel;
-            associationModel = new AssociationModel(mockLogger.Object, mockRest.Object, mockObj, mockTranslator.Object, new SonarQubeViewModel("test", mockObj));
+            associationModel = new AssociationModel(mockLogger.Object, mockRest.Object, mockObj, mockTranslator.Object, mockPlugin.Object, new SonarQubeViewModel("test", mockObj));
             associationModel.UpdateServicesInModels(mockVsHelper.Object, null, null);
 
             Assert.That(associationModel.AssignASonarProjectToSolution(new Resource() { IsBranch = false }, new Resource() { Default = true }), Is.True);
