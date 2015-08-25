@@ -173,7 +173,15 @@
             get
             {
                 // create a new source control provider for solution
-                return this.model.VSonarQubeOptionsViewData.PluginManager.GetIssueTrackerPlugin();
+                try
+                {
+                    return this.model.VSonarQubeOptionsViewData.PluginManager.GetIssueTrackerPlugin();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                    return null;
+                }
             }
         }
 
