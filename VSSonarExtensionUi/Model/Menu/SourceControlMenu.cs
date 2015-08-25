@@ -219,7 +219,6 @@
             {
                 this.manager.ReportMessage(new Message { Id = "SourceControlMenu", Data = "Failed to perform operation: " + ex.Message });
                 this.manager.ReportException(ex);
-                throw;
             }
         }
 
