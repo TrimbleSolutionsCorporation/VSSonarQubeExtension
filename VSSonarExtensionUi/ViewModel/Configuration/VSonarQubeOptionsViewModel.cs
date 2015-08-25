@@ -27,6 +27,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
     using Model.Association;
+    using System.Diagnostics;
 
 
     /// <summary>
@@ -435,7 +436,14 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         {
             foreach (var option in this.AvailableOptionsModels)
             {
-                option.SaveData();
+                try
+                {
+                    option.SaveData();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
             }
 
             this.configurationHelper.SyncSettings();

@@ -268,7 +268,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 }
             }
 
-            if (cnt != 1)
+            if (cnt > 1)
             {
                 MessageDisplayBox.DisplayMessage("More than on issue tracker plugin is enabled, make sure only one pluing is enabled", builder.ToString());
                 return null;
