@@ -81,6 +81,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// The source dir
         /// </summary>
         private string sourceDir;
+        private IIssueTrackerPlugin issueTrackerPlugin;
 
         #endregion
 
@@ -247,6 +248,18 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
         #region Public Methods and Operators
 
+        /// <summary>
+        /// Associates the with new project.
+        /// </summary>
+        /// <param name="configIn">The configuration in.</param>
+        /// <param name="project">The project.</param>
+        /// <param name="workingDir">The working dir.</param>
+        /// <param name="sourceModel">The source model.</param>
+        /// <param name="sourcePlugin">The source plugin.</param>
+        public void AssociateWithNewProject(ISonarConfiguration configIn, Resource project, string workingDir, ISourceControlProvider sourceModel, IIssueTrackerPlugin sourcePlugin)
+        {
+            // not neccessary
+        }
 
         /// <summary>
         /// Gets the issue tracker plugin.
@@ -254,27 +267,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <returns>enabled plugin</returns>
         public IIssueTrackerPlugin GetIssueTrackerPlugin()
         {
-            IIssueTrackerPlugin pluginOut = null;
-
-            int cnt = 0;
-            var builder = new StringBuilder();
-            foreach (IPlugin plugin in this.IssueTrackerPlugins)
-            {
-                if (plugin.GetPluginDescription().Enabled)
-                {
-                    pluginOut = plugin as IIssueTrackerPlugin;
-                    builder.AppendLine("Plugin Enabled: " + plugin.GetPluginDescription().Name);
-                    cnt++;
-                }
-            }
-
-            if (cnt > 1)
-            {
-                MessageDisplayBox.DisplayMessage("More than on issue tracker plugin is enabled, make sure only one pluing is enabled", builder.ToString());
-                return null;
-            }
-
-            return pluginOut;
+            return this.issueTrackerPlugin;
         }
 
         /// <summary>
@@ -454,8 +447,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="project">The project.</param>
         /// <param name="workDir">The work dir.</param>
         /// <param name="provider">The provider.</param>
-        /// <param name="sourcePlugin">The source plugin.</param>
-        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin)
+        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workDir, ISourceControlProvider provider)
         {
             this.sourceDir = workDir;
             this.sonarConf = config;
@@ -491,6 +483,9 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                     Debug.WriteLine(ex.Message);
                 }
             }
+
+            // select issue tracker plugin to use
+            this.SelectIssueTrackerPlugin();
         }
 
         /// <summary>
@@ -602,6 +597,30 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
                     return;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Selects the issue tracker plugin.
+        /// </summary>
+        private void SelectIssueTrackerPlugin()
+        {
+            int cnt = 0;
+            var builder = new StringBuilder();
+            foreach (IPlugin plugin in this.IssueTrackerPlugins)
+            {
+                if (plugin.GetPluginDescription().Enabled)
+                {
+                    this.issueTrackerPlugin = plugin as IIssueTrackerPlugin;
+                    builder.AppendLine("Plugin Enabled: " + plugin.GetPluginDescription().Name);
+                    cnt++;
+                }
+            }
+
+            if (cnt > 1)
+            {
+                MessageDisplayBox.DisplayMessage("More than on issue tracker plugin is enabled, make sure only one pluing is enabled", builder.ToString());
+                this.issueTrackerPlugin = null;
             }
         }
 

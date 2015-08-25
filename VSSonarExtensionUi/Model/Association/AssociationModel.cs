@@ -164,15 +164,6 @@
             }
         }
 
-        public IIssueTrackerPlugin IssueTrackerPlugin
-        {
-            get
-            {
-                // create a new source control provider for solution
-                return this.pluginManager.GetIssueTrackerPlugin();
-            }
-        }
-
         /// <summary>
         /// Registers the new model in pool.
         /// </summary>
@@ -742,8 +733,7 @@
                 AuthtenticationHelper.AuthToken,
                 this.AssociatedProject,
                 this.OpenSolutionPath,
-                this.SourceControl,
-                this.IssueTrackerPlugin);
+                this.SourceControl);
 
             foreach (IModelBase model in modelPool)
             {
@@ -754,7 +744,7 @@
                         this.AssociatedProject,
                         this.OpenSolutionPath,
                         this.SourceControl,
-                        this.IssueTrackerPlugin);
+                        this.pluginManager.GetIssueTrackerPlugin());
                 }
                 catch (Exception ex)
                 {

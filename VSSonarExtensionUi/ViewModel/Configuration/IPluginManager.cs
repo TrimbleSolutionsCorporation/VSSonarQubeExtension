@@ -45,7 +45,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="associatedProject">The associated project.</param>
         /// <param name="openSolutionPath">The open solution path.</param>
         /// <param name="sourceControl">The source control.</param>
-        /// <param name="issueTrackerPlugin">The issue tracker plugin.</param>
-        void AssociateWithNewProject(ISonarConfiguration authToken, Resource associatedProject, string openSolutionPath, ISourceControlProvider sourceControl, IIssueTrackerPlugin issueTrackerPlugin);
+        void AssociateWithNewProject(ISonarConfiguration authToken, Resource associatedProject, string openSolutionPath, ISourceControlProvider sourceControl);
     }
 }
