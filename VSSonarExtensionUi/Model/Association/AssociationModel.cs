@@ -148,26 +148,13 @@
                 if (this.sourceControl == null)
                 {
                     // create a new source control provider for solution
-                    try
-                    {
-                        this.sourceControl = new SourceControlModel(this.model.VSonarQubeOptionsViewData.PluginManager.SourceCodePlugins, this.OpenSolutionPath);
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine(ex.Message);
-                    }
+                    this.sourceControl = new SourceControlModel(this.model.VSonarQubeOptionsViewData.PluginManager.SourceCodePlugins, this.OpenSolutionPath);
                 }
 
                 return this.sourceControl;
             }
         }
 
-        /// <summary>
-        /// Gets the issue tracker plugin.
-        /// </summary>
-        /// <value>
-        /// The issue tracker plugin.
-        /// </value>
         public IIssueTrackerPlugin IssueTrackerPlugin
         {
             get
