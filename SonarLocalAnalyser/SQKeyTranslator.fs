@@ -277,6 +277,39 @@ type SQKeyTranslator() =
                 else
                     ":" + branchIn + ":"
 
+            if lookupType = KeyLookUpType.Invalid then
+
+                let mutable path = Path.Combine(projectBaseDir, key.Replace(projectKey + branch, "").Replace('/', Path.DirectorySeparatorChar))
+
+                if File.Exists(path) then
+                    lookupType <- KeyLookUpType.Flat
+                else
+                    path <-
+                        let keyWithoutProjectKey = key.Replace(projectKey + branch, "")
+                        let allModulesPresentInKey =  keyWithoutProjectKey.Split(':')
+                        let modulesPresentInKey =  Array.sub allModulesPresentInKey 0 (allModulesPresentInKey.Length-1)
+
+                        let mutable currPath = projectBaseDir
+                        for moduleinKey in modulesPresentInKey do
+                            currPath <- getRelativeDirForModuleAgainstPrevious(currPath, moduleinKey)
+
+                        Path.Combine(currPath, allModulesPresentInKey.[allModulesPresentInKey.Length-1].Replace('/', Path.DirectorySeparatorChar))
+
+                    if File.Exists(path) then
+                        lookupType <- KeyLookUpType.Module
+                    else
+                        path <-
+                            let keyWithoutProjectKey = key.Replace(projectKey + branch, "")
+                            let allModulesPresentInKey =  keyWithoutProjectKey.Split(':')
+            
+                            let project = Directory.GetParent(vshelper.GetProjectByNameInSolution(allModulesPresentInKey.[0]).ProjectFilePath).ToString()
+                            Path.Combine(project, allModulesPresentInKey.[1].Replace('/', Path.DirectorySeparatorChar))
+
+                        if File.Exists(path) then
+                            lookupType <- KeyLookUpType.Module
+                        else
+                            lookupType <- KeyLookUpType.Invalid
+                   
             if lookupType = KeyLookUpType.Flat then
                 Path.Combine(projectBaseDir, key.Replace(projectKey + branch, "").Replace('/', Path.DirectorySeparatorChar))
             elif lookupType = KeyLookUpType.Module then
