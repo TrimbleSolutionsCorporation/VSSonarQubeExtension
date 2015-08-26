@@ -102,6 +102,12 @@
         /// </summary>
         private void OnAssignProjectCommand()
         {
+            if (this.SelectedProject == null)
+            {
+                MessageBox.Show("Please select a project, or if empty please login in the Menu > Configuration in the Sonar Window");
+                return;
+            }
+
             if (this.SelectedProject.IsBranch && this.SelectedBranchProject == null)
             {
                 MessageBox.Show("Please select a feature branch as the in use branch");
