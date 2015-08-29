@@ -128,6 +128,8 @@
             this.OpenInVsCommand = new RelayCommand<IList>(this.OnOpenInVsCommand);
             this.MouseEventCommand = new RelayCommand(this.OnMouseEventCommand);
 
+            this.CloseFlyoutCommand = new RelayCommand(() => this.IsCommentEnabled = false);
+
             this.SelectionChangedCommand = new RelayCommand<IList>(
                 items =>
                     {
@@ -174,6 +176,34 @@
         ///     Gets or sets a value indicating whether assignee visible.
         /// </summary>
         public bool AssigneeVisible { get; set; }
+
+        /// <summary>
+        /// Gets or sets the selected issue.
+        /// </summary>
+        /// <value>
+        /// The selected issue.
+        /// </value>
+        public Issue SelectedIssue { get; set; }
+
+        public void OnSelectedIssueChanged()
+        {
+            if (this.SelectedIssue != null && this.SelectedIssue.Comments.Count != 0)
+            {
+                this.IsCommentEnabled = true;
+            }
+            else
+            {
+                this.IsCommentEnabled = false;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is comment enabled.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is comment enabled; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsCommentEnabled { get; set; }
 
         /// <summary>
         ///     Gets or sets the back ground color.
@@ -653,6 +683,7 @@
 
         /// <summary>Gets or sets the debt index.</summary>
         public int DebtIndex { get; set; }
+        public ICommand CloseFlyoutCommand { get; private set; }
 
         #endregion
 

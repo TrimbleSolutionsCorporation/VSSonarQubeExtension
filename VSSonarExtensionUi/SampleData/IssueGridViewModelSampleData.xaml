@@ -1,0 +1,771 @@
+﻿<Helpers:IssueGridViewModel xmlns:Helpers="clr-namespace:VSSonarExtensionUi.ViewModel.Helpers" xmlns:Types="clr-namespace:VSSonarPlugins.Types;assembly=VSSonarPlugins" xmlns:System="clr-namespace:System;assembly=mscorlib" AssigneeVisible="True" AssigneeIndex="35" BusyIndicatorTooltip="Vestibulum mauris tincidunt" BackGroundColor="#FF355D64" CloseDateIndex="10" CloseDateVisible="True" CreationDateVisible="True" ComponentIndex="81" CanHideColoumnCommand="False" ComponentVisible="False" CreationDateIndex="43" DebtIndex="54" DebtVisible="False" ExtensionIsBusy="True" EffortToFixIndex="32" EffortToFixVisible="False" FilterTermIsNew="Tristique adipiscing nascetur" FilterTermAssignee="Justo vel nam" FilterTermRule="Montes pharetra" FilterTermProject="Mollis sed lorem parturient" FilterTermComponent="Lacus potenti vestibulum" ForeGroundColor="#FF090F04" FilterTermMessage="Pretium cras" Header="Ultricies rhoncus nostra" IsNewVisible="True" IssuesCounter="Tincidunt tempus" IsNewIndex="41" IdIndex="51" IsCommentEnabled="True" IdVisible="False" KeyIndex="82" KeyVisible="False" LineIndex="22" LineVisible="True" MessageIndex="85" MessageVisible="False" NumberOfCriticals="88" NumberOfMajorsStr="Commodo conubia" NumberOfCriticalsStr="Ultricies venenatis nisi vulputate" NumberOfIssues="42" NumberOfBlockersStr="Vestibulum sed" NumberOfMajors="11" NumberOfIssuesStr="Nibh vestibulum vehicula tortor blandit" Name="Ultrices eros vestibulum tristique vel" NumberOfBlockers="20" ProjectVisible="True" ProjectIndex="10" QueryForIssuesIsRunning="False" RuleIndex="21" ResolutionVisible="True" ResolutionIndex="29" RuleVisible="False" SeverityVisible="True" SeverityIndex="33" ShowSqaleRating="True" SelectedIndex="76" StatusIndex="67" SqaleRating="Turpis adipiscing dis varius" ShowHeaderContextMenu="True" SqaleRatingStr="Volutpat cubilia aenean" ShowContextMenu="False" StatusVisible="False" TechnicalDebtStr="Vestibulum adipiscing nam parturient" UpdateDateVisible="True" UpdateDateIndex="36" ViolationIdVisible="False" ViolationIdIndex="59">
+	<Helpers:IssueGridViewModel.AllIssues>
+		<Types:Issue Assignee="Congue etiam fusce" CreationDate="08/29/2015 20:06:24" Component="Cras nam aliquam" CloseDate="08/29/2015 20:06:24" Debt="Justo blandit fermentum" Id="48" IsNew="True" IssueTrackerId="Duis cursus nunc" Line="76" LocalPath="Class maecenas curae" Message="Vestibulum aenean donec mauris" Project="Integer nullam praesent adipiscing parturient" Resolution="FIXED" Rule="Quisque aptent auctor" Severity="UNDEFINED" Status="REOPENED" UpdateDate="08/29/2015 20:06:24" ViolationId="63">
+			<Types:Issue.Comments>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Curabitur phasellus" Id="69" Login="Sed vestibulum">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Lorem vivamus accumsan morbi" Id="95" Login="Nulla consequat convallis amet">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Proin bibendum dignissim" Id="47" Login="Elementum augue dolor dis">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Dictum dictumst eleifend ante facilisis" Id="14" Login="Est fames hac aliquam arcu">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Diam felis leo ipsum" Id="75" Login="Mus nec aliquet">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+			</Types:Issue.Comments>
+			<Types:Issue.EffortToFix>
+				<System:Decimal/>
+			</Types:Issue.EffortToFix>
+			<Types:Issue.Key>
+				<System:Guid/>
+			</Types:Issue.Key>
+		</Types:Issue>
+		<Types:Issue Assignee="Vestibulum dapibus" CreationDate="08/29/2015 20:06:24" Component="Fringilla elit facilisi" CloseDate="08/29/2015 20:06:24" Debt="Pretium est" Id="29" IsNew="False" IssueTrackerId="Per egestas erat habitasse sed" Line="10" LocalPath="Commodo vestibulum lacus" Message="Non adipiscing eget" Project="Conubia cubilia" Resolution="UNDEFINED" Rule="Parturient vestibulum enim" Severity="INFO" Status="CONFIRMED" UpdateDate="08/29/2015 20:06:24" ViolationId="83">
+			<Types:Issue.Comments>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Euismod eros sem sit lectus" Id="66" Login="Faucibus hendrerit">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Lorem feugiat nibh gravida habitant" Id="14" Login="Libero iaculis lacinia">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Ligula laoreet magna natoque" Id="52" Login="Nisi nisl massa adipiscing">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Posuere metus morbi" Id="34" Login="Parturient neque potenti">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Vel nam sed inceptos himenaeos" Id="93" Login="Vestibulum interdum nunc dis litora">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+			</Types:Issue.Comments>
+			<Types:Issue.EffortToFix>
+				<System:Decimal/>
+			</Types:Issue.EffortToFix>
+			<Types:Issue.Key>
+				<System:Guid/>
+			</Types:Issue.Key>
+		</Types:Issue>
+		<Types:Issue Assignee="Mauris nascetur integer" CreationDate="08/29/2015 20:06:24" Component="Luctus leo magnis nulla viverra" CloseDate="08/29/2015 20:06:24" Debt="Pulvinar per" Id="79" IsNew="True" IssueTrackerId="Quis mollis" Line="10" LocalPath="Vestibulum odio netus" Message="Hac orci rhoncus sodales" Project="Aliquam adipiscing porta pede mattis" Resolution="FALSE_POSITIVE" Rule="Imperdiet quam lobortis" Severity="MAJOR" Status="RESOLVED" UpdateDate="08/29/2015 20:06:24" ViolationId="43">
+			<Types:Issue.Comments>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Parturient quisque vivamus" Id="92" Login="Malesuada urna aliquam penatibus">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Mus cras duis nec" Id="21" Login="Pharetra aliquet">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Non porttitor purus vestibulum montes" Id="91" Login="Blandit placerat">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Nostra nunc vestibulum" Id="32" Login="Commodo conubia">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Tincidunt risus velit adipiscing" Id="88" Login="Cubilia amet">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+			</Types:Issue.Comments>
+			<Types:Issue.EffortToFix>
+				<System:Decimal/>
+			</Types:Issue.EffortToFix>
+			<Types:Issue.Key>
+				<System:Guid/>
+			</Types:Issue.Key>
+		</Types:Issue>
+		<Types:Issue Assignee="Platea tristique ultricies class" CreationDate="08/29/2015 20:06:24" Component="Vestibulum vestibulum euismod" CloseDate="08/29/2015 20:06:24" Debt="Tempor proin dis augue" Id="26" IsNew="False" IssueTrackerId="Curae gravida donec" Line="69" LocalPath="Dapibus vitae parturient" Message="Sed egestas" Project="Feugiat ornare" Resolution="FALSE_POSITIVE" Rule="Sagittis ante" Severity="MINOR" Status="CONFIRMED" UpdateDate="08/29/2015 20:06:24" ViolationId="24">
+			<Types:Issue.Comments>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Adipiscing iaculis sem venenatis" Id="35" Login="Senectus parturient etiam fusce lorem">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Primis sit sociosqu vel" Id="18" Login="Rutrum lacinia nam vulputate curabitur">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Morbi sapien semper" Id="81" Login="Laoreet arcu">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Phasellus suscipit nulla sociis sed" Id="39" Login="Vestibulum taciti">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Vestibulum natoque adipiscing parturient torquent" Id="99" Login="Posuere tellus">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+			</Types:Issue.Comments>
+			<Types:Issue.EffortToFix>
+				<System:Decimal/>
+			</Types:Issue.EffortToFix>
+			<Types:Issue.Key>
+				<System:Guid/>
+			</Types:Issue.Key>
+		</Types:Issue>
+		<Types:Issue Assignee="Elit tempus elementum tortor turpis" CreationDate="08/29/2015 20:06:24" Component="Convallis hac sodales leo diam" CloseDate="08/29/2015 20:06:24" Debt="Maecenas sit vestibulum nullam" Id="77" IsNew="True" IssueTrackerId="Facilisis enim fermentum nec" Line="90" LocalPath="Potenti ultrices est pretium" Message="Vehicula rhoncus consequat vestibulum" Project="Dignissim dolor fames eget mus" Resolution="FIXED" Rule="Felis viverra" Severity="MAJOR" Status="CONFIRMED" UpdateDate="08/29/2015 20:06:24" ViolationId="46">
+			<Types:Issue.Comments>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Aliquam ipsum" Id="17" Login="Varius erat eros vestibulum">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Adipiscing non" Id="57" Login="Justo per volutpat integer nibh">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Nisi aenean" Id="10" Login="Mauris quisque fringilla sed">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Lacus nisl" Id="69" Login="Lorem magna">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Parturient vivamus" Id="33" Login="Sem nunc habitasse">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+			</Types:Issue.Comments>
+			<Types:Issue.EffortToFix>
+				<System:Decimal/>
+			</Types:Issue.EffortToFix>
+			<Types:Issue.Key>
+				<System:Guid/>
+			</Types:Issue.Key>
+		</Types:Issue>
+		<Types:Issue Assignee="Imperdiet vestibulum hac aptent" CreationDate="08/29/2015 20:06:24" Component="Massa metus adipiscing dis" CloseDate="08/29/2015 20:06:24" Debt="Conubia duis vestibulum nunc" Id="11" IsNew="False" IssueTrackerId="Adipiscing neque leo" Line="59" LocalPath="Vel hendrerit odio praesent nam" Message="Himenaeos sed vestibulum" Project="Accumsan parturient" Resolution="REMOVED" Rule="Est orci morbi vestibulum" Severity="MAJOR" Status="OPEN" UpdateDate="08/29/2015 20:06:24" ViolationId="51">
+			<Types:Issue.Comments>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Auctor aliquam mus bibendum" Id="41" Login="Nec congue pede quam">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Netus aliquet nulla" Id="26" Login="Non malesuada cursus penatibus">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Porttitor quis parturient" Id="83" Login="Tincidunt porta urna purus">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Dictumst per" Id="91" Login="Sed blandit">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Eleifend cras vestibulum" Id="82" Login="Risus commodo tristique ultricies facilisi">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+			</Types:Issue.Comments>
+			<Types:Issue.EffortToFix>
+				<System:Decimal/>
+			</Types:Issue.EffortToFix>
+			<Types:Issue.Key>
+				<System:Guid/>
+			</Types:Issue.Key>
+		</Types:Issue>
+		<Types:Issue Assignee="Vestibulum vel" CreationDate="08/29/2015 20:06:24" Component="Habitant amet cubilia dapibus sem" CloseDate="08/29/2015 20:06:24" Debt="Pharetra leo placerat facilisis luctus" Id="28" IsNew="True" IssueTrackerId="Inceptos egestas" Line="96" LocalPath="Velit venenatis faucibus" Message="Adipiscing dictum vitae" Project="Ante parturient lectus" Resolution="REMOVED" Rule="Sit vestibulum vulputate arcu" Severity="BLOCKER" Status="RESOLVED" UpdateDate="08/29/2015 20:06:24" ViolationId="90">
+			<Types:Issue.Comments>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Interdum nam" Id="18" Login="Diam adipiscing parturient euismod">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Eget sed curabitur feugiat phasellus" Id="52" Login="Dis lobortis est nascetur class">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Vestibulum curae donec vestibulum" Id="13" Login="Adipiscing elit">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Hac consequat" Id="19" Login="Libero enim convallis">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Dignissim elementum ligula etiam" Id="84" Login="Parturient litora">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+			</Types:Issue.Comments>
+			<Types:Issue.EffortToFix>
+				<System:Decimal/>
+			</Types:Issue.EffortToFix>
+			<Types:Issue.Key>
+				<System:Guid/>
+			</Types:Issue.Key>
+		</Types:Issue>
+		<Types:Issue Assignee="Senectus sociosqu fermentum suscipit" CreationDate="08/29/2015 20:06:24" Component="Gravida lorem" CloseDate="08/29/2015 20:06:24" Debt="Parturient viverra" Id="74" IsNew="False" IssueTrackerId="Iaculis adipiscing nulla" Line="25" LocalPath="Fusce erat" Message="Vestibulum magnis pulvinar" Project="Vestibulum sagittis" Resolution="REMOVED" Rule="Mus morbi mattis eros" Severity="MAJOR" Status="RESOLVED" UpdateDate="08/29/2015 20:06:24" ViolationId="99">
+			<Types:Issue.Comments>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Mauris fringilla" Id="79" Login="Torquent mollis proin">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Montes augue parturient" Id="32" Login="Lacinia nec vestibulum non">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Laoreet nostra vestibulum nibh" Id="78" Login="Adipiscing ornare platea natoque posuere">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Potenti pretium ultrices" Id="67" Login="Rhoncus primis">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Nisi vehicula dolor" Id="28" Login="Volutpat per sodales maecenas rutrum">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+			</Types:Issue.Comments>
+			<Types:Issue.EffortToFix>
+				<System:Decimal/>
+			</Types:Issue.EffortToFix>
+			<Types:Issue.Key>
+				<System:Guid/>
+			</Types:Issue.Key>
+		</Types:Issue>
+		<Types:Issue Assignee="Tellus hendrerit vestibulum" CreationDate="08/29/2015 20:06:24" Component="Praesent odio ipsum vestibulum" CloseDate="08/29/2015 20:06:24" Debt="Nulla adipiscing quisque tristique" Id="84" IsNew="True" IssueTrackerId="Justo sem himenaeos adipiscing pede" Line="89" LocalPath="Sapien semper nisl nunc" Message="Fames sociis felis" Project="Accumsan bibendum taciti habitasse" Resolution="REMOVED" Rule="Orci sed" Severity="UNDEFINED" Status="UNDEFINED" UpdateDate="08/29/2015 20:06:24" ViolationId="75">
+			<Types:Issue.Comments>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Dictumst eleifend parturient vestibulum" Id="37" Login="Lacus lorem sit tempor">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Tempus imperdiet tortor magna massa" Id="15" Login="Metus vel">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Quam malesuada aliquam quis" Id="26" Login="Turpis integer vestibulum penatibus porttitor">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Tincidunt varius" Id="46" Login="Morbi facilisi">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Nam neque" Id="10" Login="Netus faucibus">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+			</Types:Issue.Comments>
+			<Types:Issue.EffortToFix>
+				<System:Decimal/>
+			</Types:Issue.EffortToFix>
+			<Types:Issue.Key>
+				<System:Guid/>
+			</Types:Issue.Key>
+		</Types:Issue>
+		<Types:Issue Assignee="Pharetra vulputate duis" CreationDate="08/29/2015 20:06:24" Component="Cras inceptos porta vestibulum venenatis" CloseDate="08/29/2015 20:06:24" Debt="Vestibulum dictum lectus libero" Id="20" IsNew="False" IssueTrackerId="Nunc adipiscing dis purus" Line="20" LocalPath="Aenean habitant ultricies parturient" Message="Vestibulum urna" Project="Sed interdum lobortis" Resolution="REMOVED" Rule="Mauris vivamus aliquam nullam nascetur" Severity="MINOR" Status="CLOSED" UpdateDate="08/29/2015 20:06:24" ViolationId="42">
+			<Types:Issue.Comments>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Aptent est auctor curabitur" Id="20" Login="Parturient risus placerat">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Velit phasellus" Id="50" Login="Hac pulvinar vitae aliquet class">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Consequat amet congue vestibulum" Id="91" Login="Sagittis ante vestibulum curae">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Adipiscing convallis leo parturient donec" Id="72" Login="Vestibulum vestibulum arcu">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Blandit adipiscing parturient" Id="86" Login="Commodo senectus diam eget cursus">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+			</Types:Issue.Comments>
+			<Types:Issue.EffortToFix>
+				<System:Decimal/>
+			</Types:Issue.EffortToFix>
+			<Types:Issue.Key>
+				<System:Guid/>
+			</Types:Issue.Key>
+		</Types:Issue>
+	</Helpers:IssueGridViewModel.AllIssues>
+	<Helpers:IssueGridViewModel.Issues>
+		<Types:Issue Assignee="Mus adipiscing metus" CreationDate="08/29/2015 20:06:24" Component="Platea est placerat hac primis" CloseDate="08/29/2015 20:06:24" Debt="Arcu sed parturient fermentum" Id="64" IsNew="False" IssueTrackerId="Semper nec sociis" Line="17" LocalPath="Venenatis vestibulum vestibulum ornare" Message="Duis dis" Project="Rutrum vulputate magna sapien leo" Resolution="FIXED" Rule="Massa curabitur nunc" Severity="MAJOR" Status="CLOSED" UpdateDate="08/29/2015 20:06:24" ViolationId="76">
+			<Types:Issue.Comments>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Taciti non morbi per" Id="80" Login="Phasellus neque">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Tellus netus sed parturient tempor" Id="82" Login="Sem pulvinar sit tempus">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Tortor sagittis amet" Id="90" Login="Sodales ante consequat">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Viverra convallis" Id="98" Login="Vestibulum vestibulum vel dignissim senectus">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Aliquam turpis integer" Id="41" Login="Varius elementum adipiscing facilisis nam">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+			</Types:Issue.Comments>
+			<Types:Issue.EffortToFix>
+				<System:Decimal/>
+			</Types:Issue.EffortToFix>
+			<Types:Issue.Key>
+				<System:Guid/>
+			</Types:Issue.Key>
+		</Types:Issue>
+		<Types:Issue Assignee="Himenaeos imperdiet vivamus" CreationDate="08/29/2015 20:06:24" Component="Nulla diam habitasse adipiscing" CloseDate="08/29/2015 20:06:24" Debt="Fusce bibendum tristique vel dictumst" Id="98" IsNew="True" IssueTrackerId="Nullam leo risus" Line="70" LocalPath="Dis est sociosqu aenean vestibulum" Message="Vestibulum suscipit torquent fringilla quisque" Project="Ultrices hendrerit porta purus" Resolution="FALSE_POSITIVE" Rule="Hac vehicula mauris" Severity="UNDEFINED" Status="OPEN" UpdateDate="08/29/2015 20:06:24" ViolationId="43">
+			<Types:Issue.Comments>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Volutpat eget" Id="34" Login="Aptent elit maecenas">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Velit malesuada enim praesent" Id="12" Login="Penatibus vitae mus nec">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Class non" Id="23" Login="Parturient per erat auctor">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Aliquam vestibulum curae sed" Id="54" Login="Porttitor vestibulum adipiscing eros">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Congue nibh donec nisi sem" Id="90" Login="Tincidunt accumsan sit aliquet etiam">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+			</Types:Issue.Comments>
+			<Types:Issue.EffortToFix>
+				<System:Decimal/>
+			</Types:Issue.EffortToFix>
+			<Types:Issue.Key>
+				<System:Guid/>
+			</Types:Issue.Key>
+		</Types:Issue>
+		<Types:Issue Assignee="Commodo dolor facilisi" CreationDate="08/29/2015 20:06:24" Component="Nulla ultricies" CloseDate="08/29/2015 20:06:24" Debt="Pharetra placerat" Id="78" IsNew="False" IssueTrackerId="Nisl fames vestibulum" Line="49" LocalPath="Nam parturient" Message="Vestibulum lorem sed morbi" Project="Eleifend cursus" Resolution="UNDEFINED" Rule="Dis blandit proin augue est" Severity="CRITICAL" Status="UNDEFINED" UpdateDate="08/29/2015 20:06:24" ViolationId="37">
+			<Types:Issue.Comments>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Felis faucibus" Id="68" Login="Ipsum nunc">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Dictum justo conubia" Id="37" Login="Cubilia habitant lectus dapibus">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Libero odio" Id="88" Login="Lacus orci adipiscing">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Inceptos venenatis vulputate hac ligula" Id="69" Login="Egestas interdum leo">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Lorem magna lobortis" Id="53" Login="Litora curabitur mus parturient nascetur">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+			</Types:Issue.Comments>
+			<Types:Issue.EffortToFix>
+				<System:Decimal/>
+			</Types:Issue.EffortToFix>
+			<Types:Issue.Key>
+				<System:Guid/>
+			</Types:Issue.Key>
+		</Types:Issue>
+		<Types:Issue Assignee="Adipiscing metus" CreationDate="08/29/2015 20:06:24" Component="Massa per vestibulum luctus" CloseDate="08/29/2015 20:06:24" Debt="Mauris hac leo" Id="63" IsNew="True" IssueTrackerId="Morbi gravida" Line="34" LocalPath="Phasellus pede euismod nec feugiat" Message="Non consequat" Project="Sed sem sit" Resolution="FIXED" Rule="Vestibulum pulvinar sagittis" Severity="INFO" Status="CONFIRMED" UpdateDate="08/29/2015 20:06:24" ViolationId="10">
+			<Types:Issue.Comments>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Senectus vel neque convallis quam" Id="30" Login="Iaculis nam dignissim lacinia laoreet">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Parturient sociosqu" Id="20" Login="Natoque posuere vestibulum">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Netus potenti" Id="60" Login="Nulla suscipit porta sed">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Pretium torquent rhoncus purus" Id="76" Login="Quis ultrices">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Magnis dis" Id="28" Login="Mattis est risus">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+			</Types:Issue.Comments>
+			<Types:Issue.EffortToFix>
+				<System:Decimal/>
+			</Types:Issue.EffortToFix>
+			<Types:Issue.Key>
+				<System:Guid/>
+			</Types:Issue.Key>
+		</Types:Issue>
+		<Types:Issue Assignee="Vivamus volutpat nec" CreationDate="08/29/2015 20:06:24" Component="Aliquam vitae" CloseDate="08/29/2015 20:06:24" Debt="Semper habitasse sociis taciti sit" Id="40" IsNew="False" IssueTrackerId="Aliquam duis curae" Line="50" LocalPath="Urna cras velit mollis" Message="Montes vehicula sodales viverra nostra" Project="Integer quisque vestibulum" Resolution="UNDEFINED" Rule="Class mus" Severity="MINOR" Status="RESOLVED" UpdateDate="08/29/2015 20:06:24" ViolationId="78">
+			<Types:Issue.Comments>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Maecenas aliquet adipiscing parturient praesent" Id="70" Login="Accumsan non blandit commodo">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Donec ornare" Id="65" Login="Platea elementum">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Per nunc facilisis etiam conubia" Id="58" Login="Cubilia vestibulum fusce sed">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Vestibulum bibendum" Id="16" Login="Sem primis fermentum lorem rutrum">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Dictumst sapien dapibus" Id="10" Login="Adipiscing fringilla">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+			</Types:Issue.Comments>
+			<Types:Issue.EffortToFix>
+				<System:Decimal/>
+			</Types:Issue.EffortToFix>
+			<Types:Issue.Key>
+				<System:Guid/>
+			</Types:Issue.Key>
+		</Types:Issue>
+		<Types:Issue Assignee="Est eleifend egestas morbi parturient" CreationDate="08/29/2015 20:06:24" Component="Nam sed" CloseDate="08/29/2015 20:06:24" Debt="Elit dolor potenti per pretium" Id="25" IsNew="True" IssueTrackerId="Diam himenaeos facilisi" Line="32" LocalPath="Parturient tellus" Message="Vestibulum vestibulum vel amet" Project="Ante adipiscing hendrerit tempor tempus" Resolution="UNDEFINED" Rule="Dis arcu" Severity="INFO" Status="OPEN" UpdateDate="08/29/2015 20:06:24" ViolationId="26">
+			<Types:Issue.Comments>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Hac vestibulum imperdiet" Id="69" Login="Malesuada euismod leo feugiat tortor">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Turpis penatibus" Id="27" Login="Gravida iaculis lacinia varius">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Eget vestibulum aenean mus nulla" Id="68" Login="Laoreet mauris">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Faucibus proin" Id="80" Login="Adipiscing natoque habitant">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Porttitor tincidunt augue nec posuere" Id="87" Login="Tristique non inceptos ultricies parturient">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+			</Types:Issue.Comments>
+			<Types:Issue.EffortToFix>
+				<System:Decimal/>
+			</Types:Issue.EffortToFix>
+			<Types:Issue.Key>
+				<System:Guid/>
+			</Types:Issue.Key>
+		</Types:Issue>
+		<Types:Issue Assignee="Nascetur curabitur enim" CreationDate="08/29/2015 20:06:24" Component="Interdum sodales viverra lobortis venenatis" CloseDate="08/29/2015 20:06:24" Debt="Metus dictum sed sociosqu suscipit" Id="19" IsNew="False" IssueTrackerId="Phasellus lacus consequat sed" Line="45" LocalPath="Nullam fames" Message="Rhoncus vestibulum aptent" Project="Vestibulum vulputate felis" Resolution="UNDEFINED" Rule="Ipsum justo" Severity="MAJOR" Status="RESOLVED" UpdateDate="08/29/2015 20:06:24" ViolationId="41">
+			<Types:Issue.Comments>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Lorem erat" Id="65" Login="Pharetra aliquam convallis integer">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Eros placerat" Id="94" Login="Nibh auctor magna">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Adipiscing sem" Id="82" Login="Massa pulvinar">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Sit nisi vel" Id="14" Login="Nisl nunc quisque odio">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Sagittis nam senectus" Id="29" Login="Congue cursus">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+			</Types:Issue.Comments>
+			<Types:Issue.EffortToFix>
+				<System:Decimal/>
+			</Types:Issue.EffortToFix>
+			<Types:Issue.Key>
+				<System:Guid/>
+			</Types:Issue.Key>
+		</Types:Issue>
+		<Types:Issue Assignee="Pede vivamus aliquam non aliquet" CreationDate="08/29/2015 20:06:24" Component="Lectus hac torquent libero ligula" CloseDate="08/29/2015 20:06:24" Debt="Volutpat vel mattis adipiscing" Id="33" IsNew="True" IssueTrackerId="Blandit habitasse litora" Line="94" LocalPath="Dignissim morbi dis" Message="Neque netus elementum facilisis est" Project="Nulla orci" Resolution="FALSE_POSITIVE" Rule="Leo mus fermentum nec fringilla" Severity="CRITICAL" Status="RESOLVED" UpdateDate="08/29/2015 20:06:24" ViolationId="56">
+			<Types:Issue.Comments>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Per parturient" Id="28" Login="Quam sed ultrices">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Commodo quis vehicula porta" Id="90" Login="Purus hendrerit">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Risus urna" Id="77" Login="Sem himenaeos conubia cubilia">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Velit dapibus luctus cras" Id="31" Login="Magnis vitae">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Egestas sit vestibulum euismod duis" Id="20" Login="Imperdiet vestibulum malesuada">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+			</Types:Issue.Comments>
+			<Types:Issue.EffortToFix>
+				<System:Decimal/>
+			</Types:Issue.EffortToFix>
+			<Types:Issue.Key>
+				<System:Guid/>
+			</Types:Issue.Key>
+		</Types:Issue>
+		<Types:Issue Assignee="Dictumst eleifend facilisi est faucibus" CreationDate="08/29/2015 20:06:24" Component="Bibendum lacinia sed tincidunt" CloseDate="08/29/2015 20:06:24" Debt="Phasellus platea" Id="25" IsNew="False" IssueTrackerId="Hac leo" Line="31" LocalPath="Feugiat penatibus gravida maecenas porttitor" Message="Nam iaculis praesent accumsan parturient" Project="Vestibulum laoreet nunc dis" Resolution="FALSE_POSITIVE" Rule="Class amet" Severity="CRITICAL" Status="UNDEFINED" UpdateDate="08/29/2015 20:06:24" ViolationId="83">
+			<Types:Issue.Comments>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Tristique curae mauris" Id="71" Login="Ante donec habitant arcu etiam">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Ultricies vestibulum natoque inceptos" Id="44" Login="Mollis posuere venenatis potenti interdum">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Fusce montes nostra" Id="83" Login="Lorem adipiscing ornare">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Pretium lobortis nascetur morbi" Id="34" Login="Nulla parturient">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Diam rhoncus mus vulputate" Id="91" Login="Vestibulum curabitur proin eget">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+			</Types:Issue.Comments>
+			<Types:Issue.EffortToFix>
+				<System:Decimal/>
+			</Types:Issue.EffortToFix>
+			<Types:Issue.Key>
+				<System:Guid/>
+			</Types:Issue.Key>
+		</Types:Issue>
+		<Types:Issue Assignee="Parturient facilisis aliquam integer primis" CreationDate="08/29/2015 20:06:24" Component="Adipiscing viverra convallis" CloseDate="08/29/2015 20:06:24" Debt="Magna aliquet" Id="37" IsNew="True" IssueTrackerId="Fermentum rutrum" Line="71" LocalPath="Consequat vestibulum" Message="Sodales nec pharetra placerat augue" Project="Non per" Resolution="REMOVED" Rule="Dignissim dolor pulvinar sagittis elementum" Severity="INFO" Status="CONFIRMED" UpdateDate="08/29/2015 20:06:24" ViolationId="46">
+			<Types:Issue.Comments>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Senectus fames quisque vestibulum sapien" Id="22" Login="Fringilla semper">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Sociis habitasse hendrerit vivamus" Id="72" Login="Aliquam himenaeos vestibulum imperdiet">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Adipiscing felis sociosqu suscipit" Id="99" Login="Taciti malesuada">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Sed penatibus" Id="36" Login="Torquent elit enim parturient tellus">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Ipsum justo porttitor tempor sem" Id="65" Login="Sit lacus lorem erat">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+			</Types:Issue.Comments>
+			<Types:Issue.EffortToFix>
+				<System:Decimal/>
+			</Types:Issue.EffortToFix>
+			<Types:Issue.Key>
+				<System:Guid/>
+			</Types:Issue.Key>
+		</Types:Issue>
+	</Helpers:IssueGridViewModel.Issues>
+	<Helpers:IssueGridViewModel.SelectedIssue>
+		<Types:Issue Assignee="Conubia fermentum mus nec torquent" CreationDate="08/29/2015 20:06:24" Component="Adipiscing sociosqu" CloseDate="08/29/2015 20:06:24" Debt="Posuere sit urna parturient ipsum" Id="38" IsNew="False" IssueTrackerId="Morbi cubilia" Line="42" LocalPath="Vestibulum etiam" Message="Dignissim fusce elementum lorem" Project="Suscipit elit enim facilisis" Resolution="FIXED" Rule="Ligula erat eros" Severity="INFO" Status="UNDEFINED" UpdateDate="08/29/2015 20:06:24" ViolationId="89">
+			<Types:Issue.Comments>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Dapibus fringilla nulla non" Id="90" Login="Egestas euismod per parturient vestibulum">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Nibh habitasse feugiat litora gravida" Id="31" Login="Sed ultrices sem vestibulum">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Sit proin iaculis augue" Id="56" Login="Vehicula nisi vel">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Lacinia adipiscing laoreet volutpat" Id="87" Login="Hendrerit luctus">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Maecenas nam dolor" Id="67" Login="Himenaeos sed parturient imperdiet praesent">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Fames accumsan bibendum nisl dis" Id="61" Login="Est malesuada dictumst">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Eleifend natoque nunc" Id="92" Login="Hac leo facilisi mus">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Nec odio non" Id="82" Login="Orci vestibulum vestibulum faucibus magnis">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Felis pede habitant per" Id="10" Login="Mattis sed">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+				<Types:Comment CreatedAt="08/29/2015 20:06:24" HtmlText="Penatibus adipiscing inceptos quam quis" Id="89" Login="Interdum lobortis porttitor sem">
+					<Types:Comment.Key>
+						<System:Guid/>
+					</Types:Comment.Key>
+				</Types:Comment>
+			</Types:Issue.Comments>
+			<Types:Issue.EffortToFix>
+				<System:Decimal/>
+			</Types:Issue.EffortToFix>
+			<Types:Issue.Key>
+				<System:Guid/>
+			</Types:Issue.Key>
+		</Types:Issue>
+	</Helpers:IssueGridViewModel.SelectedIssue>
+	<Helpers:IssueGridViewModel.TechnicalDebt>
+		<System:Int64/>
+	</Helpers:IssueGridViewModel.TechnicalDebt>
+</Helpers:IssueGridViewModel>

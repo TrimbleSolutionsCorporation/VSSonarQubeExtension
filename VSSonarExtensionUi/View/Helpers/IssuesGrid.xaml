@@ -5,27 +5,91 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:command="http://www.galasoft.ch/mvvmlight"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-    x:Class="VSSonarExtensionUi.View.Helpers.IssuesGrid"
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:converters="clr-namespace:VSSonarExtensionUi.Model.Converters"
+             x:Class="VSSonarExtensionUi.View.Helpers.IssuesGrid"
+    
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="2000">
 
     <UserControl.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>                
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/Styles.xaml"/>
                 <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/MenuItemStyles.xaml"/>
                 <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/DataGridStyles.xaml"/>
                 <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/MetroDataGrid.xaml"/>
-                
+
 
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
-            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
-            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
-            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
-            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
 
             </ResourceDictionary.MergedDictionaries>
 
-            
+
+            <DataTemplate x:Key="CustomFlyoutHeaderTemplate" x:Shared="False">
+                    <Border BorderThickness="2" BorderBrush="LightBlue">                
+                <DockPanel x:Name="dpHeader"
+                   Margin="10,0,0,0"
+                   VerticalAlignment="Center"
+                   LastChildFill="True" >
+
+
+                        <Button x:Name="nav"
+                        DockPanel.Dock="Left"
+                        Style="{DynamicResource MetroCircleButtonStyle}"
+                        Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Controls:Flyout}}, Path=CloseButtonVisibility}"
+                        Height="30"
+                        Width="30"
+                        FontFamily="Segoe UI Symbol"
+                        Foreground="{Binding RelativeSource={RelativeSource AncestorType={x:Type Controls:Flyout}}, Path=Foreground}"
+                        FontSize="8"
+                        VerticalAlignment="Bottom">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Click">
+                                    <command:EventToCommand  Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.CloseFlyoutCommand }"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <Rectangle Width="15"
+                           Height="10"
+                           Fill="{Binding RelativeSource={RelativeSource AncestorType={x:Type Controls:Flyout}}, Path=Foreground}">
+                                <Rectangle.OpacityMask>
+                                    <VisualBrush Stretch="Fill">
+                                        <VisualBrush.Visual>
+                                            <Canvas Width="48"
+                                        Height="48"
+                                        Clip="F1 M 0,0L 48,0L 48,48L 0,48L 0,0"
+                                        UseLayoutRounding="False">
+                                                <Path Width="25"
+                                          Height="18"
+                                          Canvas.Left="12"
+                                          Canvas.Top="15"
+                                          Stretch="Fill"
+                                          Fill="Black"
+                                          Data="F1 M 12,22L 12,26L 28.25,26L 21,33L 27.5,33L 37,24L 27.5,15L 21,15L 28.25,22L 12,22 Z " />
+                                            </Canvas>
+                                        </VisualBrush.Visual>
+                                    </VisualBrush>
+                                </Rectangle.OpacityMask>
+                            </Rectangle>
+                        </Button>
+                        <TextBlock Text="{Binding}"
+                       x:Name="PART_BackButton"
+                       Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Controls:Flyout}}, Path=TitleVisibility}"
+                       FontSize="12"
+                       Margin="10,0,0,0"
+                       VerticalAlignment="Center" />
+
+                </DockPanel>
+                                            </Border>
+            </DataTemplate>
+
+
+
+
             <ContextMenu Style="{StaticResource ContextMenuStyle}"
                          Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
                          Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"                          
@@ -79,24 +143,38 @@
             <Style x:Key="DataGridColumnHeaderStyle" TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource DefaultDataGridColumnHeaderStyle}" >
                 <Setter Property="ContextMenu" Value="{StaticResource HeaderContextMenu}" />
             </Style>
+            <DataTemplate x:Key="CommentTemplate">
+                <Border BorderThickness="1">
+                    <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="75"/>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="75"/>                        
+                    </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="{Binding Login, FallbackValue=kdsffaasda}"/>
+                        <TextBlock Grid.Column="1" TextWrapping="WrapWithOverflow" Text="{Binding HtmlText, FallbackValue=al;ksd;lask}"/>
+                        <TextBlock Grid.Column="2" Text="{Binding CreatedAt, FallbackValue=lefflsjdhlf}"/>                        
+                    </Grid>
+                </Border>
+            </DataTemplate>
 
 
         </ResourceDictionary>
     </UserControl.Resources>
-        
- <UserControl.Background>
-   <SolidColorBrush Color="{Binding BackGroundColor}"/>
-</UserControl.Background>
+
+    <UserControl.Background>
+        <SolidColorBrush Color="{Binding BackGroundColor}"/>
+    </UserControl.Background>
 
     <UserControl.Foreground>
-   <SolidColorBrush Color="{Binding ForeGroundColor}"/>
-</UserControl.Foreground> 
-    
-	<Grid d:DataContext="{Binding Source={StaticResource DatagridSampleData}}">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="3*"/>
-			<RowDefinition Height="25"/>
-		</Grid.RowDefinitions>
+        <SolidColorBrush Color="{Binding ForeGroundColor}"/>
+    </UserControl.Foreground>
+
+    <Grid d:DataContext="{Binding Source={StaticResource DatagridSampleData}}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="25"/>
+        </Grid.RowDefinitions>
         <StatusBar Grid.Row="1" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}">
             <StatusBarItem HorizontalAlignment="Left">
                 <TextBlock Grid.Row="1">
@@ -151,18 +229,18 @@
                 <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding OpenInVsCommand}" CommandParameter="{Binding SelectedItems, ElementName=Datagrid}" />
             </DataGrid.InputBindings>
             <i:Interaction.Triggers>
-				<i:EventTrigger EventName="MouseRightButtonUp">
-					<command:EventToCommand Command="{Binding MouseEventCommand}" PassEventArgsToCommand="True" />
-				</i:EventTrigger>
-				<i:EventTrigger EventName="SelectionChanged">
-					<command:EventToCommand Command="{Binding SelectionChangedCommand}" CommandParameter="{Binding SelectedItems, ElementName=Datagrid}" />
-				</i:EventTrigger>
+                <i:EventTrigger EventName="MouseRightButtonUp">
+                    <command:EventToCommand Command="{Binding MouseEventCommand}" PassEventArgsToCommand="True" />
+                </i:EventTrigger>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <command:EventToCommand Command="{Binding SelectionChangedCommand}" CommandParameter="{Binding SelectedItems, ElementName=Datagrid}" />
+                </i:EventTrigger>
                 <i:EventTrigger EventName="ColumnReordered">
                     <command:EventToCommand Command="{Binding ColumnHeaderChangedCommand}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
 
-			<DataGrid.Columns>
+            <DataGrid.Columns>
 
                 <DataGridTemplateColumn MinWidth="100" x:Name="MessageTemplateCol" Header="Message" CanUserSort="True" SortMemberPath="Message" DisplayIndex="{Binding Data.MessageIndex, FallbackValue=0, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.MessageVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
                     <DataGridTemplateColumn.CellTemplate>
@@ -196,7 +274,7 @@
                 </DataGridTemplateColumn>
 
                 <DataGridTextColumn Binding="{Binding CreationDate}" MinWidth="100" x:Name="CreationDateTemplateCol" Header="CreationDate" CanUserSort="True" SortMemberPath="CreationDate" DisplayIndex="{Binding CreationDate, FallbackValue=1, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.CreationDateVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
-                
+
                 <DataGridTextColumn Binding="{Binding CloseDate}" MinWidth="100" x:Name="CloseDateTemplateCol" Header="CloseDate" CanUserSort="True" SortMemberPath="CloseDate" DisplayIndex="{Binding CloseDateIndex, FallbackValue=2, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.CloseDateVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
 
                 <DataGridTemplateColumn MinWidth="100" x:Name="ComponentTemplateCol" Header="Component" CanUserSort="True" SortMemberPath="Component" DisplayIndex="{Binding Data.ComponentIndex, FallbackValue=3, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.ComponentVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
@@ -208,7 +286,7 @@
                     <!--NAME COLUMN-->
                     <DataGridTemplateColumn.HeaderTemplate>
                         <DataTemplate>
-                            <Grid IsHitTestVisible="True">                                
+                            <Grid IsHitTestVisible="True">
                                 <!--FILTER EXPANDER-->
                                 <Expander Header="{TemplateBinding Content}"  IsHitTestVisible="True" VerticalAlignment="Top" Margin="0 0 0 0" ToolTip="RuleFilter">
                                     <Border IsHitTestVisible="True" BorderThickness="1" Margin="0 0 0 0" >
@@ -312,7 +390,7 @@
                                         <StackPanel Margin="0 2 0 0">
                                             <!--FILTER TEXTBOX-->
                                             <ComboBox ItemsSource="{Binding Source={StaticResource GetSeverityEnumValues}}" Width="Auto" SelectedValue="{Binding DataContext.FilterTermSeverity, Mode=TwoWay, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"    />
-                                            
+
                                             <!--FILTER BUTTONS-->
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                                 <TextBlock Margin="2" FontFamily="Segoe UI"><Hyperlink Command="{Binding DataContext.FilterApplyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"><Run Text="Apply"/></Hyperlink></TextBlock>
@@ -457,12 +535,30 @@
                                     IsReadOnly="True"
                                     Visibility="{Binding Data.DebtVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}" />
             </DataGrid.Columns>
-            
-            
-            
-		</DataGrid>
 
-        
-        
-	</Grid>
+
+
+        </DataGrid>
+
+        <Controls:FlyoutsControl>
+
+            <Controls:FlyoutTheme>Accent</Controls:FlyoutTheme>
+            <Controls:Flyout Header="Comments" Position="Right" Width="350" IsOpen="{Binding IsCommentEnabled, FallbackValue=True}">
+                <Controls:Flyout.Resources>
+                    <Style TargetType="{x:Type Controls:Flyout}" >
+                        <Setter Property="HeaderTemplate" Value="{StaticResource CustomFlyoutHeaderTemplate}" />
+                    </Style>
+                </Controls:Flyout.Resources>
+                <Border BorderBrush="LightBlue" BorderThickness="2" d:DataContext="{d:DesignData /SampleData/IssueGridViewModelSampleData.xaml}">
+                    <Grid>
+                        <ListBox x:Name="listBox" ItemTemplate="{DynamicResource CommentTemplate}" ItemsSource="{Binding SelectedIssue.Comments}"/>
+
+                    </Grid>
+
+                </Border>
+
+            </Controls:Flyout>
+        </Controls:FlyoutsControl>
+
+    </Grid>
 </UserControl>
