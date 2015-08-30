@@ -116,18 +116,27 @@ namespace VSSonarQubeExtension.Coverage
         /// </returns>
         public IEnumerable<ITagSpan<CoverageTag>> GetTags(NormalizedSnapshotSpanCollection spans)
         {
-            if (spans.Count == 0)
+            try
             {
-                yield break;
-            }
+                if (spans.Count == 0)
+                {
+                    yield break;
+                }
 
-            if (!SonarQubeViewModelFactory.SQViewModel.ServerViewModel.CoverageInEditorEnabled)
-            {
-                yield break;
-            }
+                if (!SonarQubeViewModelFactory.SQViewModel.ServerViewModel.CoverageInEditorEnabled)
+                {
+                    yield break;
+                }
 
-            if (this.coverageTags.Count == 0)
+                if (this.coverageTags.Count == 0)
+                {
+                    yield break;
+                }
+            }
+            catch (Exception ex)
             {
+                Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.StackTrace);
                 yield break;
             }
 

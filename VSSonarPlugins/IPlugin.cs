@@ -10,9 +10,8 @@ namespace VSSonarPlugins
 {
     using System;
     using System.Collections.Generic;
-    using System.Windows.Controls;
 
-    using VSSonarPlugins.Types;
+    using Types;
 
     /// <summary>The message.</summary>
     public class Message

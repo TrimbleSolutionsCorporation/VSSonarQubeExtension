@@ -29,21 +29,28 @@ namespace VSSonarExtensionUi.Model.Helpers
         private readonly List<SonarQubeProperties> tempproperties = new List<SonarQubeProperties>();
 
         /// <summary>
+        /// The manager
+        /// </summary>
+        private readonly INotificationManager manager;
+
+        /// <summary>
         /// The properties
         /// </summary>
         private List<SonarQubeProperties> properties = new List<SonarQubeProperties>();
-
+        
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConfigurationHelper"/> class. 
-        ///     Initializes a new instance of the <see cref="VsPropertiesHelper"/> class.
+        /// Initializes a new instance of the <see cref="ConfigurationHelper" /> class.
         /// </summary>
-        public ConfigurationHelper(string vsVersion)
+        /// <param name="vsversion">The vsversion.</param>
+        /// <param name="manager">The manager.</param>
+        public ConfigurationHelper(string vsversion, INotificationManager manager)
         {
+            this.manager = manager;
             this.ApplicationDataUserSettingsFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
-                                                   + "\\VSSonarExtension\\settings.cfg." + vsVersion;
+                                                   + "\\VSSonarExtension\\settings.cfg." + vsversion;
 
             this.LogForAnalysis = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
-                                  + "\\VSSonarExtension\\temp\\analysisLog.txt." + vsVersion;
+                                  + "\\VSSonarExtension\\temp\\analysisLog.txt." + vsversion;
 
             if (!Directory.Exists(Directory.GetParent(this.ApplicationDataUserSettingsFile).ToString()))
             {
@@ -74,15 +81,38 @@ namespace VSSonarExtensionUi.Model.Helpers
             return this.LogForAnalysis;
         }
 
+        /// <summary>
+        /// Writes the option in application data.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="owner">The owner.</param>
+        /// <param name="key">The key.</param>
+        /// <param name="value">The value.</param>
+        /// <param name="sync">if set to <c>true</c> [synchronize].</param>
+        /// <param name="skipIfExist">if set to <c>true</c> [skip if exist].</param>
         public void WriteOptionInApplicationData(
             Context context,
             string owner,
             string key,
-            string value, bool sync = false, bool skipIfExist = false)
+            string value,
+            bool sync = false,
+            bool skipIfExist = false)
         {
             this.WriteSetting(new SonarQubeProperties(context, owner, key, value), sync, skipIfExist);
         }
 
+        /// <summary>
+        /// Reads the setting.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="owner">The owner.</param>
+        /// <param name="key">The key.</param>
+        /// <returns>Valid property.</returns>
+        /// <exception cref="Exception">
+        /// Property not found:  + key
+        /// or
+        /// Property not found:  + key
+        /// </exception>
         public SonarQubeProperties ReadSetting(Context context, string owner, string key)
         {
             if (context.Equals(Context.AnalysisProject))
@@ -109,6 +139,12 @@ namespace VSSonarExtensionUi.Model.Helpers
             throw new Exception("Property not found: " + key);
         }
 
+        /// <summary>
+        /// Reads the settings.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="owner">The owner.</param>
+        /// <returns>Returns all properties.</returns>
         public IEnumerable<SonarQubeProperties> ReadSettings(Context context, string owner)
         {
             if (context.Equals(Context.AnalysisProject))
@@ -119,6 +155,12 @@ namespace VSSonarExtensionUi.Model.Helpers
             return this.properties.Where(property => property.Context.Equals(context) && property.Owner.Equals(owner));
         }
 
+        /// <summary>
+        /// Writes the setting.
+        /// </summary>
+        /// <param name="prop">The property.</param>
+        /// <param name="sync">if set to <c>true</c> [synchronize].</param>
+        /// <param name="skipifexist">if set to <c>true</c> [skipifexist].</param>
         public void WriteSetting(SonarQubeProperties prop, bool sync, bool skipifexist)
         {
             if (prop.Value == null)
@@ -174,6 +216,9 @@ namespace VSSonarExtensionUi.Model.Helpers
             }
         }
 
+        /// <summary>
+        /// Synchronizes the settings.
+        /// </summary>
         public void SyncSettings()
         {
             if (this.properties.Count == 0)
@@ -191,8 +236,10 @@ namespace VSSonarExtensionUi.Model.Helpers
                         this.properties = (List<SonarQubeProperties>)bformatter.Deserialize(stream);
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    this.manager.ReportMessage(new Message { Id = "ConfigurationHelper", Data = "Failed to load configuration: " + this.ApplicationDataUserSettingsFile });
+                    this.manager.ReportException(ex);
                     File.Delete(this.ApplicationDataUserSettingsFile);
                 }
             }
@@ -207,6 +254,9 @@ namespace VSSonarExtensionUi.Model.Helpers
             }
         }
 
+        /// <summary>
+        /// Clears the non saved settings.
+        /// </summary>
         public void ClearNonSavedSettings()
         {
             using (Stream stream = File.Open(this.ApplicationDataUserSettingsFile, FileMode.Open))
@@ -216,6 +266,9 @@ namespace VSSonarExtensionUi.Model.Helpers
             }
         }
 
+        /// <summary>
+        /// Deletes the settings file.
+        /// </summary>
         public void DeleteSettingsFile()
         {
             if (File.Exists(this.ApplicationDataUserSettingsFile))

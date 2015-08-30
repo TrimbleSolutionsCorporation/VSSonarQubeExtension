@@ -232,7 +232,9 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                this.notificationManager.ReportMessage(
+                    new Message { Id = "GeneralConfigurationViewModel", Data = "ReloadDataFromDisk Failed Read : " + GlobalIds.IsConnectAtStartOn + " : " + ex.Message });
+                this.notificationManager.ReportException(ex);
                 this.IsConnectAtStartOn = true;
                 this.configurationHelper.WriteSetting(
                     new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.IsConnectAtStartOn, this.IsConnectAtStartOn ? "true" : "false"));
@@ -245,7 +247,9 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                this.notificationManager.ReportMessage(
+                    new Message { Id = "GeneralConfigurationViewModel", Data = "ReloadDataFromDisk Failed Read : " + GlobalIds.UserDefinedEditor + " : " + ex.Message });
+                this.notificationManager.ReportException(ex);
                 this.UserDefinedEditor = "notepad";
                 this.configurationHelper.WriteSetting(new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.UserDefinedEditor, "notepad"));
             }
@@ -257,7 +261,9 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                this.notificationManager.ReportMessage(
+                    new Message { Id = "GeneralConfigurationViewModel", Data = "ReloadDataFromDisk Failed Read : " + GlobalIds.DisableEditorTags + " : " + ex.Message });
+                this.notificationManager.ReportException(ex);
                 this.DisableEditorTags = false;
                 this.configurationHelper.WriteSetting(new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.DisableEditorTags, "false"));
             }
@@ -273,7 +279,9 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                this.notificationManager.ReportMessage(
+                    new Message { Id = "GeneralConfigurationViewModel", Data = "ReloadDataFromDisk Failed : " + GlobalIds.ExtensionDebugModeEnabled + " : " + ex.Message });
+                this.notificationManager.ReportException(ex);
                 this.ExtensionDebugModeEnabled = false;
                 this.configurationHelper.WriteSetting(
                     new SonarQubeProperties(
@@ -422,33 +430,34 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         private void GetCredentials()
         {
-            var cm = new Credential { Target = "VSSonarQubeExtension", };
-
-            if (!cm.Exists())
+            using (var cm = new Credential { Target = "VSSonarQubeExtension" })
             {
-                return;
-            }
-
-            cm.Load();
-
-            try
-            {
-                string address = this.configurationHelper.ReadSetting(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, "ServerAddress").Value;
-                string bootatstart = this.configurationHelper.ReadSetting(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.IsConnectAtStartOn).Value;
-
-                if (address != null && bootatstart.Equals("true"))
+                if (!cm.Exists())
                 {
-                    if (AuthtenticationHelper.EstablishAConnection(this.restService, address, cm.Username, ConnectionConfiguration.ConvertToUnsecureString(cm.SecurePassword)))
+                    return;
+                }
+
+                cm.Load();
+
+                try
+                {
+                    string address = this.configurationHelper.ReadSetting(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, "ServerAddress").Value;
+                    string bootatstart = this.configurationHelper.ReadSetting(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.IsConnectAtStartOn).Value;
+
+                    if (address != null &&
+                        bootatstart.Equals("true") &&
+                        AuthtenticationHelper.EstablishAConnection(this.restService, address, cm.Username, ConnectionConfiguration.ConvertToUnsecureString(cm.SecurePassword)))
                     {
                         this.UserName = cm.Username;
                         this.ServerAddress = address;
                         this.Password = ConnectionConfiguration.ConvertToUnsecureString(cm.SecurePassword);
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
+                catch (Exception ex)
+                {
+                    this.notificationManager.ReportMessage(new Message { Id = "GeneralConfigurationViewModel", Data = "Failed To Connect To Server: " + ex.Message });
+                    this.notificationManager.ReportException(ex);
+                }
             }
         }
 

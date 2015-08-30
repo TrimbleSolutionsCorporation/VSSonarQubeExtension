@@ -16,32 +16,28 @@ namespace VSSonarQubeExtension
     using System;
     using System.ComponentModel.Design;
     using System.Diagnostics;
-    using System.Drawing;
+
     using System.Globalization;
+    using System.IO;
     using System.Reflection;
     using System.Runtime.InteropServices;
     using System.Windows.Controls;
-    using System.IO;
-    using Microsoft.CodeAnalysis.Diagnostics;
-    using EnvDTE;
 
+    using EnvDTE;
     using EnvDTE80;
 
-    using Microsoft.VisualStudio;
+    using Helpers;
+    using Microsoft.CodeAnalysis.Diagnostics;
+    using Microsoft.VisualStudio;    
     using Microsoft.VisualStudio.PlatformUI;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
 
-    using SonarRestService;
-
+    using StatusBar;
+    using VSControls;
     using VSSonarExtensionUi.View.Helpers;
-    using VSSonarExtensionUi.ViewModel;
-
     using VSSonarPlugins;
 
-    using VSSonarQubeExtension.Helpers;
-    using VSSonarQubeExtension.StatusBar;
-    using VSSonarQubeExtension.VSControls;
     using DColor = System.Drawing.Color;
     using MColor = System.Windows.Media.Color;
 
@@ -185,11 +181,12 @@ namespace VSSonarQubeExtension
                 try
                 {
                     this.visualStudioInterface = new VsPropertiesHelper(this.dte2, this);
+
+                    this.visualStudioInterface.WriteToVisualStudioOutput(DateTime.Now + " : VsSonarExtensionPackage Initialize");
+
                     this.VsEvents = new VsEvents(this.visualStudioInterface, this.dte2, this);
                     var bar = this.GetService(typeof(SVsStatusbar)) as IVsStatusbar;
                     this.StatusBar = new VSSStatusBar(bar, this.dte2);
-
-
                     var extensionRunningPath = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty).ToString();
 
                     var uniqueId = this.dte2.Version;
@@ -206,7 +203,6 @@ namespace VSSonarQubeExtension
 
                     SonarQubeViewModelFactory.SQViewModel.UpdateTheme(ToMediaColor(defaultBackground), ToMediaColor(defaultForeground));
 
-
                     // force analysis to come to vsix
                     var i = 0;
                     var data = string.Empty;
@@ -216,14 +212,11 @@ namespace VSSonarQubeExtension
 
                         foreach (var check in item.Value.AvailableChecks)
                         {
-
-
                             DiagnosticAnalyzer analyser = check;
                             data += analyser.ToString();
                         }
                     }
 
-                    this.StatusBar.DisplayMessage("checks : " + i);
                     
                     try
                     {
@@ -246,7 +239,8 @@ namespace VSSonarQubeExtension
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine(ex.Message);
+                        this.visualStudioInterface.WriteToVisualStudioOutput(DateTime.Now + " : VsSonarExtensionPackage Failed Create Window : " + ex.Message);
+                        this.visualStudioInterface.WriteToVisualStudioOutput(DateTime.Now + " : VsSonarExtensionPackage Failed Create Window : " + ex.StackTrace);
                     }
                 }
                 catch (Exception ex)
