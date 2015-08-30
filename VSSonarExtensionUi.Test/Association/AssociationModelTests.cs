@@ -54,7 +54,7 @@
             Assert.That(associationModel.AssignASonarProjectToSolution(null, null), Is.False);
         }
 
-        [Test]
+        //[Test]
         public void AssignWhenProjectIsMainAndBranchIsNullReturnsFalse()
         {
             var mockTranslator = new Mock<ISQKeyTranslator>();
