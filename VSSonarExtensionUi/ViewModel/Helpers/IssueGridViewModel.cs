@@ -1205,7 +1205,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.FilterTermProject = string.Empty;
             this.FilterTermRule = string.Empty;
             this.FilterTermAssignee = string.Empty;
-            this.FilterTermIssueTrackerId = string.Empty;
+            this.FilterTermIssueTrackerId = null;
             this.FilterTermStatus = null;
             this.FilterTermSeverity = null;
             this.FilterTermResolution = null;

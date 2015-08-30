@@ -75,16 +75,16 @@ namespace VSSonarExtensionUi.Model.Helpers
                 bool issuesSeverity = this.FilterBySeverity(parameter);
                 bool issuesResolution = this.FilterByResolution(parameter);
                 bool issuesIsNew = this.FilterByIsNew(parameter);
+                bool isIssueTrackerId = this.FilterByIssueTracker(parameter);
 
 
-                bool include = (parameter.Message == null || parameter.Message.IndexOf(this.filterOption.FilterTermMessage, StringComparison.InvariantCultureIgnoreCase) >= 0)
-                               && (parameter.IssueTrackerId == null || parameter.IssueTrackerId.IndexOf(this.filterOption.FilterTermIssueTrackerId, StringComparison.InvariantCultureIgnoreCase) >= 0)
+                bool include = (parameter.Message == null || parameter.Message.IndexOf(this.filterOption.FilterTermMessage, StringComparison.InvariantCultureIgnoreCase) >= 0)                               
                                && (parameter.Component == null || parameter.Component.IndexOf(this.filterOption.FilterTermComponent, StringComparison.InvariantCultureIgnoreCase) >= 0)
                                && (parameter.Project == null || parameter.Project.IndexOf(this.filterOption.FilterTermProject, StringComparison.InvariantCultureIgnoreCase) >= 0)
                                && (parameter.Rule == null || parameter.Rule.IndexOf(this.filterOption.FilterTermRule, StringComparison.InvariantCultureIgnoreCase) >= 0)
                                && (parameter.Assignee == null || parameter.Assignee.IndexOf(this.filterOption.FilterTermAssignee, StringComparison.InvariantCultureIgnoreCase) >= 0);
 
-                return include && issuesStatus && issuesSeverity && issuesResolution && issuesIsNew;
+                return include && issuesStatus && issuesSeverity && issuesResolution && issuesIsNew && isIssueTrackerId;
             }
             catch (Exception ex)
             {
@@ -125,6 +125,27 @@ namespace VSSonarExtensionUi.Model.Helpers
 
             return false;
         }
+
+        /// <summary>
+        /// Filters the by issue tracker.
+        /// </summary>
+        /// <param name="parameter">The parameter.</param>
+        /// <returns>true if filtered</returns>
+        private bool FilterByIssueTracker(Issue parameter)
+        {
+            if (this.filterOption.FilterTermIssueTrackerId == null)
+            {
+                return true;
+            }
+
+            if (parameter.IssueTrackerId == null)
+            {
+                return false;
+            }
+
+            return parameter.IssueTrackerId.IndexOf(this.filterOption.FilterTermIssueTrackerId, StringComparison.InvariantCultureIgnoreCase) >= 0;
+        }
+
 
         /// <summary>
         /// The filter by issue status.
