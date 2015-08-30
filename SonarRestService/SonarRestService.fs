@@ -129,6 +129,10 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             | None -> ()
             | Some value -> issue.Assignee <- value
 
+            match elem.ActionPlan with
+            | None -> ()
+            | Some value -> issue.ActionPlan <- value
+
             for elemC in elem.Comments do issue.Comments.Add(new Comment(elemC.CreatedAt, elemC.HtmlText, elemC.Key, elemC.Login, -1))
 
             match elem.CloseDate with
@@ -167,6 +171,10 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             issue.Severity <- GetSeverity(elem.Severity)
             issue.Rule <- elem.Rule
             issue.Key <- elem.Key
+
+            match elem.ActionPlan with
+            | None -> ()
+            | Some value -> issue.ActionPlan <- value
 
             if not(obj.ReferenceEquals(elem.Assignee, null)) then
                 issue.Assignee <- elem.Assignee.Value

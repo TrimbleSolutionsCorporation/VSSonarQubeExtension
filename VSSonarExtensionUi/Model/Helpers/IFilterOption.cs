@@ -11,11 +11,10 @@
 // You should have received a copy of the GNU Lesser General Public License along with this program; if not, write to the Free
 // Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 // --------------------------------------------------------------------------------------------------------------------
-
-using VSSonarPlugins.Types;
 namespace VSSonarExtensionUi.Model.Helpers
 {
-    
+    using System;
+    using VSSonarPlugins.Types;
 
     /// <summary>
     /// The FilterOption interface.
@@ -53,6 +52,14 @@ namespace VSSonarExtensionUi.Model.Helpers
         /// Gets or sets the filter term resolution.
         /// </summary>
         Resolution? FilterTermResolution { get; set; }
+
+        /// <summary>
+        /// Gets or sets the filter term issue tracker identifier.
+        /// </summary>
+        /// <value>
+        /// The filter term issue tracker identifier.
+        /// </value>
+        string FilterTermIssueTrackerId { get; set; }
 
         /// <summary>
         /// Gets or sets the filter term rule.

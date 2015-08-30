@@ -1,4 +1,17 @@
-﻿namespace VSSonarExtensionUi.ViewModel.Helpers
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="IssueGridViewModel.cs" company="Copyright © 2015 Tekla Corporation. Tekla is a Trimble Company">
+//     Copyright (C) 2014 [Jorge Costa, Jorge.Costa@tekla.com]
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+// This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
+// as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+// of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. 
+// You should have received a copy of the GNU Lesser General Public License along with this program; if not, write to the Free
+// Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+// --------------------------------------------------------------------------------------------------------------------
+namespace VSSonarExtensionUi.ViewModel.Helpers
 {
     using System;
     using System.Collections;
@@ -14,6 +27,7 @@
     using System.Windows.Media;
     using GalaSoft.MvvmLight.Command;
 
+    using Model.Association;
     using Model.Helpers;
     using Model.Menu;
     using PropertyChanged;
@@ -21,8 +35,7 @@
     using SonarLocalAnalyser;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-    using Model.Association;
-
+    using View.Helpers;
 
     /// <summary>
     /// The issue grid view viewModel.
@@ -91,6 +104,10 @@
         /// The source work dir
         /// </summary>
         private string sourceWorkDir;
+
+        /// <summary>
+        /// The issue tracker menu
+        /// </summary>
         private IMenuItem issueTrackerMenu;
 
         #endregion
@@ -125,6 +142,7 @@
             this.AllIssues = new AsyncObservableCollection<Issue>();
             this.Issues = new AsyncObservableCollection<Issue>();
 
+            this.OpenInIssueTrackerCommand = new RelayCommand(this.OnOpenInIssueTrackerCommand);
             this.OpenInVsCommand = new RelayCommand<IList>(this.OnOpenInVsCommand);
             this.MouseEventCommand = new RelayCommand(this.OnMouseEventCommand);
 
@@ -184,18 +202,6 @@
         /// The selected issue.
         /// </value>
         public Issue SelectedIssue { get; set; }
-
-        public void OnSelectedIssueChanged()
-        {
-            if (this.SelectedIssue != null && this.SelectedIssue.Comments.Count != 0)
-            {
-                this.IsCommentEnabled = true;
-            }
-            else
-            {
-                this.IsCommentEnabled = false;
-            }
-        }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is comment enabled.
@@ -264,6 +270,14 @@
         ///     Gets or sets the clear filter term status command.
         /// </summary>
         public ICommand ClearFilterTermStatusCommand { get; set; }
+
+        /// <summary>
+        /// Gets the clear filter term issue tracker command.
+        /// </summary>
+        /// <value>
+        /// The clear filter term issue tracker command.
+        /// </value>
+        public ICommand ClearFilterTermIssueTrackerCommand { get; private set; }
 
         /// <summary>
         ///     Gets or sets the close date index.
@@ -344,6 +358,14 @@
         ///     Gets or sets the filter term component.
         /// </summary>
         public string FilterTermComponent { get; set; }
+
+        /// <summary>
+        /// Gets or sets the filter term issue tracker identifier.
+        /// </summary>
+        /// <value>
+        /// The filter term issue tracker identifier.
+        /// </value>
+        public string FilterTermIssueTrackerId { get; set; }
 
         /// <summary>
         ///     Gets or sets the filter term is new.
@@ -465,6 +487,14 @@
         ///     Gets or sets the open in vs command.
         /// </summary>
         public ICommand OpenInVsCommand { get; set; }
+
+        /// <summary>
+        /// Gets or sets the open in issue tracker command.
+        /// </summary>
+        /// <value>
+        /// The open in issue tracker command.
+        /// </value>
+        public ICommand OpenInIssueTrackerCommand { get; set; }
 
         /// <summary>
         ///     Gets or sets the project index.
@@ -683,6 +713,13 @@
 
         /// <summary>Gets or sets the debt index.</summary>
         public int DebtIndex { get; set; }
+
+        /// <summary>
+        /// Gets the close flyout command.
+        /// </summary>
+        /// <value>
+        /// The close flyout command.
+        /// </value>
         public ICommand CloseFlyoutCommand { get; private set; }
 
         #endregion
@@ -700,6 +737,21 @@
             }
 
             this.OnOpenInVsCommand(this.SelectedItems);
+        }
+
+        /// <summary>
+        /// Called when [selected issue changed].
+        /// </summary>
+        public void OnSelectedIssueChanged()
+        {
+            if (this.SelectedIssue != null && this.SelectedIssue.Comments.Count != 0)
+            {
+                this.IsCommentEnabled = true;
+            }
+            else
+            {
+                this.IsCommentEnabled = false;
+            }
         }
 
         /// <summary>
@@ -741,6 +793,38 @@
         public bool IsNotFiltered(Issue issue)
         {
             return this.filter.FilterFunction(issue);
+        }
+
+        /// <summary>
+        /// Called when [open in issue tracker command].
+        /// </summary>
+        public void OnOpenInIssueTrackerCommand()
+        {
+            string[] delimiters = { "<br/>" };
+            var link = string.Empty;
+            if (this.SelectedIssue != null && this.SelectedIssue.Comments.Count > 0)
+            {
+                foreach (var comment in this.SelectedIssue.Comments)
+                {
+                    // [VSSonarQubeExtension] Attached to issue: 116179<br/>link<br/>
+                    if (comment.HtmlText.Contains("[VSSonarQubeExtension] Attached to issue"))
+                    {
+                        link = comment.HtmlText.Split(delimiters, StringSplitOptions.RemoveEmptyEntries)[1];
+                    }
+                }
+            }
+
+            if (!string.IsNullOrEmpty(link))
+            {
+                try
+                {
+                    Process.Start(link);
+                }
+                catch (Exception ex)
+                {
+                    MessageDisplayBox.DisplayMessage("Failed to open issue in Issue Tracker", ex.Message);                    
+                }                
+            }
         }
 
         /// <summary>
@@ -1065,6 +1149,7 @@
             this.ClearClearFilterTermRuleCommand = new RelayCommand<object>(this.OnClearClearFilterTermRuleCommand);
             this.ClearFilterTermAssigneeCommand = new RelayCommand<object>(this.OnClearFilterTermAssigneeCommand);
             this.ClearFilterTermComponentCommand = new RelayCommand<object>(this.OnClearFilterTermComponentCommand);
+            this.ClearFilterTermIssueTrackerCommand = new RelayCommand<object>(this.OnClearFilterTermIssueTrackerCommand);            
             this.ClearFilterTermIsNewCommand = new RelayCommand<object>(this.OnClearFilterTermIsNewCommand);
             this.ClearFilterTermMessageCommand = new RelayCommand<object>(this.OnClearFilterTermMessageCommand);
             this.ClearFilterTermProjectCommand = new RelayCommand<object>(this.OnClearFilterTermProjectCommand);
@@ -1108,6 +1193,16 @@
         private void OnClearFilterTermComponentCommand(object obj)
         {
             this.FilterTermComponent = string.Empty;
+            this.ClearFilter();
+        }
+
+        /// <summary>
+        /// Called when [clear filter term issue tracker command].
+        /// </summary>
+        /// <param name="obj">The object.</param>
+        private void OnClearFilterTermIssueTrackerCommand(object obj)
+        {
+            this.FilterTermIssueTrackerId = string.Empty;
             this.ClearFilter();
         }
 

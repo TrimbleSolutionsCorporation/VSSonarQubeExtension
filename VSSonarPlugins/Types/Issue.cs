@@ -33,7 +33,7 @@ namespace VSSonarPlugins.Types
         public Issue()
         {
             this.Comments = new List<Comment>();
-            this.Message = "";
+            this.Message = string.Empty;
             this.CreationDate = DateTime.Now;
             this.CloseDate = DateTime.Now;
             this.Component = string.Empty;
@@ -125,8 +125,16 @@ namespace VSSonarPlugins.Types
         public string Assignee { get; set; }
 
         /// <summary>
-        /// Gets or sets the assignee.
+        /// Gets or sets the action plan.
         /// </summary>
+        public Guid ActionPlan { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is new.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is new; otherwise, <c>false</c>.
+        /// </value>
         public bool IsNew { get; set; }
 
         /// <summary>
@@ -157,6 +165,15 @@ namespace VSSonarPlugins.Types
         /// </summary>
         public List<Comment> Comments { get; set; }
 
+
+        /// <summary>
+        /// Gets or sets the debt.
+        /// </summary>
+        /// <value>
+        /// The debt.
+        /// </value>
+        public string Debt { get; set; }
+
         /// <summary>
         /// The deep copy.
         /// </summary>
@@ -184,6 +201,8 @@ namespace VSSonarPlugins.Types
                                     Debt = this.Debt,
                                     ViolationId = this.ViolationId,
                                     Assignee = this.Assignee,
+                                    ActionPlan = this.ActionPlan,
+                                    IssueTrackerId = this.IssueTrackerId,
                                     Comments = new List<Comment>()
                                 };
 
@@ -202,8 +221,5 @@ namespace VSSonarPlugins.Types
 
             return copyIssue;
         }
-
-        public string Debt { get; set; }
-
     }
 }

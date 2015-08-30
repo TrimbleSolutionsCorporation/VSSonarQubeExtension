@@ -10,7 +10,7 @@
              x:Class="VSSonarExtensionUi.View.Helpers.IssuesGrid"
     
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="2000">
+             d:DesignHeight="300" d:DesignWidth="2600">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -82,6 +82,7 @@
                        FontSize="12"
                        Margin="10,0,0,0"
                        VerticalAlignment="Center" />
+                        <TextBlock FontSize="12" Margin="120,7,0,0"><Hyperlink ToolTip="Open issue in issue tracker, if available" Command="{Binding DataContext.OpenInIssueTrackerCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"><Run Text="Open In Issue Tracker"/></Hyperlink></TextBlock>
 
                 </DockPanel>
                                             </Border>
@@ -526,14 +527,53 @@
                 <DataGridTextColumn Binding="{Binding Key}" MinWidth="100" x:Name="KeyTemplateCol" Header="Key" CanUserSort="True" SortMemberPath="Key" DisplayIndex="{Binding KeyIndex, FallbackValue=14, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.KeyVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
 
                 <DataGridTextColumn Binding="{Binding Id}" MinWidth="100" x:Name="IdTemplateCol" Header="Id" CanUserSort="True" SortMemberPath="Id" DisplayIndex="{Binding IdIndex, FallbackValue=15, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.IdVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
+                
+                <DataGridTextColumn Binding="{Binding ActionPlan}" MinWidth="100" x:Name="ActionPlanTemplateCol" Header="Action Plan" CanUserSort="True" SortMemberPath="Id" DisplayIndex="{Binding IdIndex, FallbackValue=16, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.IdVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
 
-                <DataGridTextColumn Binding="{Binding ViolationId}" MinWidth="100" x:Name="ViolationIdTemplateCol" Header="ViolationId" CanUserSort="true" SortMemberPath="ViolationId" DisplayIndex="{Binding ViolationIdIndex, FallbackValue=16, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.ViolationIdVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
+                <DataGridTextColumn Binding="{Binding ViolationId}" MinWidth="100" x:Name="ViolationIdTemplateCol" Header="ViolationId" CanUserSort="true" SortMemberPath="ViolationId" DisplayIndex="{Binding ViolationIdIndex, FallbackValue=17, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.ViolationIdVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
 
                 <DataGridTextColumn Binding="{Binding Debt}" MinWidth="100" x:Name="DebtemplateCol"
                                     Header="Debt" CanUserSort="True" SortMemberPath="Debt"
-                                    DisplayIndex="{Binding Debt, FallbackValue=17, Mode=TwoWay, Source={StaticResource Proxy}}"
+                                    DisplayIndex="{Binding Debt, FallbackValue=18, Mode=TwoWay, Source={StaticResource Proxy}}"
                                     IsReadOnly="True"
                                     Visibility="{Binding Data.DebtVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}" />
+                
+                <DataGridTemplateColumn MinWidth="100" x:Name="IssueTrackerTemplateCol"
+                                        Header="Issue Tracker" CanUserSort="True" SortMemberPath="IssueTrackerId"
+                                        DisplayIndex="{Binding Data.IssueTrackerIdIndex, FallbackValue=19, Mode=TwoWay, Source={StaticResource Proxy}}"
+                                        IsReadOnly="True"
+                                        Visibility="{Binding Data.ComponentVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding IssueTrackerId, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"    />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <!--NAME COLUMN-->
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid IsHitTestVisible="True">
+                                <!--FILTER EXPANDER-->
+                                <Expander Header="{TemplateBinding Content}"  IsHitTestVisible="True" VerticalAlignment="Top" Margin="0 0 0 0" ToolTip="RuleFilter">
+                                    <Border IsHitTestVisible="True" BorderThickness="1" Margin="0 0 0 0" >
+                                        <StackPanel Margin="0 2 0 0">
+                                            <!--FILTER TEXTBOX-->
+                                            <TextBox Text="{Binding DataContext.FilterTermIssueTrackerId, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+												 
+												ToolTip="Enter filter term" Width="100" Height="18" FontSize="9" BorderThickness="1" />
+                                            <!--FILTER BUTTONS-->
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <TextBlock Margin="2" FontFamily="Segoe UI"><Hyperlink Command="{Binding DataContext.FilterApplyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"><Run Text="Apply"/></Hyperlink></TextBlock>
+                                                <TextBlock Margin="2"><Hyperlink Command="{Binding DataContext.ClearFilterTermIssueTrackerCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"><Run Text="Clear"/></Hyperlink></TextBlock>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </Expander>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                </DataGridTemplateColumn>
+
+                
             </DataGrid.Columns>
 
 

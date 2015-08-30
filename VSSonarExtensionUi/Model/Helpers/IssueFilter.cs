@@ -76,7 +76,9 @@ namespace VSSonarExtensionUi.Model.Helpers
                 bool issuesResolution = this.FilterByResolution(parameter);
                 bool issuesIsNew = this.FilterByIsNew(parameter);
 
+
                 bool include = (parameter.Message == null || parameter.Message.IndexOf(this.filterOption.FilterTermMessage, StringComparison.InvariantCultureIgnoreCase) >= 0)
+                               && (string.IsNullOrEmpty(parameter.IssueTrackerId) || parameter.IssueTrackerId.IndexOf(this.filterOption.FilterTermIssueTrackerId, StringComparison.InvariantCultureIgnoreCase) >= 0)
                                && (parameter.Component == null || parameter.Component.IndexOf(this.filterOption.FilterTermComponent, StringComparison.InvariantCultureIgnoreCase) >= 0)
                                && (parameter.Project == null || parameter.Project.IndexOf(this.filterOption.FilterTermProject, StringComparison.InvariantCultureIgnoreCase) >= 0)
                                && (parameter.Rule == null || parameter.Rule.IndexOf(this.filterOption.FilterTermRule, StringComparison.InvariantCultureIgnoreCase) >= 0)
