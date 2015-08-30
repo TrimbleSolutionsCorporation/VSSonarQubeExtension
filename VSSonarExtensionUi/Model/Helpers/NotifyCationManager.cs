@@ -90,6 +90,11 @@
         /// <param name="ex">The ex.</param>
         public void ReportException(Exception ex)
         {
+            if (this.helper == null)
+            {
+                return;
+            }
+
             this.helper.WriteToVisualStudioOutput(DateTime.Now + ":" + ex.Source + ":" + ex.Message + " : " + ex.StackTrace);
         }
 
@@ -97,6 +102,11 @@
         /// <param name="messages">The messages.</param>
         public void ReportMessage(Message messages)
         {
+            if (this.helper == null)
+            {
+                return;
+            }
+
             this.helper.WriteToVisualStudioOutput(DateTime.Now + ":" + messages.Id + " : " + messages.Data);
         }
 
