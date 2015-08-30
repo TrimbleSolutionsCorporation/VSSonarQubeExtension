@@ -637,7 +637,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             };
 
             bw.DoWork +=
-                delegate { this.IssuesGridView.UpdateIssues(this.searchModel.GetAllIssuesInProject()); };
+                delegate { this.IssuesGridView.UpdateIssues(this.searchModel.GetAllIssuesInProject(), this.AvailableActionPlans); };
 
             bw.RunWorkerAsync();
         }
@@ -660,7 +660,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             bw.DoWork +=
                 delegate
                     {
-                        this.IssuesGridView.UpdateIssues(this.searchModel.GetIssuesSinceLastProjectDate());
+                        this.IssuesGridView.UpdateIssues(this.searchModel.GetIssuesSinceLastProjectDate(), this.AvailableActionPlans);
                     };
 
             bw.RunWorkerAsync();
@@ -684,7 +684,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             bw.DoWork +=
                 delegate
                     {
-                        this.IssuesGridView.UpdateIssues(this.searchModel.GetCurrentUserIssues());
+                        this.IssuesGridView.UpdateIssues(this.searchModel.GetCurrentUserIssues(), this.AvailableActionPlans);
                     };
 
             bw.RunWorkerAsync();
@@ -741,7 +741,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 delegate
                     {
                         this.IssuesGridView.UpdateIssues(
-                            this.searchModel.GetCurrentUserIssuesInProject());
+                            this.searchModel.GetCurrentUserIssuesInProject(), this.AvailableActionPlans);
                     };
 
             bw.RunWorkerAsync();
@@ -783,8 +783,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             request += this.FilterResolutions();
             request += this.FilterActionPlans();
 
-            this.IssuesGridView.UpdateIssues(this.searchModel.GetIssuesUsingFilter(request, this.IsFilterBySSCMChecked));
-            
+            this.IssuesGridView.UpdateIssues(this.searchModel.GetIssuesUsingFilter(request, this.IsFilterBySSCMChecked), this.AvailableActionPlans);            
         }
     }
 }

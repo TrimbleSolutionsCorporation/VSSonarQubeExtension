@@ -36,13 +36,19 @@ namespace VSSonarPlugins.Types
         /// The removed.
         /// </summary>
         [Description("REMOVED")]
-        REMOVED = 3, 
+        REMOVED = 3,
+
+        /// <summary>
+        /// The wont fix.
+        /// </summary>
+        [Description("WONTFIX")]
+        WONTFIX = 4,
 
         /// <summary>
         ///     The linear.
         /// </summary>
         [Description("UNDEFINED")]
-        UNDEFINED = 4, 
+        UNDEFINED = 5, 
     }
 
     /// <summary>

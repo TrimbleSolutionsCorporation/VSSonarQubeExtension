@@ -11,22 +11,20 @@
 // You should have received a copy of the GNU Lesser General Public License along with this program; if not, write to the Free
 // Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 // --------------------------------------------------------------------------------------------------------------------
-
 namespace VSSonarExtensionUi.ViewModel.Analysis
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.IO;
     using System.Linq;
     using System.Windows.Input;
     using System.Windows.Media;
 
-
     using GalaSoft.MvvmLight.Command;
-
     using Helpers;
-
     using Model.Analysis;
+    using Model.Association;
     using Model.Cache;
     using Model.Helpers;
     using PropertyChanged;
@@ -34,8 +32,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using VSSonarPlugins;
     using VSSonarPlugins.Helpers;
     using VSSonarPlugins.Types;
-    using Model.Association;
-
+    
     /// <summary>
     ///     The server view model.
     /// </summary>
@@ -96,6 +93,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <param name="configurationHelper">The configuration helper.</param>
         /// <param name="restservice">The restservice.</param>
         /// <param name="notificationManager">The notification manager.</param>
+        /// <param name="translator">The translator.</param>
         public ServerViewModel(
             IVsEnvironmentHelper vsenvironmenthelper,
             IConfigurationHelper configurationHelper,
@@ -109,6 +107,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.restservice = restservice;
 
             this.Header = "Server Analysis";
+            this.AvailableActionPlans = new ObservableCollection<SonarActionPlan>();
             this.AlreadyOpenDiffs = new SortedSet<string>();
             this.IssuesGridView = new IssueGridViewModel(true, "ServerView", true, this.configurationHelper, this.restservice, this.notificationMan, translator);
             this.InitCommanding();
@@ -203,6 +202,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         ///     Gets or sets the resource in editor.
         /// </summary>
         public Resource ResourceInEditor { get; set; }
+
+        /// <summary>
+        /// Gets or sets the available gates.
+        /// </summary>
+        /// <value>
+        /// The available gates.
+        /// </value>
+        public ObservableCollection<SonarActionPlan> AvailableActionPlans { get; set; }
 
         /// <summary>
         /// Gets or sets the already open diffs.
@@ -387,6 +394,12 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             {
                 this.IsRunningInVisualStudio = false;
             }
+
+            List<SonarActionPlan> usortedListofPlan = this.restservice.GetAvailableActionPlan(userConnectionConfig, this.associatedProject.Key);
+            if (usortedListofPlan != null && usortedListofPlan.Count > 0)
+            {
+                this.AvailableActionPlans = new ObservableCollection<SonarActionPlan>(usortedListofPlan.OrderBy(i => i.Name));
+            }
         }
 
         /// <summary>
@@ -444,14 +457,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             var newSource = VsSonarUtils.GetLinesFromSource(this.restservice.GetSourceForFileResource(this.userConfiguration, this.ResourceInEditor.Key), "\r\n");
             var newIssues = this.restservice.GetIssuesInResource(this.userConfiguration, this.ResourceInEditor.Key);
 
-            this.IssuesGridView.Issues.Clear();
-            this.IssuesGridView.AllIssues.Clear();
-            foreach (var newIssue in newIssues)
-            {
-                this.IssuesGridView.AllIssues.Add(newIssue);
-                this.IssuesGridView.Issues.Add(newIssue);
-            }
-
+            this.IssuesGridView.UpdateIssues(newIssues, this.AvailableActionPlans);
             this.localEditorCache.UpdateResourceData(this.ResourceInEditor, newCoverage, newIssues, newSource);
             this.OnSelectedViewChanged();
         }

@@ -243,45 +243,12 @@
 
             <DataGrid.Columns>
 
-                <DataGridTemplateColumn MinWidth="100" x:Name="MessageTemplateCol" Header="Message" CanUserSort="True" SortMemberPath="Message" DisplayIndex="{Binding Data.MessageIndex, FallbackValue=0, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.MessageVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
+                <DataGridTemplateColumn DisplayIndex="{Binding Data.ComponentIndex, FallbackValue=0, Mode=TwoWay, Source={StaticResource Proxy}}"
+                                        MinWidth="250" MaxWidth="250" x:Name="ComponentTemplateCol" Header="Component" CanUserSort="True" SortMemberPath="Component"                                        
+                                        IsReadOnly="True" Visibility="{Binding Data.ComponentVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock TextAlignment="Justify" MaxHeight="100" MaxWidth="400" TextWrapping="Wrap" Text="{Binding Message, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}, Mode=FindAncestor}}"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                    <!--NAME COLUMN-->
-                    <DataGridTemplateColumn.HeaderTemplate>
-                        <DataTemplate>
-                            <Grid IsHitTestVisible="True" Width="{Binding Path=Width, ElementName=MessageTemplateCol}">
-                                <!--FILTER EXPANDER-->
-                                <Expander Header="{TemplateBinding Content}" IsHitTestVisible="True" VerticalAlignment="Top" Margin="0 0 0 0" ToolTip="RuleFilter">
-                                    <Border IsHitTestVisible="True" BorderThickness="1" Margin="0 0 0 0" >
-                                        <StackPanel Margin="0 2 0 0">
-                                            <!--FILTER TEXTBOX-->
-                                            <TextBox Text="{Binding DataContext.FilterTermMessage, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
-												 
-												ToolTip="Enter filter term" Width="100" Height="18" FontSize="9" BorderThickness="1" />
-                                            <!--FILTER BUTTONS-->
-                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                                <TextBlock Margin="2" FontFamily="Segoe UI"><Hyperlink Command="{Binding DataContext.FilterApplyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"><Run Text="Apply"/></Hyperlink></TextBlock>
-                                                <TextBlock Margin="2"><Hyperlink Command="{Binding DataContext.ClearFilterTermMessageCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"><Run Text="Clear"/></Hyperlink></TextBlock>
-                                            </StackPanel>
-                                        </StackPanel>
-                                    </Border>
-                                </Expander>
-                            </Grid>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.HeaderTemplate>
-                </DataGridTemplateColumn>
-
-                <DataGridTextColumn Binding="{Binding CreationDate}" MinWidth="100" x:Name="CreationDateTemplateCol" Header="CreationDate" CanUserSort="True" SortMemberPath="CreationDate" DisplayIndex="{Binding CreationDate, FallbackValue=1, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.CreationDateVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
-
-                <DataGridTextColumn Binding="{Binding CloseDate}" MinWidth="100" x:Name="CloseDateTemplateCol" Header="CloseDate" CanUserSort="True" SortMemberPath="CloseDate" DisplayIndex="{Binding CloseDateIndex, FallbackValue=2, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.CloseDateVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
-
-                <DataGridTemplateColumn MinWidth="100" x:Name="ComponentTemplateCol" Header="Component" CanUserSort="True" SortMemberPath="Component" DisplayIndex="{Binding Data.ComponentIndex, FallbackValue=3, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.ComponentVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Component, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"    />
+                            <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding Component, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"    />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                     <!--NAME COLUMN-->
@@ -309,32 +276,34 @@
                     </DataGridTemplateColumn.HeaderTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTextColumn Binding="{Binding EffortToFix}" MinWidth="100" x:Name="EffortToFixTemplateCol" Header="EffortToFix" CanUserSort="True" SortMemberPath="EffortToFix" DisplayIndex="{Binding EffortToFixIndex, FallbackValue=4, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.EffortToFixVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
-
-                <DataGridTextColumn Binding="{Binding Line}" MinWidth="100" x:Name="LineTemplateCol" Header="Line" CanUserSort="True" SortMemberPath="Line" DisplayIndex="{Binding LineIndex, FallbackValue=5, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.LineVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
-
-                <DataGridTemplateColumn MinWidth="100" x:Name="ProjectTemplateCol" Header="Project" CanUserSort="True" SortMemberPath="Project" DisplayIndex="{Binding Data.ProjectIndex, FallbackValue=6, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.ProjectVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
+                <DataGridTextColumn DisplayIndex="{Binding LineIndex, FallbackValue=1, Mode=TwoWay, Source={StaticResource Proxy}}"
+                                    Binding="{Binding Line}" MinWidth="50" MaxWidth="50" x:Name="LineTemplateCol" Header="Line" CanUserSort="True" SortMemberPath="Line" 
+                                    IsReadOnly="True" Visibility="{Binding Data.LineVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
+                
+                <DataGridTemplateColumn DisplayIndex="{Binding Data.MessageIndex, FallbackValue=2, Mode=TwoWay, Source={StaticResource Proxy}}"
+                                        MinWidth="250" MaxWidth="250" x:Name="MessageTemplateCol" Header="Message" CanUserSort="True" SortMemberPath="Message"                                         
+                                        IsReadOnly="True" Visibility="{Binding Data.MessageVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Project, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"    />
+                            <TextBlock TextAlignment="Justify" MaxHeight="100" MaxWidth="400" TextWrapping="WrapWithOverflow" Text="{Binding Message, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}, Mode=FindAncestor}}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                     <!--NAME COLUMN-->
                     <DataGridTemplateColumn.HeaderTemplate>
                         <DataTemplate>
-                            <Grid IsHitTestVisible="True">
+                            <Grid IsHitTestVisible="True" Width="{Binding Path=Width, ElementName=MessageTemplateCol}">
                                 <!--FILTER EXPANDER-->
-                                <Expander   Header="{TemplateBinding Content}" IsHitTestVisible="True" VerticalAlignment="Top" Margin="0 0 0 0" ToolTip="RuleFilter">
+                                <Expander Header="{TemplateBinding Content}" IsHitTestVisible="True" VerticalAlignment="Top" Margin="0 0 0 0" ToolTip="RuleFilter">
                                     <Border IsHitTestVisible="True" BorderThickness="1" Margin="0 0 0 0" >
                                         <StackPanel Margin="0 2 0 0">
                                             <!--FILTER TEXTBOX-->
-                                            <TextBox Text="{Binding DataContext.FilterTermProject, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                            <TextBox Text="{Binding DataContext.FilterTermMessage, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
 												 
 												ToolTip="Enter filter term" Width="100" Height="18" FontSize="9" BorderThickness="1" />
                                             <!--FILTER BUTTONS-->
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                                 <TextBlock Margin="2" FontFamily="Segoe UI"><Hyperlink Command="{Binding DataContext.FilterApplyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"><Run Text="Apply"/></Hyperlink></TextBlock>
-                                                <TextBlock Margin="2"><Hyperlink Command="{Binding DataContext.ClearFilterTermProjectCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"><Run Text="Clear"/></Hyperlink></TextBlock>
+                                                <TextBlock Margin="2"><Hyperlink Command="{Binding DataContext.ClearFilterTermMessageCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"><Run Text="Clear"/></Hyperlink></TextBlock>
                                             </StackPanel>
                                         </StackPanel>
                                     </Border>
@@ -344,38 +313,9 @@
                     </DataGridTemplateColumn.HeaderTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTextColumn MinWidth="100" x:Name="UpdateDateTemplateCol" Header="UpdateDate" CanUserSort="True" SortMemberPath="UpdateDate" DisplayIndex="{Binding Data.UpdateDateIndex, FallbackValue=7, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.UpdateDateVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
-
-                <DataGridTemplateColumn MinWidth="100" x:Name="StatusTemplateCol" Header="Status" CanUserSort="True" SortMemberPath="Status" DisplayIndex="{Binding Data.StatusIndex, FallbackValue=8, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.StatusVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"    />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                    <!--NAME COLUMN-->
-                    <DataGridTemplateColumn.HeaderTemplate>
-                        <DataTemplate>
-                            <Grid IsHitTestVisible="True">
-                                <!--FILTER EXPANDER-->
-                                <Expander   Header="{TemplateBinding Content}" IsHitTestVisible="True" VerticalAlignment="Top" Margin="0 0 0 0" ToolTip="RuleFilter">
-                                    <Border IsHitTestVisible="True" BorderThickness="1" Margin="0 0 0 0" >
-                                        <StackPanel Margin="0 2 0 0">
-                                            <!--FILTER TEXTBOX-->
-                                            <ComboBox ItemsSource="{Binding Source={StaticResource GetStatusEnumValues}}" Width="Auto" SelectedValue="{Binding DataContext.FilterTermStatus, Mode=TwoWay, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"    />
-                                            <!--FILTER BUTTONS-->
-                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                                <TextBlock Margin="2" FontFamily="Segoe UI"><Hyperlink Command="{Binding DataContext.FilterApplyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"><Run Text="Apply"/></Hyperlink></TextBlock>
-                                                <TextBlock Margin="2"><Hyperlink Command="{Binding DataContext.ClearFilterTermStatusCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"><Run Text="Clear"/></Hyperlink></TextBlock>
-                                            </StackPanel>
-                                        </StackPanel>
-                                    </Border>
-                                </Expander>
-                            </Grid>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.HeaderTemplate>
-                </DataGridTemplateColumn>
-
-                <DataGridTemplateColumn MinWidth="100" x:Name="SeverityTemplateCol" Header="Severity" CanUserSort="True" SortMemberPath="Severity" DisplayIndex="{Binding Data.SeverityIndex, FallbackValue=9, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.SeverityVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
+                <DataGridTemplateColumn DisplayIndex="{Binding Data.SeverityIndex, FallbackValue=3, Mode=TwoWay, Source={StaticResource Proxy}}"
+                                        MinWidth="100" MaxWidth="100" x:Name="SeverityTemplateCol" Header="Severity" CanUserSort="True" SortMemberPath="Severity"                                        
+                                        IsReadOnly="True" Visibility="{Binding Data.SeverityVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Severity, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"    />
@@ -404,11 +344,13 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.HeaderTemplate>
                 </DataGridTemplateColumn>
-
-                <DataGridTemplateColumn MinWidth="100" x:Name="RuleTemplateCol" Header="Rule" CanUserSort="True" SortMemberPath="Rule" DisplayIndex="{Binding Data.RuleIndex, FallbackValue=10, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.RuleVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
+                
+                <DataGridTemplateColumn DisplayIndex="{Binding Data.StatusIndex, FallbackValue=4, Mode=TwoWay, Source={StaticResource Proxy}}"
+                                        MinWidth="100" MaxWidth="100" x:Name="StatusTemplateCol" Header="Status" CanUserSort="True" SortMemberPath="Status"                                        
+                                        IsReadOnly="True" Visibility="{Binding Data.StatusVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Rule, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"    />
+                            <TextBlock Text="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"    />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                     <!--NAME COLUMN-->
@@ -420,13 +362,11 @@
                                     <Border IsHitTestVisible="True" BorderThickness="1" Margin="0 0 0 0" >
                                         <StackPanel Margin="0 2 0 0">
                                             <!--FILTER TEXTBOX-->
-                                            <TextBox Text="{Binding DataContext.FilterTermRule, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
-												 
-												ToolTip="Enter filter term" Width="100" Height="18" FontSize="9" BorderThickness="1" />
+                                            <ComboBox ItemsSource="{Binding Source={StaticResource GetStatusEnumValues}}" Width="Auto" SelectedValue="{Binding DataContext.FilterTermStatus, Mode=TwoWay, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"    />
                                             <!--FILTER BUTTONS-->
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                                 <TextBlock Margin="2" FontFamily="Segoe UI"><Hyperlink Command="{Binding DataContext.FilterApplyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"><Run Text="Apply"/></Hyperlink></TextBlock>
-                                                <TextBlock Margin="2"><Hyperlink Command="{Binding DataContext.ClearClearFilterTermRuleCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"><Run Text="Clear"/></Hyperlink></TextBlock>
+                                                <TextBlock Margin="2"><Hyperlink Command="{Binding DataContext.ClearFilterTermStatusCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"><Run Text="Clear"/></Hyperlink></TextBlock>
                                             </StackPanel>
                                         </StackPanel>
                                     </Border>
@@ -435,36 +375,16 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.HeaderTemplate>
                 </DataGridTemplateColumn>
-
-                <DataGridTemplateColumn MinWidth="100" x:Name="ResolutionTemplateCol" Header="Resolution" CanUserSort="True" SortMemberPath="Resolution" DisplayIndex="{Binding Data.ResolutionIndex, FallbackValue=11, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.ResolutionVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Resolution, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"    />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                    <!--NAME COLUMN-->
-                    <DataGridTemplateColumn.HeaderTemplate>
-                        <DataTemplate>
-                            <Grid IsHitTestVisible="True">
-                                <Expander   Header="{TemplateBinding Content}" IsHitTestVisible="True" VerticalAlignment="Top" Margin="0 0 0 0" ToolTip="RuleFilter">
-                                    <Border IsHitTestVisible="True" BorderThickness="1" Margin="0 0 0 0" >
-                                        <StackPanel Margin="0 2 0 0">
-                                            <!--FILTER TEXTBOX-->
-                                            <ComboBox ItemsSource="{Binding Source={StaticResource GetResolutionEnumValues}}" Width="Auto" SelectedValue="{Binding DataContext.FilterTermResolution, Mode=TwoWay, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"    />
-                                            <!--FILTER BUTTONS-->
-                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                                <TextBlock Margin="2" FontFamily="Segoe UI"><Hyperlink Command="{Binding DataContext.FilterApplyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"><Run Text="Apply"/></Hyperlink></TextBlock>
-                                                <TextBlock Margin="2"><Hyperlink Command="{Binding DataContext.ClearFilterTermResolutionCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"><Run Text="Clear"/></Hyperlink></TextBlock>
-                                            </StackPanel>
-                                        </StackPanel>
-                                    </Border>
-                                </Expander>
-                            </Grid>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.HeaderTemplate>
-                </DataGridTemplateColumn>
-
-                <DataGridTemplateColumn MinWidth="100" x:Name="AssigneeTemplateCol" Header="Assignee" CanUserSort="True" SortMemberPath="Assignee" DisplayIndex="{Binding Data.AssigneeIndex, FallbackValue=12, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.AssigneeVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
+                
+                <DataGridTextColumn DisplayIndex="{Binding DebtIndex, FallbackValue=5, Mode=TwoWay, Source={StaticResource Proxy}}"
+                                    Binding="{Binding Debt}" MinWidth="80" MaxWidth="80" x:Name="DebtemplateCol"
+                                    Header="Debt" CanUserSort="True" SortMemberPath="Debt"                                    
+                                    IsReadOnly="True"
+                                    Visibility="{Binding Data.DebtVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}" />
+                
+                <DataGridTemplateColumn DisplayIndex="{Binding Data.AssigneeIndex, FallbackValue=6, Mode=TwoWay, Source={StaticResource Proxy}}"
+                                        MinWidth="100" MaxWidth="100" x:Name="AssigneeTemplateCol" Header="Assignee" CanUserSort="True" SortMemberPath="Assignee"
+                                        IsReadOnly="True" Visibility="{Binding Data.AssigneeVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Assignee, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"    />
@@ -492,57 +412,12 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.HeaderTemplate>
                 </DataGridTemplateColumn>
-
-                <DataGridTemplateColumn MinWidth="100" x:Name="IsNewTemplateCol" Header="IsNew" CanUserSort="True" SortMemberPath="IsNew" DisplayIndex="{Binding Data.IsNewIndex, FallbackValue=13, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.IsNewVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding IsNew, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"    />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                    <!--NAME COLUMN-->
-                    <DataGridTemplateColumn.HeaderTemplate>
-                        <DataTemplate>
-                            <Grid IsHitTestVisible="True">
-                                <Expander   Header="{TemplateBinding Content}" IsHitTestVisible="True" VerticalAlignment="Top" Margin="0 0 0 0" ToolTip="RuleFilter">
-                                    <Border IsHitTestVisible="True" BorderThickness="1" Margin="0 0 0 0" >
-                                        <StackPanel Margin="0 2 0 0">
-                                            <!--FILTER TEXTBOX-->
-                                            <ComboBox Width="Auto" SelectedValue="{Binding DataContext.FilterTermIsNew, Mode=TwoWay, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"    >
-                                                <ComboBoxItem Content="yes"></ComboBoxItem>
-                                                <ComboBoxItem Content="no"></ComboBoxItem>
-                                            </ComboBox>
-                                            <!--FILTER BUTTONS-->
-                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                                <TextBlock Margin="2" FontFamily="Segoe UI"><Hyperlink Command="{Binding DataContext.FilterApplyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"><Run Text="Apply"/></Hyperlink></TextBlock>
-                                                <TextBlock Margin="2"><Hyperlink Command="{Binding DataContext.ClearFilterTermIsNewCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"><Run Text="Clear"/></Hyperlink></TextBlock>
-                                            </StackPanel>
-                                        </StackPanel>
-                                    </Border>
-                                </Expander>
-                            </Grid>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.HeaderTemplate>
-                </DataGridTemplateColumn>
-
-                <DataGridTextColumn Binding="{Binding Key}" MinWidth="100" x:Name="KeyTemplateCol" Header="Key" CanUserSort="True" SortMemberPath="Key" DisplayIndex="{Binding KeyIndex, FallbackValue=14, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.KeyVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
-
-                <DataGridTextColumn Binding="{Binding Id}" MinWidth="100" x:Name="IdTemplateCol" Header="Id" CanUserSort="True" SortMemberPath="Id" DisplayIndex="{Binding IdIndex, FallbackValue=15, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.IdVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
-                
-                <DataGridTextColumn Binding="{Binding ActionPlan}" MinWidth="100" x:Name="ActionPlanTemplateCol" Header="Action Plan" CanUserSort="True" SortMemberPath="Id" DisplayIndex="{Binding IdIndex, FallbackValue=16, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.IdVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
-
-                <DataGridTextColumn Binding="{Binding ViolationId}" MinWidth="100" x:Name="ViolationIdTemplateCol" Header="ViolationId" CanUserSort="true" SortMemberPath="ViolationId" DisplayIndex="{Binding ViolationIdIndex, FallbackValue=17, Mode=TwoWay, Source={StaticResource Proxy}}" IsReadOnly="True" Visibility="{Binding Data.ViolationIdVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
-
-                <DataGridTextColumn Binding="{Binding Debt}" MinWidth="100" x:Name="DebtemplateCol"
-                                    Header="Debt" CanUserSort="True" SortMemberPath="Debt"
-                                    DisplayIndex="{Binding Debt, FallbackValue=18, Mode=TwoWay, Source={StaticResource Proxy}}"
-                                    IsReadOnly="True"
-                                    Visibility="{Binding Data.DebtVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}" />
-                
-                <DataGridTemplateColumn MinWidth="100" x:Name="IssueTrackerTemplateCol"
-                                        Header="Issue Tracker" CanUserSort="True" SortMemberPath="IssueTrackerId"
-                                        DisplayIndex="{Binding Data.IssueTrackerIdIndex, FallbackValue=19, Mode=TwoWay, Source={StaticResource Proxy}}"
+                                
+                <DataGridTemplateColumn DisplayIndex="{Binding Data.IssueTrackerIdIndex, FallbackValue=7, Mode=TwoWay, Source={StaticResource Proxy}}"
+                                        MinWidth="100" x:Name="IssueTrackerTemplateCol"
+                                        Header="Issue Tracker" CanUserSort="True" SortMemberPath="IssueTrackerId"                                        
                                         IsReadOnly="True"
-                                        Visibility="{Binding Data.ComponentVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
+                                        Visibility="{Binding Data.IssueTrackerIdVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding IssueTrackerId, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"    />
@@ -573,6 +448,166 @@
                     </DataGridTemplateColumn.HeaderTemplate>
                 </DataGridTemplateColumn>
 
+                <DataGridTemplateColumn DisplayIndex="{Binding Data.IsNewIndex, FallbackValue=8, Mode=TwoWay, Source={StaticResource Proxy}}"
+                                        MinWidth="100" x:Name="IsNewTemplateCol" Header="IsNew" CanUserSort="True" SortMemberPath="IsNew"                                        
+                                        IsReadOnly="True" Visibility="{Binding Data.IsNewVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding IsNew, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"    />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <!--NAME COLUMN-->
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid IsHitTestVisible="True">
+                                <Expander   Header="{TemplateBinding Content}" IsHitTestVisible="True" VerticalAlignment="Top" Margin="0 0 0 0" ToolTip="RuleFilter">
+                                    <Border IsHitTestVisible="True" BorderThickness="1" Margin="0 0 0 0" >
+                                        <StackPanel Margin="0 2 0 0">
+                                            <!--FILTER TEXTBOX-->
+                                            <ComboBox Width="Auto" SelectedValue="{Binding DataContext.FilterTermIsNew, Mode=TwoWay, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"    >
+                                                <ComboBoxItem Content="yes"></ComboBoxItem>
+                                                <ComboBoxItem Content="no"></ComboBoxItem>
+                                            </ComboBox>
+                                            <!--FILTER BUTTONS-->
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <TextBlock Margin="2" FontFamily="Segoe UI"><Hyperlink Command="{Binding DataContext.FilterApplyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"><Run Text="Apply"/></Hyperlink></TextBlock>
+                                                <TextBlock Margin="2"><Hyperlink Command="{Binding DataContext.ClearFilterTermIsNewCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"><Run Text="Clear"/></Hyperlink></TextBlock>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </Expander>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                </DataGridTemplateColumn>
+                
+                <DataGridTextColumn DisplayIndex="{Binding ActionPlanIndex, FallbackValue=9, Mode=TwoWay, Source={StaticResource Proxy}}"
+                                    Binding="{Binding ActionPlanName}" MinWidth="100" x:Name="ActionPlanTemplateCol" Header="Action Plan" CanUserSort="True" SortMemberPath="ActionPlan"                                    
+                                    IsReadOnly="True" Visibility="{Binding Data.ActionPlanVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
+                
+                <DataGridTextColumn DisplayIndex="{Binding CreationDateIndex, FallbackValue=10, Mode=TwoWay, Source={StaticResource Proxy}}"
+                                    Binding="{Binding CreationDate}" MinWidth="100" x:Name="CreationDateTemplateCol" Header="CreationDate" CanUserSort="True" SortMemberPath="CreationDate"
+                                    IsReadOnly="True" Visibility="{Binding Data.CreationDateVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
+
+                <DataGridTextColumn DisplayIndex="{Binding CloseDateIndex, FallbackValue=11, Mode=TwoWay, Source={StaticResource Proxy}}"
+                                    Binding="{Binding CloseDate}" MinWidth="100" x:Name="CloseDateTemplateCol" Header="CloseDate" CanUserSort="True" SortMemberPath="CloseDate"                                    
+                                    IsReadOnly="True" Visibility="{Binding Data.CloseDateVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
+
+                <DataGridTextColumn DisplayIndex="{Binding EffortToFixIndex, FallbackValue=12, Mode=TwoWay, Source={StaticResource Proxy}}"
+                                    Binding="{Binding EffortToFix}" MinWidth="100" x:Name="EffortToFixTemplateCol" Header="EffortToFix" CanUserSort="True" SortMemberPath="EffortToFix"                                    
+                                    IsReadOnly="True" Visibility="{Binding Data.EffortToFixVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
+               
+                <DataGridTemplateColumn DisplayIndex="{Binding Data.ProjectIndex, FallbackValue=13, Mode=TwoWay, Source={StaticResource Proxy}}"
+                                        MinWidth="100" x:Name="ProjectTemplateCol" Header="Project" CanUserSort="True" SortMemberPath="Project"                                        
+                                        IsReadOnly="True" Visibility="{Binding Data.ProjectVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Project, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"    />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <!--NAME COLUMN-->
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid IsHitTestVisible="True">
+                                <!--FILTER EXPANDER-->
+                                <Expander   Header="{TemplateBinding Content}" IsHitTestVisible="True" VerticalAlignment="Top" Margin="0 0 0 0" ToolTip="RuleFilter">
+                                    <Border IsHitTestVisible="True" BorderThickness="1" Margin="0 0 0 0" >
+                                        <StackPanel Margin="0 2 0 0">
+                                            <!--FILTER TEXTBOX-->
+                                            <TextBox Text="{Binding DataContext.FilterTermProject, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+												 
+												ToolTip="Enter filter term" Width="100" Height="18" FontSize="9" BorderThickness="1" />
+                                            <!--FILTER BUTTONS-->
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <TextBlock Margin="2" FontFamily="Segoe UI"><Hyperlink Command="{Binding DataContext.FilterApplyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"><Run Text="Apply"/></Hyperlink></TextBlock>
+                                                <TextBlock Margin="2"><Hyperlink Command="{Binding DataContext.ClearFilterTermProjectCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"><Run Text="Clear"/></Hyperlink></TextBlock>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </Expander>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTextColumn DisplayIndex="{Binding Data.UpdateDateIndex, FallbackValue=14, Mode=TwoWay, Source={StaticResource Proxy}}" 
+                                    MinWidth="100" x:Name="UpdateDateTemplateCol" Header="UpdateDate" CanUserSort="True" SortMemberPath="UpdateDate"
+                                    IsReadOnly="True" Visibility="{Binding Data.UpdateDateVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
+
+                <DataGridTemplateColumn DisplayIndex="{Binding Data.RuleIndex, FallbackValue=15, Mode=TwoWay, Source={StaticResource Proxy}}"
+                                        MinWidth="100" x:Name="RuleTemplateCol" Header="Rule" CanUserSort="True" SortMemberPath="Rule"                                        
+                                        IsReadOnly="True" Visibility="{Binding Data.RuleVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Rule, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"    />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <!--NAME COLUMN-->
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid IsHitTestVisible="True">
+                                <!--FILTER EXPANDER-->
+                                <Expander   Header="{TemplateBinding Content}" IsHitTestVisible="True" VerticalAlignment="Top" Margin="0 0 0 0" ToolTip="RuleFilter">
+                                    <Border IsHitTestVisible="True" BorderThickness="1" Margin="0 0 0 0" >
+                                        <StackPanel Margin="0 2 0 0">
+                                            <!--FILTER TEXTBOX-->
+                                            <TextBox Text="{Binding DataContext.FilterTermRule, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+												 
+												ToolTip="Enter filter term" Width="100" Height="18" FontSize="9" BorderThickness="1" />
+                                            <!--FILTER BUTTONS-->
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <TextBlock Margin="2" FontFamily="Segoe UI"><Hyperlink Command="{Binding DataContext.FilterApplyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"><Run Text="Apply"/></Hyperlink></TextBlock>
+                                                <TextBlock Margin="2"><Hyperlink Command="{Binding DataContext.ClearClearFilterTermRuleCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"><Run Text="Clear"/></Hyperlink></TextBlock>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </Expander>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn DisplayIndex="{Binding Data.ResolutionIndex, FallbackValue=16, Mode=TwoWay, Source={StaticResource Proxy}}"
+                                        MinWidth="100" x:Name="ResolutionTemplateCol" Header="Resolution" CanUserSort="True" SortMemberPath="Resolution"                                        
+                                        IsReadOnly="True" Visibility="{Binding Data.ResolutionVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Resolution, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"    />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <!--NAME COLUMN-->
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid IsHitTestVisible="True">
+                                <Expander   Header="{TemplateBinding Content}" IsHitTestVisible="True" VerticalAlignment="Top" Margin="0 0 0 0" ToolTip="RuleFilter">
+                                    <Border IsHitTestVisible="True" BorderThickness="1" Margin="0 0 0 0" >
+                                        <StackPanel Margin="0 2 0 0">
+                                            <!--FILTER TEXTBOX-->
+                                            <ComboBox ItemsSource="{Binding Source={StaticResource GetResolutionEnumValues}}" Width="Auto" SelectedValue="{Binding DataContext.FilterTermResolution, Mode=TwoWay, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"    />
+                                            <!--FILTER BUTTONS-->
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <TextBlock Margin="2" FontFamily="Segoe UI"><Hyperlink Command="{Binding DataContext.FilterApplyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"><Run Text="Apply"/></Hyperlink></TextBlock>
+                                                <TextBlock Margin="2"><Hyperlink Command="{Binding DataContext.ClearFilterTermResolutionCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"><Run Text="Clear"/></Hyperlink></TextBlock>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </Expander>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTextColumn DisplayIndex="{Binding KeyIndex, FallbackValue=17, Mode=TwoWay, Source={StaticResource Proxy}}" 
+                                    Binding="{Binding Key}" MinWidth="100" x:Name="KeyTemplateCol" Header="Key" CanUserSort="True" SortMemberPath="Key"                                    
+                                    IsReadOnly="True" Visibility="{Binding Data.KeyVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
+
+                <DataGridTextColumn DisplayIndex="{Binding IdIndex, FallbackValue=18, Mode=TwoWay, Source={StaticResource Proxy}}"
+                                    Binding="{Binding Id}" MinWidth="100" x:Name="IdTemplateCol" Header="Id" CanUserSort="True" SortMemberPath="Id"                                     
+                                    IsReadOnly="True" Visibility="{Binding Data.IdVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
+                
+                <DataGridTextColumn DisplayIndex="{Binding ViolationIdIndex, FallbackValue=19, Mode=TwoWay, Source={StaticResource Proxy}}"
+                                    Binding="{Binding ViolationId}" MinWidth="100" x:Name="ViolationIdTemplateCol" Header="ViolationId" CanUserSort="true" SortMemberPath="ViolationId"                                    
+                                    IsReadOnly="True" Visibility="{Binding Data.ViolationIdVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
                 
             </DataGrid.Columns>
 

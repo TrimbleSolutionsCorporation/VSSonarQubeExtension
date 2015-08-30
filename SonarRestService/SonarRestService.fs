@@ -102,6 +102,12 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
         if not(obj.ReferenceEquals(data.JsonValue.TryGetProperty("resolution"), null)) then
             issue.Resolution <- (EnumHelper.asEnum<Resolution>(data.Resolution.Replace("-","_"))).Value
 
+        if issue.Comments.Count <> 0 then
+            for comment in issue.Comments do
+                if comment.HtmlText.StartsWith("[VSSonarQubeExtension] Attached to issue: ") then
+                    for item in Regex.Matches(comment.HtmlText, "\\d+") do
+                        if issue.IssueTrackerId = null || issue.IssueTrackerId = "" then
+                            issue.IssueTrackerId <- item.Value
         issue
 
     let getIssuesFromStringAfter45(responsecontent : string) =
@@ -146,6 +152,13 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             match elem.Debt with
             | None -> ()
             | Some value -> issue.Debt <- value
+
+            if issue.Comments.Count <> 0 then
+                for comment in issue.Comments do
+                    if comment.HtmlText.StartsWith("[VSSonarQubeExtension] Attached to issue: ") then
+                        for item in Regex.Matches(comment.HtmlText, "\\d+") do
+                            if issue.IssueTrackerId = null || issue.IssueTrackerId = "" then
+                                issue.IssueTrackerId <- item.Value
 
             issueList.Add(issue)
 
@@ -193,6 +206,13 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 issue.EffortToFix <- 0.0m
                 match itemValue with
                 | decimal -> issue.EffortToFix <- itemValue.AsDecimal()
+
+            if issue.Comments.Count <> 0 then
+                for comment in issue.Comments do
+                    if comment.HtmlText.StartsWith("[VSSonarQubeExtension] Attached to issue: ") then
+                        for item in Regex.Matches(comment.HtmlText, "\\d+") do
+                            if issue.IssueTrackerId = null || issue.IssueTrackerId = "" then
+                                issue.IssueTrackerId <- item.Value
 
             issueList.Add(issue)
 

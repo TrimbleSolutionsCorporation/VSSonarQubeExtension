@@ -153,7 +153,7 @@ namespace VSSonarExtensionUi.Model.Menu
 
             foreach (string column in columns)
             {
-                if (column.Equals("Component") || column.Equals("Message") || column.Equals("Line"))
+                if (column.Equals("Component") || column.Equals("Message") || column.Equals("Line") || column.Equals("LocalPath") || column.Equals("Comments"))
                 {
                     continue;
                 }
@@ -161,7 +161,7 @@ namespace VSSonarExtensionUi.Model.Menu
                 var subItem = new ShowHideIssueColumn(model, helper, column, gridKey) { IsEnabled = true, CommandText = "Hide " + column };
                 try
                 {
-                    var value = helper.ReadSetting(Context.UIProperties, gridKey, column + "Visible").Value;
+                    var value = helper.ReadSetting(Context.UIProperties, gridKey, column + "Visible").Value.ToLower();
                     if (value.Equals("true"))
                     {
                         subItem.CommandText = "Hide " + column;
@@ -178,6 +178,9 @@ namespace VSSonarExtensionUi.Model.Menu
 
                 menu.SubItems.Add(subItem);
             }
+
+            var subItemreset = new ShowHideIssueColumn(model, helper, "Reset View", gridKey) { IsEnabled = true, CommandText = "Reset View" };
+            menu.SubItems.Add(subItemreset);
 
             return menu;
         }
@@ -252,8 +255,11 @@ namespace VSSonarExtensionUi.Model.Menu
                 prop.Key = this.name + "Visible";
                 prop.Context = Context.UIProperties;
                 this.helper.WriteSetting(prop, true);
+                this.model.RestoreUserSettingsInIssuesDataGrid();
+                return;
             }
-            else
+
+            if (this.CommandText.Equals("Hide " + this.name))
             {
                 this.CommandText = "Show " + this.name;
                 var prop = new SonarQubeProperties();
@@ -261,10 +267,16 @@ namespace VSSonarExtensionUi.Model.Menu
                 prop.Value = "false";
                 prop.Key = this.name + "Visible";
                 prop.Context = Context.UIProperties;
-                this.helper.WriteSetting(prop, true);
+                this.helper.WriteSetting(prop, false);
+                this.model.RestoreUserSettingsInIssuesDataGrid();
+                return;
             }
 
-            this.model.RestoreUserSettingsInIssuesDataGrid();
+            if (this.CommandText.Equals("Reset View"))
+            {
+                this.model.ResetColumnsView();
+                return;
+            }            
         }
 
         #endregion

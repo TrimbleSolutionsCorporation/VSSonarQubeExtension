@@ -51,6 +51,8 @@ namespace VSSonarPlugins.Types
             this.Assignee = string.Empty;
             this.IsNew = false;
             this.Key = new Guid();
+            this.ActionPlan = new Guid();
+            this.ActionPlanName = string.Empty;
 
             this.Id = 0;
             this.ViolationId = 0;
@@ -173,6 +175,14 @@ namespace VSSonarPlugins.Types
         /// The debt.
         /// </value>
         public string Debt { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the action plan.
+        /// </summary>
+        /// <value>
+        /// The name of the action plan.
+        /// </value>
+        public string ActionPlanName { get; set; }
 
         /// <summary>
         /// The deep copy.
