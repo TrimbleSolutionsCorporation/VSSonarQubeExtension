@@ -49,12 +49,18 @@
         private readonly ISourceVersionPlugin supportedPlugin;
 
         /// <summary>
+        /// The manager
+        /// </summary>
+        private readonly INotificationManager manager;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SourceControlModel" /> class.
         /// </summary>
         /// <param name="sourceControlPlugins">The source control plugins.</param>
         /// <param name="basePath">The base path.</param>
-        public SourceControlModel(IEnumerable<ISourceVersionPlugin> sourceControlPlugins, string basePath)
+        public SourceControlModel(IEnumerable<ISourceVersionPlugin> sourceControlPlugins, string basePath, INotificationManager manager)
         {
+            this.manager = manager;
             this.basePath = basePath;
             this.plugins = sourceControlPlugins;
 
@@ -83,6 +89,13 @@
             if (this.supportedPlugin != null)
             {
                 return this.supportedPlugin.GetBlameByLine(filePath, line);
+            }
+            else
+            {
+                if (this.manager != null)
+                {
+                    this.manager.ReportMessage(new Message { Id = "IssueTrackerMenu", Data = "Project not supported by any source control plugin" });
+                }                
             }
 
             return null;

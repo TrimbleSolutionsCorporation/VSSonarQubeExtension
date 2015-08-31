@@ -239,7 +239,9 @@
                 {
                     foreach (var user in users)
                     {
-                        if (user.Email.Equals(blameLine.Email.ToLower()))
+                        var emailBlame = blameLine.Email.ToLower().Trim();
+                        var emailSq = user.Email.ToLower().Trim();
+                        if (emailBlame.Equals(emailSq))
                         {
                             var issues = new List<Issue>();
                             issues.Add(issue);

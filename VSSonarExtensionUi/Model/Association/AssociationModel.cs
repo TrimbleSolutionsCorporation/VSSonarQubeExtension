@@ -157,7 +157,7 @@
                 if (this.sourceControl == null)
                 {
                     // create a new source control provider for solution
-                    this.sourceControl = new SourceControlModel(this.pluginManager.SourceCodePlugins, this.OpenSolutionPath);
+                    this.sourceControl = new SourceControlModel(this.pluginManager.SourceCodePlugins, this.OpenSolutionPath, this.logger);
                 }
 
                 return this.sourceControl;
@@ -391,7 +391,7 @@
             this.OpenSolutionPath = solutionPath;
 
             // create a new source control provider for solution
-            this.sourceControl = new SourceControlModel(this.pluginManager.SourceCodePlugins, this.OpenSolutionPath);
+            this.sourceControl = new SourceControlModel(this.pluginManager.SourceCodePlugins, this.OpenSolutionPath, this.logger);
 
             if (this.model.IsConnected)
             {

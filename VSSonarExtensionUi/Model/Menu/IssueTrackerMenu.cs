@@ -446,6 +446,12 @@ namespace VSSonarExtensionUi.Model.Menu
                 {
                     var defect = this.issueTrackerPlugin.GetDefectFromCommitMessage(message.Summary);
 
+                    if (defect == null)
+                    {
+                        this.manager.ReportMessage(new Message { Id = "IssueTrackerMenu", Data = "Could not get issue tracker info message: " + message.Summary });
+                        return;
+                    }
+
                     if (defect != null)
                     {
                         this.GenerateSubMenus(defect.Id);
@@ -457,11 +463,6 @@ namespace VSSonarExtensionUi.Model.Menu
                     }
                     
                     this.issueDefectCache.Add(issue.Key, defect);
-                }
-                else
-                {
-                    this.manager.ReportMessage(
-                        new Message { Id = "IssueTrackerMenu", Data = "Source Control Plugin Not Available" });
                 }
             }
         }
