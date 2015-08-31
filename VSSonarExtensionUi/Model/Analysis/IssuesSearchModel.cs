@@ -108,7 +108,6 @@ namespace VSSonarExtensionUi.Model.Analysis
             this.configurationHelper = configurationHelper;
             this.restService = restService;
             this.issuesSearchViewModel = new IssuesSearchViewModel(this, manager, this.configurationHelper, restService, translator);
-
             AssociationModel.RegisterNewModelInPool(this);
         }
 

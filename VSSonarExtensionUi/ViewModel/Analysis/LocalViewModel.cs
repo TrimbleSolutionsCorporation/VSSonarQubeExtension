@@ -177,6 +177,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.plugins = pluginsIn;
             this.Header = "Local Analysis";
             this.IssuesGridView = new IssueGridViewModel(false, "LocalView", false, this.configurationHelper, service, notificationManager, translator);
+            this.IssuesGridView.ShowLeftFlyoutEvent += this.ShowHideLeftFlyout;
             this.OuputLogLines = new PaginatedObservableCollection<string>(300);
             this.AllLog = new List<string>();
 
@@ -188,7 +189,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.localAnalyserModule.LocalAnalysisCompleted += this.UpdateLocalIssues;
             this.localAnalyserModule.AssociateCommandCompeted += this.UpdateAssociateCommand;
 
-            this.ShowFlyouts = false;
+            this.ShowLeftFlyOut = false;
             this.SizeOfFlyout = 0;
 
             this.ForeGroundColor = Colors.Black;
@@ -234,19 +235,9 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public string AssociatingTextTooltip { get; set; }
 
         /// <summary>
-        ///     Gets or sets the close flyout log viewer command.
-        /// </summary>
-        public ICommand CloseFlyoutLogViewerCommand { get; set; }
-
-        /// <summary>
         ///     Gets or sets a value indicating whether file analysis is enabled.
         /// </summary>
         public bool FileAnalysisIsEnabled { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the flyout log viewer command.
-        /// </summary>
-        public ICommand FlyoutLogViewerCommand { get; set; }
 
         /// <summary>
         ///     Gets or sets the fore ground color.
@@ -298,6 +289,11 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public ICommand OpenSourceDirCommand { get; set; }
 
         /// <summary>
+        ///     Gets the close flyout issue search command.
+        /// </summary>
+        public RelayCommand CloseLeftFlyoutCommand { get; private set; }
+
+        /// <summary>
         ///     Gets or sets the ouput log lines.
         /// </summary>
         public PaginatedObservableCollection<string> OuputLogLines { get; set; }
@@ -331,7 +327,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <summary>
         ///     Gets or sets a value indicating whether show flyouts.
         /// </summary>
-        public bool ShowFlyouts
+        public bool ShowLeftFlyOut
         {
             get
             {
@@ -341,7 +337,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             set
             {
                 this.showFlyouts = value;
-                this.SizeOfFlyout = value ? 150 : 0;
+                this.SizeOfFlyout = value ? 250 : 0;
             }
         }
 
@@ -433,6 +429,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                     issue =>
                     this.IssuesGridView.IsNotFiltered(issue) && file.Key.Equals(issue.Component))
                     .ToList();
+        }
+
+        /// <summary>
+        /// Called when [show flyouts changed].
+        /// </summary>
+        public void OnShowFlyoutsChanged()
+        {
+            this.SizeOfFlyout = this.ShowLeftFlyOut ? 200 : 0;
         }
 
         /// <summary>
@@ -661,9 +665,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.OpenLogCommand = new RelayCommand(this.OnOpenLogCommand);
             this.GoToPrevIssueCommand = new RelayCommand(this.OnGoToPrevIssueCommand);
             this.GoToNextIssueCommand = new RelayCommand(this.OnGoToNextIssueCommand);
-
-            this.FlyoutLogViewerCommand = new RelayCommand(this.OnFlyoutLogViewerCommand);
-            this.CloseFlyoutLogViewerCommand = new RelayCommand(this.OnCloseFlyoutLogViewerCommand);
+            this.CloseLeftFlyoutCommand = new RelayCommand(this.OnCloseLeftFlyoutCommand);
         }
 
         /// <summary>
@@ -699,20 +701,12 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         }
 
         /// <summary>
-        ///     The on close flyout log viewer command.
-        /// </summary>
-        private void OnCloseFlyoutLogViewerCommand()
-        {
-            this.ShowFlyouts = true;
-            this.SizeOfFlyout = 150;
-        }
-
-        /// <summary>
         ///     The on flyout log viewer command.
         /// </summary>
-        private void OnFlyoutLogViewerCommand()
+        private void OnCloseLeftFlyoutCommand()
         {
-            this.ShowFlyouts = false;
+            this.ShowLeftFlyOut = false;
+            this.IssuesGridView.ShowLeftFlyOut = false;
             this.SizeOfFlyout = 0;
         }
 
@@ -985,6 +979,22 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         private DateTime GetUpdateTimeFromAssembly(string outputPath)
         {
             return File.GetLastWriteTime(outputPath);
+        }
+
+        /// <summary>
+        /// Shows the hide left flyout.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void ShowHideLeftFlyout(object sender, EventArgs e)
+        {
+            if (this.IssuesGridView == null)
+            {
+                return;
+            }
+
+            this.ShowLeftFlyOut = this.IssuesGridView.ShowLeftFlyOut;
+            this.OnShowFlyoutsChanged();
         }
 
         #endregion

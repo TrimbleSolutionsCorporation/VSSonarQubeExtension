@@ -170,6 +170,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.BackGroundColor = Colors.White;
 
             this.ShowSqaleRating = showSqaleRating;
+            this.CommentsFlyoutEnabled = true;
 
             // register model
             AssociationModel.RegisterNewModelInPool(this);
@@ -181,9 +182,38 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         #region Public Properties
 
         /// <summary>
+        ///     The analysis mode has change.
+        /// </summary>
+        public event ChangedEventHandler ShowLeftFlyoutEvent;
+
+        /// <summary>
+        ///     The analysis mode has change.
+        /// </summary>
+        public event ChangedEventHandler NavigateDownEvent;
+
+        /// <summary>
+        ///     The analysis mode has change.
+        /// </summary>
+        public event ChangedEventHandler NavigateUpEvent;
+        
+        /// <summary>
         /// Gets or sets the all issues.
         /// </summary>
         public AsyncObservableCollection<Issue> AllIssues { get; set; }
+
+        /// <summary>Gets or sets the go to prev issue command.</summary>
+        public ICommand GoToPrevIssueCommand { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [comments flyout enabled].
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if [comments flyout enabled]; otherwise, <c>false</c>.
+        /// </value>
+        public bool CommentsFlyoutEnabled { get; set; }
+
+        /// <summary>Gets or sets the go to next issue command.</summary>
+        public ICommand GoToNextIssueCommand { get; set; }
 
         /// <summary>
         ///     Gets or sets the assignee index.
@@ -220,6 +250,14 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         ///     Gets or sets the busy indicator tooltip.
         /// </summary>
         public string BusyIndicatorTooltip { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [show left fly out].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [show left fly out]; otherwise, <c>false</c>.
+        /// </value>
+        public bool ShowLeftFlyOut { get; set; }
 
         /// <summary>
         ///     Gets or sets a value indicating whether can hide coloumn command.
@@ -776,6 +814,12 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// </summary>
         public void OnSelectedIssueChanged()
         {
+            if (!this.CommentsFlyoutEnabled)
+            {
+                this.IsCommentEnabled = false;
+                return;
+            }
+
             if (this.SelectedIssue != null && this.SelectedIssue.Comments.Count != 0)
             {
                 this.IsCommentEnabled = true;
@@ -833,6 +877,14 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         public bool IsNotFiltered(Issue issue)
         {
             return this.filter.FilterFunction(issue);
+        }
+
+        /// <summary>
+        /// Called when [show left fly out changed].
+        /// </summary>
+        public void OnShowLeftFlyOutChanged()
+        {
+            this.ShowLeftFlyout(EventArgs.Empty);
         }
 
         /// <summary>
@@ -919,25 +971,17 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 try
                 {
                     translatedPath = this.keyTranslator.TranslateKey(issue.Component, this.vsenvironmenthelper, this.associatedProject.BranchName);
+                    if (string.IsNullOrEmpty(translatedPath))
+                    {
+                        this.ReportTranslationException(issue, translatedPath);
+                        return;
+                    }
+
                     this.vsenvironmenthelper.OpenResourceInVisualStudio(this.sourceWorkDir, translatedPath, issue.Line);
                 }
                 catch (Exception ex)
                 {
-                    this.notificationManager.ReportMessage(new Message() { Id = "OnInEditor", Data = ex.Message + " : " + issue.Component });
-                    this.notificationManager.ReportMessage(new Message() { Id = "OnInEditor ", Data = "Solution = " + this.sourceWorkDir });
-                    this.notificationManager.ReportMessage(new Message() { Id = "OnInEditor", Data = "Project = " + this.sourceWorkDir });
-                    this.notificationManager.ReportMessage(new Message() { Id = "OnInEditor", Data = "Translated Path = " + translatedPath });
-                    this.notificationManager.ReportException(ex);
-
-                    try
-                    {
-                        this.restService.GetResourcesData(AuthtenticationHelper.AuthToken, issue.Component);
-                    }
-                    catch (Exception exConnection)
-                    {
-                        this.notificationManager.ReportMessage(new Message() { Id = "OnInEditor : Failed to get Data For Resource", Data = exConnection.Message + " : " + issue.Component });
-                        this.notificationManager.ReportException(exConnection);
-                    }
+                    this.ReportTranslationException(issue, translatedPath, ex);
                 }
             }
         }
@@ -1223,6 +1267,9 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.ClearFilterTermStatusCommand = new RelayCommand<object>(this.OnClearFilterTermStatusCommand);
             this.FilterApplyCommand = new RelayCommand(this.OnFilterApplyCommand);
             this.FilterClearAllCommand = new RelayCommand<object>(this.OnFilterClearAllCommand);
+
+            this.GoToPrevIssueCommand = new RelayCommand(this.OnGoToPrevIssueCommand);
+            this.GoToNextIssueCommand = new RelayCommand(this.OnGoToNextIssueCommand);
         }
 
         /// <summary>
@@ -1726,6 +1773,31 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, this.dataGridOptionsKey, "IssueTrackerIdVisible", this.IssueTrackerIdVisible.ToString());
         }
 
+
+        /// <summary>
+        /// Shows the left flyout.
+        /// </summary>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void ShowLeftFlyout(EventArgs e)
+        {
+            if (this.ShowLeftFlyoutEvent != null)
+            {
+                this.ShowLeftFlyoutEvent(this, e);
+            }
+        }
+
+        /// <summary>The on go to next issue command.</summary>
+        private void OnGoToNextIssueCommand()
+        {
+            this.GoToNextIssue();
+        }
+
+        /// <summary>The on go to prev issue command.</summary>
+        private void OnGoToPrevIssueCommand()
+        {
+            this.GoToPrevIssue();
+        }
+
         /// <summary>
         ///     The write window options.
         /// </summary>
@@ -1741,6 +1813,36 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                     i.ToString(CultureInfo.InvariantCulture));
                 this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, this.dataGridOptionsKey, propertyInfo.Name + "Visible", "true");
                 i++;
+            }
+        }
+
+        /// <summary>
+        /// Reports the translation exception.
+        /// </summary>
+        /// <param name="issue">The issue.</param>
+        /// <param name="translatedPath">The translated path.</param>
+        /// <param name="ex">The ex.</param>
+        private void ReportTranslationException(Issue issue, string translatedPath, Exception ex = null)
+        {
+            if (ex != null)
+            {
+                this.notificationManager.ReportMessage(new Message() { Id = "OnInEditor", Data = ex.Message + " : " + issue.Component });
+                this.notificationManager.ReportException(ex);
+            }
+
+            this.notificationManager.ReportMessage(new Message() { Id = "OnInEditor ", Data = "Was Not Able To Translate Path For Componenent:  " + issue.Component });
+            this.notificationManager.ReportMessage(new Message() { Id = "OnInEditor ", Data = "Solution = " + this.sourceWorkDir });
+            this.notificationManager.ReportMessage(new Message() { Id = "OnInEditor", Data = "Project = " + this.sourceWorkDir });
+            this.notificationManager.ReportMessage(new Message() { Id = "OnInEditor", Data = "Translated Path = " + translatedPath });
+
+            try
+            {
+                this.restService.GetResourcesData(AuthtenticationHelper.AuthToken, issue.Component);
+            }
+            catch (Exception exConnection)
+            {
+                this.notificationManager.ReportMessage(new Message() { Id = "OnInEditor : Failed to get Data For Resource", Data = exConnection.Message + " : " + issue.Component });
+                this.notificationManager.ReportException(exConnection);
             }
         }
 

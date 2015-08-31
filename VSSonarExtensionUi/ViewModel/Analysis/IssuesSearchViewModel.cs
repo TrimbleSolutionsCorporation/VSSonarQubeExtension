@@ -81,6 +81,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.AvailableActionPlans = new ObservableCollection<SonarActionPlan>();
             this.UsersList = new ObservableCollection<User>();
             this.IssuesGridView = new IssueGridViewModel(true, "SearchView", false, configurationHelper, restService, notificationManager, translator);
+            this.IssuesGridView.ShowLeftFlyoutEvent += this.ShowHideLeftFlyout;
+            this.SizeOfFlyout = 0;
 
             this.InitCommanding();
 
@@ -90,6 +92,17 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.CreatedSinceDate = DateTime.Now;
 
             SonarQubeViewModel.RegisterNewViewModelInPool(this);
+        }
+
+        private void ShowHideLeftFlyout(object sender, EventArgs e)
+        {
+            if (this.IssuesGridView == null)
+            {
+                return;
+            }
+
+            this.ShowLeftFlyOut = this.IssuesGridView.ShowLeftFlyOut;
+            this.OnShowFlyoutsChanged();
         }
 
         /// <summary>
@@ -126,7 +139,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <summary>
         ///     Gets the close flyout issue search command.
         /// </summary>
-        public RelayCommand CloseFlyoutIssueSearchCommand { get; private set; }
+        public RelayCommand CloseLeftFlyoutCommand { get; private set; }
 
         /// <summary>
         ///     Gets or sets the created before date.
@@ -142,11 +155,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         ///     Gets or sets the document in view.
         /// </summary>
         public string DocumentInView { get; set; }
-
-        /// <summary>
-        ///     Gets the flyout issue search command.
-        /// </summary>
-        public RelayCommand FlyoutIssueSearchCommand { get; private set; }
 
         /// <summary>
         ///     Gets or sets the fore ground color.
@@ -172,12 +180,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         ///     Gets or sets the get issues by filter command.
         /// </summary>
         public ICommand GetIssuesByFilterCommand { get; set; }
-
-        /// <summary>Gets or sets the go to prev issue command.</summary>
-        public ICommand GoToPrevIssueCommand { get; set; }
-
-        /// <summary>Gets or sets the go to next issue command.</summary>
-        public ICommand GoToNextIssueCommand { get; set; }
 
         /// <summary>
         ///     Gets or sets the get my issues in project command.
@@ -300,7 +302,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <summary>
         ///     Gets or sets a value indicating whether show flyouts.
         /// </summary>
-        public bool ShowFlyouts { get; set; }
+        public bool ShowLeftFlyOut { get; set; }
 
         /// <summary>
         ///     Gets the size of flyout.
@@ -325,7 +327,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         public void OnShowFlyoutsChanged()
         {
-            this.SizeOfFlyout = this.ShowFlyouts ? 150 : 0;
+            this.SizeOfFlyout = this.ShowLeftFlyOut ? 250 : 0;
         }
 
         /// <summary>
@@ -585,16 +587,11 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             this.CanQUeryIssues = false;
             this.GetIssuesByFilterCommand = new RelayCommand(this.OnGetIssuesByFilterCommand);
-            this.GoToPrevIssueCommand = new RelayCommand(this.OnGoToPrevIssueCommand);
-            this.GoToNextIssueCommand = new RelayCommand(this.OnGoToNextIssueCommand);
-
             this.GetAllIssuesFromProjectCommand = new RelayCommand(this.OnGetAllIssuesInProject);
             this.GetAllIssuesSinceLastAnalysisCommand = new RelayCommand(this.OnGetAllIssuesSinceLastAnalysisCommand);
             this.GetMyIssuesInProjectCommand = new RelayCommand(this.OnGetMyIssuesInProjectCommand);
             this.GetAllMyIssuesCommand = new RelayCommand(this.OnGetAllMyIssuesCommand);
-
-            this.FlyoutIssueSearchCommand = new RelayCommand(this.OnFlyoutIssueSearchCommand);
-            this.CloseFlyoutIssueSearchCommand = new RelayCommand(this.OnCloseFlyoutIssueSearchCommand);
+            this.CloseLeftFlyoutCommand = new RelayCommand(this.OnCloseFlyoutIssueSearchCommand);
         }
 
         /// <summary>
@@ -602,17 +599,9 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         private void OnCloseFlyoutIssueSearchCommand()
         {
-            this.ShowFlyouts = false;
+            this.ShowLeftFlyOut = false;
+            this.IssuesGridView.ShowLeftFlyOut = false;
             this.SizeOfFlyout = 0;
-        }
-
-        /// <summary>
-        ///     The on flyout issue search command.
-        /// </summary>
-        private void OnFlyoutIssueSearchCommand()
-        {
-            this.ShowFlyouts = true;
-            this.SizeOfFlyout = 150;
         }
 
         /// <summary>
@@ -688,18 +677,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                     };
 
             bw.RunWorkerAsync();
-        }
-
-        /// <summary>The on go to next issue command.</summary>
-        private void OnGoToNextIssueCommand()
-        {
-            this.IssuesGridView.GoToNextIssue();
-        }
-
-        /// <summary>The on go to prev issue command.</summary>
-        private void OnGoToPrevIssueCommand()
-        {
-            this.IssuesGridView.GoToPrevIssue();
         }
 
         /// <summary>

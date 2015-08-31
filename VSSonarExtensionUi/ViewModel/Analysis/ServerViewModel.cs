@@ -110,11 +110,12 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.AvailableActionPlans = new ObservableCollection<SonarActionPlan>();
             this.AlreadyOpenDiffs = new SortedSet<string>();
             this.IssuesGridView = new IssueGridViewModel(true, "ServerView", true, this.configurationHelper, this.restservice, this.notificationMan, translator);
+            this.IssuesGridView.ShowLeftFlyoutEvent += this.ShowHideLeftFlyout;
             this.InitCommanding();
 
             this.ForeGroundColor = Colors.Black;
             this.BackGroundColor = Colors.White;
-
+            this.SizeOfFlyout = 0;
             // register model
             AssociationModel.RegisterNewModelInPool(this);
         }
@@ -158,20 +159,9 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public ICommand DisplaySourceDiffCommand { get; private set; }
 
         /// <summary>
-        /// Gets or sets the go to previous issue command.
+        ///     Gets the close flyout issue search command.
         /// </summary>
-        /// <value>
-        /// The go to previous issue command.
-        /// </value>
-        public ICommand GoToPrevIssueCommand { get; set; }
-
-        /// <summary>
-        /// Gets or sets the go to next issue command.
-        /// </summary>
-        /// <value>
-        /// The go to next issue command.
-        /// </value>
-        public ICommand GoToNextIssueCommand { get; set; }
+        public RelayCommand CloseLeftFlyoutCommand { get; private set; }
 
         /// <summary>
         ///     Gets or sets the document in view.
@@ -219,10 +209,25 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </value>
         public SortedSet<string> AlreadyOpenDiffs { get; set; }
 
+        /// <summary>
+        /// Gets a value indicating whether [show left fly out].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [show left fly out]; otherwise, <c>false</c>.
+        /// </value>
+        public bool ShowLeftFlyOut { get; set; }
+
+        /// <summary>
+        /// Gets or sets the size of flyout.
+        /// </summary>
+        /// <value>
+        /// The size of flyout.
+        /// </value>
+        public int SizeOfFlyout { get; set; }
+
         #endregion
 
         #region Public Methods and Operators
-
 
         /// <summary>
         /// Updates the open difference window list.
@@ -509,19 +514,11 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         }
 
         /// <summary>
-        /// Called when [go to next issue command].
+        /// Called when [show flyouts changed].
         /// </summary>
-        private void OnGoToNextIssueCommand()
+        public void OnShowFlyoutsChanged()
         {
-            this.IssuesGridView.GoToNextIssue();
-        }
-
-        /// <summary>
-        /// Called when [go to previous issue command].
-        /// </summary>
-        private void OnGoToPrevIssueCommand()
-        {
-            this.IssuesGridView.GoToPrevIssue();
+            this.SizeOfFlyout = this.ShowLeftFlyOut ? 250 : 0;
         }
 
         #endregion
@@ -534,8 +531,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         private void InitCommanding()
         {
             this.DisplaySourceDiffCommand = new RelayCommand(this.OnDisplaySourceDiffCommand);
-            this.GoToPrevIssueCommand = new RelayCommand(this.OnGoToPrevIssueCommand);
-            this.GoToNextIssueCommand = new RelayCommand(this.OnGoToNextIssueCommand);
+            this.CloseLeftFlyoutCommand = new RelayCommand(this.OnCloseFlyoutIssueSearchCommand);
         }
 
         /// <summary>
@@ -561,6 +557,32 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                     this.notificationMan.ReportException(ex);
                 }
             }
+        }
+
+        /// <summary>
+        /// Shows the hide left flyout.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void ShowHideLeftFlyout(object sender, EventArgs e)
+        {
+            if (this.IssuesGridView == null)
+            {
+                return;
+            }
+
+            this.ShowLeftFlyOut = this.IssuesGridView.ShowLeftFlyOut;
+            this.OnShowFlyoutsChanged();
+        }
+
+        /// <summary>
+        ///     The on close flyout issue search command.
+        /// </summary>
+        private void OnCloseFlyoutIssueSearchCommand()
+        {
+            this.ShowLeftFlyOut = false;
+            this.IssuesGridView.ShowLeftFlyOut = false;
+            this.SizeOfFlyout = 0;
         }
 
         #endregion

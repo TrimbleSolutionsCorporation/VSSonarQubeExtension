@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:command="http://www.galasoft.ch/mvvmlight"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:converters="clr-namespace:VSSonarExtensionUi.Model.Converters"
              x:Class="VSSonarExtensionUi.View.Helpers.IssuesGrid"
     
@@ -26,9 +26,14 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml" />
+                
+                <ResourceDictionary Source="pack://application:,,,/VSSonarExtensionUi;component/Resources/Icons.xaml" />
+                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/ButtonStyles.xaml" />
 
             </ResourceDictionary.MergedDictionaries>
-
+            
+            <Thickness x:Key="ControlMargin">0 5 0 0</Thickness>
 
             <DataTemplate x:Key="CustomFlyoutHeaderTemplate" x:Shared="False">
                     <Border BorderThickness="2" BorderBrush="LightBlue">                
@@ -144,6 +149,7 @@
             <Style x:Key="DataGridColumnHeaderStyle" TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource DefaultDataGridColumnHeaderStyle}" >
                 <Setter Property="ContextMenu" Value="{StaticResource HeaderContextMenu}" />
             </Style>
+                       
             <DataTemplate x:Key="CommentTemplate">
                 <Border BorderThickness="1">
                     <Grid>
@@ -174,9 +180,78 @@
     <Grid d:DataContext="{Binding Source={StaticResource DatagridSampleData}}">
         <Grid.RowDefinitions>
             <RowDefinition Height="3*"/>
-            <RowDefinition Height="25"/>
+            <RowDefinition Height="35"/>
         </Grid.RowDefinitions>
         <StatusBar Grid.Row="1" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}">
+           
+            <StatusBarItem HorizontalAlignment="Left">
+                <StackPanel Orientation="Horizontal">
+                        <ToggleButton Width="30"
+                                      Height="30"
+                                      Margin="0, 0, 0, 0"
+                                      ToolTip="Shows Options For Current View"
+                                      Style="{DynamicResource MetroCircleToggleButtonStyle}"  IsChecked="{Binding ShowLeftFlyOut}" IsEnabled="True">
+              
+                            <Rectangle Width="15"
+                                       Height="15"
+                                       Fill="{Binding  ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}">
+                                <Rectangle.OpacityMask>
+                                    <VisualBrush Stretch="Fill"
+                                                 Visual="{StaticResource appbar_chevron_right}" />
+                                </Rectangle.OpacityMask>
+                            </Rectangle>
+                        </ToggleButton>  
+                    
+                    <Button Width="30"
+                            Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                            Height="30"
+                            Margin="0, 0, 0, 0"
+                            ToolTip="Go to previous issue"
+                            Style="{DynamicResource SquareButtonStyle}" Command="{Binding GoToPrevIssueCommand}" IsEnabled="True">
+                        <Rectangle Width="15"
+                                    Height="15"
+                                    Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}">
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Stretch="Fill"
+                                                Visual="{StaticResource appbar_list_up}" />
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                    </Button>
+                    <Button Width="30"
+                            Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                            Height="30"
+                            Margin="0, 0, 0, 0"
+                            ToolTip="Go to next issue"
+                            Style="{DynamicResource SquareButtonStyle}"
+                            Command="{Binding GoToNextIssueCommand}">
+                        <Rectangle Width="15"
+                                    Height="15"
+                                    Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}">
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Stretch="Fill"
+                                                Visual="{StaticResource appbar_list_reorder_down}" />
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                    </Button>
+                    
+                        <ToggleButton Width="30"
+                                      Height="30"
+                                      Margin="0, 0, 0, 0"
+                                      ToolTip="Enable Disables the Comments Flyout in the Right"
+                                      Style="{DynamicResource MetroCircleToggleButtonStyle}"  IsChecked="{Binding CommentsFlyoutEnabled}" IsEnabled="True">
+              
+                            <Rectangle Width="15"
+                                       Height="15"
+                                       Fill="{Binding  ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}">
+                                <Rectangle.OpacityMask>
+                                    <VisualBrush Stretch="Fill"
+                                                 Visual="{StaticResource appbar_chat}" />
+                                </Rectangle.OpacityMask>
+                            </Rectangle>
+                        </ToggleButton>                     
+                </StackPanel>
+
+            </StatusBarItem>            
             <StatusBarItem HorizontalAlignment="Left">
                 <TextBlock Grid.Row="1">
                         <Hyperlink

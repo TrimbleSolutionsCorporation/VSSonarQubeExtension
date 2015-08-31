@@ -5,8 +5,22 @@
     xmlns:system="clr-namespace:System;assembly=mscorlib"
 	xmlns:extensionTypes="clr-namespace:VSSonarPlugins.Types;assembly=VSSonarPlugins"
 	xmlns:themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
+    xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:command="http://www.galasoft.ch/mvvmlight"
 	xmlns:converters="clr-namespace:VSSonarExtensionUi.Model.Converters">
 
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/Styles.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VSSonarExtensionUi;component/Resources/Icons.xaml" />
+        <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/ButtonStyles.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+    
     <helpers:BindingProxy x:Key="Proxy" Data="{Binding}" />
     <converters:ActivityToBrushConverter x:Key="BrushConverter"/>
     <converters:UrlToImageSourceConverter x:Key="UrlToImageSourceConverter"/>
@@ -14,8 +28,6 @@
     <converters:ColorToBrushConverter x:Key="ColorToBrushConverter"/>
     <converters:ConfigurableBooleanToVisibilityConverter x:Key="BoolToVis" />
     <BorderGapMaskConverter x:Key="BorderGapMaskConverter"/>
-
-    
 
     <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type system:Enum}" x:Key="GetStatusEnumValues">
         <ObjectDataProvider.MethodParameters>
@@ -631,5 +643,42 @@
 					</Setter.Value>
 				</Setter>
 			</Style>
+    
+                <DataTemplate x:Key="CustomFlyoutHeaderTemplate" x:Shared="False">
+                    <Border BorderThickness="2" BorderBrush="LightBlue">
+                    <DockPanel x:Name="dpHeader"
+                   Margin="10,0,0,0"
+                   VerticalAlignment="Center"
+                   LastChildFill="True" >
+                        <Button x:Name="nav" DockPanel.Dock="Right" Style="{DynamicResource MetroCircleButtonStyle}"
+                            Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:Flyout}}, Path=CloseButtonVisibility}"
+                            Height="30"
+                            Width="30"
+                            FontFamily="Segoe UI Symbol"
+                            Foreground="{Binding RelativeSource={RelativeSource AncestorType={x:Type controls:Flyout}}, Path=Foreground}"
+                            FontSize="8"
+                            VerticalAlignment="Bottom">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Click">
+                                    <command:EventToCommand  Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.CloseLeftFlyoutCommand }"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                                        <Rectangle Width="15" Height="15" Fill="{Binding RelativeSource={RelativeSource AncestorType={x:Type controls:Flyout}}, Path=Foreground}">
+                                            <Rectangle.OpacityMask>
+                                                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_arrow_left}" />
+                                            </Rectangle.OpacityMask>
+                                        </Rectangle>
+                        </Button>
+                        <TextBlock Text="{Binding}"
+                           x:Name="PART_BackButton"
+                           Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:Flyout}}, Path=TitleVisibility}"
+                           FontSize="12"
+                           Margin="10,0,0,0"
+                           VerticalAlignment="Center" />
+                        </DockPanel>
+                </Border>
+            </DataTemplate>
+                        
+
 
 </ResourceDictionary>

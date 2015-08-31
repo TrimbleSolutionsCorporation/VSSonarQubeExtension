@@ -299,11 +299,14 @@ type SQKeyTranslator() =
                         lookupType <- KeyLookUpType.Module
                     else
                         path <-
-                            let keyWithoutProjectKey = key.Replace(projectKey + branch, "")
-                            let allModulesPresentInKey =  keyWithoutProjectKey.Split(':')
+                            try
+                                let keyWithoutProjectKey = key.Replace(projectKey + branch, "")
+                                let allModulesPresentInKey =  keyWithoutProjectKey.Split(':')
             
-                            let project = Directory.GetParent(vshelper.GetProjectByNameInSolution(allModulesPresentInKey.[0]).ProjectFilePath).ToString()
-                            Path.Combine(project, allModulesPresentInKey.[1].Replace('/', Path.DirectorySeparatorChar))
+                                let project = Directory.GetParent(vshelper.GetProjectByNameInSolution(allModulesPresentInKey.[0]).ProjectFilePath).ToString()
+                                Path.Combine(project, allModulesPresentInKey.[1].Replace('/', Path.DirectorySeparatorChar))
+                            with
+                            | ex -> ""
 
                         if File.Exists(path) then
                             lookupType <- KeyLookUpType.Module

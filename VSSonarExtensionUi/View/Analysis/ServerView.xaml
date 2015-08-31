@@ -5,6 +5,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:helpers="clr-namespace:VSSonarExtensionUi.ViewModel.Helpers"
     xmlns:helpersView="clr-namespace:VSSonarExtensionUi.View.Helpers"
+    xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:command="http://www.galasoft.ch/mvvmlight"
     mc:Ignorable="d"
     x:Class="VSSonarExtensionUi.View.Analysis.ServerView"
     x:Name="UserControl"
@@ -30,6 +33,7 @@
             <DataTemplate DataType="{x:Type helpers:IssueGridViewModel}">
                 <helpersView:IssuesGrid />
             </DataTemplate>
+            
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -41,82 +45,35 @@
         <SolidColorBrush Color="{Binding ForeGroundColor}" />
     </UserControl.Foreground>
 
-    <Grid x:Name="LayoutRoot">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="30" />
-            <RowDefinition Height="3*" />
-        </Grid.RowDefinitions>
+    <DockPanel>
+        <controls:FlyoutsControl DockPanel.Dock="Left">
+            <controls:Flyout Header="Server Analysis" Position="Left" Width="{Binding SizeOfFlyout, FallbackValue=250}" IsOpen="{Binding ShowLeftFlyOut, FallbackValue=True}" >
+                <controls:Flyout.Resources>
 
-        <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <ToggleButton Width="30"
-                          Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                          Height="30"
-                          Margin="0, 0, 0, 0"
-                          ToolTip="Show Coverage Info"
-                          IsChecked="{Binding CoverageInEditorEnabled}" IsEnabled="{Binding IsRunningInVisualStudio}">
-                <Rectangle Width="15"
-                           Height="15"
-                           Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}">
-                    <Rectangle.OpacityMask>
-                        <VisualBrush Stretch="Fill"
-                                     Visual="{StaticResource appbar_notification}" />
-                    </Rectangle.OpacityMask>
-                </Rectangle>
-            </ToggleButton>
+                    <Style TargetType="{x:Type controls:Flyout}" >
+                        <Setter Property="HeaderTemplate" Value="{StaticResource CustomFlyoutHeaderTemplate}" />
+                    </Style>
 
-            <Button Width="30" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                    Height="30"
-                    Margin="0, 0, 0, 0"
-                    ToolTip="Show Source Difference"
-                    Style="{DynamicResource SquareButtonStyle}" Command="{Binding DisplaySourceDiffCommand}"
-                    IsEnabled="{Binding IsRunningInVisualStudio}">
-                <Rectangle Width="15"
-                           Height="15"
-                           Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}">
-                    <Rectangle.OpacityMask>
-                        <VisualBrush Stretch="Fill"
-                                     Visual="{StaticResource appbar_column_two}" />
-                    </Rectangle.OpacityMask>
-                </Rectangle>
-            </Button>
+                </controls:Flyout.Resources>
 
-            <Button Width="30"
-                        Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                        Height="30"
-                        Margin="0, 0, 0, 0"
-                        ToolTip="Go to previous issue"
-                        Style="{DynamicResource SquareButtonStyle}" Command="{Binding GoToPrevIssueCommand}"
-                        IsEnabled="{Binding IsRunningInVisualStudio}">
-                <Rectangle Width="15"
-                               Height="15"
-                               Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}">
-                    <Rectangle.OpacityMask>
-                        <VisualBrush Stretch="Fill"
-                                         Visual="{StaticResource appbar_list_up}" />
-                    </Rectangle.OpacityMask>
-                </Rectangle>
-            </Button>
+                <StackPanel>
+                    <ToggleButton Content="Enable Coverage"
+                                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"                                    
+                                    ToolTip="Show Coverage Info"
+                                    IsChecked="{Binding CoverageInEditorEnabled}" IsEnabled="{Binding IsRunningInVisualStudio}">
+                    </ToggleButton>
 
-            <Button Width="30"
-                        Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                        Height="30"
-                        Margin="0, 0, 0, 0"
-                        ToolTip="Go to next issue"
-                        Style="{DynamicResource SquareButtonStyle}" Command="{Binding GoToNextIssueCommand}" IsEnabled="{Binding IsRunningInVisualStudio}">
-                <Rectangle Width="15"
-                               Height="15"
-                               Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}">
-                    <Rectangle.OpacityMask>
-                        <VisualBrush Stretch="Fill"
-                                         Visual="{StaticResource appbar_list_reorder_down}" />
-                    </Rectangle.OpacityMask>
-                </Rectangle>
-            </Button>
+                    <Button Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"                            
+                            ToolTip="Show Source Difference"
+                            Content="Show Source Differece"
+                            Style="{DynamicResource SquareButtonStyle}" Command="{Binding DisplaySourceDiffCommand}"
+                            IsEnabled="{Binding IsRunningInVisualStudio}">
+                    </Button>
+                </StackPanel>
+            </controls:Flyout>
+        </controls:FlyoutsControl>
+        
+        <ContentControl Content="{Binding IssuesGridView}" DockPanel.Dock="Right" />
 
-        </StackPanel>
-        <Border Grid.Row="1" Margin="5" BorderBrush="#FF7F9DB9" BorderThickness="1">
-            <ContentControl Content="{Binding IssuesGridView}" />
-        </Border>
-
-    </Grid>
+    </DockPanel>
 </UserControl>
