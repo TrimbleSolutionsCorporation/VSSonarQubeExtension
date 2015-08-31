@@ -407,6 +407,18 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.DisableEditorTags, this.DisableEditorTags ? "true" : "false"));
         }
 
+
+        /// <summary>
+        /// Called when [server address changed].
+        /// </summary>
+        public void OnServerAddressChanged()
+        {
+            if (this.ServerAddress.EndsWith("/"))
+            {
+                this.ServerAddress = this.ServerAddress.Trim('/');
+            }
+        }
+
         #endregion Public Methods and Operators
 
         #region Methods
@@ -541,7 +553,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             };
             cm.Save();
         }
-        
+
         #endregion Methods
     }
 }
