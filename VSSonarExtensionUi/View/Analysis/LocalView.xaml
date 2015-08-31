@@ -45,4 +45,101 @@
         <SolidColorBrush Color="{Binding ForeGroundColor}" />
     </UserControl.Foreground>
 
+
+    <DockPanel>
+        <controls:FlyoutsControl DockPanel.Dock="Left">
+            <controls:Flyout Header="Local Analysis" Position="Left" Width="{Binding SizeOfFlyout, FallbackValue=250}" IsOpen="{Binding ShowLeftFlyOut, FallbackValue=True}" >
+                <controls:Flyout.Resources>
+
+                    <Style TargetType="{x:Type controls:Flyout}" >
+                        <Setter Property="HeaderTemplate" Value="{StaticResource CustomFlyoutHeaderTemplate}" />
+                    </Style>
+
+                </controls:Flyout.Resources>
+
+                <ScrollViewer>
+                    <StackPanel>
+                        <Button 
+                            Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                            Margin="0, 0, 0, 0"
+                                Content="Source Folder"
+                            ToolTip="Select Root Path for Project"
+                            Style="{DynamicResource SquareButtonStyle}" Command="{Binding OpenSourceDirCommand}"
+                            IsEnabled="{Binding IsAssociatedWithProject}">
+
+                        </Button>
+
+                        <GroupBox Header="Analysis">
+                            <StackPanel Orientation="Vertical">
+                                <ToggleButton 
+                                      Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                      Margin="0, 0, 0, 0"
+                                      Content="File Analysis"
+                                      IsChecked="{Binding FileAnalysisIsEnabled}" IsEnabled="{Binding CanRunLocalAnalysis}">
+                                </ToggleButton>
+
+                                <Button 
+                                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                    Margin="0, 0, 0, 0"
+                                    Content="Incremental Analysis"
+                                    Style="{DynamicResource SquareButtonStyle}" Command="{Binding IncrementalCommand}"
+                                    IsEnabled="{Binding CanRunLocalAnalysis}">
+                                </Button>
+
+                                <Button 
+                                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                    Margin="0, 0, 0, 0"
+                                    Content="Preview Analysis"
+                                    Style="{DynamicResource SquareButtonStyle}" Command="{Binding PreviewCommand}"
+                                    IsEnabled="{Binding CanRunLocalAnalysis}">
+                                </Button>
+
+                                <Button 
+                                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                    Margin="0, 0, 0, 0"
+                                    Content="Run Full Analysis"
+                                    Style="{DynamicResource SquareButtonStyle}" Command="{Binding AnalysisCommand}"
+                                    IsEnabled="{Binding CanRunLocalAnalysis}">
+
+                                </Button>
+                                <Button 
+                            Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                            Margin="0, 0, 0, 0"
+                            Content="Cancel Analysis"
+                            Style="{DynamicResource SquareButtonStyle}" Command="{Binding StopLocalAnalysisCommand}"
+                            IsEnabled="{Binding CanRunLocalAnalysis, Converter={StaticResource BooleanInverter}}">
+                                </Button>
+                                <ItemsControl Height="100" x:Name="LstBox" ItemsSource="{Binding OuputLogLines}" Background="#FFC2C2C2" BorderBrush="#FF000000" BorderThickness="1,1,1,1"/>
+                                <Button 
+                            Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                            Margin="0, 0, 0, 0"
+                            Content="Open Analysis Log"
+                            Style="{DynamicResource SquareButtonStyle}" Command="{Binding OpenLogCommand}"
+                            IsEnabled="{Binding CanRunLocalAnalysis}">
+
+                                </Button>
+                            <controls:MetroProgressBar Grid.Row="1" IsIndeterminate="{Binding LoadingSonarData}"
+                                               Value="{Binding ElementName=horizSlider, Path=Value}"
+                                               ToolTip="{Binding AssociatingTextTooltip}"
+                                               Foreground="{DynamicResource AccentColorBrush}"/>                                
+                            </StackPanel>
+                        </GroupBox>
+                        
+                        
+                    </StackPanel>
+
+
+                </ScrollViewer>
+            </controls:Flyout>
+            
+        </controls:FlyoutsControl>
+
+
+
+        <ContentControl Content="{Binding IssuesGridView}" />
+
+
+
+    </DockPanel>
+
 </UserControl>
