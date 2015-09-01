@@ -16,6 +16,9 @@ namespace VSSonarExtensionUi.Model.Menu
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Linq;
+    using System.Text;
+    using System.Text.RegularExpressions;
     using System.Windows;
     using System.Windows.Input;
 
@@ -24,15 +27,10 @@ namespace VSSonarExtensionUi.Model.Menu
     using Helpers;
 
     using SonarLocalAnalyser;
+    using View.Helpers;
     using ViewModel.Helpers;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-    using View.Helpers;
-    using System.Linq;
-    using System.Text;
-    using System.Text.RegularExpressions;
-
-
 
     /// <summary>
     /// Issue tracker menus.
@@ -156,20 +154,6 @@ namespace VSSonarExtensionUi.Model.Menu
         public ObservableCollection<IMenuItem> SubItems { get; set; }
 
         /// <summary>
-        /// Gets the get defect cache.
-        /// </summary>
-        /// <value>
-        /// The get defect cache.
-        /// </value>
-        public Dictionary<Guid, Defect> DefectCache
-        {
-            get
-            {
-                return this.issueDefectCache;
-            }
-        }
-
-        /// <summary>
         /// The make menu.
         /// </summary>
         /// <param name="rest">The rest.</param>
@@ -266,6 +250,8 @@ namespace VSSonarExtensionUi.Model.Menu
                                 }
                             }
                         }
+
+                        this.GenerateMenuForIssuesInView();
                     });
             }
 
@@ -338,13 +324,24 @@ namespace VSSonarExtensionUi.Model.Menu
                 if (this.CommandText.Equals("show info"))
                 {
                     var id = this.parent.CommandText;
-                    if (this.parent.parent.defectCache.ContainsKey(id))
+                    if (!this.parent.parent.defectCache.ContainsKey(id))
                     {
-                        var item = this.parent.parent.defectCache[id];
-                        string message = string.Format("Summary:\t\t {0}\r\nStatus:\t\t {1}\r\nId:\t {2}\r\n", item.Summary, item.Status, item.Id);
-                        MessageDisplayBox.DisplayMessage(message, string.Empty);
-                        return;
+                        try
+                        {
+                            var defect = this.issueTrackerPlugin.GetDefect(id);
+                            this.parent.parent.defectCache.Add(id, defect);
+                        }
+                        catch (Exception ex)
+                        {
+                            this.manager.ReportMessage(new Message { Id = "IssueTrackerMenu", Data = "Failed to get info for defect: " + ex.Message });
+                            this.manager.ReportException(ex);
+                            return;
+                        }
                     }
+
+                    var item = this.parent.parent.defectCache[id];
+                    string message = string.Format("Summary:\t\t {0}\r\nStatus:\t\t {1}\r\nId:\t {2}\r\n", item.Summary, item.Status, item.Id);
+                    MessageDisplayBox.DisplayMessage(message, string.Empty);
                 }
             }
             catch (Exception ex)
@@ -372,6 +369,11 @@ namespace VSSonarExtensionUi.Model.Menu
                     {
                         issue.IssueTrackerId = this.GenerateIdFromMessage(comment.HtmlText);
                     }
+                }
+
+                if (string.IsNullOrEmpty(issue.IssueTrackerId))
+                {
+                    return;
                 }
             }
 
@@ -471,7 +473,7 @@ namespace VSSonarExtensionUi.Model.Menu
         /// Generates the identifier from message.
         /// </summary>
         /// <param name="htmlText">The HTML text.</param>
-        /// <returns></returns>
+        /// <returns>returns id from a message.</returns>
         private string GenerateIdFromMessage(string htmlText)
         {
             foreach (Match item in Regex.Matches(htmlText, "\\d+"))
@@ -480,6 +482,32 @@ namespace VSSonarExtensionUi.Model.Menu
             }
 
             return string.Empty;
+        }
+
+        /// <summary>
+        /// Generates the menu for issues in view.
+        /// </summary>
+        private void GenerateMenuForIssuesInView()
+        {
+            foreach (var issue in this.model.AllIssues)
+            {
+                if (string.IsNullOrEmpty(issue.IssueTrackerId))
+                {
+                    continue;
+                }
+
+                if (this.defectCache.ContainsKey(issue.IssueTrackerId))
+                {
+                    continue;
+                }
+
+                this.GenerateSubMenus(issue.IssueTrackerId);
+            }
+
+            foreach (var item in this.defectCache)
+            {
+                this.GenerateSubMenus(item.Key);
+            }
         }
     }
 }
