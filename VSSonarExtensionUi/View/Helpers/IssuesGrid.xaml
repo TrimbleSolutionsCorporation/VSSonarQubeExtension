@@ -489,7 +489,7 @@
                 </DataGridTemplateColumn>
                                 
                 <DataGridTemplateColumn DisplayIndex="{Binding Data.IssueTrackerIdIndex, FallbackValue=7, Mode=TwoWay, Source={StaticResource Proxy}}"
-                                        MinWidth="120" MaxWidth="120" x:Name="IssueTrackerTemplateCol"
+                                        MinWidth="140" MaxWidth="140" x:Name="IssueTrackerTemplateCol"
                                         Header="Issue Tracker" CanUserSort="True" SortMemberPath="IssueTrackerId"                                        
                                         IsReadOnly="True"
                                         Visibility="{Binding Data.IssueTrackerIdVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
