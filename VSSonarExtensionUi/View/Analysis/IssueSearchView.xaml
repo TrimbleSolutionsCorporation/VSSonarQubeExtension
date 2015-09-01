@@ -11,7 +11,7 @@
     mc:Ignorable="d"
     x:Class="VSSonarExtensionUi.View.Analysis.IssueSearchView"
     x:Name="UserControl"
-    d:DesignWidth="1040" d:DesignHeight="480">
+    d:DesignWidth="1040" d:DesignHeight="580">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -342,8 +342,9 @@
                                       Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
                             <Grid
                                     Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                    Height="25">
+                                    Height="60">
                                 <Grid.RowDefinitions>
+                                    <RowDefinition Height="30" />
                                     <RowDefinition Height="30" />
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
@@ -362,6 +363,11 @@
                                               ItemTemplate="{DynamicResource UserSelectionComboBoxDataTemplate}" />
                                 <CheckBox Grid.Row="0" Grid.Column="2" Margin="4,0,-4,0"
                                               IsChecked="{Binding IsActionPlanSelected}" />
+                                <Button Grid.Row="1" Grid.ColumnSpan="3" Margin="10 3 10 0"
+                                        Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Style="{DynamicResource MyMetroButton}"
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Content="Reload" Command="{Binding ReloadPlanDataCommand}" />
                             </Grid>
                         </Expander>
 

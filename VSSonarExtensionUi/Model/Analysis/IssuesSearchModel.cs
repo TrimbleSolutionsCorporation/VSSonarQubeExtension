@@ -185,6 +185,7 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// <param name="project">The project.</param>
         /// <param name="workingDir">The working dir.</param>
         /// <param name="sourceModelIn">The source model in.</param>
+        /// <param name="sourcePlugin">The source plugin.</param>
         public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workingDir, ISourceControlProvider sourceModelIn, IIssueTrackerPlugin sourcePlugin)
         {
             this.sourceModel = sourceModelIn;
@@ -199,7 +200,15 @@ namespace VSSonarExtensionUi.Model.Analysis
                 this.issuesSearchViewModel.UsersList = new ObservableCollection<User>(usortedList.OrderBy(i => i.Name));
             }
 
-            List<SonarActionPlan> usortedListofPlan = this.restService.GetAvailableActionPlan(config, this.associatedProject.Key);
+            this.ReloadPlanData();
+        }
+
+        /// <summary>
+        /// Reloads the plan data.
+        /// </summary>
+        public void ReloadPlanData()
+        {
+            List<SonarActionPlan> usortedListofPlan = this.restService.GetAvailableActionPlan(this.userConf, this.associatedProject.Key);
             if (usortedListofPlan != null && usortedListofPlan.Count > 0)
             {
                 this.issuesSearchViewModel.AvailableActionPlans = new ObservableCollection<SonarActionPlan>(usortedListofPlan.OrderBy(i => i.Name));

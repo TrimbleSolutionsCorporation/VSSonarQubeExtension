@@ -53,6 +53,11 @@ namespace VSSonarExtensionUi.Model.Menu
         private readonly INotificationManager manager;
 
         /// <summary>
+        /// The parent
+        /// </summary>
+        private readonly PlanMenu parent;
+
+        /// <summary>
         /// The vs helper.
         /// </summary>
         private IVsEnvironmentHelper visualStudioHelper;
@@ -71,6 +76,8 @@ namespace VSSonarExtensionUi.Model.Menu
         /// The associated project
         /// </summary>
         private Resource associatedProject;
+        private ISourceControlProvider provider;
+        private IIssueTrackerPlugin sourcePlugin;
 
         #endregion
 
@@ -83,8 +90,9 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <param name="model">The model.</param>
         /// <param name="manager">The manager.</param>
         /// <param name="registerPool">if set to <c>true</c> [register pool].</param>
-        private PlanMenu(ISonarRestService rest, IssueGridViewModel model, INotificationManager manager, bool registerPool = true)
+        private PlanMenu(ISonarRestService rest, IssueGridViewModel model, INotificationManager manager, PlanMenu parent = null, bool registerPool = true)
         {
+            this.parent = parent;
             this.manager = manager;
             this.model = model;
             this.rest = rest;
@@ -141,7 +149,7 @@ namespace VSSonarExtensionUi.Model.Menu
 
             topLel.SubItems.Add(new PlanMenu(rest, model, manager) { CommandText = "Add to Existent Plan", IsEnabled = false });
             topLel.SubItems.Add(new PlanMenu(rest, model, manager) { CommandText = "Unplan", IsEnabled = true });
-            topLel.SubItems.Add(new PlanMenu(rest, model, manager) { CommandText = "Associate to new plan", IsEnabled = true });
+            topLel.SubItems.Add(new PlanMenu(rest, model, manager, topLel) { CommandText = "Associate to new plan", IsEnabled = true });
             return topLel;
         }
 
@@ -171,13 +179,15 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <param name="configIn">The configuration in.</param>
         /// <param name="project">The project.</param>
         /// <param name="workingDir">The working dir.</param>
-        /// <param name="provider">The provider.</param>
-        /// <param name="sourcePlugin">The source plugin.</param>
-        public void AssociateWithNewProject(ISonarConfiguration configIn, Resource project, string workingDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin)
+        /// <param name="providerIn">The provider in.</param>
+        /// <param name="sourcePluginIn">The source plugin in.</param>
+        public void AssociateWithNewProject(ISonarConfiguration configIn, Resource project, string workingDir, ISourceControlProvider providerIn, IIssueTrackerPlugin sourcePluginIn)
         {
+            this.sourcePlugin = sourcePluginIn;
             this.sourceDir = workingDir;
             this.associatedProject = project;
             this.config = configIn;
+            this.provider = providerIn;
 
             if (this.CommandText.Equals("Add to Existent Plan"))
             {
@@ -188,14 +198,14 @@ namespace VSSonarExtensionUi.Model.Menu
 
                         foreach (var item in this.rest.GetAvailableActionPlan(this.config, project.Key))
                         {
-                            var menu = new PlanMenu(this.rest, this.model, this.manager, false) { CommandText = item.Name, IsEnabled = true };
-                            menu.AssociateWithNewProject(configIn, project, workingDir, provider, sourcePlugin);
+                            var menu = new PlanMenu(this.rest, this.model, this.manager, null, false) { CommandText = item.Name, IsEnabled = true };
+                            menu.AssociateWithNewProject(configIn, project, workingDir, this.provider, sourcePlugin);
                             this.SubItems.Add(menu);
                         }
                     });
             }
         }
-
+      
         /// <summary>
         /// Gets the view model.
         /// </summary>
@@ -249,7 +259,7 @@ namespace VSSonarExtensionUi.Model.Menu
                                 var replies = this.rest.PlanIssues(this.config, this.model.SelectedItems, existentPlan.Key.ToString());
                                 foreach (var itemreply in replies)
                                 {
-                                    this.manager.ReportMessage(new Message() { Data = "Plan Operation Result: " + itemreply.Key + " : " + itemreply.Value  });
+                                    this.manager.ReportMessage(new Message { Data = "Plan Operation Result: " + itemreply.Key + " : " + itemreply.Value });
                                 }
                             }
 
@@ -263,13 +273,15 @@ namespace VSSonarExtensionUi.Model.Menu
                         var replies = this.rest.PlanIssues(this.config, this.model.SelectedItems, plan.Key.ToString());
                         foreach (var itemreply in replies)
                         {
-                            manager.ReportMessage(new Message() { Data = "Plan Operation Result: " + itemreply.Key + " : " + itemreply.Value  });
+                            this.manager.ReportMessage(new Message { Data = "Plan Operation Result: " + itemreply.Key + " : " + itemreply.Value });
                         }
                     }
                     catch (Exception ex)
                     {
                         UserExceptionMessageBox.ShowException("Cannot Create Plan, Make sure you have permissions", ex);
-                    }                   
+                    }
+
+                    this.ReloadPlanData(this.parent);
                 }
                 else
                 {
@@ -278,7 +290,7 @@ namespace VSSonarExtensionUi.Model.Menu
                         var replies = this.rest.UnPlanIssues(this.config, this.model.SelectedItems);
                         foreach (var itemreply in replies)
                         {
-                            this.manager.ReportMessage(new Message() { Data = "Unplan Operation Result: " + itemreply.Key + " : " + itemreply.Value  });
+                            this.manager.ReportMessage(new Message() { Data = "Unplan Operation Result: " + itemreply.Key + " : " + itemreply.Value });
                         }
                     }
                     else
@@ -291,7 +303,7 @@ namespace VSSonarExtensionUi.Model.Menu
                                 var replies = this.rest.PlanIssues(this.config, this.model.SelectedItems, plan.Key.ToString());
                                 foreach (var itemreply in replies)
                                 {
-                                    this.manager.ReportMessage(new Message() { Data = "Plan Operation Result: " + itemreply.Key + " : " + itemreply.Value  });
+                                    this.manager.ReportMessage(new Message() { Data = "Plan Operation Result: " + itemreply.Key + " : " + itemreply.Value });
                                 }
 
                                 return;
@@ -303,6 +315,32 @@ namespace VSSonarExtensionUi.Model.Menu
             catch (Exception ex)
             {
                 UserExceptionMessageBox.ShowException("Cannot Perform Operation in Plan: " + ex.Message + " please check vs output log for detailed information", ex);
+            }
+        }
+
+        /// <summary>
+        /// Reloads the plan data.
+        /// </summary>
+        /// <param name="parentMenu">The parent menu.</param>
+        private void ReloadPlanData(PlanMenu parentMenu)
+        {
+            foreach (var item in parentMenu.SubItems)
+            {
+                if (item.CommandText.Equals("Add to Existent Plan"))
+                {
+                    Application.Current.Dispatcher.Invoke(
+                        delegate
+                        {
+                            item.SubItems.Clear();
+
+                            foreach (var plan in this.rest.GetAvailableActionPlan(this.config, this.associatedProject.Key))
+                            {
+                                var menu = new PlanMenu(this.rest, this.model, this.manager, null, false) { CommandText = plan.Name, IsEnabled = true };
+                                menu.AssociateWithNewProject(this.config, this.associatedProject, this.sourceDir, this.provider, this.sourcePlugin);
+                                item.SubItems.Add(menu);
+                            }
+                        });
+                }
             }
         }
 

@@ -28,11 +28,10 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using Model.Analysis;
     using PropertyChanged;
 
+    using SonarLocalAnalyser;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-    using SonarLocalAnalyser;
-
-
+    
     /// <summary>
     /// The issues search view model.
     /// </summary>
@@ -94,17 +93,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             SonarQubeViewModel.RegisterNewViewModelInPool(this);
         }
 
-        private void ShowHideLeftFlyout(object sender, EventArgs e)
-        {
-            if (this.IssuesGridView == null)
-            {
-                return;
-            }
-
-            this.ShowLeftFlyOut = this.IssuesGridView.ShowLeftFlyOut;
-            this.OnShowFlyoutsChanged();
-        }
-
         /// <summary>
         /// Gets or sets the available gates.
         /// </summary>
@@ -141,6 +129,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         public RelayCommand CloseLeftFlyoutCommand { get; private set; }
 
+        /// <summary>
+        /// Gets the reload plan data command.
+        /// </summary>
+        /// <value>
+        /// The reload plan data command.
+        /// </value>
+        public RelayCommand ReloadPlanDataCommand { get; private set; }
+        
         /// <summary>
         ///     Gets or sets the created before date.
         /// </summary>
@@ -592,6 +588,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.GetMyIssuesInProjectCommand = new RelayCommand(this.OnGetMyIssuesInProjectCommand);
             this.GetAllMyIssuesCommand = new RelayCommand(this.OnGetAllMyIssuesCommand);
             this.CloseLeftFlyoutCommand = new RelayCommand(this.OnCloseFlyoutIssueSearchCommand);
+            this.ReloadPlanDataCommand = new RelayCommand(this.OnReloadPlanDataCommand);
         }
 
         /// <summary>
@@ -761,6 +758,30 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             request += this.FilterActionPlans();
 
             this.IssuesGridView.UpdateIssues(this.searchModel.GetIssuesUsingFilter(request, this.IsFilterBySSCMChecked), this.AvailableActionPlans);            
+        }
+
+        /// <summary>
+        /// Shows the hide left flyout.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void ShowHideLeftFlyout(object sender, EventArgs e)
+        {
+            if (this.IssuesGridView == null)
+            {
+                return;
+            }
+
+            this.ShowLeftFlyOut = this.IssuesGridView.ShowLeftFlyOut;
+            this.OnShowFlyoutsChanged();
+        }
+
+        /// <summary>
+        /// Called when [reload plan data command].
+        /// </summary>
+        private void OnReloadPlanDataCommand()
+        {
+            this.searchModel.ReloadPlanData();
         }
     }
 }
