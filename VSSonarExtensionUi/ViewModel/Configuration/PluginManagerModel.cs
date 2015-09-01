@@ -574,6 +574,13 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         private void OnSelectionChangeCommand()
         {
+            this.OptionsInView = null;
+
+            if (this.SelectedPlugin == null)
+            {
+                return;
+            }
+
             this.PluginIsSelected = true;
 
             foreach (IPlugin plugin in this.plugins)
