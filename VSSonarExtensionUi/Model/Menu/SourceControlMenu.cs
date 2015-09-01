@@ -2,7 +2,9 @@
 {
     using System;
     using System.Collections.ObjectModel;
+    using System.Collections.Generic;
     using System.Windows.Input;
+
     using Helpers;
 
     using ViewModel.Helpers;
@@ -10,7 +12,6 @@
     using VSSonarPlugins.Types;
     using GalaSoft.MvvmLight.Command;
     using Association;
-    using System.Collections.Generic;
     using SonarLocalAnalyser;
     using View.Helpers;
 
@@ -139,6 +140,14 @@
         /// are context dependent on the selected issues.
         /// </summary>
         public void RefreshMenuData()
+        {
+            // not necessary
+        }
+
+        /// <summary>
+        /// Cancels the refresh data.
+        /// </summary>
+        public void CancelRefreshData()
         {
             // not necessary
         }

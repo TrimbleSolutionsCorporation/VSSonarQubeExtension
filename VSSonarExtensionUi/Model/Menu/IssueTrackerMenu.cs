@@ -108,6 +108,11 @@ namespace VSSonarExtensionUi.Model.Menu
         private IVsEnvironmentHelper vshelper;
 
         /// <summary>
+        /// The cancel update
+        /// </summary>
+        private bool cancelUpdate;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="IssueTrackerMenu" /> class.
         /// </summary>
         /// <param name="rest">The rest.</param>
@@ -211,6 +216,14 @@ namespace VSSonarExtensionUi.Model.Menu
         }
 
         /// <summary>
+        /// Cancels the refresh data.
+        /// </summary>
+        public void CancelRefreshData()
+        {
+            this.cancelUpdate = true;
+        }
+
+        /// <summary>
         /// Refreshes the menu data for menu that have options that
         /// are context dependent on the selected issues.
         /// </summary>
@@ -231,8 +244,14 @@ namespace VSSonarExtensionUi.Model.Menu
                     delegate
                     {
                         this.SubItems.Clear();
-                        foreach (var item in this.model.SelectedItems)
+                        foreach (var item in this.model.Issues)
                         {
+                            if (this.cancelUpdate)
+                            {
+                                this.cancelUpdate = false;
+                                return;
+                            }
+
                             var issue = item as Issue;
 
                             if (issue != null)

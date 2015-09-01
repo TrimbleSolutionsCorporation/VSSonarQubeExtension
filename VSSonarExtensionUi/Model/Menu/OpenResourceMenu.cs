@@ -171,6 +171,14 @@ namespace VSSonarExtensionUi.Model.Menu
         }
 
         /// <summary>
+        /// Cancels the refresh data.
+        /// </summary>
+        public void CancelRefreshData()
+        {
+            // not necessay
+        }
+
+        /// <summary>
         /// The end data association.
         /// </summary>
         public void EndDataAssociation()

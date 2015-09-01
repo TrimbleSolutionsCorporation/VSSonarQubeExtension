@@ -111,25 +111,6 @@ namespace VSSonarExtensionUi.Model.Menu
         #region Public Methods and Operators
 
         /// <summary>
-        /// The refresh menu items status.
-        /// </summary>
-        /// <param name="contextMenuItems">
-        /// The context menu items.
-        /// </param>
-        /// <param name="b">
-        /// The b.
-        /// </param>
-        public static void RefreshMenuItemsStatus(ObservableCollection<IMenuItem> contextMenuItems, bool b)
-        {
-            foreach (IMenuItem contextMenuItem in contextMenuItems)
-            {
-                if (contextMenuItem is ShowHideIssueColumn)
-                {
-                }
-            }
-        }
-
-        /// <summary>
         /// The make menu.
         /// </summary>
         /// <param name="model">
@@ -235,6 +216,14 @@ namespace VSSonarExtensionUi.Model.Menu
         public void RefreshMenuData()
         {
             // not necessary
+        }
+
+        /// <summary>
+        /// Cancels the refresh data.
+        /// </summary>
+        public void CancelRefreshData()
+        {
+            // not necessay
         }
 
         #endregion

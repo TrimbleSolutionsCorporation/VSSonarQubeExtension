@@ -19,16 +19,13 @@ namespace VSSonarExtensionUi.Model.Menu
     using System.Windows;
     using System.Windows.Input;
 
+    using Association;
     using GalaSoft.MvvmLight.Command;
-
+    using Helpers;
     using View.Helpers;
-    using ViewModel;
     using ViewModel.Helpers;
-
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-    using Helpers;
-    using Association;
 
     /// <summary>
     /// The issue handler menu.
@@ -76,7 +73,15 @@ namespace VSSonarExtensionUi.Model.Menu
         /// The associated project
         /// </summary>
         private Resource associatedProject;
+
+        /// <summary>
+        /// The provider
+        /// </summary>
         private ISourceControlProvider provider;
+
+        /// <summary>
+        /// The source plugin
+        /// </summary>
         private IIssueTrackerPlugin sourcePlugin;
 
         #endregion
@@ -89,6 +94,7 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <param name="rest">The rest.</param>
         /// <param name="model">The model.</param>
         /// <param name="manager">The manager.</param>
+        /// <param name="parent">The parent.</param>
         /// <param name="registerPool">if set to <c>true</c> [register pool].</param>
         private PlanMenu(ISonarRestService rest, IssueGridViewModel model, INotificationManager manager, PlanMenu parent = null, bool registerPool = true)
         {
@@ -163,12 +169,20 @@ namespace VSSonarExtensionUi.Model.Menu
         }
 
         /// <summary>
+        /// Cancels the refresh data.
+        /// </summary>
+        public void CancelRefreshData()
+        {
+            // not necessay
+        }
+
+        /// <summary>
         /// Updates the services.
         /// </summary>
         /// <param name="vsenvironmenthelperIn">The vsenvironmenthelper in.</param>
         /// <param name="statusBar">The status bar.</param>
-        /// <param name="provider">The provider.</param>
-        public void UpdateServices(IVsEnvironmentHelper vsenvironmenthelperIn, IVSSStatusBar statusBar, IServiceProvider provider)
+        /// <param name="providerIn">The provider in.</param>
+        public void UpdateServices(IVsEnvironmentHelper vsenvironmenthelperIn, IVSSStatusBar statusBar, IServiceProvider providerIn)
         {
             this.visualStudioHelper = vsenvironmenthelperIn;
         }
@@ -199,7 +213,7 @@ namespace VSSonarExtensionUi.Model.Menu
                         foreach (var item in this.rest.GetAvailableActionPlan(this.config, project.Key))
                         {
                             var menu = new PlanMenu(this.rest, this.model, this.manager, null, false) { CommandText = item.Name, IsEnabled = true };
-                            menu.AssociateWithNewProject(configIn, project, workingDir, this.provider, sourcePlugin);
+                            menu.AssociateWithNewProject(configIn, project, workingDir, this.provider, this.sourcePlugin);
                             this.SubItems.Add(menu);
                         }
                     });

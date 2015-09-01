@@ -172,6 +172,14 @@ namespace VSSonarExtensionUi.Model.Menu
             // not necessary
         }
 
+        /// <summary>
+        /// Cancels the refresh data.
+        /// </summary>
+        public void CancelRefreshData()
+        {
+            // not necessary
+        }
+
         #endregion
 
         #region Methods

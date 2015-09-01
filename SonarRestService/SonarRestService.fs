@@ -1253,7 +1253,13 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 with
                     | ex -> AddCommentFromResponse(getReviewsFromString(response.Content))
 
-                responseMap.Add(idstr, response.StatusCode) |> ignore
+                try
+                    if not(responseMap.ContainsKey(idstr)) then
+                        responseMap.Add(idstr, response.StatusCode) |> ignore
+                    else
+                        responseMap.Add(idstr + "-dup", response.StatusCode) |> ignore
+                with
+                    | ex -> ()
                 ()
 
             responseMap

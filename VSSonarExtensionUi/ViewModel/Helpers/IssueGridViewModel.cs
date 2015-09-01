@@ -45,6 +45,8 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
     {
         #region Fields
 
+        private readonly object dataRefreshLock = new object();
+
         /// <summary>
         ///     The data grid options key.
         /// </summary>
@@ -1064,6 +1066,20 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                         }
                     });
 
+
+            // reload menu data
+            using (var bw = new BackgroundWorker { WorkerReportsProgress = false })
+            {
+                bw.RunWorkerCompleted += delegate { Application.Current.Dispatcher.Invoke(delegate { }); };
+
+                bw.DoWork += delegate
+                {
+                    this.ReloadMenuData();
+                };
+
+                bw.RunWorkerAsync();
+            }
+
             this.RefreshView();
         }
 
@@ -1144,6 +1160,25 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.sourceWorkDir = string.Empty;
             this.sonarConfiguration = null;
             this.associatedProject = null;
+        }
+
+        /// <summary>
+        /// Reloads the menu data.
+        /// </summary>
+        public void ReloadMenuData()
+        {
+            foreach (var item in this.ContextMenuItems)
+            {
+                item.CancelRefreshData();
+            }
+
+            lock (this.dataRefreshLock)
+            {
+                foreach (var item in this.ContextMenuItems)
+                {
+                    item.RefreshMenuData();
+                }
+            }
         }
 
         #endregion
@@ -1517,10 +1552,6 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// </summary>
         private void OnMouseEventCommand()
         {
-            foreach (var item in this.ContextMenuItems)
-            {
-                item.RefreshMenuData();
-            }
         }
 
         /// <summary>
