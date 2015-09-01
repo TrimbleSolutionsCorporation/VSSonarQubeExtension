@@ -360,7 +360,7 @@
                                         IsReadOnly="True" Visibility="{Binding Data.MessageVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock TextAlignment="Justify" MaxHeight="100" MaxWidth="400" TextWrapping="WrapWithOverflow" Text="{Binding Message, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}, Mode=FindAncestor}}"/>
+                            <TextBlock TextAlignment="Justify" TextWrapping="WrapWithOverflow" Text="{Binding Message, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}, Mode=FindAncestor}}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                     <!--NAME COLUMN-->
