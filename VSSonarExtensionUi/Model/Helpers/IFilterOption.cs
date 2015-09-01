@@ -13,7 +13,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarExtensionUi.Model.Helpers
 {
-    using System;
     using VSSonarPlugins.Types;
 
     /// <summary>
@@ -27,6 +26,14 @@ namespace VSSonarExtensionUi.Model.Helpers
         /// Gets or sets the filter term assignee.
         /// </summary>
         string FilterTermAssignee { get; set; }
+
+        /// <summary>
+        /// Gets or sets the filter term author.
+        /// </summary>
+        /// <value>
+        /// The filter term author.
+        /// </value>
+        string FilterTermAuthor { get; set; }
 
         /// <summary>
         /// Gets or sets the filter term component.

@@ -223,9 +223,25 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         public int AssigneeIndex { get; set; }
 
         /// <summary>
+        /// Gets or sets the index of the author.
+        /// </summary>
+        /// <value>
+        /// The index of the author.
+        /// </value>
+        public int AuthorIndex { get; set; }
+
+        /// <summary>
         ///     Gets or sets a value indicating whether assignee visible.
         /// </summary>
         public bool AssigneeVisible { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [author visible].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [author visible]; otherwise, <c>false</c>.
+        /// </value>
+        public bool AuthorVisible { get; set; }
 
         /// <summary>
         /// Gets or sets the selected issue.
@@ -275,6 +291,14 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         ///     Gets or sets the clear filter term assignee command.
         /// </summary>
         public ICommand ClearFilterTermAssigneeCommand { get; set; }
+
+        /// <summary>
+        /// Gets or sets the clear filter term author command.
+        /// </summary>
+        /// <value>
+        /// The clear filter term author command.
+        /// </value>
+        public ICommand ClearFilterTermAuthorCommand { get; set; }
 
         /// <summary>
         ///     Gets or sets the clear filter term component command.
@@ -393,6 +417,14 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         ///     Gets or sets the filter term assignee.
         /// </summary>
         public string FilterTermAssignee { get; set; }
+
+        /// <summary>
+        /// Gets or sets the filter term author.
+        /// </summary>
+        /// <value>
+        /// The filter term author.
+        /// </value>
+        public string FilterTermAuthor { get; set; }
 
         /// <summary>
         ///     Gets or sets the filter term component.
@@ -1284,6 +1316,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.FilterTermProject = string.Empty;
             this.FilterTermRule = string.Empty;
             this.FilterTermAssignee = string.Empty;
+            this.FilterTermAuthor = string.Empty;
             this.FilterTermIssueTrackerId = null;
             this.FilterTermStatus = null;
             this.FilterTermSeverity = null;
@@ -1292,6 +1325,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
 
             this.ClearClearFilterTermRuleCommand = new RelayCommand<object>(this.OnClearClearFilterTermRuleCommand);
             this.ClearFilterTermAssigneeCommand = new RelayCommand<object>(this.OnClearFilterTermAssigneeCommand);
+            this.ClearFilterTermAuthorCommand = new RelayCommand<object>(this.OnClearFilterTermAuthorCommand);
             this.ClearFilterTermComponentCommand = new RelayCommand<object>(this.OnClearFilterTermComponentCommand);
             this.ClearFilterTermIssueTrackerCommand = new RelayCommand<object>(this.OnClearFilterTermIssueTrackerCommand);            
             this.ClearFilterTermIsNewCommand = new RelayCommand<object>(this.OnClearFilterTermIsNewCommand);
@@ -1328,6 +1362,16 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         private void OnClearFilterTermAssigneeCommand(object obj)
         {
             this.FilterTermAssignee = string.Empty;
+            this.ClearFilter();
+        }
+
+        /// <summary>
+        /// The on clear filter term assignee command.
+        /// </summary>
+        /// <param name="obj">The obj.</param>
+        private void OnClearFilterTermAuthorCommand(object obj)
+        {
+            this.FilterTermAuthor = string.Empty;
             this.ClearFilter();
         }
 
@@ -1530,6 +1574,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.FilterTermMessage = string.Empty;
             this.FilterTermComponent = string.Empty;
             this.FilterTermAssignee = string.Empty;
+            this.FilterTermAuthor = string.Empty;
             this.FilterTermRule = string.Empty;
 
             if (this.AllIssues == null || this.AllIssues.Count == 0)
@@ -1574,14 +1619,15 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 this.IsNewIndex = int.Parse(GetValueForOption(options, "IsNewIndex", "9", owner), CultureInfo.InvariantCulture);
                 this.RuleIndex = int.Parse(GetValueForOption(options, "RuleIndex", "10", owner), CultureInfo.InvariantCulture);
                 this.AssigneeIndex = int.Parse(GetValueForOption(options, "AssigneeIndex", "11", owner), CultureInfo.InvariantCulture);
-                this.CreationDateIndex = int.Parse(GetValueForOption(options, "CreationDateIndex", "12", owner), CultureInfo.InvariantCulture);
-                this.ProjectIndex = int.Parse(GetValueForOption(options, "ProjectIndex", "13", owner), CultureInfo.InvariantCulture);
-                this.ResolutionIndex = int.Parse(GetValueForOption(options, "ResolutionIndex", "14", owner), CultureInfo.InvariantCulture);
-                this.EffortToFixIndex = int.Parse(GetValueForOption(options, "EffortToFixIndex", "15", owner), CultureInfo.InvariantCulture);
-                this.UpdateDateIndex = int.Parse(GetValueForOption(options, "UpdateDateIndex", "16", owner), CultureInfo.InvariantCulture);
-                this.CloseDateIndex = int.Parse(GetValueForOption(options, "CloseDateIndex", "17", owner), CultureInfo.InvariantCulture);
-                this.KeyIndex = int.Parse(GetValueForOption(options, "KeyIndex", "18", owner), CultureInfo.InvariantCulture);
-                this.IdIndex = int.Parse(GetValueForOption(options, "IdIndex", "19", owner), CultureInfo.InvariantCulture);
+                this.AuthorIndex = int.Parse(GetValueForOption(options, "AuthorIndex", "12", owner), CultureInfo.InvariantCulture);
+                this.CreationDateIndex = int.Parse(GetValueForOption(options, "CreationDateIndex", "13", owner), CultureInfo.InvariantCulture);
+                this.ProjectIndex = int.Parse(GetValueForOption(options, "ProjectIndex", "14", owner), CultureInfo.InvariantCulture);
+                this.ResolutionIndex = int.Parse(GetValueForOption(options, "ResolutionIndex", "15", owner), CultureInfo.InvariantCulture);
+                this.EffortToFixIndex = int.Parse(GetValueForOption(options, "EffortToFixIndex", "16", owner), CultureInfo.InvariantCulture);
+                this.UpdateDateIndex = int.Parse(GetValueForOption(options, "UpdateDateIndex", "17", owner), CultureInfo.InvariantCulture);
+                this.CloseDateIndex = int.Parse(GetValueForOption(options, "CloseDateIndex", "18", owner), CultureInfo.InvariantCulture);
+                this.KeyIndex = int.Parse(GetValueForOption(options, "KeyIndex", "19", owner), CultureInfo.InvariantCulture);
+                this.IdIndex = int.Parse(GetValueForOption(options, "IdIndex", "20", owner), CultureInfo.InvariantCulture);
 
 
                 this.ComponentVisible = bool.Parse(GetValueForOption(options, "ComponentVisible", "true", owner));
@@ -1593,6 +1639,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 this.IssueTrackerIdVisible = bool.Parse(GetValueForOption(options, "IssueTrackerIdVisible", "true", owner));
                 this.ActionPlanVisible = bool.Parse(GetValueForOption(options, "ActionPlanVisible", "true", owner));
                 this.AssigneeVisible = bool.Parse(GetValueForOption(options, "AssigneeVisible", "true", owner));
+                this.AuthorVisible = bool.Parse(GetValueForOption(options, "AuthorVisible", "true", owner));
                 this.RuleVisible = bool.Parse(GetValueForOption(options, "RuleVisible", "true", owner));
                 this.CreationDateVisible = bool.Parse(GetValueForOption(options, "CreationDateVisible", "false", owner));
                 this.ProjectVisible = bool.Parse(GetValueForOption(options, "ProjectVisible", "false", owner));
@@ -1624,6 +1671,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.StatusIndex = this.GetIndex(ref index);
             this.DebtIndex = this.GetIndex(ref index);
             this.AssigneeIndex = this.GetIndex(ref index);
+            this.AuthorIndex = this.GetIndex(ref index);
             this.IssueTrackerIdIndex = this.GetIndex(ref index);
             this.IsNewIndex = this.GetIndex(ref index);
             this.ActionPlanIndex = this.GetIndex(ref index);
@@ -1648,6 +1696,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.StatusVisible = true;
             this.DebtVisible = true;
             this.AssigneeVisible = true;
+            this.AuthorVisible = true;
             this.IssueTrackerIdVisible = true;
             this.IsNewVisible = true;
             this.ActionPlanVisible = true;
@@ -1683,7 +1732,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// </summary>
         private void SaveWindowOptions()
         {
-            if (this.ComponentIndex < 0 || this.LineIndex < 0 || this.AssigneeIndex < 0 || this.MessageIndex < 0 || this.StatusIndex < 0
+            if (this.ComponentIndex < 0 || this.LineIndex < 0 || this.AuthorIndex < 0  || this.AssigneeIndex < 0 || this.MessageIndex < 0 || this.StatusIndex < 0
                 || this.RuleIndex < 0 || this.CreationDateIndex < 0 || this.ProjectIndex < 0 || this.ResolutionIndex < 0 || this.EffortToFixIndex < 0
                 || this.UpdateDateIndex < 0 || this.CloseDateIndex < 0 || this.KeyIndex < 0 || this.IsNewIndex < 0 || this.ViolationIdIndex < 0)
             {
@@ -1705,6 +1754,11 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 this.dataGridOptionsKey, 
                 "AssigneeIndex", 
                 this.AssigneeIndex.ToString(CultureInfo.InvariantCulture));
+            this.configurationHelper.WriteOptionInApplicationData(
+                Context.UIProperties,
+                this.dataGridOptionsKey,
+                "AuthorIndex",
+                this.AuthorIndex.ToString(CultureInfo.InvariantCulture));
             this.configurationHelper.WriteOptionInApplicationData(
                 Context.UIProperties, 
                 this.dataGridOptionsKey, 
@@ -1796,6 +1850,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, this.dataGridOptionsKey, "RuleVisible", this.RuleVisible.ToString());
             this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, this.dataGridOptionsKey, "ResolutionVisible", this.ResolutionVisible.ToString());
             this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, this.dataGridOptionsKey, "AssigneeVisible", this.AssigneeVisible.ToString());
+            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, this.dataGridOptionsKey, "AuthorVisible", this.AuthorVisible.ToString());
             this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, this.dataGridOptionsKey, "IsNewVisible", this.IsNewVisible.ToString());
             this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, this.dataGridOptionsKey, "KeyVisible", this.KeyVisible.ToString());
             this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, this.dataGridOptionsKey, "IdVisible", this.IdVisible.ToString());

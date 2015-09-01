@@ -115,7 +115,9 @@
         public static IMenuItem MakeMenu(ISonarRestService rest, IssueGridViewModel model, INotificationManager manager, ISQKeyTranslator translator)
         {
             var topLel = new SourceControlMenu(rest, model, manager, translator) { CommandText = "Source Control", IsEnabled = false };
+            
             topLel.SubItems.Add(new SourceControlMenu(rest, model, manager, translator) { CommandText = "assign to committer", IsEnabled = true });
+            topLel.SubItems.Add(new SourceControlMenu(rest, model, manager, translator) { CommandText = "assign to author", IsEnabled = true });
             topLel.SubItems.Add(new SourceControlMenu(rest, model, manager, translator) { CommandText = "show commit message", IsEnabled = true });
             return topLel;
         }
@@ -207,6 +209,20 @@
                     return;
                 }
 
+                if (this.CommandText.Equals("assign to author"))
+                {
+                    var users = this.rest.GetUserList(this.userConf);
+                    var issues = this.model.SelectedItems;
+
+                    foreach (var issue in issues)
+                    {
+                        this.AssignIssueToAuthor(users, issue as Issue);
+                    }
+
+                    return;
+                }
+
+
                 if (this.CommandText.Equals("show commit message"))
                 {
                     var issue = this.model.SelectedItems[0] as Issue;
@@ -273,5 +289,41 @@
                 throw;
             }
         }
+
+        /// <summary>
+        /// Assigns the issue to author.
+        /// </summary>
+        /// <param name="users">The users.</param>
+        /// <param name="issue">The issue.</param>
+        private void AssignIssueToAuthor(List<User> users, Issue issue)
+        {
+            try
+            {
+                foreach (var user in users)
+                {
+                    var emailAuthor = issue.Author;
+                    var emailSq = user.Email.ToLower().Trim();
+                    if (emailAuthor.Equals(emailSq))
+                    {
+                        var issues = new List<Issue>();
+                        issues.Add(issue);
+
+                        this.rest.AssignIssuesToUser(this.userConf, issues, user, "VSSonarQube Extension Auto Assign");
+                        this.manager.ReportMessage(new Message { Id = "SourceControlMenu : ", Data = "assign issue to: " + user.Name + " ok" });
+                        return;
+                    }
+                }
+
+                this.manager.ReportMessage(new Message { Id = "SourceControlMenu : ", Data = "assign issue to: " + issue.Author + " failed, unable to find user by this email" });
+            }
+            catch (Exception ex)
+            {
+                this.manager.ReportMessage(new Message { Id = "SourceControlMenu", Data = "Failed to assign issue" + issue.Message });
+                this.manager.ReportException(ex);
+                throw;
+            }
+        }
+
+
     }
 }

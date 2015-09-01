@@ -18,8 +18,6 @@ namespace VSSonarExtensionUi.Model.Helpers
     using System.Diagnostics;
     using VSSonarPlugins.Types;
 
-    
-
     /// <summary>
     ///     The rule filter.
     /// </summary>
@@ -82,7 +80,8 @@ namespace VSSonarExtensionUi.Model.Helpers
                                && (parameter.Component == null || parameter.Component.IndexOf(this.filterOption.FilterTermComponent, StringComparison.InvariantCultureIgnoreCase) >= 0)
                                && (parameter.Project == null || parameter.Project.IndexOf(this.filterOption.FilterTermProject, StringComparison.InvariantCultureIgnoreCase) >= 0)
                                && (parameter.Rule == null || parameter.Rule.IndexOf(this.filterOption.FilterTermRule, StringComparison.InvariantCultureIgnoreCase) >= 0)
-                               && (parameter.Assignee == null || parameter.Assignee.IndexOf(this.filterOption.FilterTermAssignee, StringComparison.InvariantCultureIgnoreCase) >= 0);
+                               && (parameter.Assignee == null || parameter.Assignee.IndexOf(this.filterOption.FilterTermAssignee, StringComparison.InvariantCultureIgnoreCase) >= 0)
+                               && (parameter.Author == null || parameter.Author.IndexOf(this.filterOption.FilterTermAuthor, StringComparison.InvariantCultureIgnoreCase) >= 0);
 
                 return include && issuesStatus && issuesSeverity && issuesResolution && issuesIsNew && isIssueTrackerId;
             }

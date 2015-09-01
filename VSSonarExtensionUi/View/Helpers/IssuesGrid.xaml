@@ -487,8 +487,40 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.HeaderTemplate>
                 </DataGridTemplateColumn>
-                                
-                <DataGridTemplateColumn DisplayIndex="{Binding Data.IssueTrackerIdIndex, FallbackValue=7, Mode=TwoWay, Source={StaticResource Proxy}}"
+
+                <DataGridTemplateColumn DisplayIndex="{Binding Data.AuthorIndex, FallbackValue=7, Mode=TwoWay, Source={StaticResource Proxy}}"
+                                        MinWidth="120" MaxWidth="120" x:Name="AuthorTemplateCol" Header="Author" CanUserSort="True" SortMemberPath="Author"
+                                        IsReadOnly="True" Visibility="{Binding Data.AuhtorVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Author, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"    />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <!--NAME COLUMN-->
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid IsHitTestVisible="True">
+                                <Expander   Header="{TemplateBinding Content}" IsHitTestVisible="True" VerticalAlignment="Top" Margin="0 0 0 0" ToolTip="RuleFilter">
+                                    <Border IsHitTestVisible="True" BorderThickness="1" Margin="0 0 0 0" >
+                                        <StackPanel Margin="0 2 0 0">
+                                            <TextBox Text="{Binding DataContext.FilterTermAuthor, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+												 
+												ToolTip="Enter filter term" Width="100" Height="18" FontSize="9" BorderThickness="1" />
+                                            <!--FILTER BUTTONS-->
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <TextBlock Margin="2" FontFamily="Segoe UI"><Hyperlink Command="{Binding DataContext.FilterApplyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"><Run Text="Apply"/></Hyperlink></TextBlock>
+                                                <TextBlock Margin="2"><Hyperlink Command="{Binding DataContext.ClearFilterTermAuthorCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"><Run Text="Clear"/></Hyperlink></TextBlock>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </Expander>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                </DataGridTemplateColumn>
+
+                
+                <DataGridTemplateColumn DisplayIndex="{Binding Data.IssueTrackerIdIndex, FallbackValue=8, Mode=TwoWay, Source={StaticResource Proxy}}"
                                         MinWidth="140" MaxWidth="140" x:Name="IssueTrackerTemplateCol"
                                         Header="Issue Tracker" CanUserSort="True" SortMemberPath="IssueTrackerId"                                        
                                         IsReadOnly="True"
@@ -523,7 +555,7 @@
                     </DataGridTemplateColumn.HeaderTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn DisplayIndex="{Binding Data.IsNewIndex, FallbackValue=8, Mode=TwoWay, Source={StaticResource Proxy}}"
+                <DataGridTemplateColumn DisplayIndex="{Binding Data.IsNewIndex, FallbackValue=9, Mode=TwoWay, Source={StaticResource Proxy}}"
                                         MinWidth="100" x:Name="IsNewTemplateCol" Header="IsNew" CanUserSort="True" SortMemberPath="IsNew"                                        
                                         IsReadOnly="True" Visibility="{Binding Data.IsNewVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
                     <DataGridTemplateColumn.CellTemplate>
@@ -556,23 +588,23 @@
                     </DataGridTemplateColumn.HeaderTemplate>
                 </DataGridTemplateColumn>
                 
-                <DataGridTextColumn DisplayIndex="{Binding ActionPlanIndex, FallbackValue=9, Mode=TwoWay, Source={StaticResource Proxy}}"
+                <DataGridTextColumn DisplayIndex="{Binding ActionPlanIndex, FallbackValue=10, Mode=TwoWay, Source={StaticResource Proxy}}"
                                     Binding="{Binding ActionPlanName}" MinWidth="120" x:Name="ActionPlanTemplateCol" Header="Action Plan" CanUserSort="True" SortMemberPath="ActionPlan"                                    
                                     IsReadOnly="True" Visibility="{Binding Data.ActionPlanVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
                 
-                <DataGridTextColumn DisplayIndex="{Binding CreationDateIndex, FallbackValue=10, Mode=TwoWay, Source={StaticResource Proxy}}"
+                <DataGridTextColumn DisplayIndex="{Binding CreationDateIndex, FallbackValue=11, Mode=TwoWay, Source={StaticResource Proxy}}"
                                     Binding="{Binding CreationDate}" MinWidth="120" MaxWidth="120" x:Name="CreationDateTemplateCol" Header="CreationDate" CanUserSort="True" SortMemberPath="CreationDate"
                                     IsReadOnly="True" Visibility="{Binding Data.CreationDateVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
 
-                <DataGridTextColumn DisplayIndex="{Binding CloseDateIndex, FallbackValue=11, Mode=TwoWay, Source={StaticResource Proxy}}"
+                <DataGridTextColumn DisplayIndex="{Binding CloseDateIndex, FallbackValue=12, Mode=TwoWay, Source={StaticResource Proxy}}"
                                     Binding="{Binding CloseDate}" MinWidth="120" MaxWidth="120" x:Name="CloseDateTemplateCol" Header="CloseDate" CanUserSort="True" SortMemberPath="CloseDate"                                    
                                     IsReadOnly="True" Visibility="{Binding Data.CloseDateVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
 
-                <DataGridTextColumn DisplayIndex="{Binding EffortToFixIndex, FallbackValue=12, Mode=TwoWay, Source={StaticResource Proxy}}"
+                <DataGridTextColumn DisplayIndex="{Binding EffortToFixIndex, FallbackValue=13, Mode=TwoWay, Source={StaticResource Proxy}}"
                                     Binding="{Binding EffortToFix}" MinWidth="100" MaxWidth="100" x:Name="EffortToFixTemplateCol" Header="EffortToFix" CanUserSort="True" SortMemberPath="EffortToFix"                                    
                                     IsReadOnly="True" Visibility="{Binding Data.EffortToFixVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
                
-                <DataGridTemplateColumn DisplayIndex="{Binding Data.ProjectIndex, FallbackValue=13, Mode=TwoWay, Source={StaticResource Proxy}}"
+                <DataGridTemplateColumn DisplayIndex="{Binding Data.ProjectIndex, FallbackValue=14, Mode=TwoWay, Source={StaticResource Proxy}}"
                                         MinWidth="120" x:Name="ProjectTemplateCol" Header="Project" CanUserSort="True" SortMemberPath="Project"                                        
                                         IsReadOnly="True" Visibility="{Binding Data.ProjectVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
                     <DataGridTemplateColumn.CellTemplate>
@@ -605,11 +637,11 @@
                     </DataGridTemplateColumn.HeaderTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTextColumn DisplayIndex="{Binding Data.UpdateDateIndex, FallbackValue=14, Mode=TwoWay, Source={StaticResource Proxy}}" 
+                <DataGridTextColumn DisplayIndex="{Binding Data.UpdateDateIndex, FallbackValue=15, Mode=TwoWay, Source={StaticResource Proxy}}" 
                                     MinWidth="120" MaxWidth="120" x:Name="UpdateDateTemplateCol" Header="UpdateDate" CanUserSort="True" SortMemberPath="UpdateDate"
                                     IsReadOnly="True" Visibility="{Binding Data.UpdateDateVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
 
-                <DataGridTemplateColumn DisplayIndex="{Binding Data.RuleIndex, FallbackValue=15, Mode=TwoWay, Source={StaticResource Proxy}}"
+                <DataGridTemplateColumn DisplayIndex="{Binding Data.RuleIndex, FallbackValue=16, Mode=TwoWay, Source={StaticResource Proxy}}"
                                         MinWidth="120" x:Name="RuleTemplateCol" Header="Rule" CanUserSort="True" SortMemberPath="Rule"                                        
                                         IsReadOnly="True" Visibility="{Binding Data.RuleVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
                     <DataGridTemplateColumn.CellTemplate>
@@ -642,7 +674,7 @@
                     </DataGridTemplateColumn.HeaderTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn DisplayIndex="{Binding Data.ResolutionIndex, FallbackValue=16, Mode=TwoWay, Source={StaticResource Proxy}}"
+                <DataGridTemplateColumn DisplayIndex="{Binding Data.ResolutionIndex, FallbackValue=17, Mode=TwoWay, Source={StaticResource Proxy}}"
                                         MinWidth="120" MaxWidth="120" x:Name="ResolutionTemplateCol" Header="Resolution" CanUserSort="True" SortMemberPath="Resolution"                                        
                                         IsReadOnly="True" Visibility="{Binding Data.ResolutionVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
                     <DataGridTemplateColumn.CellTemplate>
@@ -672,15 +704,15 @@
                     </DataGridTemplateColumn.HeaderTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTextColumn DisplayIndex="{Binding KeyIndex, FallbackValue=17, Mode=TwoWay, Source={StaticResource Proxy}}" 
+                <DataGridTextColumn DisplayIndex="{Binding KeyIndex, FallbackValue=18, Mode=TwoWay, Source={StaticResource Proxy}}" 
                                     Binding="{Binding Key}" MinWidth="120" x:Name="KeyTemplateCol" Header="Key" CanUserSort="True" SortMemberPath="Key"                                    
                                     IsReadOnly="True" Visibility="{Binding Data.KeyVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
 
-                <DataGridTextColumn DisplayIndex="{Binding IdIndex, FallbackValue=18, Mode=TwoWay, Source={StaticResource Proxy}}"
+                <DataGridTextColumn DisplayIndex="{Binding IdIndex, FallbackValue=19, Mode=TwoWay, Source={StaticResource Proxy}}"
                                     Binding="{Binding Id}" MinWidth="120" x:Name="IdTemplateCol" Header="Id" CanUserSort="True" SortMemberPath="Id"                                     
                                     IsReadOnly="True" Visibility="{Binding Data.IdVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
                 
-                <DataGridTextColumn DisplayIndex="{Binding ViolationIdIndex, FallbackValue=19, Mode=TwoWay, Source={StaticResource Proxy}}"
+                <DataGridTextColumn DisplayIndex="{Binding ViolationIdIndex, FallbackValue=20, Mode=TwoWay, Source={StaticResource Proxy}}"
                                     Binding="{Binding ViolationId}" MinWidth="120" x:Name="ViolationIdTemplateCol" Header="ViolationId" CanUserSort="true" SortMemberPath="ViolationId"                                    
                                     IsReadOnly="True" Visibility="{Binding Data.ViolationIdVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
                 

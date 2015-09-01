@@ -49,6 +49,7 @@ namespace VSSonarPlugins.Types
 
             this.Resolution = Resolution.UNDEFINED;
             this.Assignee = string.Empty;
+            this.Author = string.Empty;
             this.IsNew = false;
             this.Key = new Guid();
             this.ActionPlan = new Guid();
@@ -125,6 +126,14 @@ namespace VSSonarPlugins.Types
         /// Gets or sets the assignee.
         /// </summary>
         public string Assignee { get; set; }
+
+        /// <summary>
+        /// Gets or sets the author.
+        /// </summary>
+        /// <value>
+        /// The author.
+        /// </value>
+        public string Author { get; set; }
 
         /// <summary>
         /// Gets or sets the action plan.

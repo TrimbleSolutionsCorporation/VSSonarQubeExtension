@@ -108,11 +108,6 @@ namespace VSSonarExtensionUi.Model.Menu
         private IVsEnvironmentHelper vshelper;
 
         /// <summary>
-        /// The cancel update
-        /// </summary>
-        private bool cancelUpdate;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="IssueTrackerMenu" /> class.
         /// </summary>
         /// <param name="rest">The rest.</param>
@@ -172,7 +167,7 @@ namespace VSSonarExtensionUi.Model.Menu
         {
             var topLel = new IssueTrackerMenu(rest, model, manager, translator) { CommandText = "Issue Tracker", IsEnabled = false };
             topLel.SubItems.Add(new IssueTrackerMenu(rest, model, manager, translator) { CommandText = "new issue and attach", IsEnabled = true });
-            topLel.SubItems.Add(new IssueTrackerMenu(rest, model, manager, translator) { CommandText = "attach to existent", IsEnabled = false });
+            topLel.SubItems.Add(new IssueTrackerMenu(rest, model, manager, translator) { CommandText = "attach to existent", IsEnabled = true });
             return topLel;
         }
 
@@ -220,7 +215,7 @@ namespace VSSonarExtensionUi.Model.Menu
         /// </summary>
         public void CancelRefreshData()
         {
-            this.cancelUpdate = true;
+            // not used
         }
 
         /// <summary>
@@ -229,55 +224,7 @@ namespace VSSonarExtensionUi.Model.Menu
         /// </summary>
         public void RefreshMenuData()
         {
-            if (this.CommandText.Equals("attach to existent"))
-            {
-                if (this.issueTrackerPlugin == null)
-                {
-                    this.manager.ReportMessage(
-                        new Message { Id = "IssueTrackerMenu", Data = "Issue Tracker Not Enabled or Not Available" });
-
-                    return;
-                }
-
-
-                Application.Current.Dispatcher.Invoke(
-                    delegate
-                    {
-                        this.SubItems.Clear();
-                        foreach (var item in this.model.Issues)
-                        {
-                            if (this.cancelUpdate)
-                            {
-                                this.cancelUpdate = false;
-                                return;
-                            }
-
-                            var issue = item as Issue;
-
-                            if (issue != null)
-                            {
-                                try
-                                {
-                                    this.CreateMenuItemsForExistentIssues(issue);
-                                    this.CreateMenuForIssueReference(issue);
-                                }
-                                catch (Exception ex)
-                                {
-                                    this.manager.ReportMessage(
-                                        new Message { Id = "IssueTrackerMenu", Data = "Could not get issue tracker info for: " + issue.Key + " : " + issue.Line + " : " + issue.Message });
-                                    this.manager.ReportException(ex);
-                                }
-                            }
-                        }
-
-                        this.GenerateMenuForIssuesInView();
-                    });
-            }
-
-            foreach (var item in this.SubItems)
-            {
-                item.RefreshMenuData();
-            }
+            // not used
         }
 
         /// <summary>
@@ -290,7 +237,6 @@ namespace VSSonarExtensionUi.Model.Menu
         {
             this.vshelper = vsenvironmenthelperIn;
         }
-
 
         /// <summary>
         /// Called when [attache to issue tracker].
@@ -322,22 +268,36 @@ namespace VSSonarExtensionUi.Model.Menu
                     this.rest.CommentOnIssues(this.config, issues, builder.ToString());
                 }
 
-                if (this.CommandText.Equals("attach"))
+                if (this.CommandText.Equals("attach to existent"))
                 {
-                    var id = this.parent.CommandText;
-                    var issues = this.model.SelectedItems.Cast<Issue>().ToList();
-                    var replydata = this.issueTrackerPlugin.AttachToExistentDefect(issues, id);
-
-                    if (string.IsNullOrEmpty(replydata))
+                    var id = PromptUserData.Prompt("Enter Item Id", "Issue Tracker Id");
+                    if (string.IsNullOrEmpty(id))
                     {
-                        this.manager.ReportMessage(new Message { Id = "IssueTrackerMenu", Data = "Failed to attach to defect" });
                         return;
                     }
 
-                    var builder = new StringBuilder();
-                    builder.AppendLine(CommentMessageForIssue + id);
-                    builder.AppendLine(replydata);
-                    this.rest.CommentOnIssues(this.config, issues, builder.ToString());
+                    try
+                    {
+                        var issues = this.model.SelectedItems.Cast<Issue>().ToList();
+                        var replydata = this.issueTrackerPlugin.AttachToExistentDefect(issues, id);
+
+                        if (string.IsNullOrEmpty(replydata))
+                        {
+                            this.manager.ReportMessage(new Message { Id = "IssueTrackerMenu", Data = "Failed to attach to defect" });
+                            return;
+                        }
+
+                        var builder = new StringBuilder();
+                        builder.AppendLine(CommentMessageForIssue + id);
+                        builder.AppendLine(replydata);
+                        this.rest.CommentOnIssues(this.config, issues, builder.ToString());
+                    }
+                    catch (Exception ex)
+                    {
+                        this.manager.ReportMessage(new Message { Id = "IssueTrackerMenu", Data = "Failed to attach to defect: " + ex.Message });
+                        this.manager.ReportException(ex);
+                        return;
+                    }
                 }
 
                 if (this.CommandText.Equals("show info"))
@@ -370,125 +330,6 @@ namespace VSSonarExtensionUi.Model.Menu
         }
 
         /// <summary>
-        /// Creates the menu for issue reference.
-        /// </summary>
-        /// <param name="issue">The issue.</param>
-        private void CreateMenuForIssueReference(Issue issue)
-        {
-            if (string.IsNullOrEmpty(issue.IssueTrackerId))
-            {
-                if (issue.Comments.Count == 0)
-                {
-                    return;
-                }
-
-                foreach (var comment in issue.Comments)
-                {                   
-                    if (comment.HtmlText.StartsWith(CommentMessageForIssue))
-                    {
-                        issue.IssueTrackerId = this.GenerateIdFromMessage(comment.HtmlText);
-                    }
-                }
-
-                if (string.IsNullOrEmpty(issue.IssueTrackerId))
-                {
-                    return;
-                }
-            }
-
-            if (!this.defectCache.ContainsKey(issue.IssueTrackerId))
-            {
-                var defect = this.issueTrackerPlugin.GetDefect(issue.IssueTrackerId);
-                this.defectCache.Add(issue.IssueTrackerId, defect);
-            }
-
-            this.GenerateSubMenus(issue.IssueTrackerId);
-        }
-
-
-
-        /// <summary>
-        /// Generates the sub menus.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        private void GenerateSubMenus(string id)
-        {
-            if (string.IsNullOrEmpty(id))
-            {
-                return;
-            }
-
-            foreach (var item in this.SubItems)
-            {
-                if (item.CommandText.Equals(id))
-                {
-                    return;
-                }
-            }
-
-            var menu = new IssueTrackerMenu(this.rest, this.model, this.manager, this.translator, this, false)
-            {
-                CommandText = id,
-                IsEnabled = false
-            };
-
-            menu.UpdateServices(this.vshelper, null, null);
-            menu.AssociateWithNewProject(this.config, this.associatedProject, this.sourceDir, this.sourceModel, this.issueTrackerPlugin);
-
-            var subMenu = new IssueTrackerMenu(this.rest, this.model, this.manager, this.translator, menu, false) { CommandText = "show info", IsEnabled = true };
-            subMenu.UpdateServices(this.vshelper, null, null);
-            subMenu.AssociateWithNewProject(this.config, this.associatedProject, this.sourceDir, this.sourceModel, this.issueTrackerPlugin);
-
-            var subMenu2 = new IssueTrackerMenu(this.rest, this.model, this.manager, this.translator, menu, false) { CommandText = "attach", IsEnabled = true };
-            subMenu2.UpdateServices(this.vshelper, null, null);
-            subMenu2.AssociateWithNewProject(this.config, this.associatedProject, this.sourceDir, this.sourceModel, this.issueTrackerPlugin);
-
-            menu.SubItems.Add(subMenu);
-            menu.SubItems.Add(subMenu2);
-
-            this.SubItems.Add(menu);
-        }
-
-        /// <summary>
-        /// Creates the menu items for existent issues.
-        /// </summary>
-        /// <param name="issue">The issue.</param>
-        private void CreateMenuItemsForExistentIssues(Issue issue)
-        {
-            if (this.issueDefectCache.ContainsKey(issue.Key))
-            {
-                this.GenerateSubMenus(this.issueDefectCache[issue.Key].Id);
-            }
-            else
-            {
-                var path = this.translator.TranslateKey(issue.Component, this.vshelper, this.associatedProject.BranchName);
-                var message = this.sourceModel.GetBlameByLine(path, issue.Line);
-                if (message != null)
-                {
-                    var defect = this.issueTrackerPlugin.GetDefectFromCommitMessage(message.Summary);
-
-                    if (defect == null)
-                    {
-                        this.manager.ReportMessage(new Message { Id = "IssueTrackerMenu", Data = "Could not get issue tracker info message: " + message.Summary });
-                        return;
-                    }
-
-                    if (defect != null)
-                    {
-                        this.GenerateSubMenus(defect.Id);
-                    }
-
-                    if (!this.defectCache.ContainsKey(defect.Id))
-                    {
-                        this.defectCache.Add(defect.Id, defect);
-                    }
-                    
-                    this.issueDefectCache.Add(issue.Key, defect);
-                }
-            }
-        }
-
-        /// <summary>
         /// Generates the identifier from message.
         /// </summary>
         /// <param name="htmlText">The HTML text.</param>
@@ -501,32 +342,6 @@ namespace VSSonarExtensionUi.Model.Menu
             }
 
             return string.Empty;
-        }
-
-        /// <summary>
-        /// Generates the menu for issues in view.
-        /// </summary>
-        private void GenerateMenuForIssuesInView()
-        {
-            foreach (var issue in this.model.AllIssues)
-            {
-                if (string.IsNullOrEmpty(issue.IssueTrackerId))
-                {
-                    continue;
-                }
-
-                if (this.defectCache.ContainsKey(issue.IssueTrackerId))
-                {
-                    continue;
-                }
-
-                this.GenerateSubMenus(issue.IssueTrackerId);
-            }
-
-            foreach (var item in this.defectCache)
-            {
-                this.GenerateSubMenus(item.Key);
-            }
         }
     }
 }

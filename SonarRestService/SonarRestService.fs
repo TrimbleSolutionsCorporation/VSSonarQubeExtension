@@ -88,6 +88,9 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
         if not(obj.ReferenceEquals(data.JsonValue.TryGetProperty("assignee"), null)) then
             issue.Assignee <- data.Assignee
 
+        if not(obj.ReferenceEquals(data.JsonValue.TryGetProperty("author"), null)) then
+            issue.Author <- data.Author
+
         if not(obj.ReferenceEquals(data.JsonValue.TryGetProperty("comments"), null)) then
             for elemC in data.Comments do issue.Comments.Add(new Comment(elemC.CreatedAt, elemC.HtmlText, elemC.Key, elemC.Login, -1))
             
@@ -134,6 +137,10 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             match elem.Assignee with
             | None -> ()
             | Some value -> issue.Assignee <- value
+
+            match elem.Author with
+            | None -> ()
+            | Some value -> issue.Author <- value
 
             match elem.ActionPlan with
             | None -> ()
@@ -191,6 +198,9 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
             if not(obj.ReferenceEquals(elem.Assignee, null)) then
                 issue.Assignee <- elem.Assignee.Value
+
+            if not(obj.ReferenceEquals(elem.Author, null)) then
+                issue.Author <- elem.Author.Value
             
             if not(obj.ReferenceEquals(elem.Comments, null)) then
                 for elemC in elem.Comments do issue.Comments.Add(new Comment(elemC.CreatedAt, elemC.HtmlText, elemC.Key, elemC.Login, -1))

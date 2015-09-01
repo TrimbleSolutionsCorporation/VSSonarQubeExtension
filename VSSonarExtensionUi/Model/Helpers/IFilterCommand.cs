@@ -34,6 +34,14 @@ namespace VSSonarExtensionUi.Model.Helpers
         ICommand ClearFilterTermAssigneeCommand { get; set; }
 
         /// <summary>
+        /// Gets or sets the clear filter term author command.
+        /// </summary>
+        /// <value>
+        /// The clear filter term author command.
+        /// </value>
+        ICommand ClearFilterTermAuthorCommand { get; set; }
+
+        /// <summary>
         /// Gets or sets the clear filter term component command.
         /// </summary>
         ICommand ClearFilterTermComponentCommand { get; set; }
