@@ -431,7 +431,7 @@ namespace VSSonarExtensionUi.Model.Analysis
                         new Message
                         {
                             Id = "IssuesSearchModel",
-                            Data = "Blame Failed, Filtering Not Available. Check if a compatible source control plugin is available"
+                            Data = "Blame Failed, Filtering Not Available for : " + translatedPath + " : " + issue.Line
                         });
 
                     return issue;
