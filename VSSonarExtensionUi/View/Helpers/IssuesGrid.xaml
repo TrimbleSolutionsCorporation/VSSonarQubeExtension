@@ -319,7 +319,7 @@
             <DataGrid.Columns>
 
                 <DataGridTemplateColumn DisplayIndex="{Binding Data.ComponentIndex, FallbackValue=0, Mode=TwoWay, Source={StaticResource Proxy}}"
-                                        MinWidth="250" x:Name="ComponentTemplateCol" Header="Component" CanUserSort="True" SortMemberPath="Component"                                        
+                                        MinWidth="250" MaxWidth="350" x:Name="ComponentTemplateCol" Header="Component" CanUserSort="True" SortMemberPath="Component"                                        
                                         IsReadOnly="True" Visibility="{Binding Data.ComponentVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -356,7 +356,7 @@
                                     IsReadOnly="True" Visibility="{Binding Data.LineVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
                 
                 <DataGridTemplateColumn DisplayIndex="{Binding Data.MessageIndex, FallbackValue=2, Mode=TwoWay, Source={StaticResource Proxy}}"
-                                        MinWidth="250" x:Name="MessageTemplateCol" Header="Message" CanUserSort="True" SortMemberPath="Message"                                         
+                                        MinWidth="250" MaxWidth="350" x:Name="MessageTemplateCol" Header="Message" CanUserSort="True" SortMemberPath="Message"                                         
                                         IsReadOnly="True" Visibility="{Binding Data.MessageVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
