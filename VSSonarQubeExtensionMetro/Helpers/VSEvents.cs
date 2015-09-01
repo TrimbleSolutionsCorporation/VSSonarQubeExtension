@@ -168,7 +168,7 @@ namespace VSSonarQubeExtension.Helpers
 
         private void CloseToolWindows()
         {
-            this.package.CloseToolWindow();
+            this.package.CloseToolsWindows();
         }
 
         private DTEEvents visualStudioEvents { get; set; }

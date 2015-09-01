@@ -95,7 +95,7 @@ namespace VSSonarQubeExtension
         /// <summary>
         ///     The show tool window.
         /// </summary>
-        public void CloseToolWindow()
+        public void CloseToolsWindows()
         {
             for (int i = 0; i < 100; i++)
             {
@@ -197,51 +197,18 @@ namespace VSSonarQubeExtension
                     }
 
                     SonarQubeViewModelFactory.StartupModelWithVsVersion(uniqueId).InitModelFromPackageInitialization(this.visualStudioInterface, this.StatusBar, this, this.AssemblyDirectory);
+                   
+                    this.CloseToolsWindows();
+                    this.StartOutputWindow("CDA8E85D-C469-4855-878B-0E778CD0DD" + int.Parse(uniqueId.Split('.')[0]).ToString());
 
+                    // start listening
+                    SonarQubeViewModelFactory.SQViewModel.PluginRequest += this.LoadPluginIntoNewToolWindow;
+                    this.StartSolutionListeners(this.visualStudioInterface);
+
+                    // configure colours
                     DColor defaultBackground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBackgroundColorKey);
                     DColor defaultForeground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowTextColorKey);
-
                     SonarQubeViewModelFactory.SQViewModel.UpdateTheme(ToMediaColor(defaultBackground), ToMediaColor(defaultForeground));
-
-                    // force analysis to come to vsix
-                    var i = 0;
-                    var data = string.Empty;
-                    foreach (var item in SonarQubeViewModelFactory.StartupModelWithVsVersion(uniqueId).VSonarQubeOptionsViewData.RoslynModel.ExtensionDiagnostics)
-                    {
-                        i += item.Value.AvailableChecks.Count;
-
-                        foreach (var check in item.Value.AvailableChecks)
-                        {
-                            DiagnosticAnalyzer analyser = check;
-                            data += analyser.ToString();
-                        }
-                    }
-
-                    
-                    try
-                    {
-                        var outWindow = GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
-                        var customGuid = new Guid("CDA8E85D-C469-4855-878B-0E778CD0DD53");
-                        if (outWindow != null)
-                        {
-                            outWindow.CreatePane(ref customGuid, "VSSonarQube Output", 1, 1);
-                            IVsOutputWindowPane customPane;
-                            outWindow.GetPane(ref customGuid, out customPane);
-                            ((VsPropertiesHelper)this.visualStudioInterface).CustomPane = customPane;
-                            ((VsPropertiesHelper)this.visualStudioInterface).CustomPane.Activate();
-                        }
-
-                        SonarQubeViewModelFactory.SQViewModel.PluginRequest += this.LoadPluginIntoNewToolWindow;
-                        this.CloseToolWindow();
-
-                        this.StartSolutionListeners(this.visualStudioInterface);
-
-                    }
-                    catch (Exception ex)
-                    {
-                        this.visualStudioInterface.WriteToVisualStudioOutput(DateTime.Now + " : VsSonarExtensionPackage Failed Create Window : " + ex.Message);
-                        this.visualStudioInterface.WriteToVisualStudioOutput(DateTime.Now + " : VsSonarExtensionPackage Failed Create Window : " + ex.StackTrace);
-                    }
                 }
                 catch (Exception ex)
                 {
@@ -252,6 +219,31 @@ namespace VSSonarQubeExtension
             {
                 UserExceptionMessageBox.ShowException("Extension Failed to Start", ex);
                 throw;
+            }
+        }
+
+        /// <summary>
+        /// Starts the output window.
+        /// </summary>
+        /// <param name="guid">The unique identifier.</param>
+        private void StartOutputWindow(string guid)
+        {
+            try
+            {
+                var outWindow = GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
+                var customGuid = new Guid(guid);
+                if (outWindow != null)
+                {
+                    outWindow.CreatePane(ref customGuid, "VSSonarQube Output", 1, 1);
+                    IVsOutputWindowPane customPane;
+                    outWindow.GetPane(ref customGuid, out customPane);
+                    ((VsPropertiesHelper)this.visualStudioInterface).CustomPane = customPane;
+                    ((VsPropertiesHelper)this.visualStudioInterface).CustomPane.Activate();
+                }
+            }
+            catch (Exception ex)
+            {
+                UserExceptionMessageBox.ShowException("VsSonarExtensionPackage Failed Create Output Window: " + guid, ex);
             }
         }
 
