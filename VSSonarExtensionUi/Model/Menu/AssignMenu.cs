@@ -249,7 +249,6 @@ namespace VSSonarExtensionUi.Model.Menu
 
                 if (this.CommandText.Equals("assign to author"))
                 {
-
                     using (var bw = new BackgroundWorker { WorkerReportsProgress = false })
                     {
                         bw.RunWorkerCompleted += delegate { Application.Current.Dispatcher.Invoke(delegate { this.manager.EndedWorking(); }); };

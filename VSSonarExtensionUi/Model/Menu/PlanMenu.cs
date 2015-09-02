@@ -26,6 +26,7 @@ namespace VSSonarExtensionUi.Model.Menu
     using ViewModel.Helpers;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
+    using System.ComponentModel;
 
     /// <summary>
     /// The issue handler menu.
@@ -254,45 +255,74 @@ namespace VSSonarExtensionUi.Model.Menu
             {
                 if (this.CommandText.Equals("Associate to new plan"))
                 {
-                    var availablePlans = this.rest.GetAvailableActionPlan(this.config, this.associatedProject.Key);
-                    var newPlan = PromptUserForNewPlan.Prompt(availablePlans);
+                    this.manager.StartedWorking("Associate With New Plan");
 
-                    if (newPlan == null)
+                    using (var bw = new BackgroundWorker { WorkerReportsProgress = false })
                     {
-                        return;
-                    }
+                        bw.RunWorkerCompleted += delegate { Application.Current.Dispatcher.Invoke(delegate { this.manager.EndedWorking(); }); };
 
-                    foreach (var existentPlan in availablePlans)
-                    {
-                        if (existentPlan.Name.Equals(newPlan))
+                        bw.DoWork += delegate
                         {
-                            var associatedWithExistent = QuestionUser.GetInput("Plan exists already, do you want to associate with current plan?");
-
-                            if (associatedWithExistent)
+                            try
                             {
-                                var replies = this.rest.PlanIssues(this.config, this.model.SelectedItems, existentPlan.Key.ToString());
+                                var availablePlans = this.rest.GetAvailableActionPlan(this.config, this.associatedProject.Key);
+                                var newPlan = PromptUserForNewPlan.Prompt(availablePlans);
+
+                                if (newPlan == null)
+                                {
+                                    return;
+                                }
+
+                                foreach (var existentPlan in availablePlans)
+                                {
+                                    if (existentPlan.Name.Equals(newPlan))
+                                    {
+                                        var associatedWithExistent = QuestionUser.GetInput("Plan exists already, do you want to associate with current plan?");
+
+                                        if (associatedWithExistent)
+                                        {
+                                            var repliesData = this.rest.PlanIssues(this.config, this.model.SelectedItems, existentPlan.Key.ToString());
+                                            foreach (var itemreply in repliesData)
+                                            {
+                                                this.manager.ReportMessage(new Message { Data = "Plan Operation Result: " + itemreply.Key + " : " + itemreply.Value });
+                                            }
+
+                                            foreach (var issue in this.model.SelectedItems)
+                                            {
+                                                var issueData = issue as Issue;
+                                                issueData.ActionPlanName = existentPlan.Name;
+                                                issueData.ActionPlan = existentPlan.Key;
+                                            }
+                                        }
+
+                                        return;
+                                    }
+                                }
+
+                                var plan = this.rest.CreateNewPlan(this.config, this.associatedProject.Key, newPlan);
+                                var replies = this.rest.PlanIssues(this.config, this.model.SelectedItems, plan.Key.ToString());
                                 foreach (var itemreply in replies)
                                 {
                                     this.manager.ReportMessage(new Message { Data = "Plan Operation Result: " + itemreply.Key + " : " + itemreply.Value });
                                 }
+
+                                foreach (var issue in this.model.SelectedItems)
+                                {
+                                    var issueData = issue as Issue;
+                                    issueData.ActionPlanName = plan.Name;
+                                    issueData.ActionPlan = plan.Key;
+                                }
+
+                                this.model.RefreshView();
                             }
+                            catch (Exception ex)
+                            {
+                                this.manager.ReportMessage(new Message { Data = "Plan Operation Failed" + ex.Message });
+                                this.manager.ReportException(ex);
+                            }
+                        };
 
-                            return;
-                        }
-                    }
-
-                    try
-                    {
-                        var plan = this.rest.CreateNewPlan(this.config, this.associatedProject.Key, newPlan);
-                        var replies = this.rest.PlanIssues(this.config, this.model.SelectedItems, plan.Key.ToString());
-                        foreach (var itemreply in replies)
-                        {
-                            this.manager.ReportMessage(new Message { Data = "Plan Operation Result: " + itemreply.Key + " : " + itemreply.Value });
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        UserExceptionMessageBox.ShowException("Cannot Create Plan, Make sure you have permissions", ex);
+                        bw.RunWorkerAsync();
                     }
 
                     this.ReloadPlanData(this.parent);
@@ -301,27 +331,65 @@ namespace VSSonarExtensionUi.Model.Menu
                 {
                     if (this.CommandText.Equals("Unplan"))
                     {
-                        var replies = this.rest.UnPlanIssues(this.config, this.model.SelectedItems);
-                        foreach (var itemreply in replies)
+                        this.manager.StartedWorking("Unplan");
+
+                        using (var bw = new BackgroundWorker { WorkerReportsProgress = false })
                         {
-                            this.manager.ReportMessage(new Message() { Data = "Unplan Operation Result: " + itemreply.Key + " : " + itemreply.Value });
+                            bw.RunWorkerCompleted += delegate { Application.Current.Dispatcher.Invoke(delegate { this.manager.EndedWorking(); }); };
+
+                            bw.DoWork += delegate
+                            {
+                                var replies = this.rest.UnPlanIssues(this.config, this.model.SelectedItems);
+                                foreach (var itemreply in replies)
+                                {
+                                    this.manager.ReportMessage(new Message() { Data = "Unplan Operation Result: " + itemreply.Key + " : " + itemreply.Value });
+                                }
+
+                                foreach (var issue in this.model.SelectedItems)
+                                {
+                                    (issue as Issue).ActionPlanName = string.Empty;
+                                    (issue as Issue).ActionPlan = Guid.Empty;
+                                }
+
+                                this.model.RefreshView();
+                            };
+
+                            bw.RunWorkerAsync();
                         }
                     }
                     else
                     {
-                        var plans = this.rest.GetAvailableActionPlan(this.config, this.associatedProject.Key);
-                        foreach (var plan in plans)
-                        {
-                            if (plan.Name.Equals(this.CommandText))
-                            {
-                                var replies = this.rest.PlanIssues(this.config, this.model.SelectedItems, plan.Key.ToString());
-                                foreach (var itemreply in replies)
-                                {
-                                    this.manager.ReportMessage(new Message() { Data = "Plan Operation Result: " + itemreply.Key + " : " + itemreply.Value });
-                                }
+                        this.manager.StartedWorking("Attach to plan");
 
-                                return;
-                            }
+                        using (var bw = new BackgroundWorker { WorkerReportsProgress = false })
+                        {
+                            bw.RunWorkerCompleted += delegate { Application.Current.Dispatcher.Invoke(delegate { this.manager.EndedWorking(); }); };
+
+                            bw.DoWork += delegate
+                            {
+                                var plans = this.rest.GetAvailableActionPlan(this.config, this.associatedProject.Key);
+                                foreach (var plan in plans)
+                                {
+                                    if (plan.Name.Equals(this.CommandText))
+                                    {
+                                        var replies = this.rest.PlanIssues(this.config, this.model.SelectedItems, plan.Key.ToString());
+                                        foreach (var itemreply in replies)
+                                        {
+                                            this.manager.ReportMessage(new Message() { Data = "Plan Operation Result: " + itemreply.Key + " : " + itemreply.Value });
+                                        }
+
+                                        foreach (var issue in this.model.SelectedItems)
+                                        {
+                                            (issue as Issue).ActionPlanName = plan.Name;
+                                            (issue as Issue).ActionPlan = plan.Key;
+                                        }
+
+                                        return;
+                                    }
+                                }
+                            };
+
+                            bw.RunWorkerAsync();
                         }
                     }
                 }
