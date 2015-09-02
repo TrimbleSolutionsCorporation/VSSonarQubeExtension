@@ -17,6 +17,7 @@ namespace VSSonarExtensionUi.View.Helpers
     using System;
     using System.Collections.Generic;
     using System.Windows;
+    using System.Windows.Controls;
     using VSSonarPlugins.Types;
 
     /// <summary>
@@ -24,6 +25,11 @@ namespace VSSonarExtensionUi.View.Helpers
     /// </summary>
     public partial class PromptUserForNewPlan
     {
+        /// <summary>
+        /// The plans
+        /// </summary>
+        private readonly List<SonarActionPlan> plans;
+
         #region Constructors and Destructors
 
         /// <summary>
@@ -32,6 +38,7 @@ namespace VSSonarExtensionUi.View.Helpers
         /// <param name="existetPlans">The existet plans.</param>
         public PromptUserForNewPlan(List<SonarActionPlan> existetPlans)
         {
+            this.plans = existetPlans;
             this.InitializeComponent();
 
             this.availableplans.Text = string.Empty;
@@ -67,7 +74,7 @@ namespace VSSonarExtensionUi.View.Helpers
                 {
                     plan.DeadLine = inst.datePicker.SelectedDate.Value;
                 }
-                
+
                 return plan;
             }
 
@@ -77,6 +84,24 @@ namespace VSSonarExtensionUi.View.Helpers
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Handles the TextChanged event of the TextBox control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="TextChangedEventArgs"/> instance containing the event data.</param>
+        private void TextChanged(object sender, TextChangedEventArgs e)
+        {
+            this.OkButton.IsEnabled = true;
+
+            foreach (var existentPlan in this.plans)
+            {
+                if (existentPlan.Name.Equals(this.nameOfPlan.Text))
+                {
+                    this.OkButton.IsEnabled = false;
+                }
+            }
+        }
 
         /// <summary>
         /// The btn cancel_ click.
