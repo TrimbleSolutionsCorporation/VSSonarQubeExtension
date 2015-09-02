@@ -256,6 +256,12 @@ namespace VSSonarExtensionUi.Model.Menu
                     string id = string.Empty;
                     var replydata = this.issueTrackerPlugin.AttachToNewDefect(issues, out id);
 
+                    // update issues
+                    foreach (var issue in issues)
+                    {
+                        issue.IssueTrackerId = id;
+                    }
+
                     if (string.IsNullOrEmpty(replydata))
                     {
                         this.manager.ReportMessage(new Message { Id = "IssueTrackerMenu", Data = "Failed to create defect" });
@@ -285,6 +291,12 @@ namespace VSSonarExtensionUi.Model.Menu
                         {
                             this.manager.ReportMessage(new Message { Id = "IssueTrackerMenu", Data = "Failed to attach to defect" });
                             return;
+                        }
+
+                        // update issues
+                        foreach (var issue in issues)
+                        {
+                            issue.IssueTrackerId = id;
                         }
 
                         var builder = new StringBuilder();
