@@ -384,6 +384,7 @@ namespace VSSonarExtensionUi.Model.Menu
                                             (issue as Issue).ActionPlan = plan.Key;
                                         }
 
+                                        this.model.RefreshView();
                                         return;
                                     }
                                 }
