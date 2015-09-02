@@ -13,14 +13,12 @@ namespace VSSonarExtensionUi.Model.Menu
     using System.Collections.ObjectModel;
     using System.Windows.Input;
 
+    using Association;    
     using GalaSoft.MvvmLight.Command;
-    using SonarLocalAnalyser;
-    using ViewModel;
+    using Helpers;
     using ViewModel.Helpers;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-    using Helpers;
-    using Association;
 
     /// <summary>
     ///     The show hide issue column.

@@ -125,6 +125,7 @@
   <ItemGroup>
     <Compile Include="Model\Analysis\IssuesSearchModel.cs" />
     <Compile Include="Model\Association\AssociationModel.cs" />
+    <Compile Include="Model\Menu\AssignMenu.cs" />
     <Compile Include="ViewModel\Configuration\IPluginManager.cs" />
     <Compile Include="Model\Cache\EditorData.cs" />
     <Compile Include="Model\Cache\ModelEditorCache.cs" />
@@ -207,6 +208,9 @@
     </Compile>
     <Compile Include="View\Configuration\PluginManagerView.xaml.cs">
       <DependentUpon>PluginManagerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Helpers\PromptForAssignUser.xaml.cs">
+      <DependentUpon>PromptForAssignUser.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Helpers\PromptUserForNewPlan.xaml.cs">
       <DependentUpon>PromptUserForNewPlan.xaml</DependentUpon>
@@ -311,6 +315,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\Configuration\PluginManagerView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Helpers\PromptForAssignUser.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

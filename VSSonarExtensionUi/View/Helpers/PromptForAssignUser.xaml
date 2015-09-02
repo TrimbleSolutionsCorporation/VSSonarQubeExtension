@@ -1,0 +1,50 @@
+﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    x:Class="VSSonarExtensionUi.View.Helpers.PromptForAssignUser"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    WindowStartupLocation="CenterScreen" 
+    xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+    SizeToContent="WidthAndHeight"
+    MinWidth="300"
+    MinHeight="100"
+    ResizeMode="CanMinimize" WindowStyle="None">
+    
+        <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/Styles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            
+            <DataTemplate x:Key="UserSelectionComboBoxDataTemplate">
+                <StackPanel>
+                    <TextBlock Text="{Binding Name}" />
+                </StackPanel>
+            </DataTemplate>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Border BorderBrush="Black"
+                Background="LightGray"
+                BorderThickness="2"
+                Padding="8">
+        <StackPanel Margin="5" >
+            <TextBlock Name="txtQuestion" Margin="5"/>
+            <ComboBox Margin="5" x:Name="UserBox"
+                        Style="{DynamicResource VirtualisedMetroComboBox}"
+                        TextSearch.TextPath="Name"
+                        controls:TextBoxHelper.Watermark="Type name"
+                        IsEditable="True"
+                        MaxDropDownHeight="125"
+                        ItemTemplate="{DynamicResource UserSelectionComboBoxDataTemplate}">
+            </ComboBox>
+            <TextBox Name="txtComment" Margin="5" ToolTip="Comment"/>
+            <WrapPanel Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Right" Margin="0,5,0,0">
+                <Button MinWidth="60" Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="_Ok" Click="BtnOkClick"  Margin="0,0,10,0"/>
+                <Button MinWidth="60" Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="_Cancel" Click="BtnCancelClick"  Margin="0,0,10,0"/>
+            </WrapPanel>
+        </StackPanel>
+    </Border>
+</Window>

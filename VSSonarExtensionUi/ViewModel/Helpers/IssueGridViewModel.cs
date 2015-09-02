@@ -1300,7 +1300,8 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                                OpenResourceMenu.MakeMenu(this.restService, this),
                                PlanMenu.MakeMenu(this.restService, this, this.notificationManager),
                                SourceControlMenu.MakeMenu(this.restService, this, this.notificationManager, this.keyTranslator),
-                               IssueTrackerMenu.MakeMenu(this.restService, this, this.notificationManager, this.keyTranslator)
+                               IssueTrackerMenu.MakeMenu(this.restService, this, this.notificationManager, this.keyTranslator),
+                               AssignMenu.MakeMenu(this.restService, this, this.notificationManager),
                            };
 
             return menu;
