@@ -70,48 +70,42 @@
         
 	<Grid x:Name="LayoutRoot">
 		<Grid.RowDefinitions>
-			<RowDefinition Height="40"/>
 			<RowDefinition Height="418*"/>
 			<RowDefinition Height="32"/>
             <RowDefinition Height="5" />
 		</Grid.RowDefinitions>
-		<Menu x:Name="MainMenuIssues" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
-            <MenuItem Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" x:Name="ToolsMenu" Header="Menu" Width="auto" HorizontalAlignment="Center" VerticalAlignment="Center" >
-                <MenuItem Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" x:Name="OptionsMenu" Header="Configuration" Command="{Binding LaunchExtensionPropertiesCommand}"/>
-                <MenuItem Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" x:Name="AssociationMenu" Header="Project Association" Width="auto" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding StartAssociationWindowCommand}"/>
-            </MenuItem>
-            <MenuItem x:Name="PluginsMenu" Header="Tools" ItemsSource="{Binding ToolsProvidedByPlugins}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <MenuItem.ItemContainerStyle>
-                    <Style TargetType="{x:Type MenuItem}">
-                        <Setter Property="Foreground" Value="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"/>
-                        <Setter Property="Background" Value="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"/>
-                        <Setter Property="Command" Value="{Binding ToolSwitchCommand}"  />
-                        <Setter Property="IsEnabled" Value="{Binding IsAssociated}"  />
-                        <Setter Property="CommandParameter" Value="{Binding Header, RelativeSource={RelativeSource Self}}" />
-                    </Style>
-                </MenuItem.ItemContainerStyle>
-            </MenuItem>
-            <ComboBox Width="300" 
-                      Style="{DynamicResource VirtualisedMetroComboBox}"
-                      TextSearch.TextPath="Name"
-                      controls:TextBoxHelper.Watermark="Branch"
-                      IsEditable="True"
-                      IsEnabled="{Binding IsBranchSelectionEnabled}"
-                      SelectedItem="{Binding SelectedBranch, Mode=TwoWay}"
-                      ItemsSource="{Binding AvailableBranches}"                   
-                      MaxDropDownHeight="125"
-                      ItemTemplate="{DynamicResource ProjectSelectionComboBoxDataTemplate}"
-                      />            
-        </Menu>
        
-		<StatusBar Grid.Row="2" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}">
+		<StatusBar Grid.Row="1" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}">
             <StatusBarItem HorizontalAlignment="Left">
-                <TextBlock Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Text="{Binding StatusMessage}"></TextBlock>
+                <TextBlock Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Text="{Binding StatusMessage, FallbackValue=messsageaslkdjalksjakjskdjaskda}"></TextBlock>
             </StatusBarItem>
           
             <StatusBarItem HorizontalAlignment="Right">
 				<StackPanel Orientation="Horizontal">
-                    
+                    <Menu x:Name="MainMenuIssues" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" >
+                        <MenuItem x:Name="PluginsMenu" Header="Tools" ItemsSource="{Binding ToolsProvidedByPlugins}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center" FlowDirection="RightToLeft">
+                            <MenuItem.ItemContainerStyle>
+                                <Style TargetType="{x:Type MenuItem}">
+                                    <Setter Property="Foreground" Value="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"/>
+                                    <Setter Property="Background" Value="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"/>
+                                    <Setter Property="Command" Value="{Binding ToolSwitchCommand}"  />
+                                    <Setter Property="IsEnabled" Value="{Binding IsAssociated}"  />
+                                    <Setter Property="CommandParameter" Value="{Binding Header, RelativeSource={RelativeSource Self}}" />
+                                </Style>
+                            </MenuItem.ItemContainerStyle>
+                        </MenuItem>
+                    </Menu>                    
+                <ComboBox Width="200" 
+                          Style="{DynamicResource VirtualisedMetroComboBox}"
+                          TextSearch.TextPath="Name"
+                          controls:TextBoxHelper.Watermark="Branch"
+                          IsEditable="True"
+                          IsEnabled="{Binding IsBranchSelectionEnabled}"
+                          SelectedItem="{Binding SelectedBranch, Mode=TwoWay}"
+                          ItemsSource="{Binding AvailableBranches}"                   
+                          MaxDropDownHeight="125"
+                          ItemTemplate="{DynamicResource ProjectSelectionComboBoxDataTemplate}"
+                          />                     
                     <StatusBarItem>                                              
                         <ToggleButton Width="30"
                                       Height="30"
@@ -121,6 +115,7 @@
 								            <ContextMenu>
 									            <MenuItem Header="Connect" Command="{Binding ConnectedToServerCommand}" IsEnabled="{Binding IsConnected, Converter={StaticResource BooleanInverter}}"/>
 									            <MenuItem Header="Disconnect" Command="{Binding DisconnectToServerCommand}" IsEnabled="{Binding IsConnected}"/>
+                                                <MenuItem Header="Association Window" Command="{Binding StartAssociationWindowCommand}" IsEnabled="{Binding IsConnected}"/>
 								            </ContextMenu>
 							            </ToggleButton.ContextMenu>                  
                         <Rectangle Width="15"
@@ -137,12 +132,11 @@
 				</StackPanel>
 			</StatusBarItem>
 		</StatusBar>
-        <controls:MetroProgressBar Grid.Row="3" IsIndeterminate="{Binding IsExtensionBusy}"
+        <controls:MetroProgressBar Grid.Row="2" IsIndeterminate="{Binding IsExtensionBusy}"
                                        Value="{Binding ElementName=horizSlider, Path=Value}"
                                        ToolTip="{Binding BusyToolTip}"
                                        Foreground="{DynamicResource AccentColorBrush}"/>
-
-        <TabControl controls:TabControlHelper.IsUnderlined="True" Grid.Row="1"  x:Name="TabControlViews" ItemsSource="{Binding SonarQubeViews}" SelectedItem="{Binding SelectedViewModel}" TabStripPlacement="Bottom" >
+        <TabControl controls:TabControlHelper.IsUnderlined="True" Grid.Row="0"  x:Name="TabControlViews" ItemsSource="{Binding SonarQubeViews}" SelectedItem="{Binding SelectedViewModel}" TabStripPlacement="Bottom" >
             <TabControl.Resources>
                     <Style TargetType="TabItem" BasedOn="{StaticResource MetroTabItem}">
                         <Setter Property="controls:ControlsHelper.HeaderFontSize" Value="12" />

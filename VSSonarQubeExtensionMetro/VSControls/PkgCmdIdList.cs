@@ -24,10 +24,15 @@ namespace VSSonarQubeExtension.VSControls
         public const uint CmdidReviewsCommand = 0x145;
 
         /// <summary>
-        /// The cmdid my command.
+        /// The cmdid show output command
         /// </summary>
-        public const uint ToolBarReportReviews = 0x200;
+        public const uint CmdidShowOutputCommand = 0x146;
 
+        /// <summary>
+        /// The cmdid show options command
+        /// </summary>
+        public const uint CmdidShowOptionsCommand = 0x147;
+        
         /// <summary>
         /// The cmdid run analysis in solution.
         /// </summary>

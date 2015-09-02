@@ -30,6 +30,7 @@ namespace VSSonarQubeExtension.VSControls
         /// </summary>
         public IssuesToolWindow() : base(null)
         {
+
             this.Caption = "SonarQube";
             this.BitmapResourceID = 301;
             this.BitmapIndex = 1;

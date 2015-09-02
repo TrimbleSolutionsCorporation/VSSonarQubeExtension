@@ -74,19 +74,34 @@ namespace VSSonarQubeExtension
         /// </summary>
         public VSSStatusBar StatusBar { get; set; }
 
+        public string AssemblyDirectory
+        {
+            get
+            {
+                string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+                UriBuilder uri = new UriBuilder(codeBase);
+                string path = Uri.UnescapeDataString(uri.Path);
+                return Path.GetDirectoryName(path);
+            }
+        }
+
+        /// <summary>
+        /// Gets the output unique identifier.
+        /// </summary>
+        /// <value>
+        /// The output unique identifier.
+        /// </value>
+        public string OutputGuid { get; private set; }
+
         #endregion
 
         #region Public Methods and Operators
 
         /// <summary>
-        /// The to media color.
+        /// To the color of the media.
         /// </summary>
-        /// <param name="color">
-        /// The color.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Color"/>.
-        /// </returns>
+        /// <param name="color">The color.</param>
+        /// <returns></returns>
         public static MColor ToMediaColor(DColor color)
         {
             return MColor.FromArgb(color.A, color.R, color.G, color.B);
@@ -199,7 +214,8 @@ namespace VSSonarQubeExtension
                     SonarQubeViewModelFactory.StartupModelWithVsVersion(uniqueId).InitModelFromPackageInitialization(this.visualStudioInterface, this.StatusBar, this, this.AssemblyDirectory);
                    
                     this.CloseToolsWindows();
-                    this.StartOutputWindow("CDA8E85D-C469-4855-878B-0E778CD0DD" + int.Parse(uniqueId.Split('.')[0]).ToString());
+                    this.OutputGuid = "CDA8E85D-C469-4855-878B-0E778CD0DD" + int.Parse(uniqueId.Split('.')[0]).ToString(CultureInfo.InvariantCulture);
+                    this.StartOutputWindow(this.OutputGuid);
 
                     // start listening
                     SonarQubeViewModelFactory.SQViewModel.PluginRequest += this.LoadPluginIntoNewToolWindow;
@@ -268,17 +284,6 @@ namespace VSSonarQubeExtension
             };
         }
 
-        public string AssemblyDirectory
-        {
-            get
-            {
-                string codeBase = Assembly.GetExecutingAssembly().CodeBase;
-                UriBuilder uri = new UriBuilder(codeBase);
-                string path = Uri.UnescapeDataString(uri.Path);
-                return Path.GetDirectoryName(path);
-            }
-        }
-
         /// <summary>
         /// The analyse solution cmd.
         /// </summary>
@@ -305,15 +310,20 @@ namespace VSSonarQubeExtension
                 return;
             }
 
+            // menu commands
             var menuCommandId = new CommandID(GuidList.GuidVSSonarExtensionCmdSet, (int)PkgCmdIdList.CmdidReviewsCommand);
             this.sonarReviewsCommand = new OleMenuCommand(this.ShowIssuesToolWindow, menuCommandId);
             mcs.AddCommand(this.sonarReviewsCommand);
 
-            menuCommandId = new CommandID(GuidList.GuidShowInitialToolbarCmdSet, (int)PkgCmdIdList.ToolBarReportReviews);
-            this.sonarReviewsCommandBar = new OleMenuCommand(this.ShowIssuesToolWindow, menuCommandId);
-            mcs.AddCommand(this.sonarReviewsCommandBar);
+            menuCommandId = new CommandID(GuidList.GuidVSSonarExtensionCmdSet, (int)PkgCmdIdList.CmdidShowOutputCommand);
+            this.sonarShowOutputCommand = new OleMenuCommand(this.ShowOutputWindow, menuCommandId);
+            mcs.AddCommand(this.sonarShowOutputCommand);
 
-            // CONTEXT MENUS
+            menuCommandId = new CommandID(GuidList.GuidVSSonarExtensionCmdSet, (int)PkgCmdIdList.CmdidShowOptionsCommand);
+            this.sonarShowOptionsCommand = new OleMenuCommand(this.ShowOptionsWindow, menuCommandId);
+            mcs.AddCommand(this.sonarShowOptionsCommand);
+
+            // solution context menus
             menuCommandId = new CommandID(GuidList.GuidStartAnalysisSolutionCTXCmdSet, PkgCmdIdList.CmdidRunAnalysisInSolution);
             this.runAnalysisCmd = new OleMenuCommand(this.AnalyseSolutionCmd, menuCommandId);
             mcs.AddCommand(this.runAnalysisCmd);
@@ -321,6 +331,26 @@ namespace VSSonarQubeExtension
             menuCommandId = new CommandID(GuidList.GuidStartAnalysisSolutionCTXCmdSet, PkgCmdIdList.CmdidRunAnalysisInProject);
             this.runAnalysisInProjectCmd = new OleMenuCommand(this.ShowIssuesToolWindow, menuCommandId);
             mcs.AddCommand(this.runAnalysisInProjectCmd);
+        }
+
+        /// <summary>
+        /// Shows the options window.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void ShowOptionsWindow(object sender, EventArgs e)
+        {
+            SonarQubeViewModelFactory.SQViewModel.LaunchExtensionProperties();
+        }
+
+        /// <summary>
+        /// Shows the output window.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void ShowOutputWindow(object sender, EventArgs e)
+        {
+            this.StartOutputWindow(this.OutputGuid);
         }
 
         /// <summary>

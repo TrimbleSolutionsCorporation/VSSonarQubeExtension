@@ -51,6 +51,16 @@ namespace VSSonarQubeExtension
         private OleMenuCommand sonarReviewsCommand;
 
         /// <summary>
+        /// The sonar show output command
+        /// </summary>
+        private OleMenuCommand sonarShowOutputCommand;
+
+        /// <summary>
+        /// The sonar show options command
+        /// </summary>
+        private OleMenuCommand sonarShowOptionsCommand;
+        
+        /// <summary>
         /// The visual studio interface.
         /// </summary>
         private IVsEnvironmentHelper visualStudioInterface;

@@ -1014,7 +1014,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// <summary>
         ///     The launch extension properties.
         /// </summary>
-        private void LaunchExtensionProperties()
+        public void LaunchExtensionProperties()
         {
             var window = new VSonarQubeOptionsView(this.VSonarQubeOptionsViewData);
             window.ShowDialog();

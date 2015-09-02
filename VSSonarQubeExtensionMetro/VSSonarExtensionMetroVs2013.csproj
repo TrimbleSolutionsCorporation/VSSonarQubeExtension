@@ -276,10 +276,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Resource Include="Resources\sonariconcoverage.bmp" />
-    <Resource Include="Resources\sonariconsource.bmp" />
-    <Resource Include="Resources\sonariconviolationslocaladded.bmp" />
-    <Resource Include="Resources\sonariconviolationslocal.bmp" />
     <Content Include="Resources\sonarviolations.bmp">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>

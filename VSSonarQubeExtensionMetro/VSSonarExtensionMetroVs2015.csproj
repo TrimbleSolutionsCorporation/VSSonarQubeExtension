@@ -145,7 +145,6 @@
       <HintPath>..\packages\Microsoft.CodeAnalysis.Workspaces.Common.1.0.0\lib\net45\Microsoft.CodeAnalysis.Workspaces.Desktop.dll</HintPath>
       <Private>True</Private>
     </Reference>
-
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.1.2.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
@@ -300,14 +299,10 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Resource Include="Resources\sonariconcoverage.bmp" />
-    <Resource Include="Resources\sonariconsource.bmp" />
-    <Resource Include="Resources\sonariconviolationslocaladded.bmp" />
-    <Resource Include="Resources\sonariconviolationslocal.bmp" />
     <Content Include="Resources\sonarviolations.bmp">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
+    </Content>    
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VSSonarQubeCmdExecutor\VSSonarQubeCmdExecutor.fsproj">
