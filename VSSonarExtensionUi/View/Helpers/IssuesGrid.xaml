@@ -489,11 +489,11 @@
                 </DataGridTemplateColumn>
 
                 <DataGridTemplateColumn DisplayIndex="{Binding Data.AuthorIndex, FallbackValue=7, Mode=TwoWay, Source={StaticResource Proxy}}"
-                                        MinWidth="120" MaxWidth="120" x:Name="AuthorTemplateCol" Header="Author" CanUserSort="True" SortMemberPath="Author"
+                                        MinWidth="120" MaxWidth="150" x:Name="AuthorTemplateCol" Header="Author" CanUserSort="True" SortMemberPath="Author"
                                         IsReadOnly="True" Visibility="{Binding Data.AuhtorVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Author, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"    />
+                            <TextBlock Text="{Binding Author, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"  TextWrapping="WrapWithOverflow"  />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                     <!--NAME COLUMN-->
