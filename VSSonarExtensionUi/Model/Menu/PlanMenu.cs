@@ -256,7 +256,6 @@ namespace VSSonarExtensionUi.Model.Menu
                 if (this.CommandText.Equals("Associate to new plan"))
                 {
                     var availablePlans = this.rest.GetAvailableActionPlan(this.config, this.associatedProject.Key);
-                    bool associateWithExistent = false;
                     var newPlan = PromptUserForNewPlan.Prompt(availablePlans);
 
                     if (newPlan == null)
@@ -264,10 +263,7 @@ namespace VSSonarExtensionUi.Model.Menu
                         return;
                     }
 
-                    if (associateWithExistent)
-                    {
-                        this.AssociateToNewPlan(availablePlans, newPlan);
-                    }
+                    this.AssociateToNewPlan(availablePlans, newPlan);
 
                     foreach (var issue in this.model.SelectedItems)
                     {
