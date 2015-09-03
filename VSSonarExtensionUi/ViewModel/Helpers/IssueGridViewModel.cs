@@ -1591,6 +1591,8 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             {
                 this.notificationManager.ReportException(ex);
             }
+
+            this.RefreshStatistics();
         }
 
         /// <summary>
