@@ -1112,7 +1112,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 bw.RunWorkerAsync();
             }
 
-            this.RefreshView();
+            this.RefreshStatistics();
         }
 
         /// <summary>
