@@ -11,6 +11,7 @@ type KeyLookUpType =
    | Flat = 1
    | VSBootStrapper = 2
    | Invalid = 3
+   | ProjectGuid = 4
 
 [<AllowNullLiteral>]
 type SonarModule() = 
@@ -277,9 +278,11 @@ type SQKeyTranslator() =
                 else
                     ":" + branchIn + ":"
 
-            if lookupType = KeyLookUpType.Invalid then
+            let mutable path = ""
 
-                let mutable path = Path.Combine(projectBaseDir, key.Replace(projectKey + branch, "").Replace('/', Path.DirectorySeparatorChar))
+            if lookupType = KeyLookUpType.Invalid || lookupType = KeyLookUpType.ProjectGuid then
+
+                path <- Path.Combine(projectBaseDir, key.Replace(projectKey + branch, "").Replace('/', Path.DirectorySeparatorChar))
 
                 if File.Exists(path) then
                     lookupType <- KeyLookUpType.Flat
@@ -311,7 +314,20 @@ type SQKeyTranslator() =
                         if File.Exists(path) then
                             lookupType <- KeyLookUpType.Module
                         else
-                            lookupType <- KeyLookUpType.Invalid
+                            path <-
+                                try
+                                    let keyWithoutProjectKey = key.Replace(projectKey + branch, "")
+                                    let allModulesPresentInKey =  keyWithoutProjectKey.Split(':')
+            
+                                    let project = Directory.GetParent(vshelper.GetProjectByGuidInSolution(allModulesPresentInKey.[0]).ProjectFilePath).ToString()
+                                    Path.Combine(project, allModulesPresentInKey.[1].Replace('/', Path.DirectorySeparatorChar))
+                                with
+                                | ex -> ""
+
+                            if File.Exists(path) then
+                                lookupType <- KeyLookUpType.ProjectGuid
+                            else
+                                lookupType <- KeyLookUpType.Invalid
                    
             if lookupType = KeyLookUpType.Flat then
                 Path.Combine(projectBaseDir, key.Replace(projectKey + branch, "").Replace('/', Path.DirectorySeparatorChar))
@@ -332,5 +348,8 @@ type SQKeyTranslator() =
             
                 let project = Directory.GetParent(vshelper.GetProjectByNameInSolution(allModulesPresentInKey.[0]).ProjectFilePath).ToString()
                 Path.Combine(project, allModulesPresentInKey.[1].Replace('/', Path.DirectorySeparatorChar))
+            elif lookupType = KeyLookUpType.ProjectGuid then
+                path
+
             else
             ""
