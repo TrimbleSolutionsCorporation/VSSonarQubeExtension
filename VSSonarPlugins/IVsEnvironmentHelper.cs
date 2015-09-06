@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarPlugins
 {
+    using System;
     using Types;
 
     /// <summary>
@@ -163,6 +164,13 @@ namespace VSSonarPlugins
         /// <returns></returns>
         VsProjectItem GetProjectByGuidInSolution(string projectGuid);
 
+        /// <summary>
+        /// Gets the project guid from path.
+        /// </summary>
+        /// <param name="projectPath">The project path.</param>
+        /// <returns>project unique identifier</returns>		
+		string GetGuidForProject(string projectPath);
+		
         /// <summary>The get file real path for solution.</summary>
         /// <param name="fileInView">The file in view.</param>
         /// <returns>The <see cref="string"/>.</returns>

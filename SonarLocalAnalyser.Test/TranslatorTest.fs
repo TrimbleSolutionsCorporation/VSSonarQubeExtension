@@ -165,9 +165,55 @@ type TraTests() =
         Assert.That((translator :> ISQKeyTranslator).TranslateKey("cpp-multimodule-project:lib:dup.cpp", mockAVsinterface, ""), Is.EqualTo((Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\ModulesDefinedAllInOnePropertiesFile\\lib\\dup.cpp"))))
 
     [<Test>]
+    member test.``Should Return Key Correctly With MSBuild Runner when No Branch is Detected`` () =
+        let translator = new SQKeyTranslator() :> ISQKeyTranslator
+        translator.SetProjectKeyAndBaseDir("Company:Group", assemblyRunningPath, "")
+        translator.SetLookupType(KeyLookUpType.ProjectGuid)
+        let mockAVsinterface =
+            Mock<IVsEnvironmentHelper>()
+                .Setup(fun x -> <@ x.GetGuidForProject(any()) @>).Returns("{guid}")
+                .Setup(fun x -> <@ x.GetProperFilePathCapitalization(any()) @>).Returns(Path.Combine(assemblyRunningPath, "Folder\\file.cs"))
+                .Create()
+
+        let item = new VsFileItem()
+        item.FileName <- "file.cs"
+        item.FilePath <- Path.Combine(assemblyRunningPath, "ProjectX\\Folder\\file.cs")
+        item.Project <- new VsProjectItem()
+        item.Project.ProjectFilePath <- Path.Combine(assemblyRunningPath, "ProjectX\\ProjectX.csproj")
+        item.Project.ProjectName <- "ProjectX"
+        item.Project.Solution <- new VsSolutionItem()
+        item.Project.Solution.SolutionPath <- assemblyRunningPath
+
+        let key = translator.TranslatePath(item, mockAVsinterface, mockRest, mockConfigurtion)
+        Assert.That(key, Is.EqualTo("Company:Group:Company:Group:{guid}:Folder/file.cs"))
+
+    [<Test>]
+    member test.``Should Return Key Correctly With MSBuild Runner when Branch is Detected`` () =
+        let translator = new SQKeyTranslator() :> ISQKeyTranslator
+        translator.SetProjectKeyAndBaseDir("Company:Group", assemblyRunningPath, "master")
+        translator.SetLookupType(KeyLookUpType.ProjectGuid)
+        let mockAVsinterface =
+            Mock<IVsEnvironmentHelper>()
+                .Setup(fun x -> <@ x.GetGuidForProject(any()) @>).Returns("{guid}")
+                .Setup(fun x -> <@ x.GetProperFilePathCapitalization(any()) @>).Returns(Path.Combine(assemblyRunningPath, "Folder\\file.cs"))
+                .Create()
+
+        let item = new VsFileItem()
+        item.FileName <- "file.cs"
+        item.FilePath <- Path.Combine(assemblyRunningPath, "ProjectX\\Folder\\file.cs")
+        item.Project <- new VsProjectItem()
+        item.Project.ProjectFilePath <- Path.Combine(assemblyRunningPath, "ProjectX\\ProjectX.csproj")
+        item.Project.ProjectName <- "ProjectX"
+        item.Project.Solution <- new VsSolutionItem()
+        item.Project.Solution.SolutionPath <- assemblyRunningPath
+
+        let key = translator.TranslatePath(item, mockAVsinterface, mockRest, mockConfigurtion)
+        Assert.That(key, Is.EqualTo("Company:Group:Company:Group:{guid}:master:Folder/file.cs"))
+
+    [<Test>]
     member test.``Should Return Path Correctly With Msbuild Runner`` () =
         let translator = new SQKeyTranslator() :> ISQKeyTranslator
-        translator.SetProjectKeyAndBaseDir("whatever-project", assemblyRunningPath)
+        translator.SetProjectKeyAndBaseDir("whatever-project", assemblyRunningPath, "")
         translator.SetLookupType(KeyLookUpType.ProjectGuid)
         let projectItem = new VsProjectItem()
         projectItem.ProjectFilePath <- Path.Combine(assemblyRunningPath, "ProjectX")

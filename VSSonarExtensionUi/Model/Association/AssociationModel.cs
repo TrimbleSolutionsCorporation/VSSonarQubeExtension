@@ -184,7 +184,7 @@
         public bool AssignASonarProjectToSolution(Resource projectIn, Resource branchProject)
         {
             var project = projectIn;
-
+            var branchName = string.Empty;
             if (project == null)
             {
                 return false;
@@ -210,6 +210,7 @@
                 branchProject.Default = true;
                 this.model.IsBranchSelectionEnabled = true;
                 this.model.SelectedBranch = branchProject;
+                branchName = branchProject.BranchName;
             }
             else
             {
@@ -252,7 +253,7 @@
                     });
 
                 this.AssociatedProject.SolutionRoot = this.OpenSolutionPath;
-                this.keyTranslator.SetProjectKeyAndBaseDir(this.AssociatedProject.Key, this.OpenSolutionPath);
+                this.keyTranslator.SetProjectKeyAndBaseDir(this.AssociatedProject.Key, this.OpenSolutionPath, branchName);
             }
 
             this.configurationHelper.SyncSettings();

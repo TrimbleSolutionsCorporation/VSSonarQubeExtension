@@ -31,13 +31,12 @@ type ISQKeyTranslator =
   abstract member GetSources : unit -> string
   abstract member GetLookupType : unit -> KeyLookUpType
   abstract member SetLookupType : key:KeyLookUpType -> unit
-  abstract member SetProjectKeyAndBaseDir : key:string * path:string -> unit
+  abstract member SetProjectKeyAndBaseDir : key:string * path:string * currentBranch:string -> unit
   abstract member SetProjectKey : key:string -> unit  
   abstract member GetModules : unit -> List<SonarModule>  
   abstract member TranslateKey : key:string * vshelper:IVsEnvironmentHelper * branch:string -> string
   abstract member TranslatePath : key:VsFileItem * vshelper:IVsEnvironmentHelper * rest:ISonarRestService * configuration:ISonarConfiguration -> string
   
-
 [<AllowNullLiteral>]
 type SQKeyTranslator() = 
     let mutable projectKey : string = ""
@@ -45,6 +44,7 @@ type SQKeyTranslator() =
     let mutable projectVersion : string = ""
     let mutable sonarSources : string = ""
     let mutable projectBaseDir : string = ""
+    let mutable currentBranch : string = ""
     let mutable modules : SonarModule List = List.Empty
 
     let mutable lookupType : KeyLookUpType = KeyLookUpType.Invalid
@@ -261,6 +261,21 @@ type SQKeyTranslator() =
             Path.Combine(project, allModulesPresentInKey.[1].Replace('/', Path.DirectorySeparatorChar))
         with
         | ex -> ""
+        
+    let GetMSbuildRunnerKey(vshelper : IVsEnvironmentHelper, fileItem : VsFileItem, branch : string) =
+        try
+            let guid = vshelper.GetGuidForProject(fileItem.Project.ProjectFilePath)
+            let tounix = vshelper.GetProperFilePathCapitalization(fileItem.FilePath).Replace("\\", "/")
+            let driveLetter = tounix.Substring(0, 1)
+            let solutionCan = driveLetter + fileItem.Project.Solution.SolutionPath.Replace("\\", "/").Substring(1)
+            let fromBaseDir = tounix.Replace(solutionCan + "/", "")
+
+            if branch <> "" then
+                projectKey + ":" + projectKey + ":" + guid + ":" + branch + ":" + fromBaseDir
+            else
+                projectKey + ":" + projectKey + ":" + guid + ":" + fromBaseDir
+        with
+        | ex -> ""
 
     let GuessLookupTypeFromKey(key : string, branch : string, vshelper : IVsEnvironmentHelper) =
         if lookupType = KeyLookUpType.Invalid then
@@ -275,7 +290,7 @@ type SQKeyTranslator() =
 
         lookupType
 
-    let GuessLookupTypeFromPath(vshelper : IVsEnvironmentHelper, fileItem : VsFileItem, rest : ISonarRestService, configuration : ISonarConfiguration) = 
+    let GuessLookupTypeFromPath(vshelper : IVsEnvironmentHelper, fileItem : VsFileItem, rest : ISonarRestService, configuration : ISonarConfiguration, branchIn:string) = 
 
         if lookupType = KeyLookUpType.Invalid then
 
@@ -294,7 +309,7 @@ type SQKeyTranslator() =
                 | KeyLookUpType.Flat -> ValidateResourceInServer(GetFlatKey(vshelper, fileItem))
                 | KeyLookUpType.Module -> ValidateResourceInServer(GetModuleKey(vshelper, fileItem))
                 | KeyLookUpType.VSBootStrapper -> ValidateResourceInServer(GetVSBootStrapperKey(vshelper, fileItem))
-                | KeyLookUpType.ProjectGuid -> false // TODO
+                | KeyLookUpType.ProjectGuid -> ValidateResourceInServer(GetMSbuildRunnerKey(vshelper, fileItem, branchIn))
                 | _ -> false                
                   
             let allTags : KeyLookUpType seq = unbox (System.Enum.GetValues(typeof<KeyLookUpType>))    
@@ -306,9 +321,10 @@ type SQKeyTranslator() =
         lookupType
 
     interface ISQKeyTranslator with
-        member this.SetProjectKeyAndBaseDir(key:string, path:string) =
+        member this.SetProjectKeyAndBaseDir(key:string, path:string, branch:string) =
             projectBaseDir <- path
             projectKey <- key
+            currentBranch <- branch
             ()
 
         member this.SetProjectKey(key:string) =
@@ -340,11 +356,11 @@ type SQKeyTranslator() =
 
         member this.TranslatePath(fileItem : VsFileItem, vshelper : IVsEnvironmentHelper, rest : ISonarRestService, configuration : ISonarConfiguration) =
 
-            match GuessLookupTypeFromPath(vshelper, fileItem, rest, configuration) with
+            match GuessLookupTypeFromPath(vshelper, fileItem, rest, configuration, currentBranch) with
             | KeyLookUpType.Flat -> GetFlatKey(vshelper, fileItem)
             | KeyLookUpType.Module -> GetModuleKey(vshelper, fileItem)
             | KeyLookUpType.VSBootStrapper -> GetVSBootStrapperKey(vshelper, fileItem)
-            | KeyLookUpType.ProjectGuid -> ""
+            | KeyLookUpType.ProjectGuid -> GetMSbuildRunnerKey(vshelper, fileItem, currentBranch)
             | _ -> ""
 
         member this.TranslateKey(key : string, vshelper : IVsEnvironmentHelper, branchIn:string) =
