@@ -3,7 +3,7 @@ VSSonarQubeExtension
 [![Issue Stats](http://issuestats.com/github/jmecosta/VSSonarQubeExtension/badge/issue)](http://issuestats.com/github/jmecosta/VSSonarQubeExtension)
 [![Issue Stats](http://issuestats.com/github/jmecosta/VSSonarQubeExtension/badge/pr)](http://issuestats.com/github/jmecosta/VSSonarQubeExtension)
 
-[![Build status](https://ci.appveyor.com/api/projects/status/7c1r35db6k6ug756?svg=true)](https://ci.appveyor.com/project/jorgecosta/vssonarqubeextension)
+[![Build status](https://ci.appveyor.com/api/projects/status/7c1r35db6k6ug756?svg=true)](https://ci.appveyor.com/project/jorgecosta/vssonarqubeextension/branch/master)
 
 This is a Extension for Visual Studio to interact wiht SonarQube (TM).
 
