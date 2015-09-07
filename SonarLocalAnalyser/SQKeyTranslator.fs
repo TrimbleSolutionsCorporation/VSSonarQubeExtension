@@ -284,9 +284,9 @@ type SQKeyTranslator() =
             let fromBaseDir = tounix.Replace(solutionCan + "/", "")
 
             if branch <> "" then
-                projectKey.Replace(branch, "") + projectKey.Replace(branch, "") + guid + ":" + branch + ":" + fromBaseDir
+                projectKey.Replace(branch, "") + projectKey.Replace(branch, "") + guid.ToUpper() + ":" + branch + ":" + fromBaseDir
             else
-                projectKey + ":" + projectKey + ":" + guid + ":" + fromBaseDir
+                projectKey + ":" + projectKey + ":" + guid.ToUpper() + ":" + fromBaseDir.Replace(fileItem.Project.ProjectName + "/", "")
         with
         | ex -> ""
 

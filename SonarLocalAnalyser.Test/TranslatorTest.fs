@@ -217,7 +217,7 @@ type TraTests() =
         item.Project.Solution.SolutionPath <- assemblyRunningPath
 
         let key = translator.TranslatePath(item, mockAVsinterface, mockRest, mockConfigurtion)
-        Assert.That(key, Is.EqualTo("Company:Group:Company:Group:{guid}:Folder/file.cs"))
+        Assert.That(key, Is.EqualTo("Company:Group:Company:Group:{GUID}:Folder/file.cs"))
 
     [<Test>]
     member test.``Should Return Key Correctly With MSBuild Runner when Branch is Detected`` () =
@@ -240,5 +240,5 @@ type TraTests() =
         item.Project.Solution.SolutionPath <- assemblyRunningPath
 
         let key = translator.TranslatePath(item, mockAVsinterface, mockRest, mockConfigurtion)
-        Assert.That(key, Is.EqualTo("Company:Group:Company:Group:{guid}:master:Folder/file.cs"))
+        Assert.That(key, Is.EqualTo("Company:Group:Company:Group:{GUID}:master:Folder/file.cs"))
 
