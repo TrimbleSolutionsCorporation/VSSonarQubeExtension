@@ -227,5 +227,10 @@ namespace VSSonarExtensionUi.Test.Association
         {
             throw new NotImplementedException();
         }
+
+        public VsProjectItem GetProjectByGuidInSolution(string projectGuid)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

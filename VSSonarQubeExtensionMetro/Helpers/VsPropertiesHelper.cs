@@ -959,10 +959,60 @@ namespace VSSonarQubeExtension.Helpers
             {
                 if (project.Name.ToLower().Equals(projectName.ToLower()))
                 {
-                    var proToRet = new VsProjectItem();
-                    proToRet.ProjectName = project.Name;
-                    proToRet.ProjectFilePath = project.FullName;
-                    return proToRet;
+                    return CreateVsProjectItem(project);
+                }
+            }
+
+            return null;
+        }
+
+        private static VsProjectItem CreateVsProjectItem(Project project)
+        {
+            var proToRet = new VsProjectItem();
+            proToRet.ProjectName = project.Name;
+            proToRet.ProjectFilePath = project.FullName;
+            return proToRet;
+        }
+
+        public VsProjectItem GetProjectByGuidInSolution(string projectName)
+        {
+            if (this.environment == null) { return null; }
+
+            foreach (Project project in this.environment.Solution.Projects)
+            {
+                // Got some help from here: http://www.mztools.com/articles/2007/mz2007016.aspx
+                IntPtr serviceIntPtr;
+                int hr = 0;
+                Guid SIDGuid = typeof(IVsSolution).GUID; 
+                Guid IIDGuid = SIDGuid;
+                
+                var serviceProvider = (Microsoft.VisualStudio.OLE.Interop.IServiceProvider)project.DTE;
+                hr = serviceProvider.QueryService(SIDGuid, IIDGuid, out serviceIntPtr);
+
+                if (hr != 0)
+                {
+                    Marshal.ThrowExceptionForHR(hr);
+                }
+                else if (!serviceIntPtr.Equals(IntPtr.Zero))
+                {
+                    object service = Marshal.GetObjectForIUnknown(serviceIntPtr);
+                    Marshal.Release(serviceIntPtr);
+
+                    var solution = (IVsSolution)service;
+                    IVsHierarchy hierarchy = null;
+                    int result = solution.GetProjectOfUniqueName(project.UniqueName, out hierarchy);
+                    if (result == 0)
+                    {
+                        Guid projectGuid;
+                        int guidResult = solution.GetGuidOfProject(hierarchy, out projectGuid);
+                        if (guidResult == 0)
+                        {
+                            if (projectName.ToLower() == projectGuid.ToString().ToLower())
+                            {
+                                return CreateVsProjectItem(project);
+                            }
+                        }
+                    }
                 }
             }
 

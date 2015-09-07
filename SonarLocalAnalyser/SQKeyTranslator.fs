@@ -11,6 +11,7 @@ type KeyLookUpType =
    | Flat = 1
    | VSBootStrapper = 2
    | Invalid = 3
+   | ProjectGuid = 4
 
 [<AllowNullLiteral>]
 type SonarModule() = 
@@ -34,7 +35,7 @@ type ISQKeyTranslator =
   abstract member SetProjectKey : key:string -> unit  
   abstract member GetModules : unit -> List<SonarModule>  
   abstract member TranslateKey : key:string * vshelper:IVsEnvironmentHelper * branch:string -> string
-  abstract member TranslatePath : key:VsFileItem * vshelper:IVsEnvironmentHelper -> string
+  abstract member TranslatePath : key:VsFileItem * vshelper:IVsEnvironmentHelper * rest:ISonarRestService * configuration:ISonarConfiguration -> string
   
 
 [<AllowNullLiteral>]
@@ -190,6 +191,141 @@ type SQKeyTranslator() =
                else
                     UpdateModule("", based, lines, curreModule)
 
+    let GetFlatPath(key : string, branch : string) =
+        Path.Combine(projectBaseDir, key.Replace(projectKey + branch, "").Replace('/', Path.DirectorySeparatorChar))
+
+    let GetFlatKey(vshelper : IVsEnvironmentHelper, fileItem : VsFileItem) =
+        let tounix = vshelper.GetProperFilePathCapitalization(fileItem.FilePath).Replace("\\", "/")
+        let driveLetter = tounix.Substring(0, 1)
+        let solutionCan = driveLetter + fileItem.Project.Solution.SolutionPath.Replace("\\", "/").Substring(1)
+        let fromBaseDir = tounix.Replace(solutionCan + "/", "")
+
+        if fileItem.Project.Solution.SonarProject <> null then
+            fileItem.Project.Solution.SonarProject.Key + ":" + fromBaseDir
+        else
+            projectKey + ":" + fromBaseDir
+
+    let GetModulePath (key : string, branch : string) =
+        let keyWithoutProjectKey = key.Replace(projectKey + branch, "")
+        let allModulesPresentInKey =  keyWithoutProjectKey.Split(':')
+        let modulesPresentInKey =  Array.sub allModulesPresentInKey 0 (allModulesPresentInKey.Length-1)
+
+        let mutable currPath = projectBaseDir
+        for moduleinKey in modulesPresentInKey do
+            currPath <- getRelativeDirForModuleAgainstPrevious(currPath, moduleinKey)
+        Path.Combine(currPath, allModulesPresentInKey.[allModulesPresentInKey.Length-1].Replace('/', Path.DirectorySeparatorChar))
+
+    let GetModuleKey(vshelper : IVsEnvironmentHelper, fileItem : VsFileItem) =
+        let mutable keyOfResource = ""
+        for moduled in modules do
+            if keyOfResource = "" then
+                let okMod = searchFilePathinModules(moduled, fileItem)
+                if okMod <> null then
+                    keyOfResource <- 
+                        if fileItem.Project.Solution.SonarProject <> null then
+                            fileItem.Project.Solution.SonarProject.Key + ":" + CreateKey(okMod, fileItem)
+                        else
+                            projectKey + ":" + CreateKey(okMod, fileItem)
+        keyOfResource
+
+    let GetVSBootStrapperPath(key : string, branch : string, vshelper : IVsEnvironmentHelper) =
+        try
+            let keyWithoutProjectKey = key.Replace(projectKey + branch, "")
+            let allModulesPresentInKey =  keyWithoutProjectKey.Split(':')
+            
+            let project = Directory.GetParent(vshelper.GetProjectByNameInSolution(allModulesPresentInKey.[0]).ProjectFilePath).ToString()
+            Path.Combine(project, allModulesPresentInKey.[1].Replace('/', Path.DirectorySeparatorChar))
+        with
+        | ex -> ""
+
+    let GetVSBootStrapperKey(vshelper : IVsEnvironmentHelper, fileItem : VsFileItem) =
+        let filePath = fileItem.FilePath.Replace("\\", "/")
+        let solutionPath = fileItem.Project.Solution.SolutionPath.Replace("\\", "/")
+        let filerelativePath = filePath.Replace(solutionPath + "/", "")
+        let keySplit = projectKey.Split(':').[0]
+
+        if not(fileItem = null) then
+            let path = Directory.GetParent(fileItem.Project.ProjectFilePath).ToString().Replace("\\", "/")
+            let file = filePath.Replace(path + "/", "")
+            projectKey + ":" + fileItem.Project.ProjectName + ":" + file
+        else
+            let filesplit = filerelativePath.Split('/')
+            projectKey + ":" + filesplit.[0] + ":" + filerelativePath.Replace(filesplit.[0] + "/", "")
+
+    let GetMSbuildRunnerPath(key : string, branch : string, vshelper : IVsEnvironmentHelper) = 
+        
+        let keyWithoutBranch = 
+            if branch <> "" then
+                projectKey.Replace(":" + branch, "")
+            else
+                projectKey
+                                       
+        try
+            let keyWithoutProjectKey = key.Replace(keyWithoutBranch + ":", "")
+            let allModulesPresentInKey =  keyWithoutProjectKey.Split(':')
+            
+            let project = Directory.GetParent(vshelper.GetProjectByGuidInSolution(allModulesPresentInKey.[0]).ProjectFilePath).ToString()
+
+            if allModulesPresentInKey.Length = 3 then
+                Path.Combine(project, allModulesPresentInKey.[2].Replace('/', Path.DirectorySeparatorChar))
+            else
+                Path.Combine(project, allModulesPresentInKey.[1].Replace('/', Path.DirectorySeparatorChar))
+                            
+        with
+        | ex -> ""
+
+    let GuessLookupTypeFromKey(key : string, branchIn : string, vshelper : IVsEnvironmentHelper) =
+        let branch =
+            if branchIn = "" || projectKey.Contains(branchIn) then
+                if projectKey.Contains(branchIn) then
+                    ":"
+                else
+                    ""
+            else
+                ":" + branchIn + ":"
+
+        if lookupType = KeyLookUpType.Invalid then
+            if File.Exists(GetFlatPath(key, branch)) then
+                lookupType <- KeyLookUpType.Flat
+            elif File.Exists(GetModulePath(key, branch)) then
+                lookupType <- KeyLookUpType.Module
+            elif File.Exists(GetVSBootStrapperPath(key, branch, vshelper)) then
+                lookupType <- KeyLookUpType.VSBootStrapper
+            elif File.Exists(GetMSbuildRunnerPath(key, branchIn, vshelper)) then
+                lookupType <- KeyLookUpType.ProjectGuid     
+
+        lookupType
+
+    let GuessLookupTypeFromPath(vshelper : IVsEnvironmentHelper, fileItem : VsFileItem, rest : ISonarRestService, configuration : ISonarConfiguration) = 
+
+        if lookupType = KeyLookUpType.Invalid then
+
+            let validateResourceInServer(keyType : KeyLookUpType) = 
+
+                let ValidateResourceInServer(key : string) =
+                    try
+                        if rest.GetResourcesData(configuration, key).[0] <> null then
+                            true
+                        else
+                            false
+                    with
+                    | ex -> false
+
+                match keyType with
+                | KeyLookUpType.Flat -> ValidateResourceInServer(GetFlatKey(vshelper, fileItem))
+                | KeyLookUpType.Module -> ValidateResourceInServer(GetModuleKey(vshelper, fileItem))
+                | KeyLookUpType.VSBootStrapper -> ValidateResourceInServer(GetVSBootStrapperKey(vshelper, fileItem))
+                | KeyLookUpType.ProjectGuid -> false // TODO
+                | _ -> false                
+                  
+            let allTags : KeyLookUpType seq = unbox (System.Enum.GetValues(typeof<KeyLookUpType>))    
+            let data = allTags |> Seq.tryFind(fun elem -> validateResourceInServer(elem))
+            match data with
+            | Some elem -> lookupType <- elem
+            | _ -> lookupType <- KeyLookUpType.Invalid
+
+        lookupType
+
     interface ISQKeyTranslator with
         member this.SetProjectKeyAndBaseDir(key:string, path:string) =
             projectBaseDir <- path
@@ -223,51 +359,17 @@ type SQKeyTranslator() =
         member this.GetSources() =
             sonarSources
 
-        member this.TranslatePath(fileItem : VsFileItem, vshelper : IVsEnvironmentHelper) =
+        member this.TranslatePath(fileItem : VsFileItem, vshelper : IVsEnvironmentHelper, rest : ISonarRestService, configuration : ISonarConfiguration) =
 
-            if lookupType = KeyLookUpType.Flat then
-                let tounix = vshelper.GetProperFilePathCapitalization(fileItem.FilePath).Replace("\\", "/")
-                let driveLetter = tounix.Substring(0, 1)
-                let solutionCan = driveLetter + fileItem.Project.Solution.SolutionPath.Replace("\\", "/").Substring(1)
-                let fromBaseDir = tounix.Replace(solutionCan + "/", "")
-
-                if fileItem.Project.Solution.SonarProject <> null then
-                    fileItem.Project.Solution.SonarProject.Key + ":" + fromBaseDir
-                else
-                    projectKey + ":" + fromBaseDir
-
-            elif lookupType = KeyLookUpType.Module then
-            
-                let mutable keyOfResource = ""
-                for moduled in modules do
-                    if keyOfResource = "" then
-                        let okMod = searchFilePathinModules(moduled, fileItem)
-                        if okMod <> null then
-                            keyOfResource <- 
-                                if fileItem.Project.Solution.SonarProject <> null then
-                                    fileItem.Project.Solution.SonarProject.Key + ":" + CreateKey(okMod, fileItem)
-                                else
-                                    projectKey + ":" + CreateKey(okMod, fileItem)
-                keyOfResource
-
-            elif lookupType = KeyLookUpType.VSBootStrapper then
-                let filePath = fileItem.FilePath.Replace("\\", "/")
-                let solutionPath = fileItem.Project.Solution.SolutionPath.Replace("\\", "/")
-                let filerelativePath = filePath.Replace(solutionPath + "/", "")
-                let keySplit = projectKey.Split(':').[0]
-
-                if not(fileItem = null) then
-                    let path = Directory.GetParent(fileItem.Project.ProjectFilePath).ToString().Replace("\\", "/")
-                    let file = filePath.Replace(path + "/", "")
-                    projectKey + ":" + fileItem.Project.ProjectName + ":" + file
-                else
-                    let filesplit = filerelativePath.Split('/')
-                    projectKey + ":" + filesplit.[0] + ":" + filerelativePath.Replace(filesplit.[0] + "/", "")
-
-            else
-                ""
+            match GuessLookupTypeFromPath(vshelper, fileItem, rest, configuration) with
+            | KeyLookUpType.Flat -> GetFlatKey(vshelper, fileItem)
+            | KeyLookUpType.Module -> GetModuleKey(vshelper, fileItem)
+            | KeyLookUpType.VSBootStrapper -> GetVSBootStrapperKey(vshelper, fileItem)
+            | KeyLookUpType.ProjectGuid -> ""
+            | _ -> ""
 
         member this.TranslateKey(key : string, vshelper : IVsEnvironmentHelper, branchIn:string) =
+
             let branch =
                 if branchIn = "" || projectKey.Contains(branchIn) then
                     if projectKey.Contains(branchIn) then
@@ -276,61 +378,10 @@ type SQKeyTranslator() =
                         ""
                 else
                     ":" + branchIn + ":"
-
-            if lookupType = KeyLookUpType.Invalid then
-
-                let mutable path = Path.Combine(projectBaseDir, key.Replace(projectKey + branch, "").Replace('/', Path.DirectorySeparatorChar))
-
-                if File.Exists(path) then
-                    lookupType <- KeyLookUpType.Flat
-                else
-                    path <-
-                        let keyWithoutProjectKey = key.Replace(projectKey + branch, "")
-                        let allModulesPresentInKey =  keyWithoutProjectKey.Split(':')
-                        let modulesPresentInKey =  Array.sub allModulesPresentInKey 0 (allModulesPresentInKey.Length-1)
-
-                        let mutable currPath = projectBaseDir
-                        for moduleinKey in modulesPresentInKey do
-                            currPath <- getRelativeDirForModuleAgainstPrevious(currPath, moduleinKey)
-
-                        Path.Combine(currPath, allModulesPresentInKey.[allModulesPresentInKey.Length-1].Replace('/', Path.DirectorySeparatorChar))
-
-                    if File.Exists(path) then
-                        lookupType <- KeyLookUpType.Module
-                    else
-                        path <-
-                            try
-                                let keyWithoutProjectKey = key.Replace(projectKey + branch, "")
-                                let allModulesPresentInKey =  keyWithoutProjectKey.Split(':')
-            
-                                let project = Directory.GetParent(vshelper.GetProjectByNameInSolution(allModulesPresentInKey.[0]).ProjectFilePath).ToString()
-                                Path.Combine(project, allModulesPresentInKey.[1].Replace('/', Path.DirectorySeparatorChar))
-                            with
-                            | ex -> ""
-
-                        if File.Exists(path) then
-                            lookupType <- KeyLookUpType.Module
-                        else
-                            lookupType <- KeyLookUpType.Invalid
-                   
-            if lookupType = KeyLookUpType.Flat then
-                Path.Combine(projectBaseDir, key.Replace(projectKey + branch, "").Replace('/', Path.DirectorySeparatorChar))
-            elif lookupType = KeyLookUpType.Module then
-                let keyWithoutProjectKey = key.Replace(projectKey + branch, "")
-                let allModulesPresentInKey =  keyWithoutProjectKey.Split(':')
-                let modulesPresentInKey =  Array.sub allModulesPresentInKey 0 (allModulesPresentInKey.Length-1)
-
-                let mutable currPath = projectBaseDir
-                for moduleinKey in modulesPresentInKey do
-                    currPath <- getRelativeDirForModuleAgainstPrevious(currPath, moduleinKey)
-
-                Path.Combine(currPath, allModulesPresentInKey.[allModulesPresentInKey.Length-1].Replace('/', Path.DirectorySeparatorChar))
-
-            elif lookupType = KeyLookUpType.VSBootStrapper then
-                let keyWithoutProjectKey = key.Replace(projectKey + branch, "")
-                let allModulesPresentInKey =  keyWithoutProjectKey.Split(':')
-            
-                let project = Directory.GetParent(vshelper.GetProjectByNameInSolution(allModulesPresentInKey.[0]).ProjectFilePath).ToString()
-                Path.Combine(project, allModulesPresentInKey.[1].Replace('/', Path.DirectorySeparatorChar))
-            else
-            ""
+           
+            match GuessLookupTypeFromKey(key, branchIn, vshelper) with
+            | KeyLookUpType.Flat -> GetFlatPath(key, branch)
+            | KeyLookUpType.Module -> GetModulePath(key, branch)
+            | KeyLookUpType.VSBootStrapper -> GetVSBootStrapperPath(key, branch, vshelper)
+            | KeyLookUpType.ProjectGuid -> GetMSbuildRunnerPath(key, branchIn, vshelper)
+            | _ -> ""

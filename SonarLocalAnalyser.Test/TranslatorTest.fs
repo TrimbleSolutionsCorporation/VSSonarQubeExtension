@@ -34,6 +34,14 @@ type TraTests() =
             .Setup(fun x -> <@ x.GetProjectByNameInSolution(any()) @>).Returns(new VsProjectItem(ProjectFilePath = Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject\\A\\1\\a\\bla.vcxproj")))
             .Create()
 
+    let mockConfigurtion =
+        Mock<ISonarConfiguration>()
+            .Create()
+
+    let mockRest =
+        Mock<ISonarRestService>()
+            .Create()
+
     [<Test>]
     member test.``Should Return Key Correctly When Multi Module`` () =
         let translator = new SQKeyTranslator()
@@ -49,7 +57,7 @@ type TraTests() =
         item.Project <- new VsProjectItem()
         item.Project.Solution <- new VsSolutionItem()
         item.Project.Solution.SolutionPath <- Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject")
-        Assert.That((translator :> ISQKeyTranslator).TranslatePath(item, mockAVsinterface), Is.EqualTo("AB:ProjectX_CPP:A:1:a:dup.cpp"))
+        Assert.That((translator :> ISQKeyTranslator).TranslatePath(item, mockAVsinterface, mockRest, mockConfigurtion), Is.EqualTo("AB:ProjectX_CPP:A:1:a:dup.cpp"))
 
     [<Test>]
     member test.``Should Return Path Correctly When Multi Module`` () =
@@ -79,7 +87,7 @@ type TraTests() =
         item.Project.Solution <- new VsSolutionItem()
         item.Project.Solution.SolutionPath <- Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject")
 
-        Assert.That((translator :> ISQKeyTranslator).TranslatePath(item, mockAVsinterface), Is.EqualTo("AB:ProjectX_CPP_Flat:A/1/a/dup.cpp"))
+        Assert.That((translator :> ISQKeyTranslator).TranslatePath(item, mockAVsinterface, mockRest, mockConfigurtion), Is.EqualTo("AB:ProjectX_CPP_Flat:A/1/a/dup.cpp"))
 
     [<Test>]
     member test.``Should Return Path Correctly With Flat Structure`` () =
@@ -112,7 +120,7 @@ type TraTests() =
         item.Project.Solution <- new VsSolutionItem()
         item.Project.Solution.SolutionPath <- Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\VisualBootStrapper")
 
-        Assert.That((translator :> ISQKeyTranslator).TranslatePath(item, mockAVsinterface), Is.EqualTo("AB:ProjectX_CPP_BootStrapper:a1a:dup.cpp"))
+        Assert.That((translator :> ISQKeyTranslator).TranslatePath(item, mockAVsinterface, mockRest, mockConfigurtion), Is.EqualTo("AB:ProjectX_CPP_BootStrapper:a1a:dup.cpp"))
 
     [<Test>]
     member test.``Should Return Path Correctly With Visual Studio BootStrapper`` () =
@@ -143,7 +151,7 @@ type TraTests() =
         item.Project.Solution <- new VsSolutionItem()
         item.Project.Solution.SolutionPath <- Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\ModulesDefinedAllInOnePropertiesFile")
 
-        Assert.That((translator :> ISQKeyTranslator).TranslatePath(item, mockAVsinterface), Is.EqualTo("cpp-multimodule-project:lib:dup.cpp"))
+        Assert.That((translator :> ISQKeyTranslator).TranslatePath(item, mockAVsinterface, mockRest, mockConfigurtion), Is.EqualTo("cpp-multimodule-project:lib:dup.cpp"))
 
     [<Test>]
     member test.``Should Return Path Correctly With Visual Studio BootStrapper False, but modules defined`` () =
@@ -155,3 +163,36 @@ type TraTests() =
         Assert.That((translator :> ISQKeyTranslator).GetProjectName(), Is.EqualTo("cpp-multimodule-project"))
 
         Assert.That((translator :> ISQKeyTranslator).TranslateKey("cpp-multimodule-project:lib:dup.cpp", mockAVsinterface, ""), Is.EqualTo((Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\ModulesDefinedAllInOnePropertiesFile\\lib\\dup.cpp"))))
+
+    [<Test>]
+    member test.``Should Return Path Correctly With Msbuild Runner Without Branch`` () =
+        let translator = new SQKeyTranslator() :> ISQKeyTranslator
+        translator.SetProjectKeyAndBaseDir("Tekla:VSSonarQubeExtension", assemblyRunningPath)
+        translator.SetLookupType(KeyLookUpType.ProjectGuid)
+        let projectItem = new VsProjectItem()
+        projectItem.ProjectFilePath <- Path.Combine(assemblyRunningPath, "VSSonarExtensionUi", "VSSonarExtensionUi.csproj")
+        let mockAVsinterface =
+            Mock<IVsEnvironmentHelper>()
+                .Setup(fun x -> <@ x.GetProjectByGuidInSolution(any()) @>).Returns(projectItem)
+                .Create()
+
+        let key = translator.TranslateKey("Tekla:VSSonarQubeExtension:Tekla:VSSonarQubeExtension:BC583A5D-931B-4ED9-AC2C-5667A37B3043:SampleData/DatagridSampleData/DatagridSampleData.xaml.cs", mockAVsinterface, "")
+
+        Assert.That(key, Is.EqualTo((Path.Combine(assemblyRunningPath, "VSSonarExtensionUi\\SampleData\\DatagridSampleData\\DatagridSampleData.xaml.cs"))))
+
+    [<Test>]
+    member test.``Should Return Path Correctly With Msbuild Runner With Branch`` () =
+        let translator = new SQKeyTranslator() :> ISQKeyTranslator
+        translator.SetProjectKeyAndBaseDir("Organization:Name:master", assemblyRunningPath)
+        translator.SetLookupType(KeyLookUpType.ProjectGuid)
+        let projectItem = new VsProjectItem()
+        projectItem.ProjectFilePath <- Path.Combine(assemblyRunningPath, "project", "project.csproj")
+        let mockAVsinterface =
+            Mock<IVsEnvironmentHelper>()
+                .Setup(fun x -> <@ x.GetProjectByGuidInSolution(any()) @>).Returns(projectItem)
+                .Create()
+
+        let key = translator.TranslateKey("Organization:Name:Organization:Name:3DED9E16-30BF-4BB9-866A-56BEBCA2CACB:master:folder/file.cs", mockAVsinterface, "master")
+
+        Assert.That(key, Is.EqualTo((Path.Combine(assemblyRunningPath, "project\\folder\\file.cs"))))
+
