@@ -157,6 +157,13 @@ namespace VSSonarPlugins
         VsProjectItem GetProjectByNameInSolution(string projectName);
 
         /// <summary>
+        /// Gets the project guid from path.
+        /// </summary>
+        /// <param name="projectPath">The project path.</param>
+        /// <returns>project unique identifier</returns>		
+        string GetGuidForProject(string projectPath);
+
+        /// <summary>
         /// Gets the project by unique identifier in solution.
         /// </summary>
         /// <param name="projectGuid">The project unique identifier.</param>

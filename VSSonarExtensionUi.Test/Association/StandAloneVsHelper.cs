@@ -44,6 +44,17 @@ namespace VSSonarExtensionUi.Test.Association
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Gets the unique identifier for project.
+        /// </summary>
+        /// <param name="projectPath">The project path.</param>
+        /// <returns></returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public string GetGuidForProject(string projectPath)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>The open resource in visual studio.</summary>
         /// <param name="workfolder">The workfolder.</param>
         /// <param name="filename">The filename.</param>

@@ -167,7 +167,7 @@ type TraTests() =
     [<Test>]
     member test.``Should Return Path Correctly With Msbuild Runner Without Branch`` () =
         let translator = new SQKeyTranslator() :> ISQKeyTranslator
-        translator.SetProjectKeyAndBaseDir("Tekla:VSSonarQubeExtension", assemblyRunningPath)
+        translator.SetProjectKeyAndBaseDir("Tekla:VSSonarQubeExtension", assemblyRunningPath, "")
         translator.SetLookupType(KeyLookUpType.ProjectGuid)
         let projectItem = new VsProjectItem()
         projectItem.ProjectFilePath <- Path.Combine(assemblyRunningPath, "VSSonarExtensionUi", "VSSonarExtensionUi.csproj")
@@ -183,7 +183,7 @@ type TraTests() =
     [<Test>]
     member test.``Should Return Path Correctly With Msbuild Runner With Branch`` () =
         let translator = new SQKeyTranslator() :> ISQKeyTranslator
-        translator.SetProjectKeyAndBaseDir("Organization:Name:master", assemblyRunningPath)
+        translator.SetProjectKeyAndBaseDir("Organization:Name:master", assemblyRunningPath, "master")
         translator.SetLookupType(KeyLookUpType.ProjectGuid)
         let projectItem = new VsProjectItem()
         projectItem.ProjectFilePath <- Path.Combine(assemblyRunningPath, "project", "project.csproj")
@@ -195,4 +195,50 @@ type TraTests() =
         let key = translator.TranslateKey("Organization:Name:Organization:Name:3DED9E16-30BF-4BB9-866A-56BEBCA2CACB:master:folder/file.cs", mockAVsinterface, "master")
 
         Assert.That(key, Is.EqualTo((Path.Combine(assemblyRunningPath, "project\\folder\\file.cs"))))
+
+    [<Test>]
+    member test.``Should Return Key Correctly With MSBuild Runner when No Branch is Detected`` () =
+        let translator = new SQKeyTranslator() :> ISQKeyTranslator
+        translator.SetProjectKeyAndBaseDir("Company:Group", assemblyRunningPath, "")
+        translator.SetLookupType(KeyLookUpType.ProjectGuid)
+        let mockAVsinterface =
+            Mock<IVsEnvironmentHelper>()
+                .Setup(fun x -> <@ x.GetGuidForProject(any()) @>).Returns("{guid}")
+                .Setup(fun x -> <@ x.GetProperFilePathCapitalization(any()) @>).Returns(Path.Combine(assemblyRunningPath, "Folder\\file.cs"))
+                .Create()
+
+        let item = new VsFileItem()
+        item.FileName <- "file.cs"
+        item.FilePath <- Path.Combine(assemblyRunningPath, "ProjectX\\Folder\\file.cs")
+        item.Project <- new VsProjectItem()
+        item.Project.ProjectFilePath <- Path.Combine(assemblyRunningPath, "ProjectX\\ProjectX.csproj")
+        item.Project.ProjectName <- "ProjectX"
+        item.Project.Solution <- new VsSolutionItem()
+        item.Project.Solution.SolutionPath <- assemblyRunningPath
+
+        let key = translator.TranslatePath(item, mockAVsinterface, mockRest, mockConfigurtion)
+        Assert.That(key, Is.EqualTo("Company:Group:Company:Group:{guid}:Folder/file.cs"))
+
+    [<Test>]
+    member test.``Should Return Key Correctly With MSBuild Runner when Branch is Detected`` () =
+        let translator = new SQKeyTranslator() :> ISQKeyTranslator
+        translator.SetProjectKeyAndBaseDir("Company:Group:master", assemblyRunningPath, "master")
+        translator.SetLookupType(KeyLookUpType.ProjectGuid)
+        let mockAVsinterface =
+            Mock<IVsEnvironmentHelper>()
+                .Setup(fun x -> <@ x.GetGuidForProject(any()) @>).Returns("{guid}")
+                .Setup(fun x -> <@ x.GetProperFilePathCapitalization(any()) @>).Returns(Path.Combine(assemblyRunningPath, "Folder\\file.cs"))
+                .Create()
+
+        let item = new VsFileItem()
+        item.FileName <- "file.cs"
+        item.FilePath <- Path.Combine(assemblyRunningPath, "ProjectX\\Folder\\file.cs")
+        item.Project <- new VsProjectItem()
+        item.Project.ProjectFilePath <- Path.Combine(assemblyRunningPath, "ProjectX\\ProjectX.csproj")
+        item.Project.ProjectName <- "ProjectX"
+        item.Project.Solution <- new VsSolutionItem()
+        item.Project.Solution.SolutionPath <- assemblyRunningPath
+
+        let key = translator.TranslatePath(item, mockAVsinterface, mockRest, mockConfigurtion)
+        Assert.That(key, Is.EqualTo("Company:Group:Company:Group:{guid}:master:Folder/file.cs"))
 
