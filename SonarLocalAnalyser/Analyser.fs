@@ -204,6 +204,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
     let syncLockProfiles = new System.Object()
     let mutable profilesCnt = 0
     let mutable exec : AnalyserCommandExec = new AnalyserCommandExec(null, int64(1000 * 60 * 60)) // TODO timeout to be passed as parameter
+    let mutable sonarConfig : ISonarConfiguration = null
 
     let initializationDone = 
 
@@ -572,7 +573,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                                 let issues = extension.ExecuteAnalysisOnFile(x.ItemInView, profile, x.Project, x.Conf)
 
                                 for issue in issues do
-                                    issue.Component <- x.SqTranslator.TranslatePath(x.ItemInView, x.VsInter)
+                                    issue.Component <- x.SqTranslator.TranslatePath(x.ItemInView, x.VsInter, restService, sonarConfig)
 
                                 lock syncLock (
                                     fun () ->
@@ -814,6 +815,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                         worker2.RunWorkerAsync()
 
             if project <> null && conf <> null then
+                sonarConfig <- conf
                 let processLine(line : string) =
                     if line.Contains("=") then
                         let vals = line.Split('=')

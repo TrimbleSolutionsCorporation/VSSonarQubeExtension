@@ -184,6 +184,7 @@
         public bool AssignASonarProjectToSolution(Resource projectIn, Resource branchProject)
         {
             var project = projectIn;
+            var branchName = string.Empty;
 
             if (project == null)
             {
@@ -210,6 +211,7 @@
                 branchProject.Default = true;
                 this.model.IsBranchSelectionEnabled = true;
                 this.model.SelectedBranch = branchProject;
+                branchName = branchProject.BranchName;
             }
             else
             {
@@ -252,7 +254,7 @@
                     });
 
                 this.AssociatedProject.SolutionRoot = this.OpenSolutionPath;
-                this.keyTranslator.SetProjectKeyAndBaseDir(this.AssociatedProject.Key, this.OpenSolutionPath);
+                this.keyTranslator.SetProjectKeyAndBaseDir(this.AssociatedProject.Key, this.OpenSolutionPath, branchName);
             }
 
             this.configurationHelper.SyncSettings();
@@ -282,7 +284,7 @@
                 return null;
             }
 
-            var key = this.keyTranslator.TranslatePath(this.vshelper.VsFileItem(fullName, project, null), this.vshelper);
+            var key = this.keyTranslator.TranslatePath(this.vshelper.VsFileItem(fullName, project, null), this.vshelper, this.sonarService, AuthtenticationHelper.AuthToken);
             var localRes = new Resource();
             localRes.Key = key;
             localRes.Scope = "FIL";
@@ -307,41 +309,8 @@
                 return null;
             }
 
-            var vsitem = this.vshelper.VsFileItem(fullName, project, null);
-            if (vsitem == null)
-            {
-                this.keyTranslator.SetLookupType(KeyLookUpType.Invalid);
-                return null;
-            }
-
-            if (this.keyTranslator.GetLookupType() == KeyLookUpType.Invalid)
-            {
-                foreach (KeyLookUpType type in Enum.GetValues(typeof(KeyLookUpType)))
-                {
-                    if (type != KeyLookUpType.Invalid)
-                    {
-                        this.keyTranslator.SetLookupType(type);
-
-                        var key = this.keyTranslator.TranslatePath(vsitem, this.vshelper);
-                        if (!string.IsNullOrEmpty(key))
-                        {
-                            var item = this.ValidateResourceInServer(fullName, key);
-                            if (item != null)
-                            {
-                                return item;
-                            }
-                        }
-                    }
-                }
-
-                this.keyTranslator.SetLookupType(KeyLookUpType.Invalid);
-                return null;
-            }
-            else
-            {
-                var key = this.keyTranslator.TranslatePath(this.vshelper.VsFileItem(fullName, project, null), this.vshelper);
-                return this.ValidateResourceInServer(fullName, key);
-            }
+            var key = this.keyTranslator.TranslatePath(this.vshelper.VsFileItem(fullName, project, null), this.vshelper, this.sonarService, AuthtenticationHelper.AuthToken);
+            return this.CreateResourceForKey(fullName, key);
         }
 
         /// <summary>
@@ -695,7 +664,7 @@
         /// <param name="fullName">The full name.</param>
         /// <param name="key">The key.</param>
         /// <returns>valid resource in server</returns>
-        private Resource ValidateResourceInServer(string fullName, string key)
+        private Resource CreateResourceForKey(string fullName, string key)
         {
             try
             {
@@ -734,6 +703,8 @@
                 this.AssociatedProject,
                 this.OpenSolutionPath,
                 this.SourceControl);
+
+            this.keyTranslator.SetLookupType(KeyLookUpType.Invalid);
 
             foreach (IModelBase model in modelPool)
             {
