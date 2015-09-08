@@ -434,6 +434,9 @@ namespace VSSonarQubeExtension.Helpers
                 try
                 {
                     this.environment.ItemOperations.OpenFile(filename);
+                    var textSelection = (TextSelection)this.environment.ActiveDocument.Selection;
+                    textSelection.GotoLine(line < 1 ? 1 : line);
+                    textSelection.SelectLine();
                 }
                 catch (Exception ex)
                 {
