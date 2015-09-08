@@ -15,12 +15,11 @@
     using View.Helpers;
     using ViewModel;
     using ViewModel.Association;
-    using ViewModel.Helpers;
+    using ViewModel.Configuration;
     using VSSonarPlugins;
     using VSSonarPlugins.Helpers;
     using VSSonarPlugins.Types;
-    using ViewModel.Configuration;
-
+    
     /// <summary>
     /// Generates associations with sonar projects
     /// </summary>
@@ -76,6 +75,11 @@
         /// The source control
         /// </summary>
         private ISourceControlProvider sourceControl;
+
+        /// <summary>
+        /// The current branch name
+        /// </summary>
+        private string currentBranchName;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AssociationModel" /> class.
@@ -184,7 +188,7 @@
         public bool AssignASonarProjectToSolution(Resource projectIn, Resource branchProject)
         {
             var project = projectIn;
-            var branchName = string.Empty;
+            this.currentBranchName = string.Empty;
 
             if (project == null)
             {
@@ -211,7 +215,7 @@
                 branchProject.Default = true;
                 this.model.IsBranchSelectionEnabled = true;
                 this.model.SelectedBranch = branchProject;
-                branchName = branchProject.BranchName;
+                this.currentBranchName = branchProject.BranchName;
             }
             else
             {
@@ -254,7 +258,7 @@
                     });
 
                 this.AssociatedProject.SolutionRoot = this.OpenSolutionPath;
-                this.keyTranslator.SetProjectKeyAndBaseDir(this.AssociatedProject.Key, this.OpenSolutionPath, branchName);
+                this.keyTranslator.SetProjectKeyAndBaseDir(this.AssociatedProject.Key, this.OpenSolutionPath, this.currentBranchName);
             }
 
             this.configurationHelper.SyncSettings();
@@ -705,6 +709,7 @@
                 this.SourceControl);
 
             this.keyTranslator.SetLookupType(KeyLookUpType.Invalid);
+            this.keyTranslator.SetProjectKeyAndBaseDir(this.AssociatedProject.Key, this.OpenSolutionPath, this.currentBranchName);
 
             foreach (IModelBase model in modelPool)
             {

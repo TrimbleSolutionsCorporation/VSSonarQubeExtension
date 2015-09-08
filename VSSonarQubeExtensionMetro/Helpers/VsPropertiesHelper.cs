@@ -429,6 +429,20 @@ namespace VSSonarQubeExtension.Helpers
                 return;
             }
 
+            if (File.Exists(filename))
+            {
+                try
+                {
+                    this.environment.ItemOperations.OpenFile(filename);
+                }
+                catch (Exception ex)
+                {
+                    this.ErroMessage = "Exception Occured: " + filename + " : " + Convert.ToString(line) + " ex: " + ex.Message;
+                }
+
+                return;
+            }
+
             ProjectItem files = this.environment.Solution.FindProjectItem(filename);
             if (files != null)
             {
