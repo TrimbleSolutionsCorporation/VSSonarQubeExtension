@@ -206,9 +206,6 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-    <Content Include="externalAnalysers\roslynDiagnostics\SonarLint.Common.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
     <Content Include="externalAnalysers\roslynDiagnostics\SonarLint.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>

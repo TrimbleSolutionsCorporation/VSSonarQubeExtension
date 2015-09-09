@@ -4,7 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:VSSonarExtensionUi.View.Configuration"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:command="http://www.galasoft.ch/mvvmlight"
              mc:Ignorable="d" Height="530" Width="800"> 
 
     <UserControl.Resources>
@@ -26,6 +28,12 @@
             </ResourceDictionary.MergedDictionaries>
 
 
+            <DataTemplate x:Key="ListViewTemplate">
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox IsChecked="{Binding Enabled}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2,0,0,0"></CheckBox>
+                    <TextBlock Text="{Binding Name, FallbackValue=Plugin}" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                </StackPanel>
+            </DataTemplate>
 
             <DataTemplate x:Key="ProjectSelectionComboBoxDataTemplate">
                 <StackPanel>
@@ -33,15 +41,6 @@
                     </TextBlock>
                 </StackPanel>
             </DataTemplate>
-
-            <Style x:Key="IssuesGridRowStyle" TargetType="{x:Type DataGridRow}" BasedOn="{StaticResource RowStyleWithAlternation}">
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding IsBranch}" Value="True">
-                        <Setter Property="Foreground" Value="Red" />
-                    </DataTrigger>
-                </Style.Triggers>
-
-            </Style>
 
             <Style x:Key="DataGridColumnHeaderStyle" TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource DefaultDataGridColumnHeaderStyle}" >
             </Style>
@@ -56,32 +55,80 @@
     </UserControl.Foreground>
 
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="319*"/>
+        </Grid.ColumnDefinitions>        
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition Height="111*"/>
             <RowDefinition Height="166*"/>
         </Grid.RowDefinitions>
-        <ComboBox Grid.Row="0"
-                      Style="{DynamicResource VirtualisedMetroComboBox}"
-                      TextSearch.TextPath="Name"
-                      controls:TextBoxHelper.Watermark="Name"
-                      IsEditable="True"
-                      IsEnabled="{Binding IsBranchSelectionEnabled}"
-                      SelectedItem="{Binding SelectedDiagnostic, Mode=TwoWay}"
-                      ItemsSource="{Binding AvailableDllDiagnostics}"                   
-                      MaxDropDownHeight="125"
-                      ItemTemplate="{DynamicResource ProjectSelectionComboBoxDataTemplate}" Margin="0,0,379,0"/>
-
-        <DataGrid x:Name="MainProjects" BorderBrush="Black"
-                  ItemsSource="{Binding AvailableChecksInDll}" Grid.Row="1"
-                  ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}"   AutoGenerateColumns="False"       
-                    RowStyle="{DynamicResource IssuesGridRowStyle}">
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Grid.ColumnSpan="2">
+                    <Button Width="30"
+                        Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                        Height="30"
+                        Margin="0, 0, 0, 0"
+                        ToolTip="Install new plugin, be sure the dll is unblocked before installing"
+                        Style="{DynamicResource SquareButtonStyle}" Command="{Binding InstallNewDllCommand}">
+                        <Rectangle Width="15"
+                               Height="15"
+                               Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}">
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Stretch="Fill"
+                                         Visual="{StaticResource appbar_add}" />
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                    </Button>
+        
+                    <Button Width="30"
+                        Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                        Height="30"
+                        Margin="0, 0, 0, 0"
+                        ToolTip="Remove Plugin"
+                        Style="{DynamicResource SquareButtonStyle}" Command="{Binding RemoveDllCommand}" >
+                        <Rectangle Width="15"
+                               Height="15"
+                               Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}">
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Stretch="Fill"
+                                         Visual="{StaticResource appbar_delete}" />
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                    </Button>
+                </StackPanel>
+        
+        <DataGrid x:Name="Diagnostics" BorderBrush="Black"
+                  ItemsSource="{Binding AvailableChecksInDll}" Grid.Row="1" Grid.Column="0"
+                  ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}"   AutoGenerateColumns="False" >
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Name}" MinWidth="100" x:Name="NameTemplateCol" Header="Name" CanUserSort="True" SortMemberPath="Line" IsReadOnly="True" Visibility="{Binding Data.LineVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
+                <DataGridTextColumn Binding="{Binding Name}" MinWidth="100" Header="Name" CanUserSort="True" SortMemberPath="Line" IsReadOnly="True" Visibility="{Binding Data.LineVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
             </DataGrid.Columns>                  
             
         </DataGrid>
-
+        
+                <ListView Grid.Row="1" Grid.Column="0" x:Name="AvailableDlls"
+                          ItemsSource="{Binding AvailableDllDiagnostics}"     
+                          SelectedItem="{Binding SelectedDllDiagnostic}"
+                          BorderThickness="1"
+                          Grid.ColumnSpan="2"
+                          ItemTemplate="{DynamicResource ListViewTemplate}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <command:EventToCommand Command="{Binding SelectionChangedCommand}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ListView>        
+               
+        <DataGrid x:Name="MainProjects" BorderBrush="Black"
+                  ItemsSource="{Binding SelectedDllDiagnostic.ChecksInterpretation}" Grid.Row="1" Grid.Column="1"
+                  ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}"   AutoGenerateColumns="False" >
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Id}" MinWidth="100" x:Name="NameTemplateCol" Header="Id" CanUserSort="True" SortMemberPath="Id" IsReadOnly="True" />
+                <DataGridTextColumn Binding="{Binding Title}" MinWidth="100" x:Name="TitleTemplateCol" Header="Title" CanUserSort="True" SortMemberPath="Title" IsReadOnly="True" />
+                
+            </DataGrid.Columns>                              
+        </DataGrid>
 
         <TabControl x:Name="tabControl" Grid.Row="2" TabStripPlacement="Left">
             <TabControl.Resources>

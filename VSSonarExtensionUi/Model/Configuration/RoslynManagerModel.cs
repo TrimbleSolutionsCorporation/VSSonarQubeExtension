@@ -109,6 +109,15 @@
         }
 
         /// <summary>
+        /// Removes the DLL from list.
+        /// </summary>
+        /// <param name="selectedDllDiagnostic">The selected DLL diagnostic.</param>
+        internal void RemoveDllFromList(VSSonarExtensionDiagnostic selectedDllDiagnostic)
+        {
+            this.ExtensionDiagnostics.Remove(selectedDllDiagnostic.Name);
+        }
+
+        /// <summary>
         /// Updates the services.
         /// </summary>
         /// <param name="vsenvironmenthelperIn">The vsenvironmenthelper in.</param>
@@ -247,6 +256,7 @@
         /// </summary>
         private void InitializedInstalledDiagnostics()
         {
+
             if (this.confHelper != null)
             {
                 try
@@ -280,7 +290,7 @@
                 this.ExtensionDiagnostics.Add(
                     "SonarLint.Extra.dll",
                     new VSSonarExtensionDiagnostic(
-                        "SonarLint.dll",
+                        "SonarLint.Extra.dll",
                         Path.Combine(this.extensionRunningPath, "externalAnalysers\\roslynDiagnostics", "SonarLint.Extra.dll")));
             }
 
