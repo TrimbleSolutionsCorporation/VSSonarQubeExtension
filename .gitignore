@@ -114,3 +114,4 @@ UpgradeLog*.XML
 *.unittest.report.nunit2.xml
 Settings.StyleCop
 .sonarqube/
+ObjDrop/

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="VSSonarExtension2015-6FC40A4F-2B69-4DFB-98D0-08D50056643E" Version="4.0.2" Language="en-US" Publisher="Tekla Oy" />
+    <Identity Id="VSSonarExtension2015-6FC40A4F-2B69-4DFB-98D0-08D50056643E" Version="4.0.3" Language="en-US" Publisher="Tekla Oy" />
     <DisplayName>VSSonarExtension2015</DisplayName>
     <Description xml:space="preserve">Visual Studio Extension For SonarQube(TM) Version 2015 - Rosylin</Description>
     <License>LICENSE.txt</License>
