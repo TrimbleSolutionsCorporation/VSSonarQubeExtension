@@ -83,7 +83,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
         issue.Status <- (EnumHelper.asEnum<IssueStatus>(data.Status)).Value
         issue.Severity <- GetSeverity(data.Severity)
         issue.Rule <- data.Rule
-        issue.Key <- data.Key
+        issue.Key <- data.Key.ToString()
 
         if not(obj.ReferenceEquals(data.JsonValue.TryGetProperty("assignee"), null)) then
             issue.Assignee <- data.Assignee
@@ -132,7 +132,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             issue.Status <- (EnumHelper.asEnum<IssueStatus>(elem.Status)).Value
             issue.Severity <- GetSeverity(elem.Severity)
             issue.Rule <- elem.Rule
-            issue.Key <- elem.Key
+            issue.Key <- elem.Key.ToString()
 
             match elem.Assignee with
             | None -> ()
@@ -190,7 +190,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             issue.Status <- (EnumHelper.asEnum<IssueStatus>(elem.Status)).Value
             issue.Severity <- GetSeverity(elem.Severity)
             issue.Rule <- elem.Rule
-            issue.Key <- elem.Key
+            issue.Key <- elem.Key.ToString()
 
             match elem.ActionPlan with
             | None -> ()
@@ -352,7 +352,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             with
             | ex -> getIssuesFromString(responsecontent)
         with
-        | ex ->            
+        | ex ->          
             let reviewsurl = "/api/reviews?resources="+ resource
             let reviewsInResource = getReviewsFromString(httpconnector.HttpSonarGetRequest(userConf, reviewsurl))
             let violationsurl = "/api/violations?resource=" + resource
@@ -1569,7 +1569,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 if not(obj.ReferenceEquals(elem.CreationDate, null)) then
                     issue.CreationDate <- elem.CreationDate.Value
                 if not(obj.ReferenceEquals(elem.Key, null)) && not(obj.ReferenceEquals(elem.Key.Guid, null)) then
-                    issue.Key <- elem.Key.Guid.Value
+                    issue.Key <- elem.Key.Guid.Value.ToString()
                 if not(obj.ReferenceEquals(elem.Line, null)) then
                     issue.Line <- elem.Line.Value
                 if not(obj.ReferenceEquals(elem.Message, null)) then

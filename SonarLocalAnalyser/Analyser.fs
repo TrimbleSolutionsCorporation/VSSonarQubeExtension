@@ -195,6 +195,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
     let stdOutEvent = new DelegateEvent<System.EventHandler>()
     let associateCompletedEvent = new DelegateEvent<System.EventHandler>()
     let mutable profileUpdated = false
+    let mutable profileCannotBeRetrived = true
     let jsonReports : System.Collections.Generic.List<String> = new System.Collections.Generic.List<String>()
     let localissues : System.Collections.Generic.List<Issue> = new System.Collections.Generic.List<Issue>()
     let cachedProfiles : System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, Profile>> =
@@ -372,6 +373,45 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
     let monitor = new Object()
     let numberofFilesToAnalyse = ref 0;
       
+    let GetQualityProfiles(conf:ISonarConfiguration, project:Resource, x : SonarLocalAnalyser) =
+        if cachedProfiles.ContainsKey(project.Name) then
+            profileUpdated <- true
+            associateCompletedEvent.Trigger([|x; null|])
+        else
+            let profiles = restService.GetQualityProfilesForProject(conf, project.Key)
+            profilesCnt <- profiles.Count - 1
+            for profile in profiles do
+                let worker2 = new BackgroundWorker()
+
+                worker2.DoWork.Add(fun c -> 
+                    notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "updating profile: " + profile.Name + " : " + profile.Language))
+
+                    lock syncLockProfiles (
+                        fun () -> 
+                            try
+                                System.Diagnostics.Debug.WriteLine("Get Profile: " + profile.Name + " : " + profile.Language)
+                                restService.GetRulesForProfile(conf, profile, false)
+                                if cachedProfiles.ContainsKey(project.Name) then
+                                    cachedProfiles.[project.Name].Add(profile.Language, profile)
+                                else
+                                    let entry = new System.Collections.Generic.Dictionary<string, Profile>()
+                                    cachedProfiles.Add(project.Name, entry)
+                                    cachedProfiles.[project.Name].Add(profile.Language, profile)
+                            with
+                            | ex -> System.Diagnostics.Debug.WriteLine("cannot add profile: " + ex.Message + " : " + ex.StackTrace)
+                        )
+                    )
+
+                worker2.RunWorkerCompleted.Add(fun c ->
+                    notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Completed update profile: " + profile.Name + " : " + profile.Language + " : " + (profilesCnt.ToString()) + " remaining"))
+                    profilesCnt <- profilesCnt - 1
+                    if profilesCnt = 0 then
+                        profileUpdated <- true
+                        associateCompletedEvent.Trigger([|x; null|])
+                )
+
+                worker2.RunWorkerAsync()
+
     member val Abort = false with get, set
     member val ProjectRoot = "" with get, set
     member val Project = null : Resource with get, set
@@ -669,29 +709,35 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                              conf : ISonarConfiguration,
                              sqTranslator : ISQKeyTranslator,
                              vsInter : IVsEnvironmentHelper) =
-            if profileUpdated then
-                x.CurrentAnalysisType <- AnalysisMode.File
-                x.Conf <- conf
-                x.Version <- version
-                x.Abort <- false
-                x.Project <- project
-                x.ItemInView <- itemInView
-                x.OnModifyFiles <- onModifiedLinesOnly
-                x.SqTranslator <- sqTranslator
-                x.VsInter <- vsInter
 
-                if plugins = null then
-                    raise(new ResourceNotSupportedException())
+            x.CurrentAnalysisType <- AnalysisMode.File
+            x.Conf <- conf
+            x.Version <- version
+            x.Abort <- false
+            x.Project <- project
+            x.ItemInView <- itemInView
+            x.OnModifyFiles <- onModifiedLinesOnly
+            x.SqTranslator <- sqTranslator
+            x.VsInter <- vsInter
 
-                if itemInView = null then
-                    raise(new NoFileInViewException())
+            if not(profileCannotBeRetrived) then
+                if not(profileUpdated) then
+                    (x :> ISonarLocalAnalyser).AssociateWithProject(project, conf)
+                else
+                    if plugins = null then
+                        raise(new ResourceNotSupportedException())
 
-                if GetPluginThatSupportsResource(x.ItemInView) = null then
-                    raise(new ResourceNotSupportedException())
+                    if itemInView = null then
+                        raise(new NoFileInViewException())
+
+                    if GetPluginThatSupportsResource(x.ItemInView) = null then
+                        raise(new ResourceNotSupportedException())
             
-                x.AnalysisIsRunning <- true
-                localissues.Clear()
-                (new Thread(new ThreadStart(x.RunFileAnalysisThread))).Start()
+                    x.AnalysisIsRunning <- true
+                    localissues.Clear()
+                    (new Thread(new ThreadStart(x.RunFileAnalysisThread))).Start()  
+            else
+                raise(new Exception("Profile Cannot Be Updated"))
 
         member x.RunIncrementalAnalysis(project : Resource, version : double, conf : ISonarConfiguration) =
             if profileUpdated then
@@ -775,45 +821,6 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
             plugin.GetResourceKey(itemInView, safeIsOn)
 
         member x.AssociateWithProject(project : Resource, conf:ISonarConfiguration) =
-            let GetQualityProfiles(conf:ISonarConfiguration, project:Resource) =
-                if cachedProfiles.ContainsKey(project.Name) then
-                    profileUpdated <- true
-                    associateCompletedEvent.Trigger([|x; null|])
-                else
-                    let profiles = restService.GetQualityProfilesForProject(conf, project.Key)
-                    profilesCnt <- profiles.Count - 1
-                    for profile in profiles do
-                        let worker2 = new BackgroundWorker()
-
-                        worker2.DoWork.Add(fun c -> 
-                            notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "updating profile: " + profile.Name + " : " + profile.Language))
-
-                            lock syncLockProfiles (
-                                fun () -> 
-                                    try
-                                        System.Diagnostics.Debug.WriteLine("Get Profile: " + profile.Name + " : " + profile.Language)
-                                        restService.GetRulesForProfile(conf, profile, false)
-                                        if cachedProfiles.ContainsKey(project.Name) then
-                                            cachedProfiles.[project.Name].Add(profile.Language, profile)
-                                        else
-                                            let entry = new System.Collections.Generic.Dictionary<string, Profile>()
-                                            cachedProfiles.Add(project.Name, entry)
-                                            cachedProfiles.[project.Name].Add(profile.Language, profile)
-                                    with
-                                    | ex -> System.Diagnostics.Debug.WriteLine("cannot add profile: " + ex.Message + " : " + ex.StackTrace)
-                                )
-                            )
-
-                        worker2.RunWorkerCompleted.Add(fun c ->
-                            notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Completed update profile: " + profile.Name + " : " + profile.Language + " : " + (profilesCnt.ToString()) + " remaining"))
-                            profilesCnt <- profilesCnt - 1
-                            if profilesCnt = 0 then
-                                profileUpdated <- true
-                                associateCompletedEvent.Trigger([|x; null|])
-                        )
-
-                        worker2.RunWorkerAsync()
-
             if project <> null && conf <> null then
                 sonarConfig <- conf
                 let processLine(line : string) =
@@ -838,7 +845,21 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                             lines |> Seq.iter (fun line -> processLine(line))
 
                 profileUpdated <- false
-                notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Start Update profile"))
-                GetQualityProfiles(conf, project)
+
+                try
+                    notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Start Update profile"))
+                    GetQualityProfiles(conf, project, x) 
+                with
+                | ex ->                    
+                    notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Failed to Update profile"))
+                    notificationManager.ReportException(ex)
+                    profileUpdated <- true
+                    profileCannotBeRetrived <- true
+                    associateCompletedEvent.Trigger([|x; null|])
+                    raise(ex)
 
 
+        member x.ResetInitialization() =
+            profileUpdated <- false
+            profileCannotBeRetrived <- false
+   

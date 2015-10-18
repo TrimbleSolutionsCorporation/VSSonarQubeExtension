@@ -127,6 +127,7 @@ namespace VSSonarExtensionUi.ViewModel
             this.ConnectionTooltip = "Not Connected";
             this.BackGroundColor = Colors.White;
             this.ForeGroundColor = Colors.Black;
+            this.ErrorIsFound = false;
             this.IsExtensionBusy = false;
             
             this.InitCommands();
@@ -154,6 +155,7 @@ namespace VSSonarExtensionUi.ViewModel
             this.ConnectionTooltip = "Not Connected";
             this.BackGroundColor = Colors.White;
             this.ForeGroundColor = Colors.Black;
+            this.ErrorIsFound = true;
             this.IsExtensionBusy = false;
 
             this.InitCommands();
@@ -180,6 +182,22 @@ namespace VSSonarExtensionUi.ViewModel
         #endregion
 
         #region Public Properties
+
+        /// <summary>
+        /// Gets or sets the error colour.
+        /// </summary>
+        /// <value>
+        /// The error colour.
+        /// </value>
+        public bool ErrorIsFound { get; set; }
+
+        /// <summary>
+        /// Gets or sets the error message tooltip.
+        /// </summary>
+        /// <value>
+        /// The error message tooltip.
+        /// </value>
+        public string ErrorMessageTooltip { get; set; }
 
         /// <summary>Gets or sets the id of plugin to remove.</summary>
         public int IdOfPluginToRemove { get; set; }
@@ -1051,6 +1069,8 @@ namespace VSSonarExtensionUi.ViewModel
             this.ClearProjectAssociation();
             this.AssociationModule.Disconnect();           
             this.ConnectionTooltip = "Not Connected";
+            this.ErrorIsFound = false;
+            this.ErrorMessageTooltip = string.Empty;
         }
 
         /// <summary>

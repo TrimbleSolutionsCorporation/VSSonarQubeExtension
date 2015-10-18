@@ -107,7 +107,7 @@
                             Margin="0, 0, 0, 0"
                             Content="Cancel Analysis"
                             Style="{DynamicResource SquareButtonStyle}" Command="{Binding StopLocalAnalysisCommand}"
-                            IsEnabled="{Binding CanRunLocalAnalysis, Converter={StaticResource BooleanInverter}}">
+                            IsEnabled="{Binding CanCancelAnalysis}">
                                 </Button>
                                 <ItemsControl Height="100" x:Name="LstBox" ItemsSource="{Binding OuputLogLines}" Background="#FFC2C2C2" BorderBrush="#FF000000" BorderThickness="1,1,1,1"/>
                                 <Button 
