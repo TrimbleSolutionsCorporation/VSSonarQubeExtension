@@ -57,6 +57,20 @@
                 </StackPanel>
             </DataTemplate>
             
+      <VisualBrush x:Key="FailBrush">Red</VisualBrush>
+        <VisualBrush x:Key="PassBrush">Green</VisualBrush>
+
+            <Style x:Key="ColorRectangleStyle" TargetType="Rectangle">
+                <Setter Property="Fill" Value="Green"/>
+                <Style.Triggers>
+                <DataTrigger Binding="{Binding ErrorIsFound}" Value="False">
+                    <Setter Property="Fill" Value="{StaticResource PassBrush}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ErrorIsFound}" Value="True">
+                    <Setter Property="Fill" Value="{StaticResource FailBrush}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
         </ResourceDictionary>
     </UserControl.Resources>
             
@@ -76,6 +90,12 @@
 		</Grid.RowDefinitions>
        
 		<StatusBar Grid.Row="1" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}">
+            <StatusBarItem HorizontalAlignment="Left">
+                <Border BorderBrush="Black" BorderThickness="1">
+                    <Rectangle Width="15" Height="15" Style="{StaticResource ColorRectangleStyle}" ToolTip="{Binding ErrorMessageTooltip}"/>
+                </Border>
+            </StatusBarItem>
+
             <StatusBarItem HorizontalAlignment="Left">
                 <TextBlock Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Text="{Binding StatusMessage, FallbackValue=messsageaslkdjalksjakjskdjaskda}"></TextBlock>
             </StatusBarItem>

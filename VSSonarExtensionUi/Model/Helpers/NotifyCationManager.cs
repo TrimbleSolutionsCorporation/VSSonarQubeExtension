@@ -8,6 +8,7 @@
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
     using Association;
+    using System.Windows.Media;
 
     /// <summary>The notify cation manager.</summary>
     public class NotifyCationManager : INotificationManager, IModelBase
@@ -256,6 +257,18 @@
         public void EndDataAssociation()
         {
             // not needed
+        }
+
+        public void ResetFailure()
+        {
+            this.model.ErrorMessageTooltip = string.Empty;
+            this.model.ErrorIsFound = false;
+        }
+
+        public void FlagFailure(string v)
+        {
+            this.model.ErrorMessageTooltip = v;
+            this.model.ErrorIsFound = true;
         }
     }
 }

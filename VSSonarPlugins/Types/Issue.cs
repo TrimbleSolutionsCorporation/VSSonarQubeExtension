@@ -51,7 +51,7 @@ namespace VSSonarPlugins.Types
             this.Assignee = string.Empty;
             this.Author = string.Empty;
             this.IsNew = false;
-            this.Key = new Guid();
+            this.Key = string.Empty;
             this.ActionPlan = new Guid();
             this.ActionPlanName = string.Empty;
 
@@ -151,7 +151,7 @@ namespace VSSonarPlugins.Types
         /// <summary>
         /// Gets or sets the key.
         /// </summary>
-        public Guid Key { get; set; }
+        public string Key { get; set; }
 
         /// <summary>
         /// Gets or sets the id, versious before 3.6

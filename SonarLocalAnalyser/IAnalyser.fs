@@ -42,6 +42,8 @@ type ISonarLocalAnalyser =
 
   abstract member AssociateWithProject : project:Resource * conf:ISonarConfiguration -> unit
  
+  abstract member ResetInitialization : unit -> unit
+  
   [<CLIEvent>]
   abstract member AssociateCommandCompeted : IDelegateEvent<System.EventHandler>
 

@@ -261,6 +261,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public bool IsAssociatedWithProject { get; set; }
 
         /// <summary>Gets a value indicating whether can run local analysis.</summary>
+        [AlsoNotifyFor("CanCancelAnalysis")]
         public bool CanRunLocalAnalysis
         {
             get
@@ -277,6 +278,26 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 return this.IsAssociatedWithProject && !this.LoadingSonarData;
             }
         }
+
+        /// <summary>
+        /// Gets a value indicating whether this instance can run local analysis and its associated.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance can run local analysis and its associated; otherwise, <c>false</c>.
+        /// </value>
+        public bool CanCancelAnalysis
+        {
+            get
+            {
+                if (!this.IsAssociatedWithProject)
+                {
+                    return false;
+                }
+
+                return !this.CanRunLocalAnalysis;
+            }
+        }
+        
 
         /// <summary>
         ///     Gets or sets the issues grid view.
@@ -500,6 +521,11 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                     "SonarOptionsGeneral", 
                     "FileAnalysisIsEnabled", 
                     this.FileAnalysisIsEnabled ? "TRUE" : "FALSE");
+            }
+
+            if (this.FileAnalysisIsEnabled)
+            {
+                this.RunLocalAnalysis(AnalysisTypes.FILE);
             }
         }
 
@@ -751,6 +777,10 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             }
 
             this.localAnalyserModule.StopAllExecution();
+            this.FileAnalysisIsEnabled = false;
+            this.CanRunAnalysis = true;
+            this.LoadingSonarData = false;
+            this.notificationManager.EndedWorking();
         }
 
         /// <summary>
@@ -761,15 +791,21 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </param>
         private void RunLocalAnalysis(AnalysisTypes analysis)
         {
+            if (this.localAnalyserModule == null)
+            {
+                return;
+            }
+
             this.PermissionsAreNotAvailable = false;
             try
             {
                 this.associatedProject.ActiveConfiguration = this.vsenvironmenthelper.ActiveConfiguration();
                 this.associatedProject.ActivePlatform = this.vsenvironmenthelper.ActivePlatform();
                 this.associatedProject.SolutionRoot = this.SourceWorkingDir;
+                this.notificationManager.ResetFailure();
 
                 switch (analysis)
-                {
+                {                    
                     case AnalysisTypes.FILE:
                         var itemInView = this.vsenvironmenthelper.VsFileItem(this.resourceNameInView, this.associatedProject, this.resourceInView);
                         this.localAnalyserModule.AnalyseFile(
@@ -816,8 +852,11 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             {
                 this.notificationManager.ReportMessage(new VSSonarPlugins.Message() { Id = "LocalViewModel", Data = "Analysis Failed: " + ex.Message });
                 this.notificationManager.ReportException(ex);
-                this.CanRunAnalysis = true;
                 this.notificationManager.EndedWorking();
+                this.notificationManager.FlagFailure(ex.Message);
+                this.FileAnalysisIsEnabled = false;
+                this.CanRunAnalysis = true;
+                this.localAnalyserModule.ResetInitialization();
             }
         }
 

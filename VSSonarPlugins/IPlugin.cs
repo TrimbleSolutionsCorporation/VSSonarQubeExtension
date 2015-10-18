@@ -102,6 +102,17 @@ namespace VSSonarPlugins
         /// Refreshes the data for resource.
         /// </summary>
         void RefreshDataForResource();
+
+        /// <summary>
+        /// Resets the failure.
+        /// </summary>
+        void ResetFailure();
+
+        /// <summary>
+        /// Flags the failure.
+        /// </summary>
+        /// <param name="v">The v.</param>
+        void FlagFailure(string v);
     }
 
     /// <summary>
