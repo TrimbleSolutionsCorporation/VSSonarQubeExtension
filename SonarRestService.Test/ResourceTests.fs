@@ -119,7 +119,7 @@ type ResourceTests() =
         let issueList = new System.Collections.Generic.List<Issue>()
         let Comments = new System.Collections.Generic.List<Comment>()
         Comments.Add(new Comment())
-        issueList.Add(new Issue(Id = 343, Comments = Comments))
+        issueList.Add(new Issue(Id = 343, Comments = Comments, Key = (new Guid()).ToString()))
 
         Assert.That(issueList.[0].Comments.Count, Is.EqualTo(1))
         let status = (service :> ISonarRestService).CommentOnIssues(conf, issueList, "comment")
