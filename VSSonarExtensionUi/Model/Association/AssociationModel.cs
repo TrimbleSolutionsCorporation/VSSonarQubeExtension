@@ -1,4 +1,4 @@
-﻿namespace VSSonarExtensionUi.Model.Association
+﻿namespace VSSonarExtensionUi.Association
 {
     using System;
     using System.Collections.Generic;
@@ -8,17 +8,16 @@
     using System.Threading;
     using System.Windows;
 
-    using Helpers;
     using PropertyChanged;
     using SonarLocalAnalyser;
-    using View.Association;
     using View.Helpers;
     using ViewModel;
-    using ViewModel.Association;
-    using ViewModel.Configuration;
     using VSSonarPlugins;
     using VSSonarPlugins.Helpers;
     using VSSonarPlugins.Types;
+    using System.Collections.ObjectModel;
+    using VSSonarExtensionUi.Model.Helpers;
+    using VSSonarExtensionUi.ViewModel.Configuration;
     
     /// <summary>
     /// Generates associations with sonar projects
@@ -45,11 +44,6 @@
         /// The configuration helper
         /// </summary>
         private readonly IConfigurationHelper configurationHelper;
-
-        /// <summary>
-        /// The association view model
-        /// </summary>
-        private readonly AssociationViewModel associationViewModel;
 
         /// <summary>
         /// The model
@@ -89,14 +83,15 @@
         /// <param name="configurationHelper">The configuration helper.</param>
         /// <param name="translator">The translator.</param>
         /// <param name="pluginManager">The plugin manager.</param>
-        /// <param name="model">The model.</param>
+        /// <param name="model">The </param>
         public AssociationModel(
             INotificationManager logger,
             ISonarRestService service,
             IConfigurationHelper configurationHelper,
             ISQKeyTranslator translator,
             IPluginManager pluginManager,
-            SonarQubeViewModel model)
+            SonarQubeViewModel model,
+            ISourceControlProvider control = null)
         {
             this.keyTranslator = translator;
             this.pluginManager = pluginManager;
@@ -104,10 +99,28 @@
             this.configurationHelper = configurationHelper;
             this.logger = logger;
             this.sonarService = service;
+            this.sourceControl = control;
 
-            // start view model
-            this.associationViewModel = new AssociationViewModel(this);
+            this.AvailableProjects = new ObservableCollection<Resource>();
         }
+
+        /// <summary>
+        ///     Gets or sets the available projects.
+        /// </summary>
+        public ObservableCollection<Resource> AvailableProjects { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the selected project.
+        /// </summary>
+        public Resource SelectedProjectInView { get; set; }
+
+        /// <summary>
+        /// Gets or sets the selected branch project.
+        /// </summary>
+        /// <value>
+        /// The selected branch project.
+        /// </value>
+        public Resource SelectedBranchProject { get; set; }
 
         /// <summary>
         ///     Gets or sets the open solution path.
@@ -125,12 +138,28 @@
         public Resource AssociatedProject { get; set; }
 
         /// <summary>
-        /// Gets or sets the selected project.
+        /// Gets or sets the name of the selected project.
         /// </summary>
         /// <value>
-        /// The selected project.
+        /// The name of the selected project.
         /// </value>
-        public Resource SelectedProject { get; set; }
+        public string SelectedProjectName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the selected project key.
+        /// </summary>
+        /// <value>
+        /// The selected project key.
+        /// </value>
+        public string SelectedProjectKey { get; set; }
+
+        /// <summary>
+        /// Gets or sets the selected project version.
+        /// </summary>
+        /// <value>
+        /// The selected project version.
+        /// </value>
+        public string SelectedProjectVersion { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether is associated.
@@ -171,7 +200,7 @@
         /// <summary>
         /// Registers the new model in pool.
         /// </summary>
-        /// <param name="model">The model.</param>
+        /// <param name="model">The </param>
         public static void RegisterNewModelInPool(IModelBase model)
         {
             modelPool.Add(model);
@@ -200,8 +229,6 @@
                 return false;
             }
 
-            this.model.AvailableBranches.Clear();
-
             if (project.IsBranch && branchProject != null)
             {
                 this.AssociatedProject = branchProject;
@@ -209,20 +236,14 @@
                 foreach (var branch in projectIn.BranchResources)
                 {
                     branch.Default = false;
-                    this.model.AvailableBranches.Add(branch);
                 }
 
                 branchProject.Default = true;
-                this.model.IsBranchSelectionEnabled = true;
-                this.model.SelectedBranch = branchProject;
                 this.currentBranchName = branchProject.BranchName;
             }
             else
             {
                 this.AssociatedProject = project;
-                this.model.IsBranchSelectionEnabled = false;
-                this.model.AvailableBranches.Add(project);
-                this.model.SelectedBranch = project;
             }
 
             this.model.ConnectionTooltip = "Connected and Associated";
@@ -339,6 +360,8 @@
         {
             this.OpenSolutionName = null;
             this.OpenSolutionPath = null;
+            this.SelectedProjectInView = null;
+            this.AssociatedProject = null;
             this.IsConnectedButNotAssociated = this.model.IsConnected;
             this.IsAssociated = !this.model.IsConnected;
 
@@ -353,11 +376,12 @@
         /// </summary>
         /// <param name="solutionName">Name of the solution.</param>
         /// <param name="solutionPath">The solution path.</param>
-        public void StartAutoAssociation(string solutionName, string solutionPath)
+        /// <returns>if association window should be open or closed</returns>
+        public bool StartAutoAssociation(string solutionName, string solutionPath)
         {
             if (!this.model.IsConnected || (this.OpenSolutionName == solutionName && this.OpenSolutionPath == solutionPath))
             {
-                return;
+                return true;
             }
 
             this.OpenSolutionName = solutionName;
@@ -372,7 +396,7 @@
 
                 if (solResource != null)
                 {
-                    foreach (Resource availableProject in this.associationViewModel.AvailableProjects)
+                    foreach (Resource availableProject in this.AvailableProjects)
                     {
                         if (availableProject.Key.Equals(solResource.Key))
                         {
@@ -386,27 +410,27 @@
                                         availableProject.SolutionRoot = solutionPath;
                                         branch.SolutionRoot = solutionPath;
                                         branch.Default = true;
-                                        this.associationViewModel.SelectedProject = availableProject;
-                                        this.associationViewModel.SelectedBranchProject = branch;
+                                        this.AssociatedProject = availableProject;
+                                        this.SelectedBranchProject = branch;
                                         this.AssignASonarProjectToSolution(availableProject, branch);
                                         this.IsConnectedButNotAssociated = false;
                                         this.IsAssociated = true;
                                         this.CreateConfiguration(Path.Combine(solutionPath, "sonar-project.properties"));
-                                        return;
+                                        return true;
                                     }
                                 }
                             }
                             else
                             {
                                 availableProject.SolutionRoot = solutionPath;
-                                this.associationViewModel.SelectedProject = availableProject;
+                                this.AssociatedProject = availableProject;
                                 this.AssignASonarProjectToSolution(availableProject, null);
                                 this.IsConnectedButNotAssociated = false;
                                 this.IsAssociated = true;
                                 this.CreateConfiguration(Path.Combine(solutionPath, "sonar-project.properties"));
                             }
 
-                            return;
+                            return true;
                         }
 
                         if (availableProject.IsBranch)
@@ -417,13 +441,13 @@
                                 {
                                     availableProject.SolutionRoot = solutionPath;
                                     branch.SolutionRoot = solutionPath;
-                                    this.associationViewModel.SelectedProject = availableProject;
-                                    this.associationViewModel.SelectedBranchProject = branch;
+                                    this.AssociatedProject = availableProject;
+                                    this.SelectedBranchProject = branch;
                                     this.AssignASonarProjectToSolution(availableProject, branch);
                                     this.IsConnectedButNotAssociated = false;
                                     this.IsAssociated = true;
                                     this.CreateConfiguration(Path.Combine(solutionPath, "sonar-project.properties"));
-                                    return;
+                                    return true;
                                 }
                             }
                         }
@@ -431,27 +455,35 @@
                 }
                 else
                 {
-                    this.ShowAssociationWindow();
+                    return false;
                 }
             }
+
+            return true;
         }
 
-
-        /// <summary>
-        /// Shows the association window.
-        /// </summary>
-        public void ShowAssociationWindow()
+        /// <summary>The associate project to solution.</summary>
+        /// <param name="solutionName">The solution Name.</param>
+        /// <param name="solutionPath">The solution Path.</param>
+        public void AssociateProjectToSolution(string solutionName, string solutionPath)
         {
-            if (!Thread.CurrentThread.GetApartmentState().Equals(ApartmentState.STA))
+            var solution = solutionName;
+
+            if (string.IsNullOrEmpty(solution))
             {
-                Thread thread = new Thread(() => this.LaunchAssociationWindow(true));
-                thread.SetApartmentState(ApartmentState.STA);
-                thread.Start();
-                thread.Join();
                 return;
             }
 
-            this.LaunchAssociationWindow(false);
+            if (!solution.ToLower().EndsWith(".sln"))
+            {
+                solution += ".sln";
+            }
+
+            if (this.StartAutoAssociation(solution, solutionPath))
+            {
+                this.model.StatusMessageAssociation = "Associated With: " + this.AssociatedProject.Name;
+                this.model.ShowRightFlyout = false;
+            }
         }
 
         /// <summary>
@@ -473,8 +505,21 @@
             this.model.IsConnected = false;
             this.OpenSolutionName = string.Empty;
             this.OpenSolutionPath = string.Empty;
-            this.associationViewModel.AvailableProjects.Clear();
-            this.associationViewModel.SelectedProject = null;
+            if (this.SelectedProjectInView != null)
+            {
+                this.SelectedProjectInView.Name = "";
+                this.SelectedProjectInView.Key = "";
+                this.SelectedProjectInView.BranchName = "";
+                this.SelectedProjectInView.BranchResources.Clear();
+            }
+
+            if (this.AvailableProjects != null)
+            {
+                this.AvailableProjects.Clear();
+            }
+
+            this.SelectedBranchProject = null;
+            this.SelectedProjectInView = null;
             this.AssociatedProject = null;
             this.keyTranslator.SetLookupType(KeyLookUpType.Invalid);
         }
@@ -498,7 +543,7 @@
                     Path.Combine(solutionPath, solutionName),
                     "PROJECTKEY");
 
-                foreach (var project in this.associationViewModel.AvailableProjects)
+                foreach (var project in this.AvailableProjects)
                 {
                     if (project.Key.Equals(prop.Value))
                     {
@@ -512,7 +557,7 @@
                 }
                 catch (Exception ex)
                 {
-                    UserExceptionMessageBox.ShowException("Associated Project does not exist in server, please configure association", ex);
+                    this.model.StatusMessageAssociation = "Associated Project does not exist in server, please configure association";
                     return null;
                 }
             }
@@ -549,54 +594,30 @@
         public void RefreshProjectList(bool useDispatcher)
         {
             List<Resource> projectsRaw = this.sonarService.GetProjectsList(AuthtenticationHelper.AuthToken);
-            List<Resource> projects = new List<Resource>();
+            SortedDictionary<string, Resource> projects = new SortedDictionary<string, Resource>();
 
             foreach (var rawitem in projectsRaw)
             {
-                var nameWithoutBrachRaw = rawitem.Name.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
-                bool added = false;
-
-                if (nameWithoutBrachRaw.Length == 2)
+                if (rawitem.IsBranch)
                 {
-                    bool projectFound = false;
-                    foreach (var processedItem in projects)
+                    var nameWithoutBrachRaw = rawitem.Name.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
+                    var keyDic = nameWithoutBrachRaw[0] + "_Main";
+                    if (!projects.ContainsKey(keyDic))
                     {
-                        var nameWithoutBrachProcessed = processedItem.Name.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
-
-                        if (nameWithoutBrachRaw[0].Equals(nameWithoutBrachProcessed[0]))
-                        {
-                            projectFound = true;
-                        }
-                    }
-
-                    if (!projectFound)
-                    {
-                        // create master branch
+                        // create main project holder
                         var mainProject = new Resource();
                         mainProject.Name = nameWithoutBrachRaw[0];
-                        mainProject.Key = nameWithoutBrachRaw[0] + "_Main";
+                        mainProject.Key = keyDic;
                         mainProject.IsBranch = true;
-                        projects.Add(mainProject);
-                        added = true;
+                        projects.Add(keyDic, mainProject);
                     }
+
+                    var element = projects[keyDic];
+                    element.BranchResources.Add(rawitem);
                 }
-
-                foreach (var processedItem in projects)
+                else
                 {
-                    var nameWithoutBrachProcessed = processedItem.Name.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
-
-                    if (nameWithoutBrachRaw[0].Equals(nameWithoutBrachProcessed[0]) && nameWithoutBrachRaw.Length == 2)
-                    {
-                        rawitem.BranchName = nameWithoutBrachRaw[1];
-                        processedItem.BranchResources.Add(rawitem);
-                        added = true;
-                    }
-                }
-
-                if (!added)
-                {
-                    rawitem.BranchName = rawitem.Name;
-                    projects.Add(rawitem);
+                    projects.Add(rawitem.Key, rawitem);
                 }
             }
 
@@ -611,19 +632,19 @@
                     Application.Current.Dispatcher.Invoke(
                         delegate
                         {
-                            this.associationViewModel.AvailableProjects.Clear();
-                            foreach (Resource source in projects.OrderBy(i => i.Name))
+                            this.AvailableProjects.Clear();
+                            foreach (var source in projects)
                             {
-                                this.associationViewModel.AvailableProjects.Add(source);
+                                this.AvailableProjects.Add(source.Value);
                             }
                         });
                 }
                 else
                 {
-                    this.associationViewModel.AvailableProjects.Clear();
-                    foreach (Resource source in projects.OrderBy(i => i.Name))
+                    this.AvailableProjects.Clear();
+                    foreach (var source in projects)
                     {
-                        this.associationViewModel.AvailableProjects.Add(source);
+                        this.AvailableProjects.Add(source.Value);
                     }
                 }
             }
@@ -636,30 +657,6 @@
         private void CreateConfiguration(string pathForPropertiesFile)
         {
             this.keyTranslator.CreateConfiguration(pathForPropertiesFile);
-        }
-
-        /// <summary>
-        /// Launches the association window.
-        /// </summary>
-        /// <param name="useDispatcher">if set to <c>true</c> [use dispatcher].</param>
-        private void LaunchAssociationWindow(bool useDispatcher)
-        {
-            if (useDispatcher)
-            {
-                Application.Current.Dispatcher.Invoke(
-                    delegate
-                    {
-                        this.associationViewModel.UpdateColours(this.model.BackGroundColor, this.model.ForeGroundColor);
-                        var window = new AssociationView(this.associationViewModel);
-                        window.ShowDialog();
-                    });
-            }
-            else
-            {
-                this.associationViewModel.UpdateColours(this.model.BackGroundColor, this.model.ForeGroundColor);
-                var window = new AssociationView(this.associationViewModel);
-                window.ShowDialog();
-            }
         }
 
         /// <summary>
@@ -732,6 +729,63 @@
             foreach (var item in listToRemo)
             {
                 modelPool.Remove(item);
+            }
+        }
+
+        public Resource SelectBranchFromList(Resource resource)
+        {
+            var branch = this.SourceControl.GetBranch();
+            Resource masterBranch = null;
+            foreach (var branchdata in this.SelectedProjectInView.BranchResources)
+            {
+                if (branchdata.BranchName.Equals(branch))
+                {
+                    this.model.StatusMessageAssociation = "Association Ready. Press associate to confirm.";
+                    return branchdata;
+                }
+
+                if (branchdata.BranchName.Equals("master"))
+                {
+                    masterBranch = branchdata;
+                }
+            }
+
+            if (masterBranch != null)
+            {
+                this.model.StatusMessageAssociation = "Using master branch, because current branch does not exist or source control not supported. Press associate to confirm.";
+                return masterBranch;
+            }
+
+            this.model.StatusMessageAssociation = "Unable to find branch, please manually choose one from list and confirm.";
+            return null;
+        }
+
+        /// <summary>
+        /// Called when [selected project changed].
+        /// </summary>
+        private void OnSelectedProjectInViewChanged()
+        {
+            if (this.SelectedProjectInView == null)
+            {
+                this.SelectedProjectName = "";
+                this.SelectedProjectKey = "";
+                this.SelectedProjectVersion = "";
+                this.model.StatusMessageAssociation = "No project selected, select from above.";
+                return;
+            }
+
+            this.SelectedProjectName = this.SelectedProjectInView.Name;
+            this.SelectedProjectKey = this.SelectedProjectInView.Key;
+            this.SelectedProjectVersion = this.SelectedProjectInView.Version;
+
+            if (this.SelectedProjectInView.IsBranch)
+            {
+                this.SelectedBranchProject = this.SelectBranchFromList(this.SelectedProjectInView);
+            }
+            else
+            {
+                this.SelectedBranchProject = null;
+                this.model.StatusMessageAssociation = "Normal project type. Press associate to confirm.";
             }
         }
     }

@@ -256,11 +256,11 @@ type SQKeyTranslator() =
     let GetMSbuildRunnerPath(key : string, branch : string, vshelper : IVsEnvironmentHelper) = 
         
         let keyWithoutBranch = 
-            if branch <> "" then
-                projectKey.Replace(":" + branch, "")
-            else
+            if branch = null || branch = "" then
                 projectKey
-                                       
+            else
+                projectKey.Replace(":" + branch, "")
+
         try
             let keyWithoutProjectKey = key.Replace(keyWithoutBranch + ":", "")
             let allModulesPresentInKey =  keyWithoutProjectKey.Split(':')
@@ -281,22 +281,27 @@ type SQKeyTranslator() =
             let tounix = vshelper.GetProperFilePathCapitalization(fileItem.FilePath).Replace("\\", "/")
             let driveLetter = tounix.Substring(0, 1)
             let solutionCan = driveLetter + fileItem.Project.Solution.SolutionPath.Replace("\\", "/").Substring(1)
-            let fromBaseDir = tounix.Replace(solutionCan + "/", "")
+            let fromBaseDir =  vshelper.EvaluatedValueForIncludeFile(fileItem.Project.ProjectFilePath, fileItem.FilePath)
 
             if branch <> "" then
-                projectKey.Replace(branch, "") + projectKey.Replace(branch, "") + guid.ToUpper() + ":" + branch + ":" + fromBaseDir
+                if fromBaseDir = null || fromBaseDir = "" then
+                    ""
+                else
+                    projectKey.Replace(branch, "") + projectKey.Replace(branch, "") + guid.ToUpper() + ":" + branch + ":" + fromBaseDir.Replace("\\", "/")
             else
-                projectKey + ":" + projectKey + ":" + guid.ToUpper() + ":" + fromBaseDir.Replace(fileItem.Project.ProjectName + "/", "")
+                if fromBaseDir = null || fromBaseDir = "" then
+                    ""
+                else
+                    projectKey + ":" + projectKey + ":" + guid.ToUpper() + ":" + fromBaseDir.Replace("\\", "/")
         with
         | ex -> ""
 
     let GuessLookupTypeFromKey(key : string, branchIn : string, vshelper : IVsEnvironmentHelper) =
         let branch =
-            if branchIn = "" || projectKey.Contains(branchIn) then
-                if projectKey.Contains(branchIn) then
-                    ":"
-                else
-                    ""
+            if branchIn = null || branchIn = "" then
+                ":"
+            elif projectKey.Contains(branchIn) then
+                ":"
             else
                 ":" + branchIn + ":"
 
@@ -308,7 +313,7 @@ type SQKeyTranslator() =
             elif File.Exists(GetVSBootStrapperPath(key, branch, vshelper)) then
                 lookupType <- KeyLookUpType.VSBootStrapper
             elif File.Exists(GetMSbuildRunnerPath(key, branchIn, vshelper)) then
-                lookupType <- KeyLookUpType.ProjectGuid     
+                lookupType <- KeyLookUpType.ProjectGuid
 
         lookupType
 
@@ -388,14 +393,13 @@ type SQKeyTranslator() =
         member this.TranslateKey(key : string, vshelper : IVsEnvironmentHelper, branchIn:string) =
 
             let branch =
-                if branchIn = "" || projectKey.Contains(branchIn) then
-                    if projectKey.Contains(branchIn) then
-                        ":"
-                    else
-                        ""
+                if branchIn = null || branchIn = "" then
+                    ":"
+                elif projectKey.Contains(branchIn) then
+                    ":"
                 else
                     ":" + branchIn + ":"
-           
+
             match GuessLookupTypeFromKey(key, branchIn, vshelper) with
             | KeyLookUpType.Flat -> GetFlatPath(key, branch)
             | KeyLookUpType.Module -> GetModulePath(key, branch)

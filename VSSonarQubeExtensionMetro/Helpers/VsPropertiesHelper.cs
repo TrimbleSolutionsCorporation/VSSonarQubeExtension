@@ -30,6 +30,9 @@ namespace VSSonarQubeExtension.Helpers
     using Microsoft.VisualStudio.Text.Editor;
     using Microsoft.VisualStudio.TextManager.Interop;
 
+
+
+
     using VSSonarPlugins;
 
     using Process = System.Diagnostics.Process;
@@ -76,7 +79,6 @@ namespace VSSonarQubeExtension.Helpers
             this.TempDataFolder = Path.GetTempPath();
             this.provider = service;
             this.environment = environment;
-
         }
 
         #endregion
@@ -239,6 +241,22 @@ namespace VSSonarQubeExtension.Helpers
             }
 
             return (this.environment.Solution != null) ? Path.GetFileNameWithoutExtension(this.environment.Solution.FullName) : string.Empty;
+        }
+
+        /// <summary>
+        ///     The get solution path.
+        /// </summary>
+        /// <returns>
+        ///     The <see cref="string" />.
+        /// </returns>
+        public string ActiveSolutionFullName()
+        {
+            if (this.environment == null)
+            {
+                return string.Empty;
+            }
+
+            return this.environment.Solution.FullName;
         }
 
         /// <summary>
@@ -968,68 +986,55 @@ namespace VSSonarQubeExtension.Helpers
         }
 
 
-        public VsProjectItem GetProjectByNameInSolution(string projectName)
+        /// <summary>
+        /// Gets the project by name in solution.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
+        public VsProjectItem GetProjectByNameInSolution(string name)
         {
-            if (this.environment == null) { return null; }
-
-            foreach (Project project in this.environment.Solution.Projects)
+            if (this.environment == null)
             {
-                if (project.Name.ToLower().Equals(projectName.ToLower()))
+                return null;
+            }
+
+            var solutionpath = ActiveSolutionFullName();
+            var solutiondata = MSBuildHelper.CreateSolutionData(solutionpath);
+            foreach (var project in solutiondata.Projects)
+            {
+                var path = project.Value.Path;
+                if (project.Value.Name.ToLower().Equals(name.ToLower()))
                 {
-                    return CreateVsProjectItem(project);
+                    return CreateVsProjectItem(project.Value);
                 }
             }
 
             return null;
         }
 
-        private static VsProjectItem CreateVsProjectItem(Project project)
+        private static VsProjectItem CreateVsProjectItem(ProjectTypes.Project project)
         {
             var proToRet = new VsProjectItem();
             proToRet.ProjectName = project.Name;
-            proToRet.ProjectFilePath = project.FullName;
+            proToRet.ProjectFilePath = project.Path;
             return proToRet;
         }
 
-        public VsProjectItem GetProjectByGuidInSolution(string projectName)
+        public VsProjectItem GetProjectByGuidInSolution(string guid)
         {
-            if (this.environment == null) { return null; }
-
-            foreach (Project project in this.environment.Solution.Projects)
+            if (this.environment == null)
             {
-                // Got some help from here: http://www.mztools.com/articles/2007/mz2007016.aspx
-                IntPtr serviceIntPtr;
-                int hr = 0;
-                Guid SIDGuid = typeof(IVsSolution).GUID; 
-                Guid IIDGuid = SIDGuid;
-                
-                var serviceProvider = (Microsoft.VisualStudio.OLE.Interop.IServiceProvider)project.DTE;
-                hr = serviceProvider.QueryService(SIDGuid, IIDGuid, out serviceIntPtr);
+                return null;
+            }
 
-                if (hr != 0)
+            var solutionpath = ActiveSolutionFullName();
+            var solutiondata = MSBuildHelper.CreateSolutionData(solutionpath);
+            foreach (var project in solutiondata.Projects)
+            {
+                var path = project.Value.Path;
+                if (project.Value.Guid.ToString().ToLower().Equals(guid.ToLower()))
                 {
-                    Marshal.ThrowExceptionForHR(hr);
-                }
-                else if (!serviceIntPtr.Equals(IntPtr.Zero))
-                {
-                    object service = Marshal.GetObjectForIUnknown(serviceIntPtr);
-                    Marshal.Release(serviceIntPtr);
-
-                    var solution = (IVsSolution)service;
-                    IVsHierarchy hierarchy = null;
-                    int result = solution.GetProjectOfUniqueName(project.UniqueName, out hierarchy);
-                    if (result == 0)
-                    {
-                        Guid projectGuid;
-                        int guidResult = solution.GetGuidOfProject(hierarchy, out projectGuid);
-                        if (guidResult == 0)
-                        {
-                            if (projectName.ToLower() == projectGuid.ToString().ToLower())
-                            {
-                                return CreateVsProjectItem(project);
-                            }
-                        }
-                    }
+                    return CreateVsProjectItem(project.Value);
                 }
             }
 
@@ -1043,47 +1048,31 @@ namespace VSSonarQubeExtension.Helpers
                 return null;
             }
 
-            foreach (Project project in this.environment.Solution.Projects)
+            var solutionpath = ActiveSolutionFullName();
+            var solutiondata = MSBuildHelper.CreateSolutionData(solutionpath);
+            foreach (var project in solutiondata.Projects)
             {
-                if (!project.FullName.ToLower().Equals(projectPath.ToLower()))
+                var path = project.Value.Path;
+                if (project.Value.Path.ToLower().Equals(projectPath.ToLower()))
                 {
-                    continue;
-                }
-
-                // Got some help from here: http://www.mztools.com/articles/2007/mz2007016.aspx
-                IntPtr serviceIntPtr;
-                int hr = 0;
-                Guid SIDGuid = typeof(IVsSolution).GUID;
-                Guid IIDGuid = SIDGuid;
-
-                var serviceProvider = (Microsoft.VisualStudio.OLE.Interop.IServiceProvider)project.DTE;
-                hr = serviceProvider.QueryService(SIDGuid, IIDGuid, out serviceIntPtr);
-
-                if (hr != 0)
-                {
-                    Marshal.ThrowExceptionForHR(hr);
-                }
-                else if (!serviceIntPtr.Equals(IntPtr.Zero))
-                {
-                    object service = Marshal.GetObjectForIUnknown(serviceIntPtr);
-                    Marshal.Release(serviceIntPtr);
-
-                    var solution = (IVsSolution)service;
-                    IVsHierarchy hierarchy = null;
-                    int result = solution.GetProjectOfUniqueName(project.UniqueName, out hierarchy);
-                    if (result == 0)
-                    {
-                        Guid projectGuid;
-                        int guidResult = solution.GetGuidOfProject(hierarchy, out projectGuid);
-                        if (guidResult == 0)
-                        {
-                            return projectGuid.ToString().ToLower();
-                        }
-                    }
+                    return project.Value.Guid.ToString();
                 }
             }
 
             return null;
+        }
+
+
+        /// <summary>
+        /// Evaluateds the value for include file.
+        /// </summary>
+        /// <param name="msbuildProjectFile">The msbuild project file.</param>
+        /// <param name="filePath">The file path.</param>
+        /// <returns></returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public string EvaluatedValueForIncludeFile(string msbuildProjectFile, string filePath)
+        {
+            return MSBuildHelper.GetProjectFilePathForFile(msbuildProjectFile, filePath);
         }
     }
 }

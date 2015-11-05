@@ -399,6 +399,11 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 res.Name <- resource.Name
                 res.Qualifier <- resource.Qualifier
                 res.Scope <- resource.Scope
+                res.IsBranch <- false
+                if not(obj.ReferenceEquals(resource.JsonValue.TryGetProperty("branch"), null)) then
+                    res.BranchName <- sprintf "%s" resource.Branch
+                    res.IsBranch <- true
+
                 if not(obj.ReferenceEquals(resource.JsonValue.TryGetProperty("version"), null)) then
                     res.Version <- sprintf "%s" resource.Version
 

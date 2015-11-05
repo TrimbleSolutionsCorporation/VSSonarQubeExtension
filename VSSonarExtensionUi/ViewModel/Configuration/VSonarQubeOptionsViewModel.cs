@@ -26,8 +26,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using SonarLocalAnalyser;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-    using Model.Association;
     using System.Diagnostics;
+    using VSSonarExtensionUi.Association;
 
 
     /// <summary>

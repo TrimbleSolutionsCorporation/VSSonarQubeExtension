@@ -363,7 +363,7 @@ type JsonProfileAfter44 = JsonProvider<""" [
   }
 ] """>
 
-type JsonResourceWithMetrics = JsonProvider<""" [{"id":1,"key":"GroupId:ProjectId","name":"Common","scope":"PRJ","qualifier":"TRK","date":"2013-07-03T12:50:52+0300","lname":"Common","lang":"c++","version":"work","description":"","msr":[{"key":"ncloc","val":45499.0,"frmt_val":"45,499"},{"key":"coverage","val":54.7,"frmt_val":"54.7%"},{"key":"profile","val":7.0,"frmt_val":"7.0","data":"DefaultTeklaC++"}]}] """>
+type JsonResourceWithMetrics = JsonProvider<""" [{"id":1,"key":"GroupId:ProjectId","name":"Common","scope":"PRJ","branch":"whatever","qualifier":"TRK","date":"2013-07-03T12:50:52+0300","lname":"Common","lang":"c++","version":"work","description":"","msr":[{"key":"ncloc","val":45499.0,"frmt_val":"45,499"},{"key":"coverage","val":54.7,"frmt_val":"54.7%"},{"key":"profile","val":7.0,"frmt_val":"7.0","data":"DefaultTeklaC++"}]}] """>
 
 type JsonValidateUser = JsonProvider<""" {"valid":true} """>
 
