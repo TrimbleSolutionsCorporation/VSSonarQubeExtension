@@ -3,7 +3,7 @@ VSSonarQubeExtension
 [![Issue Stats](http://issuestats.com/github/TeklaCorp/VSSonarQubeExtension/badge/issue)](http://issuestats.com/github/jmecosta/VSSonarQubeExtension)
 [![Issue Stats](http://issuestats.com/github/TeklaCorp/VSSonarQubeExtension/badge/pr)](http://issuestats.com/github/jmecosta/VSSonarQubeExtension)
 
-[![Build status](https://ci.appveyor.com/api/projects/status/jd3ok3erxc13m1ev?svg=true)](https://ci.appveyor.com/project/jorgecosta/vssonarqubeextension-8i4pp)
+[![Build status](https://ci.appveyor.com/api/projects/status/w03onktfvppbimow/branch/master?svg=true)](https://ci.appveyor.com/project/TeklaCorp/vssonarqubeextension/branch/master)
 
 This is a Extension for Visual Studio to interact wiht SonarQube (TM).
 
@@ -11,7 +11,7 @@ This is a Extension for Visual Studio to interact wiht SonarQube (TM).
 Use the Visual Studio Extension Manager and search for VSSonarExtension, Visual Studio 2012, 2013 and 2015 are supported.
 
 # Getting Started
-All information on configuration and usage will be found in the wiki pages. [Home](https://github.com/jmecosta/VSSonarQubeExtension/wiki)
+All information on configuration and usage will be found in the wiki pages. [Home](https://github.com/TeklaCorp/VSSonarQubeExtension/wiki)
 
 # Getting Involved
 
