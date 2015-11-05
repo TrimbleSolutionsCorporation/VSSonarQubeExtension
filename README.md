@@ -1,7 +1,7 @@
 VSSonarQubeExtension
 ====================
-[![Issue Stats](http://issuestats.com/github/jmecosta/VSSonarQubeExtension/badge/issue)](http://issuestats.com/github/jmecosta/VSSonarQubeExtension)
-[![Issue Stats](http://issuestats.com/github/jmecosta/VSSonarQubeExtension/badge/pr)](http://issuestats.com/github/jmecosta/VSSonarQubeExtension)
+[![Issue Stats](http://issuestats.com/github/TeklaCorp/VSSonarQubeExtension/badge/issue)](http://issuestats.com/github/jmecosta/VSSonarQubeExtension)
+[![Issue Stats](http://issuestats.com/github/TeklaCorp/VSSonarQubeExtension/badge/pr)](http://issuestats.com/github/jmecosta/VSSonarQubeExtension)
 
 [![Build status](https://ci.appveyor.com/api/projects/status/jd3ok3erxc13m1ev?svg=true)](https://ci.appveyor.com/project/jorgecosta/vssonarqubeextension-8i4pp)
 
