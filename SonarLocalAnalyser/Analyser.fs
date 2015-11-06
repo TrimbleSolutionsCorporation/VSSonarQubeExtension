@@ -195,7 +195,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
     let stdOutEvent = new DelegateEvent<System.EventHandler>()
     let associateCompletedEvent = new DelegateEvent<System.EventHandler>()
     let mutable profileUpdated = false
-    let mutable profileCannotBeRetrived = true
+    let mutable profileCannotBeRetrived = false
     let jsonReports : System.Collections.Generic.List<String> = new System.Collections.Generic.List<String>()
     let localissues : System.Collections.Generic.List<Issue> = new System.Collections.Generic.List<Issue>()
     let cachedProfiles : System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, Profile>> =
@@ -721,21 +721,25 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
             x.VsInter <- vsInter
 
             if not(profileCannotBeRetrived) then
-                if not(profileUpdated) then
-                    (x :> ISonarLocalAnalyser).AssociateWithProject(project, conf)
-                else
-                    if plugins = null then
-                        raise(new ResourceNotSupportedException())
+                try
+                    if not(profileUpdated) then
+                        (x :> ISonarLocalAnalyser).AssociateWithProject(project, conf)
+                    else
+                        if plugins = null then
+                            raise(new ResourceNotSupportedException())
 
-                    if itemInView = null then
-                        raise(new NoFileInViewException())
+                        if itemInView = null then
+                            raise(new NoFileInViewException())
 
-                    if GetPluginThatSupportsResource(x.ItemInView) = null then
-                        raise(new ResourceNotSupportedException())
+                        if GetPluginThatSupportsResource(x.ItemInView) = null then
+                            raise(new ResourceNotSupportedException())
             
-                    x.AnalysisIsRunning <- true
-                    localissues.Clear()
-                    (new Thread(new ThreadStart(x.RunFileAnalysisThread))).Start()  
+                        x.AnalysisIsRunning <- true
+                        localissues.Clear()
+                        (new Thread(new ThreadStart(x.RunFileAnalysisThread))).Start()  
+                with
+                | _ -> profileCannotBeRetrived <- true
+                       raise(new Exception("Profile Cannot Be Updated"))
             else
                 raise(new Exception("Profile Cannot Be Updated"))
 
@@ -854,7 +858,6 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
                     notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Failed to Update profile"))
                     notificationManager.ReportException(ex)
                     profileUpdated <- true
-                    profileCannotBeRetrived <- true
                     associateCompletedEvent.Trigger([|x; null|])
                     raise(ex)
 
