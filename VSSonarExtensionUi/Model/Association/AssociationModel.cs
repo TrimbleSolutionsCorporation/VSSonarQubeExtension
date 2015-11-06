@@ -772,7 +772,7 @@
 
         public Resource SelectBranchFromList(Resource resource)
         {
-            var branch = this.SourceControl.GetBranch();
+            var branch = this.SourceControl.GetBranch().Replace("/", "_");
             Resource masterBranch = null;
             foreach (var branchdata in this.SelectedProjectInView.BranchResources)
             {
