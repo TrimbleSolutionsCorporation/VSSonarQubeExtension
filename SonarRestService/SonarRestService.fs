@@ -122,43 +122,53 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             issue.CreationDate <- elem.CreationDate
 
             issue.Component <- elem.Component
-            if not(obj.ReferenceEquals(elem.Line, null)) then
-                issue.Line <- elem.Line
-            else
-                issue.Line <- 0
+            try
+                if not(obj.ReferenceEquals(elem.Line, null)) then
+                    issue.Line <- elem.Line
+                else
+                    issue.Line <- 0
+            with
+            | ex -> ()
 
             issue.Project <- elem.Project
             issue.UpdateDate <- elem.UpdateDate
             issue.Status <- (EnumHelper.asEnum<IssueStatus>(elem.Status)).Value
             issue.Severity <- GetSeverity(elem.Severity)
             issue.Rule <- elem.Rule
-            issue.Key <- elem.Key.ToString()
+            issue.Key <- elem.Key.ToString().Replace("\"", "")
 
-            match elem.Assignee with
-            | None -> ()
-            | Some value -> issue.Assignee <- value
+            if not(obj.ReferenceEquals(elem.Assignee, null)) then
+                match elem.Assignee with
+                | None -> ()
+                | Some value -> issue.Assignee <- value
 
-            match elem.Author with
-            | None -> ()
-            | Some value -> issue.Author <- value
+            if not(obj.ReferenceEquals(elem.Author, null)) then
+                match elem.Author with
+                | None -> ()
+                | Some value -> issue.Author <- value
 
-            match elem.ActionPlan with
-            | None -> ()
-            | Some value -> issue.ActionPlan <- value
+            if not(obj.ReferenceEquals(elem.ActionPlan, null)) then
+                match elem.ActionPlan with
+                | None -> ()
+                | Some value -> issue.ActionPlan <- value
 
-            for elemC in elem.Comments do issue.Comments.Add(new Comment(elemC.CreatedAt, elemC.HtmlText, elemC.Key, elemC.Login, -1))
+            if not(obj.ReferenceEquals(elem.Comments, null)) then
+                for elemC in elem.Comments do issue.Comments.Add(new Comment(elemC.CreatedAt, elemC.HtmlText, elemC.Key, elemC.Login, -1))
 
-            match elem.CloseDate with
-            | None -> ()
-            | Some value -> issue.CloseDate <- value
+            if not(obj.ReferenceEquals(elem.CloseDate, null)) then
+                match elem.CloseDate with
+                | None -> ()
+                | Some value -> issue.CloseDate <- value
 
-            match elem.Resolution with
-            | None -> ()
-            | Some value -> issue.Resolution <- (EnumHelper.asEnum<Resolution>(value.Replace("-", "_"))).Value
+            if not(obj.ReferenceEquals(elem.Resolution, null)) then
+                match elem.Resolution with
+                | None -> ()
+                | Some value -> issue.Resolution <- (EnumHelper.asEnum<Resolution>(value.Replace("-", "_"))).Value
 
-            match elem.Debt with
-            | None -> ()
-            | Some value -> issue.Debt <- value
+            if not(obj.ReferenceEquals(elem.Debt, null)) then
+                match elem.Debt with
+                | None -> ()
+                | Some value -> issue.Debt <- value
 
             if issue.Comments.Count <> 0 then
                 for comment in issue.Comments do
@@ -175,56 +185,60 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
         let data = JsonIssues.Parse(responsecontent)
         let issueList = new System.Collections.Generic.List<Issue>()
         for elem in data.Issues do
-            let issue = new Issue()
-            issue.Message <- elem.Message
-            issue.CreationDate <- elem.CreationDate
+            try
+                let issue = new Issue()
+                issue.Message <- elem.Message
+                issue.CreationDate <- elem.CreationDate
 
-            issue.Component <- elem.Component
-            if not(obj.ReferenceEquals(elem.Line, null)) then
-                issue.Line <- elem.Line.Value
-            else
-                issue.Line <- 0
+                issue.Component <- elem.Component
+                if not(obj.ReferenceEquals(elem.Line, null)) then
+                    issue.Line <- elem.Line.Value
+                else
+                    issue.Line <- 0
 
-            issue.Project <- elem.Project
-            issue.UpdateDate <- elem.UpdateDate
-            issue.Status <- (EnumHelper.asEnum<IssueStatus>(elem.Status)).Value
-            issue.Severity <- GetSeverity(elem.Severity)
-            issue.Rule <- elem.Rule
-            issue.Key <- elem.Key.ToString()
+                issue.Project <- elem.Project
+                issue.UpdateDate <- elem.UpdateDate
+                issue.Status <- (EnumHelper.asEnum<IssueStatus>(elem.Status)).Value
+                issue.Severity <- GetSeverity(elem.Severity)
+                issue.Rule <- elem.Rule
+                issue.Key <- elem.Key.ToString()
 
-            match elem.ActionPlan with
-            | None -> ()
-            | Some value -> issue.ActionPlan <- value
+                if not(obj.ReferenceEquals(elem.ActionPlan, null)) then
+                    match elem.ActionPlan with
+                    | None -> ()
+                    | Some value -> issue.ActionPlan <- value
 
-            if not(obj.ReferenceEquals(elem.Assignee, null)) then
-                issue.Assignee <- elem.Assignee.Value
+                if not(obj.ReferenceEquals(elem.Assignee, null)) then
+                    issue.Assignee <- elem.Assignee.Value
 
-            if not(obj.ReferenceEquals(elem.Author, null)) then
-                issue.Author <- elem.Author.Value
+                if not(obj.ReferenceEquals(elem.Author, null)) then
+                    issue.Author <- elem.Author.Value
             
-            if not(obj.ReferenceEquals(elem.Comments, null)) then
-                for elemC in elem.Comments do issue.Comments.Add(new Comment(elemC.CreatedAt, elemC.HtmlText, elemC.Key, elemC.Login, -1))
+                if not(obj.ReferenceEquals(elem.Comments, null)) then
+                    for elemC in elem.Comments do issue.Comments.Add(new Comment(elemC.CreatedAt, elemC.HtmlText, elemC.Key, elemC.Login, -1))
 
-            if not(obj.ReferenceEquals(elem.CloseDate, null)) then
-                issue.CloseDate <- elem.CloseDate.Value
+                if not(obj.ReferenceEquals(elem.CloseDate, null)) then
+                    issue.CloseDate <- elem.CloseDate.Value
 
-            if not(obj.ReferenceEquals(elem.Resolution, null)) then
-                issue.Resolution <- (EnumHelper.asEnum<Resolution>(elem.Resolution.Value.Replace("-", "_"))).Value
+                if not(obj.ReferenceEquals(elem.Resolution, null)) then
+                    issue.Resolution <- (EnumHelper.asEnum<Resolution>(elem.Resolution.Value.Replace("-", "_"))).Value
 
-            if not(obj.ReferenceEquals(elem.EffortToFix, null)) then
-                let itemValue = elem.JsonValue.Item("effortToFix")
-                issue.EffortToFix <- 0.0m
-                match itemValue with
-                | decimal -> issue.EffortToFix <- itemValue.AsDecimal()
+                if not(obj.ReferenceEquals(elem.EffortToFix, null)) then
+                    let itemValue = elem.JsonValue.Item("effortToFix")
+                    issue.EffortToFix <- 0.0m
+                    match itemValue with
+                    | decimal -> issue.EffortToFix <- itemValue.AsDecimal()
 
-            if issue.Comments.Count <> 0 then
-                for comment in issue.Comments do
-                    if comment.HtmlText.StartsWith("[VSSonarQubeExtension] Attached to issue: ") then
-                        for item in Regex.Matches(comment.HtmlText, "\\d+") do
-                            if issue.IssueTrackerId = null || issue.IssueTrackerId = "" then
-                                issue.IssueTrackerId <- item.Value
+                if issue.Comments.Count <> 0 then
+                    for comment in issue.Comments do
+                        if comment.HtmlText.StartsWith("[VSSonarQubeExtension] Attached to issue: ") then
+                            for item in Regex.Matches(comment.HtmlText, "\\d+") do
+                                if issue.IssueTrackerId = null || issue.IssueTrackerId = "" then
+                                    issue.IssueTrackerId <- item.Value
 
-            issueList.Add(issue)
+                issueList.Add(issue)
+            with
+            | ex -> ()
 
         issueList
 
@@ -288,7 +302,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
             match elem.JsonValue.TryGetProperty("comments") with
             | NotNull ->
-                for elemC in elem.Comments do issue.Comments.Add(new Comment(elemC.UpdatedAt, elemC.Text, new Guid(), elemC.Author, elem.Id))
+                for elemC in elem.Comments do issue.Comments.Add(new Comment(elemC.UpdatedAt, elemC.Text, "", elemC.Author, elem.Id))
             | _ -> ()
 
             issueList.Add(issue)
@@ -309,7 +323,9 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 AddElements(getIssuesFromStringAfter45(responsecontent))
 
                 // we need to get all pages
-                for i = 2 to data.Paging.Pages do
+                let value = int(System.Math.Ceiling(float(data.Paging.Total) / float(data.Paging.PageSize)))
+
+                for i = 2 to value do
                     let url = newurl + "&pageIndex=" + Convert.ToString(i)
                     let newresponse = httpconnector.HttpSonarGetRequest(userConf, url)
                     AddElements(getIssuesFromStringAfter45(newresponse))
@@ -1110,7 +1126,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 | Some x -> plan.DeadLine <- x
                 | _ -> ()            
                     
-                plan.Key <- entry.Key
+                plan.Key <- entry.Key.Replace("\"", "")
                 plan.Project <- entry.Project
                 plan.UserLogin <- entry.UserLogin
                 plan.TotalIssues <- entry.TotalIssues
@@ -1355,7 +1371,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             if not(obj.ReferenceEquals(plansDat.ActionPlan.JsonValue.TryGetProperty("deadLine"), null)) then
                 plan.DeadLine <- plansDat.ActionPlan.DeadLine
                     
-            plan.Key <- plansDat.ActionPlan.Key
+            plan.Key <- plansDat.ActionPlan.Key.Replace("\"", "")
             plan.Project <- plansDat.ActionPlan.Project
             plan.UserLogin <- plansDat.ActionPlan.UserLogin
             plan

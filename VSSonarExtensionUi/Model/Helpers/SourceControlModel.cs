@@ -72,7 +72,15 @@
 
             foreach (var plugin in sourceControlPlugins)
             {
-                plugin.InitializeRepository(basePath); 
+
+                try
+                {
+                    plugin.InitializeRepository(basePath); 
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine(ex.Message);
+                } 
             }
 
             this.supportedPlugin = this.GetSupportedPlugin();

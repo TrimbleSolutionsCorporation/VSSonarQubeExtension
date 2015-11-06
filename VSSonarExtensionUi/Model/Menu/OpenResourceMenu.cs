@@ -50,11 +50,6 @@ namespace VSSonarExtensionUi.Model.Menu
         private readonly ISonarRestService rest;
 
         /// <summary>
-        /// The config.
-        /// </summary>
-        private ISonarConfiguration config;
-
-        /// <summary>
         /// The vs helper.
         /// </summary>
         private IVsEnvironmentHelper visualStudioHelper;
@@ -182,7 +177,6 @@ namespace VSSonarExtensionUi.Model.Menu
         /// </summary>
         public void EndDataAssociation()
         {
-            this.config = null;
             this.associatedProject = null;
             this.sourceDir = string.Empty;
         }
@@ -220,8 +214,8 @@ namespace VSSonarExtensionUi.Model.Menu
                             continue;
                         }
 
-                        var resources = this.rest.GetResourcesData(this.config, issue.Component);
-                        this.visualStudioHelper.NavigateToResource(this.config.Hostname + "/resource/index/" + resources[0].Id);
+                        var resources = this.rest.GetResourcesData(AuthtenticationHelper.AuthToken, issue.Component);
+                        this.visualStudioHelper.NavigateToResource(AuthtenticationHelper.AuthToken.Hostname + "/resource/index/" + resources[0].Id);
                     }
                 }
 

@@ -45,7 +45,7 @@ namespace VSSonarPlugins.Types
         /// <param name="id">
         /// The id.
         /// </param>
-        public Comment(DateTime createAt, string htmlText, Guid key, string login, int id)
+        public Comment(DateTime createAt, string htmlText, string key, string login, int id)
         {
             this.CreatedAt = createAt;
             this.HtmlText = htmlText;
@@ -67,7 +67,7 @@ namespace VSSonarPlugins.Types
         /// <summary>
         /// Gets or sets the key.
         /// </summary>
-        public Guid Key { get; set; }
+        public string Key { get; set; }
 
         /// <summary>
         /// Gets or sets the login.
