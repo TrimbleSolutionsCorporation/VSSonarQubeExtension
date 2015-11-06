@@ -293,7 +293,13 @@
         /// <returns>return current branch</returns>
         public string CurrentBranch()
         {
-            return this.SourceControl.GetBranch();
+            var branch = this.SourceControl.GetBranch();
+            if (string.IsNullOrEmpty(branch))
+            {
+                return "master";
+            }
+
+            return branch;
         }
 
         /// <summary>
@@ -377,11 +383,19 @@
         /// <param name="solutionName">Name of the solution.</param>
         /// <param name="solutionPath">The solution path.</param>
         /// <returns>if association window should be open or closed</returns>
-        public bool StartAutoAssociation(string solutionName, string solutionPath)
+        public void StartAutoAssociation(string solutionName, string solutionPath)
         {
+            if (!this.model.IsConnected)
+            {
+                this.model.StatusMessageAssociation = "Not connected, no association possible.";
+                this.model.ShowRightFlyout = true;
+                return;
+            }
+
             if (!this.model.IsConnected || (this.OpenSolutionName == solutionName && this.OpenSolutionPath == solutionPath))
             {
-                return true;
+                this.model.ShowRightFlyout = false;
+                return;
             }
 
             this.OpenSolutionName = solutionName;
@@ -390,76 +404,101 @@
             // create a new source control provider for solution
             this.sourceControl = new SourceControlModel(this.pluginManager.SourceCodePlugins, this.OpenSolutionPath, this.logger);
 
-            if (this.model.IsConnected)
+            Resource solResource = this.GetResourceForSolution(solutionName, solutionPath);
+
+            if (solResource != null)
             {
-                Resource solResource = this.GetResourceForSolution(solutionName, solutionPath);
-
-                if (solResource != null)
+                foreach (Resource availableProject in this.AvailableProjects)
                 {
-                    foreach (Resource availableProject in this.AvailableProjects)
+                    if (availableProject.Key.Equals(solResource.Key))
                     {
-                        if (availableProject.Key.Equals(solResource.Key))
-                        {
-                            if (availableProject.IsBranch)
-                            {
-                                var branchName = this.CurrentBranch().Replace("/", "_");
-                                foreach (var branch in availableProject.BranchResources)
-                                {
-                                    if (branch.Name.EndsWith(branchName))
-                                    {
-                                        availableProject.SolutionRoot = solutionPath;
-                                        branch.SolutionRoot = solutionPath;
-                                        branch.Default = true;
-                                        this.AssociatedProject = availableProject;
-                                        this.SelectedBranchProject = branch;
-                                        this.AssignASonarProjectToSolution(availableProject, branch);
-                                        this.IsConnectedButNotAssociated = false;
-                                        this.IsAssociated = true;
-                                        this.CreateConfiguration(Path.Combine(solutionPath, "sonar-project.properties"));
-                                        return true;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                availableProject.SolutionRoot = solutionPath;
-                                this.AssociatedProject = availableProject;
-                                this.AssignASonarProjectToSolution(availableProject, null);
-                                this.IsConnectedButNotAssociated = false;
-                                this.IsAssociated = true;
-                                this.CreateConfiguration(Path.Combine(solutionPath, "sonar-project.properties"));
-                            }
-
-                            return true;
-                        }
-
                         if (availableProject.IsBranch)
                         {
+                            var branchName = this.CurrentBranch().Replace("/", "_");
+                            Resource masterBranch = null;
+
                             foreach (var branch in availableProject.BranchResources)
                             {
-                                if (branch.Key.Equals(solResource.Key))
+                                if (branch.BranchName.ToLower().Equals("master"))
+                                {
+                                    masterBranch = branch;
+                                }
+
+                                if (branch.Name.EndsWith(branchName))
                                 {
                                     availableProject.SolutionRoot = solutionPath;
                                     branch.SolutionRoot = solutionPath;
+                                    branch.Default = true;
                                     this.AssociatedProject = availableProject;
                                     this.SelectedBranchProject = branch;
                                     this.AssignASonarProjectToSolution(availableProject, branch);
                                     this.IsConnectedButNotAssociated = false;
                                     this.IsAssociated = true;
                                     this.CreateConfiguration(Path.Combine(solutionPath, "sonar-project.properties"));
-                                    return true;
+                                    this.SelectedProjectInView = this.AssociatedProject;
+                                    this.model.StatusMessageAssociation = "Associated with: " + this.AssociatedProject.Name;
+                                    this.model.ShowRightFlyout = false;
+                                    return;
                                 }
+                            }
+
+                            if (masterBranch != null)
+                            {
+                                this.AssociatedProject = masterBranch;
+                                this.SelectedProjectInView = this.AssociatedProject;
+                                availableProject.SolutionRoot = solutionPath;
+                                this.model.StatusMessageAssociation = "Associated with master branch because local branch not found in server.";
+                                this.model.ShowRightFlyout = false;
+                                this.IsConnectedButNotAssociated = false;
+                                this.IsAssociated = true;
+                                return;
+                            }
+
+                            this.model.StatusMessageAssociation = "No automatic association possible, no local or master branch detected in server.";
+                            this.model.ShowRightFlyout = true;
+                            return;
+                        }
+                        else
+                        {
+                            availableProject.SolutionRoot = solutionPath;
+                            this.AssociatedProject = availableProject;
+                            this.AssignASonarProjectToSolution(availableProject, null);
+                            this.IsConnectedButNotAssociated = false;
+                            this.IsAssociated = true;
+                            this.CreateConfiguration(Path.Combine(solutionPath, "sonar-project.properties"));
+                            this.SelectedProjectInView = this.AssociatedProject;
+                            this.model.StatusMessageAssociation = "Associated with: " + this.AssociatedProject.Name;
+                            this.model.ShowRightFlyout = false;
+                            return;
+                        }
+                    }
+
+                    if (availableProject.IsBranch)
+                    {
+                        foreach (var branch in availableProject.BranchResources)
+                        {
+                            if (branch.Key.Equals(solResource.Key))
+                            {
+                                availableProject.SolutionRoot = solutionPath;
+                                branch.SolutionRoot = solutionPath;
+                                this.AssociatedProject = availableProject;
+                                this.SelectedBranchProject = branch;
+                                this.AssignASonarProjectToSolution(availableProject, branch);
+                                this.IsConnectedButNotAssociated = false;
+                                this.IsAssociated = true;
+                                this.CreateConfiguration(Path.Combine(solutionPath, "sonar-project.properties"));
+                                this.SelectedProjectInView = this.AssociatedProject;
+                                this.model.StatusMessageAssociation = "Associated with: " + this.AssociatedProject.Name;
+                                this.model.ShowRightFlyout = false;
+                                return;
                             }
                         }
                     }
                 }
-                else
-                {
-                    return false;
-                }
             }
 
-            return true;
+            this.model.StatusMessageAssociation = "No automatic association possible, project found in server that corresponds to this solution.";
+            this.model.ShowRightFlyout = true;
         }
 
         /// <summary>The associate project to solution.</summary>
@@ -479,10 +518,11 @@
                 solution += ".sln";
             }
 
-            if (this.StartAutoAssociation(solution, solutionPath))
+            this.StartAutoAssociation(solution, solutionPath);
+            
+            if (this.IsAssociated)
             {
-                this.model.StatusMessageAssociation = "Associated With: " + this.AssociatedProject.Name;
-                this.model.ShowRightFlyout = false;
+                this.UpdateAssociationData();
             }
         }
 
@@ -700,7 +740,6 @@
 
             // associate
             this.pluginManager.AssociateWithNewProject(
-                AuthtenticationHelper.AuthToken,
                 this.AssociatedProject,
                 this.OpenSolutionPath,
                 this.SourceControl);
@@ -713,7 +752,6 @@
                 try
                 {
                     model.AssociateWithNewProject(
-                        AuthtenticationHelper.AuthToken,
                         this.AssociatedProject,
                         this.OpenSolutionPath,
                         this.SourceControl,

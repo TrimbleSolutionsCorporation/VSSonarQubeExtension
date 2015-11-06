@@ -71,11 +71,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         private Resource associatedProject;
 
-        /// <summary>
-        /// The user sonar configuration
-        /// </summary>
-        private ISonarConfiguration userSonarConfig;
-
         #endregion
 
         #region Constructors and Destructors
@@ -510,10 +505,9 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="workDir">The work dir.</param>
         /// <param name="provider">The provider.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
-        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin)
+        public void AssociateWithNewProject(Resource project, string workDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin)
         {
             this.SourceDir = workDir;
-            this.userSonarConfig = config;
             this.associatedProject = project;
         }
 
@@ -523,7 +517,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public void EndDataAssociation()
         {
             this.SourceDir = string.Empty;
-            this.userSonarConfig = null;
             this.associatedProject = null;
         }
 

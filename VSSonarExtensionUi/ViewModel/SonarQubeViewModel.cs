@@ -1083,17 +1083,9 @@ namespace VSSonarExtensionUi.ViewModel
                 this.IsExtensionBusy = true;
                 this.TryToConnect(useDispatcher);
                 this.AssociationModule.AssociateProjectToSolution(this.VsHelper.ActiveSolutionName(), this.VsHelper.ActiveSolutionPath());
-
-                if (this.IsConnected && !this.AssociationModule.IsAssociated)
+                if (this.AssociationModule.IsAssociated)
                 {
-                    this.StatusMessageAssociation = "Choose a project from list above and press associate to start, or open a new solution to try to achieve automatic association.";
-                    this.ShowRightFlyout = true;
-                }
-
-                if (this.IsConnected && this.AssociationModule.IsAssociated)
-                {
-                    this.StatusMessageAssociation = "Associated with: " + this.AssociationModule.SelectedProjectName;
-                    this.ShowRightFlyout = false;
+                    this.RefreshDataForResource();
                 }
             };
 

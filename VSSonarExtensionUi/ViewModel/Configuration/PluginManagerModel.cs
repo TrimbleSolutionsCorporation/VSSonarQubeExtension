@@ -68,11 +68,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         private readonly IList<IPlugin> plugins = new List<IPlugin>();
 
         /// <summary>
-        /// The sonar conf
-        /// </summary>
-        private ISonarConfiguration sonarConf;
-
-        /// <summary>
         /// The associated project
         /// </summary>
         private Resource associatedProject;
@@ -256,7 +251,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="workingDir">The working dir.</param>
         /// <param name="sourceModel">The source model.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
-        public void AssociateWithNewProject(ISonarConfiguration configIn, Resource project, string workingDir, ISourceControlProvider sourceModel, IIssueTrackerPlugin sourcePlugin)
+        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider sourceModel, IIssueTrackerPlugin sourcePlugin)
         {
             // not neccessary
         }
@@ -400,7 +395,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
             foreach (var plugin in this.plugins)
             {
-                var option = plugin.GetPluginControlOptions(this.associatedProject, this.sonarConf);
+                var option = plugin.GetPluginControlOptions(this.associatedProject, AuthtenticationHelper.AuthToken);
 
                 if (option != null)
                 {
@@ -447,10 +442,9 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="project">The project.</param>
         /// <param name="workDir">The work dir.</param>
         /// <param name="provider">The provider.</param>
-        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workDir, ISourceControlProvider provider)
+        public void AssociateWithNewProject(Resource project, string workDir, ISourceControlProvider provider)
         {
             this.sourceDir = workDir;
-            this.sonarConf = config;
             this.associatedProject = project;
 
             foreach (var plugin in this.plugins)
@@ -476,7 +470,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
                 try
                 {
-                    plugin.AssociateProject(project, config);
+                    plugin.AssociateProject(project, AuthtenticationHelper.AuthToken);
                 }
                 catch (Exception ex)
                 {
@@ -493,7 +487,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         public void EndDataAssociation()
         {
-            this.sonarConf = null;
             this.associatedProject = null;
             this.sourceDir = string.Empty;
         }
@@ -590,7 +583,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 {
                     try
                     {
-                        this.PluginController = plugin.GetPluginControlOptions(this.Project, this.sonarConf);
+                        this.PluginController = plugin.GetPluginControlOptions(this.Project, AuthtenticationHelper.AuthToken);
                         if (this.PluginController != null)
                         {
                             this.OptionsInView = this.PluginController.GetOptionControlUserInterface();

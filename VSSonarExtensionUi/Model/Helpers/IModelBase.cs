@@ -29,7 +29,6 @@
         /// <param name="sourceModel">The source model.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
         void AssociateWithNewProject(
-            ISonarConfiguration configIn,
             Resource project,
             string workingDir,
             ISourceControlProvider sourceModel,

@@ -50,11 +50,6 @@ namespace VSSonarExtensionUi.Model.Menu
         /// </summary>
         private readonly INotificationManager manager;
 
-        /// <summary>
-        ///     The config.
-        /// </summary>
-        private ISonarConfiguration config;
-
         #region Constructors and Destructors
 
         /// <summary>
@@ -138,9 +133,8 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <param name="workingDir">The working dir.</param>
         /// <param name="provider">The provider.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
-        public void AssociateWithNewProject(ISonarConfiguration configIn, Resource project, string workingDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin)
+        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin)
         {
-            this.config = configIn;
         }
 
         /// <summary>
@@ -148,7 +142,6 @@ namespace VSSonarExtensionUi.Model.Menu
         /// </summary>
         public void EndDataAssociation()
         {
-            this.config = null;
         }
 
         /// <summary>
@@ -193,7 +186,7 @@ namespace VSSonarExtensionUi.Model.Menu
                 if (this.CommandText.Equals("to user"))
                 {
                     string comment = string.Empty;
-                    var users = this.rest.GetUserList(this.config);
+                    var users = this.rest.GetUserList(AuthtenticationHelper.AuthToken);
                     var user = PromptForAssignUser.Prompt("Choose user to assign", "User selection", users, out comment);
 
                     if (user == null)
@@ -214,7 +207,7 @@ namespace VSSonarExtensionUi.Model.Menu
                                     issuesToAssign.Add(issue as Issue);
                                 }
 
-                                this.rest.AssignIssuesToUser(this.config, issuesToAssign, user, "Assigned in VSSonarExtension: " + comment);
+                                this.rest.AssignIssuesToUser(AuthtenticationHelper.AuthToken, issuesToAssign, user, "Assigned in VSSonarExtension: " + comment);
                                 this.model.RefreshView();
                             };
 
@@ -230,7 +223,7 @@ namespace VSSonarExtensionUi.Model.Menu
 
                         bw.DoWork += delegate
                         {
-                            var users = this.rest.GetUserList(this.config);
+                            var users = this.rest.GetUserList(AuthtenticationHelper.AuthToken);
                             var issues = this.model.SelectedItems;
 
                             var issuesToAssign = new List<Issue>();
@@ -239,7 +232,7 @@ namespace VSSonarExtensionUi.Model.Menu
                                 issuesToAssign.Add(issue as Issue);
                             }
 
-                            this.AssignIssueToLogin(users, this.config.Username, issuesToAssign);
+                            this.AssignIssueToLogin(users, AuthtenticationHelper.AuthToken.Username, issuesToAssign);
                             this.model.RefreshView();                            
                         };
 
@@ -255,7 +248,7 @@ namespace VSSonarExtensionUi.Model.Menu
 
                         bw.DoWork += delegate
                         {
-                            var users = this.rest.GetUserList(this.config);
+                            var users = this.rest.GetUserList(AuthtenticationHelper.AuthToken);
                             var issues = this.model.SelectedItems;
 
                             foreach (var issue in issues)
@@ -316,7 +309,7 @@ namespace VSSonarExtensionUi.Model.Menu
                     {
                         var issues = new List<Issue>();
                         issues.Add(issue);
-                        this.rest.AssignIssuesToUser(this.config, issues, user, "VSSonarQube Extension Auto Assign");
+                        this.rest.AssignIssuesToUser(AuthtenticationHelper.AuthToken, issues, user, "VSSonarQube Extension Auto Assign");
                         this.manager.ReportMessage(new Message { Id = "SourceControlMenu : ", Data = "assign issue to: " + user.Name + " ok" });
                         return;
                     }
@@ -348,7 +341,7 @@ namespace VSSonarExtensionUi.Model.Menu
                     var loginSq = user.Login.ToLower().Trim();
                     if (loginSq.Equals(login))
                     {
-                        this.rest.AssignIssuesToUser(this.config, issues, user, "VSSonarQube Extension Self Assign");
+                        this.rest.AssignIssuesToUser(AuthtenticationHelper.AuthToken, issues, user, "VSSonarQube Extension Self Assign");
                         this.manager.ReportMessage(new Message { Id = "SourceControlMenu : ", Data = "assign issue to: " + user.Name + " ok" });
                         return;
                     }

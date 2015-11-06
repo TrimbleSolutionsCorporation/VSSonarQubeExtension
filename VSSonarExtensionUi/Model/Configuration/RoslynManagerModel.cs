@@ -56,11 +56,6 @@
         private readonly IConfigurationHelper confHelper;
 
         /// <summary>
-        /// The user conf
-        /// </summary>
-        private ISonarConfiguration userConf;
-
-        /// <summary>
         /// The associated project
         /// </summary>
         private Resource associatedProject;
@@ -144,7 +139,6 @@
         /// </summary>
         public void EndDataAssociation()
         {
-            this.userConf = null;
             this.associatedProject = null;
             this.sourceDir = string.Empty;
         }
@@ -165,10 +159,9 @@
         /// <param name="workDir">The work dir.</param>
         /// <param name="sourceModelIn">The source model in.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
-        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workDir, ISourceControlProvider sourceModelIn, IIssueTrackerPlugin sourcePlugin)
+        public void AssociateWithNewProject(Resource project, string workDir, ISourceControlProvider sourceModelIn, IIssueTrackerPlugin sourcePlugin)
         {
             this.sourceDir = workDir;
-            this.userConf = config;
             this.associatedProject = project;
         }
 
