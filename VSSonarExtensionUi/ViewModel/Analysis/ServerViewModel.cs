@@ -79,11 +79,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         private Resource associatedProject;
 
-        /// <summary>
-        ///     The config.
-        /// </summary>
-        private ISonarConfiguration userConfiguration;
-
         #region Constructors and Destructors
 
         /// <summary>
@@ -142,11 +137,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         ///     Gets or sets the back ground color.
         /// </summary>
         public Color BackGroundColor { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the configuration.
-        /// </summary>
-        public object Configuration { get; set; }
 
         /// <summary>
         ///     Gets or sets a value indicating whether coverage in editor enabled.
@@ -382,15 +372,12 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <param name="provider">The provider.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
         public void AssociateWithNewProject(
-            ISonarConfiguration userConnectionConfig,
             Resource associatedProjectIn,
             string workingDir,
             ISourceControlProvider provider,
             IIssueTrackerPlugin sourcePlugin)
         {
-            this.userConfiguration = userConnectionConfig;
             this.associatedProject = associatedProjectIn;
-            this.Configuration = userConnectionConfig;
             if (this.vsenvironmenthelper != null)
             {
                 this.IsRunningInVisualStudio = this.vsenvironmenthelper.AreWeRunningInVisualStudio();
@@ -400,7 +387,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 this.IsRunningInVisualStudio = false;
             }
 
-            List<SonarActionPlan> usortedListofPlan = this.restservice.GetAvailableActionPlan(userConnectionConfig, this.associatedProject.Key);
+            List<SonarActionPlan> usortedListofPlan = this.restservice.GetAvailableActionPlan(AuthtenticationHelper.AuthToken, this.associatedProject.Key);
             if (usortedListofPlan != null && usortedListofPlan.Count > 0)
             {
                 this.AvailableActionPlans = new ObservableCollection<SonarActionPlan>(usortedListofPlan.OrderBy(i => i.Name));
@@ -458,9 +445,9 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             this.DocumentInView = documentInView;
             this.ResourceInEditor = res;
-            var newCoverage = this.restservice.GetCoverageInResource(this.userConfiguration, this.ResourceInEditor.Key);
-            var newSource = VsSonarUtils.GetLinesFromSource(this.restservice.GetSourceForFileResource(this.userConfiguration, this.ResourceInEditor.Key), "\r\n");
-            var newIssues = this.restservice.GetIssuesInResource(this.userConfiguration, this.ResourceInEditor.Key);
+            var newCoverage = this.restservice.GetCoverageInResource(AuthtenticationHelper.AuthToken, this.ResourceInEditor.Key);
+            var newSource = VsSonarUtils.GetLinesFromSource(this.restservice.GetSourceForFileResource(AuthtenticationHelper.AuthToken, this.ResourceInEditor.Key), "\r\n");
+            var newIssues = this.restservice.GetIssuesInResource(AuthtenticationHelper.AuthToken, this.ResourceInEditor.Key);
 
             this.IssuesGridView.UpdateIssues(newIssues, this.AvailableActionPlans);
             this.localEditorCache.UpdateResourceData(this.ResourceInEditor, newCoverage, newIssues, newSource);

@@ -126,11 +126,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         private IServiceProvider serviceProvier;
 
         /// <summary>
-        /// The user conf
-        /// </summary>
-        private ISonarConfiguration userConf;
-
-        /// <summary>
         /// The resource path in view
         /// </summary>
         private string resourceNameInView;
@@ -463,14 +458,12 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <summary>
         /// The init data association.
         /// </summary>
-        /// <param name="config">The configuration.</param>
         /// <param name="project">The project.</param>
         /// <param name="workingDir">The working dir.</param>
         /// <param name="provider">The provider.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
-        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workingDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin)
+        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin)
         {
-            this.userConf = config;
             this.associatedProject = project;
             this.IsAssociatedWithProject = this.associatedProject != null;
 
@@ -480,7 +473,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             {
                 this.CanRunAnalysis = true;
                 this.LoadingSonarData = true;
-                this.localAnalyserModule.AssociateWithProject(project, config);
+                this.localAnalyserModule.AssociateWithProject(project, AuthtenticationHelper.AuthToken);
             }
         }
 
@@ -812,7 +805,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                             itemInView,
                             this.associatedProject,
                             this.notificationManager.AnalysisChangeLines,
-                            this.userConf.SonarVersion,
+                            AuthtenticationHelper.AuthToken.SonarVersion,
                             AuthtenticationHelper.AuthToken,
                             this.keyTranslator,
                             this.vsenvironmenthelper);
@@ -823,7 +816,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                         this.OutputLog = string.Empty;
                         this.localAnalyserModule.RunFullAnalysis(
                             this.associatedProject,
-                            this.userConf.SonarVersion,
+                            AuthtenticationHelper.AuthToken.SonarVersion,
                             AuthtenticationHelper.AuthToken);
                         break;
                     case AnalysisTypes.INCREMENTAL:
@@ -832,7 +825,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                         this.OutputLog = string.Empty;
                         this.localAnalyserModule.RunIncrementalAnalysis(
                             this.associatedProject,
-                            this.userConf.SonarVersion,
+                            AuthtenticationHelper.AuthToken.SonarVersion,
                             AuthtenticationHelper.AuthToken);
                         break;
                     case AnalysisTypes.PREVIEW:
@@ -841,7 +834,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                         this.OutputLog = string.Empty;
                         this.localAnalyserModule.RunPreviewAnalysis(
                             this.associatedProject,
-                            this.userConf.SonarVersion,
+                            AuthtenticationHelper.AuthToken.SonarVersion,
                             AuthtenticationHelper.AuthToken);
                         break;
                     default:

@@ -59,11 +59,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         private IVsEnvironmentHelper visualStudioHelper;
 
         /// <summary>
-        /// The user configuration
-        /// </summary>
-        private ISonarConfiguration userConfig;
-
-        /// <summary>
         /// The associated project
         /// </summary>
         private Resource associatedProject;
@@ -350,11 +345,10 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="workingDir">The working dir.</param>
         /// <param name="provider">The provider.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
-        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workingDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin)
+        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin)
         {
             this.sourceDir = workingDir;
             this.associatedProject = project;
-            this.userConfig = config;
         }
 
         /// <summary>
@@ -386,7 +380,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         {
             this.sourceDir = string.Empty;
             this.associatedProject = null;
-            this.userConfig = null;
         }
 
         /// <summary>

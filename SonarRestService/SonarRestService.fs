@@ -570,17 +570,21 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
         duplicationData
 
     let GetCoverageFromContent(responsecontent : string) = 
-        let resources = JsonResourceWithMetrics.Parse(responsecontent)
-
         let source = new SourceCoverage()
 
         try
-            source.SetLineCoverageData(resources.[0].Msr.[0].Data.Value)
-        with
-            | ex -> ()
+            let resources = JsonResourceWithMetrics.Parse(responsecontent)
 
-        try
-            source.SetBranchCoverageData(resources.[0].Msr.[1].Data.Value, resources.[0].Msr.[2].Data.Value)
+
+            try
+                source.SetLineCoverageData(resources.[0].Msr.[0].Data.Value)
+            with
+                | ex -> ()
+
+            try
+                source.SetBranchCoverageData(resources.[0].Msr.[1].Data.Value, resources.[0].Msr.[2].Data.Value)
+            with
+                | ex -> ()
         with
             | ex -> ()
 

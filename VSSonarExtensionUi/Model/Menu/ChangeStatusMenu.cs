@@ -48,11 +48,6 @@ namespace VSSonarExtensionUi.Model.Menu
         /// </summary>
         private readonly INotificationManager manager;
 
-        /// <summary>
-        ///     The config.
-        /// </summary>
-        private ISonarConfiguration config;
-
         #region Constructors and Destructors
 
         /// <summary>
@@ -139,9 +134,8 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <param name="workingDir">The working dir.</param>
         /// <param name="provider">The provider.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
-        public void AssociateWithNewProject(ISonarConfiguration configIn, Resource project, string workingDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin)
+        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin)
         {
-            this.config = configIn;
         }
 
         /// <summary>
@@ -149,7 +143,6 @@ namespace VSSonarExtensionUi.Model.Menu
         /// </summary>
         public void EndDataAssociation()
         {
-            this.config = null;
         }
 
         /// <summary>
@@ -200,7 +193,7 @@ namespace VSSonarExtensionUi.Model.Menu
                         bw.DoWork += delegate
                             {
                                 this.manager.StartedWorking("Marking Issues as False Posiive");
-                                var replies = this.rest.MarkIssuesAsFalsePositive(this.config, this.model.SelectedItems, string.Empty);
+                                var replies = this.rest.MarkIssuesAsFalsePositive(AuthtenticationHelper.AuthToken, this.model.SelectedItems, string.Empty);
                                 this.VerifyChangeStatusReplies(replies, "Mark Issues as False Positive");
                                 this.model.RefreshView();
                             };
@@ -218,7 +211,7 @@ namespace VSSonarExtensionUi.Model.Menu
                         bw.DoWork += delegate
                         {
                             this.manager.StartedWorking("Confirming Issues");
-                            var replies = this.rest.ConfirmIssues(this.config, this.model.SelectedItems, string.Empty);
+                            var replies = this.rest.ConfirmIssues(AuthtenticationHelper.AuthToken, this.model.SelectedItems, string.Empty);
                             this.VerifyChangeStatusReplies(replies, "Confirm Issues");
                             this.model.RefreshView();
                         };
@@ -236,7 +229,7 @@ namespace VSSonarExtensionUi.Model.Menu
                         bw.DoWork += delegate
                         {
                             this.manager.StartedWorking("Marking issues as fixed");
-                            var replies = this.rest.ResolveIssues(this.config, this.model.SelectedItems, string.Empty);
+                            var replies = this.rest.ResolveIssues(AuthtenticationHelper.AuthToken, this.model.SelectedItems, string.Empty);
 
                             this.VerifyChangeStatusReplies(replies, "Mark Issues As Fixed");
 

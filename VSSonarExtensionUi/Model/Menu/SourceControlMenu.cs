@@ -47,11 +47,6 @@
         private ISourceControlProvider sourceControl;
 
         /// <summary>
-        /// The user conf
-        /// </summary>
-        private ISonarConfiguration userConf;
-
-        /// <summary>
         /// The vshelper
         /// </summary>
         private IVsEnvironmentHelper vshelper;
@@ -129,10 +124,9 @@
         /// <param name="workingDir">The working dir.</param>
         /// <param name="sourceModel">The source model.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
-        public void AssociateWithNewProject(ISonarConfiguration config, Resource project, string workingDir, ISourceControlProvider sourceModel, IIssueTrackerPlugin sourcePlugin)
+        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider sourceModel, IIssueTrackerPlugin sourcePlugin)
         {
             this.sourceControl = sourceModel;
-            this.userConf = config;
             this.assignProject = project;
         }
 
@@ -197,7 +191,7 @@
             {
                 if (this.CommandText.Equals("assign to committer"))
                 {
-                    var users = this.rest.GetUserList(this.userConf);
+                    var users = this.rest.GetUserList(AuthtenticationHelper.AuthToken);
                     var issues = this.model.SelectedItems;
 
                     foreach (var issue in issues)
@@ -256,7 +250,7 @@
                             var issues = new List<Issue>();
                             issues.Add(issue);
 
-                            this.rest.AssignIssuesToUser(this.userConf, issues, user, "VSSonarQube Extension Auto Assign");
+                            this.rest.AssignIssuesToUser(AuthtenticationHelper.AuthToken, issues, user, "VSSonarQube Extension Auto Assign");
                             this.manager.ReportMessage(new Message { Id = "SourceControlMenu : ", Data = "assign issue to: " + blameLine.Author + " ok" });
                             return;
                         }
