@@ -144,7 +144,6 @@
     <Compile Include="Model\Menu\IssueTrackerMenu.cs" />
     <Compile Include="Model\Menu\PlanMenu.cs" />
     <Compile Include="Model\Menu\SourceControlMenu.cs" />
-    <Compile Include="ViewModel\Association\AssociationViewModel.cs" />
     <Compile Include="Model\PluginManager\PluginController.cs" />
     <Compile Include="Model\PluginManager\PluginLoader.cs" />
     <Compile Include="Model\PluginManager\PluginSandBoxLoader.cs" />
@@ -182,9 +181,6 @@
     <Compile Include="ViewModel\Configuration\GeneralConfigurationViewModel.cs" />
     <Compile Include="ViewModel\Helpers\IViewModelBase.cs" />
     <Compile Include="ViewModel\SonarQubeViewModel.cs" />
-    <Compile Include="View\Association\AssociationView.xaml.cs">
-      <DependentUpon>AssociationView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\Configuration\RoslynManagerView.xaml.cs">
       <DependentUpon>RoslynManagerView.xaml</DependentUpon>
     </Compile>
@@ -281,10 +277,6 @@
     <Page Include="Styles\MetroWPFTemplate.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="View\Association\AssociationView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Configuration\RoslynManagerView.xaml">
       <SubType>Designer</SubType>

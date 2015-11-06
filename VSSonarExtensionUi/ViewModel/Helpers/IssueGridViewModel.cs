@@ -27,7 +27,6 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
     using System.Windows.Media;
     using GalaSoft.MvvmLight.Command;
 
-    using Model.Association;
     using Model.Helpers;
     using Model.Menu;
     using PropertyChanged;
@@ -36,6 +35,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
     using View.Helpers;
+    using VSSonarExtensionUi.Association;
 
     /// <summary>
     /// The issue grid view viewModel.

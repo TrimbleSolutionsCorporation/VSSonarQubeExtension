@@ -23,8 +23,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using View.Helpers;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-    using Model.Association;
-
+    using VSSonarExtensionUi.Association;
 
     /// <summary>
     /// The sonar configuration view viewModel.

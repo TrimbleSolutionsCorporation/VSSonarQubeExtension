@@ -21,7 +21,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using SonarLocalAnalyser;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-    using Model.Association;
+    using VSSonarExtensionUi.Association;
 
     /// <summary>
     /// The license viewer view model.

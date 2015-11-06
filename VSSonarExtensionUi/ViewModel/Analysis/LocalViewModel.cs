@@ -33,8 +33,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
     using Application = System.Windows.Application;
-    using Model.Association;
     using System.Diagnostics;
+    using VSSonarExtensionUi.Association;
 
     /// <summary>
     ///     The analysis types.

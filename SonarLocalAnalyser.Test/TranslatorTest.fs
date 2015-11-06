@@ -98,8 +98,8 @@ type TraTests() =
         Assert.That((translator :> ISQKeyTranslator).GetModules().Length, Is.EqualTo(0))
         Assert.That((translator :> ISQKeyTranslator).GetProjectKey(), Is.EqualTo("AB:ProjectX_CPP_Flat"))
         Assert.That((translator :> ISQKeyTranslator).GetProjectName(), Is.EqualTo("ProjectX_CPP"))
-
-        Assert.That((translator :> ISQKeyTranslator).TranslateKey("AB:ProjectX_CPP_Flat:A/1/a/dup.cpp", mockAVsinterface, ""), Is.EqualTo(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject\\A\\1\\a\\dup.cpp")))
+        let translatedKey = (translator :> ISQKeyTranslator).TranslateKey("AB:ProjectX_CPP_Flat:A/1/a/dup.cpp", mockAVsinterface, "")
+        Assert.That(translatedKey, Is.EqualTo(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject\\A\\1\\a\\dup.cpp")))
 
 
     [<Test>]
@@ -205,6 +205,7 @@ type TraTests() =
             Mock<IVsEnvironmentHelper>()
                 .Setup(fun x -> <@ x.GetGuidForProject(any()) @>).Returns("{guid}")
                 .Setup(fun x -> <@ x.GetProperFilePathCapitalization(any()) @>).Returns(Path.Combine(assemblyRunningPath, "Folder\\file.cs"))
+                .Setup(fun x -> <@ x.EvaluatedValueForIncludeFile(any(), any()) @>).Returns("Folder\\file.cs")
                 .Create()
 
         let item = new VsFileItem()
@@ -228,6 +229,7 @@ type TraTests() =
             Mock<IVsEnvironmentHelper>()
                 .Setup(fun x -> <@ x.GetGuidForProject(any()) @>).Returns("{guid}")
                 .Setup(fun x -> <@ x.GetProperFilePathCapitalization(any()) @>).Returns(Path.Combine(assemblyRunningPath, "Folder\\file.cs"))
+                .Setup(fun x -> <@ x.EvaluatedValueForIncludeFile(any(), any()) @>).Returns("Folder\\file.cs")
                 .Create()
 
         let item = new VsFileItem()

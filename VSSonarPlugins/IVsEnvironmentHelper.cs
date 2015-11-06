@@ -207,5 +207,14 @@ namespace VSSonarPlugins
         /// <param name="localFileName">The local file name.</param>
         /// <param name="serverFileName">The server file name.</param>
         void ClearDiffFile(string localFileName, string serverFileName);
+
+        /// <summary>
+        /// Evaluateds the value for include file.
+        /// </summary>
+        /// <param name="msbuildProjectFile">The msbuild project file.</param>
+        /// <param name="filePath">The file path.</param>
+        /// <returns></returns>
+        string EvaluatedValueForIncludeFile(string msbuildProjectFile, string filePath);
+
     }
 }

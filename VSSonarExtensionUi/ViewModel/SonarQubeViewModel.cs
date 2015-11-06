@@ -28,7 +28,6 @@ namespace VSSonarExtensionUi.ViewModel
     using GalaSoft.MvvmLight.Command;
     using Helpers;
     using Model.Analysis;
-    using Model.Association;
     using Model.Cache;
     using Model.Helpers;
     using Model.PluginManager;
@@ -38,6 +37,7 @@ namespace VSSonarExtensionUi.ViewModel
     using View.Configuration;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
+    using VSSonarExtensionUi.Association;
 
     /// <summary>
     ///     The changed event handler.
@@ -96,6 +96,11 @@ namespace VSSonarExtensionUi.ViewModel
         /// </summary>
         private readonly SonarRestService sonarRestConnector;
 
+        /// <summary>
+        /// The show flyouts
+        /// </summary>
+        private bool showRightFlyout;
+
         #region Constructors and Destructors
 
         /// <summary>
@@ -114,7 +119,6 @@ namespace VSSonarExtensionUi.ViewModel
         {
             this.vsversion = vsverionIn;
             this.ToolsProvidedByPlugins = new ObservableCollection<MenuItem>();
-            this.AvailableBranches = new List<Resource>();
 
             this.notificationManager = new NotifyCationManager(this, vsverionIn);
             this.configurationHelper = new ConfigurationHelper(vsverionIn, this.notificationManager);
@@ -129,6 +133,7 @@ namespace VSSonarExtensionUi.ViewModel
             this.ForeGroundColor = Colors.Black;
             this.ErrorIsFound = false;
             this.IsExtensionBusy = false;
+            this.ShowRightFlyout = false;
             
             this.InitCommands();
         }
@@ -142,7 +147,6 @@ namespace VSSonarExtensionUi.ViewModel
         {
             this.vsversion = vsverionIn;
             this.ToolsProvidedByPlugins = new ObservableCollection<MenuItem>();
-            this.AvailableBranches = new List<Resource>();
 
             this.configurationHelper = helper;
             this.notificationManager = new NotifyCationManager(this, vsverionIn);
@@ -184,6 +188,33 @@ namespace VSSonarExtensionUi.ViewModel
         #region Public Properties
 
         /// <summary>
+        ///     Gets or sets a value indicating whether show flyouts.
+        /// </summary>
+        public bool ShowRightFlyout
+        {
+            get
+            {
+                return this.showRightFlyout;
+            }
+
+            set
+            {
+                this.showRightFlyout = value;
+                this.SizeOfFlyout = value ? 250 : 0;
+            }
+        }
+
+        /// <summary>
+        ///     Gets or sets the assign project command.
+        /// </summary>
+        public RelayCommand AssignProjectCommand { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the size of flyout.
+        /// </summary>
+        public int SizeOfFlyout { get; set; }
+
+        /// <summary>
         /// Gets or sets the error colour.
         /// </summary>
         /// <value>
@@ -199,7 +230,12 @@ namespace VSSonarExtensionUi.ViewModel
         /// </value>
         public string ErrorMessageTooltip { get; set; }
 
-        /// <summary>Gets or sets the id of plugin to remove.</summary>
+        /// <summary>
+        /// Gets or sets the id of plugin to remove.
+        /// </summary>
+        /// <value>
+        /// The identifier of plugin to remove.
+        /// </value>
         public int IdOfPluginToRemove { get; set; }
 
         /// <summary>
@@ -228,30 +264,6 @@ namespace VSSonarExtensionUi.ViewModel
         public bool IsConnected { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this instance is branch selection enabled.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if this instance is branch selection enabled; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsBranchSelectionEnabled { get; set; }
-
-        /// <summary>
-        /// Gets or sets the available branches.
-        /// </summary>
-        /// <value>
-        /// The available branches.
-        /// </value>
-        public List<Resource> AvailableBranches { get; set; }
-
-        /// <summary>
-        /// Gets or sets the selected branch.
-        /// </summary>
-        /// <value>
-        /// The selected branch.
-        /// </value>
-        public Resource SelectedBranch { get; set; }
-
-        /// <summary>
         ///     Gets or sets the clear cache command.
         /// </summary>
         public RelayCommand ClearCacheCommand { get; set; }
@@ -275,14 +287,6 @@ namespace VSSonarExtensionUi.ViewModel
         ///     Gets or sets the disconnect to server command.
         /// </summary>
         public RelayCommand DisconnectToServerCommand { get; set; }
-
-        /// <summary>
-        /// Gets or sets the start association window command.
-        /// </summary>
-        /// <value>
-        /// The start association window command.
-        /// </value>
-        public RelayCommand StartAssociationWindowCommand { get; set; }
 
         /// <summary>
         ///     Gets or sets the document in view.
@@ -318,6 +322,11 @@ namespace VSSonarExtensionUi.ViewModel
         ///     Gets or sets the launch extension properties command.
         /// </summary>
         public RelayCommand LaunchExtensionPropertiesCommand { get; set; }
+
+        /// <summary>
+        ///     Gets the close flyout issue search command.
+        /// </summary>
+        public RelayCommand CloseRightFlyoutCommand { get; private set; }
 
         /// <summary>
         ///     Gets or sets the local view viewModel.
@@ -412,6 +421,14 @@ namespace VSSonarExtensionUi.ViewModel
         public string StatusMessage { get; set; }
 
         /// <summary>
+        /// Gets or sets the status message association.
+        /// </summary>
+        /// <value>
+        /// The status message association.
+        /// </value>
+        public string StatusMessageAssociation { get; set; }
+
+        /// <summary>
         /// Gets the issues search model.
         /// </summary>
         /// <value>
@@ -454,35 +471,14 @@ namespace VSSonarExtensionUi.ViewModel
             viewModelPool.Add(viewModel);
         }
 
-        /// <summary>The associate project to solution.</summary>
-        /// <param name="solutionName">The solution Name.</param>
-        /// <param name="solutionPath">The solution Path.</param>
-        public void AssociateProjectToSolution(string solutionName, string solutionPath)
-        {
-            var solution = solutionName;
-
-            if (string.IsNullOrEmpty(solution))
-            {
-                return;
-            }
-
-            if (!solution.ToLower().EndsWith(".sln"))
-            {
-                solution += ".sln";
-            }
-
-            this.AssociationModule.StartAutoAssociation(solution, solutionPath);
-        }
-
         /// <summary>
         ///     The clear project association.
         /// </summary>
         public void ClearProjectAssociation()
         {
-            this.AvailableBranches.Clear();
-            this.SelectedBranch = null;
             this.StatusMessage = string.Empty;
             this.ConnectionTooltip = "Connected but not associated";
+            this.StatusMessageAssociation = "Not associated with any project";
             this.AssociationModule.EndAssociationAndClearData();
         }
 
@@ -656,19 +652,6 @@ namespace VSSonarExtensionUi.ViewModel
 
             this.OnAnalysisModeHasChange(EventArgs.Empty);
             Debug.WriteLine("Name Changed");
-        }
-
-
-        /// <summary>
-        /// Called when [selected branch changed].
-        /// </summary>
-        public void OnSelectedBranchChanged()
-        {
-            if (this.SelectedBranch != null && this.AssociationModule != null)
-            {
-                this.AssociationModule.UpdateBranchSelection(this.SelectedBranch);
-                this.RefreshDataForResource(this.DocumentInView);
-            }
         }
 
         /// <summary>
@@ -950,15 +933,17 @@ namespace VSSonarExtensionUi.ViewModel
             this.ConnectCommand = new RelayCommand(this.OnConnectCommand);
             this.ConnectedToServerCommand = new RelayCommand(this.OnConnectToSonarCommand);
             this.DisconnectToServerCommand = new RelayCommand(this.OnDisconnectToSonar);
-            this.StartAssociationWindowCommand = new RelayCommand(this.OnStartAssociationWindowCommand);
+            this.AssignProjectCommand = new RelayCommand(this.OnAssignProjectCommand);
+            this.CloseRightFlyoutCommand = new RelayCommand(this.OnCloseRightFlyoutCommand);
         }
 
         /// <summary>
-        /// Called when [start association window command].
+        ///     The on close flyout issue search command.
         /// </summary>
-        private void OnStartAssociationWindowCommand()
+        private void OnCloseRightFlyoutCommand()
         {
-            this.AssociationModule.ShowAssociationWindow();
+            this.ShowRightFlyout = false;
+            this.SizeOfFlyout = 0;
         }
 
         /// <summary>
@@ -1066,11 +1051,12 @@ namespace VSSonarExtensionUi.ViewModel
         /// </summary>
         private void OnDisconnectToSonar()
         {
-            this.ClearProjectAssociation();
-            this.AssociationModule.Disconnect();           
             this.ConnectionTooltip = "Not Connected";
+            this.StatusMessageAssociation = string.Empty;
             this.ErrorIsFound = false;
             this.ErrorMessageTooltip = string.Empty;
+            this.ClearProjectAssociation();
+            this.AssociationModule.Disconnect();
         }
 
         /// <summary>
@@ -1096,7 +1082,19 @@ namespace VSSonarExtensionUi.ViewModel
                 this.CanConnectEnabled = false;
                 this.IsExtensionBusy = true;
                 this.TryToConnect(useDispatcher);
-                this.AssociateProjectToSolution(this.VsHelper.ActiveSolutionName(), this.VsHelper.ActiveSolutionPath());
+                this.AssociationModule.AssociateProjectToSolution(this.VsHelper.ActiveSolutionName(), this.VsHelper.ActiveSolutionPath());
+
+                if (this.IsConnected && !this.AssociationModule.IsAssociated)
+                {
+                    this.StatusMessageAssociation = "Choose a project from list above and press associate to start, or open a new solution to try to achieve automatic association.";
+                    this.ShowRightFlyout = true;
+                }
+
+                if (this.IsConnected && this.AssociationModule.IsAssociated)
+                {
+                    this.StatusMessageAssociation = "Associated with: " + this.AssociationModule.SelectedProjectName;
+                    this.ShowRightFlyout = false;
+                }
             };
 
             bw.RunWorkerAsync();
@@ -1133,6 +1131,32 @@ namespace VSSonarExtensionUi.ViewModel
                 this.ConnectionTooltip = "No Connection";
                 this.AssociationModule.Disconnect();
             }
+        }
+
+        /// <summary>
+        ///     The on assign project command.
+        /// </summary>
+        private void OnAssignProjectCommand()
+        {
+            if (this.AssociationModule.SelectedProjectInView == null)
+            {
+                this.StatusMessageAssociation = "Please select a project, or if empty please login in the Menu > Configuration in the Sonar Window";
+                return;
+            }
+
+            if (this.AssociationModule.SelectedProjectInView.IsBranch && this.AssociationModule.SelectedBranchProject == null)
+            {
+                this.StatusMessageAssociation = "Please select a feature branch as the in use branch";
+                return;
+            }
+
+            if (this.AssociationModule.AssignASonarProjectToSolution(this.AssociationModule.SelectedProjectInView, this.AssociationModule.SelectedBranchProject))
+            {
+                this.StatusMessageAssociation = "Associated : " + this.AssociationModule.AssociatedProject.Name;
+                return;
+            }
+
+            this.StatusMessageAssociation = "Error : Not Associated";
         }
 
         #endregion

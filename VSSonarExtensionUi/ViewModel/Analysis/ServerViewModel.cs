@@ -24,7 +24,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using GalaSoft.MvvmLight.Command;
     using Helpers;
     using Model.Analysis;
-    using Model.Association;
     using Model.Cache;
     using Model.Helpers;
     using PropertyChanged;
@@ -32,6 +31,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using VSSonarPlugins;
     using VSSonarPlugins.Helpers;
     using VSSonarPlugins.Types;
+    using VSSonarExtensionUi.Association;
     
     /// <summary>
     ///     The server view model.

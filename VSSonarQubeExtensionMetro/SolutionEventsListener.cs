@@ -115,7 +115,7 @@ namespace VSSonarQubeExtension
             string solutionPath = this.environment.ActiveSolutionPath();
 
             SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Solution Opened: " + solutionName + " : " + solutionPath);
-            SonarQubeViewModelFactory.SQViewModel.AssociateProjectToSolution(solutionName, solutionPath);
+            SonarQubeViewModelFactory.SQViewModel.AssociationModule.AssociateProjectToSolution(solutionName, solutionPath);
 
             string text = this.environment.GetCurrentTextInView();
             if (string.IsNullOrEmpty(text))

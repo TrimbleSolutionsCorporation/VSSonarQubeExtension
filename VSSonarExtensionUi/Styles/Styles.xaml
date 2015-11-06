@@ -677,7 +677,42 @@
                         </DockPanel>
                 </Border>
             </DataTemplate>
-                        
 
+    <DataTemplate x:Key="CustomFlyoutHeaderTemplateRight" x:Shared="False">
+        <Border BorderThickness="2" BorderBrush="LightBlue">
+            <DockPanel x:Name="dpHeader" 
+                   Margin="-120,0,0,0"
+                   VerticalAlignment="Center"
+                   LastChildFill="True" >
+                <TextBlock Text="{Binding}" DockPanel.Dock="Right"
+                           x:Name="PART_BackButton"
+                           Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:Flyout}}, Path=TitleVisibility}"
+                           FontSize="12"
+                           Margin="0,0,10,0"
+                           VerticalAlignment="Center" />
+                <Button DockPanel.Dock="Left" x:Name="nav" Style="{DynamicResource MetroCircleButtonStyle}"
+                            Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:Flyout}}, Path=CloseButtonVisibility}"
+                            Height="30"
+                            Width="30"
+                            Margin="0,0,0,0"
+                            FontFamily="Segoe UI Symbol"
+                            Foreground="{Binding RelativeSource={RelativeSource AncestorType={x:Type controls:Flyout}}, Path=Foreground}"
+                            FontSize="8"
+                            VerticalAlignment="Bottom">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <command:EventToCommand  Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.CloseRightFlyoutCommand }"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <Rectangle Width="15" Height="15" Fill="{Binding RelativeSource={RelativeSource AncestorType={x:Type controls:Flyout}}, Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_arrow_right}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                </Button>
+
+            </DockPanel>
+        </Border>
+    </DataTemplate>
 
 </ResourceDictionary>
