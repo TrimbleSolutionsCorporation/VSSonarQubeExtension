@@ -52,7 +52,7 @@ namespace VSSonarPlugins.Types
             this.Author = string.Empty;
             this.IsNew = false;
             this.Key = string.Empty;
-            this.ActionPlan = new Guid();
+            this.ActionPlan = string.Empty;
             this.ActionPlanName = string.Empty;
 
             this.Id = 0;
@@ -138,7 +138,7 @@ namespace VSSonarPlugins.Types
         /// <summary>
         /// Gets or sets the action plan.
         /// </summary>
-        public Guid ActionPlan { get; set; }
+        public string ActionPlan { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is new.

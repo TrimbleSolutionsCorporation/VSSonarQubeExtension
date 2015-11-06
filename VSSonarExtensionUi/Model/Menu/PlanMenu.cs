@@ -276,7 +276,7 @@ namespace VSSonarExtensionUi.Model.Menu
                         foreach (var issue in this.model.SelectedItems)
                         {
                             (issue as Issue).ActionPlanName = string.Empty;
-                            (issue as Issue).ActionPlan = Guid.Empty;
+                            (issue as Issue).ActionPlan = string.Empty;
                         }
                     }
                     else

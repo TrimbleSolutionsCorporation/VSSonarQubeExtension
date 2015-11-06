@@ -71,11 +71,6 @@
         private ISourceControlProvider sourceControl;
 
         /// <summary>
-        /// The current branch name
-        /// </summary>
-        private string currentBranchName;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="AssociationModel" /> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
@@ -217,7 +212,6 @@
         public bool AssignASonarProjectToSolution(Resource projectIn, Resource branchProject)
         {
             var project = projectIn;
-            this.currentBranchName = string.Empty;
 
             if (project == null)
             {
@@ -239,7 +233,6 @@
                 }
 
                 branchProject.Default = true;
-                this.currentBranchName = branchProject.BranchName;
             }
             else
             {
@@ -279,7 +272,7 @@
                     });
 
                 this.AssociatedProject.SolutionRoot = this.OpenSolutionPath;
-                this.keyTranslator.SetProjectKeyAndBaseDir(this.AssociatedProject.Key, this.OpenSolutionPath, this.currentBranchName);
+                this.keyTranslator.SetProjectKeyAndBaseDir(this.AssociatedProject.Key, this.OpenSolutionPath, this.AssociatedProject.BranchName);
             }
 
             this.configurationHelper.SyncSettings();
@@ -445,7 +438,8 @@
                             if (masterBranch != null)
                             {
                                 this.AssociatedProject = masterBranch;
-                                this.SelectedProjectInView = this.AssociatedProject;
+                                this.SelectedProjectInView = availableProject;
+                                this.SelectedBranchProject = masterBranch;
                                 availableProject.SolutionRoot = solutionPath;
                                 this.model.StatusMessageAssociation = "Associated with master branch because local branch not found in server.";
                                 this.model.ShowRightFlyout = false;
@@ -745,7 +739,7 @@
                 this.SourceControl);
 
             this.keyTranslator.SetLookupType(KeyLookUpType.Invalid);
-            this.keyTranslator.SetProjectKeyAndBaseDir(this.AssociatedProject.Key, this.OpenSolutionPath, this.currentBranchName);
+            this.keyTranslator.SetProjectKeyAndBaseDir(this.AssociatedProject.Key, this.OpenSolutionPath, this.AssociatedProject.BranchName);
 
             foreach (IModelBase model in modelPool)
             {

@@ -957,7 +957,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         {
             foreach (var issue in issues)
             {
-                if (issue.ActionPlan != Guid.Empty && string.IsNullOrEmpty(issue.ActionPlanName))
+                if (string.IsNullOrEmpty(issue.ActionPlan) && string.IsNullOrEmpty(issue.ActionPlanName))
                 {
                     foreach (var plan in availableActionPlans)
                     {

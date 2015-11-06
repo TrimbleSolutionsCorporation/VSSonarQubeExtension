@@ -349,9 +349,14 @@ type SQKeyTranslator() =
 
     interface ISQKeyTranslator with
         member this.SetProjectKeyAndBaseDir(key:string, path:string, branch:string) =
+            if branch = null then
+                currentBranch <- ""
+            else
+                currentBranch <- branch
+
             projectBaseDir <- path
             projectKey <- key
-            currentBranch <- branch
+            
             ()
 
         member this.SetProjectKey(key:string) =
