@@ -33,6 +33,30 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         IList<ISourceVersionPlugin> SourceCodePlugins { get; }
 
         /// <summary>
+        /// Gets the issue tracker plugins.
+        /// </summary>
+        /// <value>
+        /// The issue tracker plugins.
+        /// </value>
+        IList<IIssueTrackerPlugin> IssueTrackerPlugins { get; }
+
+        /// <summary>
+        /// Gets the analysis plugins.
+        /// </summary>
+        /// <value>
+        /// The analysis plugins.
+        /// </value>
+        IList<IAnalysisPlugin> AnalysisPlugins { get; }
+
+        /// <summary>
+        /// Gets the menu plugins.
+        /// </summary>
+        /// <value>
+        /// The menu plugins.
+        /// </value>
+        IList<IMenuCommandPlugin> MenuPlugins { get; }
+
+        /// <summary>
         /// Gets the issue tracker plugin.
         /// </summary>
         /// <returns>returns issue tracker plugin</returns>

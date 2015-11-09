@@ -514,7 +514,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         /// The end data association.
         /// </summary>
-        public void EndDataAssociation()
+        public void OnSolutionClosed()
         {
             this.SourceDir = string.Empty;
             this.associatedProject = null;

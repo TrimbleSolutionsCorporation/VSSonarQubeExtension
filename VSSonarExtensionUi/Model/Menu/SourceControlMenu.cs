@@ -150,7 +150,7 @@
         /// <summary>
         /// The end data association.
         /// </summary>
-        public void EndDataAssociation()
+        public void OnSolutionClosed()
         {
             // not needed
         }

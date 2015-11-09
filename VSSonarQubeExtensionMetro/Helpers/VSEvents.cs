@@ -275,7 +275,7 @@ namespace VSSonarQubeExtension.Helpers
         private void SolutionClosed()
         {
             SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Solution Closed");
-            SonarQubeViewModelFactory.SQViewModel.ClearProjectAssociation();        
+            SonarQubeViewModelFactory.SQViewModel.OnSolutionClosed();
         }
 
         /// <summary>
@@ -283,21 +283,18 @@ namespace VSSonarQubeExtension.Helpers
         /// </summary>
         private void SolutionOpened()
         {
-            
             string solutionName = this.environment.ActiveSolutionName();
             string solutionPath = this.environment.ActiveSolutionPath();
 
-            SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Solution Opened: " + solutionName + " : " + solutionPath);
-            SonarQubeViewModelFactory.SQViewModel.AssociationModule.AssociateProjectToSolution(solutionName, solutionPath);
-
             string text = this.environment.GetCurrentTextInView();
-            if (string.IsNullOrEmpty(text))
+            string fileName = "";
+            if (!string.IsNullOrEmpty(text))
             {
-                return;
+                fileName = this.environment.ActiveFileFullPath();
             }
 
-            string fileName = this.environment.ActiveFileFullPath();
-            SonarQubeViewModelFactory.SQViewModel.RefreshDataForResource(fileName);
+            SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Solution Opened: " + solutionName + " : " + solutionPath);
+            SonarQubeViewModelFactory.SQViewModel.OnSolutionOpen(solutionName, solutionPath, fileName);
         }
 
         /// <summary>

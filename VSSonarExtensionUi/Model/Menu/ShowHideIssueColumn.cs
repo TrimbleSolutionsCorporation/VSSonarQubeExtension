@@ -202,7 +202,7 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <summary>
         /// The end data association.
         /// </summary>
-        public void EndDataAssociation()
+        public void OnSolutionClosed()
         {
             // menu not accessing services
         }

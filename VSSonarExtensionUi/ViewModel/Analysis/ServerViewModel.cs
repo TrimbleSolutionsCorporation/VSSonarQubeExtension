@@ -304,7 +304,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <summary>
         ///     The end data association.
         /// </summary>
-        public void EndDataAssociation()
+        public void OnSolutionClosed()
         {
             this.ClearIssues();
             this.IsRunningInVisualStudio = false;

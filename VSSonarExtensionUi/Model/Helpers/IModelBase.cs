@@ -37,7 +37,7 @@
         /// <summary>
         /// The end data association.
         /// </summary>
-        void EndDataAssociation();
+        void OnSolutionClosed();
 
         /// <summary>
         /// Gets the view model.

@@ -166,7 +166,7 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// <summary>
         ///     The end data association.
         /// </summary>
-        public void EndDataAssociation()
+        public void OnSolutionClosed()
         {
             this.ClearIssues();
             this.associatedProject = null;

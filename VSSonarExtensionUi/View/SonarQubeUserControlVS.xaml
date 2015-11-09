@@ -229,25 +229,25 @@
                                   TextSearch.TextPath="Name"
                                   controls:TextBoxHelper.Watermark="Name"
                                   IsEditable="True"
-                                  SelectedItem="{Binding AssociationModule.SelectedProjectInView, Mode=TwoWay}"
-                                  ItemsSource="{Binding AssociationModule.AvailableProjects}"
+                                  SelectedItem="{Binding SelectedProjectInView, Mode=TwoWay}"
+                                  ItemsSource="{Binding AvailableProjects}"
                                   MaxDropDownHeight="125"
                                   ItemTemplate="{DynamicResource ProjectSelectionComboBoxDataTemplate}"/>
-                            
-                            <ComboBox Name="BranchesBox" Grid.ColumnSpan="2" Grid.Row="1"
+
+                            <ComboBox Name="BranchesBox" Grid.ColumnSpan="2" Grid.Row="1" Visibility="{Binding SelectedProjectInView.IsBranch, Converter={StaticResource BoolToVis}}"
                                           Style="{DynamicResource VirtualisedMetroComboBox}"
                                           TextSearch.TextPath="Name"
-                                          IsEnabled="{Binding AssociationModule.SelectedProjectInView.IsBranch}"
+                                          IsEnabled="{Binding SelectedProjectInView.IsBranch}"
                                           controls:TextBoxHelper.Watermark="Branch"
                                           IsEditable="True"
-                                          SelectedItem="{Binding AssociationModule.SelectedBranchProject, Mode=TwoWay}"
-                                          ItemsSource="{Binding AssociationModule.SelectedProjectInView.BranchResources}"
+                                          SelectedItem="{Binding SelectedBranchProject, Mode=TwoWay}"
+                                          ItemsSource="{Binding SelectedProjectInView.BranchResources}"
                                           MaxDropDownHeight="125"
                                           ItemTemplate="{DynamicResource ProjectSelectionComboBoxDataTemplate}" Height="31" VerticalAlignment="Top"/>
 
-                            <TextBlock ToolTip="This is the project name"  Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding AssociationModule.SelectedProjectName}"></TextBlock>
-                            <TextBlock ToolTip="This is the project key"  Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding AssociationModule.SelectedProjectKey}"></TextBlock>
-                            <TextBlock ToolTip="This is the project version"  Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding AssociationModule.SelectedProjectVersion}"></TextBlock>
+                            <TextBlock ToolTip="This is the project name"  Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding SelectedProjectName}"></TextBlock>
+                            <TextBlock ToolTip="This is the project key"  Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding SelectedProjectKey}"></TextBlock>
+                            <TextBlock ToolTip="This is the project version"  Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding SelectedProjectVersion}"></TextBlock>
 
                         </Grid>
                     </DockPanel>

@@ -78,7 +78,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <summary>
         /// The plugins
         /// </summary>
-        private readonly List<IAnalysisPlugin> plugins = new List<IAnalysisPlugin>();
+        private readonly IList<IAnalysisPlugin> plugins = new List<IAnalysisPlugin>();
 
         /// <summary>
         /// The rest service
@@ -158,7 +158,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <param name="notificationManager">The notification manager.</param>
         /// <param name="translator">The translator.</param>
         public LocalViewModel(
-            List<IAnalysisPlugin> pluginsIn, 
+            IList<IAnalysisPlugin> pluginsIn, 
             ISonarRestService service, 
             IConfigurationHelper configurationHelper,
             INotificationManager notificationManager,
@@ -224,6 +224,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <summary>
         ///     Gets or sets a value indicating whether can run analysis.
         /// </summary>
+        [AlsoNotifyFor("CanRunLocalAnalysis")]
         public bool CanRunAnalysis { get; set; }
 
         /// <summary>Gets or sets the associating text tooltip.</summary>
@@ -261,16 +262,21 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             get
             {
-                if (this.LoadingSonarData)
+                if (this.LoadingSonarData || !this.IsAssociatedWithProject)
                 {
-                    this.AssociatingTextTooltip = "Loading SonarQube profile Data";
-                }
-                else
-                {
-                    this.AssociatingTextTooltip = string.Empty;
+                    if (this.LoadingSonarData)
+                    {
+                        this.AssociatingTextTooltip = "Loading SonarQube profile Data";
+                    }
+                    else
+                    {
+                        this.AssociatingTextTooltip = string.Empty;
+                    }
+
+                    return false;
                 }
 
-                return this.IsAssociatedWithProject && !this.LoadingSonarData;
+                return this.CanRunAnalysis;
             }
         }
 
@@ -396,6 +402,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </value>
         public ICommand GoToNextIssueCommand { get; set; }
 
+        /// <summary>
+        /// Gets the project link.
+        /// </summary>
+        /// <value>
+        /// The project link.
+        /// </value>
+        public string ProjectLink { get; private set; }
+
         #endregion
 
         #region Public Methods and Operators
@@ -414,7 +428,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <summary>
         ///     The end data association.
         /// </summary>
-        public void EndDataAssociation()
+        public void OnSolutionClosed()
         {
             this.ClearIssues();
             this.associatedProject = null;
@@ -867,6 +881,12 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.CanRunAnalysis = true;
             this.notificationManager.EndedWorking();
 
+            if (!string.IsNullOrEmpty(this.ProjectLink))
+            {
+                this.vsenvironmenthelper.NavigateToResource(this.ProjectLink);
+                this.ProjectLink = string.Empty;
+            }
+
             if (this.PermissionsAreNotAvailable)
             {
                 MessageBox.Show("You're not authorized to execute a dry run analysis. Please contact your SonarQube administrator.");
@@ -934,6 +954,13 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 "You're not authorized to execute a dry run analysis. Please contact your SonarQube administrator."))
             {
                 this.PermissionsAreNotAvailable = true;
+            }
+
+            // 14:48:56.728 INFO - ANALYSIS SUCCESSFUL, you can browse http://localhost:9000/dashboard/index/Trimble.Connect:Desktop:master
+            if (exceptionMsg.ErrorMessage.Contains("ANALYSIS SUCCESSFUL, you can browse"))
+            {
+                string[] separatingChars = { "ANALYSIS SUCCESSFUL, you can browse" };
+                this.ProjectLink = exceptionMsg.ErrorMessage.Split(separatingChars, StringSplitOptions.RemoveEmptyEntries)[1];
             }
         }
 

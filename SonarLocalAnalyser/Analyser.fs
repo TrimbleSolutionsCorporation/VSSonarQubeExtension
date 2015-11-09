@@ -33,6 +33,7 @@ open System.Reflection
 open System.ComponentModel
 open System.Management
 open System.Runtime.InteropServices
+open Microsoft.Win32
 
 type LanguageType =
    | SingleLang = 0
@@ -189,7 +190,7 @@ type AnalyserCommandExec(logger : TaskLoggingHelper, timeout : int64) =
 
 [<ComVisible(false)>]
 [<HostProtection(SecurityAction.LinkDemand, Synchronization = true, ExternalThreading = true)>]
-type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugin>, restService : ISonarRestService, vsinter : IConfigurationHelper, notificationManager : INotificationManager) =
+type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlugin>, restService : ISonarRestService, vsinter : IConfigurationHelper, notificationManager : INotificationManager) =
     let assemblyRunningPath = Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString()
     let completionEvent = new DelegateEvent<System.EventHandler>()
     let stdOutEvent = new DelegateEvent<System.EventHandler>()
@@ -207,10 +208,38 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
     let mutable exec : AnalyserCommandExec = new AnalyserCommandExec(null, int64(1000 * 60 * 60)) // TODO timeout to be passed as parameter
     let mutable sonarConfig : ISonarConfiguration = null
 
+    let GetJavaInstallationPath() = 
+        let mutable pathdata = ""
+        let environmentPath = Environment.GetEnvironmentVariable("JAVA_HOME")
+        if environmentPath = "" then
+            let JAVA_KEY = "SOFTWARE\\JavaSoft\\Java Runtime Environment\\"
+
+            let localKey32 = RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, RegistryView.Registry32)
+            let localKey64 = RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, RegistryView.Registry64)
+
+            use rk = localKey32.OpenSubKey(JAVA_KEY)
+            if rk <> null then
+                let currentVersion = rk.GetValue("CurrentVersion").ToString();
+                use  key = rk.OpenSubKey(currentVersion)
+                pathdata <- key.GetValue("JavaHome").ToString()
+            else                
+                use rk = localKey64.OpenSubKey(JAVA_KEY)
+                if rk <> null then
+                    let currentVersion = rk.GetValue("CurrentVersion").ToString();
+                    use key = rk.OpenSubKey(currentVersion)
+                    pathdata <- key.GetValue("JavaHome").ToString()
+
+        else
+            pathdata <- environmentPath
+
+        pathdata
+
+        
     let initializationDone = 
 
         vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.ExcludedPluginsKey, Value = "devcockpit,pdfreport,report,scmactivity,views,jira,scmstats", Context = Context.AnalysisGeneral, Owner = OwnersId.AnalysisOwnerId), false, true)
 
+        let java = GetJavaInstallationPath();
 
         let javaExists = 
             try
@@ -218,10 +247,8 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
             with
             | _ -> false
 
-        if File.Exists("C:\Program Files (x86)\Java\jre8\bin\java.exe") then
-            vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.JavaExecutableKey, Value = @"C:\Program Files (x86)\Java\jre8\bin\java.exe", Context = Context.AnalysisGeneral, Owner = OwnersId.AnalysisOwnerId), false, javaExists)
-        else
-            vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.JavaExecutableKey, Value = @"C:\Program Files (x86)\Java\jre7\bin\java.exe", Context = Context.AnalysisGeneral, Owner = OwnersId.AnalysisOwnerId), false, javaExists)
+        if not(javaExists) then
+            vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.JavaExecutableKey, Value = Path.Combine(java, "bin", "java.exe"), Context = Context.AnalysisGeneral, Owner = OwnersId.AnalysisOwnerId), false, false)
 
         let skipIfExists =
             try
@@ -322,8 +349,12 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
         // analysis
         if version >= 4.0 && not(mode.Equals(AnalysisMode.Full)) then
             match mode with
-            | AnalysisMode.Incremental -> builder.AppendSwitchIfNotNull("-Dsonar.analysis.mode=", "incremental")
-                                          builder.AppendSwitchIfNotNull("-Dsonar.preview.excludePlugins=", excludedPlugins)
+            | AnalysisMode.Incremental -> 
+                if version >= 5.2 && version < 5.3 then
+                    raise (new InvalidOperationException("Incremental Mode Not Available in this Version of SonarQube"))
+                else
+                    builder.AppendSwitchIfNotNull("-Dsonar.analysis.mode=", "incremental")
+                    builder.AppendSwitchIfNotNull("-Dsonar.preview.excludePlugins=", excludedPlugins)
 
             | AnalysisMode.Preview -> builder.AppendSwitchIfNotNull("-Dsonar.analysis.mode=", "preview")
                                       builder.AppendSwitchIfNotNull("-Dsonar.preview.excludePlugins=", excludedPlugins)
@@ -736,6 +767,10 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.List<IAnalysisPlugi
             
                         x.AnalysisIsRunning <- true
                         localissues.Clear()
+
+                        if File.Exists(Path.Combine(x.Project.SolutionRoot, ".sonar", "sonar-report.json")) then
+                            File.Delete(Path.Combine(x.Project.SolutionRoot, ".sonar", "sonar-report.json"))
+                                                        
                         (new Thread(new ThreadStart(x.RunFileAnalysisThread))).Start()  
                 with
                 | _ -> profileCannotBeRetrived <- true

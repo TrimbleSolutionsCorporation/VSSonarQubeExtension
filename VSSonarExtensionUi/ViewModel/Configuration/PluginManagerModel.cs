@@ -76,6 +76,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// The source dir
         /// </summary>
         private string sourceDir;
+
         private IIssueTrackerPlugin issueTrackerPlugin;
 
         #endregion
@@ -102,6 +103,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.vshelper = helper;
 
             this.plugins = new List<IPlugin>();
+
             this.MenuPlugins = new List<IMenuCommandPlugin>();
             this.AnalysisPlugins = new List<IAnalysisPlugin>();
             this.SourceCodePlugins = new List<ISourceVersionPlugin>();
@@ -134,7 +136,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         ///     Gets the analysis plugins.
         /// </summary>
-        public List<IAnalysisPlugin> AnalysisPlugins { get; private set; }
+        public IList<IAnalysisPlugin> AnalysisPlugins { get; private set; }
 
         /// <summary>
         /// Gets the issue tracker plugins.
@@ -142,7 +144,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <value>
         /// The issue tracker plugins.
         /// </value>
-        public List<IIssueTrackerPlugin> IssueTrackerPlugins { get; private set; }
+        public IList<IIssueTrackerPlugin> IssueTrackerPlugins { get; private set; }
 
         /// <summary>
         ///     Gets or sets the back ground color.
@@ -177,7 +179,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         ///     Gets the menu plugins.
         /// </summary>
-        public List<IMenuCommandPlugin> MenuPlugins { get; private set; }
+        public IList<IMenuCommandPlugin> MenuPlugins { get; private set; }
 
         /// <summary>
         ///     Gets or sets the options in view.
@@ -485,7 +487,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         /// The end data association.
         /// </summary>
-        public void EndDataAssociation()
+        public void OnSolutionClosed()
         {
             this.associatedProject = null;
             this.sourceDir = string.Empty;
