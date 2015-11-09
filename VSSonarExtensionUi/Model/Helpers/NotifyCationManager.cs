@@ -216,7 +216,7 @@
         /// <param name="v2">The v2.</param>
         public void AssociateProjectToSolution(string v1, string v2)
         {
-            this.model.AssociationModule.AssociateProjectToSolution(v1, v2);
+            this.model.AssociationModule.AssociateProjectToSolution(v1, v2, this.model.AvailableProjects, this.model.SourceControl);
         }
 
         /// <summary>
@@ -254,7 +254,7 @@
         /// <summary>
         /// The end data association.
         /// </summary>
-        public void EndDataAssociation()
+        public void OnSolutionClosed()
         {
             // not needed
         }

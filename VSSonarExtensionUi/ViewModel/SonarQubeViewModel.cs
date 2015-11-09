@@ -77,6 +77,11 @@ namespace VSSonarExtensionUi.ViewModel
         private readonly IConfigurationHelper configurationHelper;
 
         /// <summary>
+        /// The source control
+        /// </summary>
+        private ISourceControlProvider sourceControl;
+
+        /// <summary>
         /// The vs version
         /// </summary>
         private readonly string vsversion;
@@ -89,17 +94,22 @@ namespace VSSonarExtensionUi.ViewModel
         /// <summary>
         /// The sonar key translator
         /// </summary>
-        private readonly SQKeyTranslator sonarKeyTranslator;
+        private readonly ISQKeyTranslator sonarKeyTranslator;
 
         /// <summary>
         /// The sonar rest connector
         /// </summary>
-        private readonly SonarRestService sonarRestConnector;
+        private readonly ISonarRestService sonarRestConnector;
 
         /// <summary>
         /// The show flyouts
         /// </summary>
         private bool showRightFlyout;
+
+        /// <summary>
+        /// The plugin manager
+        /// </summary>
+        private IPluginManager pluginManager;
 
         #region Constructors and Destructors
 
@@ -119,6 +129,7 @@ namespace VSSonarExtensionUi.ViewModel
         {
             this.vsversion = vsverionIn;
             this.ToolsProvidedByPlugins = new ObservableCollection<MenuItem>();
+            this.AvailableProjects = new ObservableCollection<Resource>();
 
             this.notificationManager = new NotifyCationManager(this, vsverionIn);
             this.configurationHelper = new ConfigurationHelper(vsverionIn, this.notificationManager);
@@ -147,6 +158,7 @@ namespace VSSonarExtensionUi.ViewModel
         {
             this.vsversion = vsverionIn;
             this.ToolsProvidedByPlugins = new ObservableCollection<MenuItem>();
+            this.AvailableProjects = new ObservableCollection<Resource>();
 
             this.configurationHelper = helper;
             this.notificationManager = new NotifyCationManager(this, vsverionIn);
@@ -165,6 +177,58 @@ namespace VSSonarExtensionUi.ViewModel
             this.InitCommands();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SonarQubeViewModel"/> class.
+        /// </summary>
+        /// <param name="vsverionIn">The vsverion in.</param>
+        /// <param name="helper">The helper.</param>
+        /// <param name="notification">The notification.</param>
+        /// <param name="translator">The translator.</param>
+        /// <param name="restService">The rest service.</param>
+        public SonarQubeViewModel(string vsverionIn,
+            IConfigurationHelper helper,
+            INotificationManager notification,
+            ISQKeyTranslator translator,
+            ISonarRestService restService,
+            ISourceControlProvider sourceControl = null,
+            IPluginManager pluginManager = null)
+        {
+            this.vsversion = vsverionIn;
+            this.ToolsProvidedByPlugins = new ObservableCollection<MenuItem>();
+            this.AvailableProjects = new ObservableCollection<Resource>();
+
+            this.pluginManager = pluginManager;
+            this.sourceControl = sourceControl;
+            this.configurationHelper = helper;
+            this.notificationManager = notification;
+            this.sonarKeyTranslator = translator;
+            this.sonarRestConnector = restService;
+            this.VSonarQubeOptionsViewData =
+                new VSonarQubeOptionsViewModel(
+                    this.sonarRestConnector,
+                    this.configurationHelper,
+                    this.notificationManager);
+
+            this.VSonarQubeOptionsViewData.ResetUserData();
+
+            // start association module after all models are started
+            this.AssociationModule = new AssociationModel(
+                this.notificationManager,
+                this.sonarRestConnector,
+                this.configurationHelper,
+                this.sonarKeyTranslator,
+                this.pluginManager,
+                this);
+
+            this.CanConnectEnabled = true;
+            this.ConnectionTooltip = "Not Connected";
+            this.BackGroundColor = Colors.White;
+            this.ForeGroundColor = Colors.Black;
+            this.ErrorIsFound = true;
+            this.IsExtensionBusy = false;
+
+            this.InitCommands();
+        }
 
         #endregion
 
@@ -205,6 +269,71 @@ namespace VSSonarExtensionUi.ViewModel
         }
 
         /// <summary>
+        /// Gets the source control.
+        /// </summary>
+        /// <value>
+        /// The source control.
+        /// </value>
+        public ISourceControlProvider SourceControl
+        {
+            get
+            {
+                if (this.sourceControl == null)
+                {
+                    // create a new source control provider for solution
+                    this.sourceControl = new SourceControlModel(
+                        this.pluginManager.SourceCodePlugins,
+                        this.AssociationModule.OpenSolutionPath,
+                        this.Logger);
+                }
+
+                return this.sourceControl;
+            }
+        }
+
+        /// <summary>
+        ///     Gets or sets the available projects.
+        /// </summary>
+        public ObservableCollection<Resource> AvailableProjects { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the selected project.
+        /// </summary>
+        public Resource SelectedProjectInView { get; set; }
+
+        /// <summary>
+        /// Gets or sets the selected branch project.
+        /// </summary>
+        /// <value>
+        /// The selected branch project.
+        /// </value>
+        public Resource SelectedBranchProject { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the selected project.
+        /// </summary>
+        /// <value>
+        /// The name of the selected project.
+        /// </value>
+        public string SelectedProjectName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the selected project key.
+        /// </summary>
+        /// <value>
+        /// The selected project key.
+        /// </value>
+        public string SelectedProjectKey { get; set; }
+
+        /// <summary>
+        /// Gets or sets the selected project version.
+        /// </summary>
+        /// <value>
+        /// The selected project version.
+        /// </value>
+        public string SelectedProjectVersion { get; set; }
+
+        /// <summary>
         ///     Gets or sets the assign project command.
         /// </summary>
         public RelayCommand AssignProjectCommand { get; set; }
@@ -221,6 +350,14 @@ namespace VSSonarExtensionUi.ViewModel
         /// The error colour.
         /// </value>
         public bool ErrorIsFound { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is solution open.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is solution open; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsSolutionOpen { get; set; }
 
         /// <summary>
         /// Gets or sets the error message tooltip.
@@ -471,15 +608,117 @@ namespace VSSonarExtensionUi.ViewModel
             viewModelPool.Add(viewModel);
         }
 
+
         /// <summary>
-        ///     The clear project association.
+        /// Called when [solution open].
         /// </summary>
-        public void ClearProjectAssociation()
+        /// <param name="solutionName">Name of the solution.</param>
+        /// <param name="solutionPath">The solution path.</param>
+        /// <param name="fileInView">The file in view.</param>
+        public void OnSolutionOpen(string solutionName, string solutionPath, string fileInView, ISourceControlProvider sourceProvider = null)
         {
+            this.ErrorIsFound = false;
+            this.IsSolutionOpen = true;
+
+            if (sourceProvider == null)
+            {
+                // create new source control provider
+                this.sourceControl = new SourceControlModel(
+                    this.pluginManager.SourceCodePlugins,
+                    solutionPath,
+                    this.Logger);
+            }
+            else
+            {
+                this.sourceControl = sourceProvider;
+            }
+
+            this.AssociationModule.AssociateProjectToSolution(solutionName, solutionPath, this.AvailableProjects, this.SourceControl);
+
+            if (!string.IsNullOrEmpty(fileInView))
+            {
+                this.RefreshDataForResource(fileInView);
+            }
+
+            this.SetupAssociationMessages();
+        }
+
+        /// <summary>
+        /// Refreshes the project list.
+        /// </summary>
+        /// <param name="useDispatcher">if set to <c>true</c> [use dispatcher].</param>
+        public void RefreshProjectList(bool useDispatcher)
+        {
+            List<Resource> projectsRaw = this.sonarRestConnector.GetProjectsList(AuthtenticationHelper.AuthToken);
+            SortedDictionary<string, Resource> projects = new SortedDictionary<string, Resource>();
+
+            foreach (var rawitem in projectsRaw)
+            {
+                if (rawitem.IsBranch)
+                {
+                    var nameWithoutBrachRaw = rawitem.Name.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
+                    var keyDic = nameWithoutBrachRaw[0] + "_Main";
+                    if (!projects.ContainsKey(keyDic))
+                    {
+                        // create main project holder
+                        var mainProject = new Resource();
+                        mainProject.Name = nameWithoutBrachRaw[0];
+                        mainProject.Key = keyDic;
+                        mainProject.IsBranch = true;
+                        projects.Add(keyDic, mainProject);
+                    }
+
+                    var element = projects[keyDic];
+                    element.BranchResources.Add(rawitem);
+                }
+                else
+                {
+                    projects.Add(rawitem.Key, rawitem);
+                }
+            }
+
+            if (projects != null && projects.Count > 0)
+            {
+                if (useDispatcher)
+                {
+                    Application.Current.Dispatcher.Invoke(
+                        delegate
+                        {
+                            this.AvailableProjects.Clear();
+                            foreach (var source in projects)
+                            {
+                                this.AvailableProjects.Add(source.Value);
+                            }
+                        });
+                }
+                else
+                {
+                    this.AvailableProjects.Clear();
+                    foreach (var source in projects)
+                    {
+                        this.AvailableProjects.Add(source.Value);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Called when [solution closed].
+        /// </summary>
+        public void OnSolutionClosed()
+        {
+            this.IsSolutionOpen = false;
+            // clear all messages related with association
             this.StatusMessage = string.Empty;
             this.ConnectionTooltip = "Connected but not associated";
             this.StatusMessageAssociation = "Not associated with any project";
-            this.AssociationModule.EndAssociationAndClearData();
+            this.SelectedBranchProject = null;
+            this.SelectedProjectInView = null;
+            this.SelectedProjectKey = string.Empty;
+            this.SelectedProjectName = string.Empty;
+            this.SelectedProjectVersion = string.Empty;
+
+            this.AssociationModule.OnSolutionClosed();
         }
 
         /// <summary>The execute plugin.</summary>
@@ -549,6 +788,7 @@ namespace VSSonarExtensionUi.ViewModel
             // register notificaton manager, since all messages will be show also for initialization
             (this.notificationManager as IModelBase).UpdateServices(this.VsHelper, this.StatusBar, this.ServiceProvider);
             this.VSonarQubeOptionsViewData.InitPuginSystem(vsenvironmenthelperIn, this.pluginController, this.notificationManager);
+            this.pluginManager = this.VSonarQubeOptionsViewData.PluginManager;
             this.InitMenus();
             this.InitViewsAndModels();
 
@@ -616,6 +856,118 @@ namespace VSSonarExtensionUi.ViewModel
         public void OnConnectToSonarCommand()
         {
             this.OnConnectToSonar(true);
+        }
+
+        /// <summary>
+        /// The connect to sonar.
+        /// </summary>
+        /// <param name="useDispatcher">if set to <c>true</c> [use dispatcher].</param>
+        public void OnConnectToSonar(bool useDispatcher)
+        {
+            this.ErrorIsFound = false;
+
+            if (AuthtenticationHelper.AuthToken == null)
+            {
+                this.StatusMessage = "No credentials available Go To: Menu > Configuration in this window";
+                this.IsConnected = false;
+                this.ErrorIsFound = true;
+                return;
+            }
+
+            if (this.VsHelper == null)
+            {
+                this.StatusMessage = "Extension in unusable, unable to access visual studio services.";
+                this.IsConnected = false;
+                this.ErrorIsFound = true;
+                return;
+            }
+
+            this.CanConnectEnabled = false;
+            this.IsExtensionBusy = true;
+
+            var bw = new BackgroundWorker { WorkerReportsProgress = true };
+            bw.RunWorkerCompleted += delegate
+            {
+                this.CanConnectEnabled = true;
+                this.IsExtensionBusy = false;
+            };
+
+            bw.DoWork += delegate
+            {
+                try
+                {
+                    this.RefreshProjectList(useDispatcher);
+
+                    this.StatusMessage = string.Empty;
+                    this.IsConnected = true;
+                    this.AssociationModule.IsAssociated = false;
+                    this.ConnectionTooltip = "Authenticated, but no associated";
+                }
+                catch (Exception ex)
+                {
+                    this.notificationManager.ReportMessage(new Message { Id = "SonarQubeViewModel", Data = "Fail To Connect To SonarQube: " + ex.Message });
+                    this.notificationManager.ReportException(ex);
+                    this.ConnectionTooltip = "No Connection";
+                    this.AssociationModule.Disconnect();
+                    this.StatusMessage = "Failed to Connect to Sonar, check output log for details";
+                    this.IsConnected = false;
+                    return;
+                }
+
+                // try to associate with open solution
+                if (this.IsSolutionOpen)
+                {
+                    try
+                    {
+                        this.AssociationModule.AssociateProjectToSolution(this.VsHelper.ActiveSolutionName(), this.VsHelper.ActiveSolutionPath(), this.AvailableProjects, this.SourceControl);
+
+                        if (this.AssociationModule.IsAssociated)
+                        {
+                            if (this.SelectedViewModel == this.LocalViewModel)
+                            {
+                                this.LocalViewModel.FileAnalysisIsEnabled = true;
+                            }
+                            
+                            this.RefreshDataForResource();                        
+                        }
+
+                        this.SetupAssociationMessages();
+                    }
+                    catch (Exception ex)
+                    {
+                        this.ErrorIsFound = true;
+                        this.ErrorMessageTooltip = ex.Message + "\r\n" + ex.StackTrace;
+                        this.StatusMessage = "Failed to Associate with Solution : " + this.VsHelper.ActiveSolutionName() + " " + ex.Message;
+                        this.notificationManager.ReportMessage(new Message { Id = "SonarQubeViewModel", Data = "Failed to Associate with Solution : " + ex.Message });
+                        this.notificationManager.ReportException(ex);
+                    }
+                }
+            };
+
+            bw.RunWorkerAsync();
+        }
+
+        private void SetupAssociationMessages()
+        {
+            if (!this.AssociationModule.IsAssociated)
+            {
+                this.SelectedProjectInView = null;
+                this.SelectedProjectKey = null;
+                this.SelectedProjectName = null;
+                this.SelectedProjectVersion = null;
+                this.ErrorIsFound = true;
+                this.StatusMessage = "Was unable to associate with sonar project, use project association dialog";
+                this.ShowRightFlyout = true;
+            }
+            else
+            {
+                this.SelectedProjectKey = this.AssociationModule.AssociatedProject.Key;
+                this.SelectedProjectName = this.AssociationModule.AssociatedProject.Name;
+                this.SelectedProjectVersion = this.AssociationModule.AssociatedProject.Version;
+                this.StatusMessage = "successfully associated with : " + this.AssociationModule.AssociatedProject.Name;
+                this.ShowRightFlyout = false;
+                this.ErrorIsFound = false;
+            }
         }
 
         /// <summary>
@@ -705,14 +1057,7 @@ namespace VSSonarExtensionUi.ViewModel
 
             this.DocumentInView = fullName;
             this.ResourceInEditor = null;
-            if (this.LocalViewModel.FileAnalysisIsEnabled)
-            {
-                this.LocalViewModel.ClearIssues();
-                this.LocalViewModel.ResetStats();
-            }
-
-            this.ServerViewModel.ClearIssues();
-            this.ServerViewModel.ResetStats();
+            this.ResetIssuesInViews();
 
             this.ResourceInEditor = this.AssociationModule.CreateAValidResourceFromServer(fullName, this.AssociationModule.AssociatedProject);
             if (this.ResourceInEditor == null &&
@@ -721,13 +1066,13 @@ namespace VSSonarExtensionUi.ViewModel
             {
                 this.ResourceInEditor = this.AssociationModule.CreateResourcePathFile(fullName, this.AssociationModule.AssociatedProject);
             }
-                
+
             if (this.ResourceInEditor == null)
             {
                 this.StatusMessage = "Could not check key type for resource, see VSonarOutput Window for more details and report";
                 return;
             }
-           
+
             IAnalysisModelBase analyser = this.SelectedModel;
             if (analyser != null)
             {
@@ -745,6 +1090,15 @@ namespace VSSonarExtensionUi.ViewModel
                     this.notificationManager.ReportException(ex);
                 }
             }
+        }
+
+        private void ResetIssuesInViews()
+        {
+            this.LocalViewModel.ClearIssues();
+            this.LocalViewModel.ResetStats();
+
+            this.ServerViewModel.ClearIssues();
+            this.ServerViewModel.ResetStats();
         }
 
         /// <summary>
@@ -951,7 +1305,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// </summary>
         private void InitMenus()
         {
-            foreach (IMenuCommandPlugin plugin in this.VSonarQubeOptionsViewData.PluginManager.MenuPlugins)
+            foreach (IMenuCommandPlugin plugin in this.pluginManager.MenuPlugins)
             {
                 this.ToolsProvidedByPlugins.Add(new MenuItem { Header = plugin.GetPluginDescription().Name });
                 this.menuItemPlugins.Add(this.menuItemPlugins.Count, plugin);
@@ -971,7 +1325,7 @@ namespace VSSonarExtensionUi.ViewModel
                 this.sonarKeyTranslator);
 
             this.LocalViewModel = new LocalViewModel(
-                this.VSonarQubeOptionsViewData.PluginManager.AnalysisPlugins,
+                this.pluginManager.AnalysisPlugins,
                 this.sonarRestConnector,
                 this.configurationHelper,
                 this.notificationManager,
@@ -1049,80 +1403,23 @@ namespace VSSonarExtensionUi.ViewModel
         /// <summary>
         ///     The on disconnect to sonar.
         /// </summary>
-        private void OnDisconnectToSonar()
+        public void OnDisconnectToSonar()
         {
             this.ConnectionTooltip = "Not Connected";
-            this.StatusMessageAssociation = string.Empty;
+            this.StatusMessage = "Not Connected";
+            this.IsConnected = false;
             this.ErrorIsFound = false;
+            this.AvailableProjects.Clear();
+            this.SelectedProjectInView = null;
+            this.SelectedBranchProject = null;
+
+            this.SelectedProjectKey = string.Empty;
+            this.SelectedProjectName = string.Empty;
+            this.SelectedProjectVersion = string.Empty;
             this.ErrorMessageTooltip = string.Empty;
-            this.ClearProjectAssociation();
+            this.StatusMessageAssociation = string.Empty;
             this.AssociationModule.Disconnect();
-        }
-
-        /// <summary>
-        /// The connect to sonar.
-        /// </summary>
-        /// <param name="useDispatcher">if set to <c>true</c> [use dispatcher].</param>
-        private void OnConnectToSonar(bool useDispatcher)
-        {
-            if (this.VsHelper == null)
-            {
-                return;
-            }
-
-            var bw = new BackgroundWorker { WorkerReportsProgress = true };
-            bw.RunWorkerCompleted += delegate
-            {
-                this.CanConnectEnabled = true;
-                this.IsExtensionBusy = false;
-            };
-
-            bw.DoWork += delegate
-            {
-                this.CanConnectEnabled = false;
-                this.IsExtensionBusy = true;
-                this.TryToConnect(useDispatcher);
-                this.AssociationModule.AssociateProjectToSolution(this.VsHelper.ActiveSolutionName(), this.VsHelper.ActiveSolutionPath());
-                if (this.AssociationModule.IsAssociated)
-                {
-                    this.RefreshDataForResource();
-                }
-            };
-
-            bw.RunWorkerAsync();
-        }
-
-        /// <summary>
-        /// The try to connect.
-        /// </summary>
-        /// <param name="useDispatcher">if set to <c>true</c> [use dispatcher].</param>
-        private void TryToConnect(bool useDispatcher)
-        {
-            try
-            {
-                if (AuthtenticationHelper.AuthToken == null)
-                {
-                    this.StatusMessage = "No credentials available Go To: Menu > Configuration in this window";
-                    this.IsConnected = false;
-                    return;
-                }
-
-                this.StatusMessage = string.Empty;
-
-                this.IsConnected = true;
-                this.AssociationModule.IsConnectedButNotAssociated = true;
-                this.AssociationModule.IsAssociated = false;
-
-                this.ConnectionTooltip = "Authenticated, but no associated";
-                this.AssociationModule.RefreshProjectList(useDispatcher);
-            }
-            catch (Exception ex)
-            {
-                this.notificationManager.ReportMessage(new Message { Id = "SonarQubeViewModel", Data = "Fail To Connect To SonarQube: " + ex.Message });
-                this.notificationManager.ReportException(ex);
-                this.ConnectionTooltip = "No Connection";
-                this.AssociationModule.Disconnect();
-            }
+            this.ResetIssuesInViews();
         }
 
         /// <summary>
@@ -1130,27 +1427,96 @@ namespace VSSonarExtensionUi.ViewModel
         /// </summary>
         private void OnAssignProjectCommand()
         {
-            if (this.AssociationModule.SelectedProjectInView == null)
+            this.ErrorIsFound = false;
+            if (this.SelectedProjectInView == null)
             {
                 this.StatusMessageAssociation = "Please select a project, or if empty please login in the Menu > Configuration in the Sonar Window";
+                this.StatusMessage = "Ready";
                 return;
             }
 
-            if (this.AssociationModule.SelectedProjectInView.IsBranch && this.AssociationModule.SelectedBranchProject == null)
+            if (this.SelectedProjectInView.IsBranch && this.SelectedBranchProject == null)
             {
                 this.StatusMessageAssociation = "Please select a feature branch as the in use branch";
+                this.StatusMessage = "Ready";
                 return;
             }
 
-            if (this.AssociationModule.AssignASonarProjectToSolution(this.AssociationModule.SelectedProjectInView, this.AssociationModule.SelectedBranchProject))
+            if (this.AssociationModule.AssignASonarProjectToSolution(this.SelectedProjectInView, this.SelectedBranchProject, this.SourceControl))
             {
                 this.StatusMessageAssociation = "Associated : " + this.AssociationModule.AssociatedProject.Name;
+                this.StatusMessage = "Ready";
                 return;
             }
 
+            this.ErrorIsFound = false;
+            this.ErrorMessageTooltip = "Could not associate, something failed. Check output log for error messages.";
             this.StatusMessageAssociation = "Error : Not Associated";
         }
 
+        /// <summary>
+        /// Called when [selected project changed].
+        /// </summary>
+        private void OnSelectedProjectInViewChanged()
+        {
+            if (this.SelectedProjectInView == null)
+            {
+                this.SelectedProjectName = "";
+                this.SelectedProjectKey = "";
+                this.SelectedProjectVersion = "";
+                this.StatusMessageAssociation = "No project selected, select from above.";
+                return;
+            }
+
+            this.SelectedProjectName = this.SelectedProjectInView.Name;
+            this.SelectedProjectKey = this.SelectedProjectInView.Key;
+            this.SelectedProjectVersion = this.SelectedProjectInView.Version;
+
+            if (this.SelectedProjectInView.IsBranch)
+            {
+                this.SelectedBranchProject = this.SelectBranchFromList();
+            }
+            else
+            {
+                this.SelectedBranchProject = null;
+                this.StatusMessageAssociation = "Normal project type. Press associate to confirm.";
+            }
+        }
+
+        /// <summary>
+        /// Selects the branch from list.
+        /// </summary>
+        /// <param name="resource">The resource.</param>
+        /// <returns></returns>
+        public Resource SelectBranchFromList()
+        {
+            var branch = this.SourceControl.GetBranch().Replace("/", "_");
+            Resource masterBranch = null;
+            foreach (var branchdata in this.SelectedProjectInView.BranchResources)
+            {
+                if (branchdata.BranchName.Equals(branch))
+                {
+                    this.StatusMessageAssociation = "Association Ready. Press associate to confirm.";
+                    return branchdata;
+                }
+
+                if (branchdata.BranchName.Equals("master"))
+                {
+                    masterBranch = branchdata;
+                }
+            }
+
+            if (masterBranch != null)
+            {
+                this.StatusMessageAssociation = "Using master branch, because current branch does not exist or source control not supported. Press associate to confirm.";
+                return masterBranch;
+            }
+
+            this.StatusMessageAssociation = "Unable to find branch, please manually choose one from list and confirm.";
+            return null;
+        }
+
         #endregion
+
     }
 }

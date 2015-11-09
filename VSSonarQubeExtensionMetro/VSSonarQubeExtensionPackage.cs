@@ -279,7 +279,7 @@ namespace VSSonarQubeExtension
                     string solutionPath = this.visualStudioInterface.ActiveSolutionPath();
 
                     SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Solution Opened: " + solutionName + " : " + solutionPath);
-                    SonarQubeViewModelFactory.SQViewModel.AssociationModule.AssociateProjectToSolution(solutionName, solutionPath);
+                    SonarQubeViewModelFactory.SQViewModel.OnSolutionOpen(solutionName, solutionPath, string.Empty);
                 }
             };
         }
