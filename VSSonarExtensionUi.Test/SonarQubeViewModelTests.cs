@@ -184,7 +184,7 @@
             Assert.That(associationModel.AssociationModule.IsAssociated, Is.True);
             Assert.That(associationModel.ErrorIsFound, Is.False);
             Assert.That(associationModel.ShowRightFlyout, Is.False);
-            Assert.That(associationModel.StatusMessage, Is.EqualTo("successfully associated with : project"));
+            Assert.That(associationModel.StatusMessage, Is.EqualTo("successfully associated with : project master"));
             Assert.That(associationModel.IsConnected, Is.True);
             Assert.That(associationModel.AssociationModule.AssociatedProject.Name, Is.EqualTo("project"));
             Assert.That(associationModel.AssociationModule.AssociatedProject.Key, Is.EqualTo("tekla.utilities:project"));
