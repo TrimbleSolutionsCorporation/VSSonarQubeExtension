@@ -328,7 +328,7 @@
             Resource associatedProjectInSonar = null;
             foreach (Resource availableProject in this.model.AvailableProjects)
             {
-                if (availableProject.IsBranch)
+                if (availableProject.IsBranch && solResource.IsBranch)
                 {
                     associatedProjectInSonar = GetProjectInBranchResources(availableProject, solResource, branchName);
                 }

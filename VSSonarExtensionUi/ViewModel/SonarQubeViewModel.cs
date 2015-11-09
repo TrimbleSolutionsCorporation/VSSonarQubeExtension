@@ -923,9 +923,12 @@ namespace VSSonarExtensionUi.ViewModel
 
                         if (this.AssociationModule.IsAssociated)
                         {
-                            if (this.SelectedViewModel == this.LocalViewModel)
+                            if (this.LocalViewModel != null)
                             {
-                                this.LocalViewModel.FileAnalysisIsEnabled = true;
+                                if (this.SelectedViewModel == this.LocalViewModel)
+                                {
+                                    this.LocalViewModel.FileAnalysisIsEnabled = true;
+                                }
                             }
                             
                             this.RefreshDataForResource();                        
@@ -1094,11 +1097,17 @@ namespace VSSonarExtensionUi.ViewModel
 
         private void ResetIssuesInViews()
         {
-            this.LocalViewModel.ClearIssues();
-            this.LocalViewModel.ResetStats();
+            if (this.LocalViewModel != null)
+            {
+                this.LocalViewModel.ClearIssues();
+                this.LocalViewModel.ResetStats();
+            }
 
-            this.ServerViewModel.ClearIssues();
-            this.ServerViewModel.ResetStats();
+            if (this.ServerViewModel != null)
+            {
+                this.ServerViewModel.ClearIssues();
+                this.ServerViewModel.ResetStats();
+            }
         }
 
         /// <summary>
