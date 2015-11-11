@@ -18,7 +18,8 @@
     using System.Collections.ObjectModel;
     using VSSonarExtensionUi.Model.Helpers;
     using VSSonarExtensionUi.ViewModel.Configuration;
-    
+    using Model.Menu;
+
     /// <summary>
     /// Generates associations with sonar projects
     /// </summary>
@@ -130,7 +131,7 @@
         /// <returns>
         /// Ok if assign.
         /// </returns>
-        public bool AssignASonarProjectToSolution(Resource project, Resource branchProject, ISourceControlProvider sourceControl)
+        public bool AssignASonarProjectToSolution(Resource project, Resource branchProject, ISourceControlProvider sourceControl, bool skipRegisterModels = false)
         {
             if (project == null)
             {
@@ -161,7 +162,11 @@
             }
 
             this.configurationHelper.SyncSettings();
-            this.UpdateAssociationDataInRegisteredModels(sourceControl);
+            if (!skipRegisterModels)
+            {
+                this.UpdateAssociationDataInRegisteredModels(sourceControl);
+            }
+            
             return true;
         }
 
@@ -303,7 +308,8 @@
             string solutionName,
             string solutionPath,
             ICollection<Resource> availableProjects,
-            ISourceControlProvider sourceControl)
+            ISourceControlProvider sourceControl,
+            bool skipRegisterModels)
         {
             this.OpenSolutionName = solutionName;
             this.OpenSolutionPath = solutionPath;
@@ -319,7 +325,7 @@
 
             if (resource != null)
             {
-                this.AssignASonarProjectToSolution(resource, resource, sourceControl);
+                this.AssignASonarProjectToSolution(resource, resource, sourceControl, skipRegisterModels);
             }
         }
 
@@ -406,12 +412,15 @@
 
             try
             {
-                this.StartAutoAssociation(solution, solutionPath, availableProjects, sourceControl);
+                this.StartAutoAssociation(solution, solutionPath, availableProjects, sourceControl, true);
 
                 if (this.IsAssociated)
                 {
                     this.CreateConfiguration(Path.Combine(solutionPath, "sonar-project.properties"));
                     this.UpdateAssociationDataInRegisteredModels(sourceControl);
+                    var mainProject = SetExclusionsMenu.GetMainProject(this.AssociatedProject, this.model.AvailableProjects);
+                    var exclusions = this.sonarService.GetExclusions(AuthtenticationHelper.AuthToken, mainProject);
+                    this.model.LocaAnalyser.UpdateExclusions(exclusions);
                 }
             }
             catch (Exception ex)
@@ -428,7 +437,12 @@
         public void Disconnect()
         {
             this.AssociatedProject = null;
+            this.IsAssociated = false;
             this.keyTranslator.SetLookupType(KeyLookUpType.Invalid);
+            foreach (var item in modelPool)
+            {
+                item.OnDisconnect();
+            }
         }
 
         /// <summary>
@@ -564,7 +578,7 @@
                         this.AssociatedProject,
                         this.OpenSolutionPath,
                         sourceControl,
-                        this.pluginManager.GetIssueTrackerPlugin());
+                        this.pluginManager.GetIssueTrackerPlugin(), this.model.AvailableProjects);
                 }
                 catch (Exception ex)
                 {

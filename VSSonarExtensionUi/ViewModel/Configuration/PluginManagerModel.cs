@@ -253,7 +253,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="workingDir">The working dir.</param>
         /// <param name="sourceModel">The source model.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
-        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider sourceModel, IIssueTrackerPlugin sourcePlugin)
+        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider sourceModel, IIssueTrackerPlugin sourcePlugin, IList<Resource> availableProjects)
         {
             // not neccessary
         }
@@ -369,6 +369,13 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             {
                 plugin.UpdateTheme(this.BackGroundColor, this.ForeGroundColor);
             }
+        }
+
+        /// <summary>
+        /// Called when [disconnect].
+        /// </summary>
+        public void OnDisconnect()
+        {
         }
 
         /// <summary>

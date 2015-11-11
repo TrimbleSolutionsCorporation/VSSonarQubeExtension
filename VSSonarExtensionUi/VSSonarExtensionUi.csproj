@@ -126,6 +126,7 @@
     <Compile Include="Model\Analysis\IssuesSearchModel.cs" />
     <Compile Include="Model\Association\AssociationModel.cs" />
     <Compile Include="Model\Menu\AssignMenu.cs" />
+    <Compile Include="Model\Menu\SetExclusionsMenu.cs" />
     <Compile Include="ViewModel\Configuration\IPluginManager.cs" />
     <Compile Include="Model\Cache\EditorData.cs" />
     <Compile Include="Model\Cache\ModelEditorCache.cs" />

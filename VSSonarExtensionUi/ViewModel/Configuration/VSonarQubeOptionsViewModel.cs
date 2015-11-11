@@ -28,6 +28,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using VSSonarPlugins.Types;
     using System.Diagnostics;
     using VSSonarExtensionUi.Association;
+    using System.Collections.Generic;
 
 
     /// <summary>
@@ -304,6 +305,13 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         }
 
         /// <summary>
+        /// Called when [disconnect].
+        /// </summary>
+        public void OnDisconnect()
+        {
+        }
+
+        /// <summary>
         /// Gets the available model, TODO: needs to be removed after viewmodels are split into models and view models
         /// </summary>
         /// <returns>
@@ -321,7 +329,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="projectIn">The project in.</param>
         /// <param name="workingDir">The working dir.</param>
         /// <param name="provider">The provider.</param>
-        public void AssociateWithNewProject(Resource projectIn, string workingDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin)
+        public void AssociateWithNewProject(Resource projectIn, string workingDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin, IList<Resource> availableProjects)
         {
             this.project = projectIn;
 

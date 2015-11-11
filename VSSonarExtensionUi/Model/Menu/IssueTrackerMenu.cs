@@ -179,11 +179,11 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <param name="workingDir">The working dir.</param>
         /// <param name="sourceModelIn">The source model in.</param>
         /// <param name="sourcePluginIn">The source plugin in.</param>
-        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider sourceModelIn, IIssueTrackerPlugin sourcePluginIn)
+        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider sourceModelIn, IIssueTrackerPlugin sourcePlugin, IList<Resource> availableProjects)
         {
             this.sourceDir = workingDir;
             this.associatedProject = project;
-            this.issueTrackerPlugin = sourcePluginIn;
+            this.issueTrackerPlugin = sourcePlugin;
             this.sourceModel = sourceModelIn;
         }
 
@@ -207,6 +207,13 @@ namespace VSSonarExtensionUi.Model.Menu
         public object GetViewModel()
         {
             return null;
+        }
+
+        /// <summary>
+        /// Called when [disconnect].
+        /// </summary>
+        public void OnDisconnect()
+        {
         }
 
         /// <summary>

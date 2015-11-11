@@ -41,8 +41,11 @@ type ISonarLocalAnalyser =
   abstract member GetIssues : config:ISonarConfiguration * project:Resource -> System.Collections.Generic.List<Issue>
 
   abstract member AssociateWithProject : project:Resource * conf:ISonarConfiguration -> unit
+  abstract member OnDisconect : unit -> unit
  
   abstract member ResetInitialization : unit -> unit
+
+  abstract member UpdateExclusions : exclusions : System.Collections.Generic.IList<Exclusion> -> unit
   
   [<CLIEvent>]
   abstract member AssociateCommandCompeted : IDelegateEvent<System.EventHandler>

@@ -124,6 +124,13 @@
         }
 
         /// <summary>
+        /// Called when [disconnect].
+        /// </summary>
+        public void OnDisconnect()
+        {
+        }
+
+        /// <summary>
         /// Gets the view model.
         /// </summary>
         /// <returns>
@@ -159,7 +166,7 @@
         /// <param name="workDir">The work dir.</param>
         /// <param name="sourceModelIn">The source model in.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
-        public void AssociateWithNewProject(Resource project, string workDir, ISourceControlProvider sourceModelIn, IIssueTrackerPlugin sourcePlugin)
+        public void AssociateWithNewProject(Resource project, string workDir, ISourceControlProvider sourceModelIn, IIssueTrackerPlugin sourcePlugin, IList<Resource> availableProjects)
         {
             this.sourceDir = workDir;
             this.associatedProject = project;

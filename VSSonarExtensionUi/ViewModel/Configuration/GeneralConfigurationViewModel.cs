@@ -24,6 +24,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
     using VSSonarExtensionUi.Association;
+    using System.Collections.Generic;
 
     /// <summary>
     /// The sonar configuration view viewModel.
@@ -327,6 +328,13 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         }
 
         /// <summary>
+        /// Called when [disconnect].
+        /// </summary>
+        public void OnDisconnect()
+        {
+        }
+
+        /// <summary>
         /// Updates the services.
         /// </summary>
         /// <param name="vsenvironmenthelperIn">The vsenvironmenthelper in.</param>
@@ -345,7 +353,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="workingDir">The working dir.</param>
         /// <param name="provider">The provider.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
-        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin)
+        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin, IList<Resource> availableProjects)
         {
             this.sourceDir = workingDir;
             this.associatedProject = project;

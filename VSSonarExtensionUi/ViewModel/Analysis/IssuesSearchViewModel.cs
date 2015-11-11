@@ -31,7 +31,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using SonarLocalAnalyser;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-    
+    using Model.Menu;
+
     /// <summary>
     /// The issues search view model.
     /// </summary>
@@ -79,10 +80,11 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.Header = "Issues Search";
             this.AvailableActionPlans = new ObservableCollection<SonarActionPlan>();
             this.UsersList = new ObservableCollection<User>();
-            this.IssuesGridView = new IssueGridViewModel(true, "SearchView", false, configurationHelper, restService, notificationManager, translator);
+            this.IssuesGridView = new IssueGridViewModel("SearchView", false, configurationHelper, restService, notificationManager, translator);
+            this.IssuesGridView.ContextMenuItems = this.CreateRowContextMenu(restService, translator);
+            this.IssuesGridView.ShowContextMenu = true;
             this.IssuesGridView.ShowLeftFlyoutEvent += this.ShowHideLeftFlyout;
             this.SizeOfFlyout = 0;
-
             this.InitCommanding();
 
             this.ForeGroundColor = Colors.Black;
@@ -91,6 +93,31 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.CreatedSinceDate = DateTime.Now;
 
             SonarQubeViewModel.RegisterNewViewModelInPool(this);
+        }
+
+        /// <summary>
+        ///     The create row context menu.
+        /// </summary>
+        /// <returns>
+        ///     The
+        ///     <see>
+        ///         <cref>ObservableCollection</cref>
+        ///     </see>
+        ///     .
+        /// </returns>
+        private ObservableCollection<IMenuItem> CreateRowContextMenu(ISonarRestService service, ISQKeyTranslator translator)
+        {
+            var menu = new ObservableCollection<IMenuItem>
+                           {
+                               ChangeStatusMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager),
+                               OpenResourceMenu.MakeMenu(service, this.IssuesGridView),
+                               PlanMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager),
+                               SourceControlMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager, translator),
+                               IssueTrackerMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager, translator),
+                               AssignMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager),
+                           };
+
+            return menu;
         }
 
         /// <summary>

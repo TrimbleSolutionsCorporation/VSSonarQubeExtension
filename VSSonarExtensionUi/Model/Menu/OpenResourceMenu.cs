@@ -31,6 +31,7 @@ namespace VSSonarExtensionUi.Model.Menu
     using SonarLocalAnalyser;
     using Helpers;
     using Association;
+    using System.Collections.Generic;
 
     /// <summary>
     ///     The issue handler menu.
@@ -149,7 +150,7 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <param name="workingDir">The working dir.</param>
         /// <param name="provider">The provider.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
-        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin)
+        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin, IList<Resource> availableProjects)
         {
             this.associatedProject = project;
             this.sourceDir = workingDir;
@@ -162,6 +163,13 @@ namespace VSSonarExtensionUi.Model.Menu
         public void RefreshMenuData()
         {
             // not necessary
+        }
+
+        /// <summary>
+        /// Called when [disconnect].
+        /// </summary>
+        public void OnDisconnect()
+        {
         }
 
         /// <summary>

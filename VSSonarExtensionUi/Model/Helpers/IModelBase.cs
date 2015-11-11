@@ -1,6 +1,7 @@
 ﻿namespace VSSonarExtensionUi.Model.Helpers
 {
     using System;
+    using System.Collections.Generic;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
 
@@ -32,12 +33,18 @@
             Resource project,
             string workingDir,
             ISourceControlProvider sourceModel,
-            IIssueTrackerPlugin sourcePlugin);
+            IIssueTrackerPlugin sourcePlugin,
+            IList<Resource> availableProjects);
 
         /// <summary>
         /// The end data association.
         /// </summary>
         void OnSolutionClosed();
+
+        /// <summary>
+        /// Called when [disconnect].
+        /// </summary>
+        void OnDisconnect();
 
         /// <summary>
         /// Gets the view model.

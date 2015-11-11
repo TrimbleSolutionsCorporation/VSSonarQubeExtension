@@ -4,6 +4,8 @@ open NUnit.Framework
 open SonarRestService
 open Foq
 open System.IO
+open System.Net
+open System.Web
 
 open VSSonarPlugins
 open VSSonarPlugins.Types
@@ -108,3 +110,66 @@ type QualityTests() =
         Assert.That(gates.[0].Name, Is.EqualTo("Version 3.6"))
         Assert.That(gates.[1].Name, Is.EqualTo("Version 3.5"))
 
+    [<Test>]
+    member test.``Should AddExclusion`` () =
+        let conf = ConnectionConfiguration("http://localhost:9000", "admin", "admin", 5.2)
+        let response = new RestSharp.RestResponse()
+        response.StatusCode <- HttpStatusCode.OK
+
+        let mockHttpReq =
+            Mock<IHttpSonarConnector>()
+                .Setup(fun x -> <@ x.HttpSonarPostRequest(any(), any(), any()) @>).Returns(response)
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/PropertiesResponse.txt"))
+                .Create()
+                       
+        let resource = new Resource ( Key = "Trimble.Connect:Project", Name = "project master", BranchName = "master", IsBranch = true );
+        resource.BranchResources.Add(new Resource ( Key = "tekla.utilities:project:feature_A", Name = "project feature_A", BranchName = "feature_A", IsBranch = true ));
+        resource.BranchResources.Add(new Resource ( Key = "tekla.utilities:project:feature_B", Name = "project feature_B", BranchName = "feature_B", IsBranch = true ));
+            
+        let service = SonarRestService(mockHttpReq)
+        let ret = (service :> ISonarRestService).IgnoreAllFile(conf, resource, "filex")
+        Assert.That(ret, Is.True)
+
+
+    [<Test>]
+    member test.``Should AddExclusion Multicriteria`` () =
+        let conf = ConnectionConfiguration("http://localhost:9000", "admin", "admin", 5.2)
+        let response = new RestSharp.RestResponse()
+        response.StatusCode <- HttpStatusCode.OK
+
+        let mockHttpReq =
+            Mock<IHttpSonarConnector>()
+                .Setup(fun x -> <@ x.HttpSonarPostRequest(any(), any(), any()) @>).Returns(response)
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/PropertiesResponse.txt"))
+                .Create()
+
+        let resource = new Resource ( Key = "Trimble.Connect:Project", Name = "project master", BranchName = "master", IsBranch = true );
+        resource.BranchResources.Add(new Resource ( Key = "tekla.utilities:project:feature_A", Name = "project feature_A", BranchName = "feature_A", IsBranch = true ));
+        resource.BranchResources.Add(new Resource ( Key = "tekla.utilities:project:feature_B", Name = "project feature_B", BranchName = "feature_B", IsBranch = true ));
+            
+        let rule = new Rule(Key = "rulenumber1")
+        let service = SonarRestService(mockHttpReq)
+        let ret = (service :> ISonarRestService).IgnoreRuleOnFile(conf, resource, "filenumber", rule)
+        Assert.That(ret, Is.True)
+
+
+    [<Test>]
+    member test.``Should Failed to add Exclusion Multicriteria`` () =
+        let conf = ConnectionConfiguration("http://localhost:9000", "admin", "admin", 5.2)
+        let response = new RestSharp.RestResponse()
+        response.StatusCode <- HttpStatusCode.NotModified
+
+        let mockHttpReq =
+            Mock<IHttpSonarConnector>()
+                .Setup(fun x -> <@ x.HttpSonarPostRequest(any(), any(), any()) @>).Returns(response)
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/PropertiesResponse.txt"))
+                .Create()
+
+        let resource = new Resource ( Key = "Trimble.Connect:Project", Name = "project master", BranchName = "master", IsBranch = true );
+        resource.BranchResources.Add(new Resource ( Key = "tekla.utilities:project:feature_A", Name = "project feature_A", BranchName = "feature_A", IsBranch = true ));
+        resource.BranchResources.Add(new Resource ( Key = "tekla.utilities:project:feature_B", Name = "project feature_B", BranchName = "feature_B", IsBranch = true ));
+            
+        let rule = new Rule(Key = "rulenumber1")
+        let service = SonarRestService(mockHttpReq)
+        let ret = (service :> ISonarRestService).IgnoreRuleOnFile(conf, resource, "filenumber", rule)
+        Assert.That(ret, Is.False)
