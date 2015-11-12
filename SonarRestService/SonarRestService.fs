@@ -1751,4 +1751,9 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             else
                 uploadProperty(projectIn)
 
+            let foundAlready = List.ofSeq exclusions |> Seq.tryFind (fun  c -> c.RuleRegx.Equals(rule.Key) && c.FileRegx.Equals(file))
+            match foundAlready with
+            | Some(c) -> ()
+            | _ -> exclusions.Add(new Exclusion(RuleRegx = rule.Key, FileRegx = file))
+
             exclusions :> System.Collections.Generic.IList<Exclusion>

@@ -123,12 +123,13 @@ type QualityTests() =
                 .Create()
                        
         let resource = new Resource ( Key = "Trimble.Connect:Project", Name = "project master", BranchName = "master", IsBranch = true );
+        resource.BranchResources.Add(new Resource ( Key = "tekla.utilities:project:master", Name = "project master", BranchName = "master", IsBranch = true ));
         resource.BranchResources.Add(new Resource ( Key = "tekla.utilities:project:feature_A", Name = "project feature_A", BranchName = "feature_A", IsBranch = true ));
         resource.BranchResources.Add(new Resource ( Key = "tekla.utilities:project:feature_B", Name = "project feature_B", BranchName = "feature_B", IsBranch = true ));
             
         let service = SonarRestService(mockHttpReq)
         let ret = (service :> ISonarRestService).IgnoreAllFile(conf, resource, "filex")
-        Assert.That(ret, Is.True)
+        Assert.That(ret.Count, Is.EqualTo(1))
 
 
     [<Test>]
@@ -144,13 +145,14 @@ type QualityTests() =
                 .Create()
 
         let resource = new Resource ( Key = "Trimble.Connect:Project", Name = "project master", BranchName = "master", IsBranch = true );
+        resource.BranchResources.Add(new Resource ( Key = "tekla.utilities:project:master", Name = "project master", BranchName = "master", IsBranch = true ));
         resource.BranchResources.Add(new Resource ( Key = "tekla.utilities:project:feature_A", Name = "project feature_A", BranchName = "feature_A", IsBranch = true ));
         resource.BranchResources.Add(new Resource ( Key = "tekla.utilities:project:feature_B", Name = "project feature_B", BranchName = "feature_B", IsBranch = true ));
             
         let rule = new Rule(Key = "rulenumber1")
         let service = SonarRestService(mockHttpReq)
         let ret = (service :> ISonarRestService).IgnoreRuleOnFile(conf, resource, "filenumber", rule)
-        Assert.That(ret, Is.True)
+        Assert.That(ret.Count, Is.EqualTo(1))
 
 
     [<Test>]
@@ -166,10 +168,11 @@ type QualityTests() =
                 .Create()
 
         let resource = new Resource ( Key = "Trimble.Connect:Project", Name = "project master", BranchName = "master", IsBranch = true );
+        resource.BranchResources.Add(new Resource ( Key = "tekla.utilities:project:master", Name = "project master", BranchName = "master", IsBranch = true ));
         resource.BranchResources.Add(new Resource ( Key = "tekla.utilities:project:feature_A", Name = "project feature_A", BranchName = "feature_A", IsBranch = true ));
         resource.BranchResources.Add(new Resource ( Key = "tekla.utilities:project:feature_B", Name = "project feature_B", BranchName = "feature_B", IsBranch = true ));
             
         let rule = new Rule(Key = "rulenumber1")
         let service = SonarRestService(mockHttpReq)
         let ret = (service :> ISonarRestService).IgnoreRuleOnFile(conf, resource, "filenumber", rule)
-        Assert.That(ret, Is.False)
+        Assert.That(ret.Count, Is.EqualTo(1))
