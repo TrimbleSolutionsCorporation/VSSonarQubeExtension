@@ -832,6 +832,35 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
         for parsedDataRule in rules do
             CreateRuleInProfile(parsedDataRule, profile, enabledStatus)
 
+
+    member this.IgnoreAllFile2(conf : ISonarConfiguration, projectIn : Resource, file : string) =
+        let epoch = (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds.ToString().Replace(",", "")
+
+        let uploadProperty(currentproject : Resource) =
+            // let get properties for project
+            let properties = (this :> ISonarRestService).GetProperties(conf, currentproject)
+
+            let getPropertiesForUpload =                                 
+                let elem = properties |> Seq.tryFind (fun c -> c.Key.Equals("sonar.issue.ignore.allfile"))
+                match elem with
+                | Some(c) -> c.Value + "," + epoch
+                | _ -> epoch
+
+            // upload new epochs
+            let url = sprintf "/api/properties?id=sonar.issue.ignore.allfile&value=%s&resource=%s" getPropertiesForUpload currentproject.Key
+            let response = httpconnector.HttpSonarPostRequest(conf, url, Map.empty)
+            if response.StatusCode = Net.HttpStatusCode.OK then
+                let url = sprintf "/api/properties?id=sonar.issue.ignore.allfile.%s.fileRegexp&value=%s&resource=%s" epoch file currentproject.Key
+                httpconnector.HttpSonarPostRequest(conf, url, Map.empty) |> ignore
+
+        if projectIn.IsBranch then
+            for branch in projectIn.BranchResources do
+                uploadProperty(branch)
+        else
+            uploadProperty(projectIn)
+
+        true
+
     interface VSSonarPlugins.ISonarRestService with
         member this.CreateRule(conf:ISonarConfiguration, rule:Rule, ruleTemplate:Rule) =
             let errorMessages = new System.Collections.Generic.List<string>()
@@ -1172,6 +1201,20 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 getUserListFromXmlResponse(responsecontent)
             with
              | ex -> new System.Collections.Generic.List<User>()
+
+        member this.GetProperties(newConf : ISonarConfiguration, project : Resource) =
+            let url = "/api/properties?resource=" + project.Key
+
+            let responsecontent = httpconnector.HttpSonarGetRequest(newConf, url)
+            let data = JSonProperties.Parse(responsecontent)
+            let dic = new System.Collections.Generic.Dictionary<string, string>()
+            for i in data do
+                try
+                    dic.Add(i.Key, i.Value.JsonValue.InnerText())
+                with
+                | ex -> ()
+
+            dic
 
         member this.GetProperties(newConf : ISonarConfiguration) =
             let url = "/api/properties"           
@@ -1612,3 +1655,105 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
             issuesInFile.Issues |> Seq.iter (fun elem -> currentListOfIssues.Add(ConvertIssue(elem)))            
             currentListOfIssues          
+
+        member this.IgnoreAllFile(conf : ISonarConfiguration, projectIn : Resource, file : string) =
+            let mutable ok = true
+
+            let epoch = (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds.ToString().Replace(",", "")
+            let dummyRule = new Rule(Key = "*")
+            (this :> ISonarRestService).IgnoreRuleOnFile(conf, projectIn, file, dummyRule)
+
+
+        member this.GetExclusions(conf : ISonarConfiguration, projectIn : Resource) =
+            let mutable ok = true
+            let exclusions = new System.Collections.Generic.List<Exclusion>()
+
+            let uploadProperty(currentproject : Resource) =
+
+                let properties = (this :> ISonarRestService).GetProperties(conf, currentproject)
+
+                // upload new epochs
+                let AddExclusionToList(ruleKey : string, fileKey : string) =
+                    let resourceKeyElem = List.ofSeq exclusions |> Seq.tryFind (fun c -> c.RuleRegx.Equals(ruleKey) && c.FileRegx.Equals(fileKey))
+                    match resourceKeyElem with
+                    | Some(m) -> ()
+                    | _ -> exclusions.Add(new Exclusion(RuleRegx = ruleKey, FileRegx = fileKey))
+                    
+                let AddExclusion(key : string, value : string) =
+                    if key.EndsWith(".ruleKey") && key.StartsWith("sonar.issue.ignore.multicriteria") then
+                        let id = key.Replace("sonar.issue.ignore.multicriteria.", "").Replace(".ruleKey", "")
+                        let ruleRegex = value
+                        let resourceKeyElem = properties |> Seq.tryFind (fun c -> c.Key.Equals("sonar.issue.ignore.multicriteria." + id + ".resourceKey"))
+                        match resourceKeyElem with
+                        | Some(m) -> AddExclusionToList(ruleRegex, m.Value)
+                        | _ -> ()
+
+                properties |> Seq.iter (fun c -> AddExclusion(c.Key, c.Value))
+
+
+            if projectIn.IsBranch then
+                for branch in projectIn.BranchResources do
+                    uploadProperty(branch)
+            else
+                uploadProperty(projectIn)
+
+
+            exclusions :> System.Collections.Generic.IList<Exclusion>
+
+
+        member this.IgnoreRuleOnFile(conf : ISonarConfiguration, projectIn : Resource, file : string, rule : Rule) =
+
+            let exclusions = new System.Collections.Generic.List<Exclusion>()
+
+            let epoch = (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds.ToString().Replace(",", "")
+
+            let uploadProperty(currentproject : Resource) =
+
+                let properties = (this :> ISonarRestService).GetProperties(conf, currentproject)
+
+                let getPropertiesForUpload =                                 
+                    let elem = properties |> Seq.tryFind (fun c -> c.Key.Equals("sonar.issue.ignore.multicriteria"))
+                    match elem with
+                    | Some(c) -> c.Value + "," + epoch
+                    | _ -> epoch
+
+                // upload new epochs
+                let url = sprintf "/api/properties?id=sonar.issue.ignore.multicriteria.%s.ruleKey&value=%s&resource=%s" epoch rule.Key currentproject.Key
+                let response = httpconnector.HttpSonarPostRequest(conf, url, Map.empty)
+                if response.StatusCode = Net.HttpStatusCode.OK then
+                    let url = sprintf "/api/properties?id=sonar.issue.ignore.multicriteria.%s.resourceKey&value=%s&resource=%s" epoch file currentproject.Key
+                    let response = httpconnector.HttpSonarPostRequest(conf, url, Map.empty)
+                    if response.StatusCode = Net.HttpStatusCode.OK then
+                        let url = sprintf "/api/properties?id=sonar.issue.ignore.multicriteria&value=%s&resource=%s" getPropertiesForUpload currentproject.Key
+                        httpconnector.HttpSonarPostRequest(conf, url, Map.empty) |> ignore
+
+                let AddExclusionToList(ruleKey : string, fileKey : string) =
+                    let resourceKeyElem = List.ofSeq exclusions |> Seq.tryFind (fun c -> c.RuleRegx.Equals(ruleKey) && c.FileRegx.Equals(fileKey))
+                    match resourceKeyElem with
+                    | Some(m) -> ()
+                    | _ -> exclusions.Add(new Exclusion(RuleRegx = ruleKey, FileRegx = fileKey))
+                    
+                let AddExclusion(key : string, value : string) =
+                    if key.EndsWith(".ruleKey") && key.StartsWith("sonar.issue.ignore.multicriteria") then
+                        let id = key.Replace("sonar.issue.ignore.multicriteria.", "").Replace(".ruleKey", "")
+                        let ruleRegex = value
+                        let resourceKeyElem = properties |> Seq.tryFind (fun c -> c.Key.Equals("sonar.issue.ignore.multicriteria." + id + ".resourceKey"))
+                        match resourceKeyElem with
+                        | Some(m) -> AddExclusionToList(ruleRegex, m.Value)
+                        | _ -> ()
+
+                properties |> Seq.iter (fun c -> AddExclusion(c.Key, c.Value))
+
+
+            if projectIn.IsBranch then
+                for branch in projectIn.BranchResources do
+                    uploadProperty(branch)
+            else
+                uploadProperty(projectIn)
+
+            let foundAlready = List.ofSeq exclusions |> Seq.tryFind (fun  c -> c.RuleRegx.Equals(rule.Key) && c.FileRegx.Equals(file))
+            match foundAlready with
+            | Some(c) -> ()
+            | _ -> exclusions.Add(new Exclusion(RuleRegx = rule.Key, FileRegx = file))
+
+            exclusions :> System.Collections.Generic.IList<Exclusion>

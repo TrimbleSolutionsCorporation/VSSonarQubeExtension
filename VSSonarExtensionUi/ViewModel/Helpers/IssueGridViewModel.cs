@@ -122,7 +122,6 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// <param name="notManager">The not manager.</param>
         /// <param name="keyTranslatorIn">The key translator in.</param>
         public IssueGridViewModel(
-            bool rowContextMenu,
             string gridId,
             bool showSqaleRating,
             IConfigurationHelper helper,
@@ -157,8 +156,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
 
             this.ShowHeaderContextMenu = true;
             this.ContextVisibilityMenuItems = this.CreateColumnVisibiltyMenu();
-            this.ShowContextMenu = rowContextMenu;
-            this.ContextMenuItems = this.CreateRowContextMenu();
+            this.ContextMenuItems = new ObservableCollection<IMenuItem>();
 
             this.filter = new IssueFilter(this);
             this.InitFilterCommanding();
@@ -1172,7 +1170,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// <param name="workingDir">The working dir.</param>
         /// <param name="providerIn">The provider in.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
-        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider providerIn, IIssueTrackerPlugin sourcePlugin)
+        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider providerIn, IIssueTrackerPlugin sourcePlugin, IList<Resource> availableProjects)
         {
             this.sourceWorkDir = workingDir;
             this.associatedProject = project;
@@ -1204,6 +1202,13 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                     item.RefreshMenuData();
                 }
             }
+        }
+
+        /// <summary>
+        /// Called when [disconnect].
+        /// </summary>
+        public void OnDisconnect()
+        {
         }
 
         #endregion
@@ -1271,31 +1276,6 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             List<string> submenus = props.Select(propertyInfo => propertyInfo.Name).ToList();
 
             var menu = new ObservableCollection<IMenuItem> { ShowHideIssueColumn.MakeMenu(this, this.configurationHelper, submenus, this.dataGridOptionsKey) };
-
-            return menu;
-        }
-
-        /// <summary>
-        ///     The create row context menu.
-        /// </summary>
-        /// <returns>
-        ///     The
-        ///     <see>
-        ///         <cref>ObservableCollection</cref>
-        ///     </see>
-        ///     .
-        /// </returns>
-        private ObservableCollection<IMenuItem> CreateRowContextMenu()
-        {
-            var menu = new ObservableCollection<IMenuItem>
-                           {
-                               ChangeStatusMenu.MakeMenu(this.restService, this, this.notificationManager),
-                               OpenResourceMenu.MakeMenu(this.restService, this),
-                               PlanMenu.MakeMenu(this.restService, this, this.notificationManager),
-                               SourceControlMenu.MakeMenu(this.restService, this, this.notificationManager, this.keyTranslator),
-                               IssueTrackerMenu.MakeMenu(this.restService, this, this.notificationManager, this.keyTranslator),
-                               AssignMenu.MakeMenu(this.restService, this, this.notificationManager),
-                           };
 
             return menu;
         }

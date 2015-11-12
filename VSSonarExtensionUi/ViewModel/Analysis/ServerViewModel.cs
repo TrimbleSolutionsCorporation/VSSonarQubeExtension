@@ -32,7 +32,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using VSSonarPlugins.Helpers;
     using VSSonarPlugins.Types;
     using VSSonarExtensionUi.Association;
-    
+    using Model.Menu;
+
     /// <summary>
     ///     The server view model.
     /// </summary>
@@ -78,6 +79,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// The associated project
         /// </summary>
         private Resource associatedProject;
+        private readonly ISonarLocalAnalyser analyser;
 
         #region Constructors and Destructors
 
@@ -94,8 +96,10 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             IConfigurationHelper configurationHelper,
             ISonarRestService restservice,
             INotificationManager notificationManager,
-            ISQKeyTranslator translator)
+            ISQKeyTranslator translator,
+            ISonarLocalAnalyser analyser)
         {
+            this.analyser = analyser;
             this.notificationMan = notificationManager;
             this.vsenvironmenthelper = vsenvironmenthelper;
             this.configurationHelper = configurationHelper;
@@ -104,7 +108,9 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.Header = "Server Analysis";
             this.AvailableActionPlans = new ObservableCollection<SonarActionPlan>();
             this.AlreadyOpenDiffs = new SortedSet<string>();
-            this.IssuesGridView = new IssueGridViewModel(true, "ServerView", true, this.configurationHelper, this.restservice, this.notificationMan, translator);
+            this.IssuesGridView = new IssueGridViewModel("ServerView", true, this.configurationHelper, this.restservice, this.notificationMan, translator);
+            this.IssuesGridView.ContextMenuItems = this.CreateRowContextMenu(restservice, translator);
+            this.IssuesGridView.ShowContextMenu = true;
             this.IssuesGridView.ShowLeftFlyoutEvent += this.ShowHideLeftFlyout;
             this.InitCommanding();
 
@@ -113,6 +119,32 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.SizeOfFlyout = 0;
             // register model
             AssociationModel.RegisterNewModelInPool(this);
+        }
+
+        /// <summary>
+        ///     The create row context menu.
+        /// </summary>
+        /// <returns>
+        ///     The
+        ///     <see>
+        ///         <cref>ObservableCollection</cref>
+        ///     </see>
+        ///     .
+        /// </returns>
+        private ObservableCollection<IMenuItem> CreateRowContextMenu(ISonarRestService service, ISQKeyTranslator translator)
+        {
+            var menu = new ObservableCollection<IMenuItem>
+                           {
+                               ChangeStatusMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan),
+                               OpenResourceMenu.MakeMenu(service, this.IssuesGridView),
+                               PlanMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan),
+                               SourceControlMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan, translator),
+                               IssueTrackerMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan, translator),
+                               AssignMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan),
+                               SetExclusionsMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan, translator, this.analyser)
+                           };
+
+            return menu;
         }
 
         #endregion
@@ -312,6 +344,13 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         }
 
         /// <summary>
+        /// Called when [disconnect].
+        /// </summary>
+        public void OnDisconnect()
+        {
+        }
+
+        /// <summary>
         ///     The get coverage in editor.
         /// </summary>
         /// <param name="currentSourceBuffer">
@@ -328,7 +367,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             if (this.CoverageInEditorEnabled)
             {
-                this.notificationMan.WriteMessage("Requested Coverage - Coverge enabled");
+                this.notificationMan.WriteMessage("Requested Coverage - Coverage enabled");
                 return this.localEditorCache.GetCoverageDataForResource(this.ResourceInEditor, currentSourceBuffer);
             }
 
@@ -375,7 +414,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             Resource associatedProjectIn,
             string workingDir,
             ISourceControlProvider provider,
-            IIssueTrackerPlugin sourcePlugin)
+            IIssueTrackerPlugin sourcePlugin,
+            IList<Resource> availableProjects)
         {
             this.associatedProject = associatedProjectIn;
             if (this.vsenvironmenthelper != null)

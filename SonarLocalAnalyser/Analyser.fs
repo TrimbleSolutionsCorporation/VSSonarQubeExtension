@@ -69,8 +69,7 @@ type AnalyserCommandExec(logger : TaskLoggingHelper, timeout : int64) =
     member val stopWatch = Stopwatch.StartNew()
     member val proc : Process  = new Process() with get, set
     member val returncode : ReturnCode = ReturnCode.Ok with get, set
-    member val cancelSignal : bool = false with get, set
-
+    member val cancelSignal : bool = false with get, set    
     member val Program : string = "" with get, set
 
     member this.killProcess(pid : int32) : bool =
@@ -430,6 +429,8 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                                     cachedProfiles.[project.Name].Add(profile.Language, profile)
                             with
                             | ex -> System.Diagnostics.Debug.WriteLine("cannot add profile: " + ex.Message + " : " + ex.StackTrace)
+                                    if ex.Message.Contains("An item with the same key has already been added.") then
+                                        profilesCnt <- profilesCnt - 1
                         )
                     )
 
@@ -455,7 +456,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
     member val OnModifyFiles = false with get, set
     member val AnalysisIsRunning = false with get, set
     member val ProjectLookupRunning = Set.empty with get, set
-
+    member val Exclusions : System.Collections.Generic.IList<Exclusion> = null with get, set
     member val SqTranslator : ISQKeyTranslator = null with get, set
     member val VsInter : IVsEnvironmentHelper = null with get, set
 
@@ -643,12 +644,24 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                                 let profile = cachedProfiles.[x.Project.Name].[plugin.GetLanguageKey(x.ItemInView)]
                                 let issues = extension.ExecuteAnalysisOnFile(x.ItemInView, profile, x.Project, x.Conf)
 
-                                for issue in issues do
-                                    issue.Component <- x.SqTranslator.TranslatePath(x.ItemInView, x.VsInter, restService, sonarConfig)
-
                                 lock syncLock (
                                     fun () ->
-                                        localissues.AddRange(issues)
+
+                                        for issue in issues do
+                                            issue.Component <- x.SqTranslator.TranslatePath(x.ItemInView, x.VsInter, restService, sonarConfig)
+                                            if x.Exclusions = null then
+                                                localissues.Add(issue)
+                                            else
+                                                let mutable excluded = false
+                                                for exclusion in x.Exclusions do
+                                                    if issue.Component.Contains(exclusion.FileRegx) && issue.Rule.Equals(exclusion.RuleRegx) then
+                                                        excluded <- true
+
+                                                    if issue.Component.Contains(exclusion.FileRegx) && exclusion.RuleRegx.Equals("*") then
+                                                        excluded <- true
+
+                                                if not(excluded) then
+                                                    localissues.Add(issue)
                                     )
                         else
                             (x :> ISonarLocalAnalyser).AssociateWithProject(x.Project, x.Conf)
@@ -678,6 +691,11 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
             false
 
     interface ISonarLocalAnalyser with
+
+        member x.UpdateExclusions(exclusions : System.Collections.Generic.IList<Exclusion>) =
+            x.Exclusions <- exclusions
+            ()
+
         [<CLIEvent>]
         member x.LocalAnalysisCompleted = completionEvent.Publish
 
@@ -859,6 +877,9 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
 
             plugin.GetResourceKey(itemInView, safeIsOn)
 
+        member x.OnDisconect() =
+            profileUpdated <- false            
+
         member x.AssociateWithProject(project : Resource, conf:ISonarConfiguration) =
             if project <> null && conf <> null then
                 sonarConfig <- conf
@@ -883,11 +904,9 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                             let lines = File.ReadAllLines(projectFile)
                             lines |> Seq.iter (fun line -> processLine(line))
 
-                profileUpdated <- false
-
                 try
                     notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Start Update profile"))
-                    GetQualityProfiles(conf, project, x) 
+                    GetQualityProfiles(conf, project, x)
                 with
                 | ex ->                    
                     notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Failed to Update profile"))

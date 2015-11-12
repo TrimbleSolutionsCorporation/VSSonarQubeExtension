@@ -375,6 +375,13 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         }
 
         /// <summary>
+        /// Called when [disconnect].
+        /// </summary>
+        public void OnDisconnect()
+        {
+        }
+
+        /// <summary>
         ///     Gets or sets a value indicating whether browse for java trigger.
         /// </summary>
         public void OnBrowseForJavaTrigger()
@@ -505,7 +512,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="workDir">The work dir.</param>
         /// <param name="provider">The provider.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
-        public void AssociateWithNewProject(Resource project, string workDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin)
+        public void AssociateWithNewProject(Resource project, string workDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin, IList<Resource> availableProjects)
         {
             this.SourceDir = workDir;
             this.associatedProject = project;

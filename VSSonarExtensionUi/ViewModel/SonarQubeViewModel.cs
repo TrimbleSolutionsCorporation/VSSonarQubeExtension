@@ -191,7 +191,8 @@ namespace VSSonarExtensionUi.ViewModel
             ISQKeyTranslator translator,
             ISonarRestService restService,
             ISourceControlProvider sourceControl = null,
-            IPluginManager pluginManager = null)
+            IPluginManager pluginManager = null,
+            ISonarLocalAnalyser locaAnalyser = null)
         {
             this.vsversion = vsverionIn;
             this.ToolsProvidedByPlugins = new ObservableCollection<MenuItem>();
@@ -203,6 +204,7 @@ namespace VSSonarExtensionUi.ViewModel
             this.notificationManager = notification;
             this.sonarKeyTranslator = translator;
             this.sonarRestConnector = restService;
+            this.LocaAnalyser = locaAnalyser;
             this.VSonarQubeOptionsViewData =
                 new VSonarQubeOptionsViewModel(
                     this.sonarRestConnector,
@@ -595,6 +597,8 @@ namespace VSSonarExtensionUi.ViewModel
             }
         }
 
+        public ISonarLocalAnalyser LocaAnalyser { get; private set; }
+
         #endregion
 
         #region Public Methods and Operators
@@ -634,6 +638,7 @@ namespace VSSonarExtensionUi.ViewModel
             }
 
             this.AssociationModule.AssociateProjectToSolution(solutionName, solutionPath, this.AvailableProjects, this.SourceControl);
+
 
             if (!string.IsNullOrEmpty(fileInView))
             {
@@ -1326,19 +1331,23 @@ namespace VSSonarExtensionUi.ViewModel
         /// </summary>
         private void InitViewsAndModels()
         {
+            this.LocaAnalyser = new SonarLocalAnalyser(this.pluginManager.AnalysisPlugins, this.sonarRestConnector, this.configurationHelper, this.notificationManager);
+
             this.ServerViewModel = new ServerViewModel(
                 this.VsHelper, 
                 this.configurationHelper, 
                 this.sonarRestConnector,
                 this.notificationManager,
-                this.sonarKeyTranslator);
+                this.sonarKeyTranslator,
+                this.LocaAnalyser);
 
             this.LocalViewModel = new LocalViewModel(
                 this.pluginManager.AnalysisPlugins,
                 this.sonarRestConnector,
                 this.configurationHelper,
                 this.notificationManager,
-                this.sonarKeyTranslator);
+                this.sonarKeyTranslator,
+                this.LocaAnalyser);
 
             this.IssuesSearchModel = new IssuesSearchModel(
                 this.configurationHelper,

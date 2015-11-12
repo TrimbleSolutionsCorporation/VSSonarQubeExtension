@@ -9,6 +9,7 @@
     using VSSonarPlugins.Types;
     using Association;
     using System.Windows.Media;
+    using System.Collections.Generic;
 
     /// <summary>The notify cation manager.</summary>
     public class NotifyCationManager : INotificationManager, IModelBase
@@ -85,6 +86,13 @@
         public void OnIssuesUpdated()
         {
             this.model.OnIssuesChangeEvent();
+        }
+
+        /// <summary>
+        /// Called when [disconnect].
+        /// </summary>
+        public void OnDisconnect()
+        {
         }
 
         /// <summary>The report exception.</summary>
@@ -246,7 +254,7 @@
         /// <param name="workingDir">The working dir.</param>
         /// <param name="provider">The provider.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
-        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin)
+        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin, IList<Resource> availableProjects)
         {
             // not needed
         }

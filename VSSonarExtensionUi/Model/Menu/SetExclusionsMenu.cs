@@ -19,7 +19,7 @@
     /// <summary>
     /// Source Control Related Actions
     /// </summary>
-    public class SourceControlMenu : IMenuItem
+    public class SetExclusionsMenu : IMenuItem
     {
         /// <summary>
         /// The rest service
@@ -57,20 +57,27 @@
         private Resource assignProject;
 
         /// <summary>
+        /// The available projects
+        /// </summary>
+        private IList<Resource> availableProjects;
+        private readonly ISonarLocalAnalyser analyser;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SourceControlMenu" /> class.
         /// </summary>
         /// <param name="rest">The rest.</param>
         /// <param name="model">The model.</param>
         /// <param name="manager">The manager.</param>
         /// <param name="translator">The translator.</param>
-        public SourceControlMenu(ISonarRestService rest, IssueGridViewModel model, INotificationManager manager, ISQKeyTranslator translator)
+        public SetExclusionsMenu(ISonarRestService rest, IssueGridViewModel model, INotificationManager manager, ISQKeyTranslator translator, ISonarLocalAnalyser analyser)
         {
+            this.analyser = analyser;
             this.rest = rest;
             this.model = model;
             this.manager = manager;
             this.tranlator = translator;
 
-            this.ExecuteCommand = new RelayCommand(this.OnSourceControlCommand);
+            this.ExecuteCommand = new RelayCommand(this.OnSetExclusionsMenuCommand);
             this.SubItems = new ObservableCollection<IMenuItem>();
 
             // register menu for data sync
@@ -107,12 +114,12 @@
         /// <returns>
         /// The <see cref="IMenuItem" />.
         /// </returns>
-        public static IMenuItem MakeMenu(ISonarRestService rest, IssueGridViewModel model, INotificationManager manager, ISQKeyTranslator translator)
+        public static IMenuItem MakeMenu(ISonarRestService rest, IssueGridViewModel model, INotificationManager manager, ISQKeyTranslator translator, ISonarLocalAnalyser analyser)
         {
-            var topLel = new SourceControlMenu(rest, model, manager, translator) { CommandText = "Source Control", IsEnabled = false };
+            var topLel = new SetExclusionsMenu(rest, model, manager, translator, analyser) { CommandText = "Exclusions", IsEnabled = false };
             
-            topLel.SubItems.Add(new SourceControlMenu(rest, model, manager, translator) { CommandText = "assign to committer", IsEnabled = true });
-            topLel.SubItems.Add(new SourceControlMenu(rest, model, manager, translator) { CommandText = "show commit message", IsEnabled = true });
+            topLel.SubItems.Add(new SetExclusionsMenu(rest, model, manager, translator, analyser) { CommandText = "file", IsEnabled = true });
+            topLel.SubItems.Add(new SetExclusionsMenu(rest, model, manager, translator, analyser) { CommandText = "rule in file", IsEnabled = true });
             return topLel;
         }
 
@@ -128,6 +135,7 @@
         {
             this.sourceControl = sourceModel;
             this.assignProject = project;
+            this.availableProjects = availableProjects;
         }
 
         /// <summary>
@@ -187,7 +195,7 @@
         /// <summary>
         /// Called when [source control command].
         /// </summary>
-        private void OnSourceControlCommand()
+        private void OnSetExclusionsMenuCommand()
         {
             if (this.model.SelectedItems == null || this.model.SelectedItems.Count == 0)
             {
@@ -196,84 +204,62 @@
 
             try
             {
-                if (this.CommandText.Equals("assign to committer"))
-                {
-                    var users = this.rest.GetUserList(AuthtenticationHelper.AuthToken);
-                    var issues = this.model.SelectedItems;
+                Resource projectToUse = GetMainProject(this.assignProject, this.availableProjects);
 
-                    foreach (var issue in issues)
+                if (this.CommandText.Equals("file"))
+                {
+                    foreach (var item in this.model.SelectedItems)
                     {
-                        this.AssignIssueToUser(users, issue as Issue);
+                        var issue = item as Issue;
+                        var filereglems = issue.Component.Split(':');
+                        var fileregex = filereglems[filereglems.Length - 1];
+
+                        var exclusionList = this.rest.IgnoreAllFile(AuthtenticationHelper.AuthToken, projectToUse, fileregex);
+                        this.analyser.UpdateExclusions(exclusionList);
                     }
 
                     return;
                 }
 
-                if (this.CommandText.Equals("show commit message"))
+                if (this.CommandText.Equals("rule in file"))
                 {
-                    var issue = this.model.SelectedItems[0] as Issue;
-
-                    var translatedPath = this.tranlator.TranslateKey(issue.Component, this.vshelper, this.assignProject.BranchName);
-
-                    var blameLine = this.sourceControl.GetBlameByLine(translatedPath, issue.Line);
-
-                    if (blameLine != null)
+                    foreach (var item in this.model.SelectedItems)
                     {
-                        string message = string.Format("Author:\t\t {0}\r\nEmail:\t\t {1}\r\nCommit Date:\t {2}\r\nHash:\t\t {3}", blameLine.Author, blameLine.Email, blameLine.Date, blameLine.Guid);
-                        string summary = blameLine.Summary;
+                        var issue = item as Issue;
+                        var filereglems = issue.Component.Split(':');
+                        var fileregex = filereglems[filereglems.Length - 1];
+                        var exclusionList = this.rest.IgnoreAllFile(AuthtenticationHelper.AuthToken, projectToUse, fileregex);
+                        this.analyser.UpdateExclusions(exclusionList);
+                    }
 
-                        MessageDisplayBox.DisplayMessage(message, summary);
-                    }                                       
+                    return;
                 }
             }
             catch (Exception ex)
             {
-                this.manager.ReportMessage(new Message { Id = "SourceControlMenu", Data = "Failed to perform operation: " + ex.Message });
+                this.manager.ReportMessage(new Message { Id = "SetExclusions", Data = "Failed to perform operation: " + ex.Message });
                 this.manager.ReportException(ex);
             }
         }
 
-        /// <summary>
-        /// Assigns the issue to user.
-        /// </summary>
-        /// <param name="users">The users.</param>
-        /// <param name="issue">The issue.</param>
-        private void AssignIssueToUser(List<User> users, Issue issue)
+        public static Resource GetMainProject(Resource projectIn, IList<Resource> projects)
         {
-            try
+            var projectToUse = projectIn;
+            foreach (var project in projects)
             {
-                var translatedPath = this.tranlator.TranslateKey(issue.Component, this.vshelper, this.assignProject.BranchName);
-
-                var blameLine = this.sourceControl.GetBlameByLine(translatedPath, issue.Line);
-
-                if (blameLine != null)
+                if (project.IsBranch)
                 {
-                    foreach (var user in users)
+                    foreach (var branch in project.BranchResources)
                     {
-                        var emailBlame = blameLine.Email.ToLower().Trim();
-                        var emailSq = user.Email.ToLower().Trim();
-                        if (emailBlame.Equals(emailSq))
+                        if (branch.Key.Equals(projectIn.Key))
                         {
-                            var issues = new List<Issue>();
-                            issues.Add(issue);
-
-                            this.rest.AssignIssuesToUser(AuthtenticationHelper.AuthToken, issues, user, "VSSonarQube Extension Auto Assign");
-                            this.manager.ReportMessage(new Message { Id = "SourceControlMenu : ", Data = "assign issue to: " + blameLine.Author + " ok" });
-                            return;
+                            projectToUse = project;
                         }
                     }
                 }
-                else
-                {
-                    this.manager.ReportMessage(new Message { Id = "SourceControlMenu : ", Data = "Cannot assign issue: source control information not available" });
-                }                
             }
-            catch (Exception ex)
-            {
-                this.manager.ReportMessage(new Message { Id = "SourceControlMenu", Data = "Failed to assign issue" + issue.Message });
-                this.manager.ReportException(ex);
-                throw;
-            }
+
+            return projectToUse;
         }
     }
 }

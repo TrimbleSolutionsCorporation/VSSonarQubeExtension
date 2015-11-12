@@ -36,26 +36,101 @@
         /// <returns></returns>
         List<Issue> GetIssuesForProjects(ISonarConfiguration config, string projectKey);
 
+        /// <summary>
+        /// Gets the issues for projects created after date.
+        /// </summary>
+        /// <param name="config">The configuration.</param>
+        /// <param name="projectKey">The project key.</param>
+        /// <param name="time">The time.</param>
+        /// <returns></returns>
         List<Issue> GetIssuesForProjectsCreatedAfterDate(ISonarConfiguration config, string projectKey, DateTime time);
 
+        /// <summary>
+        /// Gets the issues in resource.
+        /// </summary>
+        /// <param name="config">The configuration.</param>
+        /// <param name="resourceKey">The resource key.</param>
+        /// <returns></returns>
         List<Issue> GetIssuesInResource(ISonarConfiguration config, string resourceKey);
 
+        /// <summary>
+        /// Gets the issues.
+        /// </summary>
+        /// <param name="config">The configuration.</param>
+        /// <param name="query">The query.</param>
+        /// <param name="projectId">The project identifier.</param>
+        /// <returns></returns>
         List<Issue> GetIssues(ISonarConfiguration config, string query, string projectId);
 
+        /// <summary>
+        /// Gets the projects.
+        /// </summary>
+        /// <param name="config">The configuration.</param>
+        /// <returns></returns>
         List<SonarProject> GetProjects(ISonarConfiguration config);
 
+        /// <summary>
+        /// Comments the on issues.
+        /// </summary>
+        /// <param name="newConf">The new conf.</param>
+        /// <param name="issues">The issues.</param>
+        /// <param name="comment">The comment.</param>
+        /// <returns></returns>
         Dictionary<string, HttpStatusCode> CommentOnIssues(ISonarConfiguration newConf, IList issues, string comment);
 
+        /// <summary>
+        /// Res the open issues.
+        /// </summary>
+        /// <param name="Conf">The conf.</param>
+        /// <param name="issues">The issues.</param>
+        /// <param name="comment">The comment.</param>
+        /// <returns></returns>
         Dictionary<string, HttpStatusCode> ReOpenIssues(ISonarConfiguration Conf, List<Issue> issues, string comment);
 
+        /// <summary>
+        /// Confirms the issues.
+        /// </summary>
+        /// <param name="newConf">The new conf.</param>
+        /// <param name="issues">The issues.</param>
+        /// <param name="comment">The comment.</param>
+        /// <returns></returns>
         Dictionary<string, HttpStatusCode> ConfirmIssues(ISonarConfiguration newConf, IList issues, string comment);
 
+        /// <summary>
+        /// Uns the confirm issues.
+        /// </summary>
+        /// <param name="newConf">The new conf.</param>
+        /// <param name="issues">The issues.</param>
+        /// <param name="comment">The comment.</param>
+        /// <returns></returns>
         Dictionary<string, HttpStatusCode> UnConfirmIssues(ISonarConfiguration newConf, IList issues, string comment);
 
+        /// <summary>
+        /// Marks the issues as false positive.
+        /// </summary>
+        /// <param name="newConf">The new conf.</param>
+        /// <param name="issues">The issues.</param>
+        /// <param name="comment">The comment.</param>
+        /// <returns></returns>
         Dictionary<string, HttpStatusCode> MarkIssuesAsFalsePositive(ISonarConfiguration newConf, IList issues, string comment);
 
+        /// <summary>
+        /// Resolves the issues.
+        /// </summary>
+        /// <param name="newConf">The new conf.</param>
+        /// <param name="issues">The issues.</param>
+        /// <param name="comment">The comment.</param>
+        /// <returns></returns>
         Dictionary<string, HttpStatusCode> ResolveIssues(ISonarConfiguration newConf, IList issues, string comment);
 
+        /// <summary>
+        /// Assigns the issues to user.
+        /// </summary>
+        /// <param name="newConf">The new conf.</param>
+        /// <param name="issues">The issues.</param>
+        /// <param name="user">The user.</param>
+        /// <param name="comment">The comment.</param>
+        /// <returns></returns>
         Dictionary<string, HttpStatusCode> AssignIssuesToUser(ISonarConfiguration newConf, List<Issue> issues, User user, string comment);
 
         /// <summary>
@@ -101,22 +176,78 @@
         /// <returns></returns>
         List<User> GetUserList(ISonarConfiguration conf);
 
+        /// <summary>
+        /// Authenticates the user.
+        /// </summary>
+        /// <param name="conf">The conf.</param>
+        /// <returns></returns>
         bool AuthenticateUser(ISonarConfiguration conf);
 
+        /// <summary>
+        /// Gets the resources data.
+        /// </summary>
+        /// <param name="conf">The conf.</param>
+        /// <param name="key">The key.</param>
+        /// <returns></returns>
         List<Resource> GetResourcesData(ISonarConfiguration conf, string key);
 
+        /// <summary>
+        /// Gets the projects list.
+        /// </summary>
+        /// <param name="conf">The conf.</param>
+        /// <returns></returns>
         List<Resource> GetProjectsList(ISonarConfiguration conf);
 
+        /// <summary>
+        /// Gets the server information.
+        /// </summary>
+        /// <param name="conf">The conf.</param>
+        /// <returns></returns>
         float GetServerInfo(ISonarConfiguration conf);
 
+        /// <summary>
+        /// Gets the coverage in resource.
+        /// </summary>
+        /// <param name="conf">The conf.</param>
+        /// <param name="key">The key.</param>
+        /// <returns></returns>
         SourceCoverage GetCoverageInResource(ISonarConfiguration conf, string key);
 
+        /// <summary>
+        /// Gets the source for file resource.
+        /// </summary>
+        /// <param name="conf">The conf.</param>
+        /// <param name="key">The key.</param>
+        /// <returns></returns>
         Source GetSourceForFileResource(ISonarConfiguration conf, string key);
 
+        /// <summary>
+        /// Gets the properties.
+        /// </summary>
+        /// <param name="props">The props.</param>
+        /// <returns>
+        /// list of properties for server
+        /// </returns>
         Dictionary<string, string> GetProperties(ISonarConfiguration props);
+
+        /// <summary>
+        /// Gets the properties.
+        /// </summary>
+        /// <param name="props">The props.</param>
+        /// <param name="project">The project.</param>
+        /// <returns>
+        /// list of properties for project
+        /// </returns>
+        Dictionary<string, string> GetProperties(ISonarConfiguration props, Resource project);
 
         List<Profile> GetEnabledRulesInProfile(ISonarConfiguration conf, string language, string profile);
 
+        /// <summary>
+        /// Gets the quality profile.
+        /// </summary>
+        /// <param name="conf">The conf.</param>
+        /// <param name="resourceKey">The resource key.</param>
+        /// <returns></returns>
         List<Resource> GetQualityProfile(ISonarConfiguration conf, string resourceKey);
 
         void GetRulesForProfile(ISonarConfiguration conf, Profile profile, bool ruleDetails, bool active);
@@ -164,5 +295,31 @@
 
         List<DuplicationData> GetDuplicationsDataInResource(ISonarConfiguration conf, string resourceKey);
 
+        /// <summary>
+        /// Ignores all file.
+        /// </summary>
+        /// <param name="conf">The conf.</param>
+        /// <param name="project">The project.</param>
+        /// <param name="file">The file.</param>
+        /// <returns>returns a list of exclusions</returns>
+        IList<Exclusion> IgnoreAllFile(ISonarConfiguration conf, Resource project, string file);
+
+        /// <summary>
+        /// Ignores the rule on file.
+        /// </summary>
+        /// <param name="conf">The conf.</param>
+        /// <param name="project">The project.</param>
+        /// <param name="file">The file.</param>
+        /// <param name="rule">The rule.</param>
+        /// <returns>returns a list of exclusions</returns>
+        IList<Exclusion> IgnoreRuleOnFile(ISonarConfiguration conf, Resource project, string file, Rule rule);
+
+        /// <summary>
+        /// Gets the exclusions.
+        /// </summary>
+        /// <param name="conf">The conf.</param>
+        /// <param name="project">The project.</param>
+        /// <returns>returns a list of exclusions</returns>
+        IList<Exclusion> GetExclusions(ISonarConfiguration conf, Resource project);
     }
 }

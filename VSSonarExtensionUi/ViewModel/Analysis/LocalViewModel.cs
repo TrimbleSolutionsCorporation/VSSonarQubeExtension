@@ -35,6 +35,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using Application = System.Windows.Application;
     using System.Diagnostics;
     using VSSonarExtensionUi.Association;
+    using Model.Menu;
+    using System.Collections.ObjectModel;
 
     /// <summary>
     ///     The analysis types.
@@ -162,7 +164,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             ISonarRestService service, 
             IConfigurationHelper configurationHelper,
             INotificationManager notificationManager,
-            ISQKeyTranslator translator)
+            ISQKeyTranslator translator,
+            ISonarLocalAnalyser analyser)
         {
             this.keyTranslator = translator;
             this.notificationManager = notificationManager;
@@ -171,18 +174,19 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
 
             this.plugins = pluginsIn;
             this.Header = "Local Analysis";
-            this.IssuesGridView = new IssueGridViewModel(false, "LocalView", false, this.configurationHelper, service, notificationManager, translator);
+            this.IssuesGridView = new IssueGridViewModel("LocalView", false, this.configurationHelper, service, notificationManager, translator);
+            this.IssuesGridView.ContextMenuItems = this.CreateRowContextMenu(service, translator, analyser);
+            this.IssuesGridView.ShowContextMenu = true;
             this.IssuesGridView.ShowLeftFlyoutEvent += this.ShowHideLeftFlyout;
             this.OuputLogLines = new PaginatedObservableCollection<string>(300);
             this.AllLog = new List<string>();
 
             this.InitCommanding();
-            this.InitFileAnalysis();
 
-            this.localAnalyserModule = new SonarLocalAnalyser(this.plugins, this.restService, this.configurationHelper, this.notificationManager);
+            this.localAnalyserModule = analyser;
             this.localAnalyserModule.StdOutEvent += this.UpdateOutputMessagesFromPlugin;
             this.localAnalyserModule.LocalAnalysisCompleted += this.UpdateLocalIssues;
-            this.localAnalyserModule.AssociateCommandCompeted += this.UpdateAssociateCommand;
+            this.localAnalyserModule.AssociateCommandCompeted += this.AssociationHasCompleted;
 
             this.ShowLeftFlyOut = false;
             this.SizeOfFlyout = 0;
@@ -193,6 +197,28 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             // register model
             AssociationModel.RegisterNewModelInPool(this);
         }
+
+
+        /// <summary>
+        ///     The create row context menu.
+        /// </summary>
+        /// <returns>
+        ///     The
+        ///     <see>
+        ///         <cref>ObservableCollection</cref>
+        ///     </see>
+        ///     .
+        /// </returns>
+        private ObservableCollection<IMenuItem> CreateRowContextMenu(ISonarRestService service, ISQKeyTranslator translator, ISonarLocalAnalyser analyser)
+        {
+            var menu = new ObservableCollection<IMenuItem>
+                           {
+                               SetExclusionsMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager, translator, analyser)
+                           };
+
+            return menu;
+        }
+
 
         #endregion
 
@@ -434,6 +460,15 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.associatedProject = null;
             this.CanRunAnalysis = false;
             this.IsAssociatedWithProject = false;
+            this.localAnalyserModule.OnDisconect();
+        }
+
+        /// <summary>
+        /// Called when [disconnect].
+        /// </summary>
+        public void OnDisconnect()
+        {
+            this.localAnalyserModule.OnDisconect();
         }
 
         /// <summary>
@@ -476,7 +511,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <param name="workingDir">The working dir.</param>
         /// <param name="provider">The provider.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
-        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin)
+        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin, IList<Resource> availableProjects)
         {
             this.associatedProject = project;
             this.IsAssociatedWithProject = this.associatedProject != null;
@@ -487,7 +522,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             {
                 this.CanRunAnalysis = true;
                 this.LoadingSonarData = true;
-                this.localAnalyserModule.AssociateWithProject(project, AuthtenticationHelper.AuthToken);
+                this.localAnalyserModule.AssociateWithProject(project, AuthtenticationHelper.AuthToken);                
             }
         }
 
@@ -521,13 +556,9 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         public void OnFileAnalysisIsEnabledChanged()
         {
-            if (this.CanRunAnalysis)
+            if (!this.CanRunAnalysis)
             {
-                this.configurationHelper.WriteOptionInApplicationData(
-                    Context.AnalysisGeneral,
-                    "SonarOptionsGeneral", 
-                    "FileAnalysisIsEnabled", 
-                    this.FileAnalysisIsEnabled ? "TRUE" : "FALSE");
+                return;
             }
 
             if (this.FileAnalysisIsEnabled)
@@ -715,22 +746,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         private void OnGoToPrevIssueCommand()
         {
             this.IssuesGridView.GoToPrevIssue();
-        }
-
-        /// <summary>
-        ///     The init file analysis.
-        /// </summary>
-        private void InitFileAnalysis()
-        {
-            try
-            {
-                var option = this.configurationHelper.ReadSetting(Context.AnalysisGeneral, "SonarOptionsGeneral", "FileAnalysisIsEnabled");
-                this.FileAnalysisIsEnabled = option.Value.Equals("TRUE");
-            }
-            catch (Exception)
-            {
-                this.FileAnalysisIsEnabled = true;
-            }
         }
 
         /// <summary>
@@ -956,7 +971,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 this.PermissionsAreNotAvailable = true;
             }
 
-            // 14:48:56.728 INFO - ANALYSIS SUCCESSFUL, you can browse http://localhost:9000/dashboard/index/Trimble.Connect:Desktop:master
+            // 14:48:56.728 INFO - ANALYSIS SUCCESSFUL, you can browse http://localhost:9000/dashboard/index/Trimble.Connect:Project
             if (exceptionMsg.ErrorMessage.Contains("ANALYSIS SUCCESSFUL, you can browse"))
             {
                 string[] separatingChars = { "ANALYSIS SUCCESSFUL, you can browse" };
@@ -967,11 +982,10 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <summary>The update associate command.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The e.</param>
-        private void UpdateAssociateCommand(object sender, EventArgs e)
+        private void AssociationHasCompleted(object sender, EventArgs e)
         {
             this.LoadingSonarData = false;
-
-            this.notificationManager.RefreshDataForResource();
+            this.FileAnalysisIsEnabled = true;
         }
 
         /// <summary>
