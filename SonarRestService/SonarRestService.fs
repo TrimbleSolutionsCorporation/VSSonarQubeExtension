@@ -834,8 +834,6 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
 
     member this.IgnoreAllFile2(conf : ISonarConfiguration, projectIn : Resource, file : string) =
-        let mutable ok = true
-
         let epoch = (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds.ToString().Replace(",", "")
 
         let uploadProperty(currentproject : Resource) =
@@ -851,13 +849,9 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             // upload new epochs
             let url = sprintf "/api/properties?id=sonar.issue.ignore.allfile&value=%s&resource=%s" getPropertiesForUpload currentproject.Key
             let response = httpconnector.HttpSonarPostRequest(conf, url, Map.empty)
-            if response.StatusCode <> Net.HttpStatusCode.OK then
-                ok <- false 
-            else
+            if response.StatusCode = Net.HttpStatusCode.OK then
                 let url = sprintf "/api/properties?id=sonar.issue.ignore.allfile.%s.fileRegexp&value=%s&resource=%s" epoch file currentproject.Key
-                let response = httpconnector.HttpSonarPostRequest(conf, url, Map.empty)
-                if response.StatusCode <> Net.HttpStatusCode.OK then
-                    ok <- false
+                httpconnector.HttpSonarPostRequest(conf, url, Map.empty) |> ignore
 
         if projectIn.IsBranch then
             for branch in projectIn.BranchResources do
@@ -865,7 +859,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
         else
             uploadProperty(projectIn)
 
-        ok
+        true
 
     interface VSSonarPlugins.ISonarRestService with
         member this.CreateRule(conf:ISonarConfiguration, rule:Rule, ruleTemplate:Rule) =
@@ -1708,7 +1702,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
 
         member this.IgnoreRuleOnFile(conf : ISonarConfiguration, projectIn : Resource, file : string, rule : Rule) =
-            let mutable ok = true
+
             let exclusions = new System.Collections.Generic.List<Exclusion>()
 
             let epoch = (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds.ToString().Replace(",", "")
@@ -1726,18 +1720,12 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 // upload new epochs
                 let url = sprintf "/api/properties?id=sonar.issue.ignore.multicriteria.%s.ruleKey&value=%s&resource=%s" epoch rule.Key currentproject.Key
                 let response = httpconnector.HttpSonarPostRequest(conf, url, Map.empty)
-                if response.StatusCode <> Net.HttpStatusCode.OK then
-                    ok <- false 
-                else
+                if response.StatusCode = Net.HttpStatusCode.OK then
                     let url = sprintf "/api/properties?id=sonar.issue.ignore.multicriteria.%s.resourceKey&value=%s&resource=%s" epoch file currentproject.Key
                     let response = httpconnector.HttpSonarPostRequest(conf, url, Map.empty)
-                    if response.StatusCode <> Net.HttpStatusCode.OK then
-                        ok <- false 
-                    else
+                    if response.StatusCode = Net.HttpStatusCode.OK then
                         let url = sprintf "/api/properties?id=sonar.issue.ignore.multicriteria&value=%s&resource=%s" getPropertiesForUpload currentproject.Key
-                        let response = httpconnector.HttpSonarPostRequest(conf, url, Map.empty)
-                        if response.StatusCode <> Net.HttpStatusCode.OK then
-                            ok <- false
+                        httpconnector.HttpSonarPostRequest(conf, url, Map.empty) |> ignore
 
                 let AddExclusionToList(ruleKey : string, fileKey : string) =
                     let resourceKeyElem = List.ofSeq exclusions |> Seq.tryFind (fun c -> c.RuleRegx.Equals(ruleKey) && c.FileRegx.Equals(fileKey))

@@ -191,7 +191,8 @@ namespace VSSonarExtensionUi.ViewModel
             ISQKeyTranslator translator,
             ISonarRestService restService,
             ISourceControlProvider sourceControl = null,
-            IPluginManager pluginManager = null)
+            IPluginManager pluginManager = null,
+            ISonarLocalAnalyser locaAnalyser = null)
         {
             this.vsversion = vsverionIn;
             this.ToolsProvidedByPlugins = new ObservableCollection<MenuItem>();
@@ -203,6 +204,7 @@ namespace VSSonarExtensionUi.ViewModel
             this.notificationManager = notification;
             this.sonarKeyTranslator = translator;
             this.sonarRestConnector = restService;
+            this.LocaAnalyser = locaAnalyser;
             this.VSonarQubeOptionsViewData =
                 new VSonarQubeOptionsViewModel(
                     this.sonarRestConnector,

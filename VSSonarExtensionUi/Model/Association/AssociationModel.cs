@@ -308,8 +308,7 @@
             string solutionName,
             string solutionPath,
             ICollection<Resource> availableProjects,
-            ISourceControlProvider sourceControl,
-            bool skipRegisterModels)
+            ISourceControlProvider sourceControl)
         {
             this.OpenSolutionName = solutionName;
             this.OpenSolutionPath = solutionPath;
@@ -325,7 +324,7 @@
 
             if (resource != null)
             {
-                this.AssignASonarProjectToSolution(resource, resource, sourceControl, skipRegisterModels);
+                this.AssignASonarProjectToSolution(resource, resource, sourceControl, true);
             }
         }
 
@@ -412,7 +411,7 @@
 
             try
             {
-                this.StartAutoAssociation(solution, solutionPath, availableProjects, sourceControl, true);
+                this.StartAutoAssociation(solution, solutionPath, availableProjects, sourceControl);
 
                 if (this.IsAssociated)
                 {

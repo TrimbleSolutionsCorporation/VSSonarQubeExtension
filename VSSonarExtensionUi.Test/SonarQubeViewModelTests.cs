@@ -26,6 +26,7 @@
         Mock<IPluginManager> mockPlugin;
         Mock<ISourceControlProvider> mockSourceProvider;
         Mock<IVsEnvironmentHelper> mockVsHelper;
+        Mock<ISonarLocalAnalyser> mockAnalyser;
 
         List<Resource> CreatProjects()
         {
@@ -47,6 +48,7 @@
             mockPlugin = new Mock<IPluginManager>();
             mockSourceProvider = new Mock<ISourceControlProvider>();
             mockVsHelper = new Mock<IVsEnvironmentHelper>();
+            mockAnalyser = new Mock<ISonarLocalAnalyser>();
         }
 
         [Test]
@@ -104,7 +106,7 @@
 
             AuthtenticationHelper.EstablishAConnection(mockRest.Object, "as", "asda", "asd");
 
-            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, mockSourceProvider.Object, mockPlugin.Object);
+            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, mockSourceProvider.Object, mockPlugin.Object, mockAnalyser.Object);
             associationModel.VsHelper = mockVsHelper.Object;
             associationModel.IsSolutionOpen = true;            
             associationModel.OnConnectToSonar(false);
@@ -128,7 +130,7 @@
 
             AuthtenticationHelper.EstablishAConnection(mockRest.Object, "as", "asda", "asd");
 
-            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, mockSourceProvider.Object, mockPlugin.Object);
+            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, mockSourceProvider.Object, mockPlugin.Object, mockAnalyser.Object);
             associationModel.VsHelper = mockVsHelper.Object;
             associationModel.IsSolutionOpen = true;
             associationModel.OnConnectToSonar(false);
@@ -152,7 +154,7 @@
 
             AuthtenticationHelper.EstablishAConnection(mockRest.Object, "as", "asda", "asd");
 
-            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, mockSourceProvider.Object, mockPlugin.Object);
+            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, mockSourceProvider.Object, mockPlugin.Object, mockAnalyser.Object);
             associationModel.VsHelper = mockVsHelper.Object;
             associationModel.IsSolutionOpen = true;
             associationModel.OnConnectToSonar(false);
@@ -175,7 +177,7 @@
 
             AuthtenticationHelper.EstablishAConnection(mockRest.Object, "as", "asda", "asd");
 
-            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, mockSourceProvider.Object, mockPlugin.Object);
+            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, mockSourceProvider.Object, mockPlugin.Object, mockAnalyser.Object);
             associationModel.VsHelper = mockVsHelper.Object;
             associationModel.IsSolutionOpen = true;
             associationModel.OnConnectToSonar(false);
