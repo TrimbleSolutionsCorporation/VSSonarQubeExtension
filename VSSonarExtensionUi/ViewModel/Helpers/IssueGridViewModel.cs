@@ -1000,7 +1000,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                     translatedPath = this.keyTranslator.TranslateKey(issue.Component, this.vsenvironmenthelper, this.associatedProject.BranchName);
                     if (string.IsNullOrEmpty(translatedPath))
                     {
-                        this.ReportTranslationException(issue, translatedPath);
+                        IssueGridViewModel.ReportTranslationException(issue, translatedPath, this.notificationManager, this.restService, this.associatedProject);
                         return;
                     }
 
@@ -1008,7 +1008,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 }
                 catch (Exception ex)
                 {
-                    this.ReportTranslationException(issue, translatedPath, ex);
+                    IssueGridViewModel.ReportTranslationException(issue, translatedPath, this.notificationManager, this.restService, this.associatedProject, ex);
                 }
             }
         }
@@ -1884,27 +1884,26 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// <param name="issue">The issue.</param>
         /// <param name="translatedPath">The translated path.</param>
         /// <param name="ex">The ex.</param>
-        private void ReportTranslationException(Issue issue, string translatedPath, Exception ex = null)
+        public static void ReportTranslationException(Issue issue, string translatedPath, INotificationManager manager, ISonarRestService service, Resource associatedProject, Exception ex = null)
         {
             if (ex != null)
             {
-                this.notificationManager.ReportMessage(new Message() { Id = "OnInEditor", Data = ex.Message + " : " + issue.Component });
-                this.notificationManager.ReportException(ex);
+                manager.ReportMessage(new Message() { Id = "OnInEditor", Data = ex.Message + " : " + issue.Component });
+                manager.ReportException(ex);
             }
 
-            this.notificationManager.ReportMessage(new Message() { Id = "OnInEditor ", Data = "Was Not Able To Translate Path For Componenent:  " + issue.Component });
-            this.notificationManager.ReportMessage(new Message() { Id = "OnInEditor ", Data = "Solution = " + this.sourceWorkDir });
-            this.notificationManager.ReportMessage(new Message() { Id = "OnInEditor", Data = "Project = " + this.sourceWorkDir });
-            this.notificationManager.ReportMessage(new Message() { Id = "OnInEditor", Data = "Translated Path = " + translatedPath });
+            manager.ReportMessage(new Message() { Id = "OnInEditor ", Data = "Was Not Able To Translate Path For Componenent:  " + issue.Component });
+            manager.ReportMessage(new Message() { Id = "OnInEditor ", Data = "Solution = " + associatedProject.SolutionRoot });
+            manager.ReportMessage(new Message() { Id = "OnInEditor", Data = "Translated Path = " + translatedPath });
 
             try
             {
-                this.restService.GetResourcesData(AuthtenticationHelper.AuthToken, issue.Component);
+                service.GetResourcesData(AuthtenticationHelper.AuthToken, issue.Component);
             }
             catch (Exception exConnection)
             {
-                this.notificationManager.ReportMessage(new Message() { Id = "OnInEditor : Failed to get Data For Resource", Data = exConnection.Message + " : " + issue.Component });
-                this.notificationManager.ReportException(exConnection);
+                manager.ReportMessage(new Message() { Id = "OnInEditor : Failed to get Data For Resource", Data = exConnection.Message + " : " + issue.Component });
+                manager.ReportException(exConnection);
             }
         }
 

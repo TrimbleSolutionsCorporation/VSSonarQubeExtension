@@ -135,6 +135,17 @@ type TraTests() =
 
 
     [<Test>]
+    member test.``Should Return Path Correctly With Visual Studio BootStrapper in subfolder`` () =
+        let translator = new SQKeyTranslator()
+        Assert.That(File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\VisualBootStrapper\\sonar-project.properties")), Is.True)
+        (translator :> ISQKeyTranslator).CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\VisualBootStrapper\\sonar-project.properties"));
+        Assert.That((translator :> ISQKeyTranslator).GetModules().Length, Is.EqualTo(0))
+        Assert.That((translator :> ISQKeyTranslator).GetProjectKey(), Is.EqualTo("AB:ProjectX_CPP_BootStrapper"))
+        Assert.That((translator :> ISQKeyTranslator).GetProjectName(), Is.EqualTo("ProjectX_CPP"))
+
+        Assert.That((translator :> ISQKeyTranslator).TranslateKey("AB:ProjectX_CPP_BootStrapper:a1a:abc/dup.cpp", mockAVsinterface, ""), Is.EqualTo(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject\\A\\1\\a\\abc\\dup.cpp")))
+
+    [<Test>]
     member test.``Should Return Key Correctly With Visual Studio BootStrapper False, but modules defined`` () =
         let translator = new SQKeyTranslator()
         Assert.That(File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\ModulesDefinedAllInOnePropertiesFile\\sonar-project.properties")), Is.True)

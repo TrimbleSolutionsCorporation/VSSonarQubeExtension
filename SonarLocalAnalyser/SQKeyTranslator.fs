@@ -230,14 +230,12 @@ type SQKeyTranslator() =
         keyOfResource
 
     let GetVSBootStrapperPath(key : string, branch : string, vshelper : IVsEnvironmentHelper) =
-        try
-            let keyWithoutProjectKey = key.Replace(projectKey + branch, "")
-            let allModulesPresentInKey =  keyWithoutProjectKey.Split(':')
+        let keyWithoutProjectKey = key.Replace(projectKey + branch, "")
+        let allModulesPresentInKey =  keyWithoutProjectKey.Split(':')
             
-            let project = Directory.GetParent(vshelper.GetProjectByNameInSolution(allModulesPresentInKey.[0]).ProjectFilePath).ToString()
-            Path.Combine(project, allModulesPresentInKey.[1].Replace('/', Path.DirectorySeparatorChar))
-        with
-        | ex -> ""
+        let project = Directory.GetParent(vshelper.GetProjectByNameInSolution(allModulesPresentInKey.[0]).ProjectFilePath).ToString()
+        Path.Combine(project, allModulesPresentInKey.[1].Replace('/', Path.DirectorySeparatorChar))
+
 
     let GetVSBootStrapperKey(vshelper : IVsEnvironmentHelper, fileItem : VsFileItem) =
         let filePath = fileItem.FilePath.Replace("\\", "/")
