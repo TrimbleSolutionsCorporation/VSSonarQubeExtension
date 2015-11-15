@@ -89,6 +89,9 @@
     <None Include="TestData\SampleProjects\VisualBootStrapper\sonar-project.properties">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\SampleProjects\VisualBootStrapper2\sonar-project.properties">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>    
     <None Include="TestData\SampleProjects\ModulesDefinedAllInOnePropertiesFile\sonar-project.properties">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

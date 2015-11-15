@@ -237,20 +237,17 @@ type SQKeyTranslator() =
         exMessage <- exMessage + "\r\n branch : " + branch
 
         try
-            let keyWithoutProjectKey = key.Replace(projectKey + branch, "")
-            let allModulesPresentInKey =  keyWithoutProjectKey.Split(':')
-            
-            exMessage <- exMessage + "\r\n keyWithoutProjectKey : " + keyWithoutProjectKey
-            exMessage <- exMessage + "\r\n allModulesPresentInKey[0] : " + allModulesPresentInKey.[0]
+            let allModulesPresentInKey =  key.Split(':')
+            exMessage <- exMessage + "\r\n allModulesPresentInKey[0] : " + allModulesPresentInKey.[allModulesPresentInKey.Length - 2]
 
-            let project = vshelper.GetProjectByNameInSolution(allModulesPresentInKey.[0], solutionPath)
+            let project = vshelper.GetProjectByNameInSolution(allModulesPresentInKey.[allModulesPresentInKey.Length - 2], solutionPath)
             if project = null then
                 exMessage <- exMessage + "\r\n vshelper.GetProjectByNameInSolution(allModulesPresentInKey.[0]) is null "
             else
                 exMessage <- exMessage + "\r\n vshelper.GetProjectByNameInSolution(allModulesPresentInKey.[0]).ProjectFilePath" + vshelper.GetProjectByNameInSolution(allModulesPresentInKey.[0], solutionPath).ProjectFilePath
 
             let project = Directory.GetParent(vshelper.GetProjectByNameInSolution(allModulesPresentInKey.[0], solutionPath).ProjectFilePath).ToString()
-            Path.Combine(project, allModulesPresentInKey.[1].Replace('/', Path.DirectorySeparatorChar))
+            Path.Combine(project, allModulesPresentInKey.[allModulesPresentInKey.Length - 1].Replace('/', Path.DirectorySeparatorChar))
         with
         | ex -> raise(new System.Exception(exMessage))
 

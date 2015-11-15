@@ -146,6 +146,18 @@ type TraTests() =
         Assert.That((translator :> ISQKeyTranslator).TranslateKey("AB:ProjectX_CPP_BootStrapper:a1a:abc/dup.cpp", mockAVsinterface, ""), Is.EqualTo(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject\\A\\1\\a\\abc\\dup.cpp")))
 
     [<Test>]
+    member test.``Should Return Path Correctly With Visual Studio BootStrapper with key without only 2 elements`` () =
+        let translator = new SQKeyTranslator()
+        Assert.That(File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\VisualBootStrapper2\\sonar-project.properties")), Is.True)
+        (translator :> ISQKeyTranslator).CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\VisualBootStrapper2\\sonar-project.properties"));
+        Assert.That((translator :> ISQKeyTranslator).GetModules().Length, Is.EqualTo(0))
+        Assert.That((translator :> ISQKeyTranslator).GetProjectKey(), Is.EqualTo("cppcheck"))
+        Assert.That((translator :> ISQKeyTranslator).GetProjectName(), Is.EqualTo("cppcheck"))
+
+        Assert.That((translator :> ISQKeyTranslator).TranslateKey("cppcheck:cppcheck:tokenize.cpp", mockAVsinterface, ""), Is.EqualTo(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject\\A\\1\\a\\tokenize.cpp")))
+
+
+    [<Test>]
     member test.``Should Return Key Correctly With Visual Studio BootStrapper False, but modules defined`` () =
         let translator = new SQKeyTranslator()
         Assert.That(File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\ModulesDefinedAllInOnePropertiesFile\\sonar-project.properties")), Is.True)
@@ -164,6 +176,7 @@ type TraTests() =
 
         Assert.That((translator :> ISQKeyTranslator).TranslatePath(item, mockAVsinterface, mockRest, mockConfigurtion), Is.EqualTo("cpp-multimodule-project:lib:dup.cpp"))
 
+
     [<Test>]
     member test.``Should Return Path Correctly With Visual Studio BootStrapper False, but modules defined`` () =
         let translator = new SQKeyTranslator()
@@ -174,6 +187,7 @@ type TraTests() =
         Assert.That((translator :> ISQKeyTranslator).GetProjectName(), Is.EqualTo("cpp-multimodule-project"))
 
         Assert.That((translator :> ISQKeyTranslator).TranslateKey("cpp-multimodule-project:lib:dup.cpp", mockAVsinterface, ""), Is.EqualTo((Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\ModulesDefinedAllInOnePropertiesFile\\lib\\dup.cpp"))))
+
 
     [<Test>]
     member test.``Should Return Path Correctly With Msbuild Runner Without Branch`` () =
