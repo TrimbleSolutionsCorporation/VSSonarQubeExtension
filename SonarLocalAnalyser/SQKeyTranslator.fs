@@ -230,12 +230,28 @@ type SQKeyTranslator() =
         keyOfResource
 
     let GetVSBootStrapperPath(key : string, branch : string, vshelper : IVsEnvironmentHelper) =
-        let keyWithoutProjectKey = key.Replace(projectKey + branch, "")
-        let allModulesPresentInKey =  keyWithoutProjectKey.Split(':')
-            
-        let project = Directory.GetParent(vshelper.GetProjectByNameInSolution(allModulesPresentInKey.[0]).ProjectFilePath).ToString()
-        Path.Combine(project, allModulesPresentInKey.[1].Replace('/', Path.DirectorySeparatorChar))
+        let mutable exMessage = ""
+        exMessage <- exMessage + "\r\n key : " + key
+        exMessage <- exMessage + "\r\n projectKey : " + projectKey
+        exMessage <- exMessage + "\r\n branch : " + branch
 
+        try
+            let keyWithoutProjectKey = key.Replace(projectKey + branch, "")
+            let allModulesPresentInKey =  keyWithoutProjectKey.Split(':')
+            
+            exMessage <- exMessage + "\r\n keyWithoutProjectKey : " + keyWithoutProjectKey
+            exMessage <- exMessage + "\r\n allModulesPresentInKey[0] : " + allModulesPresentInKey.[0]
+
+            let project = vshelper.GetProjectByNameInSolution(allModulesPresentInKey.[0])
+            if project = null then
+                exMessage <- exMessage + "\r\n vshelper.GetProjectByNameInSolution(allModulesPresentInKey.[0]) is null "
+            else
+                exMessage <- exMessage + "\r\n vshelper.GetProjectByNameInSolution(allModulesPresentInKey.[0]).ProjectFilePath" + vshelper.GetProjectByNameInSolution(allModulesPresentInKey.[0]).ProjectFilePath
+
+            let project = Directory.GetParent(vshelper.GetProjectByNameInSolution(allModulesPresentInKey.[0]).ProjectFilePath).ToString()
+            Path.Combine(project, allModulesPresentInKey.[1].Replace('/', Path.DirectorySeparatorChar))
+        with
+        | ex -> raise(new System.Exception(exMessage))
 
     let GetVSBootStrapperKey(vshelper : IVsEnvironmentHelper, fileItem : VsFileItem) =
         let filePath = fileItem.FilePath.Replace("\\", "/")
