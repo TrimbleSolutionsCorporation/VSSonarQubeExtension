@@ -31,7 +31,7 @@ type TraTests() =
     let mockAVsinterface =
         Mock<IVsEnvironmentHelper>()
             .Setup(fun x -> <@ x.GetProperFilePathCapitalization(any()) @>).Returns(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject\\A\\1\\a\\dup.cpp"))
-            .Setup(fun x -> <@ x.GetProjectByNameInSolution(any()) @>).Returns(new VsProjectItem(ProjectFilePath = Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject\\A\\1\\a\\bla.vcxproj")))
+            .Setup(fun x -> <@ x.GetProjectByNameInSolution(any(), any()) @>).Returns(new VsProjectItem(ProjectFilePath = Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject\\A\\1\\a\\bla.vcxproj")))
             .Create()
 
     let mockConfigurtion =
@@ -178,13 +178,13 @@ type TraTests() =
     [<Test>]
     member test.``Should Return Path Correctly With Msbuild Runner Without Branch`` () =
         let translator = new SQKeyTranslator() :> ISQKeyTranslator
-        translator.SetProjectKeyAndBaseDir("Tekla:VSSonarQubeExtension", assemblyRunningPath, "")
+        translator.SetProjectKeyAndBaseDir("Tekla:VSSonarQubeExtension", assemblyRunningPath, "", assemblyRunningPath + "\\sda.sln")
         translator.SetLookupType(KeyLookUpType.ProjectGuid)
         let projectItem = new VsProjectItem()
         projectItem.ProjectFilePath <- Path.Combine(assemblyRunningPath, "VSSonarExtensionUi", "VSSonarExtensionUi.csproj")
         let mockAVsinterface =
             Mock<IVsEnvironmentHelper>()
-                .Setup(fun x -> <@ x.GetProjectByGuidInSolution(any()) @>).Returns(projectItem)
+                .Setup(fun x -> <@ x.GetProjectByGuidInSolution(any(), any()) @>).Returns(projectItem)
                 .Create()
 
         let key = translator.TranslateKey("Tekla:VSSonarQubeExtension:Tekla:VSSonarQubeExtension:BC583A5D-931B-4ED9-AC2C-5667A37B3043:SampleData/DatagridSampleData/DatagridSampleData.xaml.cs", mockAVsinterface, "")
@@ -194,13 +194,13 @@ type TraTests() =
     [<Test>]
     member test.``Should Return Path Correctly With Msbuild Runner With Branch`` () =
         let translator = new SQKeyTranslator() :> ISQKeyTranslator
-        translator.SetProjectKeyAndBaseDir("Organization:Name:master", assemblyRunningPath, "master")
+        translator.SetProjectKeyAndBaseDir("Organization:Name:master", assemblyRunningPath, "master", assemblyRunningPath + "\\sda.sln")
         translator.SetLookupType(KeyLookUpType.ProjectGuid)
         let projectItem = new VsProjectItem()
         projectItem.ProjectFilePath <- Path.Combine(assemblyRunningPath, "project", "project.csproj")
         let mockAVsinterface =
             Mock<IVsEnvironmentHelper>()
-                .Setup(fun x -> <@ x.GetProjectByGuidInSolution(any()) @>).Returns(projectItem)
+                .Setup(fun x -> <@ x.GetProjectByGuidInSolution(any(), any()) @>).Returns(projectItem)
                 .Create()
 
         let key = translator.TranslateKey("Organization:Name:Organization:Name:3DED9E16-30BF-4BB9-866A-56BEBCA2CACB:master:folder/file.cs", mockAVsinterface, "master")
@@ -210,11 +210,11 @@ type TraTests() =
     [<Test>]
     member test.``Should Return Key Correctly With MSBuild Runner when No Branch is Detected`` () =
         let translator = new SQKeyTranslator() :> ISQKeyTranslator
-        translator.SetProjectKeyAndBaseDir("Company:Group", assemblyRunningPath, "")
+        translator.SetProjectKeyAndBaseDir("Company:Group", assemblyRunningPath, "", assemblyRunningPath + "\\sda.sln")
         translator.SetLookupType(KeyLookUpType.ProjectGuid)
         let mockAVsinterface =
             Mock<IVsEnvironmentHelper>()
-                .Setup(fun x -> <@ x.GetGuidForProject(any()) @>).Returns("{guid}")
+                .Setup(fun x -> <@ x.GetGuidForProject(any(), any()) @>).Returns("{guid}")
                 .Setup(fun x -> <@ x.GetProperFilePathCapitalization(any()) @>).Returns(Path.Combine(assemblyRunningPath, "Folder\\file.cs"))
                 .Setup(fun x -> <@ x.EvaluatedValueForIncludeFile(any(), any()) @>).Returns("Folder\\file.cs")
                 .Create()
@@ -234,11 +234,11 @@ type TraTests() =
     [<Test>]
     member test.``Should Return Key Correctly With MSBuild Runner when Branch is Detected`` () =
         let translator = new SQKeyTranslator() :> ISQKeyTranslator
-        translator.SetProjectKeyAndBaseDir("Company:Group:master", assemblyRunningPath, "master")
+        translator.SetProjectKeyAndBaseDir("Company:Group:master", assemblyRunningPath, "master", assemblyRunningPath + "\\sda.sln")
         translator.SetLookupType(KeyLookUpType.ProjectGuid)
         let mockAVsinterface =
             Mock<IVsEnvironmentHelper>()
-                .Setup(fun x -> <@ x.GetGuidForProject(any()) @>).Returns("{guid}")
+                .Setup(fun x -> <@ x.GetGuidForProject(any(), any()) @>).Returns("{guid}")
                 .Setup(fun x -> <@ x.GetProperFilePathCapitalization(any()) @>).Returns(Path.Combine(assemblyRunningPath, "Folder\\file.cs"))
                 .Setup(fun x -> <@ x.EvaluatedValueForIncludeFile(any(), any()) @>).Returns("Folder\\file.cs")
                 .Create()

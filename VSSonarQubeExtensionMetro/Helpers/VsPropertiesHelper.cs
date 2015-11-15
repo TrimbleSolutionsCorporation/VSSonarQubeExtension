@@ -991,15 +991,9 @@ namespace VSSonarQubeExtension.Helpers
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns></returns>
-        public VsProjectItem GetProjectByNameInSolution(string name)
+        public VsProjectItem GetProjectByNameInSolution(string name, string solutionPath)
         {
-            if (this.environment == null)
-            {
-                return null;
-            }
-
-            var solutionpath = ActiveSolutionFullName();
-            var solutiondata = MSBuildHelper.CreateSolutionData(solutionpath);
+            var solutiondata = MSBuildHelper.CreateSolutionData(solutionPath);
             foreach (var project in solutiondata.Projects)
             {
                 var path = project.Value.Path;
@@ -1020,15 +1014,9 @@ namespace VSSonarQubeExtension.Helpers
             return proToRet;
         }
 
-        public VsProjectItem GetProjectByGuidInSolution(string guid)
+        public VsProjectItem GetProjectByGuidInSolution(string guid, string solutionPath)
         {
-            if (this.environment == null)
-            {
-                return null;
-            }
-
-            var solutionpath = ActiveSolutionFullName();
-            var solutiondata = MSBuildHelper.CreateSolutionData(solutionpath);
+            var solutiondata = MSBuildHelper.CreateSolutionData(solutionPath);
             foreach (var project in solutiondata.Projects)
             {
                 var path = project.Value.Path;
@@ -1041,15 +1029,9 @@ namespace VSSonarQubeExtension.Helpers
             return null;
         }
 
-        public string GetGuidForProject(string projectPath)
+        public string GetGuidForProject(string projectPath, string solutionPath)
         {
-            if (this.environment == null)
-            {
-                return null;
-            }
-
-            var solutionpath = ActiveSolutionFullName();
-            var solutiondata = MSBuildHelper.CreateSolutionData(solutionpath);
+            var solutiondata = MSBuildHelper.CreateSolutionData(solutionPath);
             foreach (var project in solutiondata.Projects)
             {
                 var path = project.Value.Path;

@@ -154,21 +154,21 @@ namespace VSSonarPlugins
         /// </summary>
         /// <param name="projectName">Name of the project.</param>
         /// <returns>The <see cref="VsProjectItem"/>.</returns>
-        VsProjectItem GetProjectByNameInSolution(string projectName);
+        VsProjectItem GetProjectByNameInSolution(string projectName, string solutionPath);
 
         /// <summary>
         /// Gets the project guid from path.
         /// </summary>
         /// <param name="projectPath">The project path.</param>
         /// <returns>project unique identifier</returns>		
-        string GetGuidForProject(string projectPath);
+        string GetGuidForProject(string projectPath, string solutionPath);
 
         /// <summary>
         /// Gets the project by unique identifier in solution.
         /// </summary>
         /// <param name="projectGuid">The project unique identifier.</param>
         /// <returns></returns>
-        VsProjectItem GetProjectByGuidInSolution(string projectGuid);
+        VsProjectItem GetProjectByGuidInSolution(string projectGuid, string solutionPath);
 
         /// <summary>The get file real path for solution.</summary>
         /// <param name="fileInView">The file in view.</param>
