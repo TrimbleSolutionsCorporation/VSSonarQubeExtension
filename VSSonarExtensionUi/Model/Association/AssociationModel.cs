@@ -158,7 +158,14 @@
             {
                 this.SaveAssociationToDisk(this.AssociatedProject);
                 this.AssociatedProject.SolutionRoot = this.OpenSolutionPath;
-                this.keyTranslator.SetProjectKeyAndBaseDir(this.AssociatedProject.Key, this.OpenSolutionPath, this.AssociatedProject.BranchName, Path.Combine(this.OpenSolutionPath, this.OpenSolutionName));
+                if (string.IsNullOrEmpty(this.OpenSolutionPath))
+                {
+                    this.keyTranslator.SetProjectKeyAndBaseDir(this.AssociatedProject.Key, this.OpenSolutionPath, this.AssociatedProject.BranchName, "");
+                }
+                else
+                {
+                    this.keyTranslator.SetProjectKeyAndBaseDir(this.AssociatedProject.Key, this.OpenSolutionPath, this.AssociatedProject.BranchName, Path.Combine(this.OpenSolutionPath, this.OpenSolutionName));
+                }
             }
 
             this.configurationHelper.SyncSettings();
@@ -567,7 +574,14 @@
                 sourceControl);
 
             this.keyTranslator.SetLookupType(KeyLookUpType.Invalid);
-            this.keyTranslator.SetProjectKeyAndBaseDir(this.AssociatedProject.Key, this.OpenSolutionPath, this.AssociatedProject.BranchName, Path.Combine(this.OpenSolutionPath, this.OpenSolutionName));
+            if (string.IsNullOrEmpty(this.OpenSolutionPath))
+            {
+                this.keyTranslator.SetProjectKeyAndBaseDir(this.AssociatedProject.Key, this.OpenSolutionPath, this.AssociatedProject.BranchName, "");
+            }
+            else
+            {
+                this.keyTranslator.SetProjectKeyAndBaseDir(this.AssociatedProject.Key, this.OpenSolutionPath, this.AssociatedProject.BranchName, Path.Combine(this.OpenSolutionPath, this.OpenSolutionName));
+            }
 
             foreach (IModelBase model in modelPool)
             {
