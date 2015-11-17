@@ -231,25 +231,14 @@ type SQKeyTranslator() =
         keyOfResource
 
     let GetVSBootStrapperPath(key : string, branch : string, vshelper : IVsEnvironmentHelper) =
-        let mutable exMessage = ""
-        exMessage <- exMessage + "\r\n key : " + key
-        exMessage <- exMessage + "\r\n projectKey : " + projectKey
-        exMessage <- exMessage + "\r\n branch : " + branch
-
         try
             let allModulesPresentInKey =  key.Split(':')
-            exMessage <- exMessage + "\r\n allModulesPresentInKey[0] : " + allModulesPresentInKey.[allModulesPresentInKey.Length - 2]
 
             let project = vshelper.GetProjectByNameInSolution(allModulesPresentInKey.[allModulesPresentInKey.Length - 2], solutionPath)
-            if project = null then
-                exMessage <- exMessage + "\r\n vshelper.GetProjectByNameInSolution(allModulesPresentInKey.[0]) is null "
-            else
-                exMessage <- exMessage + "\r\n vshelper.GetProjectByNameInSolution(allModulesPresentInKey.[0]).ProjectFilePath" + vshelper.GetProjectByNameInSolution(allModulesPresentInKey.[0], solutionPath).ProjectFilePath
-
             let project = Directory.GetParent(vshelper.GetProjectByNameInSolution(allModulesPresentInKey.[0], solutionPath).ProjectFilePath).ToString()
             Path.Combine(project, allModulesPresentInKey.[allModulesPresentInKey.Length - 1].Replace('/', Path.DirectorySeparatorChar))
         with
-        | ex -> raise(new System.Exception(exMessage))
+        | ex -> ""
 
     let GetVSBootStrapperKey(vshelper : IVsEnvironmentHelper, fileItem : VsFileItem) =
         let filePath = fileItem.FilePath.Replace("\\", "/")
