@@ -31,8 +31,8 @@ type ISQKeyTranslator =
   abstract member GetSources : unit -> string
   abstract member GetLookupType : unit -> KeyLookUpType
   abstract member SetLookupType : key:KeyLookUpType -> unit
-  abstract member SetProjectKeyAndBaseDir : key:string * path:string * currentBranch:string -> unit
-  abstract member SetProjectKey : key:string -> unit  
+  abstract member SetProjectKeyAndBaseDir : key:string * path:string * currentBranch:string * solutionPath:string -> unit
+  abstract member SetProjectKey : key:string -> unit
   abstract member GetModules : unit -> List<SonarModule>  
   abstract member TranslateKey : key:string * vshelper:IVsEnvironmentHelper * branch:string -> string
   abstract member TranslatePath : key:VsFileItem * vshelper:IVsEnvironmentHelper * rest:ISonarRestService * configuration:ISonarConfiguration -> string
@@ -43,6 +43,7 @@ type SQKeyTranslator() =
     let mutable projectKey : string = ""
     let mutable projectName : string = ""
     let mutable projectVersion : string = ""
+    let mutable solutionPath : string = ""
     let mutable sonarSources : string = ""
     let mutable projectBaseDir : string = ""
     let mutable currentBranch : string = ""
@@ -231,11 +232,11 @@ type SQKeyTranslator() =
 
     let GetVSBootStrapperPath(key : string, branch : string, vshelper : IVsEnvironmentHelper) =
         try
-            let keyWithoutProjectKey = key.Replace(projectKey + branch, "")
-            let allModulesPresentInKey =  keyWithoutProjectKey.Split(':')
-            
-            let project = Directory.GetParent(vshelper.GetProjectByNameInSolution(allModulesPresentInKey.[0]).ProjectFilePath).ToString()
-            Path.Combine(project, allModulesPresentInKey.[1].Replace('/', Path.DirectorySeparatorChar))
+            let allModulesPresentInKey =  key.Split(':')
+
+            let project = vshelper.GetProjectByNameInSolution(allModulesPresentInKey.[allModulesPresentInKey.Length - 2], solutionPath)
+            let project = Directory.GetParent(vshelper.GetProjectByNameInSolution(allModulesPresentInKey.[0], solutionPath).ProjectFilePath).ToString()
+            Path.Combine(project, allModulesPresentInKey.[allModulesPresentInKey.Length - 1].Replace('/', Path.DirectorySeparatorChar))
         with
         | ex -> ""
 
@@ -265,7 +266,7 @@ type SQKeyTranslator() =
             let keyWithoutProjectKey = key.Replace(keyWithoutBranch + ":", "")
             let allModulesPresentInKey =  keyWithoutProjectKey.Split(':')
             
-            let project = Directory.GetParent(vshelper.GetProjectByGuidInSolution(allModulesPresentInKey.[0]).ProjectFilePath).ToString()
+            let project = Directory.GetParent(vshelper.GetProjectByGuidInSolution(allModulesPresentInKey.[0], solutionPath).ProjectFilePath).ToString()
 
             if allModulesPresentInKey.Length = 3 then
                 Path.Combine(project, allModulesPresentInKey.[2].Replace('/', Path.DirectorySeparatorChar))
@@ -277,7 +278,7 @@ type SQKeyTranslator() =
 
     let GetMSbuildRunnerKey(vshelper : IVsEnvironmentHelper, fileItem : VsFileItem, branch : string) =
         try
-            let guid = vshelper.GetGuidForProject(fileItem.Project.ProjectFilePath)
+            let guid = vshelper.GetGuidForProject(fileItem.Project.ProjectFilePath, solutionPath)
             let tounix = vshelper.GetProperFilePathCapitalization(fileItem.FilePath).Replace("\\", "/")
             let driveLetter = tounix.Substring(0, 1)
             let solutionCan = driveLetter + fileItem.Project.Solution.SolutionPath.Replace("\\", "/").Substring(1)
@@ -348,7 +349,7 @@ type SQKeyTranslator() =
         lookupType
 
     interface ISQKeyTranslator with
-        member this.SetProjectKeyAndBaseDir(key:string, path:string, branch:string) =
+        member this.SetProjectKeyAndBaseDir(key:string, path:string, branch:string, solutionPathIn : string) =
             if branch = null then
                 currentBranch <- ""
             else
@@ -356,7 +357,8 @@ type SQKeyTranslator() =
 
             projectBaseDir <- path
             projectKey <- key
-            
+            solutionPath <- solutionPathIn
+
             ()
 
         member this.SetProjectKey(key:string) =

@@ -405,8 +405,9 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
       
     let GetQualityProfiles(conf:ISonarConfiguration, project:Resource, x : SonarLocalAnalyser) =
         if cachedProfiles.ContainsKey(project.Name) then
+            notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Use Cached Version for: " + project.Name))
             profileUpdated <- true
-            associateCompletedEvent.Trigger([|x; null|])
+            associateCompletedEvent.Trigger([|x; null|])            
         else
             let profiles = restService.GetQualityProfilesForProject(conf, project.Key)
             profilesCnt <- profiles.Count - 1
@@ -438,7 +439,11 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                     notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Completed update profile: " + profile.Name + " : " + profile.Language + " : " + (profilesCnt.ToString()) + " remaining"))
                     profilesCnt <- profilesCnt - 1
                     if profilesCnt = 0 then
+                        notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Profile Updated : " + project.Name))
                         profileUpdated <- true
+                        if not(cachedProfiles.ContainsKey(project.Name)) then
+                            profileCannotBeRetrived <- true
+                            
                         associateCompletedEvent.Trigger([|x; null|])
                 )
 
@@ -791,8 +796,9 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                                                         
                         (new Thread(new ThreadStart(x.RunFileAnalysisThread))).Start()  
                 with
-                | _ -> profileCannotBeRetrived <- true
-                       raise(new Exception("Profile Cannot Be Updated"))
+                | ex -> profileCannotBeRetrived <- true
+                        let exp = new Exception("Profile Cannot Be Updated", ex)                        
+                        raise(ex)
             else
                 raise(new Exception("Profile Cannot Be Updated"))
 
@@ -878,7 +884,8 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
             plugin.GetResourceKey(itemInView, safeIsOn)
 
         member x.OnDisconect() =
-            profileUpdated <- false            
+            profileUpdated <- false        
+            profileCannotBeRetrived <- false    
 
         member x.AssociateWithProject(project : Resource, conf:ISonarConfiguration) =
             if project <> null && conf <> null then
@@ -912,6 +919,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                     notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Failed to Update profile"))
                     notificationManager.ReportException(ex)
                     profileUpdated <- true
+                    profileCannotBeRetrived <- true
                     associateCompletedEvent.Trigger([|x; null|])
                     raise(ex)
 

@@ -50,7 +50,7 @@ namespace VSSonarExtensionUi.Test.Association
         /// <param name="projectPath">The project path.</param>
         /// <returns></returns>
         /// <exception cref="System.NotImplementedException"></exception>
-        public string GetGuidForProject(string projectPath)
+        public string GetGuidForProject(string projectPath, string solutionFullPath)
         {
             throw new NotImplementedException();
         }
@@ -234,12 +234,12 @@ namespace VSSonarExtensionUi.Test.Association
         }
 
 
-        public VsProjectItem GetProjectByNameInSolution(string projectName)
+        public VsProjectItem GetProjectByNameInSolution(string projectName, string solutionFullPath)
         {
             throw new NotImplementedException();
         }
 
-        public VsProjectItem GetProjectByGuidInSolution(string projectGuid)
+        public VsProjectItem GetProjectByGuidInSolution(string projectGuid, string solutionFullPath)
         {
             throw new NotImplementedException();
         }

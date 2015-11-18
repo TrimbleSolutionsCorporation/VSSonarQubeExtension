@@ -27,6 +27,7 @@ namespace VSSonarExtensionUi.Model.Analysis
     using ViewModel.Analysis;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
+    using VSSonarExtensionUi.ViewModel.Helpers;
     
 
 
@@ -416,12 +417,22 @@ namespace VSSonarExtensionUi.Model.Analysis
                 return issue;
             }
 
-            var translatedPath = this.keyTranslator.TranslateKey(issue.Component, this.visualStudioHelper, this.associatedProject.BranchName);
+            var translatedPath = string.Empty;
 
-            if (!File.Exists(translatedPath))
+            try
             {
-                var message = "Search Model Failed : Translator Failed:  Key : " + issue.Component + " - Path : " + translatedPath + " - KeyType : " + this.keyTranslator.GetLookupType().ToString();
-                this.notificationmanager.ReportMessage(new Message { Id = "IssuesSearchModel", Data = message });
+                translatedPath = this.keyTranslator.TranslateKey(issue.Component, this.visualStudioHelper, this.associatedProject.BranchName);
+
+                if (!File.Exists(translatedPath))
+                {
+                    var message = "Search Model Failed : Translator Failed:  Key : " + issue.Component + " - Path : " + translatedPath + " - KeyType : " + this.keyTranslator.GetLookupType().ToString();
+                    this.notificationmanager.ReportMessage(new Message { Id = "IssuesSearchModel", Data = message });
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                IssueGridViewModel.ReportTranslationException(issue, translatedPath, this.notificationmanager, this.restService, this.associatedProject, ex);
                 return null;
             }
 
@@ -453,7 +464,7 @@ namespace VSSonarExtensionUi.Model.Analysis
                     new Message
                     {
                         Id = "IssuesSearchModel",
-                        Data = "Blame thorw exception, please report: " + ex.Message
+                        Data = "Blame throw exception, please report: " + ex.Message
                     });
 
                 this.notificationmanager.ReportException(ex);
