@@ -1353,7 +1353,8 @@ namespace VSSonarExtensionUi.ViewModel
                 this.configurationHelper,
                 this.sonarRestConnector, 
                 this.notificationManager, 
-                this.sonarKeyTranslator);
+                this.sonarKeyTranslator,
+                this.LocaAnalyser);
             
             this.SonarQubeModels = new ObservableCollection<IAnalysisModelBase>
                                       {

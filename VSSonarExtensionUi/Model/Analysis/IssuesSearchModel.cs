@@ -93,17 +93,19 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// <param name="restService">The rest service.</param>
         /// <param name="manager">The manager.</param>
         /// <param name="translator">The translator.</param>
+        /// <param name="analyser">The analyser.</param>
         public IssuesSearchModel(
             IConfigurationHelper configurationHelper,
             ISonarRestService restService,
             INotificationManager manager,
-            ISQKeyTranslator translator)
+            ISQKeyTranslator translator,
+            ISonarLocalAnalyser analyser)
         {
             this.keyTranslator = translator;
             this.notificationmanager = manager;
             this.configurationHelper = configurationHelper;
             this.restService = restService;
-            this.issuesSearchViewModel = new IssuesSearchViewModel(this, manager, this.configurationHelper, restService, translator);
+            this.issuesSearchViewModel = new IssuesSearchViewModel(this, manager, this.configurationHelper, restService, translator, analyser);
             AssociationModel.RegisterNewModelInPool(this);
         }
 
@@ -177,11 +179,11 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// <summary>
         /// The init data association.
         /// </summary>
-        /// <param name="config">The configuration.</param>
         /// <param name="project">The project.</param>
         /// <param name="workingDir">The working dir.</param>
         /// <param name="sourceModelIn">The source model in.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
+        /// <param name="availableProjects">The available projects.</param>
         public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider sourceModelIn, IIssueTrackerPlugin sourcePlugin, IList<Resource> availableProjects)
         {
             this.sourceModel = sourceModelIn;
@@ -320,6 +322,7 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// </summary>
         public void OnDisconnect()
         {
+            // not used
         }
 
         /// <summary>
@@ -425,7 +428,8 @@ namespace VSSonarExtensionUi.Model.Analysis
 
                 if (!File.Exists(translatedPath))
                 {
-                    var message = "Search Model Failed : Translator Failed:  Key : " + issue.Component + " - Path : " + translatedPath + " - KeyType : " + this.keyTranslator.GetLookupType().ToString();
+                    var message = "Search Model Failed : Translator Failed:  Key : " + 
+                        issue.Component + " - Path : " + translatedPath + " - KeyType : " + this.keyTranslator.GetLookupType().ToString();
                     this.notificationmanager.ReportMessage(new Message { Id = "IssuesSearchModel", Data = message });
                     return null;
                 }
