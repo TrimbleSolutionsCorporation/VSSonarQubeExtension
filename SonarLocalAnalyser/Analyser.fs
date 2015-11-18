@@ -928,3 +928,15 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
             profileUpdated <- false
             profileCannotBeRetrived <- false
    
+        member x.GetRuleForKey(key : string, project : Resource) = 
+            if cachedProfiles.ContainsKey(project.Name) then
+                let profileData = cachedProfiles.[project.Name]
+
+                let ruled = profileData |> Seq.tryFind (fun c -> c.Value.GetRule(key) <> null)
+                match ruled with
+                | Some(c) ->  c.Value.GetRule(key)
+                | _ -> null
+
+            else
+                null
+                

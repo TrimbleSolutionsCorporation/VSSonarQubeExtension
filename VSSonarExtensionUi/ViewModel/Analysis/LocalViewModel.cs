@@ -213,7 +213,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             var menu = new ObservableCollection<IMenuItem>
                            {
-                               SetExclusionsMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager, translator, analyser)
+                               SetExclusionsMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager, translator, analyser),
+                               SetSqaleMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager, translator, analyser)
                            };
 
             return menu;
@@ -829,6 +830,11 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 switch (analysis)
                 {                    
                     case AnalysisTypes.FILE:
+                        if (this.resourceInView == null)
+                        {
+                            return;
+                        }
+
                         var itemInView = this.vsenvironmenthelper.VsFileItem(this.resourceNameInView, this.associatedProject, this.resourceInView);
                         this.localAnalyserModule.AnalyseFile(
                             itemInView,

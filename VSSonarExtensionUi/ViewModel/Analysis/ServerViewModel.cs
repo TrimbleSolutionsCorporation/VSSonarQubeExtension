@@ -21,18 +21,21 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using System.Windows.Input;
     using System.Windows.Media;
 
+    using Association;
     using GalaSoft.MvvmLight.Command;
     using Helpers;
     using Model.Analysis;
     using Model.Cache;
     using Model.Helpers;
+    using Model.Menu;
+
     using PropertyChanged;
     using SonarLocalAnalyser;
     using VSSonarPlugins;
     using VSSonarPlugins.Helpers;
     using VSSonarPlugins.Types;
-    using VSSonarExtensionUi.Association;
-    using Model.Menu;
+    
+    
 
     /// <summary>
     ///     The server view model.
@@ -79,6 +82,10 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// The associated project
         /// </summary>
         private Resource associatedProject;
+
+        /// <summary>
+        /// The analyser
+        /// </summary>
         private readonly ISonarLocalAnalyser analyser;
 
         #region Constructors and Destructors
@@ -91,6 +98,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <param name="restservice">The restservice.</param>
         /// <param name="notificationManager">The notification manager.</param>
         /// <param name="translator">The translator.</param>
+        /// <param name="analyser">The analyser.</param>
         public ServerViewModel(
             IVsEnvironmentHelper vsenvironmenthelper,
             IConfigurationHelper configurationHelper,
@@ -119,32 +127,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.SizeOfFlyout = 0;
             // register model
             AssociationModel.RegisterNewModelInPool(this);
-        }
-
-        /// <summary>
-        ///     The create row context menu.
-        /// </summary>
-        /// <returns>
-        ///     The
-        ///     <see>
-        ///         <cref>ObservableCollection</cref>
-        ///     </see>
-        ///     .
-        /// </returns>
-        private ObservableCollection<IMenuItem> CreateRowContextMenu(ISonarRestService service, ISQKeyTranslator translator)
-        {
-            var menu = new ObservableCollection<IMenuItem>
-                           {
-                               ChangeStatusMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan),
-                               OpenResourceMenu.MakeMenu(service, this.IssuesGridView),
-                               PlanMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan),
-                               SourceControlMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan, translator),
-                               IssueTrackerMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan, translator),
-                               AssignMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan),
-                               SetExclusionsMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan, translator, this.analyser)
-                           };
-
-            return menu;
         }
 
         #endregion
@@ -611,6 +593,34 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.IssuesGridView.ShowLeftFlyOut = false;
             this.SizeOfFlyout = 0;
         }
+
+        /// <summary>
+        /// The create row context menu.
+        /// </summary>
+        /// <param name="service">The service.</param>
+        /// <param name="translator">The translator.</param>
+        /// <returns>
+        /// The
+        /// <see><cref>ObservableCollection</cref></see>
+        /// .
+        /// </returns>
+        private ObservableCollection<IMenuItem> CreateRowContextMenu(ISonarRestService service, ISQKeyTranslator translator)
+        {
+            var menu = new ObservableCollection<IMenuItem>
+                           {
+                               ChangeStatusMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan),
+                               OpenResourceMenu.MakeMenu(service, this.IssuesGridView),
+                               PlanMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan),
+                               SourceControlMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan, translator),
+                               IssueTrackerMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan, translator),
+                               AssignMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan),
+                               SetExclusionsMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan, translator, this.analyser),
+                               SetSqaleMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan, translator, this.analyser)
+                           };
+
+            return menu;
+        }
+
 
         #endregion
     }
