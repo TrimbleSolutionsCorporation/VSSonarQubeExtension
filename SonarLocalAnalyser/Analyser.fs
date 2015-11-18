@@ -441,6 +441,9 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                     if profilesCnt = 0 then
                         notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Profile Updated : " + project.Name))
                         profileUpdated <- true
+                        if not(cachedProfiles.ContainsKey(project.Name)) then
+                            profileCannotBeRetrived <- true
+                            
                         associateCompletedEvent.Trigger([|x; null|])
                 )
 
@@ -793,8 +796,9 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                                                         
                         (new Thread(new ThreadStart(x.RunFileAnalysisThread))).Start()  
                 with
-                | _ -> profileCannotBeRetrived <- true
-                       raise(new Exception("Profile Cannot Be Updated"))
+                | ex -> profileCannotBeRetrived <- true
+                        let exp = new Exception("Profile Cannot Be Updated", ex)                        
+                        raise(ex)
             else
                 raise(new Exception("Profile Cannot Be Updated"))
 
@@ -880,7 +884,8 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
             plugin.GetResourceKey(itemInView, safeIsOn)
 
         member x.OnDisconect() =
-            profileUpdated <- false            
+            profileUpdated <- false        
+            profileCannotBeRetrived <- false    
 
         member x.AssociateWithProject(project : Resource, conf:ISonarConfiguration) =
             if project <> null && conf <> null then
@@ -914,6 +919,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                     notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Failed to Update profile"))
                     notificationManager.ReportException(ex)
                     profileUpdated <- true
+                    profileCannotBeRetrived <- true
                     associateCompletedEvent.Trigger([|x; null|])
                     raise(ex)
 
