@@ -405,8 +405,9 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
       
     let GetQualityProfiles(conf:ISonarConfiguration, project:Resource, x : SonarLocalAnalyser) =
         if cachedProfiles.ContainsKey(project.Name) then
+            notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Use Cached Version for: " + project.Name))
             profileUpdated <- true
-            associateCompletedEvent.Trigger([|x; null|])
+            associateCompletedEvent.Trigger([|x; null|])            
         else
             let profiles = restService.GetQualityProfilesForProject(conf, project.Key)
             profilesCnt <- profiles.Count - 1
@@ -438,6 +439,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                     notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Completed update profile: " + profile.Name + " : " + profile.Language + " : " + (profilesCnt.ToString()) + " remaining"))
                     profilesCnt <- profilesCnt - 1
                     if profilesCnt = 0 then
+                        notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Profile Updated : " + project.Name))
                         profileUpdated <- true
                         associateCompletedEvent.Trigger([|x; null|])
                 )

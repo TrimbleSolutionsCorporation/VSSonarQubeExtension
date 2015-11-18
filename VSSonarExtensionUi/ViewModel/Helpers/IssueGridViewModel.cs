@@ -1892,7 +1892,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 manager.ReportException(ex);
             }
 
-            manager.ReportMessage(new Message() { Id = "OnInEditor ", Data = "Was Not Able To Translate Path For Componenent:  " + issue.Component });
+            manager.ReportMessage(new Message() { Id = "OnInEditor ", Data = "Was Not Able To Translate Path For Resource:  " + issue.Component });
             manager.ReportMessage(new Message() { Id = "OnInEditor ", Data = "Solution = " + associatedProject.SolutionRoot });
             manager.ReportMessage(new Message() { Id = "OnInEditor", Data = "Translated Path = " + translatedPath });
 
