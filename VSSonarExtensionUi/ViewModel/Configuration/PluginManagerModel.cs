@@ -479,6 +479,12 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
                 try
                 {
+                    var menuPlugin = plugin as IMenuCommandPlugin;
+                    if (menuPlugin != null)
+                    {
+                        menuPlugin.UpdateConfiguration(AuthtenticationHelper.AuthToken, project, this.vshelper);
+                    }
+
                     plugin.AssociateProject(project, AuthtenticationHelper.AuthToken);
                 }
                 catch (Exception ex)

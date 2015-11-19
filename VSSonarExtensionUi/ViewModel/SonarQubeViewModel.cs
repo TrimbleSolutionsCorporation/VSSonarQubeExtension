@@ -738,10 +738,19 @@ namespace VSSonarExtensionUi.ViewModel
                     continue;
                 }
 
-                string isEnabled = this.configurationHelper.ReadSetting(
-                    Context.GlobalPropsId, 
-                    plugDesc.Name, 
-                    GlobalIds.PluginEnabledControlId).Value;
+                string isEnabled = "true";
+                try
+                {
+                    isEnabled = this.configurationHelper.ReadSetting(
+                        Context.GlobalPropsId,
+                        plugDesc.Name,
+                        GlobalIds.PluginEnabledControlId).Value;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
+
 
                 if (string.IsNullOrEmpty(isEnabled) || isEnabled.Equals("true", StringComparison.CurrentCultureIgnoreCase))
                 {
