@@ -210,7 +210,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
     let GetJavaInstallationPath() = 
         let mutable pathdata = ""
         let environmentPath = Environment.GetEnvironmentVariable("JAVA_HOME")
-        if environmentPath = "" then
+        if environmentPath = "" || environmentPath = null then
             let JAVA_KEY = "SOFTWARE\\JavaSoft\\Java Runtime Environment\\"
 
             let localKey32 = RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, RegistryView.Registry32)
