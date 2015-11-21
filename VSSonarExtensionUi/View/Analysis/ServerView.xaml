@@ -65,7 +65,7 @@
 
                     <Button Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"                            
                             ToolTip="Show Source Difference"
-                            Content="Show Source Differece"
+                            Content="Get current file in SonarQube server and compares with your local file."
                             Style="{DynamicResource SquareButtonStyle}" Command="{Binding DisplaySourceDiffCommand}"
                             IsEnabled="{Binding IsRunningInVisualStudio}">
                     </Button>
