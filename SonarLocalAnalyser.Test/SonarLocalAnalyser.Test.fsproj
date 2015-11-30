@@ -91,7 +91,7 @@
     </None>
     <None Include="TestData\SampleProjects\VisualBootStrapper2\sonar-project.properties">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>    
+    </None>
     <None Include="TestData\SampleProjects\ModulesDefinedAllInOnePropertiesFile\sonar-project.properties">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -113,7 +113,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.3.0.0-beta-2\lib\net45\nunit.framework.dll</HintPath>
+      <HintPath>..\packages\NUnit.3.0.0\lib\net45\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -135,11 +135,11 @@
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="..\packages\NunitRunnerTask.2.0.7\build\NunitRunnerTask.targets" Condition="Exists('..\packages\NunitRunnerTask.2.0.7\build\NunitRunnerTask.targets')" />
+  <Import Project="..\packages\NunitRunnerTask.2.0.11\build\NunitRunnerTask.targets" Condition="Exists('..\packages\NunitRunnerTask.2.0.11\build\NunitRunnerTask.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\NunitRunnerTask.2.0.7\build\NunitRunnerTask.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NunitRunnerTask.2.0.7\build\NunitRunnerTask.targets'))" />
+    <Error Condition="!Exists('..\packages\NunitRunnerTask.2.0.11\build\NunitRunnerTask.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NunitRunnerTask.2.0.11\build\NunitRunnerTask.targets'))" />
   </Target>
 </Project>

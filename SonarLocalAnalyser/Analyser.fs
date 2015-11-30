@@ -530,11 +530,13 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
 
                             let profile = cachedProfiles.[project.Name].[plugin.GetLanguageKey(vsprojitem)]
 
+                            notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Launch Analysis On  File: " + vsprojitem.FilePath))
                             let issues = extension.ExecuteAnalysisOnFile(vsprojitem, profile, project, x.Conf)
                             lock syncLock (
                                 fun () -> 
                                     localissues.AddRange(issues)
                                 )
+                            notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "ENDED Analysis On  File: " + vsprojitem.FilePath))
             with
             | ex -> ()
 
