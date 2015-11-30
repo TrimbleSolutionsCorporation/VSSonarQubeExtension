@@ -476,6 +476,25 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
         let message = new LocalAnalysisEventArgs("LA:", data.ErrorMessage, null)
         stdOutEvent.Trigger([|x; message|])
 
+    member x.GetFileToBeAnalysedFromSonarLog(line : string) =
+        let separator = [| "Populating index from" |]
+        let mutable fileName = line.Split(separator, StringSplitOptions.RemoveEmptyEntries).[1]
+
+        if fileName.Contains("abs=") then 
+            let separator = [| "abs=" |]
+            let absfileName = fileName.Split(separator, StringSplitOptions.RemoveEmptyEntries).[1].Trim()
+            fileName <- absfileName.TrimEnd(']')
+
+        if fileName.Contains("moduleKey=") || fileName.Contains("oduleKey=") then
+            let separator = [| "basedir=" |]
+            let baseDirElemts = fileName.Split(separator, StringSplitOptions.RemoveEmptyEntries)
+            let baseDir = baseDirElemts.[1].Trim().TrimEnd(']')
+            let separator = [| "relative=" |]
+            let relativePath = baseDirElemts.[0].Split(separator, StringSplitOptions.RemoveEmptyEntries).[1].Trim().TrimEnd(',')
+            fileName <- Path.Combine(baseDir, relativePath)
+
+        fileName    
+                                 
     member x.ProcessOutputDataReceived(e : DataReceivedEventArgs) =
         try
             if e.Data <> null && not(x.Abort) then
@@ -496,13 +515,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                 if e.Data.Contains("DEBUG - Populating index from") then
                     let message = new LocalAnalysisEventArgs("LA:", e.Data, null)
                     stdOutEvent.Trigger([|x; message|])
-                    let separator = [| "Populating index from" |]
-                    let mutable fileName = e.Data.Split(separator, StringSplitOptions.RemoveEmptyEntries).[1]
-
-                    if fileName.Contains("abs=") then 
-                        let separator = [| "abs=" |]
-                        let absfileName = fileName.Split(separator, StringSplitOptions.RemoveEmptyEntries).[1].Trim()
-                        fileName <- absfileName.TrimEnd(']')
+                    let fileName = x.GetFileToBeAnalysedFromSonarLog(e.Data)
 
                     if File.Exists(fileName) then
                         let vsprojitem = new VsFileItem(FileName = Path.GetFileName(fileName), FilePath = fileName)

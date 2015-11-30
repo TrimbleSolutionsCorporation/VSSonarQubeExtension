@@ -52,7 +52,7 @@
   <Import Project="$(FSharpTargetsPath)" />
   <Import Project="$(MSBuildFolder)\NunitRunnerTask.Targets" />
   <ItemGroup>
-    <Compile Include="RunAnalysisTests.fs" />
+    <Compile Include="AnalyserTests.fs" />
     <Compile Include="SupportTests.fs" />
     <None Include="SonarLocalAnalyser.Test.licenseheader" />
     <Compile Include="TranslatorTest.fs" />
@@ -96,6 +96,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Foq.Usage.fsx" />
+    <Compile Include="RunAnalysisTests.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Foq">
