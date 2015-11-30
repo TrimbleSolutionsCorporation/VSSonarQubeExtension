@@ -47,8 +47,8 @@ namespace VSSonarExtensionUi.Test.RoslynManager
             var roslynModel = new RoslynManagerModel(plugins, mockNotifier.Object, mockConfiguration.Object);
 
             Assert.That(roslynModel.ExtensionDiagnostics.Count, Is.EqualTo(2));
-            Assert.That(roslynModel.ExtensionDiagnostics["SonarLint.dll"].AvailableChecks.Count, Is.EqualTo(127));
-            Assert.That(roslynModel.ExtensionDiagnostics["SonarLint.Extra.dll"].AvailableChecks.Count, Is.EqualTo(10));
+            Assert.That(roslynModel.ExtensionDiagnostics["SonarLint.CSharp.dll"].AvailableChecks.Count, Is.EqualTo(121));
+            Assert.That(roslynModel.ExtensionDiagnostics["SonarLint.VisualBasic.dll"].AvailableChecks.Count, Is.EqualTo(30));            
         }
 
         [Test]

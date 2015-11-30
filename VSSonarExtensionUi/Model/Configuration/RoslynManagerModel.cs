@@ -282,16 +282,17 @@
             if (!this.ExtensionDiagnostics.Any())
             {
                 this.ExtensionDiagnostics.Add(
-                    "SonarLint.dll",
+                    "SonarLint.CSharp.dll",
                     new VSSonarExtensionDiagnostic(
-                        "SonarLint.dll",
-                        Path.Combine(this.extensionRunningPath, "externalAnalysers\\roslynDiagnostics", "SonarLint.dll")));
+                        "SonarLint.CSharp.dll",
+                        Path.Combine(this.extensionRunningPath, "externalAnalysers\\roslynDiagnostics", "SonarLint.CSharp.dll")));
+
 
                 this.ExtensionDiagnostics.Add(
-                    "SonarLint.Extra.dll",
+                    "SonarLint.VisualBasic.dll",
                     new VSSonarExtensionDiagnostic(
-                        "SonarLint.Extra.dll",
-                        Path.Combine(this.extensionRunningPath, "externalAnalysers\\roslynDiagnostics", "SonarLint.Extra.dll")));
+                        "SonarLint.VisualBasic.dlll",
+                        Path.Combine(this.extensionRunningPath, "externalAnalysers\\roslynDiagnostics", "SonarLint.VisualBasic.dll")));
             }
 
             this.SyncSettings();

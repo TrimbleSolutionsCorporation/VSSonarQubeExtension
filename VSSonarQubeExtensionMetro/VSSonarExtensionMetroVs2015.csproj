@@ -272,10 +272,20 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="externalAnalysers\roslynDiagnostics\SonarLint.dll">
+    <Content Include="externalAnalysers\roslynDiagnostics\deps\SonarLint.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="externalAnalysers\roslynDiagnostics\SonarLint.Extra.dll">
+    <Content Include="externalAnalysers\roslynDiagnostics\deps\SonarLint.Extra.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="externalAnalysers\roslynDiagnostics\SonarLint.CSharp.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="externalAnalysers\roslynDiagnostics\SonarLint.VisualBasic.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="externalAnalysers\StyleCop\Settings.StyleCop">
