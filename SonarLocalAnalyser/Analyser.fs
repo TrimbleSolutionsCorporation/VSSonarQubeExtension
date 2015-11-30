@@ -332,7 +332,17 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
             builder.AppendSwitchIfNotNull("-Dsonar.password=", conf.Password)
 
         builder.AppendSwitchIfNotNull("-Dsonar.projectKey=", project.Key)
-        builder.AppendSwitchIfNotNull("-Dsonar.projectName=", project.Name)
+
+        try
+            if project.Name.Contains(" ") then
+                let elements = project.Name.Split(' ')
+                builder.AppendSwitchIfNotNull("-Dsonar.projectName=", elements.[0].Replace("\"", ""))
+                builder.AppendSwitchIfNotNull("-Dsonar.branch=", elements.[1].Replace("\"", ""))
+            else
+                builder.AppendSwitchIfNotNull("-Dsonar.projectName=", project.Name)
+        with
+        | _ -> ()
+
         builder.AppendSwitchIfNotNull("-Dsonar.projectVersion=", project.Version)
 
         // optional project properties
@@ -368,7 +378,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
         elif not(mode.Equals(AnalysisMode.Full)) then
             raise (new InvalidOperationException("Analysis Method Not Available in this Version of SonarQube"))
                    
-        builder.AppendSwitch("-X")                    
+        builder.AppendSwitch("-X")
 
         builder
 
@@ -555,7 +565,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
 
 
     member x.generateCommandArgs(mode : AnalysisMode, version : double, conf : ISonarConfiguration, project : Resource) =
-        GenerateCommonArgumentsForAnalysis(mode, version, conf, project).ToString()        
+        GenerateCommonArgumentsForAnalysis(mode, version, conf, project).ToString()
                             
     member x.RunPreviewBuild() =
         try
@@ -567,12 +577,12 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
             if not(String.IsNullOrEmpty(x.Conf.Password)) then
                 let message = sprintf "[%s] %s %s" x.ProjectRoot runnerexec (incrementalArgs.Replace(x.Conf.Password, "xxxxx"))
                 let commandData = new LocalAnalysisEventArgs("CMD: ", message, null)
-                stdOutEvent.Trigger([|x; commandData|])               
+                stdOutEvent.Trigger([|x; commandData|])
         
             let errorCode = exec.ExecuteCommand(runnerexec, incrementalArgs, SetupEnvironment(x,  x.Project.ActivePlatform, x.Project.ActiveConfiguration), x.ProcessOutputDataReceived, x.ProcessOutputDataReceived, x.ProjectRoot)
             if errorCode > 0 then
                 let errorInExecution = new LocalAnalysisEventArgs("LA", "Failed To Execute", new Exception("Error Code: " + errorCode.ToString()))
-                completionEvent.Trigger([|x; errorInExecution|])               
+                completionEvent.Trigger([|x; errorInExecution|])
             else
                 completionEvent.Trigger([|x; null|])
         with
