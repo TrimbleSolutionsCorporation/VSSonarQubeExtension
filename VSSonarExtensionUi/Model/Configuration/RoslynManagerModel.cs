@@ -51,6 +51,11 @@
         private readonly string extensionRunningPath = Directory.GetParent(Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty)).ToString();
 
         /// <summary>
+        /// The extension running path
+        /// </summary>
+        private readonly string extensionsBasePath = Directory.GetParent(Directory.GetParent(Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty)).ToString()).ToString();
+
+        /// <summary>
         /// The conf helper
         /// </summary>
         private readonly IConfigurationHelper confHelper;
@@ -268,6 +273,11 @@
                     {
                         if (File.Exists(item))
                         {
+                            if (!item.Contains(this.extensionRunningPath) && item.Contains(this.extensionsBasePath))
+                            {
+                                continue;
+                            }
+
                             var name = Path.GetFileName(item);
                             this.ExtensionDiagnostics.Add(name, new VSSonarExtensionDiagnostic(name, item));
                         }
