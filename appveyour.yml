@@ -14,10 +14,6 @@ install:
         $env:VCVARS_PLATFORM="amd64"
         $env:LANG_PLATFORM="-x64"
       }	  
-  - cmd: appveyor DownloadFile https://github.com/nunit/nunit/releases/download/3.0.0/nunit-3.0.0.zip
-  - cmd: 7z x -oC:\Tools\NUnit3 nunit-3.0.0.zip > NUL
-  - cmd: SET PATH=%JAVA_HOME%\bin;C:\Tools\NUnit3\bin;%PATH%
-  - cmd: SET
 build_script:
   - msbuild BuildExtension.msbuild /p:Configuration=Release
 artifacts:
