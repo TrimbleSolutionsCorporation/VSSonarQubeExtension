@@ -1,0 +1,29 @@
+version: '{build}'
+install:
+  - ps: |
+      If ($env:Platform -Match "x86") {
+        $env:PCRE_PLATFORM="Win32"
+        $env:JAVA_HOME="c:/Program Files (x86)/Java/jdk1.8.0"
+        $env:MSBuildDir="C:/Program Files (x86)/MSBuild/14.0/Bin/msbuild.exe"
+        $env:VCVARS_PLATFORM="x86"
+        $env:LANG_PLATFORM=""
+      } Else {
+        $env:PCRE_PLATFORM="x64"
+        $env:JAVA_HOME="c:/Program Files/Java/jdk1.8.0"
+        $env:MSBuildDir="C:/Program Files/MSBuild/14.0/Bin/msbuild.exe"
+        $env:VCVARS_PLATFORM="amd64"
+        $env:LANG_PLATFORM="-x64"
+      }	  
+  - cmd: appveyor DownloadFile https://github.com/nunit/nunit/releases/download/3.0.0/nunit-3.0.0.zip
+  - cmd: 7z x -oC:\Tools\NUnit3 nunit-3.0.0.zip > NUL
+  - cmd: SET PATH=%JAVA_HOME%\bin;C:\Tools\NUnit3\bin;%PATH%
+  - cmd: SET
+build_script:
+  - msbuild BuildExtension.msbuild /p:Configuration=Release
+artifacts:
+  - path: 'BuildDrop\vs12\VSSonarExtensionMetroVs2012.vsix'
+    name: VSSonarExtensionMetroVs2012
+  - path: 'BuildDrop\vs13\VSSonarExtensionMetroVs2013.vsix'
+    name: VSSonarExtensionMetroVs2013
+  - path: 'BuildDrop\vs15\VSSonarExtensionMetroVs2015.vsix'
+    name: VSSonarExtensionMetroVs2015
