@@ -89,7 +89,7 @@
                 this.LoadDependencies(System.IO.Path.Combine(Directory.GetParent(path).ToString(), "deps"));
 
                 var assembly = Assembly.LoadFrom(path);
-                var types2 = assembly.GetExportedTypes();
+                var types2 = assembly.GetTypes();
                 foreach (var typedata in types2)
                 {
                     try

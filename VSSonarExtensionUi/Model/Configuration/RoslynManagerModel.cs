@@ -297,12 +297,18 @@
                         "SonarLint.CSharp.dll",
                         Path.Combine(this.extensionRunningPath, "externalAnalysers\\roslynDiagnostics", "SonarLint.CSharp.dll")));
 
-
                 this.ExtensionDiagnostics.Add(
                     "SonarLint.VisualBasic.dll",
                     new VSSonarExtensionDiagnostic(
-                        "SonarLint.VisualBasic.dlll",
+                        "SonarLint.VisualBasic.dll",
                         Path.Combine(this.extensionRunningPath, "externalAnalysers\\roslynDiagnostics", "SonarLint.VisualBasic.dll")));
+
+                this.ExtensionDiagnostics.Add(
+                    "StyleCop.Analyzers.dll",
+                    new VSSonarExtensionDiagnostic(
+                        "StyleCop.Analyzers.dll",
+                        Path.Combine(this.extensionRunningPath, "externalAnalysers\\roslynDiagnostics", "StyleCop.Analyzers.dll")));
+                
             }
 
             this.SyncSettings();
