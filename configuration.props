@@ -12,7 +12,7 @@
         <BuildNumber                  Condition="'$(BuildNumber)'==''">0</BuildNumber>
         <RevisionNumber               Condition="'$(RevisionNumber)'==''">0</RevisionNumber>
         <AssemblyPatcherTaskOn        Condition="'$(AssemblyPatcherTaskOn)'==''">false</AssemblyPatcherTaskOn>
-        <NunitRunnerTaskEnabled       Condition="'$(NunitRunnerTaskEnabled)'==''">false</NunitRunnerTaskEnabled>
+        <NunitRunnerTaskEnabled       Condition="'$(NunitRunnerTaskEnabled)'==''">true</NunitRunnerTaskEnabled>
 
         <VSVersion Condition="'$(VSVersion)'==''">$(VisualStudioVersion)</VSVersion>
         <TargetFSharpDataVersion>2.2.5.0</TargetFSharpDataVersion>

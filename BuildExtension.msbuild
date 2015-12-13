@@ -4,8 +4,7 @@
     <Import Project="$(MSBuildFolder)\TeklaNuget.tasks" Condition="'$(NugetRestoreTaskIncluded)'!='yes'"/>
     <Import Project="$(MSBuildFolder)\MSBuild.ExtensionPack.tasks"/>
     
-    <ItemGroup>
-        
+    <ItemGroup>        
         <VSSonarQubeExtension2013 Include="VSSonarQubeExtension2013.sln" />
         <VSSonarQubeExtension2012 Include="VSSonarQubeExtension2012.sln" />
         <VSSonarQubeExtension2015 Include="VSSonarQubeExtension2015.sln" />
@@ -39,9 +38,6 @@
     		TaskAction="AddFiles" 
     		CompressFiles="@(Files2015)" 
     		ZipFileName="$(MSBuildThisFileDirectory)BuildDrop\vs15\VSSonarExtensionMetroVs2015.vsix" 
-    		RemoveRoot="$(MSBuildThisFileDirectory)BuildDrop\vs15" />    		
-    		
+    		RemoveRoot="$(MSBuildThisFileDirectory)BuildDrop\vs15" />    		    		
     </Target>
-    
-    
 </Project>
