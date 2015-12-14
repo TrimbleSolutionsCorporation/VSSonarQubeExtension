@@ -12,7 +12,8 @@
         <BuildNumber                  Condition="'$(BuildNumber)'==''">0</BuildNumber>
         <RevisionNumber               Condition="'$(RevisionNumber)'==''">0</RevisionNumber>
         <AssemblyPatcherTaskOn        Condition="'$(AssemblyPatcherTaskOn)'==''">false</AssemblyPatcherTaskOn>
-        <NunitRunnerTaskEnabled       Condition="'$(NunitRunnerTaskEnabled)'==''">true</NunitRunnerTaskEnabled>
+        <NunitRunnerTaskEnabled       Condition="'$(NunitRunnerTaskEnabled)'==''">false</NunitRunnerTaskEnabled>
+		<ProduceCoverage       Condition="'$(ProduceCoverage)'==''">false</ProduceCoverage>
 
         <VSVersion Condition="'$(VSVersion)'==''">$(VisualStudioVersion)</VSVersion>
         <TargetFSharpDataVersion>2.2.5.0</TargetFSharpDataVersion>
