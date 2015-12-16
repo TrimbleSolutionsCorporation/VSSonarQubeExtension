@@ -67,6 +67,12 @@
         private IVsEnvironmentHelper vshelper;
 
         /// <summary>
+        /// The local analyser module
+        /// </summary>
+        private readonly ISonarLocalAnalyser localAnalyserModule;
+        private ISourceControlProvider sourcecontrol;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="AssociationModel" /> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
@@ -81,7 +87,8 @@
             IConfigurationHelper configurationHelper,
             ISQKeyTranslator translator,
             IPluginManager pluginManager,
-            SonarQubeViewModel model)
+            SonarQubeViewModel model,
+            ISonarLocalAnalyser localAnalyeser)
         {
             this.keyTranslator = translator;
             this.pluginManager = pluginManager;
@@ -89,6 +96,9 @@
             this.configurationHelper = configurationHelper;
             this.logger = logger;
             this.sonarService = service;
+            this.localAnalyserModule = localAnalyeser;
+
+            this.localAnalyserModule.AssociateCommandCompeted += this.LocalAssociationCompleted;
         }
 
         /// <summary>
@@ -113,6 +123,7 @@
         /// <c>true</c> if this instance is associated; otherwise, <c>false</c>.
         /// </value>
         public bool IsAssociated { get; set; }
+        public Dictionary<string, Profile> Profile { get; private set; }
 
         /// <summary>
         /// Registers the new model in pool.
@@ -158,6 +169,7 @@
             {
                 this.SaveAssociationToDisk(this.AssociatedProject);
                 this.AssociatedProject.SolutionRoot = this.OpenSolutionPath;
+                this.AssociatedProject.SolutionName = this.OpenSolutionName;
                 if (string.IsNullOrEmpty(this.OpenSolutionPath))
                 {
                     this.keyTranslator.SetProjectKeyAndBaseDir(this.AssociatedProject.Key, this.OpenSolutionPath, this.AssociatedProject.BranchName, "");
@@ -171,7 +183,7 @@
             this.configurationHelper.SyncSettings();
             if (!skipRegisterModels)
             {
-                this.UpdateAssociationDataInRegisteredModels(sourceControl);
+                this.InitiateAssociationToSonarProject(sourceControl);
             }
             
             return true;
@@ -423,7 +435,7 @@
                 if (this.IsAssociated)
                 {
                     this.CreateConfiguration(Path.Combine(solutionPath, "sonar-project.properties"));
-                    this.UpdateAssociationDataInRegisteredModels(sourceControl);
+                    this.InitiateAssociationToSonarProject(sourceControl);
                     var mainProject = SetExclusionsMenu.GetMainProject(this.AssociatedProject, this.model.AvailableProjects);
                     var exclusions = this.sonarService.GetExclusions(AuthtenticationHelper.AuthToken, mainProject);
                     this.model.LocaAnalyser.UpdateExclusions(exclusions);
@@ -563,15 +575,21 @@
         /// <summary>
         /// Updates the services.
         /// </summary>
-        private void UpdateAssociationDataInRegisteredModels(ISourceControlProvider sourceControl)
+        private void InitiateAssociationToSonarProject(ISourceControlProvider sourceControl)
         {
-            var listToRemo = new List<IModelBase>();
+            this.sourcecontrol = sourceControl;
 
-            // associate
-            this.pluginManager.AssociateWithNewProject(
-                this.AssociatedProject,
-                this.OpenSolutionPath,
-                sourceControl);
+            // start local analysis association, and sync profile
+            this.localAnalyserModule.AssociateWithProject(this.AssociatedProject, AuthtenticationHelper.AuthToken);
+        }
+
+        /// <summary>The update associate command.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The e.</param>
+        private void LocalAssociationCompleted(object sender, EventArgs e)
+        {
+
+            var listToRemo = new List<IModelBase>();
 
             this.keyTranslator.SetLookupType(KeyLookUpType.Invalid);
             if (string.IsNullOrEmpty(this.OpenSolutionPath))
@@ -590,7 +608,7 @@
                     model.AssociateWithNewProject(
                         this.AssociatedProject,
                         this.OpenSolutionPath,
-                        sourceControl,
+                        this.sourcecontrol,
                         this.pluginManager.GetIssueTrackerPlugin(), this.model.AvailableProjects);
                 }
                 catch (Exception ex)
@@ -604,6 +622,15 @@
             {
                 modelPool.Remove(item);
             }
+
+            this.Profile = this.localAnalyserModule.GetProfile(this.AssociatedProject);
+
+            // sync data in plugins
+            this.pluginManager.AssociateWithNewProject(
+                this.AssociatedProject,
+                this.OpenSolutionPath,
+                this.sourcecontrol,
+                this.Profile);
         }
     }
 }

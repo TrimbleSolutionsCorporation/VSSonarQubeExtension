@@ -99,6 +99,14 @@ namespace VSSonarPlugins.Types
         /// </summary>
         public string SolutionRoot { get; set; }
 
+        /// <summary>
+        /// Gets or sets the name of the solution.
+        /// </summary>
+        /// <value>
+        /// The name of the solution.
+        /// </value>
+        public string SolutionName { get; set; }
+
         public bool Default { get; set; }
 
         public bool IsBranch { get; set; }

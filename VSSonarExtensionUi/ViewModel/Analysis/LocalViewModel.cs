@@ -186,7 +186,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.localAnalyserModule = analyser;
             this.localAnalyserModule.StdOutEvent += this.UpdateOutputMessagesFromPlugin;
             this.localAnalyserModule.LocalAnalysisCompleted += this.UpdateLocalIssues;
-            this.localAnalyserModule.AssociateCommandCompeted += this.AssociationHasCompleted;
 
             this.ShowLeftFlyOut = false;
             this.SizeOfFlyout = 0;
@@ -244,10 +243,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         public Color BackGroundColor { get; set; }
 
-        /// <summary>Gets or sets a value indicating whether loading sonar data.</summary>
-        [AlsoNotifyFor("CanRunLocalAnalysis")]
-        public bool LoadingSonarData { get; set; }
-
         /// <summary>
         ///     Gets or sets a value indicating whether can run analysis.
         /// </summary>
@@ -289,17 +284,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             get
             {
-                if (this.LoadingSonarData || !this.IsAssociatedWithProject)
-                {
-                    if (this.LoadingSonarData)
-                    {
-                        this.AssociatingTextTooltip = "Loading SonarQube profile Data";
-                    }
-                    else
-                    {
-                        this.AssociatingTextTooltip = string.Empty;
-                    }
-
+                if (!this.IsAssociatedWithProject)
+                {                    
                     return false;
                 }
 
@@ -516,15 +502,9 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             this.associatedProject = project;
             this.IsAssociatedWithProject = this.associatedProject != null;
-
             this.SourceWorkingDir = workingDir;
-
-            if (!string.IsNullOrEmpty(this.SourceWorkingDir) && Directory.Exists(this.SourceWorkingDir))
-            {
-                this.CanRunAnalysis = true;
-                this.LoadingSonarData = true;
-                this.localAnalyserModule.AssociateWithProject(project, AuthtenticationHelper.AuthToken);                
-            }
+            this.CanRunAnalysis = true;
+            this.FileAnalysisIsEnabled = true;
         }
 
         /// <summary>
@@ -532,7 +512,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         public void OnAnalysisCommand()
         {
-            this.FileAnalysisIsEnabled = false;            
+            this.FileAnalysisIsEnabled = false;
             this.notificationManager.StartedWorking("Running Full Analysis");
             this.CanRunAnalysis = false;
             this.RunLocalAnalysis(AnalysisTypes.ANALYSIS);
@@ -802,7 +782,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.localAnalyserModule.StopAllExecution();
             this.FileAnalysisIsEnabled = false;
             this.CanRunAnalysis = true;
-            this.LoadingSonarData = false;
             this.notificationManager.EndedWorking();
         }
 
@@ -824,9 +803,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             {
                 this.associatedProject.ActiveConfiguration = this.vsenvironmenthelper.ActiveConfiguration();
                 this.associatedProject.ActivePlatform = this.vsenvironmenthelper.ActivePlatform();
-                this.associatedProject.SolutionRoot = this.SourceWorkingDir;
                 this.notificationManager.ResetFailure();
-
                 switch (analysis)
                 {                    
                     case AnalysisTypes.FILE:
@@ -983,15 +960,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 string[] separatingChars = { "ANALYSIS SUCCESSFUL, you can browse" };
                 this.ProjectLink = exceptionMsg.ErrorMessage.Split(separatingChars, StringSplitOptions.RemoveEmptyEntries)[1];
             }
-        }
-
-        /// <summary>The update associate command.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The e.</param>
-        private void AssociationHasCompleted(object sender, EventArgs e)
-        {
-            this.LoadingSonarData = false;
-            this.FileAnalysisIsEnabled = true;
         }
 
         /// <summary>

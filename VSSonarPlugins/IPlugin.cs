@@ -152,10 +152,13 @@ namespace VSSonarPlugins
         /// </summary>
         void ResetDefaults();
 
-        /// <summary>The associate project.</summary>
+        /// <summary>
+        /// The associate project.
+        /// </summary>
         /// <param name="project">The project.</param>
         /// <param name="configuration">The configuration.</param>
-        void AssociateProject(Resource project, ISonarConfiguration configuration);
+        /// <param name="profile">The profile.</param>
+        void AssociateProject(Resource project, ISonarConfiguration configuration, Dictionary<string, Profile> profile);
 
         /// <summary>
         /// DLLs the locations.

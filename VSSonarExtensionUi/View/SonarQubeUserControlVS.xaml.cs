@@ -88,5 +88,9 @@ namespace VSSonarExtensionUi.View
         }
 
         #endregion
+
+
     }
+
+
 }

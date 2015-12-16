@@ -220,7 +220,8 @@ namespace VSSonarExtensionUi.ViewModel
                 this.configurationHelper,
                 this.sonarKeyTranslator,
                 this.pluginManager,
-                this);
+                this,
+                this.LocaAnalyser);
 
             this.CanConnectEnabled = true;
             this.ConnectionTooltip = "Not Connected";
@@ -813,7 +814,8 @@ namespace VSSonarExtensionUi.ViewModel
                 this.configurationHelper,
                 this.sonarKeyTranslator,
                 this.VSonarQubeOptionsViewData.PluginManager,
-                this);
+                this,
+                this.LocaAnalyser);
 
             this.AssociationModule.UpdateServicesInModels(this.VsHelper, this.StatusBar, this.ServiceProvider);
             this.UpdateTheme(Colors.Black, Colors.White);

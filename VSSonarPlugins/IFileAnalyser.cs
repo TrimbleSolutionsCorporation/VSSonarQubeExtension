@@ -51,7 +51,7 @@ namespace VSSonarPlugins
         /// <param name="project">The project.</param>
         /// <param name="conf">The conf.</param>
         /// <returns>The <see cref="List"/>.</returns>
-        List<Issue> ExecuteAnalysisOnFile(VsFileItem itemInView, Profile externlProfile, Resource project, ISonarConfiguration conf);
+        List<Issue> ExecuteAnalysisOnFile(VsFileItem itemInView, Resource project, ISonarConfiguration conf);
 
         /// <summary>The get issues.</summary>
         /// <param name="issue">The issue.</param>

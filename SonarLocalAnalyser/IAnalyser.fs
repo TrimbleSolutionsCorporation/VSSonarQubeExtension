@@ -42,6 +42,7 @@ type ISonarLocalAnalyser =
   abstract member ResetInitialization : unit -> unit
   abstract member UpdateExclusions : exclusions : System.Collections.Generic.IList<Exclusion> -> unit
   abstract member GetRuleForKey : key : string * project : Resource -> Rule
+  abstract member GetProfile : project:Resource -> System.Collections.Generic.Dictionary<string, Profile>
   
   [<CLIEvent>]
   abstract member AssociateCommandCompeted : IDelegateEvent<System.EventHandler>

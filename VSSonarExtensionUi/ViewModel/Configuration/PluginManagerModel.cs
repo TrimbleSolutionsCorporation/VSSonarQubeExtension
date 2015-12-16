@@ -451,7 +451,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="project">The project.</param>
         /// <param name="workDir">The work dir.</param>
         /// <param name="provider">The provider.</param>
-        public void AssociateWithNewProject(Resource project, string workDir, ISourceControlProvider provider)
+        public void AssociateWithNewProject(Resource project, string workDir, ISourceControlProvider provider, Dictionary<string, Profile> profile)
         {
             this.sourceDir = workDir;
             this.associatedProject = project;
@@ -485,7 +485,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                         menuPlugin.UpdateConfiguration(AuthtenticationHelper.AuthToken, project, this.vshelper);
                     }
 
-                    plugin.AssociateProject(project, AuthtenticationHelper.AuthToken);
+                    plugin.AssociateProject(project, AuthtenticationHelper.AuthToken, profile);
                 }
                 catch (Exception ex)
                 {

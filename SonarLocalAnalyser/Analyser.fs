@@ -454,7 +454,11 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                         if not(cachedProfiles.ContainsKey(project.Name)) then
                             profileCannotBeRetrived <- true
                             
-                        associateCompletedEvent.Trigger([|x; null|])
+                        try
+                            associateCompletedEvent.Trigger([|x; null|])
+                        with
+                        | ex -> 
+                            Debug.WriteLine(ex.Message)
                 )
 
                 worker2.RunWorkerAsync()
@@ -554,7 +558,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                             let profile = cachedProfiles.[project.Name].[plugin.GetLanguageKey(vsprojitem)]
 
                             notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Launch Analysis On  File: " + vsprojitem.FilePath))
-                            let issues = extension.ExecuteAnalysisOnFile(vsprojitem, profile, project, x.Conf)
+                            let issues = extension.ExecuteAnalysisOnFile(vsprojitem, project, x.Conf)
                             lock syncLock (
                                 fun () -> 
                                     localissues.AddRange(issues)
@@ -672,7 +676,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                         if cachedProfiles.ContainsKey(x.Project.Name) then
                             if cachedProfiles.[x.Project.Name].ContainsKey(plugin.GetLanguageKey(x.ItemInView)) then
                                 let profile = cachedProfiles.[x.Project.Name].[plugin.GetLanguageKey(x.ItemInView)]
-                                let issues = extension.ExecuteAnalysisOnFile(x.ItemInView, profile, x.Project, x.Conf)
+                                let issues = extension.ExecuteAnalysisOnFile(x.ItemInView, x.Project, x.Conf)
 
                                 lock syncLock (
                                     fun () ->
@@ -734,6 +738,9 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
 
         [<CLIEvent>]
         member x.AssociateCommandCompeted = associateCompletedEvent.Publish
+
+        member x.GetProfile(project : Resource) = 
+            cachedProfiles.[project.Name]
 
         member x.RunProjectAnalysis(project : VsProjectItem, conf : ISonarConfiguration) =
             if profileUpdated then
