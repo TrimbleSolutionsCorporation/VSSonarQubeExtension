@@ -57,7 +57,7 @@
             mockConfiguration.Setup(x => x.ReadSetting(It.IsAny<Context>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new SonarQubeProperties { Value = "dummy" });
             mockRest.Setup(x => x.GetProjectsList(It.IsAny<ISonarConfiguration>())).Returns(this.CreatProjects());
 
-            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object);
+            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, locaAnalyser: mockAnalyser.Object);
             associationModel.RefreshProjectList(false);
             Assert.That(associationModel.AvailableProjects.Count, Is.EqualTo(2));
 
@@ -79,7 +79,7 @@
 
             AuthtenticationHelper.EstablishAConnection(mockRest.Object, "as", "asda", "asd");
 
-            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object);
+            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, locaAnalyser: mockAnalyser.Object);
             associationModel.VsHelper = mockVsHelper.Object;
 
             associationModel.OnConnectToSonar(false);
@@ -203,7 +203,7 @@
 
             AuthtenticationHelper.EstablishAConnection(mockRest.Object, "as", "asda", "asd");
 
-            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, mockSourceProvider.Object, mockPlugin.Object);
+            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, mockSourceProvider.Object, mockPlugin.Object, locaAnalyser: mockAnalyser.Object);
             associationModel.AssociationModule.AssociatedProject = new Resource();
             associationModel.SelectedProjectKey = "jasd";
             associationModel.SelectedProjectName = "jasd";
@@ -237,7 +237,7 @@
             mockPlugin.Setup(x => x.SourceCodePlugins).Returns(new List<ISourceVersionPlugin>());
 
             AuthtenticationHelper.EstablishAConnection(mockRest.Object, "as", "asda", "asd");
-            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, mockSourceProvider.Object, mockPlugin.Object);
+            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, mockSourceProvider.Object, mockPlugin.Object, locaAnalyser: mockAnalyser.Object);
             associationModel.AssociationModule.AssociatedProject = new Resource();
             associationModel.SelectedProjectKey = "jasd";
             associationModel.SelectedProjectName = "jasd";
@@ -270,7 +270,7 @@
 
             AuthtenticationHelper.EstablishAConnection(mockRest.Object, "as", "asda", "asd");
 
-            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, mockSourceProvider.Object, mockPlugin.Object);
+            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, mockSourceProvider.Object, mockPlugin.Object, locaAnalyser: mockAnalyser.Object);
             associationModel.VsHelper = mockVsHelper.Object;
             associationModel.IsSolutionOpen = true;
             associationModel.OnConnectToSonar(false);
@@ -304,7 +304,7 @@
             brancheData.Add(new Resource() { Key = "tekla.utilities:project:feature_B", Name = "project feature_B", BranchName = "feature_B", IsBranch = true });
 
             mockRest.Setup(x => x.GetProjectsList(It.IsAny<ISonarConfiguration>())).Returns(brancheData);
-            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object);
+            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, locaAnalyser: mockAnalyser.Object);
             associationModel.RefreshProjectList(false);
             Assert.That(associationModel.AvailableProjects.Count, Is.EqualTo(1));
             Assert.That(associationModel.AvailableProjects[0].BranchResources.Count, Is.EqualTo(3));
@@ -336,7 +336,7 @@
             brancheData.Add(new Resource() { Key = "org.apache.maven:maven", Name = "Apache Maven" });
 
             mockRest.Setup(x => x.GetProjectsList(It.IsAny<ISonarConfiguration>())).Returns(brancheData);
-            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object);
+            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, locaAnalyser: mockAnalyser.Object);
             associationModel.RefreshProjectList(false);
             Assert.That(associationModel.AvailableProjects.Count, Is.EqualTo(4));
             Assert.That(associationModel.AvailableProjects[0].Name, Is.EqualTo("ActiveMQ"));
@@ -373,7 +373,7 @@
 
             mockRest.Setup(x => x.GetProjectsList(It.IsAny<ISonarConfiguration>())).Returns(brancheData);
             mockSourceProvider.Setup(x => x.GetBranch()).Returns("feature-x");
-            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, mockSourceProvider.Object);
+            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, mockSourceProvider.Object, locaAnalyser: mockAnalyser.Object);
             associationModel.RefreshProjectList(false);
             Assert.That(associationModel.AvailableProjects.Count, Is.EqualTo(4));
 
@@ -407,7 +407,7 @@
 
             mockRest.Setup(x => x.GetProjectsList(It.IsAny<ISonarConfiguration>())).Returns(brancheData);
             mockSourceProvider.Setup(x => x.GetBranch()).Returns("feature_A");
-            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, mockSourceProvider.Object); 
+            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, mockSourceProvider.Object, locaAnalyser: mockAnalyser.Object); 
             associationModel.RefreshProjectList(false);
             Assert.That(associationModel.AvailableProjects.Count, Is.EqualTo(4));
 
@@ -441,7 +441,7 @@
             mockRest.Setup(x => x.GetProjectsList(It.IsAny<ISonarConfiguration>())).Returns(brancheData);
             mockSourceProvider.Setup(x => x.GetBranch()).Returns(string.Empty);
 
-            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, mockSourceProvider.Object);
+            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, mockSourceProvider.Object, locaAnalyser: mockAnalyser.Object);
             associationModel.RefreshProjectList(false);
             Assert.That(associationModel.AvailableProjects.Count, Is.EqualTo(4));
 
@@ -473,7 +473,7 @@
             mockRest.Setup(x => x.GetProjectsList(It.IsAny<ISonarConfiguration>())).Returns(brancheData);
             mockSourceProvider.Setup(x => x.GetBranch()).Returns(string.Empty);
 
-            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object);
+            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, locaAnalyser: mockAnalyser.Object);
             associationModel.RefreshProjectList(false);
             Assert.That(associationModel.AvailableProjects.Count, Is.EqualTo(4));
 
@@ -505,7 +505,7 @@
             mockRest.Setup(x => x.GetProjectsList(It.IsAny<ISonarConfiguration>())).Returns(brancheData);
             mockSourceProvider.Setup(x => x.GetBranch()).Returns(string.Empty);
 
-            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object);
+            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, locaAnalyser: mockAnalyser.Object);
             associationModel.RefreshProjectList(false);
             Assert.That(associationModel.AvailableProjects.Count, Is.EqualTo(4));
 

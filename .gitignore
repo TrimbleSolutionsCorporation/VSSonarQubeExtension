@@ -116,3 +116,5 @@ Settings.StyleCop
 .sonarqube/
 ObjDrop/
 .cxxresults
+buildlog2013tekla.txt
+buildlog2015tekla.txt
