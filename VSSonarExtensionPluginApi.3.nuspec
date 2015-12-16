@@ -3,7 +3,7 @@
 <!-- Please do not modify contents of this NuGet. Consult API owner. -->
 <package>
     <metadata>
-        <id>VSSonarExtensionPluginApi.3</id>
+        <id>VSSonarExtensionPlugin3Api</id>
         <version>5.0.0-alpha001</version>
         <authors>Jorge Costa</authors>
         <owners>Jorge Costa</owners>

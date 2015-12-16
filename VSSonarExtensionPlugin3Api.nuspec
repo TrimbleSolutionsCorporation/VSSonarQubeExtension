@@ -3,14 +3,14 @@
 <!-- Please do not modify contents of this NuGet. Consult API owner. -->
 <package>
     <metadata>
-        <id>VSSonarExtensionPlugin3Api</id>
+        <id>VSSonarExtensionPluginApi.3</id>
         <version>5.0.0-alpha001</version>
         <authors>Jorge Costa</authors>
         <owners>Jorge Costa</owners>
         <licenseUrl>https://github.com/TeklaCorp/VSSonarQubeExtension/blob/master/LICENSE.txt</licenseUrl>
         <projectUrl>https://github.com/TeklaCorp/VSSonarQubeExtension</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>VSSonarExtension plugin api for FSharp Core 4.4.0</description>
+        <description>VSSonarExtension plugin api for FSharp Core 4.3.</description>
         <releaseNotes>see github</releaseNotes>
         <copyright>Copyright © 2015 Tekla Corporation. Tekla is a Trimble Company</copyright>
         <tags>Rest SonarQube VSSonarExtension</tags>
@@ -27,7 +27,7 @@
         <file src="BuildDrop\vs15\VSSonarPlugins.dll" target="lib" />
         <file src="BuildDrop\vs15\SonarRestService.dll" target="lib" />
         <file src="BuildDrop\vs15\VSSonarQubeCmdExecutor.dll" target="lib" />
-        <file src="references\4.4.0.0\FSharp.Data.dll" target="lib" />
-        <file src="references\4.4.0.0\FSharp.Data.DesignTime.dll" target="lib" />
+        <file src="references\4.3.1.0\FSharp.Data.dll" target="lib" />
+        <file src="references\4.3.1.0\FSharp.Data.DesignTime.dll" target="lib" />
     </files>
 </package>
