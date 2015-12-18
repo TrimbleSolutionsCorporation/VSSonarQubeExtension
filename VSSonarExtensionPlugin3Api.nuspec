@@ -4,7 +4,7 @@
 <package>
     <metadata>
         <id>VSSonarExtensionPlugin3Api</id>
-        <version>5.0.0-alpha001</version>
+        <version>5.0.0-alpha002</version>
         <authors>Jorge Costa</authors>
         <owners>Jorge Costa</owners>
         <licenseUrl>https://github.com/TeklaCorp/VSSonarQubeExtension/blob/master/LICENSE.txt</licenseUrl>
@@ -20,6 +20,7 @@
             <reference file="VSSonarQubeCmdExecutor.dll" />
             <reference file="FSharp.Data.dll" />
             <reference file="FSharp.Data.DesignTime.dll" />
+            <reference file="RestSharp.dll" />
         </references>
     </metadata>
     <files>
@@ -27,6 +28,7 @@
         <file src="BuildDrop\vs15\VSSonarPlugins.dll" target="lib" />
         <file src="BuildDrop\vs15\SonarRestService.dll" target="lib" />
         <file src="BuildDrop\vs15\VSSonarQubeCmdExecutor.dll" target="lib" />
+        <file src="references\RestSharp.dll" target="lib" />
         <file src="references\4.3.1.0\FSharp.Data.dll" target="lib" />
         <file src="references\4.3.1.0\FSharp.Data.DesignTime.dll" target="lib" />
     </files>
