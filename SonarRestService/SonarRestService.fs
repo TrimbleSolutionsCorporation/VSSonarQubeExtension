@@ -462,7 +462,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             let rule = new Rule()
             rule.Name <- ruleInServer.Title            
             rule.ConfigKey <- ruleInServer.ConfigKey
-            rule.Description <- ruleInServer.Description
+            rule.HtmlDescription <- ruleInServer.Description
             rule.Key <- ruleInServer.Key
             rule.Severity <- (EnumHelper.asEnum<Severity>(ruleInServer.Priority)).Value
             rule.Repo <- ruleInServer.Plugin
@@ -649,7 +649,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             newRule.SysTags.Add(tag)
         newRule.Lang <- parsedDataRule.Lang
         newRule.LangName <- parsedDataRule.LangName
-        newRule.Description <- parsedDataRule.HtmlDesc
+        newRule.HtmlDescription <- parsedDataRule.HtmlDesc
         newRule.DefaultDebtChar <- try (EnumHelper.asEnum<Category>(parsedDataRule.DefaultDebtChar)).Value with | ex -> Category.UNDEFINED
         newRule.DefaultDebtSubChar <- try (EnumHelper.asEnum<SubCategory>(parsedDataRule.DefaultDebtSubChar)).Value with | ex -> SubCategory.UNDEFINED
         newRule.Category <- try (EnumHelper.asEnum<Category>(parsedDataRule.DebtChar)).Value with | ex -> Category.UNDEFINED
@@ -716,7 +716,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
         if IfExists("lang") then rule.Lang <- parsedDataRule.Lang
         if IfExists("langName") then rule.LangName <- parsedDataRule.LangName
-        if IfExists("htmlDesc") then rule.Description <- parsedDataRule.HtmlDesc
+        if IfExists("htmlDesc") then rule.HtmlDescription <- parsedDataRule.HtmlDesc
         if IfExists("defaultDebtChar") then rule.DefaultDebtChar <- try (EnumHelper.asEnum<Category>(parsedDataRule.DefaultDebtChar)).Value with | ex -> Category.UNDEFINED
         if IfExists("defaultDebtSubChar") then rule.DefaultDebtSubChar <- try (EnumHelper.asEnum<SubCategory>(parsedDataRule.DefaultDebtSubChar)).Value with | ex -> SubCategory.UNDEFINED
         if IfExists("debtChar") then rule.Category <- try (EnumHelper.asEnum<Category>(parsedDataRule.DebtChar)).Value with | ex -> Category.UNDEFINED
@@ -788,7 +788,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
         if IfExists("lang") then newRule.Lang <- parsedDataRule.Lang
         if IfExists("langName") then newRule.LangName <- parsedDataRule.LangName
-        if IfExists("htmlDesc") then newRule.Description <- parsedDataRule.HtmlDesc
+        if IfExists("htmlDesc") then newRule.HtmlDescription <- parsedDataRule.HtmlDesc
         if IfExists("defaultDebtChar") then newRule.DefaultDebtChar <- try (EnumHelper.asEnum<Category>(parsedDataRule.DefaultDebtChar)).Value with | ex -> Category.UNDEFINED
         if IfExists("defaultDebtSubChar") then newRule.DefaultDebtSubChar <- try (EnumHelper.asEnum<SubCategory>(parsedDataRule.DefaultDebtSubChar)).Value with | ex -> SubCategory.UNDEFINED
         if IfExists("debtChar") then newRule.Category <- try (EnumHelper.asEnum<Category>(parsedDataRule.DebtChar)).Value with | ex -> Category.UNDEFINED
@@ -862,16 +862,44 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
         true
 
     interface VSSonarPlugins.ISonarRestService with
+        member this.ChangeParentProfile(conf:ISonarConfiguration, profileKey:string, parentKey:string) = 
+            let url = "/api/qualityprofiles/change_parent?profileKey=" + profileKey + "&parentKey=" + parentKey
+            let response = httpconnector.HttpSonarPostRequest(conf, url, Map.empty)
+            if response.StatusCode <> Net.HttpStatusCode.OK then
+                "Failed change parent: " + response.StatusCode.ToString()
+            else
+                ""
+
+        member this.CopyProfile(conf:ISonarConfiguration, id:string, newName:string) = 
+            let url = "/api/qualityprofiles/copy?fromKey=" + id + "&toName=" + HttpUtility.UrlEncode(newName)
+            let response = httpconnector.HttpSonarPostRequest(conf, url, Map.empty)
+            if response.StatusCode <> Net.HttpStatusCode.OK then
+                ""
+            else
+                let data = CopyProfileAnswer.Parse(response.Content)
+                let profileKey = data.Key
+                (this :> ISonarRestService).ChangeParentProfile(conf, profileKey, id)
+                profileKey
+
         member this.CreateRule(conf:ISonarConfiguration, rule:Rule, ruleTemplate:Rule) =
             let errorMessages = new System.Collections.Generic.List<string>()
             let url ="/api/rules/create"
 
-            let optionalProps = Map.empty.Add("custom_key", rule.Key.Replace( rule.Repo + ":", ""))
-                                         .Add("html_description", rule.Description)
-                                         .Add("name", rule.Name)
-                                         .Add("severity", rule.Severity.ToString())
-                                         .Add("template_key", ruleTemplate.Key)
-
+            let optionalProps =
+                if conf.SonarVersion < 5.1 then
+                    Map.empty.Add("custom_key", rule.Key.Replace( rule.Repo + ":", ""))
+                                             .Add("html_description", rule.HtmlDescription)
+                                             .Add("name", rule.Name)
+                                             .Add("severity", rule.Severity.ToString())
+                                             .Add("template_key", ruleTemplate.Key)
+                else
+                    Map.empty.Add("custom_key", rule.Key.Replace( rule.Repo + ":", ""))
+                                             .Add("html_description", rule.HtmlDescription)
+                                             .Add("markdown_description", rule.MarkDownDescription)                                             
+                                             .Add("name", rule.Name)
+                                             .Add("severity", rule.Severity.ToString())
+                                             .Add("template_key", ruleTemplate.Key)
+                                                                 
             let errorMessages = new System.Collections.Generic.List<string>()
             let response = httpconnector.HttpSonarPostRequest(conf, url, optionalProps)
             if response.StatusCode <> Net.HttpStatusCode.OK then

@@ -321,5 +321,22 @@
         /// <param name="project">The project.</param>
         /// <returns>returns a list of exclusions</returns>
         IList<Exclusion> GetExclusions(ISonarConfiguration conf, Resource project);
+
+        /// <summary>
+        /// Copies the profile.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="newName">The new name.</param>
+        /// <returns></returns>
+        string CopyProfile(ISonarConfiguration conf, string id, string newName);
+
+        /// <summary>
+        /// Changes the parent profile.
+        /// </summary>
+        /// <param name="conf">The conf.</param>
+        /// <param name="profileKey">The profile key.</param>
+        /// <param name="parentKey">The parent key.</param>
+        /// <returns></returns>
+        string ChangeParentProfile(ISonarConfiguration conf, string profileKey, string parentKey);
     }
 }

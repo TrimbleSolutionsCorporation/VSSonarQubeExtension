@@ -176,3 +176,19 @@ type QualityTests() =
         let service = SonarRestService(mockHttpReq)
         let ret = (service :> ISonarRestService).IgnoreRuleOnFile(conf, resource, "filenumber", rule)
         Assert.That(ret.Count, Is.EqualTo(1))
+
+
+    [<Test>]
+    member test.``Copy Quality Profile Ok`` () =
+        let conf = ConnectionConfiguration("http://localhost:9000", "admin", "admin", 5.3)
+        let response = new RestSharp.RestResponse()
+        response.StatusCode <- HttpStatusCode.OK
+        response.Content <- """ {"key":"cs-profile2-77634","name":"profile2","language":"cs","languageName":"C#","isDefault":false,"isInherited":false} """
+
+        let mockHttpReq =
+            Mock<IHttpSonarConnector>()
+                .Setup(fun x -> <@ x.HttpSonarPostRequest(any(), any(), any()) @>).Returns(response)
+                .Create()
+        let service = SonarRestService(mockHttpReq)
+        let ret = (service :> ISonarRestService).CopyProfile(conf, "cs-sonar-way-35151", "profile4")
+        Assert.That(ret, Is.EqualTo("cs-profile2-77634"))

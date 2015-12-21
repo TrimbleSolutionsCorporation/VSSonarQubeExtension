@@ -201,7 +201,15 @@ namespace VSSonarPlugins.Types
         /// <summary>
         ///     Gets or sets the description.
         /// </summary>
-        public string Description { get; set; }
+        public string HtmlDescription { get; set; }
+
+        /// <summary>
+        /// Gets or sets the mark down description.
+        /// </summary>
+        /// <value>
+        /// The mark down description.
+        /// </value>
+        public string MarkDownDescription { get; set; }
 
         /// <summary>
         ///     Gets or sets a value indicating whether enable set deafaults.
@@ -395,7 +403,8 @@ namespace VSSonarPlugins.Types
         {
             this.Key = rule.Key;
             this.Name = rule.Name;
-            this.Description = rule.Description;
+            this.HtmlDescription = rule.HtmlDescription;
+            this.MarkDownDescription = rule.MarkDownDescription;
             this.ConfigKey = rule.ConfigKey;
             this.Category = rule.Category;
             this.Subcategory = rule.Subcategory;

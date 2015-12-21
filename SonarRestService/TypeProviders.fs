@@ -15,6 +15,8 @@ namespace SonarRestService
 
 open FSharp.Data
 
+type CopyProfileAnswer = JsonProvider<""" {"key":"cs-profile2-77634","name":"profile2","language":"cs","languageName":"C#","isDefault":false,"isInherited":false} """>
+
 type JsonTags = JsonProvider<""" {
   "tags": [
     "naming",
