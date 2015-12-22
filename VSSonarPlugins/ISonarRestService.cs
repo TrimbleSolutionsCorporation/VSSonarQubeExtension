@@ -338,5 +338,14 @@
         /// <param name="parentKey">The parent key.</param>
         /// <returns></returns>
         string ChangeParentProfile(ISonarConfiguration conf, string profileKey, string parentKey);
+
+        /// <summary>
+        /// Assigns the profile to project.
+        /// </summary>
+        /// <param name="conf">The conf.</param>
+        /// <param name="profileKey">The profile key.</param>
+        /// <param name="projectKey">The project key.</param>
+        /// <returns></returns>
+        string AssignProfileToProject(ISonarConfiguration conf, string profileKey, string projectKey);
     }
 }

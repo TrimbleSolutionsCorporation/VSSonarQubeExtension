@@ -862,6 +862,16 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
         true
 
     interface VSSonarPlugins.ISonarRestService with
+        member this.AssignProfileToProject(conf:ISonarConfiguration, profileKey:string, projectKey:string) = 
+            let url = "/api/qualityprofiles/add_project"
+            let options = Map.empty.Add("profileKey", profileKey).Add("projectKey", projectKey)
+            let response = httpconnector.HttpSonarPostRequest(conf, url, options)
+            if response.StatusCode <> Net.HttpStatusCode.NoContent then
+                "Failed change parent: " + response.StatusCode.ToString()
+            else
+                ""
+
+
         member this.ChangeParentProfile(conf:ISonarConfiguration, profileKey:string, parentKey:string) = 
             let url = "/api/qualityprofiles/change_parent?profileKey=" + profileKey + "&parentKey=" + parentKey
             let response = httpconnector.HttpSonarPostRequest(conf, url, Map.empty)
@@ -878,7 +888,6 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             else
                 let data = CopyProfileAnswer.Parse(response.Content)
                 let profileKey = data.Key
-                (this :> ISonarRestService).ChangeParentProfile(conf, profileKey, id)
                 profileKey
 
         member this.CreateRule(conf:ISonarConfiguration, rule:Rule, ruleTemplate:Rule) =

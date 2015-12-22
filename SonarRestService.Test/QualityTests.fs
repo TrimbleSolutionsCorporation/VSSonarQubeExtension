@@ -192,3 +192,20 @@ type QualityTests() =
         let service = SonarRestService(mockHttpReq)
         let ret = (service :> ISonarRestService).CopyProfile(conf, "cs-sonar-way-35151", "profile4")
         Assert.That(ret, Is.EqualTo("cs-profile2-77634"))
+
+    [<Test>]
+    member test.``Assign Project Ok`` () =
+        let conf = ConnectionConfiguration("http://localhost:9000", "admin", "admin", 5.3)
+        let response = new RestSharp.RestResponse()
+        response.StatusCode <- HttpStatusCode.NoContent
+        response.Content <- ""
+        
+        let mockHttpReq =
+            Mock<IHttpSonarConnector>()
+                .Setup(fun x -> <@ x.HttpSonarPostRequest(any(), any(), any()) @>).Returns(response)
+                .Create()
+
+        let service = SonarRestService(mockHttpReq)
+        let profiles = (service :> ISonarRestService).GetProfilesUsingRulesApp(conf)
+        let ret = (service :> ISonarRestService).AssignProfileToProject(conf, "cs-complete-roslyn-profile-53790", "k")
+        Assert.That(ret, Is.EqualTo(""))
