@@ -44,7 +44,7 @@ namespace VSSonarExtensionUi.Test.RoslynManager
             plugins.Add(pluginAnalysis.Object);
 
 
-            var roslynModel = new RoslynManagerModel(plugins, mockNotifier.Object, mockConfiguration.Object);
+            var roslynModel = new RoslynManagerModel(plugins, mockNotifier.Object, mockConfiguration.Object, mockRest.Object);
 
             Assert.That(roslynModel.ExtensionDiagnostics.Count, Is.EqualTo(3));
             Assert.That(roslynModel.ExtensionDiagnostics["SonarLint.CSharp.dll"].AvailableChecks.Count, Is.EqualTo(121));
@@ -63,16 +63,19 @@ namespace VSSonarExtensionUi.Test.RoslynManager
             var mockSourceProvider = new Mock<ISourceControlProvider>();
             var mockVsHelper = new Mock<IVsEnvironmentHelper>();
 
+
+            mockRest.Setup(x => x.CreateRule(It.IsAny<ISonarConfiguration>(), It.IsAny<Rule>(), It.IsAny<Rule>())).Returns(new List<string>());
+
             var plugins = new List<IAnalysisPlugin>();
             plugins.Add(pluginAnalysis.Object);
 
 
-            var roslynModel = new RoslynManagerModel(plugins, mockNotifier.Object, mockConfiguration.Object);
+            var roslynModel = new RoslynManagerModel(plugins, mockNotifier.Object, mockConfiguration.Object, mockRest.Object);
             
-            Assert.That(roslynModel.AddNewRoslynPack(Path.Combine(this.runninPath, "TestData", "SonarLintDummy.dll")), Is.True);
+            Assert.That(roslynModel.AddNewRoslynPack(Path.Combine(this.runninPath, "TestData", "CSharp.dll"), false), Is.True);
             Assert.That(roslynModel.ExtensionDiagnostics.Count, Is.EqualTo(4));
 
-            Assert.That(roslynModel.AddNewRoslynPack(Path.Combine(this.runninPath, "externalAnalysers", "roslynDiagnostics", "SonarLint.dll")), Is.False);
+            Assert.That(roslynModel.AddNewRoslynPack(Path.Combine(this.runninPath, "externalAnalysers", "roslynDiagnostics", "SonarLint.dll"), false), Is.False);
             Assert.That(roslynModel.ExtensionDiagnostics.Count, Is.EqualTo(4));
         }
     }

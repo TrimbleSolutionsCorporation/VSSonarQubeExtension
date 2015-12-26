@@ -183,7 +183,7 @@
     <Content Include="externalAnalysers\roslynDiagnostics\deps\SonarLint.Extra.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestData\SonarLintDummy.dll">
+    <Content Include="TestData\CSharp.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
