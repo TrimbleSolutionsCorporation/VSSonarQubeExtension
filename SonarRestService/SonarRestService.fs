@@ -860,8 +860,36 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             uploadProperty(projectIn)
 
         true
-
+            
     interface VSSonarPlugins.ISonarRestService with
+        member this.DeleteProfile(conf:ISonarConfiguration, profileKey : string) =
+            let url = "/api/qualityprofiles/delete?profileKey=" + profileKey
+            let response = httpconnector.HttpSonarPostRequest(conf, url, Map.empty)
+            if response.StatusCode <> Net.HttpStatusCode.OK then
+                "Failed delete profile: " + response.StatusCode.ToString()
+            else
+                ""
+
+        member this.GetParentProfile(conf:ISonarConfiguration, profileKey : string) = 
+            let url = "/api/qualityprofiles/inheritance?profileKey=" + profileKey
+            let reply = httpconnector.HttpSonarGetRequest(conf, url)
+            let data = JsonarProfileInheritance.Parse(reply)
+            try
+                data.Profile.Parent
+            with
+            | _ -> ""
+                            
+        member this.GetInstalledPlugins(conf:ISonarConfiguration) =
+            let dicret = new System.Collections.Generic.Dictionary<string, string>()
+            let url = "/api/plugins/installed"
+            let reply = httpconnector.HttpSonarGetRequest(conf, url)                        
+            let data = PluginsMessage.Parse(reply)
+
+            for plugin in data.Plugins do
+                dicret.Add(plugin.Name, plugin.Version.JsonValue.ToString())
+
+            dicret
+
         member this.AssignProfileToProject(conf:ISonarConfiguration, profileKey:string, projectKey:string) = 
             let url = "/api/qualityprofiles/add_project"
             let options = Map.empty.Add("profileKey", profileKey).Add("projectKey", projectKey)
@@ -927,13 +955,13 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             GetRulesFromSearchQuery(rules.Rules, profile, true)
 
                         
-        member this.ActivateRule(conf:ISonarConfiguration, rule:Rule, profilekey:string) =
+        member this.ActivateRule(conf:ISonarConfiguration, ruleKey:string, severity:string, profilekey:string) =
             let errorMessages = new System.Collections.Generic.List<string>()
             let url ="/api/qualityprofiles/activate_rule"
 
             let optionalProps = Map.empty.Add("profile_key", HttpUtility.UrlEncode(profilekey))
-                                         .Add("rule_key", rule.Key)
-                                         .Add("severity", rule.Severity.ToString())
+                                         .Add("rule_key", ruleKey)
+                                         .Add("severity", severity.ToString())
 
             let errorMessages = new System.Collections.Generic.List<string>()
             let response = httpconnector.HttpSonarPostRequest(conf, url, optionalProps)
@@ -1737,6 +1765,21 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
             exclusions :> System.Collections.Generic.IList<Exclusion>
 
+
+        member this.UpdateProperty(conf : ISonarConfiguration, id : string, value : string, projectIn : Resource) = 
+            let resourcestr = 
+                if projectIn = null then
+                    ""
+                else
+                    sprintf "&resource=%s" projectIn.Key
+
+            let url = sprintf "/api/properties?id=%s&value=%s%s" id (HttpUtility.UrlEncode(value)) resourcestr
+            let response = httpconnector.HttpSonarPostRequest(conf, url, Map.empty)
+            if response.StatusCode <> Net.HttpStatusCode.OK then
+                "Failed update property: " + response.StatusCode.ToString()
+            else
+                ""
+                
 
         member this.IgnoreRuleOnFile(conf : ISonarConfiguration, projectIn : Resource, file : string, rule : Rule) =
 

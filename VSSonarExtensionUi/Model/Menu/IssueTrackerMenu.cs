@@ -179,7 +179,7 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <param name="workingDir">The working dir.</param>
         /// <param name="sourceModelIn">The source model in.</param>
         /// <param name="sourcePluginIn">The source plugin in.</param>
-        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider sourceModelIn, IIssueTrackerPlugin sourcePlugin, IList<Resource> availableProjects)
+        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider sourceModelIn, IIssueTrackerPlugin sourcePlugin, IList<Resource> availableProjects, Dictionary<string, Profile> profile)
         {
             this.sourceDir = workingDir;
             this.associatedProject = project;

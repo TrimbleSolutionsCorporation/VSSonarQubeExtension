@@ -289,7 +289,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
             this.LicenseManager = new LicenseViewerViewModel(this.PluginManager, this.configurationHelper);
 
-            this.RoslynModel = new RoslynManagerModel(this.PluginManager.AnalysisPlugins, manager, this.configurationHelper);
+            this.RoslynModel = new RoslynManagerModel(this.PluginManager.AnalysisPlugins, manager, this.configurationHelper, this.restService);
             this.RoslynViewModel = new RoslynManagerViewModel(this.RoslynModel);
 
             this.AvailableOptionsViews.Add(this.PluginManager);
@@ -329,7 +329,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="projectIn">The project in.</param>
         /// <param name="workingDir">The working dir.</param>
         /// <param name="provider">The provider.</param>
-        public void AssociateWithNewProject(Resource projectIn, string workingDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin, IList<Resource> availableProjects)
+        public void AssociateWithNewProject(Resource projectIn, string workingDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin, IList<Resource> availableProjects, Dictionary<string, Profile> profile)
         {
             this.project = projectIn;
 

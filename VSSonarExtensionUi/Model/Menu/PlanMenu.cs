@@ -132,6 +132,7 @@ namespace VSSonarExtensionUi.Model.Menu
         /// Gets or sets the sub items.
         /// </summary>
         public ObservableCollection<IMenuItem> SubItems { get; set; }
+        public Dictionary<string, Profile> Profile { get; private set; }
 
         #endregion
 
@@ -199,8 +200,9 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <param name="workingDir">The working dir.</param>
         /// <param name="providerIn">The provider in.</param>
         /// <param name="sourcePluginIn">The source plugin in.</param>
-        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider providerIn, IIssueTrackerPlugin sourcePluginIn, IList<Resource> availableProjects)
+        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider providerIn, IIssueTrackerPlugin sourcePluginIn, IList<Resource> availableProjects, Dictionary<string, Profile> profile)
         {
+            this.Profile = profile;
             this.sourcePlugin = sourcePluginIn;
             this.sourceDir = workingDir;
             this.associatedProject = project;
@@ -216,7 +218,7 @@ namespace VSSonarExtensionUi.Model.Menu
                         foreach (var item in this.rest.GetAvailableActionPlan(AuthtenticationHelper.AuthToken, project.Key))
                         {
                             var menu = new PlanMenu(this.rest, this.model, this.manager, null, false) { CommandText = item.Name, IsEnabled = true };
-                            menu.AssociateWithNewProject(project, workingDir, this.provider, this.sourcePlugin, availableProjects);
+                            menu.AssociateWithNewProject(project, workingDir, this.provider, this.sourcePlugin, availableProjects, this.Profile);
                             this.SubItems.Add(menu);
                         }
                     });
@@ -421,7 +423,7 @@ namespace VSSonarExtensionUi.Model.Menu
                             foreach (var plan in this.rest.GetAvailableActionPlan(AuthtenticationHelper.AuthToken, this.associatedProject.Key))
                             {
                                 var menu = new PlanMenu(this.rest, this.model, this.manager, null, false) { CommandText = plan.Name, IsEnabled = true };
-                                menu.AssociateWithNewProject(this.associatedProject, this.sourceDir, this.provider, this.sourcePlugin, null);
+                                menu.AssociateWithNewProject(this.associatedProject, this.sourceDir, this.provider, this.sourcePlugin, null, this.Profile);
                                 item.SubItems.Add(menu);
                             }
                         });

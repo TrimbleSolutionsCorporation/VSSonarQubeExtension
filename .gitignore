@@ -118,3 +118,4 @@ ObjDrop/
 .cxxresults
 buildlog2013tekla.txt
 buildlog2015tekla.txt
+*.txt.vsspell

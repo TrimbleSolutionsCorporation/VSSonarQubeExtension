@@ -96,6 +96,22 @@
                             </Rectangle.OpacityMask>
                         </Rectangle>
                     </Button>
+                    
+                    <Button Width="30"
+                        Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                        Height="30"
+                        Margin="0, 0, 0, 0"
+                        ToolTip="Auto detect local installed diagnostics"
+                        Style="{DynamicResource SquareButtonStyle}" Command="{Binding AutoImportLocalDiagnosticsCommand}" >
+                        <Rectangle Width="15"
+                               Height="15"
+                               Fill="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}">
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Stretch="Fill"
+                                         Visual="{StaticResource appbar_cogs}" />
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                    </Button>                    
                 </StackPanel>
         
         <DataGrid x:Name="Diagnostics" BorderBrush="Black"
@@ -130,19 +146,8 @@
             </DataGrid.Columns>                              
         </DataGrid>
 
-        <TabControl x:Name="tabControl" Grid.Row="2" TabStripPlacement="Left">
-            <TabControl.Resources>
-                <Style TargetType="TabItem" BasedOn="{StaticResource MetroTabItem}">
-                    <Setter Property="controls:ControlsHelper.HeaderFontSize" Value="12" />
-                    <Setter Property="controls:TabControlHelper.IsUnderlined" Value="True" />
-                </Style>
-            </TabControl.Resources>            
-            <TabItem Header="Properties">
-            </TabItem>
-            <TabItem Header="Import Log">
-                <TextBlock x:Name="ErrorLog" Text="{Binding SelectedDiagnostic.ErrorMessage}" Grid.Row="2"/>
-            </TabItem>
-        </TabControl>
-
+        <ScrollViewer Grid.Row="2" Grid.ColumnSpan="2">
+            <TextBlock  x:Name="ErrorLog" Text="{Binding SelectedDiagnostic.ErrorMessage}" />
+        </ScrollViewer>
     </Grid>
 </UserControl>

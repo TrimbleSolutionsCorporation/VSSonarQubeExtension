@@ -58,7 +58,7 @@
     <Compile Include="ResourceTests.fs" />
     <Compile Include="QualityTests.fs" />
     <None Include="app.config" />
-    <Content Include="testdata\actionPlanData.txt">
+    <Content Include="testdata\plugindata.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="testdata\issuessearchbycomponent.txt">
@@ -127,8 +127,12 @@
     <Content Include="testdata\duplicationsdata.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="testdata\actionPlanData.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="packages.config" />
     <None Include="Foq.Usage.fsx" />
+    <None Include="plugindata.txt.vsspell" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Foq">

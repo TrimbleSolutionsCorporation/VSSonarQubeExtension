@@ -5,10 +5,10 @@
 
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;    
+    using System.Collections.ObjectModel;
     using System.IO;
     using System.Reflection;
-    
+    using VSSonarPlugins.Types;
 
     /// <summary>
     /// Diagnostic loader
@@ -25,7 +25,7 @@
             this.Name = name;
             this.Path = path;
             this.Enabled = true;
-            this.AvailableChecks = new List<DiagnosticAnalyzer>();
+            this.AvailableChecks = new List<DiagnosticAnalyzerType>();
             this.ChecksInterpretation = new ObservableCollection<DiagnosticDescriptor>();
             this.LoadDiagnostics(path);
         }
@@ -60,7 +60,7 @@
         /// <value>
         /// The available checks.
         /// </value>
-        public List<DiagnosticAnalyzer> AvailableChecks { get; private set; }
+        public List<DiagnosticAnalyzerType> AvailableChecks { get; private set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="VSSonarExtensionDiagnostic"/> is enabled.
@@ -87,6 +87,7 @@
             try
             {
                 this.LoadDependencies(System.IO.Path.Combine(Directory.GetParent(path).ToString(), "deps"));
+                this.LoadDependencies(Directory.GetParent(path).ToString());
 
                 var assembly = Assembly.LoadFrom(path);
                 var types2 = assembly.GetTypes();
@@ -94,10 +95,12 @@
                 {
                     try
                     {
-                        var data = Activator.CreateInstance(typedata) as DiagnosticAnalyzer;
-                        if (data != null)
+                        
+                        if (typedata.IsSubclassOf(typeof(DiagnosticAnalyzer)) && !typedata.IsAbstract)
                         {
-                            this.AvailableChecks.Add(data);
+                            var data = Activator.CreateInstance(typedata) as DiagnosticAnalyzer;
+                            var attribute = Attribute.GetCustomAttribute(typedata, typeof(DiagnosticAnalyzerAttribute)) as DiagnosticAnalyzerAttribute;
+                            this.AvailableChecks.Add(new DiagnosticAnalyzerType() { Diagnostic = data, Languages = attribute.Languages });
                             foreach (var diagnostic in data.SupportedDiagnostics)
                             {
                                 this.ChecksInterpretation.Add(diagnostic);

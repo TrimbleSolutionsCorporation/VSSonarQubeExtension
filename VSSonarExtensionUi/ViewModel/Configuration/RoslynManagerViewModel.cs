@@ -57,6 +57,38 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             SonarQubeViewModel.RegisterNewViewModelInPool(this);
             this.InstallNewDllCommand = new RelayCommand(this.OnInstallNewDllCommand);
             this.RemoveDllCommand = new RelayCommand(this.OnRemoveDllCommand);
+            this.AutoImportLocalDiagnosticsCommand = new RelayCommand(this.OnAutoImportLocalDiagnosticsCommand);
+        }
+
+        /// <summary>
+        /// Called when [automatic import local diagnostics command].
+        /// </summary>
+        private void OnAutoImportLocalDiagnosticsCommand()
+        {
+            if (!this.model.VerifyExistenceOfRoslynPlugin())
+            {
+                MessageDisplayBox.DisplayMessage(
+                    "Adding new diagnostics analyzers requires Roslyn plugin installed in your SonarQube server. Administer Quality Profiles and Gates and Provision Projects permissions must be available to user.",
+                    helpurl: "https://visualstudiogallery.msdn.microsoft.com/7fc312c3-f1ab-49f8-b286-dbf7fff37305");
+                return;
+            }
+
+            if (this.model.Profile == null)
+            {
+                MessageDisplayBox.DisplayMessage(
+                    "Auto detection only available when a solution is associated with a sonar project.");
+                return;
+            }
+
+            var result = this.model.AutoDetectInstalledAnalysers();
+            if (string.IsNullOrEmpty(result))
+            {
+                MessageDisplayBox.DisplayMessage("Rules have been created in SonarQube. Please use tools > sqale editor to enabled them or use the Roslyn Plugin to automatically sync those against your project. ", helpurl: "https://visualstudiogallery.msdn.microsoft.com/7fc312c3-f1ab-49f8-b286-dbf7fff37305");
+            }
+            else
+            {
+                MessageDisplayBox.DisplayMessage(result);
+            }
         }
 
         /// <summary>
@@ -64,18 +96,31 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         private void OnInstallNewDllCommand()
         {
-            var filedialog = new OpenFileDialog { Filter = @"dlls|*.dll" };
-            DialogResult result = filedialog.ShowDialog();
-
-            if (result == DialogResult.OK)
+            using (var filedialog = new OpenFileDialog { InitialDirectory = this.model.SourceDir, Filter = @"dlls|*.dll", Title = "Select dll available in project folder."})
             {
-                if (!File.Exists(filedialog.FileName))
+                DialogResult result = filedialog.ShowDialog();
+
+                if (result == DialogResult.OK)
                 {
-                    UserExceptionMessageBox.ShowException("Error Choosing File, File Does not exits", null);
-                }
-                else
-                {
-                    this.model.AddNewRoslynPack(filedialog.FileName);
+                    if (!File.Exists(filedialog.FileName))
+                    {
+                        UserExceptionMessageBox.ShowException("Error Choosing File, File Does not exits", null);
+                        return;
+                    }
+
+                    if (!this.model.VerifyExistenceOfRoslynPlugin())
+                    {
+                        MessageDisplayBox.DisplayMessage(
+                            "Adding new diagnostics analyzers requires Roslyn plugin installed in your SonarQube server. Administer Quality Profiles and Gates and Provision Projects permissions must be available to user.",
+                            helpurl: "https://visualstudiogallery.msdn.microsoft.com/7fc312c3-f1ab-49f8-b286-dbf7fff37305");
+                        return;
+                    }
+
+                    if (this.model.AddNewRoslynPack(filedialog.FileName, true))
+                    {
+                        this.SyncDiagInView();
+                        MessageDisplayBox.DisplayMessage("Rules have been created in SonarQube. Please use tools > sqale editor to enabled them or use the Roslyn Plugin to automatically sync those against your project. ", helpurl: "https://visualstudiogallery.msdn.microsoft.com/7fc312c3-f1ab-49f8-b286-dbf7fff37305");
+                    }
                 }
             }
         }
@@ -88,14 +133,18 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             if (this.SelectedDllDiagnostic != null)
             {
                 this.model.RemoveDllFromList(this.SelectedDllDiagnostic);
+                this.SyncDiagInView();
+            }
+        }
 
-                this.AvailableDllDiagnostics.Clear();
+        private void SyncDiagInView()
+        {
+            this.AvailableDllDiagnostics.Clear();
 
-                foreach (var item in model.ExtensionDiagnostics)
-                {
-                    this.AvailableDllDiagnostics.Add(item.Value);
-                }
-            }         
+            foreach (var item in model.ExtensionDiagnostics)
+            {
+                this.AvailableDllDiagnostics.Add(item.Value);
+            }
         }
 
         /// <summary>
@@ -144,6 +193,14 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// The remove DLL command.
         /// </value>
         public ICommand RemoveDllCommand { get; private set; }
+
+        /// <summary>
+        /// Gets the automatic import local diagnostics command.
+        /// </summary>
+        /// <value>
+        /// The automatic import local diagnostics command.
+        /// </value>
+        public ICommand AutoImportLocalDiagnosticsCommand { get; private set; }
         
         /// <summary>
         /// The update colours.

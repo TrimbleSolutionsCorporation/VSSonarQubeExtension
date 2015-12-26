@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
 
@@ -24,17 +25,19 @@
         /// <summary>
         /// Associates the with new project.
         /// </summary>
-        /// <param name="configIn">The configuration in.</param>
         /// <param name="project">The project.</param>
         /// <param name="workingDir">The working dir.</param>
         /// <param name="sourceModel">The source model.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
+        /// <param name="availableProjects">The available projects.</param>
+        /// <param name="profile">The profile.</param>
         void AssociateWithNewProject(
             Resource project,
             string workingDir,
             ISourceControlProvider sourceModel,
             IIssueTrackerPlugin sourcePlugin,
-            IList<Resource> availableProjects);
+            IList<Resource> availableProjects,
+            Dictionary<string, Profile> profile);
 
         /// <summary>
         /// The end data association.

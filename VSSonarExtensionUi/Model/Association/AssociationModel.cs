@@ -123,6 +123,13 @@
         /// <c>true</c> if this instance is associated; otherwise, <c>false</c>.
         /// </value>
         public bool IsAssociated { get; set; }
+
+        /// <summary>
+        /// Gets the profile.
+        /// </summary>
+        /// <value>
+        /// The profile.
+        /// </value>
         public Dictionary<string, Profile> Profile { get; private set; }
 
         /// <summary>
@@ -601,6 +608,8 @@
                 this.keyTranslator.SetProjectKeyAndBaseDir(this.AssociatedProject.Key, this.OpenSolutionPath, this.AssociatedProject.BranchName, Path.Combine(this.OpenSolutionPath, this.OpenSolutionName));
             }
 
+            this.Profile = this.localAnalyserModule.GetProfile(this.AssociatedProject);
+
             foreach (IModelBase model in modelPool)
             {
                 try
@@ -609,7 +618,9 @@
                         this.AssociatedProject,
                         this.OpenSolutionPath,
                         this.sourcecontrol,
-                        this.pluginManager.GetIssueTrackerPlugin(), this.model.AvailableProjects);
+                        this.pluginManager.GetIssueTrackerPlugin(), 
+                        this.model.AvailableProjects,
+                        this.Profile);
                 }
                 catch (Exception ex)
                 {
@@ -623,7 +634,6 @@
                 modelPool.Remove(item);
             }
 
-            this.Profile = this.localAnalyserModule.GetProfile(this.AssociatedProject);
 
             // sync data in plugins
             this.pluginManager.AssociateWithNewProject(

@@ -13,18 +13,13 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarPlugins
 {
-    using Microsoft.CodeAnalysis.Diagnostics;
-    using System;
     using System.Collections.Generic;
-    using System.Windows.Controls;
-    using System.Windows.Documents;
-
 
     using VSSonarPlugins.Types;
 
     public interface IRoslynPlugin
     {
-        void SetDiagnostics(List<DiagnosticAnalyzer> diagnostics);
+        void SetDiagnostics(List<DiagnosticAnalyzerType> diagnostics);
     }
 
     /// <summary>
@@ -58,7 +53,7 @@ namespace VSSonarPlugins
         /// The is supported.
         /// </summary>
         /// <param name="fileToAnalyse">
-        /// The file to analyse.
+        /// The file to analyze.
         /// </param>
         /// <returns>
         /// The <see cref="bool"/>.

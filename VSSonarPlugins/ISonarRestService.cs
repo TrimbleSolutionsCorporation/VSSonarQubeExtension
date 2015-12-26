@@ -231,6 +231,16 @@
         Dictionary<string, string> GetProperties(ISonarConfiguration props);
 
         /// <summary>
+        /// Updates the property.
+        /// </summary>
+        /// <param name="conf">The conf.</param>
+        /// <param name="id">The identifier.</param>
+        /// <param name="value">The value.</param>
+        /// <param name="projectIn">The project in, if null it will update global property</param>
+        /// <returns>empty string if ok, error message if fails</returns>
+        string UpdateProperty(ISonarConfiguration conf, string id, string value, Resource projectIn);
+
+        /// <summary>
         /// Gets the properties.
         /// </summary>
         /// <param name="props">The props.</param>
@@ -272,7 +282,15 @@
 
         List<string> UpdateTags(ISonarConfiguration conf, Rule rule, List<string> tags);
 
-        List<string> ActivateRule(ISonarConfiguration conf, Rule rule, string profilekey);
+        /// <summary>
+        /// Activates the rule.
+        /// </summary>
+        /// <param name="conf">The conf.</param>
+        /// <param name="ruleKey">The rule key.</param>
+        /// <param name="severity">The severity.</param>
+        /// <param name="profilekey">The profilekey.</param>
+        /// <returns></returns>
+        List<string> ActivateRule(ISonarConfiguration conf, string ruleKey, string severity, string profilekey);
 
         List<string> DeleteRule(ISonarConfiguration conf, Rule rule);
 
@@ -331,6 +349,14 @@
         string CopyProfile(ISonarConfiguration conf, string id, string newName);
 
         /// <summary>
+        /// Deletes the profile.
+        /// </summary>
+        /// <param name="conf">The conf.</param>
+        /// <param name="profileKey">The profile key.</param>
+        /// <returns></returns>
+        string DeleteProfile(ISonarConfiguration conf, string profileKey);
+
+        /// <summary>
         /// Changes the parent profile.
         /// </summary>
         /// <param name="conf">The conf.</param>
@@ -340,6 +366,14 @@
         string ChangeParentProfile(ISonarConfiguration conf, string profileKey, string parentKey);
 
         /// <summary>
+        /// Gets the parent profile.
+        /// </summary>
+        /// <param name="conf">The conf.</param>
+        /// <param name="profileKey">The profile key.</param>
+        /// <returns></returns>
+        string GetParentProfile(ISonarConfiguration conf, string profileKey);
+
+        /// <summary>
         /// Assigns the profile to project.
         /// </summary>
         /// <param name="conf">The conf.</param>
@@ -347,5 +381,12 @@
         /// <param name="projectKey">The project key.</param>
         /// <returns></returns>
         string AssignProfileToProject(ISonarConfiguration conf, string profileKey, string projectKey);
+
+        /// <summary>
+        /// Gets the installed plugins.
+        /// </summary>
+        /// <param name="conf">The conf.</param>
+        /// <returns></returns>
+        Dictionary<string, string> GetInstalledPlugins(ISonarConfiguration conf);
     }
 }

@@ -512,7 +512,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="workDir">The work dir.</param>
         /// <param name="provider">The provider.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
-        public void AssociateWithNewProject(Resource project, string workDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin, IList<Resource> availableProjects)
+        public void AssociateWithNewProject(Resource project, string workDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin, IList<Resource> availableProjects, Dictionary<string, Profile> profile)
         {
             this.SourceDir = workDir;
             this.associatedProject = project;

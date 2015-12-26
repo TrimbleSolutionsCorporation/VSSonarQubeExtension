@@ -4,6 +4,8 @@ open NUnit.Framework
 open SonarRestService
 open Foq
 open System.IO
+open System.Net
+open System.Web
 
 open VSSonarPlugins
 open VSSonarPlugins.Types
@@ -149,12 +151,50 @@ type AdministrationTests() =
         Assert.That((service :> ISonarRestService).GetServerInfo(conf), Is.EqualTo(3.6f))
 
     [<Test>]
-    member test.``Get Properties`` () =
-        let conf = ConnectionConfiguration("http://sonar", "jocs1", "jocs1", 4.5)
+    member test.``Get Properties per Resource`` () =
+        let conf = ConnectionConfiguration("http://localhost:9000", "admin", "admin", 5.3)
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), "/api/properties") @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/PropertiesResponse.txt"))
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/PropertiesResponse.txt"))
+                .Create()
+
+        let service = SonarRestService(mockHttpReq)
+        Assert.That((service :> ISonarRestService).GetProperties(conf, new Resource( Key = "Tekla.Tools.RoslynRunner")).Count, Is.EqualTo(66))
+
+
+    [<Test>]
+    member test.``Get All Properties`` () =
+        let conf = ConnectionConfiguration("http://localhost:9000", "admin", "admin", 5.3)
+        let mockHttpReq =
+            Mock<IHttpSonarConnector>()
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/PropertiesResponse.txt"))
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
         Assert.That((service :> ISonarRestService).GetProperties(conf).Count, Is.EqualTo(66))
+
+
+    [<Test>]
+    member test.``Get Plugins`` () =
+        let conf = ConnectionConfiguration("http://localhost:9000", "admin", "admin", 5.3)
+        let mockHttpReq =
+            Mock<IHttpSonarConnector>()
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/plugindata.txt"))
+                .Create()
+
+        let service = SonarRestService(mockHttpReq)
+        Assert.That((service :> ISonarRestService).GetInstalledPlugins(conf).Count, Is.EqualTo(17))
+
+    [<Test>]
+    member test.``Update a property`` () =
+        let conf = ConnectionConfiguration("http://localhost:9000", "admin", "admin", 5.3)
+        let response = new RestSharp.RestResponse()
+        response.StatusCode <- HttpStatusCode.OK
+
+        let mockHttpReq =
+            Mock<IHttpSonarConnector>()
+                .Setup(fun x -> <@ x.HttpSonarPostRequest(any(), any(), any()) @>).Returns(response)
+                .Create()
+
+        let service = SonarRestService(mockHttpReq)
+        Assert.That((service :> ISonarRestService).UpdateProperty(conf, "sonar.roslyn.diagnostic.path", """c:\abc\dll.dll""", null), Is.EqualTo(""))        

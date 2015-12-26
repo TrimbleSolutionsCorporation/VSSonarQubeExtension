@@ -397,7 +397,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             string workingDir,
             ISourceControlProvider provider,
             IIssueTrackerPlugin sourcePlugin,
-            IList<Resource> availableProjects)
+            IList<Resource> availableProjects,
+            Dictionary<string, Profile> profile)
         {
             this.associatedProject = associatedProjectIn;
             if (this.vsenvironmenthelper != null)

@@ -28,19 +28,13 @@
     <Border BorderBrush="Black"
                 Background="LightGray"
                 BorderThickness="2"
-                Padding="8">
-
-
+                Padding="4">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="75" />
-                <RowDefinition Height="80" />
+                <RowDefinition Height="165" />
                 <RowDefinition Height="25" />
             </Grid.RowDefinitions>
-
-            <TextBox Grid.Row="0" TextWrapping="Wrap" Name="Message" />
-            <TextBox Grid.Row="1" TextWrapping="Wrap" Name="DetailedMessage" />
-
+            <RichTextBox Grid.Row="0" Name="Message" IsDocumentEnabled="True" IsReadOnly="True"/>
             <Button Grid.Row="2" Style="{DynamicResource SquareButtonStyle}" Content="_Close" Click="BtnDialogOkClick" />
         </Grid>
     </Border>
