@@ -14,8 +14,8 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />                   
-            </ResourceDictionary.MergedDictionaries>        	
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
     <UserControl.Background>
@@ -26,73 +26,45 @@
         <SolidColorBrush Color="{Binding ForeGroundColor, FallbackValue=Black}"/>
     </UserControl.Foreground>
     <Grid>
-		<ScrollViewer VerticalScrollBarVisibility="Visible">
-			<StackPanel >
-				<Grid>
-					<Grid.RowDefinitions>
-						<RowDefinition Height="30"/>
-						<RowDefinition Height="30"/>
-						<RowDefinition Height="30"/>
-						<RowDefinition Height="30"/>
-						<RowDefinition Height="10"/>
-						<RowDefinition Height="30"/>
-						<RowDefinition Height="30"/>
-						<RowDefinition Height="30"/>
-						<RowDefinition Height="30"/>
-						<RowDefinition Height="30"/>
-						<RowDefinition Height="30"/>
-						<RowDefinition Height="30"/>                        
-					</Grid.RowDefinitions>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="77*"/>
-						<ColumnDefinition Width="249*"/>
-						<ColumnDefinition Width="54*"/>
-					</Grid.ColumnDefinitions>
-                    <Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
-                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}" Grid.Column="0" Content="Java Executable Path"/>
-					<TextBox Grid.Row="0" Grid.Column="1" IsReadOnly="true"  TextWrapping="Wrap" Text="{Binding JavaBinary}"  />
-					<Button    Style="{DynamicResource SquareButtonStyle}" Grid.Row="0" Grid.Column="2" Command="{Binding BrowseForJavaTrigger}" Content="Browse"  />
-                    <Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
-                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"          Grid.Column="0" Grid.Row="1" Content="SonarQube Runner Path" Height="25" VerticalAlignment="Bottom"/>
-					<TextBox   Grid.Column="1" Grid.Row="1" IsReadOnly="true"  TextWrapping="Wrap" Text="{Binding SonarQubeBinary}"  />
-					<Button    Style="{DynamicResource SquareButtonStyle}" Grid.Column="2" Grid.Row="1" Command="{Binding BrowseForSonarRunnerQubeTrigger}" Content="Browse"  />
-                    <CheckBox Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
-                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"  Grid.Column="0" Grid.Row="2" Content="Enable Debug" IsChecked="{Binding DebugIsChecked}"  VerticalAlignment="Center" />
-					<Slider ToolTip="Timeout of Analysis in Minutes" Grid.Column="1" Grid.Row="2" Maximum="60" TickFrequency="10" Value="{Binding TimeoutValue}" />
-                    <Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
-                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"          Grid.Column="2" Grid.Row="2" Content="{Binding TimeoutValueString, FallbackValue=10}" Height="25" VerticalAlignment="Bottom"/>
+        <ScrollViewer VerticalScrollBarVisibility="Visible">
+            <StackPanel >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="130*"/>
+                        <ColumnDefinition Width="299*"/>
+                        <ColumnDefinition Width="94"/>
+                    </Grid.ColumnDefinitions>
 
-                    <Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
-                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"   Grid.Row="3" Grid.Column="0" Content="Excluded Plugins:" Grid.ColumnSpan="2"/>
-					<TextBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"   Text="{Binding ExcludedPlugins}"/>
+                    <Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"   Grid.Row="0" Grid.Column="0" Content="Analysis Wrapper Version:" />
+                    <TextBox Grid.Row="0" Grid.Column="1"   Text="{Binding CxxWrapperVersion}" ToolTip="Find wrapper in : https://github.com/jmecsoftware/sonar-cxx-msbuild-tasks/releases - indicate release to use : default 1.2.1" />
+                    <Button Content="Download" Grid.Column="2" Command="{Binding DownloadWrapperCommand}"></Button>
+                    
+                    <Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"   Grid.Row="1" Grid.Column="0" Content="MSBuild.SonarQube.Runner:" />
+                    <TextBox Grid.Row="1" Grid.Column="1"   Text="{Binding SQMSBuildRunnerVersion}" ToolTip="MSBuild.SonarQube.Runner version" />
 
-                    <Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
-                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"   Grid.Row="5" Grid.Column="0" Content="Project Id:" Grid.ColumnSpan="2"/>
-                    <Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
-                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"   Grid.Row="6" Grid.Column="0" Content="Language:" Grid.ColumnSpan="2"/>
-                    <Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
-                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"   Grid.Row="7" Grid.Column="0" Content="Project Version:" Grid.ColumnSpan="2"/>
-                    <Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
-                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"   Grid.Row="8" Grid.Column="0" Content="Source Dir:" Grid.ColumnSpan="2"/>
-                    <Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
-                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"   Grid.Row="9" Grid.Column="0" Content="Source Encoding:" Grid.ColumnSpan="2"/>
+                    <Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"   Grid.Row="2" Grid.Column="0" Content="Wrapper Path: " />
+                    <TextBox Grid.Row="2" Grid.Column="1"   Text="{Binding WrapperPath}" ToolTip="Path for Extension Wrapper to run MSBuild SonarQube Runner" />
 
-                    <Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
-                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"   Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Content="{Binding ProjectId}" IsEnabled="{Binding IsSolutionOpen}" />
-                    <Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
-                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"   Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Content="{Binding Language}" IsEnabled="{Binding IsSolutionOpen}"/>
-                    <Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
-                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"   Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" Content="{Binding ProjectVersion}"  />
-					<TextBox Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding SourceDir}"  TextWrapping="Wrap" IsEnabled="{Binding IsSolutionOpen}"/>                        
-					<TextBox Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding SourceEncoding}"  TextWrapping="Wrap" IsEnabled="{Binding IsSolutionOpen}"/>
-					
-                    <Label Grid.Row="10" Grid.Column="0" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}" Content="Enable Project Analysis:" ToolTip="If checked, after each build the extension will run analysis on dll"/>
-                    <CheckBox IsChecked="{Binding IsProjectAnalysisChecked}" Grid.Row="10" Grid.Column="2" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"    />
-                    <Label Grid.Row="11" Grid.Column="0" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}" Content="Enable Solution Analysis:" ToolTip="If checked, after each solution is build the extension will run solution wide analysis"/>
-                    <CheckBox IsChecked="{Binding IsSolutionAnalysisChecked}" Grid.Row="11" Grid.Column="2" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"    />
+
+                    <Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"   Grid.Row="3" Grid.Column="0" Content="Excluded Plugins:" />
+                    <TextBox Grid.Row="3" Grid.Column="1"   Text="{Binding ExcludedPlugins}"/>
+
+                    <Label Grid.Row="5" Grid.Column="0" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}" Content="Enable Project Analysis:" ToolTip="If checked, after each build the extension will run analysis on dll"/>
+                    <CheckBox IsChecked="{Binding IsProjectAnalysisChecked}" Grid.Row="5" Grid.Column="1" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"    />
+                    <Label Grid.Row="6" Grid.Column="0" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}" Content="Enable Solution Analysis:" ToolTip="If checked, after each solution is build the extension will run solution wide analysis"/>
+                    <CheckBox IsChecked="{Binding IsSolutionAnalysisChecked}" Grid.Row="6" Grid.Column="1" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"    />
 
                 </Grid>
-			</StackPanel>
-		</ScrollViewer>
-	</Grid>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
 </UserControl>

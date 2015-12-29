@@ -109,7 +109,6 @@
                             Style="{DynamicResource SquareButtonStyle}" Command="{Binding StopLocalAnalysisCommand}"
                             IsEnabled="{Binding CanCancelAnalysis}">
                                 </Button>
-                                <ItemsControl Height="100" x:Name="LstBox" ItemsSource="{Binding OuputLogLines}" Background="#FFC2C2C2" BorderBrush="#FF000000" BorderThickness="1,1,1,1"/>
                                 <Button 
                             Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
                             Margin="0, 0, 0, 0"
@@ -118,6 +117,8 @@
                             IsEnabled="{Binding CanRunLocalAnalysis}">
 
                                 </Button>
+                                <controls:ProgressRing IsActive="{Binding AnalysisIsRunning}" ToolTip="Running Analysis" Foreground="{DynamicResource AccentColorBrush}"/>
+                                
                             <controls:MetroProgressBar Grid.Row="1" IsIndeterminate="{Binding LoadingSonarData}"
                                                Value="{Binding ElementName=horizSlider, Path=Value}"
                                                ToolTip="{Binding AssociatingTextTooltip}"

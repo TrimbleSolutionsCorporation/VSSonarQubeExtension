@@ -46,6 +46,14 @@ namespace VSSonarPlugins
         /// <returns>The <see cref="string"/>.</returns>
         string UserLogForAnalysisFile();
 
+        /// <summary>
+        /// Gets or sets the application path.
+        /// </summary>
+        /// <value>
+        /// The application path.
+        /// </value>
+        string ApplicationPath { get; set; }
+
         /// <summary>The write option in application data.</summary>
         /// <param name="context">The context.</param>
         /// <param name="owner">The owner.</param>

@@ -178,7 +178,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.IssuesGridView.ContextMenuItems = this.CreateRowContextMenu(service, translator, analyser);
             this.IssuesGridView.ShowContextMenu = true;
             this.IssuesGridView.ShowLeftFlyoutEvent += this.ShowHideLeftFlyout;
-            this.OuputLogLines = new PaginatedObservableCollection<string>(300);
             this.AllLog = new List<string>();
 
             this.InitCommanding();
@@ -329,11 +328,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public RelayCommand CloseLeftFlyoutCommand { get; private set; }
 
         /// <summary>
-        ///     Gets or sets the ouput log lines.
-        /// </summary>
-        public PaginatedObservableCollection<string> OuputLogLines { get; set; }
-
-        /// <summary>
         /// Gets or sets all log.
         /// </summary>
         /// <value>
@@ -422,6 +416,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// The project link.
         /// </value>
         public string ProjectLink { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether [analysis is running].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [analysis is running]; otherwise, <c>false</c>.
+        /// </value>
+        public bool AnalysisIsRunning { get; private set; }
 
         #endregion
 
@@ -812,18 +814,25 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                             return;
                         }
 
-                        var itemInView = this.vsenvironmenthelper.VsFileItem(this.resourceNameInView, this.associatedProject, this.resourceInView);
-                        this.localAnalyserModule.AnalyseFile(
-                            itemInView,
-                            this.associatedProject,
-                            this.notificationManager.AnalysisChangeLines,
-                            AuthtenticationHelper.AuthToken.SonarVersion,
-                            AuthtenticationHelper.AuthToken,
-                            this.keyTranslator,
-                            this.vsenvironmenthelper);
+                        try
+                        {
+                            var itemInView = this.vsenvironmenthelper.VsFileItem(this.resourceNameInView, this.associatedProject, this.resourceInView);
+                            this.localAnalyserModule.AnalyseFile(
+                                itemInView,
+                                this.associatedProject,
+                                this.notificationManager.AnalysisChangeLines,
+                                AuthtenticationHelper.AuthToken.SonarVersion,
+                                AuthtenticationHelper.AuthToken,
+                                this.keyTranslator,
+                                this.vsenvironmenthelper);
+                        }
+                        catch (Exception ex)
+                        {
+                            this.notificationManager.ReportMessage(new VSSonarPlugins.Message() { Id = "LocalViewModel", Data = "Analysis Failed: " + ex.Message });
+                            this.notificationManager.ReportException(ex);
+                        }
                         break;
                     case AnalysisTypes.ANALYSIS:
-                        this.OuputLogLines.Clear();
                         this.AllLog.Clear();
                         this.OutputLog = string.Empty;
                         this.localAnalyserModule.RunFullAnalysis(
@@ -832,7 +841,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                             AuthtenticationHelper.AuthToken);
                         break;
                     case AnalysisTypes.INCREMENTAL:
-                        this.OuputLogLines.Clear();
                         this.AllLog.Clear();
                         this.OutputLog = string.Empty;
                         this.localAnalyserModule.RunIncrementalAnalysis(
@@ -841,7 +849,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                             AuthtenticationHelper.AuthToken);
                         break;
                     case AnalysisTypes.PREVIEW:
-                        this.OuputLogLines.Clear();
                         this.AllLog.Clear();
                         this.OutputLog = string.Empty;
                         this.localAnalyserModule.RunPreviewAnalysis(
@@ -859,9 +866,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 this.notificationManager.ReportException(ex);
                 this.notificationManager.EndedWorking();
                 this.notificationManager.FlagFailure(ex.Message);
-                this.FileAnalysisIsEnabled = false;
-                this.CanRunAnalysis = true;
-                this.localAnalyserModule.ResetInitialization();
             }
         }
 
@@ -877,6 +881,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         private void UpdateLocalIssues(object sender, EventArgs e)
         {
             this.CanRunAnalysis = true;
+            this.AnalysisIsRunning = false;
             this.notificationManager.EndedWorking();
 
             if (!string.IsNullOrEmpty(this.ProjectLink))
@@ -943,8 +948,12 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </param>
         private void UpdateOutputMessagesFromPlugin(object sender, EventArgs e)
         {
+            if (!this.AnalysisIsRunning)
+            {
+                this.AnalysisIsRunning = true;
+            }
+
             var exceptionMsg = (LocalAnalysisEventArgs)e;
-            Application.Current.Dispatcher.Invoke(() => this.OuputLogLines.Insert(0, exceptionMsg.ErrorMessage));
             this.AllLog.Add(exceptionMsg.ErrorMessage);
             this.vsenvironmenthelper.WriteToVisualStudioOutput(exceptionMsg.ErrorMessage);
 

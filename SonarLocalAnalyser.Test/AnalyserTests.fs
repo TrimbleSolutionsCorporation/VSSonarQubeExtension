@@ -32,7 +32,7 @@ type AnalyserTests() =
                 .Setup(fun x -> <@ x.ReadSetting(any(), any(), any()) @>).Returns(new SonarQubeProperties(Value = "something"))
                 .Create()
 
-        let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), mockConfReq, Mock<INotificationManager>().Create())
+        let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), mockConfReq, Mock<INotificationManager>().Create(), Mock<IVsEnvironmentHelper>().Create(), "14.0")
         Assert.That(analyser.GetFileToBeAnalysedFromSonarLog("22:09:02.848 DEBUG - Populating index from [moduleKey=Community:cppcheck:cli:Dev, relative=cmdlineparser.cpp, basedir=C:\GitTFS\CppCheck\cli]"), Is.EqualTo(@"C:\GitTFS\CppCheck\cli\cmdlineparser.cpp"))
 
 
@@ -45,7 +45,7 @@ type AnalyserTests() =
                 .Setup(fun x -> <@ x.ReadSetting(any(), any(), any()) @>).Returns(new SonarQubeProperties(Value = "something"))
                 .Create()
 
-        let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), mockConfReq, Mock<INotificationManager>().Create())
+        let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), mockConfReq, Mock<INotificationManager>().Create(), Mock<IVsEnvironmentHelper>().Create(), "14.0")
         Assert.That(analyser.GetFileToBeAnalysedFromSonarLog("22:09:02.848 DEBUG - Populating index from [abs=C:\GitTFS\CppCheck\cli\cmdlineparser.cpp]"), Is.EqualTo(@"C:\GitTFS\CppCheck\cli\cmdlineparser.cpp"))
         Assert.That(analyser.GetFileToBeAnalysedFromSonarLog("02:23:26.139 DEBUG - Populating index fromoduleKey=projectkey:bla, relative=Interfaces/file.hpp, basedir=E:\prod\project\src]"), Is.EqualTo(@"E:\prod\project\src\Interfaces/file.hpp"))
 

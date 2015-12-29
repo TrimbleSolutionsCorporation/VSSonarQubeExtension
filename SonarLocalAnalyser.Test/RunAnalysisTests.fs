@@ -32,17 +32,17 @@ type RunAnalysisTests() =
                 .Setup(fun x -> <@ x.ReadSetting(any(), any(), any()) @>).Returns(new SonarQubeProperties(Value = "something"))
                 .Create()
 
-        let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), mockConfReq, Mock<INotificationManager>().Create())
+        let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), mockConfReq, Mock<INotificationManager>().Create(), Mock<IVsEnvironmentHelper>().Create(), "14.0")
         Assert.That(((analyser :> ISonarLocalAnalyser).IsExecuting()), Is.False)
 
     [<Test>]
     member test.``Should throw exception when no plugin is found`` () =
-        let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create(), Mock<INotificationManager>().Create())
+        let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create(), Mock<INotificationManager>().Create(), Mock<IVsEnvironmentHelper>().Create(), "14.0")
         Assert.Throws<ResourceNotSupportedException>(fun c -> (analyser :> ISonarLocalAnalyser).GetResourceKey(new VsFileItem(), true) |> ignore) |> ignore
 
     [<Test>]
     member test.``Should throw exception if No plugins are loaded and we give a good resource`` () =
-        let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create(), Mock<INotificationManager>().Create())
+        let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create(), Mock<INotificationManager>().Create(), Mock<IVsEnvironmentHelper>().Create(), "14.0")
         let project = new Resource()
         project.Lang <- "c++"
         Assert.Throws<ResourceNotSupportedException>(fun c -> ((analyser :> ISonarLocalAnalyser).GetResourceKey(new VsFileItem(), true)) |> ignore) |> ignore 
@@ -68,6 +68,6 @@ type RunAnalysisTests() =
 
         let listofPlugins = new System.Collections.Generic.List<IAnalysisPlugin>()
         listofPlugins.Add(mockAPlugin)
-        let analyser = new SonarLocalAnalyser(listofPlugins, Mock<ISonarRestService>().Create(), mockAVsinterface, Mock<INotificationManager>().Create())
+        let analyser = new SonarLocalAnalyser(listofPlugins, Mock<ISonarRestService>().Create(), mockAVsinterface, Mock<INotificationManager>().Create(), Mock<IVsEnvironmentHelper>().Create(), "14.0")
         
         Assert.That((analyser :> ISonarLocalAnalyser).GetResourceKey(vsItem, true), Is.EqualTo("Key"))

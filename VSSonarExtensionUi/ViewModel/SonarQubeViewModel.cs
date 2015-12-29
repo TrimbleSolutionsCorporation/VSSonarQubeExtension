@@ -1342,7 +1342,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// </summary>
         private void InitViewsAndModels()
         {
-            this.LocaAnalyser = new SonarLocalAnalyser(this.pluginManager.AnalysisPlugins, this.sonarRestConnector, this.configurationHelper, this.notificationManager);
+            this.LocaAnalyser = new SonarLocalAnalyser(this.pluginManager.AnalysisPlugins, this.sonarRestConnector, this.configurationHelper, this.notificationManager, this.VsHelper, this.vsversion);
 
             this.ServerViewModel = new ServerViewModel(
                 this.VsHelper, 

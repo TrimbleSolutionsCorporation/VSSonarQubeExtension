@@ -52,6 +52,8 @@ namespace VSSonarExtensionUi.Model.Helpers
             this.LogForAnalysis = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
                                   + "\\VSSonarExtension\\temp\\analysisLog.txt." + vsversion;
 
+            this.ApplicationPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "VSSonarExtension");
+
             if (!Directory.Exists(Directory.GetParent(this.ApplicationDataUserSettingsFile).ToString()))
             {
                 Directory.CreateDirectory(Directory.GetParent(this.ApplicationDataUserSettingsFile).ToString());
@@ -59,6 +61,8 @@ namespace VSSonarExtensionUi.Model.Helpers
 
             this.SyncSettings();
         }
+
+        public string ApplicationPath { get; set; }
 
         /// <summary>
         ///     Gets or sets the application data user settings file.

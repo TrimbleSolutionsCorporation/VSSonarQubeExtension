@@ -19,10 +19,13 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
+    using System.IO.Compression;
     using System.Linq;
     using System.Reflection;
     using System.Windows.Forms;
     using System.Windows.Media;
+    using System.Net;
+
 
     using GalaSoft.MvvmLight.Command;
     using Helpers;
@@ -33,7 +36,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
     using VSSonarExtensionUi.Association;
-
+    using System.Windows.Input;
     /// <summary>
     ///     The dummy options controller.
     /// </summary>
@@ -92,11 +95,14 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.Header = "Analysis Options";
             this.ForeGroundColor = Colors.Black;
             this.BackGroundColor = Colors.White;
+            this.DownloadWrapperCommand = new RelayCommand(this.OnDownloadWrapperCommand);
             this.BrowseForJavaTrigger = new RelayCommand(this.OnBrowseForJavaTrigger);
             this.BrowseForSonarRunnerQubeTrigger = new RelayCommand(this.OnBrowseForSonarRunnerQubeTrigger);
 
             SonarQubeViewModel.RegisterNewViewModelInPool(this);
             AssociationModel.RegisterNewModelInPool(this);
+
+            this.ReloadDataFromDisk(null);
         }
 
         #endregion
@@ -127,6 +133,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         public RelayCommand BrowseForJavaTrigger { get; set; }
 
+        public ICommand DownloadWrapperCommand { get; set; }
+
         /// <summary>
         ///     Gets or sets the browse for sonar runner qube trigger.
         /// </summary>
@@ -138,6 +146,30 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public bool DebugIsChecked { get; set; }
 
         /// <summary>
+        /// Gets or sets the SQMS build runner.
+        /// </summary>
+        /// <value>
+        /// The SQMS build runner.
+        /// </value>
+        public string SQMSBuildRunnerVersion { get; set; }
+
+        /// <summary>
+        /// Gets or sets the wrapper path.
+        /// </summary>
+        /// <value>
+        /// The wrapper path.
+        /// </value>
+        public string WrapperPath { get; set; }
+
+        /// <summary>
+        /// Gets or sets the CXX wrapper version.
+        /// </summary>
+        /// <value>
+        /// The CXX wrapper version.
+        /// </value>
+        public string CxxWrapperVersion { get; set; }
+
+        /// <summary>
         ///     Gets or sets the fore ground color.
         /// </summary>
         public Color ForeGroundColor { get; set; }
@@ -146,11 +178,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         ///     Gets or sets the header.
         /// </summary>
         public string Header { get; set; }
-
-        /// <summary>
-        ///     Gets or sets a value indicating whether is solution open.
-        /// </summary>
-        public bool IsSolutionOpen { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is solution analysis checked.
@@ -234,14 +261,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             }
         }
 
-        /// <summary>
-        /// Gets or sets the project.
-        /// </summary>
-        /// <value>
-        /// The project.
-        /// </value>
-        private Resource Project { get; set; }
-
         #endregion
 
         #region Public Methods and Operators
@@ -277,8 +296,9 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public void SaveData()
         {
             // general props
-            this.configurationHelper.WriteOptionInApplicationData(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.JavaExecutableKey, this.JavaBinary);
-            this.configurationHelper.WriteOptionInApplicationData(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.RunnerExecutableKey, this.SonarQubeBinary);
+            this.configurationHelper.WriteOptionInApplicationData(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.CxxWrapperVersionKey, this.CxxWrapperVersion);
+            this.configurationHelper.WriteOptionInApplicationData(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.SonarQubeMsbuildVersionKey, this.SQMSBuildRunnerVersion);
+            this.configurationHelper.WriteOptionInApplicationData(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.CxxWrapperPathKey, this.WrapperPath);
             this.configurationHelper.WriteOptionInApplicationData(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.ExcludedPluginsKey, this.ExcludedPlugins);
             this.configurationHelper.WriteOptionInApplicationData(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.IsDebugAnalysisOnKey, this.DebugIsChecked.ToString());
             this.configurationHelper.WriteOptionInApplicationData(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.LocalAnalysisTimeoutKey, this.TimeoutValue.ToString());
@@ -292,12 +312,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 OwnersId.AnalysisOwnerId,
                 GlobalAnalysisIds.LocalAnalysisSolutionAnalysisEnabledKey,
                 this.IsSolutionAnalysisChecked.ToString());
-
-            if (this.Project != null)
-            {
-                this.configurationHelper.WriteOptionInApplicationData(Context.AnalysisProject, this.Project.Key, GlobalAnalysisIds.SonarSourceKey, this.SourceDir);
-                this.configurationHelper.WriteOptionInApplicationData(Context.AnalysisProject, this.Project.Key, GlobalAnalysisIds.SourceEncodingKey, this.SourceEncoding);
-            }
         }
 
         /// <summary>
@@ -306,23 +320,40 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="associatedProjectIn">The associated project in.</param>
         public void ReloadDataFromDisk(Resource associatedProjectIn)
         {
-            this.Project = associatedProjectIn;
-
-            this.JavaBinary = this.configurationHelper.ReadSetting(
+            this.SQMSBuildRunnerVersion = this.configurationHelper.ReadSetting(
                 Context.AnalysisGeneral,
                 OwnersId.AnalysisOwnerId,
-                GlobalAnalysisIds.JavaExecutableKey).Value;
+                GlobalAnalysisIds.SonarQubeMsbuildVersionKey).Value;
 
-            this.SonarQubeBinary = this.configurationHelper.ReadSetting(
+            this.CxxWrapperVersion = this.configurationHelper.ReadSetting(
                 Context.AnalysisGeneral,
                 OwnersId.AnalysisOwnerId,
-                GlobalAnalysisIds.RunnerExecutableKey).Value;
+                GlobalAnalysisIds.CxxWrapperVersionKey).Value;
 
+            if (string.IsNullOrEmpty(this.SQMSBuildRunnerVersion))
+            {
+                this.SQMSBuildRunnerVersion = "1.1";
+            }
+
+            if (string.IsNullOrEmpty(this.CxxWrapperVersion))
+            {
+                this.CxxWrapperVersion = "1.3";
+            }
+
+            this.WrapperPath = this.configurationHelper.ReadSetting(
+                Context.AnalysisGeneral,
+                OwnersId.AnalysisOwnerId,
+                GlobalAnalysisIds.CxxWrapperPathKey).Value;
+
+            if (string.IsNullOrEmpty(this.WrapperPath))
+            {
+                this.WrapperPath = Path.Combine(Path.Combine(this.configurationHelper.ApplicationPath, "Wrapper", this.CxxWrapperVersion), "CxxSonarQubeMsbuidRunner.exe");
+            }
+            
             this.ExcludedPlugins = this.configurationHelper.ReadSetting(
                 Context.AnalysisGeneral,
                 OwnersId.AnalysisOwnerId,
                 GlobalAnalysisIds.ExcludedPluginsKey).Value;
-
 
             try
             {
@@ -344,34 +375,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 this.IsSolutionAnalysisChecked = true;
             }
 
-            try
-            {
-                this.DebugIsChecked = bool.Parse(this.configurationHelper.ReadSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId,    GlobalAnalysisIds.IsDebugAnalysisOnKey).Value);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-            }
-
-            try
-            {
-                this.TimeoutValue =
-                    int.Parse(
-                        this.configurationHelper.ReadSetting(
-                            Context.AnalysisGeneral,
-                            OwnersId.AnalysisOwnerId,
-                            GlobalAnalysisIds.LocalAnalysisTimeoutKey).Value);
-            }
-            catch (Exception ex)
-            {
-                this.TimeoutValue = 60000;
-                Debug.WriteLine(ex.Message);
-            }
-
-            if (this.Project != null)
-            {
-                this.IsSolutionOpen = true;
-            }
+            // ensure wrapper is available
+            this.OnDownloadWrapperStartup();
         }
 
         /// <summary>
@@ -525,6 +530,96 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         {
             this.SourceDir = string.Empty;
             this.associatedProject = null;
+        }
+
+        /// <summary>
+        /// Called when [download wrapper command].
+        /// </summary>
+        /// <exception cref="System.NotImplementedException"></exception>
+        private void OnDownloadWrapperCommand()
+        {
+            if (string.IsNullOrEmpty((this.CxxWrapperVersion)))
+            {
+                MessageDisplayBox.DisplayMessage("Version cannot be empty, be sure to use tab in release page of the wrapper.", helpurl: "https://github.com/jmecsoftware/sonar-cxx-msbuild-tasks/releases");
+                return;
+            }
+
+            var installPath = Path.Combine(this.configurationHelper.ApplicationPath, "Wrapper", this.CxxWrapperVersion);
+        
+            if (File.Exists(Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe")))
+            {
+                this.WrapperPath = Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe");
+                MessageDisplayBox.DisplayMessage("Wrapper installed in  " + Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe") + " : Dont forget to save or apply.");
+                return;
+            }
+
+            var urldownload = "https://github.com/jmecsoftware/sonar-cxx-msbuild-tasks/releases/download/" + this.CxxWrapperVersion + "/CxxSonarQubeMsbuidRunner.zip";
+            var tmpFile = Path.Combine(this.configurationHelper.ApplicationPath, "CxxSonarQubeMsbuidRunner.zip");
+            try
+            {
+                using (var client = new WebClient())
+                {
+                    if (File.Exists(tmpFile))
+                    {
+                        File.Delete(tmpFile);
+                    }
+
+                    client.DownloadFile(urldownload, tmpFile);
+
+                    ZipFile.ExtractToDirectory(tmpFile, installPath);
+                }
+
+                if (!File.Exists(Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe")))
+                {
+                    MessageDisplayBox.DisplayMessage("Wrapper installation failed, expected in  " + Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe") + " : download manually and unzip to that folder", helpurl: "https://github.com/jmecsoftware/sonar-cxx-msbuild-tasks/releases");
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageDisplayBox.DisplayMessage("Wrapper installation failed : " +  ex.Message + " please be sure you have access to url. If not download manually and change the wrapper path.", helpurl: "https://github.com/jmecsoftware/sonar-cxx-msbuild-tasks/releases");
+            }
+
+            this.WrapperPath = Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe");
+            MessageDisplayBox.DisplayMessage("Wrapper installed in  " + Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe") + " : Dont forget to save or apply.");
+        }
+
+        /// <summary>
+        /// Called when [download wrapper command].
+        /// </summary>
+        /// <exception cref="System.NotImplementedException"></exception>
+        private void OnDownloadWrapperStartup()
+        {
+            var installPath = Path.Combine(this.configurationHelper.ApplicationPath, "Wrapper", this.CxxWrapperVersion);
+
+            if (File.Exists(Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe")))
+            {
+                this.WrapperPath = Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe");
+                return;
+            }
+
+            try
+            {
+                var urldownload = "https://github.com/jmecsoftware/sonar-cxx-msbuild-tasks/releases/download/" + this.CxxWrapperVersion + "/CxxSonarQubeMsbuidRunner.zip";
+                var tmpFile = Path.Combine(this.configurationHelper.ApplicationPath, "CxxSonarQubeMsbuidRunner.zip");
+
+                using (var client = new WebClient())
+                {
+                    if (File.Exists(tmpFile))
+                    {
+                        File.Delete(tmpFile);
+                    }
+
+                    client.DownloadFile(urldownload, tmpFile);
+
+                    ZipFile.ExtractToDirectory(tmpFile, installPath);
+                    this.WrapperPath = Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
         }
 
         #endregion

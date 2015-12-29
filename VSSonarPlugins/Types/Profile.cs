@@ -79,22 +79,25 @@ namespace VSSonarPlugins.Types
         {
             try
             {
-                var rule = this.Rules[internalKeyOrConfigKey];
-                this.UpdateRuleData(rule);
-                return rule;
-            }
-            catch (KeyNotFoundException)
-            {
-                try
+                if (this.Rules.ContainsKey(internalKeyOrConfigKey))
+                {
+                    var rule = this.Rules[internalKeyOrConfigKey];
+                    this.UpdateRuleData(rule);
+                    return rule;
+                }
+
+                if (this.RulesByIternalKey.ContainsKey(internalKeyOrConfigKey))
                 {
                     var rule = this.RulesByIternalKey[internalKeyOrConfigKey];
                     this.UpdateRuleData(rule);
                     return rule;
                 }
-                catch (KeyNotFoundException)
-                {
-                    return null;
-                }
+
+                return null;
+            }
+            catch (KeyNotFoundException)
+            {
+                return null;
             }
         }
 

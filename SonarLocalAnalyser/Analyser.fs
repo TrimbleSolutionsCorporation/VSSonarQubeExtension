@@ -40,7 +40,9 @@ type LanguageType =
    | MultiLang = 1
 
 type AnalyserCommandExec(logger : TaskLoggingHelper, timeout : int64) =
-    let addEnvironmentVariable (startInfo:ProcessStartInfo) a b = startInfo.EnvironmentVariables.Add(a, b)
+    let addEnvironmentVariable (startInfo:ProcessStartInfo) a b = 
+        if not(startInfo.EnvironmentVariables.ContainsKey(a)) then
+            startInfo.EnvironmentVariables.Add(a, b)
 
     let output : System.Collections.Generic.List<string> = new System.Collections.Generic.List<string>()
     let error : System.Collections.Generic.List<string> = new System.Collections.Generic.List<string>()
@@ -189,7 +191,7 @@ type AnalyserCommandExec(logger : TaskLoggingHelper, timeout : int64) =
 
 [<ComVisible(false)>]
 [<HostProtection(SecurityAction.LinkDemand, Synchronization = true, ExternalThreading = true)>]
-type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlugin>, restService : ISonarRestService, vsinter : IConfigurationHelper, notificationManager : INotificationManager) =
+type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlugin>, restService : ISonarRestService, vsinter : IConfigurationHelper, notificationManager : INotificationManager, vsinterface : IVsEnvironmentHelper, vsversion : string) =
     let assemblyRunningPath = Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString()
     let completionEvent = new DelegateEvent<System.EventHandler>()
     let stdOutEvent = new DelegateEvent<System.EventHandler>()
@@ -324,33 +326,49 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
     let GenerateCommonArgumentsForAnalysis(mode : AnalysisMode, version : double, conf : ISonarConfiguration, project : Resource) =
         let builder = new CommandLineBuilder()
         // mandatory properties
-        builder.AppendSwitchIfNotNull("-Dsonar.host.url=", conf.Hostname.Trim())
+        builder.AppendSwitchIfNotNull("/d:sonar.host.url=", conf.Hostname.Trim())
         if not(String.IsNullOrEmpty(conf.Username)) then
-            builder.AppendSwitchIfNotNull("-Dsonar.login=", conf.Username)
+            builder.AppendSwitchIfNotNull("/d:sonar.login=", conf.Username)
 
         if not(String.IsNullOrEmpty(conf.Password)) then
-            builder.AppendSwitchIfNotNull("-Dsonar.password=", conf.Password)
+            builder.AppendSwitchIfNotNull("/d:sonar.password=", conf.Password)
 
-        builder.AppendSwitchIfNotNull("-Dsonar.projectKey=", project.Key)
+        builder.AppendSwitchIfNotNull("/k=", project.Key)
+
+        let versionsq = vsinter.ReadSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.SonarQubeMsbuildVersionKey).Value;
+        builder.AppendSwitchIfNotNull("/r=", versionsq)
+
+        builder.AppendSwitchIfNotNull("/m=", Path.Combine(project.SolutionRoot, project.SolutionName))
+
+        if not(String.IsNullOrEmpty(project.BranchName)) then
+            builder.AppendSwitchIfNotNull("/d:sonar.branch=", project.BranchName.Replace("/", "_"))
 
         try
             if project.Name.Contains(" ") then
                 let elements = project.Name.Split(' ')
-                builder.AppendSwitchIfNotNull("-Dsonar.projectName=", elements.[0].Replace("\"", ""))
-                builder.AppendSwitchIfNotNull("-Dsonar.branch=", elements.[1].Replace("\"", ""))
+                builder.AppendSwitchIfNotNull("/n=", "\"" + project.Name + "\"" )
             else
-                builder.AppendSwitchIfNotNull("-Dsonar.projectName=", project.Name)
+                builder.AppendSwitchIfNotNull("/n=", project.Name)
         with
         | _ -> ()
 
-        builder.AppendSwitchIfNotNull("-Dsonar.projectVersion=", project.Version)
+        if vsversion.Contains("14.0") then
+            builder.AppendSwitchIfNotNull("/x=", "vs15")
 
-        // optional project properties
-        try
-            let prop = vsinter.ReadSetting(Context.AnalysisProject, project.Key, "sonar.sourceEncoding")
-            builder.AppendSwitchIfNotNull("-Dsonar.sourceEncoding=", prop.Value)
-        with
-        | ex -> builder.AppendSwitchIfNotNull("-Dsonar.sourceEncoding=", "UTF-8")
+        if vsversion.Contains("12.0") then
+            builder.AppendSwitchIfNotNull("/x=", "vs13")
+
+        if vsversion.Contains("11.0") then
+            builder.AppendSwitchIfNotNull("/x=", "vs12")
+
+        if vsversion.Contains("10.0") then
+            builder.AppendSwitchIfNotNull("/x=", "vs10")
+
+
+        builder.AppendSwitchIfNotNull("/v=", project.Version)
+
+        builder.AppendSwitchIfNotNull("/p:Configuration=", vsinterface.ActiveConfiguration())
+        builder.AppendSwitchIfNotNull("/p:Platform=", vsinterface.ActivePlatform())
 
 
         let excludedPlugins = vsinter.ReadSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.ExcludedPluginsKey).Value
@@ -359,27 +377,26 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
         if version >= 4.0 && not(mode.Equals(AnalysisMode.Full)) then
             match mode with
             | AnalysisMode.Incremental -> 
-                if version >= 5.2 && version < 5.3 then
+                if version >= 5.2 then
                     raise (new InvalidOperationException("Incremental Mode Not Available in this Version of SonarQube"))
                 else
-                    builder.AppendSwitchIfNotNull("-Dsonar.analysis.mode=", "incremental")
-                    builder.AppendSwitchIfNotNull("-Dsonar.preview.excludePlugins=", excludedPlugins)
+                    builder.AppendSwitchIfNotNull("/d:sonar.analysis.mode=", "incremental")
+                    builder.AppendSwitchIfNotNull("/d:sonar.issuesReport.html.enable=", "true")
+                    builder.AppendSwitchIfNotNull("/d:sonar.preview.excludePlugins=", excludedPlugins)
 
-            | AnalysisMode.Preview -> builder.AppendSwitchIfNotNull("-Dsonar.analysis.mode=", "preview")
-                                      builder.AppendSwitchIfNotNull("-Dsonar.preview.excludePlugins=", excludedPlugins)
+            | AnalysisMode.Preview -> builder.AppendSwitchIfNotNull("/d:sonar.analysis.mode=", "preview")
+                                      builder.AppendSwitchIfNotNull("/d:sonar.preview.excludePlugins=", excludedPlugins)
             | _ -> ()
 
         elif version >= 3.4 && not(mode.Equals(AnalysisMode.Full)) then
             match mode with
             | AnalysisMode.Incremental -> raise (new InvalidOperationException("Analysis Method Not Available in this Version of SonarQube"))
-            | AnalysisMode.Preview -> builder.AppendSwitchIfNotNull("-Dsonar.dryRun=", "true")
-                                      builder.AppendSwitchIfNotNull("-Dsonar.dryRun.excludePlugins=", excludedPlugins)
+            | AnalysisMode.Preview -> builder.AppendSwitchIfNotNull("/d:sonar.dryRun=", "true")
+                                      builder.AppendSwitchIfNotNull("/d:sonar.dryRun.excludePlugins=", excludedPlugins)
             | _ -> ()
         elif not(mode.Equals(AnalysisMode.Full)) then
             raise (new InvalidOperationException("Analysis Method Not Available in this Version of SonarQube"))
                    
-        builder.AppendSwitch("-X")
-
         builder
 
     let SetupEnvironment(x, platform : string, configuration : string)=
@@ -526,6 +543,15 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                     let message = new LocalAnalysisEventArgs("LA:", e.Data, null)
                     stdOutEvent.Trigger([|x; message|])
 
+                if e.Data.Contains("INFO  - HTML Issues Report generated:") then
+                    let split = [|"INFO  - HTML Issues Report generated:"|]
+                    let reportPath = e.Data.Split(split, StringSplitOptions.RemoveEmptyEntries).[1].Trim()
+                    if File.Exists(reportPath) then
+                        vsinterface.NavigateToResource(reportPath)
+                    else
+                        notificationManager.ReportMessage(new Message(Id = "LocalAnalysis", Data = "Report failed to be created. Check log"))
+                    
+
                 if e.Data.Contains("DEBUG - Populating index from") then
                     let message = new LocalAnalysisEventArgs("LA:", e.Data, null)
                     stdOutEvent.Trigger([|x; message|])
@@ -574,10 +600,10 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
     member x.RunPreviewBuild() =
         try
             jsonReports.Clear()
-            let runnerexec = vsinter.ReadSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.RunnerExecutableKey).Value
 
+            let runnerexec = vsinter.ReadSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.CxxWrapperPathKey).Value;
 
-            let incrementalArgs = x.generateCommandArgs(AnalysisMode.Preview, x.Version, x.Conf, x.Project)
+            let incrementalArgs = x.generateCommandArgs(AnalysisMode.Preview, x.Version, x.Conf, x.Project) + " /d:sonar.issuesReport.html.enable=true"
             if not(String.IsNullOrEmpty(x.Conf.Password)) then
                 let message = sprintf "[%s] %s %s" x.ProjectRoot runnerexec (incrementalArgs.Replace(x.Conf.Password, "xxxxx"))
                 let commandData = new LocalAnalysisEventArgs("CMD: ", message, null)
@@ -600,7 +626,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
         try
             jsonReports.Clear()
             localissues.Clear()
-            let runnerexec = vsinter.ReadSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.RunnerExecutableKey).Value
+            let runnerexec = vsinter.ReadSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.CxxWrapperPathKey).Value;
 
             let incrementalArgs = x.generateCommandArgs(AnalysisMode.Full, x.Version, x.Conf, x.Project)
 
@@ -626,7 +652,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
         try
             jsonReports.Clear()
             localissues.Clear()
-            let runnerexec = vsinter.ReadSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.RunnerExecutableKey).Value
+            let runnerexec = vsinter.ReadSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.CxxWrapperPathKey).Value;
 
             let incrementalArgs = x.generateCommandArgs(AnalysisMode.Incremental, x.Version, x.Conf, x.Project)
 

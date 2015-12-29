@@ -129,5 +129,20 @@ namespace VSSonarPlugins.Types
         /// The local analysis solution analysis enabled key
         /// </summary>
         public static readonly string LocalAnalysisSolutionAnalysisEnabledKey = "AnalysisOnSolution";
+
+        /// <summary>
+        /// The sonarqube msbuild version key
+        /// </summary>
+        public static readonly string SonarQubeMsbuildVersionKey = "SQMSBuildVersion";
+
+        /// <summary>
+        /// The CXX wrapper verion key
+        /// </summary>
+        public static readonly string CxxWrapperVersionKey = "CxxWrapperVersionKey";
+
+        /// <summary>
+        /// The CXX wrapper path key
+        /// </summary>
+        public static readonly string CxxWrapperPathKey = "CxxWrapperPathKey";
     }
 }
