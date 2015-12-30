@@ -862,6 +862,26 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
         true
             
     interface VSSonarPlugins.ISonarRestService with
+        member this.ProvisionProject(conf:ISonarConfiguration, key:string, name:string, branch:string) =
+            let branchtogo = 
+                if String.IsNullOrEmpty(branch.Trim()) then
+                    ""
+                else
+                    "&branch=" + branch.Trim()
+
+            let nametogo = 
+                "&name=" + HttpUtility.UrlEncode(name.Trim())
+
+            let keytogo =
+                "?key=" + key.Trim()
+
+            let url = "/api/projects/create" + keytogo + nametogo + branchtogo
+            let response = httpconnector.HttpSonarPostRequest(conf, url, Map.empty)
+            if response.StatusCode <> Net.HttpStatusCode.OK then
+                "Failed to provision project: " + response.StatusCode.ToString() + " : " + response.Content 
+            else
+                ""
+        
         member this.DeleteProfile(conf:ISonarConfiguration, profileKey : string) =
             let url = "/api/qualityprofiles/delete?profileKey=" + profileKey
             let response = httpconnector.HttpSonarPostRequest(conf, url, Map.empty)

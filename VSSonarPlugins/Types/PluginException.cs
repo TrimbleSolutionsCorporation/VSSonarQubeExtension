@@ -34,7 +34,7 @@ namespace VSSonarPlugins
         {
             get
             {
-                return "Resource is not supported by any of the installed plugins";
+                return "Resource is not supported by any of the installed plugins : check http://www.jmecsoftware.com to see if additional language plugins are available.";
             }
         }        
     }
@@ -51,7 +51,7 @@ namespace VSSonarPlugins
         {
             get
             {
-                return "No File in View, please open a file in Editor";
+                return "No File in View, please open a file in Editor.";
             }
         }
     }
@@ -68,7 +68,7 @@ namespace VSSonarPlugins
         {
             get
             {
-                return "No plugin is Installed";
+                return "No plugin is Installed.";
             }
         }
     }

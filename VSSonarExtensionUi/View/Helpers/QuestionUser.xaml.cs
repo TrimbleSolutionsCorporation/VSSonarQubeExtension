@@ -15,6 +15,8 @@ namespace VSSonarExtensionUi.View.Helpers
         public QuestionUser(string message)
         {
             InitializeComponent();
+
+            this.lblQuestion.Text = message;
         }
 
 

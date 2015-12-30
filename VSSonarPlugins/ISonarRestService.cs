@@ -70,6 +70,16 @@
         List<SonarProject> GetProjects(ISonarConfiguration config);
 
         /// <summary>
+        /// Provisions the project.
+        /// </summary>
+        /// <param name="config">The configuration.</param>
+        /// <param name="key">The key.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="branch">The branch.</param>
+        /// <returns></returns>
+        string ProvisionProject(ISonarConfiguration config, string key, string name, string branch);
+
+        /// <summary>
         /// Comments the on issues.
         /// </summary>
         /// <param name="newConf">The new conf.</param>

@@ -201,16 +201,24 @@
                     </controls:Flyout.Resources>
                     <DockPanel LastChildFill="True">
 
-                        <Border Height="30" BorderBrush="Black" BorderThickness="1"  DockPanel.Dock="Bottom">
-                        <Button Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                Content="Associate" Command="{Binding AssignProjectCommand}"  />
-                        </Border>
-
                         <GroupBox DockPanel.Dock="Bottom" Header="Status">
                             <TextBlock Height="50" TextWrapping="Wrap"  Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
                                 Text="{Binding StatusMessageAssociation, FallbackValue=asdas;dkljasl;kjdasl;kj}"/>
                         </GroupBox>
+
+                        <Border Height="30" BorderBrush="Black" BorderThickness="1"  DockPanel.Dock="Bottom">
+                            <Button Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                Content="Provision Project" ToolTip="Create project in server before analysis, SQ 5.2 or higher required." Command="{Binding ProvisionProjectCommand}" IsEnabled="{Binding CanProvision}"  />
+                        </Border>
+                        
+                        <Border Height="30" BorderBrush="Black" BorderThickness="1"  DockPanel.Dock="Bottom">
+                            <Button Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                Content="Associate" Command="{Binding AssignProjectCommand}"  />
+                        </Border>
+
+                          
                         <Grid DockPanel.Dock="Top">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="30"/>

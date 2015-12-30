@@ -1,0 +1,58 @@
+﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    x:Class="VSSonarExtensionUi.View.Helpers.ProvisionProject"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    WindowStartupLocation="CenterScreen" 
+    SizeToContent="WidthAndHeight"
+    MinWidth="500"
+    MaxWidth="500"
+    MinHeight="140"
+    MaxHeight="140"
+    ResizeMode="CanMinimize" WindowStyle="None">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/Styles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Border BorderBrush="Black"
+                Background="LightGray"
+                BorderThickness="2"
+                Padding="8">
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="220"/>
+                <ColumnDefinition Width="200"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+            </Grid.RowDefinitions>
+
+            <Label  Grid.Column="0" Grid.Row="0" Content="Name"/>
+            <Label  Grid.Column="0" Grid.Row="1" Content="Key"/>
+            <Label  Grid.Column="0" Grid.Row="2" Content="Branch"/>
+            <TextBox Name="name" Grid.Column="1" Grid.Row="0" ToolTip="key of project" Grid.ColumnSpan="2" Margin="0,1,0,1"/>
+            <TextBox Name="key" Grid.Column="1" Grid.Row="1" ToolTip="Description of the plan" Grid.ColumnSpan="2" Margin="0,1,0,1"/>
+            <TextBox Name="branchtouse" Grid.Column="1" Grid.Row="2" ToolTip="Leave empty if you are not using branches." Margin="0,1,0,1"/>
+            <Label Name="branch"  Grid.Column="0" Grid.Row="2" Content="Branch"/>
+            
+            <WrapPanel Grid.Row="3" HorizontalAlignment="Right" Margin="0,1,0,0" Grid.Column="2" Width="140">
+                <Button x:Name="OkButton" MinWidth="60" Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="_Ok" Click="BtnOkClick"  Margin="0,0,10,0" />
+                <Button MinWidth="60" Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="_Cancel" Click="BtnCancelClick"  Margin="0,0,10,0"/>
+            </WrapPanel>
+
+        </Grid>
+    </Border>
+
+</Window>

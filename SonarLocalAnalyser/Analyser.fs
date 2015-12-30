@@ -833,9 +833,14 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
             x.VsInter <- vsInter
 
             if not(profileCannotBeRetrived) then
-                try
+
                     if not(profileUpdated) then
-                        (x :> ISonarLocalAnalyser).AssociateWithProject(project, conf)
+                        try
+                            (x :> ISonarLocalAnalyser).AssociateWithProject(project, conf)
+                        with
+                        | ex -> profileCannotBeRetrived <- true
+                                let exp = new Exception("Profile Cannot Be Updated, Local Analysis will not be possible. Disconnect and connect again to try again. Please report issue.", ex)                        
+                                raise(ex)
                     else
                         if plugins = null then
                             raise(new ResourceNotSupportedException())
@@ -853,12 +858,9 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                             File.Delete(Path.Combine(x.Project.SolutionRoot, ".sonar", "sonar-report.json"))
                                                         
                         (new Thread(new ThreadStart(x.RunFileAnalysisThread))).Start()  
-                with
-                | ex -> profileCannotBeRetrived <- true
-                        let exp = new Exception("Profile Cannot Be Updated", ex)                        
-                        raise(ex)
+
             else
-                raise(new Exception("Profile Cannot Be Updated"))
+                raise(new Exception("A earlier error prevents the profiles from being restored, please disconnect and connect again to try again."))
 
         member x.RunIncrementalAnalysis(project : Resource, version : double, conf : ISonarConfiguration) =
             if profileUpdated then

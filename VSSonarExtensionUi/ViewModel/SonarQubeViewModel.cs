@@ -38,16 +38,16 @@ namespace VSSonarExtensionUi.ViewModel
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
     using VSSonarExtensionUi.Association;
-
-    /// <summary>
-    ///     The changed event handler.
-    /// </summary>
-    /// <param name="sender">
-    ///     The sender.
-    /// </param>
-    /// <param name="e">
-    ///     The e.
-    /// </param>
+    using System.Windows.Input;
+    using View.Helpers;    /// <summary>
+                           ///     The changed event handler.
+                           /// </summary>
+                           /// <param name="sender">
+                           ///     The sender.
+                           /// </param>
+                           /// <param name="e">
+                           ///     The e.
+                           /// </param>
     public delegate void ChangedEventHandler(object sender, EventArgs e);
 
     /// <summary>
@@ -110,6 +110,11 @@ namespace VSSonarExtensionUi.ViewModel
         /// The plugin manager
         /// </summary>
         private IPluginManager pluginManager;
+
+        /// <summary>
+        /// The can provision
+        /// </summary>
+        private bool canProvision;
 
         #region Constructors and Destructors
 
@@ -469,6 +474,14 @@ namespace VSSonarExtensionUi.ViewModel
         public RelayCommand CloseRightFlyoutCommand { get; private set; }
 
         /// <summary>
+        /// Gets the provision project command.
+        /// </summary>
+        /// <value>
+        /// The provision project command.
+        /// </value>
+        public ICommand ProvisionProjectCommand { get; private set; }
+
+        /// <summary>
         ///     Gets or sets the local view viewModel.
         /// </summary>
         public LocalViewModel LocalViewModel { get; set; }
@@ -583,6 +596,30 @@ namespace VSSonarExtensionUi.ViewModel
         /// The sonar qube views.
         /// </value>
         public ObservableCollection<IViewModelBase> SonarQubeViews { get; private set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance can provision.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance can provision; otherwise, <c>false</c>.
+        /// </value>
+        public bool CanProvision
+        {
+            private set
+            {
+                this.canProvision = value;
+
+                if (AuthtenticationHelper.AuthToken.SonarVersion < 5.2)
+                {
+                    this.canProvision = false;
+                }                
+            }
+
+            get
+            {
+                return this.canProvision;
+            }
+        }
 
         /// <summary>
         /// Gets the logger.
@@ -932,13 +969,15 @@ namespace VSSonarExtensionUi.ViewModel
 
                 // try to associate with open solution
                 if (this.IsSolutionOpen)
-                {
+                {                   
                     try
                     {
                         this.AssociationModule.AssociateProjectToSolution(this.VsHelper.ActiveSolutionName(), this.VsHelper.ActiveSolutionPath(), this.AvailableProjects, this.SourceControl);
 
                         if (this.AssociationModule.IsAssociated)
                         {
+                            this.CanProvision = false;
+
                             if (this.LocalViewModel != null)
                             {
                                 if (this.SelectedViewModel == this.LocalViewModel)
@@ -946,14 +985,19 @@ namespace VSSonarExtensionUi.ViewModel
                                     this.LocalViewModel.FileAnalysisIsEnabled = true;
                                 }
                             }
-                            
-                            this.RefreshDataForResource();                        
+
+                            this.RefreshDataForResource();
+                        }
+                        else
+                        {
+                            this.CanProvision = true;
                         }
 
                         this.SetupAssociationMessages();
                     }
                     catch (Exception ex)
                     {
+                        this.CanProvision = true;
                         this.ErrorIsFound = true;
                         this.ErrorMessageTooltip = ex.Message + "\r\n" + ex.StackTrace;
                         this.StatusMessage = "Failed to Associate with Solution : " + this.VsHelper.ActiveSolutionName() + " " + ex.Message;
@@ -970,16 +1014,18 @@ namespace VSSonarExtensionUi.ViewModel
         {
             if (!this.AssociationModule.IsAssociated)
             {
+                this.CanProvision = true;
                 this.SelectedProjectInView = null;
                 this.SelectedProjectKey = null;
                 this.SelectedProjectName = null;
                 this.SelectedProjectVersion = null;
                 this.ErrorIsFound = true;
-                this.StatusMessage = "Was unable to associate with sonar project, use project association dialog";
+                this.StatusMessage = "Was unable to associate with sonar project, use project association dialog to choose a project or to provision project";
                 this.ShowRightFlyout = true;
             }
             else
             {
+                this.CanProvision = false;
                 this.SelectedProjectKey = this.AssociationModule.AssociatedProject.Key;
                 this.SelectedProjectName = this.AssociationModule.AssociatedProject.Name;
                 this.SelectedProjectVersion = this.AssociationModule.AssociatedProject.Version;
@@ -1304,6 +1350,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// </summary>
         private void InitCommands()
         {
+            this.ProvisionProjectCommand = new RelayCommand(this.OnProvisionProjectCommand);
             this.LaunchExtensionPropertiesCommand = new RelayCommand(this.LaunchExtensionProperties);
             this.ToolSwitchCommand = new RelayCommand<string>(this.ExecutePlugin);
 
@@ -1314,6 +1361,73 @@ namespace VSSonarExtensionUi.ViewModel
             this.DisconnectToServerCommand = new RelayCommand(this.OnDisconnectToSonar);
             this.AssignProjectCommand = new RelayCommand(this.OnAssignProjectCommand);
             this.CloseRightFlyoutCommand = new RelayCommand(this.OnCloseRightFlyoutCommand);
+        }
+
+        /// <summary>
+        /// Called when [provision project command].
+        /// </summary>
+        private void OnProvisionProjectCommand()
+        {
+            var answer = QuestionUser.GetInput("Do you wish to provision a new project? Be sure you cant find it from the list above and you have provision permissions.");
+
+            if (answer)
+            {
+                var provisiondata = ProvisionProject.Prompt(this.AssociationModule.OpenSolutionName, this.sourceControl.GetBranch());
+
+                if (provisiondata != null)
+                {
+                    var branch = provisiondata.GetBranch();
+                    var name = provisiondata.GetName();
+                    var key = provisiondata.GetKey();
+
+                    var reply = this.sonarRestConnector.ProvisionProject(AuthtenticationHelper.AuthToken, key, name, branch);
+
+                    
+
+                    if (!string.IsNullOrEmpty(reply))
+                    {
+                        if (reply.Contains("Could not create Project, key already exists:"))
+                        {
+                            var answer2 = QuestionUser.GetInput("There is a project with same settings provisioned in server, do you want to use to complete creation?");
+
+                            if (!answer2)
+                            {
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            MessageDisplayBox.DisplayMessage("Unable to provision project.", reply, "http://docs.sonarqube.org/display/SONARQUBE51/Provisioning+Projects");
+                            return;
+
+                        }
+                    }
+
+                    var projectResource = new Resource { Key = key, Name = name, BranchName = branch, Version = "work" };
+
+                    if (!string.IsNullOrEmpty(branch))
+                    {
+                        projectResource.IsBranch = true;
+                        var branchResource = new Resource { Key = key, Name = name, BranchName = branch, Version = "work" };
+                        projectResource.BranchResources.Add(branchResource);
+                    }
+
+                    this.AvailableProjects.Add(projectResource);
+
+                    this.SelectedProjectInView = projectResource;
+
+                    if (projectResource.IsBranch)
+                    {
+                        this.SelectedBranchProject = projectResource.BranchResources[0];
+                    }
+
+                    this.OnAssignProjectCommand();
+                    this.CanProvision = false;
+
+                    MessageDisplayBox.DisplayMessage("Please configure your quality profiles in server and then run a full local analysis.");
+                    this.VsHelper.NavigateToResource(AuthtenticationHelper.AuthToken.Hostname + "/project/profile?id=" + key);
+                }                
+            }
         }
 
         /// <summary>
