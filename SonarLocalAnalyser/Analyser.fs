@@ -959,17 +959,18 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                         vsinter.WriteSetting(prop, true)
                     ()
 
-                try 
-                    let projectFile = vsinter.ReadSetting(Context.AnalysisGeneral, project.Key, GlobalAnalysisIds.PropertiesFileKey).Value
-                    if File.Exists(projectFile) then
-                        let lines = File.ReadAllLines(projectFile)
-                        lines |> Seq.iter (fun line -> processLine(line))
-                with
-                | ex -> let projectFile = Path.Combine(project.SolutionRoot, "sonar-project.properties")
+                if not(String.IsNullOrEmpty(project.SolutionRoot)) then
+                    try 
+                        let projectFile = vsinter.ReadSetting(Context.AnalysisGeneral, project.Key, GlobalAnalysisIds.PropertiesFileKey).Value
                         if File.Exists(projectFile) then
-                            vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.PropertiesFileKey, Value = "sonar-project.properties", Context = Context.AnalysisGeneral, Owner = OwnersId.AnalysisOwnerId))
                             let lines = File.ReadAllLines(projectFile)
                             lines |> Seq.iter (fun line -> processLine(line))
+                    with
+                    | ex -> let projectFile = Path.Combine(project.SolutionRoot, "sonar-project.properties")
+                            if File.Exists(projectFile) then
+                                vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.PropertiesFileKey, Value = "sonar-project.properties", Context = Context.AnalysisGeneral, Owner = OwnersId.AnalysisOwnerId))
+                                let lines = File.ReadAllLines(projectFile)
+                                lines |> Seq.iter (fun line -> processLine(line))
 
                 try
                     notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Start Update profile"))
@@ -982,6 +983,9 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                     profileCannotBeRetrived <- true
                     associateCompletedEvent.Trigger([|x; null|])
                     raise(ex)
+            else
+                associateCompletedEvent.Trigger([|x; null|])
+
 
 
         member x.ResetInitialization() =

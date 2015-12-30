@@ -398,5 +398,10 @@
         /// <param name="conf">The conf.</param>
         /// <returns></returns>
         Dictionary<string, string> GetInstalledPlugins(ISonarConfiguration conf);
+
+        /// <summary>
+        /// Cancels the request.
+        /// </summary>
+        void CancelRequest();
     }
 }

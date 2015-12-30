@@ -477,5 +477,13 @@ namespace VSSonarExtensionUi.Model.Analysis
             
             return issue;
         }
+
+        /// <summary>
+        /// Cancels the query.
+        /// </summary>
+        internal void CancelQuery()
+        {
+            this.restService.CancelRequest();
+        }
     }
 }

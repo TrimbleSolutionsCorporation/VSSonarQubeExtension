@@ -29,6 +29,7 @@ open SonarRestService
 
 type SonarRestService(httpconnector : IHttpSonarConnector) = 
     let httpconnector = httpconnector
+    let mutable cancelRequest = false
 
     let GetSeverity(value : string) =
         (EnumHelper.asEnum<Severity>(value)).Value
@@ -310,6 +311,9 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
         issueList
 
     let getIssuesOldAndNewVersions(userConf, newurl : string, oldurlreviews: string, oldurlviolations) = 
+
+        cancelRequest <- false
+
         try
             let allIssues = new System.Collections.Generic.List<Issue>()
             try
@@ -326,9 +330,10 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 let value = int(System.Math.Ceiling(float(data.Paging.Total) / float(data.Paging.PageSize)))
 
                 for i = 2 to value do
-                    let url = newurl + "&pageIndex=" + Convert.ToString(i)
-                    let newresponse = httpconnector.HttpSonarGetRequest(userConf, url)
-                    AddElements(getIssuesFromStringAfter45(newresponse))
+                    if not(cancelRequest) then
+                        let url = newurl + "&pageIndex=" + Convert.ToString(i)
+                        let newresponse = httpconnector.HttpSonarGetRequest(userConf, url)
+                        AddElements(getIssuesFromStringAfter45(newresponse))
             with
             | ex -> 
                 let responsecontent = httpconnector.HttpSonarGetRequest(userConf, newurl)
@@ -343,10 +348,10 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 // we need to get all pages
             
                 for i = 2 to data.Paging.Pages do
-                    let url = newurl + "&pageIndex=" + Convert.ToString(i)
-                    let newresponse = httpconnector.HttpSonarGetRequest(userConf, url)
-                    AddElements(getIssuesFromString(newresponse))
-
+                    if not(cancelRequest) then
+                        let url = newurl + "&pageIndex=" + Convert.ToString(i)
+                        let newresponse = httpconnector.HttpSonarGetRequest(userConf, url)
+                        AddElements(getIssuesFromString(newresponse))
             allIssues
         with
         | ex ->
@@ -358,6 +363,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 let oldcontent = httpconnector.HttpSonarGetRequest(userConf, oldurlviolations)
                 getViolationsFromString(oldcontent, reviewsInResource)
 
+        
 
     let getViolationsOldAndNewFormat(userConf, resource : string) = 
         try
@@ -862,6 +868,10 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
         true
             
     interface VSSonarPlugins.ISonarRestService with
+        member this.CancelRequest() =
+            cancelRequest <- true
+        
+         
         member this.ProvisionProject(conf:ISonarConfiguration, key:string, name:string, branch:string) =
             let branchtogo = 
                 if String.IsNullOrEmpty(branch.Trim()) then

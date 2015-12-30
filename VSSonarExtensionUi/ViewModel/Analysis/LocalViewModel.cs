@@ -502,6 +502,11 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <param name="sourcePlugin">The source plugin.</param>
         public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin, IList<Resource> availableProjects, Dictionary<string, Profile> profile)
         {
+            if (project == null || string.IsNullOrEmpty(project.SolutionRoot))
+            {
+                return;
+            }
+
             this.associatedProject = project;
             this.IsAssociatedWithProject = this.associatedProject != null;
             this.SourceWorkingDir = workingDir;

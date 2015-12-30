@@ -507,7 +507,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 return;
             }
 
-            if (!this.ServerAddress.StartsWith("http://") || !this.ServerAddress.StartsWith("https://"))
+            if (!this.ServerAddress.StartsWith("http"))
             {
                 this.StatusMessage = "Address is malformed, it must start with http or https";
                 return;

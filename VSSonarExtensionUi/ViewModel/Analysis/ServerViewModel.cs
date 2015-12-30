@@ -400,6 +400,11 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             IList<Resource> availableProjects,
             Dictionary<string, Profile> profile)
         {
+            if (associatedProjectIn == null || string.IsNullOrEmpty(associatedProjectIn.SolutionRoot))
+            {
+                return;
+            }
+
             this.associatedProject = associatedProjectIn;
             if (this.vsenvironmenthelper != null)
             {

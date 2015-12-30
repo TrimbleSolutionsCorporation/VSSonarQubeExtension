@@ -106,6 +106,13 @@
                                 Command="{Binding GetIssuesByFilterCommand}"
                                 IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}" />
 
+                        <Button Style="{DynamicResource MyMetroButton}"
+                                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                x:Name="CancelQuery"
+                                Content="Cancel query"
+                                Command="{Binding CancelQueryCommand}"/>
+
                         <Expander Header="Users" Grid.Row="5" Grid.ColumnSpan="2"
                                       Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
                             <Grid

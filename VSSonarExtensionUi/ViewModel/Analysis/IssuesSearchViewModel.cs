@@ -141,7 +141,15 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// The reload plan data command.
         /// </value>
         public RelayCommand ReloadPlanDataCommand { get; private set; }
-        
+
+        /// <summary>
+        /// Gets the cancel query command.
+        /// </summary>
+        /// <value>
+        /// The cancel query command.
+        /// </value>
+        public ICommand CancelQueryCommand { get; private set;  }
+
         /// <summary>
         ///     Gets or sets the created before date.
         /// </summary>
@@ -594,6 +602,16 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.GetAllMyIssuesCommand = new RelayCommand(this.OnGetAllMyIssuesCommand);
             this.CloseLeftFlyoutCommand = new RelayCommand(this.OnCloseFlyoutIssueSearchCommand);
             this.ReloadPlanDataCommand = new RelayCommand(this.OnReloadPlanDataCommand);
+            this.CancelQueryCommand = new RelayCommand(this.OnCancelQueryCommand);
+            
+        }
+
+        /// <summary>
+        /// Called when [cancel query command].
+        /// </summary>
+        private void OnCancelQueryCommand()
+        {
+            this.searchModel.CancelQuery();
         }
 
         /// <summary>
