@@ -37,10 +37,13 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// <param name="e">The e.</param>
         void OnAnalysisModeHasChange(EventArgs e);
 
-        /// <summary>The refresh data for resource.</summary>
+        /// <summary>
+        /// The refresh data for resource.
+        /// </summary>
         /// <param name="file">The file.</param>
         /// <param name="documentInView">The document in view.</param>
-        void RefreshDataForResource(Resource file, string documentInView);
+        /// <param name="fileContent">Content of the file.</param>
+        void RefreshDataForResource(Resource file, string documentInView, string fileContent);
 
         /// <summary>Reset Stats.</summary>
         void ResetStats();

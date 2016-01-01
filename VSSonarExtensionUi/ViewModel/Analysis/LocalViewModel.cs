@@ -37,10 +37,11 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using VSSonarExtensionUi.Association;
     using Model.Menu;
     using System.Collections.ObjectModel;
-
-    /// <summary>
-    ///     The analysis types.
-    /// </summary>
+    using VSSonarPlugins.Helpers;
+    using System.Collections;
+    using DifferenceEngine;/// <summary>
+                           ///     The analysis types.
+                           /// </summary>
     public enum AnalysisTypes
     {
         /// <summary>
@@ -146,6 +147,16 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// The project build cache
         /// </summary>
         private readonly Dictionary<string, DateTime> projectBuildCache = new Dictionary<string, DateTime>();
+
+        /// <summary>
+        /// The source in server
+        /// </summary>
+        private Dictionary<string, string> sourceInServerCache = new Dictionary<string, string>();
+
+        /// <summary>
+        /// The content in view
+        /// </summary>
+        private string contentInView;
 
         #endregion
 
@@ -336,6 +347,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public List<string> AllLog { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether [show issues on modified sections of file only].
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if [show issues on modified sections of file only]; otherwise, <c>false</c>.
+        /// </value>
+        public bool ShowIssuesOnModifiedSectionsOfFileOnly { get; set; }
+
+        /// <summary>
         ///     Gets or sets the output log.
         /// </summary>
         public string OutputLog { get; set; }
@@ -429,6 +448,11 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
 
         #region Public Methods and Operators
 
+        public void OnShowIssuesOnModifiedSectionsOfFileOnlyChanged()
+        {
+            this.UpdateLocalIssues(this, null);
+        }
+
         /// <summary>
         /// Reset Stats.
         /// </summary>
@@ -445,6 +469,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         public void OnSolutionClosed()
         {
+            this.sourceInServerCache.Clear();
             this.ClearIssues();
             this.associatedProject = null;
             this.CanRunAnalysis = false;
@@ -457,6 +482,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         public void OnDisconnect()
         {
+            this.sourceInServerCache.Clear();
             this.localAnalyserModule.OnDisconect();
         }
 
@@ -490,7 +516,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         public void OnShowFlyoutsChanged()
         {
-            this.SizeOfFlyout = this.ShowLeftFlyOut ? 200 : 0;
+            this.SizeOfFlyout = this.ShowLeftFlyOut ? 250 : 0;
         }
 
         /// <summary>
@@ -590,10 +616,11 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         /// <param name="resourceFile">The resource file.</param>
         /// <param name="resourceName">Name of the resource.</param>
-        public void RefreshDataForResource(Resource resourceFile, string resourceName)
+        public void RefreshDataForResource(Resource resourceFile, string resourceName, string content)
         {
             this.resourceInView = resourceFile;
             this.resourceNameInView = resourceName;
+            this.contentInView = content;
 
             if (this.FileAnalysisIsEnabled)
             {
@@ -926,10 +953,39 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                     Application.Current.Dispatcher.Invoke(
                         () =>
                             {
-                                this.IssuesGridView.UpdateIssues(
-                                    this.localAnalyserModule.GetIssues(
-                                        AuthtenticationHelper.AuthToken, 
-                                        this.associatedProject));
+                                if (this.ShowIssuesOnModifiedSectionsOfFileOnly && this.FileAnalysisIsEnabled)
+                                {
+                                    var issues = this.localAnalyserModule.GetIssues(
+                                            AuthtenticationHelper.AuthToken,
+                                            this.associatedProject);
+
+                                    var source = "";
+                                   
+                                    if (this.sourceInServerCache.ContainsKey(this.resourceInView.Key))
+                                    {
+                                        source = sourceInServerCache[this.resourceInView.Key];
+                                    }
+                                    else
+                                    {
+                                        var data = restService.GetSourceForFileResource(AuthtenticationHelper.AuthToken, this.resourceInView.Key).Lines;
+                                        source = String.Join("\n", data);
+                                        sourceInServerCache.Add(this.resourceInView.Key, source);
+                                    }
+
+                                    ArrayList diffReport = VsSonarUtils.GetSourceDiffFromStrings(this.contentInView, source, DiffEngineLevel.FastImperfect);
+
+                                    var issuesinChangedLines = VsSonarUtils.GetIssuesInModifiedLinesOnly(issues, diffReport);
+
+                                    this.IssuesGridView.UpdateIssues(issuesinChangedLines);
+                                }
+                                else
+                                {
+                                    this.IssuesGridView.UpdateIssues(
+                                        this.localAnalyserModule.GetIssues(
+                                            AuthtenticationHelper.AuthToken,
+                                            this.associatedProject));
+                                }
+
                                 this.OnSelectedViewChanged();
                             });
                 }

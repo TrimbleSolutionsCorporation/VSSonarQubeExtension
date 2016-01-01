@@ -48,7 +48,7 @@
 
     <DockPanel>
         <controls:FlyoutsControl DockPanel.Dock="Left">
-            <controls:Flyout Header="Local Analysis" Position="Left" Width="{Binding SizeOfFlyout, FallbackValue=250}" IsOpen="{Binding ShowLeftFlyOut, FallbackValue=True}" >
+            <controls:Flyout Header="Local Analysis" Position="Left" Width="{Binding SizeOfFlyout, FallbackValue=250}" IsOpen="{Binding ShowLeftFlyOut, FallbackValue=true}" >
                 <controls:Flyout.Resources>
 
                     <Style TargetType="{x:Type controls:Flyout}" >
@@ -71,12 +71,19 @@
 
                         <GroupBox Header="Analysis">
                             <StackPanel Orientation="Vertical">
-                                <ToggleButton 
+                                <StackPanel Orientation="Horizontal">
+
+                                    <CheckBox 
                                       Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                      Margin="0, 0, 0, 0"
-                                      Content="File Analysis"
-                                      IsChecked="{Binding FileAnalysisIsEnabled}" IsEnabled="{Binding CanRunLocalAnalysis}">
-                                </ToggleButton>
+                                      Margin="10, 0, 0, 0"
+                                      IsChecked="{Binding ShowIssuesOnModifiedSectionsOfFileOnly}" ToolTip="Shows issues only on modified sections of the file." >
+                                    </CheckBox>
+                                    <ToggleButton Width="158"
+                                        Margin="20, 0, 0, 3"
+                                    	Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                    	Content="File Analysis"
+                                    	IsChecked="{Binding FileAnalysisIsEnabled}" IsEnabled="{Binding CanRunLocalAnalysis}"/>
+                                </StackPanel>
 
                                 <Button 
                                     Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"

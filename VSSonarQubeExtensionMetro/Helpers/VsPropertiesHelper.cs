@@ -21,7 +21,7 @@ namespace VSSonarQubeExtension.Helpers
 
     using EnvDTE80;
 
-    
+
 
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Editor;
@@ -38,7 +38,7 @@ namespace VSSonarQubeExtension.Helpers
     using Process = System.Diagnostics.Process;
     using Thread = System.Threading.Thread;
     using VSSonarPlugins.Types;
-
+    using Microsoft.VisualStudio.Text;
     /// <summary>
     ///     The vs properties helper.
     /// </summary>
@@ -336,7 +336,6 @@ namespace VSSonarQubeExtension.Helpers
         public string GetCurrentTextInView()
         {
             IWpfTextView view = this.GetCurrentView();
-
             return view == null ? string.Empty : view.TextBuffer.CurrentSnapshot.GetText();
         }
 

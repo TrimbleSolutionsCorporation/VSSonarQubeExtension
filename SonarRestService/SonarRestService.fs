@@ -455,6 +455,13 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                         res.Metrics <- metrics
 
 
+                if not(res.IsBranch) then
+                    let keyelems = res.Key.Split(':')
+                    let nameelems = res.Name.Split(' ')
+                    if keyelems.[keyelems.Length - 1] = nameelems.[nameelems.Length - 1] && nameelems.Length > 1 then
+                        res.IsBranch <- true
+                        res.BranchName <- nameelems.[nameelems.Length - 1]
+                    
                 resourcelist.Add(res)
             with
                 | ex -> ()

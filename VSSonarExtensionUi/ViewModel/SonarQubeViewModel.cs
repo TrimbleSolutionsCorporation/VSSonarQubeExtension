@@ -18,6 +18,7 @@ namespace VSSonarExtensionUi.ViewModel
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Diagnostics;
+    using System.IO;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
@@ -39,15 +40,17 @@ namespace VSSonarExtensionUi.ViewModel
     using VSSonarPlugins.Types;
     using VSSonarExtensionUi.Association;
     using System.Windows.Input;
-    using View.Helpers;    /// <summary>
-                           ///     The changed event handler.
-                           /// </summary>
-                           /// <param name="sender">
-                           ///     The sender.
-                           /// </param>
-                           /// <param name="e">
-                           ///     The e.
-                           /// </param>
+    using View.Helpers;    
+
+    /// <summary>
+    ///     The changed event handler.
+    /// </summary>
+    /// <param name="sender">
+    ///     The sender.
+    /// </param>
+    /// <param name="e">
+    ///     The e.
+    /// </param>
     public delegate void ChangedEventHandler(object sender, EventArgs e);
 
     /// <summary>
@@ -678,9 +681,9 @@ namespace VSSonarExtensionUi.ViewModel
             this.AssociationModule.AssociateProjectToSolution(solutionName, solutionPath, this.AvailableProjects, this.SourceControl);
 
 
-            if (!string.IsNullOrEmpty(fileInView))
+            if (!string.IsNullOrEmpty(fileInView) && File.Exists(fileInView))
             {
-                this.RefreshDataForResource(fileInView);
+                this.RefreshDataForResource(fileInView, File.ReadAllText(fileInView));
             }
 
             this.SetupAssociationMessages();
@@ -1097,7 +1100,7 @@ namespace VSSonarExtensionUi.ViewModel
                 try
                 {
                     this.notificationManager.WriteMessage("RefreshDataForResource: Doc in View: " + this.DocumentInView);
-                    analyser.RefreshDataForResource(this.ResourceInEditor, this.DocumentInView);
+                    analyser.RefreshDataForResource(this.ResourceInEditor, this.DocumentInView, File.ReadAllText(this.DocumentInView));
                 }
                 catch (Exception ex)
                 {
@@ -1112,7 +1115,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// The refresh data for resource.
         /// </summary>
         /// <param name="fullName">The full name.</param>
-        public void RefreshDataForResource(string fullName)
+        public void RefreshDataForResource(string fullName, string contentoffile)
         {
             this.notificationManager.WriteMessage("Refresh Data For File: " + fullName);
             if (string.IsNullOrEmpty(fullName) || this.AssociationModule.AssociatedProject == null)
@@ -1144,7 +1147,7 @@ namespace VSSonarExtensionUi.ViewModel
                 try
                 {
                     this.notificationManager.WriteMessage("RefreshDataForResource: Doc in View: " + this.DocumentInView);
-                    analyser.RefreshDataForResource(this.ResourceInEditor, this.DocumentInView);
+                    analyser.RefreshDataForResource(this.ResourceInEditor, this.DocumentInView, contentoffile);
                     this.StatusMessage = this.ResourceInEditor.Key;
                 }
                 catch (Exception ex)

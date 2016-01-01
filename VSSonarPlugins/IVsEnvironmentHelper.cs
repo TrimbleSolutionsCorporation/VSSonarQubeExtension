@@ -176,14 +176,6 @@ namespace VSSonarPlugins
         string GetFileRealPathForSolution(string fileInView);
 
         /// <summary>
-        ///     The get current text in view.
-        /// </summary>
-        /// <returns>
-        ///     The <see cref="string" />.
-        /// </returns>
-        string GetCurrentTextInView();
-
-        /// <summary>
         ///     The are we running in visual studio.
         /// </summary>
         /// <returns>

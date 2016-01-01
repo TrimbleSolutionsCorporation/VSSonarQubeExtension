@@ -64,8 +64,8 @@
                     </ToggleButton>
 
                     <Button Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"                            
-                            ToolTip="Show Source Difference"
-                            Content="Get current file in SonarQube server and compares with your local file."
+                            ToolTip="Get current file in SonarQube server and compares with your local file."
+                            Content="Show Source Difference"
                             Style="{DynamicResource SquareButtonStyle}" Command="{Binding DisplaySourceDiffCommand}"
                             IsEnabled="{Binding IsRunningInVisualStudio}">
                     </Button>

@@ -113,14 +113,7 @@ namespace VSSonarQubeExtension
         {
             string solutionName = this.environment.ActiveSolutionName();
             string solutionPath = this.environment.ActiveSolutionPath();
-
-            string text = this.environment.GetCurrentTextInView();
-            string fileName = string.Empty;
-            if (!string.IsNullOrEmpty(text))
-            {
-                fileName = this.environment.ActiveFileFullPath();
-            }
-
+            string fileName = this.environment.ActiveFileFullPath();
             SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Solution Opened: " + solutionName + " : " + solutionPath);
             SonarQubeViewModelFactory.SQViewModel.OnSolutionOpen(solutionName, solutionPath, fileName);
             return VSConstants.S_OK;
