@@ -28,7 +28,7 @@ namespace VSSonarQubeExtension
 
     using Helpers;
     using Microsoft.CodeAnalysis.Diagnostics;
-    using Microsoft.VisualStudio;    
+    using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.PlatformUI;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
@@ -40,7 +40,7 @@ namespace VSSonarQubeExtension
 
     using DColor = System.Drawing.Color;
     using MColor = System.Windows.Media.Color;
-
+    using VSSonarExtensionUi.ViewModel.Analysis;
     /// <summary>
     ///     The vs sonar extension package.
     /// </summary>
@@ -295,8 +295,19 @@ namespace VSSonarQubeExtension
         /// </param>
         private void AnalyseSolutionCmd(object sender, EventArgs e)
         {
-            SonarQubeViewModelFactory.SQViewModel.LocalViewModel.OnPreviewCommand();
+            SonarQubeViewModelFactory.SQViewModel.StartAnalysisWindow(AnalysisTypes.ANALYSIS);
         }
+
+        /// <summary>
+        /// Previews the solution command.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void PreviewSolutionCmd(object sender, EventArgs e)
+        {
+            SonarQubeViewModelFactory.SQViewModel.StartAnalysisWindow(AnalysisTypes.PREVIEW);
+        }
+        
 
         /// <summary>
         ///     The setup menu commands.
@@ -328,9 +339,9 @@ namespace VSSonarQubeExtension
             this.runAnalysisCmd = new OleMenuCommand(this.AnalyseSolutionCmd, menuCommandId);
             mcs.AddCommand(this.runAnalysisCmd);
 
-            menuCommandId = new CommandID(GuidList.GuidStartAnalysisSolutionCTXCmdSet, PkgCmdIdList.CmdidRunAnalysisInProject);
-            this.runAnalysisInProjectCmd = new OleMenuCommand(this.ShowIssuesToolWindow, menuCommandId);
-            mcs.AddCommand(this.runAnalysisInProjectCmd);
+            menuCommandId = new CommandID(GuidList.GuidStartPreviewAnalysisSolutionCTXCmdSet, PkgCmdIdList.cmdidRunPreviewAnalysisInSolution);
+            this.runPreviewInProjectCmd = new OleMenuCommand(this.PreviewSolutionCmd, menuCommandId);
+            mcs.AddCommand(this.runPreviewInProjectCmd);
         }
 
         /// <summary>

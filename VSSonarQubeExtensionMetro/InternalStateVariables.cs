@@ -41,6 +41,11 @@ namespace VSSonarQubeExtension
         private OleMenuCommand runAnalysisCmd;
 
         /// <summary>
+        /// The run preview in project command
+        /// </summary>
+        private OleMenuCommand runPreviewInProjectCmd;
+
+        /// <summary>
         /// The run analysis in project cmd.
         /// </summary>
         private OleMenuCommand runAnalysisInProjectCmd;

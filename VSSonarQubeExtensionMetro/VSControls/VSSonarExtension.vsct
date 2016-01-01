@@ -59,10 +59,9 @@
       <Group guid="guidVSSonarExtensionCmdSet" id="MyMenuGroup" priority="0x0600">
         <Parent guid="guidVSSonarExtensionCmdSet" id="TopLevelMenu"/>
       </Group>
-      <Group guid="guidShowInitialToolbarCmdSet" id="MyMenuGroup"
-        priority="0x0600">
+      <Group guid="guidShowInitialToolbarCmdSet" id="MyMenuGroup" priority="0x0600">
         <Parent guid="guidShowInitialToolbarCmdSet" id="SonarToolbar"/>
-      </Group>
+      </Group>    
     </Groups>
     
     <!--Buttons section. -->
@@ -107,13 +106,20 @@
 
       <Button guid="GuidStartAnalysisSolutionCTXCmdSet" id="cmdidRunAnalysisInSolution" priority="0x0300" type="Button">
           <Parent guid="guidReferenceContext" id="cmdAddReferenceGroup" />
-          <Icon guid="bmpPicReviews" id="bmpPicReviewsName" />
           <Strings>
               <CommandName>cmdRestorePackages</CommandName>
-              <ButtonText>SQ: Analyse Solution</ButtonText>
+              <ButtonText>SQ: Run Full Analysis</ButtonText>
           </Strings>
       </Button>
-                    
+
+      <Button guid="GuidStartPreviewAnalysisSolutionCTXCmdSet" id="cmdidRunPreviewAnalysisInSolution" priority="0x0310" type="Button">
+          <Parent guid="guidReferenceContext" id="cmdAddReferenceGroup" />
+          <Strings>
+              <CommandName>cmdRunPreviewAnalysis</CommandName>
+              <ButtonText>SQ: Run Preview Analysis</ButtonText>
+          </Strings>
+      </Button>
+      
     </Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
@@ -135,6 +141,10 @@
         <CommandPlacement guid="GuidStartAnalysisSolutionCTXCmdSet" id="cmdidRunAnalysisInSolution" priority="0xF101">
             <Parent guid="guidSHLMainMenu" id="IDG_VS_CTXT_SOLUTION_BUILD" />
         </CommandPlacement>
+    
+        <CommandPlacement guid="GuidStartPreviewAnalysisSolutionCTXCmdSet" id="cmdidRunPreviewAnalysisInSolution" priority="0xF102">
+            <Parent guid="guidSHLMainMenu" id="IDG_VS_CTXT_SOLUTION_BUILD" />
+        </CommandPlacement>    
     </CommandPlacements>
 
     <Symbols>
@@ -157,9 +167,12 @@
       </GuidSymbol>
 
       <GuidSymbol name="GuidStartAnalysisSolutionCTXCmdSet" value="{7FFF1BD4-5BFD-4F5C-9EBC-52AFE79D7BFE}">
-          <IDSymbol name="cmdidRunAnalysisInProject" value="0x0200" />
           <IDSymbol name="cmdidRunAnalysisInSolution" value="0x0300" />
       </GuidSymbol>
+        
+      <GuidSymbol name="GuidStartPreviewAnalysisSolutionCTXCmdSet" value="{8AFF1BD4-5BFD-4F5C-9EBC-52AFE79D7BFE}">
+          <IDSymbol name="cmdidRunPreviewAnalysisInSolution" value="0x0310" />
+      </GuidSymbol>        
 
       <GuidSymbol name="bmpPicReviews" value="{fac5fb1e-1010-4665-bf1f-c56305358ef1}" >
           <IDSymbol name="bmpPicReviewsName" value="1" />

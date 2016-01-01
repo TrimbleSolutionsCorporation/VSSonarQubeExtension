@@ -49,5 +49,10 @@ namespace VSSonarQubeExtension.VSControls
         /// The guid start analysis solution ctx cmd set.
         /// </summary>
         public static readonly Guid GuidStartAnalysisSolutionCTXCmdSet = new Guid("{7FFF1BD4-5BFD-4F5C-9EBC-52AFE79D7BFE}");
+
+        /// <summary>
+        /// The unique identifier start preview analysis solution CTX command set
+        /// </summary>
+        public static readonly Guid GuidStartPreviewAnalysisSolutionCTXCmdSet = new Guid("{8AFF1BD4-5BFD-4F5C-9EBC-52AFE79D7BFE}");        
     }
 }

@@ -365,6 +365,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public ICommand PreviewCommand { get; set; }
 
         /// <summary>
+        /// Gets a value indicating whether [errors found during analysis].
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if [errors found during analysis]; otherwise, <c>false</c>.
+        /// </value>
+        public bool ErrorsFoundDuringAnalysis { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether [permissions are not available].
         /// </summary>
         /// <value>
@@ -549,6 +557,18 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.notificationManager.StartedWorking("Running Full Analysis");
             this.CanRunAnalysis = false;
             this.RunLocalAnalysis(AnalysisTypes.ANALYSIS);
+        }
+
+        /// <summary>
+        /// Runs the analysis.
+        /// </summary>
+        /// <param name="mode">The mode.</param>
+        public void RunAnalysis(AnalysisTypes mode)
+        {
+            this.FileAnalysisIsEnabled = false;
+            this.notificationManager.StartedWorking(mode.ToString());
+            this.CanRunAnalysis = false;
+            this.RunLocalAnalysis(mode);
         }
 
         /// <summary>
@@ -935,15 +955,17 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 {
                     this.OnSelectedViewChanged();
                     this.IssuesGridView.Issues.Clear();
-                    UserExceptionMessageBox.ShowException("Analysis Ended: " + exceptionMsg.ErrorMessage, exceptionMsg.Ex, exceptionMsg.Ex.StackTrace);
+                    this.ErrorsFoundDuringAnalysis = true;
+                    UserExceptionMessageBox.ShowException("Analysis Failed: " + exceptionMsg.ErrorMessage, exceptionMsg.Ex, exceptionMsg.Ex.StackTrace);
                     return;
                 }
             }
             catch (Exception ex)
             {
+                this.ErrorsFoundDuringAnalysis = true;
                 this.OnSelectedViewChanged();
                 this.IssuesGridView.Issues.Clear();
-                UserExceptionMessageBox.ShowException("Analysis Ended: ", ex, ex.StackTrace);
+                UserExceptionMessageBox.ShowException("Analysis Failed: ", ex, ex.StackTrace);
             }
 
             try

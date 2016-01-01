@@ -39,6 +39,11 @@ namespace VSSonarQubeExtension.VSControls
         public const int CmdidRunAnalysisInSolution = 0x300;
 
         /// <summary>
+        /// The cmdid run preview analysis in solution
+        /// </summary>
+        public const int cmdidRunPreviewAnalysisInSolution = 0x310;
+
+        /// <summary>
         /// The cmdid run analysis in project.
         /// </summary>
         public const int CmdidRunAnalysisInProject = 0x0200;        

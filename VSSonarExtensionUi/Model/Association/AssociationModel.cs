@@ -70,6 +70,10 @@
         /// The local analyser module
         /// </summary>
         private readonly ISonarLocalAnalyser localAnalyserModule;
+
+        /// <summary>
+        /// The sourcecontrol
+        /// </summary>
         private ISourceControlProvider sourcecontrol;
 
         /// <summary>

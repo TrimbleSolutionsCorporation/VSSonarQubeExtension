@@ -639,6 +639,7 @@ namespace VSSonarExtensionUi.ViewModel
         }
 
         public ISonarLocalAnalyser LocaAnalyser { get; private set; }
+        public bool AnalysisFromSolutionRunning { get; private set; }
 
         #endregion
 
@@ -912,6 +913,113 @@ namespace VSSonarExtensionUi.ViewModel
         public void OnConnectToSonarCommand()
         {
             this.OnConnectToSonar(true);
+        }
+
+        public void StartAnalysisWindow(AnalysisTypes mode)
+        {
+            if (!this.IsConnected)
+            {
+                MessageDisplayBox.DisplayMessage("You must first connect to server before you can run analysis", helpurl: "https://github.com/TeklaCorp/VSSonarQubeExtension/wiki");
+                return;
+            }
+
+            if (this.AnalysisFromSolutionRunning)
+            {
+                MessageDisplayBox.DisplayMessage("A previous analysis is running, you need to wait for completion.");
+                return;
+            }
+
+
+            if (mode.Equals(AnalysisTypes.ANALYSIS))
+            {
+                this.LocaAnalyser.LocalAnalysisCompleted += this.FullAnalysisHasCompleted;
+            }
+            else
+            {
+                this.LocaAnalyser.LocalAnalysisCompleted += this.PreviewAnalysisHasCompleted;
+            }
+
+            if (!this.AssociationModule.IsAssociated)
+            {
+                if (mode.Equals(AnalysisTypes.ANALYSIS))
+                {
+                    this.LocaAnalyser.AssociateCommandCompeted += this.RunFullAnalysisAfterAssociation;
+                }
+                else
+                {
+
+                    this.LocaAnalyser.AssociateCommandCompeted += this.RunPreviewAnalysisAfterAssociation;
+                }
+
+                this.ProvisionProject(false);
+            }
+            else
+            {
+                this.LocalViewModel.ErrorsFoundDuringAnalysis = false;
+                this.AnalysisFromSolutionRunning = true;
+                this.LocalViewModel.RunAnalysis(mode);
+            }
+        }
+
+        /// <summary>
+        /// Previews the analysis has completed.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void PreviewAnalysisHasCompleted(object sender, EventArgs e)
+        {
+            this.AnalysisFromSolutionRunning = false;
+            this.LocaAnalyser.LocalAnalysisCompleted -= this.PreviewAnalysisHasCompleted;
+            if (this.LocalViewModel.ErrorsFoundDuringAnalysis)
+            {
+                MessageDisplayBox.DisplayMessage("Analysis as failed, check output log for more information.", helpurl: "https://github.com/TeklaCorp/VSSonarQubeExtension/wiki/Troubleshooting-and-FAQ");
+            }
+
+            this.LocalViewModel.ErrorsFoundDuringAnalysis = false;
+        }
+
+        /// <summary>
+        /// Fulls the analysis has completed.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void FullAnalysisHasCompleted(object sender, EventArgs e)
+        {
+            this.AnalysisFromSolutionRunning = false;
+            this.LocaAnalyser.LocalAnalysisCompleted -= this.FullAnalysisHasCompleted;
+            if (this.LocalViewModel.ErrorsFoundDuringAnalysis)
+            {
+                MessageDisplayBox.DisplayMessage("Analysis as failed, check output log for more information.", helpurl: "https://github.com/TeklaCorp/VSSonarQubeExtension/wiki/Troubleshooting-and-FAQ");
+            }
+            else
+            {
+                MessageDisplayBox.DisplayMessage("You may use server analysis mode, to retrieve analysis results.", helpurl: "https://github.com/TeklaCorp/VSSonarQubeExtension/wiki/Server-Analysis");
+            }
+
+            this.LocalViewModel.ErrorsFoundDuringAnalysis = false;
+        }
+
+        /// <summary>
+        /// Runs the preview analysis after association.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void RunPreviewAnalysisAfterAssociation(object sender, EventArgs e)
+        {
+            this.AnalysisFromSolutionRunning = false;
+            this.LocaAnalyser.AssociateCommandCompeted -= this.RunPreviewAnalysisAfterAssociation;
+            this.LocalViewModel.RunAnalysis(AnalysisTypes.PREVIEW);
+        }
+
+        /// <summary>
+        /// Runs the full analysis after association.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void RunFullAnalysisAfterAssociation(object sender, EventArgs e)
+        {
+            this.LocaAnalyser.AssociateCommandCompeted -= this.RunFullAnalysisAfterAssociation;
+            this.LocalViewModel.RunAnalysis(AnalysisTypes.ANALYSIS);
         }
 
         /// <summary>
@@ -1371,11 +1479,20 @@ namespace VSSonarExtensionUi.ViewModel
         /// </summary>
         private void OnProvisionProjectCommand()
         {
-            var answer = QuestionUser.GetInput("Do you wish to provision a new project? Be sure you cant find it from the list above and you have provision permissions.");
+            this.ProvisionProject(true);
+        }
+
+        /// <summary>
+        /// Provisions the project.
+        /// </summary>
+        /// <param name="confirmAnalysis">if set to <c>true</c> [confirm analysis].</param>
+        private void ProvisionProject(bool confirmAnalysis)
+        {
+            var answer = QuestionUser.GetInput("Do you wish to provision a new project? Be sure you cant find it from the available projects and you have provision permissions.");
 
             if (answer)
             {
-                var provisiondata = ProvisionProject.Prompt(this.AssociationModule.OpenSolutionName, this.sourceControl.GetBranch());
+                var provisiondata = View.Helpers.ProvisionProject.Prompt(this.AssociationModule.OpenSolutionName, this.sourceControl.GetBranch());
 
                 if (provisiondata != null)
                 {
@@ -1384,8 +1501,6 @@ namespace VSSonarExtensionUi.ViewModel
                     var key = provisiondata.GetKey();
 
                     var reply = this.sonarRestConnector.ProvisionProject(AuthtenticationHelper.AuthToken, key, name, branch);
-
-                    
 
                     if (!string.IsNullOrEmpty(reply))
                     {
@@ -1427,9 +1542,12 @@ namespace VSSonarExtensionUi.ViewModel
                     this.OnAssignProjectCommand();
                     this.CanProvision = false;
 
-                    MessageDisplayBox.DisplayMessage("Please configure your quality profiles in server and then run a full local analysis.");
-                    this.VsHelper.NavigateToResource(AuthtenticationHelper.AuthToken.Hostname + "/project/profile?id=" + key);
-                }                
+                    if (confirmAnalysis)
+                    {
+                        MessageDisplayBox.DisplayMessage("Please configure your quality profiles in server and then run a full local analysis.");
+                        this.VsHelper.NavigateToResource(AuthtenticationHelper.AuthToken.Hostname + "/project/profile?id=" + key);
+                    }
+                }
             }
         }
 
