@@ -320,40 +320,57 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="associatedProjectIn">The associated project in.</param>
         public void ReloadDataFromDisk(Resource associatedProjectIn)
         {
-            this.SQMSBuildRunnerVersion = this.configurationHelper.ReadSetting(
-                Context.AnalysisGeneral,
-                OwnersId.AnalysisOwnerId,
-                GlobalAnalysisIds.SonarQubeMsbuildVersionKey).Value;
-
-            this.CxxWrapperVersion = this.configurationHelper.ReadSetting(
-                Context.AnalysisGeneral,
-                OwnersId.AnalysisOwnerId,
-                GlobalAnalysisIds.CxxWrapperVersionKey).Value;
-
-            if (string.IsNullOrEmpty(this.SQMSBuildRunnerVersion))
+            try
             {
+                this.SQMSBuildRunnerVersion = this.configurationHelper.ReadSetting(
+                        Context.AnalysisGeneral,
+                        OwnersId.AnalysisOwnerId,
+                        GlobalAnalysisIds.SonarQubeMsbuildVersionKey).Value;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
                 this.SQMSBuildRunnerVersion = "1.1";
             }
 
-            if (string.IsNullOrEmpty(this.CxxWrapperVersion))
+            try
             {
+                this.CxxWrapperVersion = this.configurationHelper.ReadSetting(
+                    Context.AnalysisGeneral,
+                    OwnersId.AnalysisOwnerId,
+                    GlobalAnalysisIds.CxxWrapperVersionKey).Value;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
                 this.CxxWrapperVersion = "1.3";
             }
 
-            this.WrapperPath = this.configurationHelper.ReadSetting(
-                Context.AnalysisGeneral,
-                OwnersId.AnalysisOwnerId,
-                GlobalAnalysisIds.CxxWrapperPathKey).Value;
-
-            if (string.IsNullOrEmpty(this.WrapperPath))
+            try
             {
-                this.WrapperPath = Path.Combine(Path.Combine(this.configurationHelper.ApplicationPath, "Wrapper", this.CxxWrapperVersion), "CxxSonarQubeMsbuidRunner.exe");
+                this.WrapperPath = this.configurationHelper.ReadSetting(
+                    Context.AnalysisGeneral,
+                    OwnersId.AnalysisOwnerId,
+                    GlobalAnalysisIds.CxxWrapperPathKey).Value;
             }
-            
-            this.ExcludedPlugins = this.configurationHelper.ReadSetting(
-                Context.AnalysisGeneral,
-                OwnersId.AnalysisOwnerId,
-                GlobalAnalysisIds.ExcludedPluginsKey).Value;
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                this.WrapperPath = Path.Combine(Path.Combine(this.configurationHelper.ApplicationPath, "Wrapper", this.CxxWrapperVersion), "CxxSonarQubeMsbuidRunner.exe");
+
+            }
+
+            try
+            {
+                this.ExcludedPlugins = this.configurationHelper.ReadSetting(
+                    Context.AnalysisGeneral,
+                    OwnersId.AnalysisOwnerId,
+                    GlobalAnalysisIds.ExcludedPluginsKey).Value;
+            }
+            catch (Exception)
+            {
+                this.ExcludedPlugins = "devcockpit,pdfreport,report,scmactivity,views,jira,scmstats";
+            }
 
             try
             {
