@@ -45,7 +45,7 @@
             <TextBox Name="name" Grid.Column="1" Grid.Row="0" ToolTip="key of project" Grid.ColumnSpan="2" Margin="0,1,0,1"/>
             <TextBox Name="key" Grid.Column="1" Grid.Row="1" ToolTip="Description of the plan" Grid.ColumnSpan="2" Margin="0,1,0,1"/>
             <TextBox Name="branchtouse" Grid.Column="1" Grid.Row="2" ToolTip="Leave empty if you are not using branches." Margin="0,1,0,1"/>
-            <Label Name="branch"  Grid.Column="0" Grid.Row="2" Content="Branch"/>
+            
             
             <WrapPanel Grid.Row="3" HorizontalAlignment="Right" Margin="0,1,0,0" Grid.Column="2" Width="140">
                 <Button x:Name="OkButton" MinWidth="60" Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="_Ok" Click="BtnOkClick"  Margin="0,0,10,0" />
