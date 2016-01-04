@@ -141,7 +141,7 @@ namespace VSSonarExtensionUi.ViewModel
 
             this.notificationManager = new NotifyCationManager(this, vsverionIn);
             this.configurationHelper = new ConfigurationHelper(vsverionIn, this.notificationManager);
-            this.sonarKeyTranslator = new SQKeyTranslator();
+            this.sonarKeyTranslator = new SQKeyTranslator(this.notificationManager);
             this.sonarRestConnector = new SonarRestService(new JsonSonarConnector());
             this.VSonarQubeOptionsViewData = new VSonarQubeOptionsViewModel(this.sonarRestConnector, this.configurationHelper, this.notificationManager);
             this.VSonarQubeOptionsViewData.ResetUserData();
@@ -170,7 +170,7 @@ namespace VSSonarExtensionUi.ViewModel
 
             this.configurationHelper = helper;
             this.notificationManager = new NotifyCationManager(this, vsverionIn);
-            this.sonarKeyTranslator = new SQKeyTranslator();
+            this.sonarKeyTranslator = new SQKeyTranslator(this.notificationManager);
             this.sonarRestConnector = new SonarRestService(new JsonSonarConnector());
             this.VSonarQubeOptionsViewData = new VSonarQubeOptionsViewModel(this.sonarRestConnector, this.configurationHelper, this.notificationManager);
             this.VSonarQubeOptionsViewData.ResetUserData();

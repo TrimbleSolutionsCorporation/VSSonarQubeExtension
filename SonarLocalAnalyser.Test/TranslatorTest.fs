@@ -42,9 +42,13 @@ type TraTests() =
         Mock<ISonarRestService>()
             .Create()
 
+    let mockNot =
+        Mock<INotificationManager>()
+            .Create()
+
     [<Test>]
     member test.``Should Return Key Correctly When Multi Module`` () =
-        let translator = new SQKeyTranslator()
+        let translator = new SQKeyTranslator(mockNot)
         Assert.That(File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\MultiModuleTest\\sonar-project.properties")), Is.True)
         (translator :> ISQKeyTranslator).CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\MultiModuleTest\\sonar-project.properties"));
         Assert.That((translator :> ISQKeyTranslator).GetModules().Length, Is.EqualTo(2))
@@ -61,7 +65,7 @@ type TraTests() =
 
     [<Test>]
     member test.``Should Return Path Correctly When Multi Module`` () =
-        let translator = new SQKeyTranslator()
+        let translator = new SQKeyTranslator(mockNot)
         Assert.That(File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\MultiModuleTest\\sonar-project.properties")), Is.True)
         (translator :> ISQKeyTranslator).CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\MultiModuleTest\\sonar-project.properties"));
         Assert.That((translator :> ISQKeyTranslator).GetModules().Length, Is.EqualTo(2))
@@ -71,7 +75,7 @@ type TraTests() =
 
     [<Test>]
     member test.``Should Return Key Correctly With Flat Structure`` () =
-        let translator = new SQKeyTranslator()
+        let translator = new SQKeyTranslator(mockNot)
         (translator :> ISQKeyTranslator).SetLookupType(KeyLookUpType.Flat)
         Assert.That(File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject\\sonar-project.properties")), Is.True)
         (translator :> ISQKeyTranslator).CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject\\sonar-project.properties"));
@@ -91,7 +95,7 @@ type TraTests() =
 
     [<Test>]
     member test.``Should Return Path Correctly With Flat Structure`` () =
-        let translator = new SQKeyTranslator()
+        let translator = new SQKeyTranslator(mockNot)
         (translator :> ISQKeyTranslator).SetLookupType(KeyLookUpType.Flat)
         Assert.That(File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject\\sonar-project.properties")), Is.True)
         (translator :> ISQKeyTranslator).CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject\\sonar-project.properties"));
@@ -104,7 +108,7 @@ type TraTests() =
 
     [<Test>]
     member test.``Should Return Key Correctly With Visual Studio BootStrapper`` () =
-        let translator = new SQKeyTranslator()
+        let translator = new SQKeyTranslator(mockNot)
         Assert.That(File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\VisualBootStrapper\\sonar-project.properties")), Is.True)
         (translator :> ISQKeyTranslator).CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\VisualBootStrapper\\sonar-project.properties"))
         Assert.That((translator :> ISQKeyTranslator).GetModules().Length, Is.EqualTo(0))
@@ -124,7 +128,7 @@ type TraTests() =
 
     [<Test>]
     member test.``Should Return Path Correctly With Visual Studio BootStrapper`` () =
-        let translator = new SQKeyTranslator()
+        let translator = new SQKeyTranslator(mockNot)
         Assert.That(File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\VisualBootStrapper\\sonar-project.properties")), Is.True)
         (translator :> ISQKeyTranslator).CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\VisualBootStrapper\\sonar-project.properties"));
         Assert.That((translator :> ISQKeyTranslator).GetModules().Length, Is.EqualTo(0))
@@ -136,7 +140,7 @@ type TraTests() =
 
     [<Test>]
     member test.``Should Return Path Correctly With Visual Studio BootStrapper in subfolder`` () =
-        let translator = new SQKeyTranslator()
+        let translator = new SQKeyTranslator(mockNot)
         Assert.That(File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\VisualBootStrapper\\sonar-project.properties")), Is.True)
         (translator :> ISQKeyTranslator).CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\VisualBootStrapper\\sonar-project.properties"));
         Assert.That((translator :> ISQKeyTranslator).GetModules().Length, Is.EqualTo(0))
@@ -147,7 +151,7 @@ type TraTests() =
 
     [<Test>]
     member test.``Should Return Path Correctly With Visual Studio BootStrapper with key without only 2 elements`` () =
-        let translator = new SQKeyTranslator()
+        let translator = new SQKeyTranslator(mockNot)
         Assert.That(File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\VisualBootStrapper2\\sonar-project.properties")), Is.True)
         (translator :> ISQKeyTranslator).CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\VisualBootStrapper2\\sonar-project.properties"));
         Assert.That((translator :> ISQKeyTranslator).GetModules().Length, Is.EqualTo(0))
@@ -159,7 +163,7 @@ type TraTests() =
 
     [<Test>]
     member test.``Should Return Key Correctly With Visual Studio BootStrapper False, but modules defined`` () =
-        let translator = new SQKeyTranslator()
+        let translator = new SQKeyTranslator(mockNot)
         Assert.That(File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\ModulesDefinedAllInOnePropertiesFile\\sonar-project.properties")), Is.True)
         (translator :> ISQKeyTranslator).CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\ModulesDefinedAllInOnePropertiesFile\\sonar-project.properties"));
         Assert.That((translator :> ISQKeyTranslator).GetModules().Length, Is.EqualTo(4))
@@ -179,7 +183,7 @@ type TraTests() =
 
     [<Test>]
     member test.``Should Return Path Correctly With Visual Studio BootStrapper False, but modules defined`` () =
-        let translator = new SQKeyTranslator()
+        let translator = new SQKeyTranslator(mockNot)
         Assert.That(File.Exists(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\ModulesDefinedAllInOnePropertiesFile\\sonar-project.properties")), Is.True)
         (translator :> ISQKeyTranslator).CreateConfiguration(Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\ModulesDefinedAllInOnePropertiesFile\\sonar-project.properties"));
         Assert.That((translator :> ISQKeyTranslator).GetModules().Length, Is.EqualTo(4))
@@ -191,7 +195,7 @@ type TraTests() =
 
     [<Test>]
     member test.``Should Return Path Correctly With Msbuild Runner Without Branch`` () =
-        let translator = new SQKeyTranslator() :> ISQKeyTranslator
+        let translator = new SQKeyTranslator(mockNot) :> ISQKeyTranslator
         translator.SetProjectKeyAndBaseDir("Tekla:VSSonarQubeExtension", assemblyRunningPath, "", assemblyRunningPath + "\\sda.sln")
         translator.SetLookupType(KeyLookUpType.ProjectGuid)
         let projectItem = new VsProjectItem()
@@ -207,7 +211,7 @@ type TraTests() =
 
     [<Test>]
     member test.``Should Return Path Correctly With Msbuild Runner With Branch`` () =
-        let translator = new SQKeyTranslator() :> ISQKeyTranslator
+        let translator = new SQKeyTranslator(mockNot) :> ISQKeyTranslator
         translator.SetProjectKeyAndBaseDir("Organization:Name:master", assemblyRunningPath, "master", assemblyRunningPath + "\\sda.sln")
         translator.SetLookupType(KeyLookUpType.ProjectGuid)
         let projectItem = new VsProjectItem()
@@ -223,7 +227,7 @@ type TraTests() =
 
     [<Test>]
     member test.``Should Return Key Correctly With MSBuild Runner when No Branch is Detected`` () =
-        let translator = new SQKeyTranslator() :> ISQKeyTranslator
+        let translator = new SQKeyTranslator(mockNot) :> ISQKeyTranslator
         translator.SetProjectKeyAndBaseDir("Company:Group", assemblyRunningPath, "", assemblyRunningPath + "\\sda.sln")
         translator.SetLookupType(KeyLookUpType.ProjectGuid)
         let mockAVsinterface =
@@ -247,7 +251,7 @@ type TraTests() =
 
     [<Test>]
     member test.``Should Return Key Correctly With MSBuild Runner when Branch is Detected`` () =
-        let translator = new SQKeyTranslator() :> ISQKeyTranslator
+        let translator = new SQKeyTranslator(mockNot) :> ISQKeyTranslator
         translator.SetProjectKeyAndBaseDir("Company:Group:master", assemblyRunningPath, "master", assemblyRunningPath + "\\sda.sln")
         translator.SetLookupType(KeyLookUpType.ProjectGuid)
         let mockAVsinterface =
