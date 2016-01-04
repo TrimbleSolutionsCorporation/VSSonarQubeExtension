@@ -36,7 +36,7 @@ namespace VSSonarExtensionUi.View.Helpers
 
             this.key.Text = "your.organization." + Path.GetFileNameWithoutExtension(solutionName);
             this.name.Text = Path.GetFileNameWithoutExtension(solutionName);
-            this.branchtouse.Text = branch;
+            this.hintbranch.Content = branch;
         }
 
         /// <summary>
