@@ -1031,22 +1031,32 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </param>
         private void UpdateOutputMessagesFromPlugin(object sender, EventArgs e)
         {
-            if (!this.AnalysisIsRunning)
-            {
-                this.AnalysisIsRunning = true;
-            }
-
             var exceptionMsg = (LocalAnalysisEventArgs)e;
             this.AllLog.Add(exceptionMsg.ErrorMessage);
             this.vsenvironmenthelper.WriteToVisualStudioOutput(exceptionMsg.ErrorMessage);
 
+            if (!this.AnalysisIsRunning)
+            {
+                this.AnalysisIsRunning = true;
+            }
+            
             if (exceptionMsg.ErrorMessage.Contains(
                 "You're not authorized to execute a dry run analysis. Please contact your SonarQube administrator."))
             {
                 this.PermissionsAreNotAvailable = true;
             }
 
-            // 14:48:56.728 INFO - ANALYSIS SUCCESSFUL, you can browse http://localhost:9000/dashboard/index/Trimble.Connect:Project
+            if (exceptionMsg.ErrorMessage.Contains("INFO  - HTML Issues Report generated:"))
+            {
+                string [] split = { "INFO  - HTML Issues Report generated:" };
+                var reportPath = exceptionMsg.ErrorMessage.Split(split, StringSplitOptions.RemoveEmptyEntries)[1].Trim();
+                
+                if(File.Exists(reportPath))
+                {
+                    this.vsenvironmenthelper.NavigateToResource(reportPath);
+                }
+            }
+
             if (exceptionMsg.ErrorMessage.Contains("ANALYSIS SUCCESSFUL, you can browse"))
             {
                 string[] separatingChars = { "ANALYSIS SUCCESSFUL, you can browse" };

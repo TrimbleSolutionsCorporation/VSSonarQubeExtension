@@ -484,7 +484,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
     member val ProjectRoot = "" with get, set
     member val Project = null : Resource with get, set
     member val Version = 0.0 with get, set
-    member val Conf = null with get, set
+    member val Conf : ISonarConfiguration = null with get, set
     member val ExecutingThread = null with get, set
     member val CurrentAnalysisType = AnalysisMode.File with get, set
     member val RunningLanguageMethod = LanguageType.SingleLang with get, set
@@ -533,26 +533,10 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                     let elems = e.Data.Split(' ');
                     jsonReports.Add(elems.[elems.Length-1])
 
-                let isDebugOn = vsinter.ReadSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.IsDebugAnalysisOnKey).Value
-
-                if e.Data.Contains(" DEBUG - ") then
-                    if isDebugOn.Equals("True") then
-                        let message = new LocalAnalysisEventArgs("LA:", e.Data, null)
-                        stdOutEvent.Trigger([|x; message|])
-                else
-                    let message = new LocalAnalysisEventArgs("LA:", e.Data, null)
-                    stdOutEvent.Trigger([|x; message|])
-
-                if e.Data.Contains("INFO  - HTML Issues Report generated:") then
-                    let split = [|"INFO  - HTML Issues Report generated:"|]
-                    let reportPath = e.Data.Split(split, StringSplitOptions.RemoveEmptyEntries).[1].Trim()
-                    if File.Exists(reportPath) then
-                        vsinterface.NavigateToResource(reportPath)
-                    else
-                        notificationManager.ReportMessage(new Message(Id = "LocalAnalysis", Data = "Report failed to be created. Check log"))
+                let message = new LocalAnalysisEventArgs("LA:", e.Data, null)
+                stdOutEvent.Trigger([|x; message|])
                     
-
-                if e.Data.Contains("DEBUG - Populating index from") then
+                if x.Conf.SonarVersion < 5.2 && e.Data.Contains("DEBUG - Populating index from") then
                     let message = new LocalAnalysisEventArgs("LA:", e.Data, null)
                     stdOutEvent.Trigger([|x; message|])
                     let fileName = x.GetFileToBeAnalysedFromSonarLog(e.Data)
