@@ -268,7 +268,7 @@
         /// <param name="conf">The conf.</param>
         /// <param name="resourceKey">The resource key.</param>
         /// <returns></returns>
-        List<Resource> GetQualityProfile(ISonarConfiguration conf, string resourceKey);
+        List<Resource> GetQualityProfile(ISonarConfiguration conf, Resource project);
 
         void GetRulesForProfile(ISonarConfiguration conf, Profile profile, bool ruleDetails, bool active);
 
@@ -276,9 +276,9 @@
 
         void UpdateRuleData(ISonarConfiguration conf, Rule newRule);
 
-        List<Profile> GetQualityProfilesForProject(ISonarConfiguration conf, string projectKey);
+        List<Profile> GetQualityProfilesForProject(ISonarConfiguration conf, Resource project);
 
-        List<Profile> GetQualityProfilesForProject(ISonarConfiguration conf, string projectKey, string language);
+        List<Profile> GetQualityProfilesForProject(ISonarConfiguration conf, Resource project, string language);
 
         List<Profile> GetAvailableProfiles(ISonarConfiguration conf);
 

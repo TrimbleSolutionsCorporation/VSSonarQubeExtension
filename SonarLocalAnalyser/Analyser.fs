@@ -436,7 +436,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
             profileUpdated <- true
             associateCompletedEvent.Trigger([|x; null|])            
         else
-            let profiles = restService.GetQualityProfilesForProject(conf, project.Key)
+            let profiles = restService.GetQualityProfilesForProject(conf, project)
             profilesCnt <- profiles.Count - 1
             for profile in profiles do
                 let worker2 = new BackgroundWorker()

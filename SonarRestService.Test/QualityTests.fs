@@ -37,7 +37,7 @@ type QualityTests() =
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        let resourceinfo = (service :> ISonarRestService).GetQualityProfile(conf, "project")
+        let resourceinfo = (service :> ISonarRestService).GetQualityProfile(conf, new Resource(Key ="project"))
         Assert.That(resourceinfo.Count, Is.EqualTo(1))
         Assert.That(resourceinfo.[0].Name, Is.EqualTo("bla"))
         Assert.That(resourceinfo.[0].Metrics.[0].Key, Is.EqualTo("profile"))

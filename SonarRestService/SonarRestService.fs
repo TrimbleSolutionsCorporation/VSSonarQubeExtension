@@ -1345,15 +1345,33 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             let url = "/api/resources?resource=" + resource
             getResourcesFromResponseContent(httpconnector.HttpSonarGetRequest(conf, url))
 
-        member this.GetQualityProfile(conf : ISonarConfiguration, resource : string) =
+        member this.GetQualityProfile(conf : ISonarConfiguration, project : Resource) =
+            let resource =
+                if not(String.IsNullOrEmpty(project.BranchName)) then
+                    project.Key + ":" + project.BranchName
+                else
+                    project.Key
+
             let url = "/api/resources?resource=" + resource + "&metrics=profile"
             getResourcesFromResponseContent(httpconnector.HttpSonarGetRequest(conf, url))
 
-        member this.GetQualityProfilesForProject(conf : ISonarConfiguration, resource : string) = 
+        member this.GetQualityProfilesForProject(conf : ISonarConfiguration, project : Resource) = 
+            let resource =
+                if not(String.IsNullOrEmpty(project.BranchName)) then
+                    project.Key + ":" + project.BranchName
+                else
+                    project.Key
+
             let url = "/api/profiles/list?project=" + resource
             GetQualityProfilesFromContent(httpconnector.HttpSonarGetRequest(conf, url), conf, this :> ISonarRestService)
                         
-        member this.GetQualityProfilesForProject(conf : ISonarConfiguration, resource : string, language : string) = 
+        member this.GetQualityProfilesForProject(conf : ISonarConfiguration, project : Resource, language : string) = 
+            let resource =
+                if not(String.IsNullOrEmpty(project.BranchName)) then
+                    project.Key + ":" + project.BranchName
+                else
+                    project.Key
+
             let url = "/api/profiles/list?project=" + resource + "&language=" + HttpUtility.UrlEncode(language)
             GetQualityProfilesFromContent(httpconnector.HttpSonarGetRequest(conf, url), conf, this :> ISonarRestService)
 
