@@ -1347,30 +1347,40 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
         member this.GetQualityProfile(conf : ISonarConfiguration, project : Resource) =
             let resource =
-                if not(String.IsNullOrEmpty(project.BranchName)) then
-                    project.Key + ":" + project.BranchName
-                else
+                if String.IsNullOrEmpty(project.BranchName) then
                     project.Key
+                else
+                    if not(project.Key.EndsWith(":" + project.BranchName))  then
+                        project.Key + ":" + project.BranchName
+                    else
+                        project.Key
 
             let url = "/api/resources?resource=" + resource + "&metrics=profile"
             getResourcesFromResponseContent(httpconnector.HttpSonarGetRequest(conf, url))
 
         member this.GetQualityProfilesForProject(conf : ISonarConfiguration, project : Resource) = 
             let resource =
-                if not(String.IsNullOrEmpty(project.BranchName)) then
-                    project.Key + ":" + project.BranchName
-                else
+                if String.IsNullOrEmpty(project.BranchName) then
                     project.Key
+                else
+                    if not(project.Key.EndsWith(":" + project.BranchName))  then
+                        project.Key + ":" + project.BranchName
+                    else
+                        project.Key
+                    
 
             let url = "/api/profiles/list?project=" + resource
             GetQualityProfilesFromContent(httpconnector.HttpSonarGetRequest(conf, url), conf, this :> ISonarRestService)
                         
         member this.GetQualityProfilesForProject(conf : ISonarConfiguration, project : Resource, language : string) = 
             let resource =
-                if not(String.IsNullOrEmpty(project.BranchName)) then
-                    project.Key + ":" + project.BranchName
-                else
+                if String.IsNullOrEmpty(project.BranchName) then
                     project.Key
+                else
+                    if not(project.Key.EndsWith(":" + project.BranchName))  then
+                        project.Key + ":" + project.BranchName
+                    else
+                        project.Key
 
             let url = "/api/profiles/list?project=" + resource + "&language=" + HttpUtility.UrlEncode(language)
             GetQualityProfilesFromContent(httpconnector.HttpSonarGetRequest(conf, url), conf, this :> ISonarRestService)

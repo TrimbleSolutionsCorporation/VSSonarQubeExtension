@@ -612,7 +612,15 @@
                 this.keyTranslator.SetProjectKeyAndBaseDir(this.AssociatedProject.Key, this.OpenSolutionPath, this.AssociatedProject.BranchName, Path.Combine(this.OpenSolutionPath, this.OpenSolutionName));
             }
 
-            this.Profile = this.localAnalyserModule.GetProfile(this.AssociatedProject);
+            try
+            {
+                this.Profile = this.localAnalyserModule.GetProfile(this.AssociatedProject);
+            }
+            catch (Exception ex)
+            {
+                UserExceptionMessageBox.ShowException("Failed to retrieve Profile : Check Log and report : " + ex.Message, ex);
+                return;
+            } 
 
             foreach (IModelBase model in modelPool)
             {
