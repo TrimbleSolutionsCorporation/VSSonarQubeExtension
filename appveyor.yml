@@ -2,17 +2,16 @@ version: '{build}'
 os: Visual Studio 2015
 build_script:
   - build.bat
-  - nuget pack VSSonarExtensionPlugin3Api.nuspec
-  - nuget pack VSSonarExtensionPlugin4Api.nuspec
 test:
   # assemblies to test - optional
   assemblies:
-    - BuildDrop\vs15\Test\Release\SonarLocalAnalyser.Test.dll
-    - BuildDrop\vs15\Test\Release\SonarRestService.Test.dll
+    - BuildDrop\vs15\Test\SonarLocalAnalyser.Test.dll
+    - BuildDrop\vs15\Test\SonarRestService.Test.dll
     - BuildDrop\vs15\Test\VSSonarExtensionUi.Test.dll
+after_test:
+  - cmd: nuget pack VSSonarExtensionPlugin3Api.nuspec
+  - cmd: nuget pack VSSonarExtensionPlugin4Api.nuspec
 artifacts:
-  - path: 'BuildDrop\vs12\VSSonarExtensionMetroVs2012.vsix'
-    name: VSSonarExtensionMetroVs2012
   - path: 'BuildDrop\vs13\VSSonarExtensionMetroVs2013.vsix'
     name: VSSonarExtensionMetroVs2013
   - path: 'BuildDrop\vs15\VSSonarExtensionMetroVs2015.vsix'
