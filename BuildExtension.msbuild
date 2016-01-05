@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" >
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" >
     <Import Project="configuration.props" Condition="'$(MSBuildFolder)'==''"/>
     <Import Project="$(MSBuildFolder)\TeklaNuget.tasks" Condition="'$(NugetRestoreTaskIncluded)'!='yes'"/>
     <Import Project="$(MSBuildFolder)\MSBuild.ExtensionPack.tasks"/>
@@ -14,7 +14,7 @@
     <Target Name="RestoreExtensionNuget"><NugetRestoreTask NugetExe="$(MSBuildFolder)\Nuget.exe" SolutionFile="$(SolutionFile)"/></Target>
 
     <Target Name="BuildExtension" DependsOnTargets="RestoreExtensionNuget">
-        <MSBuild Projects="$(SolutionFile)" Properties="Configuration=Release;VSVersion=$(VsVersion)" BuildInParallel="true" StopOnFirstFailure="true" />    
+        <MSBuild Projects="$(SolutionFile)" Properties="Configuration=Release;VSVersion=$(VsVersion);VisualStudioVersion=$(VsVersion)" BuildInParallel="true" StopOnFirstFailure="true" />    
     </Target>
     
     <Target Name="Build" DependsOnTargets="BuildExtension">

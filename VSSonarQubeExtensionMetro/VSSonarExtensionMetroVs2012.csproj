@@ -87,6 +87,10 @@
       <HintPath>..\packages\FSharpLint.Core.0.0.6-beta\lib\FSharpLint.Application.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <SpecificVersion>True</SpecificVersion>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="FSharpLint.Framework, Version=0.2.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FSharpLint.Core.0.0.6-beta\lib\FSharpLint.Framework.dll</HintPath>
       <Private>True</Private>
