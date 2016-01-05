@@ -7,8 +7,8 @@ build_script:
 test:
   # assemblies to test - optional
   assemblies:
-    - SonarLocalAnalyser.Test\bin\Release\SonarLocalAnalyser.Test.dll
-    - SonarRestService.Test\bin\Release\SonarRestService.Test.dll
+    - BuildDrop\vs15\Test\Release\SonarLocalAnalyser.Test.dll
+    - BuildDrop\vs15\Test\Release\SonarRestService.Test.dll
     - BuildDrop\vs15\Test\VSSonarExtensionUi.Test.dll
 artifacts:
   - path: 'BuildDrop\vs12\VSSonarExtensionMetroVs2012.vsix'
