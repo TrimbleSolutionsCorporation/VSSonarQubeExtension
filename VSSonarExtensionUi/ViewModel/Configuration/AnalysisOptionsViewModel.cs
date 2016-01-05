@@ -102,7 +102,14 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             SonarQubeViewModel.RegisterNewViewModelInPool(this);
             AssociationModel.RegisterNewModelInPool(this);
 
-            this.ReloadDataFromDisk(null);
+            try
+            {
+                this.ReloadDataFromDisk(null);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Failed to reload from disk : " + ex.Message);
+            }
         }
 
         #endregion
@@ -364,7 +371,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             {
                 Debug.WriteLine(ex.Message);
                 this.WrapperPath = Path.Combine(Path.Combine(this.configurationHelper.ApplicationPath, "Wrapper", this.CxxWrapperVersion), "CxxSonarQubeMsbuidRunner.exe");
-
             }
 
             try

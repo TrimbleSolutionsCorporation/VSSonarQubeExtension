@@ -220,7 +220,7 @@
             Assert.That(associationModel.IsConnected, Is.True);
             Assert.That(associationModel.ErrorIsFound, Is.True);
             Assert.That(associationModel.ShowRightFlyout, Is.True);
-            Assert.That(associationModel.StatusMessage, Is.EqualTo("Was unable to associate with sonar project, use project association dialog"));
+            Assert.That(associationModel.StatusMessage, Is.EqualTo("Was unable to associate with sonar project, use project association dialog to choose a project or to provision project"));
             Assert.That(associationModel.AssociationModule.AssociatedProject, Is.Null);
             Assert.That(associationModel.SelectedProjectName, Is.Null);
             Assert.That(associationModel.SelectedProjectKey, Is.Null);
@@ -253,7 +253,7 @@
             Assert.That(associationModel.IsConnected, Is.True);
             Assert.That(associationModel.ErrorIsFound, Is.True);
             Assert.That(associationModel.ShowRightFlyout, Is.True);
-            Assert.That(associationModel.StatusMessage, Is.EqualTo("Was unable to associate with sonar project, use project association dialog"));
+            Assert.That(associationModel.StatusMessage, Is.EqualTo("Was unable to associate with sonar project, use project association dialog to choose a project or to provision project"));
             Assert.That(associationModel.AssociationModule.AssociatedProject, Is.Null);
             Assert.That(associationModel.SelectedProjectName, Is.Null);
             Assert.That(associationModel.SelectedProjectKey, Is.Null);
@@ -280,7 +280,7 @@
             Assert.That(associationModel.IsConnected, Is.True);
             Assert.That(associationModel.ErrorIsFound, Is.True);
             Assert.That(associationModel.ShowRightFlyout, Is.True);
-            Assert.That(associationModel.StatusMessage, Is.EqualTo("Was unable to associate with sonar project, use project association dialog"));
+            Assert.That(associationModel.StatusMessage, Is.EqualTo("Was unable to associate with sonar project, use project association dialog to choose a project or to provision project"));
             Assert.That(associationModel.AssociationModule.AssociatedProject, Is.Null);
         }
 
