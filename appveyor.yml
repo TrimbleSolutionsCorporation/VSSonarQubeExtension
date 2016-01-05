@@ -1,19 +1,5 @@
 version: '{build}'
-install:
-  - ps: |
-      If ($env:Platform -Match "x86") {
-        $env:PCRE_PLATFORM="Win32"
-        $env:JAVA_HOME="c:/Program Files (x86)/Java/jdk1.8.0"
-        $env:MSBuildDir="C:/Program Files (x86)/MSBuild/14.0/Bin/msbuild.exe"
-        $env:VCVARS_PLATFORM="x86"
-        $env:LANG_PLATFORM=""
-      } Else {
-        $env:PCRE_PLATFORM="x64"
-        $env:JAVA_HOME="c:/Program Files/Java/jdk1.8.0"
-        $env:MSBuildDir="C:/Program Files/MSBuild/14.0/Bin/msbuild.exe"
-        $env:VCVARS_PLATFORM="amd64"
-        $env:LANG_PLATFORM="-x64"
-      }	  
+os: Visual Studio 2015
 build_script:
   - build.bat
   - nuget pack VSSonarExtensionPlugin3Api.nuspec
