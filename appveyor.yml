@@ -4,6 +4,12 @@ build_script:
   - build.bat
   - nuget pack VSSonarExtensionPlugin3Api.nuspec
   - nuget pack VSSonarExtensionPlugin4Api.nuspec
+test:
+  # assemblies to test - optional
+  assemblies:
+    - SonarLocalAnalyser.Test\bin\Release\SonarLocalAnalyser.Test.dll
+    - SonarRestService.Test\bin\Release\SonarRestService.Test.dll
+    - BuildDrop\vs15\Test\VSSonarExtensionUi.Test.dll
 artifacts:
   - path: 'BuildDrop\vs12\VSSonarExtensionMetroVs2012.vsix'
     name: VSSonarExtensionMetroVs2012
