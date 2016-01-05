@@ -15,7 +15,7 @@ install:
         $env:LANG_PLATFORM="-x64"
       }	  
 build_script:
-  - msbuild BuildExtension.msbuild /p:Configuration=Release
+  - build.bat
 artifacts:
   - path: 'BuildDrop\vs12\VSSonarExtensionMetroVs2012.vsix'
     name: VSSonarExtensionMetroVs2012

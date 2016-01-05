@@ -4,40 +4,31 @@
     <Import Project="$(MSBuildFolder)\TeklaNuget.tasks" Condition="'$(NugetRestoreTaskIncluded)'!='yes'"/>
     <Import Project="$(MSBuildFolder)\MSBuild.ExtensionPack.tasks"/>
     
-    <ItemGroup>        
-        <VSSonarQubeExtension2013 Include="VSSonarQubeExtension2013.sln" />
-        <VSSonarQubeExtension2012 Include="VSSonarQubeExtension2012.sln" />
-        <VSSonarQubeExtension2015 Include="VSSonarQubeExtension2015.sln" />
-    </ItemGroup>
+    <PropertyGroup>        
+        <SolutionFile Condition="'$(SolutionFile)'==''">VSSonarQubeExtension2015.sln</SolutionFile>
+        <VsFolder Condition="'$(VsFolder)'==''">vs15</VsFolder>
+        <VsVersion Condition="'$(VsVersion)'==''">14.0</VsVersion>
+        <Vsix Condition="'$(Vsix)'==''">Vs2015</Vsix>
+    </PropertyGroup>
     
-    <Target Name="RestoreExtensionNuget"><NugetRestoreTask NugetExe="$(MSBuildFolder)\Nuget.exe" SolutionFile="VSSonarQubeExtension2013.sln"/></Target>
+    <Target Name="RestoreExtensionNuget"><NugetRestoreTask NugetExe="$(MSBuildFolder)\Nuget.exe" SolutionFile="$(SolutionFile)"/></Target>
 
     <Target Name="BuildExtension" DependsOnTargets="RestoreExtensionNuget">
-	<MSBuild Projects="@(VSSonarQubeExtension2012)" Properties="Configuration=Release;VSVersion=11.0" BuildInParallel="true" StopOnFirstFailure="true" />    
-	<MSBuild Projects="@(VSSonarQubeExtension2013)" Properties="Configuration=Release;VSVersion=12.0" BuildInParallel="true" StopOnFirstFailure="true" />
-	<MSBuild Projects="@(VSSonarQubeExtension2015)" Properties="Configuration=Release;VSVersion=14.0" BuildInParallel="true" StopOnFirstFailure="true" />
+        <MSBuild Projects="$(SolutionFile)" Properties="Configuration=Release;VSVersion=$(VsVersion)" BuildInParallel="true" StopOnFirstFailure="true" />    
     </Target>
     
     <Target Name="Build" DependsOnTargets="BuildExtension">
-	    <ItemGroup>
-	      <Files2012 Include="$(MSBuildThisFileDirectory)BuildDrop\vs12\*.dll" />
-	      <Files2013 Include="$(MSBuildThisFileDirectory)BuildDrop\vs13\*.dll" />
-	      <Files2015 Include="$(MSBuildThisFileDirectory)BuildDrop\vs15\*.dll" />
-	    </ItemGroup>
+        <Message Text="Package Files :" Importance="High" />
+        <ItemGroup>
+            <FilesToInclude Include="$(MSBuildThisFileDirectory)BuildDrop\$(VsFolder)\*.dll" />
+        </ItemGroup>
+        
+        <Message Text="Package Files : @(FilesToInclude)" Importance="High" />
+        
     	<MSBuild.ExtensionPack.Compression.Zip
     		TaskAction="AddFiles" 
-    		CompressFiles="@(Files2012)" 
-    		ZipFileName="$(MSBuildThisFileDirectory)BuildDrop\vs12\VSSonarExtensionMetroVs2012.vsix" 
-    		RemoveRoot="$(MSBuildThisFileDirectory)BuildDrop\vs12" />
-    	<MSBuild.ExtensionPack.Compression.Zip
-    		TaskAction="AddFiles" 
-    		CompressFiles="@(Files2013)" 
-    		ZipFileName="$(MSBuildThisFileDirectory)BuildDrop\vs13\VSSonarExtensionMetroVs2013.vsix" 
-    		RemoveRoot="$(MSBuildThisFileDirectory)BuildDrop\vs13" />    		
-    	<MSBuild.ExtensionPack.Compression.Zip
-    		TaskAction="AddFiles" 
-    		CompressFiles="@(Files2015)" 
-    		ZipFileName="$(MSBuildThisFileDirectory)BuildDrop\vs15\VSSonarExtensionMetroVs2015.vsix" 
-    		RemoveRoot="$(MSBuildThisFileDirectory)BuildDrop\vs15" />    		    		
+    		CompressFiles="@(FilesToInclude)" 
+    		ZipFileName="$(MSBuildThisFileDirectory)BuildDrop\$(VsFolder)\VSSonarExtensionMetro$(Vsix).vsix" 
+    		RemoveRoot="$(MSBuildThisFileDirectory)BuildDrop\$(VsFolder)" />
     </Target>
 </Project>
