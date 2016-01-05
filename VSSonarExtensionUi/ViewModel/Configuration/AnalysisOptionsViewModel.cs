@@ -399,8 +399,17 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 this.IsSolutionAnalysisChecked = true;
             }
 
+
             // ensure wrapper is available
-            this.OnDownloadWrapperStartup();
+            try
+            {
+                this.OnDownloadWrapperStartup();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+            
             this.SaveData();
         }
 
