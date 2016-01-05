@@ -16,6 +16,8 @@ install:
       }	  
 build_script:
   - build.bat
+  - nuget pack VSSonarExtensionPlugin3Api.nuspec
+  - nuget pack VSSonarExtensionPlugin4Api.nuspec
 artifacts:
   - path: 'BuildDrop\vs12\VSSonarExtensionMetroVs2012.vsix'
     name: VSSonarExtensionMetroVs2012
@@ -23,3 +25,7 @@ artifacts:
     name: VSSonarExtensionMetroVs2013
   - path: 'BuildDrop\vs15\VSSonarExtensionMetroVs2015.vsix'
     name: VSSonarExtensionMetroVs2015
+  - path: 'BuildDrop\vs15\VSSonarExtensionPlugin3Api.nupkg'
+    name: VSSonarExtensionPlugin3Api
+  - path: 'BuildDrop\vs15\VSSonarExtensionPlugin4Api.nupkg'
+    name: VSSonarExtensionPlugin4Api    
