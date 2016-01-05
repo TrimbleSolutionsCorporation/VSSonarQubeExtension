@@ -39,7 +39,7 @@ type ISQKeyTranslator =
   
 
 [<AllowNullLiteral>]
-type SQKeyTranslator() = 
+type SQKeyTranslator(notificationManager : INotificationManager) = 
     let mutable projectKey : string = ""
     let mutable projectName : string = ""
     let mutable projectVersion : string = ""
@@ -233,12 +233,18 @@ type SQKeyTranslator() =
     let GetVSBootStrapperPath(key : string, branch : string, vshelper : IVsEnvironmentHelper) =
         try
             let allModulesPresentInKey =  key.Split(':')
-
+            notificationManager.ReportMessage(new Message(Id = "SQKeyTranslator-VsBootStrapper", Data = "key : " + key + " branch : " + branch))
             let project = vshelper.GetProjectByNameInSolution(allModulesPresentInKey.[allModulesPresentInKey.Length - 2], solutionPath)
-            let project = Directory.GetParent(vshelper.GetProjectByNameInSolution(allModulesPresentInKey.[0], solutionPath).ProjectFilePath).ToString()
-            Path.Combine(project, allModulesPresentInKey.[allModulesPresentInKey.Length - 1].Replace('/', Path.DirectorySeparatorChar))
+            notificationManager.ReportMessage(new Message(Id = "SQKeyTranslator-VsBootStrapper", Data = "project outpath: " + project.OutputPath))
+            notificationManager.ReportMessage(new Message(Id = "SQKeyTranslator-VsBootStrapper", Data = "project filepath: " + project.ProjectFilePath))
+            let projectfolderpath = Directory.GetParent(vshelper.GetProjectByNameInSolution(allModulesPresentInKey.[0], solutionPath).ProjectFilePath).ToString()
+            notificationManager.ReportMessage(new Message(Id = "SQKeyTranslator-VsBootStrapper", Data = "project folder path: " + projectfolderpath))
+            let path = Path.Combine(projectfolderpath, allModulesPresentInKey.[allModulesPresentInKey.Length - 1].Replace('/', Path.DirectorySeparatorChar))
+            notificationManager.ReportMessage(new Message(Id = "SQKeyTranslator-VsBootStrapper", Data = "translated path: " + path))
+            path
         with
-        | ex -> ""
+        | ex -> notificationManager.ReportMessage(new Message(Id = "SQKeyTranslator-VsBootStrapper", Data = "failed to translate path: " + ex.Message))
+                ""
 
     let GetVSBootStrapperKey(vshelper : IVsEnvironmentHelper, fileItem : VsFileItem) =
         let filePath = fileItem.FilePath.Replace("\\", "/")
@@ -246,12 +252,19 @@ type SQKeyTranslator() =
         let filerelativePath = filePath.Replace(solutionPath + "/", "")
         let keySplit = projectKey.Split(':').[0]
 
+        notificationManager.ReportMessage(new Message(Id = "SQKeyTranslator-VsBootStrapper", Data = "filepath : " + filePath))
+        notificationManager.ReportMessage(new Message(Id = "SQKeyTranslator-VsBootStrapper", Data = "solutionpath : " + solutionPath))
+        notificationManager.ReportMessage(new Message(Id = "SQKeyTranslator-VsBootStrapper", Data = "filerelativePath : " + filerelativePath))
+        notificationManager.ReportMessage(new Message(Id = "SQKeyTranslator-VsBootStrapper", Data = "projectKey : " + projectKey))
+
         if not(fileItem = null) then
             let path = Directory.GetParent(fileItem.Project.ProjectFilePath).ToString().Replace("\\", "/")
             let file = filePath.Replace(path + "/", "")
+            notificationManager.ReportMessage(new Message(Id = "SQKeyTranslator-VsBootStrapper", Data = " file item null : " + projectKey + ":" + fileItem.Project.ProjectName + ":" + file))
             projectKey + ":" + fileItem.Project.ProjectName + ":" + file
         else
             let filesplit = filerelativePath.Split('/')
+            notificationManager.ReportMessage(new Message(Id = "SQKeyTranslator-VsBootStrapper", Data = " file item not null : " + projectKey + ":" + filesplit.[0] + ":" + filerelativePath.Replace(filesplit.[0] + "/", "")))
             projectKey + ":" + filesplit.[0] + ":" + filerelativePath.Replace(filesplit.[0] + "/", "")
 
     let GetMSbuildRunnerPath(key : string, branch : string, vshelper : IVsEnvironmentHelper) = 
