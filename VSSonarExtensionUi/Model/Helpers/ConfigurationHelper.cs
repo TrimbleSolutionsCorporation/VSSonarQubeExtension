@@ -52,7 +52,12 @@ namespace VSSonarExtensionUi.Model.Helpers
             this.LogForAnalysis = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
                                   + "\\VSSonarExtension\\temp\\analysisLog.txt." + vsversion;
 
-            this.ApplicationPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "VSSonarExtension");
+            this.ApplicationPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "VSSonarExtension");
+
+            if (!Directory.Exists(this.ApplicationPath))
+            {
+                Directory.CreateDirectory(this.ApplicationPath);
+            }
 
             if (!Directory.Exists(Directory.GetParent(this.ApplicationDataUserSettingsFile).ToString()))
             {

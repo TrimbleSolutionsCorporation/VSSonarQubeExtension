@@ -329,6 +329,26 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         {
             try
             {
+                this.CxxWrapperVersion = this.configurationHelper.ReadSetting(
+                    Context.AnalysisGeneral,
+                    OwnersId.AnalysisOwnerId,
+                    GlobalAnalysisIds.CxxWrapperVersionKey).Value;
+
+                float fvv = 0;
+                if (float.TryParse(this.CxxWrapperVersion.Split('-')[0], out fvv) && fvv <= 1.4)
+                {
+                    this.CxxWrapperVersion = "1.5";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                this.CxxWrapperVersion = "1.5";
+            }
+
+            try
+            {
                 this.SQMSBuildRunnerVersion = this.configurationHelper.ReadSetting(
                         Context.AnalysisGeneral,
                         OwnersId.AnalysisOwnerId,
@@ -338,26 +358,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             {
                 Debug.WriteLine(ex.Message);
                 this.SQMSBuildRunnerVersion = "1.1";
-            }
-
-            try
-            {
-                this.CxxWrapperVersion = this.configurationHelper.ReadSetting(
-                    Context.AnalysisGeneral,
-                    OwnersId.AnalysisOwnerId,
-                    GlobalAnalysisIds.CxxWrapperVersionKey).Value;
-
-                float fvv = 0;
-                if (float.TryParse(this.CxxWrapperVersion.Split('-')[0], out fvv) && fvv <= 1.3)
-                {
-                    this.CxxWrapperVersion = "1.4";
-                }
-
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-                this.CxxWrapperVersion = "1.4";
             }
 
             try
