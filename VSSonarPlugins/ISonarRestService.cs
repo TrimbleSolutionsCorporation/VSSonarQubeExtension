@@ -125,12 +125,20 @@
         Dictionary<string, HttpStatusCode> MarkIssuesAsFalsePositive(ISonarConfiguration newConf, IList issues, string comment);
 
         /// <summary>
-        /// Resolves the issues.
+        /// Marks the issues as false positive.
         /// </summary>
         /// <param name="newConf">The new conf.</param>
         /// <param name="issues">The issues.</param>
         /// <param name="comment">The comment.</param>
         /// <returns></returns>
+        Dictionary<string, HttpStatusCode> MarkIssuesAsWontFix(ISonarConfiguration newConf, IList issues, string comment);
+        /// <summary>
+                                                                                                                                        /// Resolves the issues.
+                                                                                                                                        /// </summary>
+                                                                                                                                        /// <param name="newConf">The new conf.</param>
+                                                                                                                                        /// <param name="issues">The issues.</param>
+                                                                                                                                        /// <param name="comment">The comment.</param>
+                                                                                                                                        /// <returns></returns>
         Dictionary<string, HttpStatusCode> ResolveIssues(ISonarConfiguration newConf, IList issues, string comment);
 
         /// <summary>

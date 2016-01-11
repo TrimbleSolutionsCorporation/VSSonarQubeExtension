@@ -1472,6 +1472,49 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
             responseMap
 
+            
+        member this.MarkIssuesAsWontFix(newConf : ISonarConfiguration, issues : System.Collections.IList, comment : string) =
+            let responseMap = new System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>()
+
+            for issueobj in issues do
+                let issue = issueobj :?> Issue
+                if issue.Status <> IssueStatus.RESOLVED then
+                    let mutable idstr = issue.Key.ToString()
+                    let mutable status = DoStateTransition(newConf, issue, IssueStatus.RESOLVED, "wontfix")
+                    if status = Net.HttpStatusCode.OK then
+                        if not(String.IsNullOrEmpty(comment)) then
+                            (this :> ISonarRestService).CommentOnIssues(newConf, issues, comment) |> ignore
+                    else
+                        if not(idstr.Equals("0")) then
+                            idstr <- Convert.ToString(issue.Id)
+                            let CheckReponse(response : IRestResponse)= 
+                                if response.StatusCode = Net.HttpStatusCode.OK then
+                                    let reviews = getReviewsFromString(response.Content)
+                                    issue.Id <- reviews.[0].Id
+                                    issue.Status <- reviews.[0].Status
+                                    issue.Resolution <- Resolution.WONTFIX
+                                    let newComment = new Comment()
+                                    newComment.CreatedAt <- DateTime.Now
+                                    newComment.HtmlText <- comment
+                                    newComment.Login <- newConf.Username
+                                    issue.Comments.Add(newComment)
+
+                            if issue.Comments.Count > 0 then
+                                let parameters = Map.empty.Add("id", idstr).Add("resolution", "WONTFIX").Add("comment", comment)
+                                let response = httpconnector.HttpSonarPutRequest(newConf, "/api/reviews/resolve", parameters)
+                                status <- response.StatusCode
+                                CheckReponse(response)
+                            else
+                                let url = "/api/reviews?violation_id=" + Convert.ToString(idstr) + "&status=RESOLVED&resolution=WONTFIX" + GetComment(comment)
+                                let response = httpconnector.HttpSonarRequest(newConf, url, Method.POST)
+                                CheckReponse(response)
+                                status <- response.StatusCode
+
+                    responseMap.Add(idstr, status)
+
+            responseMap
+
+
         member this.MarkIssuesAsFalsePositive(newConf : ISonarConfiguration, issues : System.Collections.IList, comment : string) =
             let responseMap = new System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>()
 
