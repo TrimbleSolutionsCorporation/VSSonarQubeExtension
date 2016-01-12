@@ -924,9 +924,16 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
 
             bw.DoWork +=
                 delegate {
-                    var filter = "?componentRoots=" + this.resourceInView.Key.Trim() + "&resolutions=FALSE-POSITIVE,WONTFIX";
-                    var issues = this.restService.GetIssues(AuthtenticationHelper.AuthToken, filter, this.associatedProject.Key);
-                    this.falseandwontfixissues.Add(this.resourceInView.Key.Trim(), issues);
+                    try
+                    {
+                        var filter = "?componentRoots=" + this.resourceInView.Key.Trim() + "&resolutions=FALSE-POSITIVE,WONTFIX";
+                        var issues = this.restService.GetIssues(AuthtenticationHelper.AuthToken, filter, this.associatedProject.Key);
+                        this.falseandwontfixissues.Add(this.resourceInView.Key.Trim(), issues);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.Message);
+                    }
                 };
 
             bw.RunWorkerAsync();
@@ -988,41 +995,51 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
 
                                 if (!this.FileAnalysisIsEnabled)
                                 {
-                                    this.OnSelectedViewChanged();
                                     this.IssuesGridView.UpdateIssues(issues);
+                                    this.OnSelectedViewChanged();
                                     return;
                                 }
 
-                                var source = string.Empty;
 
-                                if (this.sourceInServerCache.ContainsKey(this.resourceInView.Key))
+                                try
                                 {
-                                    source = sourceInServerCache[this.resourceInView.Key];
-                                }
-                                else
-                                {
-                                    var data = restService.GetSourceForFileResource(AuthtenticationHelper.AuthToken, this.resourceInView.Key).Lines;
-                                    source = string.Join("\n", data);
-                                    sourceInServerCache.Add(this.resourceInView.Key, source);
-                                }
+                                    var source = string.Empty;
 
-                                ArrayList diffReport = VsSonarUtils.GetSourceDiffFromStrings(this.contentInView, source, DiffEngineLevel.FastImperfect);
+                                    if (this.sourceInServerCache.ContainsKey(this.resourceInView.Key))
+                                    {
+                                        source = sourceInServerCache[this.resourceInView.Key];
+                                    }
+                                    else
+                                    {
+                                        var data = restService.GetSourceForFileResource(AuthtenticationHelper.AuthToken, this.resourceInView.Key).Lines;
+                                        source = string.Join("\n", data);
+                                        sourceInServerCache.Add(this.resourceInView.Key, source);
+                                    }
 
-                                var issuesWithoutFalsePositives = issues;
+                                    ArrayList diffReport = VsSonarUtils.GetSourceDiffFromStrings(this.contentInView, source, DiffEngineLevel.FastImperfect);
 
-                                if (!this.ShowFalsePositivesAndResolvedIssues)
-                                {
-                                    issuesWithoutFalsePositives = this.FilterIssuesWithFalsePositives(issues);
+                                    var issuesWithoutFalsePositives = issues;
+
+                                    if (!this.ShowFalsePositivesAndResolvedIssues)
+                                    {
+                                        issuesWithoutFalsePositives = this.FilterIssuesWithFalsePositives(issues);
+                                    }
+
+                                    if (this.ShowIssuesOnModifiedSectionsOfFileOnly)
+                                    {
+                                        var issuesinChangedLines = VsSonarUtils.GetIssuesInModifiedLinesOnly(issuesWithoutFalsePositives, diffReport);
+                                        this.IssuesGridView.UpdateIssues(issuesinChangedLines);
+                                    }
+                                    else
+                                    {
+                                        this.IssuesGridView.UpdateIssues(issuesWithoutFalsePositives);
+                                    }
                                 }
-                               
-                                if (this.ShowIssuesOnModifiedSectionsOfFileOnly)
+                                catch (Exception ex)
                                 {
-                                    var issuesinChangedLines = VsSonarUtils.GetIssuesInModifiedLinesOnly(issuesWithoutFalsePositives, diffReport);
-                                    this.IssuesGridView.UpdateIssues(issuesinChangedLines);
-                                }
-                                else
-                                {
-                                    this.IssuesGridView.UpdateIssues(issuesWithoutFalsePositives);
+                                    this.notificationManager.ReportMessage(new VSSonarPlugins.Message() { Id = "LocalAnalyserModel", Data = "Failed to check false positives and new issues" });
+                                    this.notificationManager.ReportException(ex);
+                                    this.IssuesGridView.UpdateIssues(issues);
                                 }
 
                                 this.OnSelectedViewChanged();
