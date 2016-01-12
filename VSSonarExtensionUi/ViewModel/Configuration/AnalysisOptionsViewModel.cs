@@ -335,7 +335,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                     GlobalAnalysisIds.CxxWrapperVersionKey).Value;
 
                 float fvv = 0;
-                if (float.TryParse(this.CxxWrapperVersion.Split('-')[0], out fvv) && fvv <= 1.4)
+                if (float.TryParse(this.CxxWrapperVersion.Split('-')[0], out fvv) && fvv <= 1.7)
                 {
                     this.CxxWrapperVersion = "1.8";
                 }
