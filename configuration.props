@@ -34,7 +34,7 @@
 
         
         <ExtensionOutputPath     Condition="'$(ExtensionOutputPath)'==''">$(MSBuildThisFileDirectory)BuildDrop\$(OutFolder)\</ExtensionOutputPath>
-        <ExtensionOutputPathTest     Condition="'$(ExtensionOutputPathTest)'==''">$(MSBuildThisFileDirectory)BuildDrop\$(OutFolder)\Test</ExtensionOutputPathTest>
+        <ExtensionOutputPathTest     Condition="'$(ExtensionOutputPathTest)'==''">$(MSBuildThisFileDirectory)BuildDrop\Test\$(OutFolder)\</ExtensionOutputPathTest>
         <OBJDir>$(MSBuildThisFileDirectory)ObjDrop\$(OutFolder)\$(Configuration)\$(TSPlatform)</OBJDir>
         <IntermediateOutputPath>$(OBJDir)$(MSBuildProjectName)\</IntermediateOutputPath>
     </PropertyGroup>

@@ -24,14 +24,17 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// <param name="project">The project.</param>
         void TriggerAProjectAnalysis(VsProjectItem project);
 
-        /// <summary>The get issues for resource.</summary>
+        /// <summary>
+        /// The get issues for resource.
+        /// </summary>
         /// <param name="file">The file.</param>
         /// <param name="fileContent">The file content.</param>
-        /// <returns>The <see>
-        ///         <cref>List</cref>
-        ///     </see>
-        /// .</returns>
-        List<Issue> GetIssuesForResource(Resource file, string fileContent);
+        /// <param name="shownfalseandresolved">The shown false and resolved.</param>
+        /// <returns>
+        /// The <see><cref>List</cref></see>
+        /// .
+        /// </returns>
+        List<Issue> GetIssuesForResource(Resource file, string fileContent, out bool shownfalseandresolved);
         
         /// <summary>The on analysis mode has change.</summary>
         /// <param name="e">The e.</param>

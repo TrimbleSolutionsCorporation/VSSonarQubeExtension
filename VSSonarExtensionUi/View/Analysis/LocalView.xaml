@@ -78,8 +78,15 @@
                                       Margin="10, 0, 0, 0"
                                       IsChecked="{Binding ShowIssuesOnModifiedSectionsOfFileOnly}" ToolTip="Shows issues only on modified sections of the file." >
                                     </CheckBox>
-                                    <ToggleButton Width="158"
-                                        Margin="20, 0, 0, 3"
+
+                                    <CheckBox 
+                                      Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                      Margin="10, 0, 0, 0"
+                                      IsChecked="{Binding ShowFalsePositivesAndResolvedIssues}" ToolTip="Show false positives and issues marked as resolved." >
+                                    </CheckBox>
+                                    
+                                    <ToggleButton Width="125"
+                                        Margin="20, 0, 0, 1"
                                     	Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
                                     	Content="File Analysis"
                                     	IsChecked="{Binding FileAnalysisIsEnabled}" IsEnabled="{Binding CanRunLocalAnalysis}"/>

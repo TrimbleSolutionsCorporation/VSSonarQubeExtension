@@ -873,12 +873,14 @@ namespace VSSonarExtensionUi.ViewModel
         /// </summary>
         /// <param name="fileResource">The file Resource.</param>
         /// <param name="fileContent">The file Content.</param>
+        /// <param name="showfalseandresolved">if set to <c>true</c> [showfalseandresolved].</param>
         /// <returns>
         /// The<see><cref>List</cref></see>
         /// .
         /// </returns>
-        public List<Issue> GetIssuesInEditor(Resource fileResource, string fileContent)
+        public List<Issue> GetIssuesInEditor(Resource fileResource, string fileContent, out bool showfalseandresolved)
         {
+            showfalseandresolved = false;
             this.notificationManager.WriteMessage("Return issues for resource: " + fileResource);
             if (this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.DisableEditorTags)
             {
@@ -893,7 +895,7 @@ namespace VSSonarExtensionUi.ViewModel
                 return null;
             }
 
-            return view.GetIssuesForResource(fileResource, fileContent);
+            return view.GetIssuesForResource(fileResource, fileContent, out showfalseandresolved);
         }
 
         /// <summary>

@@ -300,33 +300,35 @@ namespace VSSonarQubeExtension.Squiggle
         /// <summary>
         /// The issues list changed.
         /// </summary>
-        /// <param name="sender">
-        /// The sender.
-        /// </param>
-        /// <param name="e">
-        /// The e.
-        /// </param>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The e.</param>
         private void IssuesListChanged(object sender, EventArgs e)
         {
             try
-            {
-                var document = VsEvents.GetPropertyFromBuffer<ITextDocument>(this.SourceBuffer);
+            {                
                 Resource resource = SonarQubeViewModelFactory.SQViewModel.ResourceInEditor;
 
-                if (resource == null || document == null)
+                if (resource == null)
                 {
                     return;
                 }
 
-                if (!document.FilePath.Replace('\\', '/').EndsWith(resource.Lname, StringComparison.OrdinalIgnoreCase))
+                string document = SonarQubeViewModelFactory.SQViewModel.VsHelper.GetCurrentDocumentInView();
+                if (string.IsNullOrEmpty(document))
+                {
+                    return;
+                }
+
+                if (!document.Replace('\\', '/').ToLower().EndsWith(resource.Lname.ToLower(), StringComparison.OrdinalIgnoreCase))
                 {
                     return;
                 }
 
                 this.sonarTags.Clear();
+                bool showFalseAndResolved = false;
                 List<Issue> issuesInEditor = SonarQubeViewModelFactory.SQViewModel.GetIssuesInEditor(
                     resource, 
-                    this.SourceBuffer.CurrentSnapshot.GetText());
+                    this.SourceBuffer.CurrentSnapshot.GetText(), out showFalseAndResolved);
 
                 if (issuesInEditor == null || issuesInEditor.Count == 0)
                 {
@@ -337,9 +339,12 @@ namespace VSSonarQubeExtension.Squiggle
                 var alreadyAddLine = new Dictionary<int, string>();
                 foreach (Issue issue in issuesInEditor)
                 {
-                    if (issue.Status == IssueStatus.CLOSED || issue.Status == IssueStatus.RESOLVED)
+                    if (!showFalseAndResolved)
                     {
-                        continue;
+                        if (issue.Status == IssueStatus.CLOSED || issue.Status == IssueStatus.RESOLVED)
+                        {
+                            continue;
+                        }
                     }
 
                     if (alreadyAddLine.ContainsKey(issue.Line))

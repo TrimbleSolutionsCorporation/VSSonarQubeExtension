@@ -350,6 +350,7 @@ namespace VSSonarQubeExtension.Helpers
                 SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("New Document Open: " + gotFocus.Document.FullName);
 
                 this.LastDocumentWindowWithFocus = gotFocus;
+                this.environment.SetCurrentDocumentInView(gotFocus.Document.FullName);
                 SonarQubeViewModelFactory.SQViewModel.RefreshDataForResource(gotFocus.Document.FullName, File.ReadAllText(gotFocus.Document.FullName));
             }
             catch (Exception ex)

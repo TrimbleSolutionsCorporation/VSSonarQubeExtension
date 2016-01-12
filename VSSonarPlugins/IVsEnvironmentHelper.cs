@@ -208,5 +208,16 @@ namespace VSSonarPlugins
         /// <returns></returns>
         string EvaluatedValueForIncludeFile(string msbuildProjectFile, string filePath);
 
+        /// <summary>
+        /// Sets the current document in view.
+        /// </summary>
+        /// <param name="fullName">The full name.</param>
+        void SetCurrentDocumentInView(string fullName);
+
+        /// <summary>
+        /// Gets the current document in view.
+        /// </summary>
+        /// <returns></returns>
+        string GetCurrentDocumentInView();
     }
 }

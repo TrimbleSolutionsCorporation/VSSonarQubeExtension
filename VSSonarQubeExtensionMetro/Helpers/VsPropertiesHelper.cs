@@ -21,8 +21,6 @@ namespace VSSonarQubeExtension.Helpers
 
     using EnvDTE80;
 
-
-
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Editor;
     using Microsoft.VisualStudio.Shell;
@@ -30,22 +28,18 @@ namespace VSSonarQubeExtension.Helpers
     using Microsoft.VisualStudio.Text.Editor;
     using Microsoft.VisualStudio.TextManager.Interop;
 
-
-
-
     using VSSonarPlugins;
 
     using Process = System.Diagnostics.Process;
     using Thread = System.Threading.Thread;
     using VSSonarPlugins.Types;
     using Microsoft.VisualStudio.Text;
+
     /// <summary>
     ///     The vs properties helper.
     /// </summary>
     public class VsPropertiesHelper : IVsEnvironmentHelper
     {
-        #region Fields
-
         /// <summary>
         ///     The environment 2.
         /// </summary>
@@ -61,9 +55,10 @@ namespace VSSonarQubeExtension.Helpers
         /// </summary>
         private IWpfTextViewHost textViewHost;
 
-        #endregion
-
-        #region Constructors and Destructors
+        /// <summary>
+        /// The resourceinview
+        /// </summary>
+        private string resourceinview;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VsPropertiesHelper"/> class.
@@ -80,11 +75,7 @@ namespace VSSonarQubeExtension.Helpers
             this.provider = service;
             this.environment = environment;
         }
-
-        #endregion
-
-        #region Public Properties
-
+       
         /// <summary>
         ///     Gets or sets the custom pane.
         /// </summary>
@@ -128,11 +119,7 @@ namespace VSSonarQubeExtension.Helpers
 
                 return this.textViewHost;
             }
-        }
-
-        #endregion
-
-        #region Public Methods and Operators
+        }        
 
         /// <summary>
         /// The get document language.
@@ -876,9 +863,136 @@ namespace VSSonarQubeExtension.Helpers
             }
         }
 
-        #endregion
+        public string ActiveConfiguration()
+        {
+            if (this.environment == null)
+            {
+                return "";
+            }
 
-        #region Methods
+            try
+            {
+                var solutionConfiguration2 = (EnvDTE80.SolutionConfiguration2)this.environment.Solution.SolutionBuild.ActiveConfiguration;
+                return solutionConfiguration2.Name;
+            } catch (Exception ex) {
+                Debug.WriteLine(ex.Message);
+                return "";
+            }
+        }
+
+        public string ActivePlatform()
+        {
+            if (this.environment == null)
+            {
+                return "";
+            }
+
+            try
+            {
+                var solutionConfiguration2 = (EnvDTE80.SolutionConfiguration2)this.environment.Solution.SolutionBuild.ActiveConfiguration;
+                return solutionConfiguration2.PlatformName;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return "";
+            }
+        }
+
+
+        /// <summary>
+        /// Gets the project by name in solution.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
+        public VsProjectItem GetProjectByNameInSolution(string name, string solutionPath)
+        {
+            var solutiondata = MSBuildHelper.CreateSolutionData(solutionPath);
+            foreach (var project in solutiondata.Projects)
+            {
+                var path = project.Value.Path;
+                if (project.Value.Name.ToLower().Equals(name.ToLower()))
+                {
+                    return CreateVsProjectItem(project.Value);
+                }
+            }
+
+            return null;
+        }
+
+        public VsProjectItem GetProjectByGuidInSolution(string guid, string solutionPath)
+        {
+            var solutiondata = MSBuildHelper.CreateSolutionData(solutionPath);
+            foreach (var project in solutiondata.Projects)
+            {
+                var path = project.Value.Path;
+                if (project.Value.Guid.ToString().ToLower().Equals(guid.ToLower()))
+                {
+                    return CreateVsProjectItem(project.Value);
+                }
+            }
+
+            return null;
+        }
+
+        public string GetGuidForProject(string projectPath, string solutionPath)
+        {
+            var solutiondata = MSBuildHelper.CreateSolutionData(solutionPath);
+            foreach (var project in solutiondata.Projects)
+            {
+                var path = project.Value.Path;
+                if (project.Value.Path.ToLower().Equals(projectPath.ToLower()))
+                {
+                    return project.Value.Guid.ToString();
+                }
+            }
+
+            return null;
+        }
+
+
+        /// <summary>
+        /// Evaluateds the value for include file.
+        /// </summary>
+        /// <param name="msbuildProjectFile">The msbuild project file.</param>
+        /// <param name="filePath">The file path.</param>
+        /// <returns></returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public string EvaluatedValueForIncludeFile(string msbuildProjectFile, string filePath)
+        {
+            return MSBuildHelper.GetProjectFilePathForFile(msbuildProjectFile, filePath);
+        }
+
+        /// <summary>
+        /// Sets the current document in view.
+        /// </summary>
+        /// <param name="fullName">The full name.</param>
+        public void SetCurrentDocumentInView(string fullName)
+        {
+            this.resourceinview = fullName;
+        }
+
+        /// <summary>
+        /// Gets the current document in view.
+        /// </summary>
+        /// <returns>returns current document in view</returns>
+        public string GetCurrentDocumentInView()
+        {
+            return this.resourceinview;
+        }
+
+        /// <summary>
+        /// Creates the vs project item.
+        /// </summary>
+        /// <param name="project">The project.</param>
+        /// <returns></returns>
+        private static VsProjectItem CreateVsProjectItem(ProjectTypes.Project project)
+        {
+            var proToRet = new VsProjectItem();
+            proToRet.ProjectName = project.Name;
+            proToRet.ProjectFilePath = project.Path;
+            return proToRet;
+        }
 
         /// <summary>
         /// The get long path name.
@@ -943,117 +1057,6 @@ namespace VSSonarQubeExtension.Helpers
             {
                 Debug.WriteLine(ex.Message);
             }
-        }
-
-        #endregion
-
-
-        public string ActiveConfiguration()
-        {
-            if (this.environment == null)
-            {
-                return "";
-            }
-
-            try
-            {
-                var solutionConfiguration2 = (EnvDTE80.SolutionConfiguration2)this.environment.Solution.SolutionBuild.ActiveConfiguration;
-                return solutionConfiguration2.Name;
-            } catch (Exception ex) {
-                Debug.WriteLine(ex.Message);
-                return "";
-            }
-        }
-
-        public string ActivePlatform()
-        {
-            if (this.environment == null)
-            {
-                return "";
-            }
-
-            try
-            {
-                var solutionConfiguration2 = (EnvDTE80.SolutionConfiguration2)this.environment.Solution.SolutionBuild.ActiveConfiguration;
-                return solutionConfiguration2.PlatformName;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-                return "";
-            }
-        }
-
-
-        /// <summary>
-        /// Gets the project by name in solution.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <returns></returns>
-        public VsProjectItem GetProjectByNameInSolution(string name, string solutionPath)
-        {
-            var solutiondata = MSBuildHelper.CreateSolutionData(solutionPath);
-            foreach (var project in solutiondata.Projects)
-            {
-                var path = project.Value.Path;
-                if (project.Value.Name.ToLower().Equals(name.ToLower()))
-                {
-                    return CreateVsProjectItem(project.Value);
-                }
-            }
-
-            return null;
-        }
-
-        private static VsProjectItem CreateVsProjectItem(ProjectTypes.Project project)
-        {
-            var proToRet = new VsProjectItem();
-            proToRet.ProjectName = project.Name;
-            proToRet.ProjectFilePath = project.Path;
-            return proToRet;
-        }
-
-        public VsProjectItem GetProjectByGuidInSolution(string guid, string solutionPath)
-        {
-            var solutiondata = MSBuildHelper.CreateSolutionData(solutionPath);
-            foreach (var project in solutiondata.Projects)
-            {
-                var path = project.Value.Path;
-                if (project.Value.Guid.ToString().ToLower().Equals(guid.ToLower()))
-                {
-                    return CreateVsProjectItem(project.Value);
-                }
-            }
-
-            return null;
-        }
-
-        public string GetGuidForProject(string projectPath, string solutionPath)
-        {
-            var solutiondata = MSBuildHelper.CreateSolutionData(solutionPath);
-            foreach (var project in solutiondata.Projects)
-            {
-                var path = project.Value.Path;
-                if (project.Value.Path.ToLower().Equals(projectPath.ToLower()))
-                {
-                    return project.Value.Guid.ToString();
-                }
-            }
-
-            return null;
-        }
-
-
-        /// <summary>
-        /// Evaluateds the value for include file.
-        /// </summary>
-        /// <param name="msbuildProjectFile">The msbuild project file.</param>
-        /// <param name="filePath">The file path.</param>
-        /// <returns></returns>
-        /// <exception cref="System.NotImplementedException"></exception>
-        public string EvaluatedValueForIncludeFile(string msbuildProjectFile, string filePath)
-        {
-            return MSBuildHelper.GetProjectFilePathForFile(msbuildProjectFile, filePath);
         }
     }
 }
