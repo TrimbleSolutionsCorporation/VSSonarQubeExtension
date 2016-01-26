@@ -1267,7 +1267,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             plans
 
         member this.GetIssues(newConf : ISonarConfiguration, query : string, project : string) = 
-            let url =  "/api/issues/search" + query + "&pageSize=200"
+            let url =  "/api/issues/search" + query + "&additionalFields=comments,actionPlans&pageSize=200"
             let oldurlreview = "/api/reviews?projects="+ project
             let oldurlviolations = "/api/violations?resource="+ project + "&depth=-1"
             getIssuesOldAndNewVersions(newConf, url, oldurlreview, oldurlviolations)
