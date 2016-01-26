@@ -185,6 +185,7 @@ namespace VSSonarExtensionUi.Model.Menu
             this.associatedProject = project;
             this.issueTrackerPlugin = sourcePlugin;
             this.sourceModel = sourceModelIn;
+            this.config = AuthtenticationHelper.AuthToken;
         }
 
 
