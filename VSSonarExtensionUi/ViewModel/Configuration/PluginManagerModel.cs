@@ -246,6 +246,15 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         #region Public Methods and Operators
 
         /// <summary>
+        /// Called when [connect to sonar].
+        /// </summary>
+        /// <param name="configuration">sonar configuration</param>
+        public void OnConnectToSonar(ISonarConfiguration configuration)
+        {
+            // does nothing
+        }
+
+        /// <summary>
         /// Associates the with new project.
         /// </summary>
         /// <param name="configIn">The configuration in.</param>

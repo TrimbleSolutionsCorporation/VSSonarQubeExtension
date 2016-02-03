@@ -17,15 +17,14 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using System.Collections.ObjectModel;
     using System.IO;
     using System.Windows.Input;
-    using System.Windows.Forms;
     using System.Windows.Media;
-   
-    using PropertyChanged;   
+
+    using PropertyChanged;
     using Model.Configuration;
     using Helpers;
-    using GalaSoft.MvvmLight.Command;    
+    using GalaSoft.MvvmLight.Command;
     using View.Helpers;
-
+    using System.Windows.Forms;
     /// <summary>
     /// roslyn manager view model
     /// </summary>
@@ -137,14 +136,21 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             }
         }
 
-        private void SyncDiagInView()
+        /// <summary>
+        /// Synchronizes the diag in view.
+        /// </summary>
+        public void SyncDiagInView()
         {
-            this.AvailableDllDiagnostics.Clear();
+            System.Windows.Application.Current.Dispatcher.Invoke(
+                delegate
+                {
+                    this.AvailableDllDiagnostics.Clear();
 
-            foreach (var item in model.ExtensionDiagnostics)
-            {
-                this.AvailableDllDiagnostics.Add(item.Value);
-            }
+                    foreach (var item in model.ExtensionDiagnostics)
+                    {
+                        this.AvailableDllDiagnostics.Add(item.Value);
+                    }
+                });
         }
 
         /// <summary>

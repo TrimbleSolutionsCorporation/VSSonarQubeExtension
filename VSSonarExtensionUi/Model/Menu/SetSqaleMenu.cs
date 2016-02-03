@@ -159,6 +159,15 @@
         }
 
         /// <summary>
+        /// Called when [connect to sonar].
+        /// </summary>
+        /// <param name="configuration">sonar configuration</param>
+        public void OnConnectToSonar(ISonarConfiguration configuration)
+        {
+            // does nothing
+        }
+
+        /// <summary>
         /// The end data association.
         /// </summary>
         public void OnSolutionClosed()

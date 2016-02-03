@@ -343,6 +343,15 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
         #region Methods
 
+        /// <summary>
+        /// Called when [connect to sonar].
+        /// </summary>
+        /// <param name="configuration">sonar configuration</param>
+        public void OnConnectToSonar(ISonarConfiguration configuration)
+        {
+            // does nothing
+        }
+
         /// <summary>The update theme.</summary>
         /// <param name="background">The background.</param>
         /// <param name="foreground">The foreground.</param>

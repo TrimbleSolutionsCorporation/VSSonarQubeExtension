@@ -824,6 +824,15 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         #region Public Methods and Operators
 
         /// <summary>
+        /// Called when [connect to sonar].
+        /// </summary>
+        /// <param name="configuration">sonar configuration</param>
+        public void OnConnectToSonar(ISonarConfiguration configuration)
+        {
+            // does nothing
+        }
+
+        /// <summary>
         /// Goes to next issue.
         /// </summary>
         public void GoToNextIssue()

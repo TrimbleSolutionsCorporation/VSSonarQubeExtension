@@ -60,6 +60,10 @@
         /// The available projects
         /// </summary>
         private IList<Resource> availableProjects;
+
+        /// <summary>
+        /// The analyser
+        /// </summary>
         private readonly ISonarLocalAnalyser analyser;
 
         /// <summary>
@@ -145,6 +149,15 @@
         public void RefreshMenuData()
         {
             // not necessary
+        }
+
+        /// <summary>
+        /// Called when [connect to sonar].
+        /// </summary>
+        /// <param name="configuration">sonar configuration</param>
+        public void OnConnectToSonar(ISonarConfiguration configuration)
+        {
+            // does nothing
         }
 
         /// <summary>

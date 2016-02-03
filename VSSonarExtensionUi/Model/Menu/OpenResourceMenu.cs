@@ -143,6 +143,15 @@ namespace VSSonarExtensionUi.Model.Menu
         }
 
         /// <summary>
+        /// Called when [connect to sonar].
+        /// </summary>
+        /// <param name="configuration">sonar configuration</param>
+        public void OnConnectToSonar(ISonarConfiguration configuration)
+        {
+            // does nothing
+        }
+
+        /// <summary>
         /// Associates the with new project.
         /// </summary>
         /// <param name="configIn">The configuration in.</param>
@@ -155,6 +164,7 @@ namespace VSSonarExtensionUi.Model.Menu
             this.associatedProject = project;
             this.sourceDir = workingDir;
         }
+
 
         /// <summary>
         /// Refreshes the menu data for menu that have options that

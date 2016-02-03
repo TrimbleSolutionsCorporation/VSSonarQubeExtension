@@ -131,6 +131,15 @@ namespace VSSonarExtensionUi.Model.Analysis
         }
 
         /// <summary>
+        /// Called when [connect to sonar].
+        /// </summary>
+        /// <param name="configuration">sonar configuration</param>
+        public void OnConnectToSonar(ISonarConfiguration configuration)
+        {
+            // does nothing
+        }
+
+        /// <summary>
         /// The get issues for resource.
         /// </summary>
         /// <param name="file">The file.</param>

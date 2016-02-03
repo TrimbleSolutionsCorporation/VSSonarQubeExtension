@@ -132,6 +132,13 @@ namespace VSSonarExtensionUi.Model.Menu
         /// Gets or sets the sub items.
         /// </summary>
         public ObservableCollection<IMenuItem> SubItems { get; set; }
+
+        /// <summary>
+        /// Gets the profile.
+        /// </summary>
+        /// <value>
+        /// The profile.
+        /// </value>
         public Dictionary<string, Profile> Profile { get; private set; }
 
         #endregion
@@ -174,6 +181,14 @@ namespace VSSonarExtensionUi.Model.Menu
             // not necessay
         }
 
+        /// <summary>
+        /// Called when [connect to sonar].
+        /// </summary>
+        /// <param name="configuration">sonar configuration</param>
+        public void OnConnectToSonar(ISonarConfiguration configuration)
+        {
+            // does nothing
+        }
         /// <summary>
         /// Called when [disconnect].
         /// </summary>

@@ -8,19 +8,13 @@
     using System.Reflection;
 
     using Helpers;
-    using Microsoft.CodeAnalysis.Diagnostics;
-    using SonarLocalAnalyser;
-    using ViewModel;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
     using Association;
-    using View.Helpers;
     using Microsoft.CodeAnalysis;
-
-    using Microsoft.CodeAnalysis.Diagnostics;
-    using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.MSBuild;
-
+    using System.Net;
+    using System.IO.Compression;
 
     /// <summary>
     /// Roslyn manager model
@@ -33,7 +27,7 @@
         private const string ID = "RoslynManagerModel";
 
         /// <summary>
-        /// The pathkey
+        /// The path key
         /// </summary>
         private const string PATHKEY = "RoslynDllPaths";
 
@@ -94,10 +88,18 @@
             this.plugins = pluginsIn;
             this.notificationManager = notificationManagerIn;
             this.ExtensionDiagnostics = new Dictionary<string, VSSonarExtensionDiagnostic>();
-            this.InitializedInstalledDiagnostics();
 
             // register model
             AssociationModel.RegisterNewModelInPool(this);
+        }
+
+        /// <summary>
+        /// Called when [connect to sonar].
+        /// </summary>
+        /// <param name="configuration">sonar configuration</param>
+        public void OnConnectToSonar(ISonarConfiguration configuration)
+        {
+            this.InitializedServerDiagnostics(configuration);
         }
 
         /// <summary>
@@ -168,6 +170,13 @@
         /// The source directory.
         /// </value>
         public string SourceDir { get; private set; }
+
+        /// <summary>
+        /// Gets the profile.
+        /// </summary>
+        /// <value>
+        /// The profile.
+        /// </value>
         public Dictionary<string, Profile> Profile { get; private set; }
 
         /// <summary>
@@ -191,7 +200,7 @@
         /// <summary>
         /// Updates the services.
         /// </summary>
-        /// <param name="vsenvironmenthelperIn">The vsenvironmenthelper in.</param>
+        /// <param name="vsenvironmenthelperIn">The vs environment helper in.</param>
         /// <param name="statusBar">The status bar.</param>
         /// <param name="provider">The provider.</param>
         public void UpdateServices(IVsEnvironmentHelper vsenvironmenthelperIn, IVSSStatusBar statusBar, IServiceProvider provider)
@@ -239,7 +248,7 @@
         /// </summary>
         /// <param name="config">The configuration.</param>
         /// <param name="project">The project.</param>
-        /// <param name="workDir">The work dir.</param>
+        /// <param name="workDir">The work directory.</param>
         /// <param name="sourceModelIn">The source model in.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
         public void AssociateWithNewProject(Resource project, string workDir, ISourceControlProvider sourceModelIn, IIssueTrackerPlugin sourcePlugin, IList<Resource> availableProjects, Dictionary<string, Profile> profile)
@@ -313,7 +322,7 @@
                     {
                         var language = GetLanguage(lang);
                         this.CreateRule(language, diag);
-                    }                    
+                    }
                 }
             }
 
@@ -464,29 +473,51 @@
         }
 
         /// <summary>
-        /// Initializeds the installed diagnostics.
+        /// Initializes the installed diagnostics.
         /// </summary>
-        private void InitializedInstalledDiagnostics()
+        public void InitializedServerDiagnostics(ISonarConfiguration authentication)
         {
+            var roslynDefaultPath = Path.Combine(this.confHelper.ApplicationPath, "Diagnostics");
 
             if (this.confHelper != null)
             {
-                try
-                {
-                    var roslynDef = this.confHelper.ReadSetting(Context.AnalysisGeneral, ID, PATHKEY).Value;
-                    var splitExistent = roslynDef.Split(';');
+                var tmpFile = Path.GetTempFileName();
+                var tmpDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
-                    foreach (var item in splitExistent)
+                if (File.Exists(tmpFile))
+                {
+                    File.Delete(tmpFile);
+                }
+
+                try
+                {                    
+                    Directory.CreateDirectory(roslynDefaultPath);
+                    var urldownload = authentication.Hostname + "/static/csharp/SonarLint.zip";
+                    using (var client = new WebClient())
                     {
-                        if (File.Exists(item))
+
+                        client.DownloadFile(urldownload, tmpFile);
+
+                        ZipFile.ExtractToDirectory(tmpFile, tmpDir);
+
+                        var files = Directory.GetFiles(tmpDir);
+
+                        foreach (var file in files)
                         {
-                            if (!item.Contains(this.extensionRunningPath) && item.Contains(this.extensionsBasePath))
+                            var endPath = Path.Combine(roslynDefaultPath, Path.GetFileName(file));
+
+                            if (File.Exists(endPath))
                             {
-                                continue;
+                                AssemblyName currentAssemblyName = AssemblyName.GetAssemblyName(endPath);
+                                AssemblyName updatedAssemblyName = AssemblyName.GetAssemblyName(file);
+
+                                if (updatedAssemblyName.Version.CompareTo(currentAssemblyName.Version) <= 0)
+                                {
+                                    continue;
+                                }
                             }
 
-                            var name = Path.GetFileName(item);
-                            this.ExtensionDiagnostics.Add(name, new VSSonarExtensionDiagnostic(name, item));
+                            File.Copy(file, endPath, true);
                         }
                     }
                 }
@@ -494,28 +525,24 @@
                 {
                     Debug.WriteLine(ex.Message);
                 }
+
+                File.Delete(tmpFile);
+                Directory.Delete(tmpDir, true);
             }
 
             if (!this.ExtensionDiagnostics.Any())
             {
-                this.ExtensionDiagnostics.Add(
-                    "SonarLint.CSharp.dll",
-                    new VSSonarExtensionDiagnostic(
-                        "SonarLint.CSharp.dll",
-                        Path.Combine(this.extensionRunningPath, "externalAnalysers\\roslynDiagnostics", "SonarLint.CSharp.dll")));
+                var diagnostics = Directory.GetFiles(roslynDefaultPath);
 
-                this.ExtensionDiagnostics.Add(
-                    "SonarLint.VisualBasic.dll",
-                    new VSSonarExtensionDiagnostic(
-                        "SonarLint.VisualBasic.dll",
-                        Path.Combine(this.extensionRunningPath, "externalAnalysers\\roslynDiagnostics", "SonarLint.VisualBasic.dll")));
+                foreach (var diagnostic in diagnostics)
+                {
+                    var newdata = new VSSonarExtensionDiagnostic(Path.GetFileName(diagnostic), diagnostic);
 
-                this.ExtensionDiagnostics.Add(
-                    "StyleCop.Analyzers.dll",
-                    new VSSonarExtensionDiagnostic(
-                        "StyleCop.Analyzers.dll",
-                        Path.Combine(this.extensionRunningPath, "externalAnalysers\\roslynDiagnostics", "StyleCop.Analyzers.dll")));
-                
+                    if (newdata.AvailableChecks.Count > 0)
+                    {
+                        this.ExtensionDiagnostics.Add(Path.GetFileName(diagnostic), newdata);
+                    }
+                }
             }
 
             this.SyncSettings();

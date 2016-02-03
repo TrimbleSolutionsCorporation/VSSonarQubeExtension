@@ -266,22 +266,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="externalAnalysers\roslynDiagnostics\deps\SonarLint.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="externalAnalysers\roslynDiagnostics\deps\SonarLint.Extra.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="externalAnalysers\roslynDiagnostics\SonarLint.CSharp.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="externalAnalysers\roslynDiagnostics\SonarLint.VisualBasic.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
     <None Include="vs2012\source.extension.vsixmanifest" />
     <None Include="app.config" />
     <None Include="packages.config" />
@@ -320,15 +304,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="externalAnalysers\SonarRunner\bin\sonar-runner">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="externalAnalysers\SonarRunner\bin\sonar-runner.bat">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="externalAnalysers\SonarRunner\conf\sonar-runner.properties">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
     <None Include="VSSonarQubeExtensionMetro.licenseheader" />
   </ItemGroup>
   <ItemGroup>
@@ -338,9 +313,6 @@
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="externalAnalysers\SonarRunner\lib\sonar-runner-dist-2.4.jar">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
     <Resource Include="Resources\sonarreviews.bmp" />
     <Content Include="Resources\Package.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

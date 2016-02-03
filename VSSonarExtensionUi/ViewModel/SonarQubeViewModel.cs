@@ -1063,7 +1063,8 @@ namespace VSSonarExtensionUi.ViewModel
                 try
                 {
                     this.RefreshProjectList(useDispatcher);
-
+                    this.VSonarQubeOptionsViewData.RoslynModel.OnConnectToSonar(AuthtenticationHelper.AuthToken);
+                    this.VSonarQubeOptionsViewData.RoslynViewModel.SyncDiagInView();
                     this.StatusMessage = string.Empty;
                     this.IsConnected = true;
                     this.AssociationModule.IsAssociated = false;

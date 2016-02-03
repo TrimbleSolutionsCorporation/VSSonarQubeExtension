@@ -173,6 +173,15 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         }
 
         /// <summary>
+        /// Called when [connect to sonar].
+        /// </summary>
+        /// <param name="configuration">sonar configuration</param>
+        public void OnConnectToSonar(ISonarConfiguration configuration)
+        {
+            // does nothing
+        }
+
+        /// <summary>
         /// Gets the view model.
         /// </summary>
         /// <returns>

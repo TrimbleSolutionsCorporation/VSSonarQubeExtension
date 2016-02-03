@@ -95,6 +95,15 @@
         {
         }
 
+        /// <summary>
+        /// Called when [connect to sonar].
+        /// </summary>
+        /// <param name="configuration">sonar configuration</param>
+        public void OnConnectToSonar(ISonarConfiguration configuration)
+        {
+            // does nothing
+        }
+
         /// <summary>The report exception.</summary>
         /// <param name="ex">The ex.</param>
         public void ReportException(Exception ex)

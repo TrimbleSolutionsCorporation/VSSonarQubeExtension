@@ -14,7 +14,7 @@
         /// <summary>
         /// Updates the services.
         /// </summary>
-        /// <param name="vsenvironmenthelperIn">The vsenvironmenthelper in.</param>
+        /// <param name="vsenvironmenthelperIn">The vs environment helper in.</param>
         /// <param name="statusBar">The status bar.</param>
         /// <param name="provider">The provider.</param>
         void UpdateServices(
@@ -26,7 +26,7 @@
         /// Associates the with new project.
         /// </summary>
         /// <param name="project">The project.</param>
-        /// <param name="workingDir">The working dir.</param>
+        /// <param name="workingDir">The working directory.</param>
         /// <param name="sourceModel">The source model.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
         /// <param name="availableProjects">The available projects.</param>
@@ -48,6 +48,11 @@
         /// Called when [disconnect].
         /// </summary>
         void OnDisconnect();
+
+        /// <summary>
+        /// Called when [connect to sonar].
+        /// </summary>
+        void OnConnectToSonar(ISonarConfiguration configuration);
 
         /// <summary>
         /// Gets the view model.
