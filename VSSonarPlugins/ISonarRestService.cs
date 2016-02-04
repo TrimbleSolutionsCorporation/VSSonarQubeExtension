@@ -411,5 +411,14 @@
         /// Cancels the request.
         /// </summary>
         void CancelRequest();
+
+        /// <summary>
+        /// Applies the permission template to project.
+        /// </summary>
+        /// <param name="conf">The conf.</param>
+        /// <param name="projectKey">The project key.</param>
+        /// <param name="templateName">Name of the template.</param>
+        /// <returns>returns error message or empty if ok</returns>
+        string ApplyPermissionTemplateToProject(ISonarConfiguration conf, string projectKey, string templateName);
     }
 }

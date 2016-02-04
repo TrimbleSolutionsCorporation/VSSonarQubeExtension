@@ -878,6 +878,21 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
         member this.CancelRequest() =
             cancelRequest <- true
         
+        member this.ApplyPermissionTemplateToProject(conf:ISonarConfiguration, key:string, name:string) =
+            let url = "/api/permissions/search_templates?q=" + name
+            try
+                let reply = httpconnector.HttpSonarGetRequest(conf, url)
+                let data = TemplateSearchAnswer.Parse(reply)
+
+                let template = data.PermissionTemplates |> Seq.find (fun c -> c.Name.Equals(name))
+                let url = "/api/permissions/apply_template?projectKey=" + key.Trim() + "&templateId=" + template.Id
+                let response = httpconnector.HttpSonarPostRequest(conf, url, Map.empty)
+                if response.StatusCode <> Net.HttpStatusCode.NoContent then
+                    "Failed to apply template id, please report issue: " + response.StatusCode.ToString() + " : " + response.Content 
+                else
+                    ""
+            with
+            | ex -> "Unable to apply or find template : " + name + " " + ex.Message                    
          
         member this.ProvisionProject(conf:ISonarConfiguration, key:string, name:string, branch:string) =
             let branchtogo = 

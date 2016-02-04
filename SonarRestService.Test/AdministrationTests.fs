@@ -197,4 +197,35 @@ type AdministrationTests() =
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        Assert.That((service :> ISonarRestService).UpdateProperty(conf, "sonar.roslyn.diagnostic.path", """c:\abc\dll.dll""", null), Is.EqualTo(""))        
+        Assert.That((service :> ISonarRestService).UpdateProperty(conf, "sonar.roslyn.diagnostic.path", """c:\abc\dll.dll""", null), Is.EqualTo(""))
+
+    [<Test>]
+    member test.``Apply Permissions Template Fails When Project Not Found`` () =
+        let conf = ConnectionConfiguration("http://sonar", "admin", "admin", 5.3)
+        let response = new RestSharp.RestResponse()
+        response.StatusCode <- HttpStatusCode.NoContent
+
+        let mockHttpReq =
+            Mock<IHttpSonarConnector>()
+                .Setup(fun x -> <@ x.HttpSonarPostRequest(any(), any(), any()) @>).Returns(response)
+                .Create()
+
+        let service = SonarRestService(mockHttpReq)
+        let errormessage = (service :> ISonarRestService).ApplyPermissionTemplateToProject(conf, "projectKey", "projectname")
+        Assert.That(errormessage, Is.EqualTo("Unable to apply or find template : projectname Value cannot be null.\r\nParameter name: s"))
+
+    [<Test>]
+    member test.``Apply Permissions Template Ok`` () =
+        let conf = ConnectionConfiguration("http://sonar", "admin", "admin", 5.3)
+        let response = new RestSharp.RestResponse()
+        response.StatusCode <- HttpStatusCode.NoContent
+
+        let mockHttpReq =
+            Mock<IHttpSonarConnector>()
+                .Setup(fun x -> <@ x.HttpSonarPostRequest(any(), any(), any()) @>).Returns(response)
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/permissiontemplate.txt"))
+                .Create()
+
+        let service = SonarRestService(mockHttpReq)
+        let errormessage = (service :> ISonarRestService).ApplyPermissionTemplateToProject(conf, "projectKey", "thisisname")
+        Assert.That(errormessage, Is.EqualTo(""))

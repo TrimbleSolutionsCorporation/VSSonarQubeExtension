@@ -58,7 +58,7 @@
     <Compile Include="ResourceTests.fs" />
     <Compile Include="QualityTests.fs" />
     <None Include="app.config" />
-    <Content Include="testdata\plugindata.txt">
+    <Content Include="testdata\permissiontemplate.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="testdata\issuessearchbycomponent.txt">
@@ -128,6 +128,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="testdata\actionPlanData.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="testdata\plugindata.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="packages.config" />
