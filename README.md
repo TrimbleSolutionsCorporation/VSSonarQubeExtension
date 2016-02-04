@@ -3,7 +3,7 @@ VSSonarQubeExtension
 [![Issue Stats](http://issuestats.com/github/TeklaCorp/VSSonarQubeExtension/badge/issue)](http://issuestats.com/github/TeklaCorp/VSSonarQubeExtension)
 [![Issue Stats](http://issuestats.com/github/TeklaCorp/VSSonarQubeExtension/badge/pr)](http://issuestats.com/github/TeklaCorp/VSSonarQubeExtension)
 
-[![Build status](https://ci.appveyor.com/api/projects/status/w03onktfvppbimow/branch/master?svg=true)](https://ci.appveyor.com/project/TeklaCorp/vssonarqubeextension/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/w03onktfvppbimow/branch/master?svg=true)](https://ci.appveyor.com/project/TrimbleSolutionsCorporation/vssonarqubeextension/branch/master)
 
 This is a Extension for Visual Studio to interact wiht SonarQube (TM).
 
