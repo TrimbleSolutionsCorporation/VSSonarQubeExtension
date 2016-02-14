@@ -34,7 +34,7 @@ namespace VSSonarQubeExtension.Helpers
     using Thread = System.Threading.Thread;
     using VSSonarPlugins.Types;
     using Microsoft.VisualStudio.Text;
-
+    using System.Security.Principal;
     /// <summary>
     ///     The vs properties helper.
     /// </summary>
@@ -979,6 +979,19 @@ namespace VSSonarQubeExtension.Helpers
         public string GetCurrentDocumentInView()
         {
             return this.resourceinview;
+        }
+
+        /// <summary>
+        /// Does the i have admin rights.
+        /// </summary>
+        /// <returns>
+        /// true if admin
+        /// </returns>
+        public bool DoIHaveAdminRights()
+        {
+            var principal = WindowsPrincipal.Current;
+            var isadmin = principal.Claims.Any((c) => c.Value == "S-1-5-32-544");
+            return isadmin;
         }
 
         /// <summary>

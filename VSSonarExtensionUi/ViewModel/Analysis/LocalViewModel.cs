@@ -879,6 +879,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                         }
                         break;
                     case AnalysisTypes.ANALYSIS:
+                        this.ValidateAdminRights();
                         this.AllLog.Clear();
                         this.OutputLog = string.Empty;
                         this.localAnalyserModule.RunFullAnalysis(
@@ -887,6 +888,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                             AuthtenticationHelper.AuthToken);
                         break;
                     case AnalysisTypes.INCREMENTAL:
+                        this.ValidateAdminRights();
                         this.AllLog.Clear();
                         this.OutputLog = string.Empty;
                         this.localAnalyserModule.RunIncrementalAnalysis(
@@ -895,6 +897,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                             AuthtenticationHelper.AuthToken);
                         break;
                     case AnalysisTypes.PREVIEW:
+                        this.ValidateAdminRights();
                         this.AllLog.Clear();
                         this.OutputLog = string.Empty;
                         this.localAnalyserModule.RunPreviewAnalysis(
@@ -912,6 +915,20 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 this.notificationManager.ReportException(ex);
                 this.notificationManager.EndedWorking();
                 this.notificationManager.FlagFailure(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Validates the admin rights.
+        /// </summary>
+        private void ValidateAdminRights()
+        {
+            if (!this.vsenvironmenthelper.DoIHaveAdminRights() && !File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "cxx-user-options.xml")))
+            {
+                MessageDisplayBox.DisplayMessage(
+                    "Admin rights not found.",
+                    "Installing third party analyzers during analysis requires administration rights. Its recommended to create a cxx-user-options.xml in your home folder with location of the tools.",
+                    "https://github.com/jmecsoftware/sonar-cxx-msbuild-tasks#using-the-wrapper-behind-proxy-or-were-admin-rights-are-not-available");
             }
         }
 

@@ -160,7 +160,10 @@ namespace VSSonarPlugins
         /// Gets the project guid from path.
         /// </summary>
         /// <param name="projectPath">The project path.</param>
-        /// <returns>project unique identifier</returns>		
+        /// <param name="solutionPath">The solution path.</param>
+        /// <returns>
+        /// project unique identifier
+        /// </returns>
         string GetGuidForProject(string projectPath, string solutionPath);
 
         /// <summary>
@@ -219,5 +222,11 @@ namespace VSSonarPlugins
         /// </summary>
         /// <returns></returns>
         string GetCurrentDocumentInView();
+
+        /// <summary>
+        /// Does the i have admin rights.
+        /// </summary>
+        /// <returns>true if admin</returns>
+        bool DoIHaveAdminRights();
     }
 }

@@ -21,22 +21,22 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using System.IO;
     using System.IO.Compression;
     using System.Linq;
+        
+    using System.Net;
     using System.Reflection;
     using System.Windows.Forms;
+    using System.Windows.Input;
     using System.Windows.Media;
-    using System.Net;
-
-
+    
     using GalaSoft.MvvmLight.Command;
     using Helpers;
     using Model.Helpers;
     using PropertyChanged;
-    using SonarLocalAnalyser;
     using View.Helpers;
+    using VSSonarExtensionUi.Association;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-    using VSSonarExtensionUi.Association;
-    using System.Windows.Input;
+
     /// <summary>
     ///     The dummy options controller.
     /// </summary>
@@ -44,7 +44,12 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     public class AnalysisOptionsViewModel : IOptionsViewModelBase, IOptionsModelBase
     {
         /// <summary>
-        ///     The defaut value sonar sources.
+        /// The minimum version
+        /// </summary>
+        public static readonly string MinimumVersion = "1.9.3";
+
+        /// <summary>
+        ///     The default value sonar sources.
         /// </summary>
         public static readonly string DefautValueSonarSources = ".";
 
@@ -59,7 +64,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         private readonly IConfigurationHelper configurationHelper;
 
         /// <summary>
-        ///     The vsenvironmenthelper.
+        ///     The vs environment helper.
         /// </summary>
         private IVsEnvironmentHelper vsenvironmenthelper;
 
@@ -86,8 +91,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.ForeGroundColor = Colors.Black;
             this.BackGroundColor = Colors.White;
             this.DownloadWrapperCommand = new RelayCommand(this.OnDownloadWrapperCommand);
-            this.BrowseForJavaTrigger = new RelayCommand(this.OnBrowseForJavaTrigger);
-            this.BrowseForSonarRunnerQubeTrigger = new RelayCommand(this.OnBrowseForSonarRunnerQubeTrigger);
 
             SonarQubeViewModel.RegisterNewViewModelInPool(this);
             AssociationModel.RegisterNewModelInPool(this);
@@ -122,22 +125,12 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public Color BackGroundColor { get; set; }
 
         /// <summary>
-        ///     Gets or sets the browse for java trigger.
-        /// </summary>
-        public RelayCommand BrowseForJavaTrigger { get; set; }
-
-        /// <summary>
         /// Gets or sets the download wrapper command.
         /// </summary>
         /// <value>
         /// The download wrapper command.
         /// </value>
         public ICommand DownloadWrapperCommand { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the browse for sonar runner qube trigger.
-        /// </summary>
-        public RelayCommand BrowseForSonarRunnerQubeTrigger { get; set; }
 
         /// <summary>
         ///     Gets or sets a value indicating whether debug is checked.
@@ -205,41 +198,25 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public string ProjectId { get; set; }
 
         /// <summary>
-        ///     Gets or sets the java binary.
+        ///     Gets or sets the Java binary.
         /// </summary>
         public string ProjectVersion { get; set; }
 
         /// <summary>
-        ///     Gets or sets the java binary.
+        ///     Gets or sets the Java binary.
         /// </summary>
         public string SourceDir { get; set; }
 
         /// <summary>
-        ///     Gets or sets the java binary.
+        ///     Gets or sets the Java binary.
         /// </summary>
         public string SourceEncoding { get; set; }
 
         /// <summary>
-        /// Gets or sets the sonar qube binary.
+        /// Gets or sets the excluded plugin.
         /// </summary>
         /// <value>
-        /// The sonar qube binary.
-        /// </value>
-        public string SonarQubeBinary { get; set; }
-
-        /// <summary>
-        /// Gets or sets the java binary.
-        /// </summary>
-        /// <value>
-        /// The java binary.
-        /// </value>
-        public string JavaBinary { get; set; }
-
-        /// <summary>
-        /// Gets or sets the excluded plugins.
-        /// </summary>
-        /// <value>
-        /// The excluded plugins.
+        /// The excluded plugin.
         /// </value>
         public string ExcludedPlugins { get; set; }
 
@@ -272,7 +249,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         /// The update services.
         /// </summary>
-        /// <param name="vsenvironmenthelperIn">The vsenvironmenthelper in.</param>
+        /// <param name="vsenvironmenthelperIn">The vs environment helper in.</param>
         /// <param name="statusBar">The status bar.</param>
         /// <param name="provider">The provider.</param>
         public void UpdateServices(
@@ -331,16 +308,16 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                     OwnersId.AnalysisOwnerId,
                     GlobalAnalysisIds.CxxWrapperVersionKey).Value;
 
-                float fvv = 0;
-                if (float.TryParse(this.CxxWrapperVersion.Split('-')[0], out fvv) && fvv <= 1.9)
+                var currentVersion = new Version(this.CxxWrapperVersion.Split('-')[0]);
+                if (currentVersion.CompareTo(new Version(MinimumVersion)) < 0)
                 {
-                    this.CxxWrapperVersion = "1.9.3";
+                    this.CxxWrapperVersion = MinimumVersion;
                 }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                this.CxxWrapperVersion = "1.9.3";
+                this.CxxWrapperVersion = MinimumVersion;
             }
 
             try
@@ -401,7 +378,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 this.IsSolutionAnalysisChecked = true;
             }
 
-
             // ensure wrapper is available
             try
             {
@@ -420,48 +396,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         public void OnDisconnect()
         {
-        }
-
-        /// <summary>
-        ///     Gets or sets a value indicating whether browse for java trigger.
-        /// </summary>
-        public void OnBrowseForJavaTrigger()
-        {
-            var filedialog = new OpenFileDialog { Filter = @"Java executable|java.exe" };
-            DialogResult result = filedialog.ShowDialog();
-
-            if (result == DialogResult.OK)
-            {
-                if (File.Exists(filedialog.FileName))
-                {
-                    this.JavaBinary = filedialog.FileName;
-                }
-                else
-                {
-                    UserExceptionMessageBox.ShowException(@"Error Choosing File, File Does not exits", null);
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Gets or sets a value indicating whether browse for sonar runner qube trigger.
-        /// </summary>
-        public void OnBrowseForSonarRunnerQubeTrigger()
-        {
-            var filedialog = new OpenFileDialog { Filter = @"SonarQube executable|sonar-runner.bat" };
-            DialogResult result = filedialog.ShowDialog();
-
-            if (result == DialogResult.OK)
-            {
-                if (File.Exists(filedialog.FileName))
-                {
-                    this.SonarQubeBinary = filedialog.FileName;
-                }
-                else
-                {
-                    UserExceptionMessageBox.ShowException(@"Error Choosing File, File Does not exits", null);
-                }
-            }
+            // does nothing
         }
 
         /// <summary>
@@ -469,18 +404,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         public void SetGeneralOptions()
         {
-            this.SonarQubeBinary =
-                this.configurationHelper.ReadSetting(
-                    Context.AnalysisGeneral,
-                    OwnersId.AnalysisOwnerId,
-                    GlobalAnalysisIds.RunnerExecutableKey).Value;
-
-            this.JavaBinary =
-                this.configurationHelper.ReadSetting(
-                    Context.AnalysisGeneral,
-                    OwnersId.AnalysisOwnerId,
-                    GlobalAnalysisIds.JavaExecutableKey).Value;
-
             this.ExcludedPlugins =
                 this.configurationHelper.ReadSetting(
                     Context.AnalysisGeneral,
@@ -535,10 +458,10 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
 
         /// <summary>
-        /// Gets the available model, TODO: needs to be removed after viewmodels are split into models and view models
+        /// Gets the available model, TODO: needs to be removed after view models are split into models and view models
         /// </summary>
         /// <returns>
-        /// returns optinal model
+        /// returns model
         /// </returns>
         public object GetAvailableModel()
         {
@@ -572,12 +495,13 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         /// Called when [download wrapper command].
         /// </summary>
-        /// <exception cref="System.NotImplementedException"></exception>
         private void OnDownloadWrapperCommand()
         {
             if (string.IsNullOrEmpty((this.CxxWrapperVersion)))
             {
-                MessageDisplayBox.DisplayMessage("Version cannot be empty, be sure to use tab in release page of the wrapper.", helpurl: "https://github.com/jmecsoftware/sonar-cxx-msbuild-tasks/releases");
+                MessageDisplayBox.DisplayMessage(
+                    "Version cannot be empty, be sure to use tab in release page of the wrapper.",
+                    helpurl: "https://github.com/jmecsoftware/sonar-cxx-msbuild-tasks/releases");
                 return;
             }
 
@@ -604,17 +528,22 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                     client.DownloadFile(urldownload, tmpFile);
 
                     ZipFile.ExtractToDirectory(tmpFile, installPath);
+                    this.InstallTools(Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe"));
                 }
 
                 if (!File.Exists(Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe")))
                 {
-                    MessageDisplayBox.DisplayMessage("Wrapper installation failed, expected in  " + Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe") + " : download manually and unzip to that folder", helpurl: "https://github.com/jmecsoftware/sonar-cxx-msbuild-tasks/releases");
+                    MessageDisplayBox.DisplayMessage(
+                        "Wrapper installation failed, expected in  " + Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe") + " : download manually and unzip to that folder",
+                        helpurl: "https://github.com/jmecsoftware/sonar-cxx-msbuild-tasks/releases");
                     return;
                 }
             }
             catch (Exception ex)
             {
-                MessageDisplayBox.DisplayMessage("Wrapper installation failed : " +  ex.Message + " please be sure you have access to url. If not download manually and change the wrapper path.", helpurl: "https://github.com/jmecsoftware/sonar-cxx-msbuild-tasks/releases");
+                MessageDisplayBox.DisplayMessage(
+                    "Wrapper installation failed : " + ex.Message + " please be sure you have access to url. If not download manually and change the wrapper path.",
+                    helpurl: "https://github.com/jmecsoftware/sonar-cxx-msbuild-tasks/releases");
             }
 
             this.WrapperPath = Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe");
@@ -622,9 +551,27 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         }
 
         /// <summary>
+        /// Installs the tools.
+        /// </summary>
+        /// <param name="cxxwrapper">The cxx wrapper.</param>
+        private void InstallTools(string cxxwrapper)
+        {
+            if (File.Exists(cxxwrapper))
+            {
+                Process process = new Process();
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.CreateNoWindow = true;
+                process.StartInfo.FileName = cxxwrapper;
+                process.StartInfo.Arguments = "/i";
+                process.Start();
+                process.WaitForExit();
+            }
+        }
+
+        /// <summary>
         /// Called when [download wrapper command].
         /// </summary>
-        /// <exception cref="System.NotImplementedException"></exception>
         private void OnDownloadWrapperStartup()
         {
             var installPath = Path.Combine(this.configurationHelper.ApplicationPath, "Wrapper", this.CxxWrapperVersion);
@@ -651,6 +598,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
                     ZipFile.ExtractToDirectory(tmpFile, installPath);
                     this.WrapperPath = Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe");
+                    this.InstallTools(this.WrapperPath);
                 }
             }
             catch (Exception ex)
