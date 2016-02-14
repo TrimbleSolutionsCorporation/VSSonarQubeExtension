@@ -1034,7 +1034,7 @@ namespace VSSonarExtensionUi.ViewModel
 
             if (AuthtenticationHelper.AuthToken == null)
             {
-                this.StatusMessage = "No credentials available Go To: Menu > Configuration in this window";
+                this.StatusMessage = "No credentials available Go To: Sonar Menu > Configuration";
                 this.IsConnected = false;
                 this.ErrorIsFound = true;
                 return;
