@@ -43,16 +43,10 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     [ImplementPropertyChanged]
     public class AnalysisOptionsViewModel : IOptionsViewModelBase, IOptionsModelBase
     {
-        #region Static Fields
-
         /// <summary>
         ///     The defaut value sonar sources.
         /// </summary>
         public static readonly string DefautValueSonarSources = ".";
-
-        #endregion
-
-        #region Fields
 
         /// <summary>
         ///     The view model.
@@ -73,10 +67,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// The associated project
         /// </summary>
         private Resource associatedProject;
-
-        #endregion
-
-        #region Constructors and Destructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AnalysisOptionsViewModel" /> class.
@@ -112,10 +102,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             }
         }
 
-        #endregion
-
-        #region Public Properties
-
         /// <summary>
         ///     Gets the assembly directory.
         /// </summary>
@@ -140,6 +126,12 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         public RelayCommand BrowseForJavaTrigger { get; set; }
 
+        /// <summary>
+        /// Gets or sets the download wrapper command.
+        /// </summary>
+        /// <value>
+        /// The download wrapper command.
+        /// </value>
         public ICommand DownloadWrapperCommand { get; set; }
 
         /// <summary>
@@ -268,10 +260,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             }
         }
 
-        #endregion
-
-        #region Public Methods and Operators
-
         /// <summary>
         /// Called when [connect to sonar].
         /// </summary>
@@ -344,16 +332,16 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                     GlobalAnalysisIds.CxxWrapperVersionKey).Value;
 
                 float fvv = 0;
-                if (float.TryParse(this.CxxWrapperVersion.Split('-')[0], out fvv) && fvv <= 1.7)
+                if (float.TryParse(this.CxxWrapperVersion.Split('-')[0], out fvv) && fvv <= 1.9)
                 {
-                    this.CxxWrapperVersion = "1.8";
+                    this.CxxWrapperVersion = "1.9.2";
                 }
 
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                this.CxxWrapperVersion = "1.8";
+                this.CxxWrapperVersion = "1.9.2";
             }
 
             try
@@ -561,11 +549,12 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         /// Associates the with new project.
         /// </summary>
-        /// <param name="config">The configuration.</param>
         /// <param name="project">The project.</param>
         /// <param name="workDir">The work dir.</param>
         /// <param name="provider">The provider.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
+        /// <param name="availableProjects">The available projects.</param>
+        /// <param name="profile">The profile.</param>
         public void AssociateWithNewProject(Resource project, string workDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin, IList<Resource> availableProjects, Dictionary<string, Profile> profile)
         {
             this.SourceDir = workDir;
@@ -671,10 +660,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             }
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         /// The get general project option from dictionary.
         /// </summary>
@@ -718,7 +703,5 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
             return string.Empty;
         }
-
-        #endregion
     }
 }
