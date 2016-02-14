@@ -334,14 +334,13 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 float fvv = 0;
                 if (float.TryParse(this.CxxWrapperVersion.Split('-')[0], out fvv) && fvv <= 1.9)
                 {
-                    this.CxxWrapperVersion = "1.9.2";
+                    this.CxxWrapperVersion = "1.9.3";
                 }
-
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                this.CxxWrapperVersion = "1.9.2";
+                this.CxxWrapperVersion = "1.9.3";
             }
 
             try
