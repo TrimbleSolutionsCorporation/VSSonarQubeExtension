@@ -15,7 +15,9 @@
 namespace VSSonarExtensionUi.Model.Menu
 {
     using System;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.ComponentModel;
     using System.Windows;
     using System.Windows.Input;
 
@@ -26,16 +28,12 @@ namespace VSSonarExtensionUi.Model.Menu
     using ViewModel.Helpers;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-    using System.ComponentModel;
-    using System.Collections.Generic;
-
+    using System.Collections;
     /// <summary>
     /// The issue handler menu.
     /// </summary>
     internal class PlanMenu : IMenuItem
     {
-        #region Fields
-
         /// <summary>
         /// The model.
         /// </summary>
@@ -62,7 +60,7 @@ namespace VSSonarExtensionUi.Model.Menu
         private IVsEnvironmentHelper visualStudioHelper;
 
         /// <summary>
-        /// The source dir
+        /// The source directory
         /// </summary>
         private string sourceDir;
 
@@ -80,10 +78,6 @@ namespace VSSonarExtensionUi.Model.Menu
         /// The source plugin
         /// </summary>
         private IIssueTrackerPlugin sourcePlugin;
-
-        #endregion
-
-        #region Constructors and Destructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PlanMenu" /> class.
@@ -108,10 +102,6 @@ namespace VSSonarExtensionUi.Model.Menu
                 AssociationModel.RegisterNewModelInPool(this);
             }            
         }
-
-        #endregion
-
-        #region Public Properties
 
         /// <summary>
         /// Gets or sets the associated command.
@@ -140,10 +130,6 @@ namespace VSSonarExtensionUi.Model.Menu
         /// The profile.
         /// </value>
         public Dictionary<string, Profile> Profile { get; private set; }
-
-        #endregion
-
-        #region Public Methods and Operators
 
         /// <summary>
         /// The make menu.
@@ -178,7 +164,7 @@ namespace VSSonarExtensionUi.Model.Menu
         /// </summary>
         public void CancelRefreshData()
         {
-            // not necessay
+            // not necessary
         }
 
         /// <summary>
@@ -189,17 +175,19 @@ namespace VSSonarExtensionUi.Model.Menu
         {
             // does nothing
         }
+
         /// <summary>
         /// Called when [disconnect].
         /// </summary>
         public void OnDisconnect()
         {
+            // not necessary
         }
 
         /// <summary>
         /// Updates the services.
         /// </summary>
-        /// <param name="vsenvironmenthelperIn">The vsenvironmenthelper in.</param>
+        /// <param name="vsenvironmenthelperIn">The visual studio environment helper.</param>
         /// <param name="statusBar">The status bar.</param>
         /// <param name="providerIn">The provider in.</param>
         public void UpdateServices(IVsEnvironmentHelper vsenvironmenthelperIn, IVSSStatusBar statusBar, IServiceProvider providerIn)
@@ -260,10 +248,6 @@ namespace VSSonarExtensionUi.Model.Menu
             this.sourceDir = string.Empty;
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         /// The on associate command.
         /// </summary>
@@ -281,16 +265,8 @@ namespace VSSonarExtensionUi.Model.Menu
                         return;
                     }
 
-                    this.AssociateToNewPlan(availablePlans, newPlan);
+                    this.AssociateToNewPlan(newPlan, this.model.SelectedItems);
 
-                    foreach (var issue in this.model.SelectedItems)
-                    {
-                        var issueData = issue as Issue;
-                        issueData.ActionPlanName = newPlan.Name;
-                        issueData.ActionPlan = newPlan.Key;
-                    }
-                    
-                    this.ReloadPlanData(this.parent);
                 }
                 else
                 {
@@ -332,7 +308,7 @@ namespace VSSonarExtensionUi.Model.Menu
         }
 
         /// <summary>
-        /// Uns the plan issues.
+        /// Remove issues from plan.
         /// </summary>
         private void UnPlanIssues()
         {
@@ -346,7 +322,7 @@ namespace VSSonarExtensionUi.Model.Menu
                     var replies = this.rest.UnPlanIssues(AuthtenticationHelper.AuthToken, this.model.SelectedItems);
                     foreach (var itemreply in replies)
                     {
-                        this.manager.ReportMessage(new Message() { Data = "Unplan Operation Result: " + itemreply.Key + " : " + itemreply.Value });
+                        this.manager.ReportMessage(new Message { Data = "Unplan Operation Result: " + itemreply.Key + " : " + itemreply.Value });
                     }
 
                     this.model.RefreshView();
@@ -386,13 +362,18 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <summary>
         /// Associates to new plan.
         /// </summary>
-        /// <param name="availablePlans">The available plans.</param>
         /// <param name="newPlan">The new plan.</param>
-        private void AssociateToNewPlan(System.Collections.Generic.List<SonarActionPlan> availablePlans, SonarActionPlan newPlan)
+        /// <param name="selectedItems">The selected items.</param>
+        private void AssociateToNewPlan(SonarActionPlan newPlan, IList selectedItems)
         {
             using (var bw = new BackgroundWorker { WorkerReportsProgress = false })
             {
-                bw.RunWorkerCompleted += delegate { Application.Current.Dispatcher.Invoke(delegate { this.manager.EndedWorking(); }); };
+                bw.RunWorkerCompleted += delegate
+                {
+                    this.ReloadPlanData(this.parent);
+
+                    Application.Current.Dispatcher.Invoke(delegate { this.manager.EndedWorking(); });
+                };
 
                 bw.DoWork += delegate
                 {
@@ -402,10 +383,19 @@ namespace VSSonarExtensionUi.Model.Menu
                     {
                         var plan = this.rest.CreateNewPlan(AuthtenticationHelper.AuthToken, this.associatedProject.Key, newPlan);
                         var replies = this.rest.PlanIssues(AuthtenticationHelper.AuthToken, this.model.SelectedItems, plan.Key.ToString());
+
+                        foreach (Issue issue in selectedItems)
+                        {
+                            issue.ActionPlanName = plan.Name;
+                            issue.ActionPlan = plan.Key;
+                        }
+
                         foreach (var itemreply in replies)
                         {
                             this.manager.ReportMessage(new Message { Data = "Plan Operation Result: " + itemreply.Key + " : " + itemreply.Value });
                         }
+
+
 
                         this.model.RefreshView();
                     }
@@ -445,7 +435,5 @@ namespace VSSonarExtensionUi.Model.Menu
                 }
             }
         }
-
-        #endregion
     }
 }
