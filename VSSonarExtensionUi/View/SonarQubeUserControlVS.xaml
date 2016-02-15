@@ -186,7 +186,7 @@
                 <controls:MetroProgressBar DockPanel.Dock="Bottom"  Grid.Row="2" IsIndeterminate="{Binding IsExtensionBusy}"
                                        Value="{Binding ElementName=horizSlider, Path=Value}"
                                        ToolTip="{Binding BusyToolTip}"
-                                       Foreground="{DynamicResource AccentColorBrush}"/>
+                                       Foreground="{DynamicResource AccentColorBrush}" Background="{Binding BackGroundColor}"/>
             </StackPanel>
         </DockPanel>
 
