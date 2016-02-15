@@ -259,5 +259,10 @@ namespace VSSonarExtensionUi.Test.Association
         {
             throw new NotImplementedException();
         }
+
+        public bool DoIHaveAdminRights()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
