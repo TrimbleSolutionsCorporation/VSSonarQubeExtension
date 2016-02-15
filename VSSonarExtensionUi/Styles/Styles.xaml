@@ -658,10 +658,10 @@
                             FontSize="8"
                             VerticalAlignment="Bottom">
                             <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="Click">
-                                    <command:EventToCommand  Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.CloseLeftFlyoutCommand }"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <i:InvokeCommandAction  Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.CloseLeftFlyoutCommand }"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
                                         <Rectangle Width="15" Height="15" Fill="{Binding RelativeSource={RelativeSource AncestorType={x:Type controls:Flyout}}, Path=Foreground}">
                                             <Rectangle.OpacityMask>
                                                 <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_arrow_left}" />
@@ -701,7 +701,7 @@
                             VerticalAlignment="Bottom">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
-                            <command:EventToCommand  Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.CloseRightFlyoutCommand }"/>
+                            <i:InvokeCommandAction  Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.CloseRightFlyoutCommand }"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                     <Rectangle Width="15" Height="15" Fill="{Binding RelativeSource={RelativeSource AncestorType={x:Type controls:Flyout}}, Path=Foreground}">

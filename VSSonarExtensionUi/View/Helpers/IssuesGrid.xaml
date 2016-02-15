@@ -55,7 +55,7 @@
                         VerticalAlignment="Bottom">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Click">
-                                    <command:EventToCommand  Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.CloseFlyoutCommand }"/>
+                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.CloseFlyoutCommand }" />
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                             <Rectangle Width="15"
@@ -306,13 +306,13 @@
             </DataGrid.InputBindings>
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseRightButtonUp">
-                    <command:EventToCommand Command="{Binding MouseEventCommand}" PassEventArgsToCommand="True" />
+                    <i:InvokeCommandAction Command="{Binding MouseEventCommand}" />
                 </i:EventTrigger>
                 <i:EventTrigger EventName="SelectionChanged">
-                    <command:EventToCommand Command="{Binding SelectionChangedCommand}" CommandParameter="{Binding SelectedItems, ElementName=Datagrid}" />
+                    <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}" CommandParameter="{Binding SelectedItems, ElementName=Datagrid}" />
                 </i:EventTrigger>
                 <i:EventTrigger EventName="ColumnReordered">
-                    <command:EventToCommand Command="{Binding ColumnHeaderChangedCommand}"/>
+                    <i:InvokeCommandAction Command="{Binding ColumnHeaderChangedCommand}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
 

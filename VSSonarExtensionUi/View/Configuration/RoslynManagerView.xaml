@@ -131,7 +131,7 @@
                           ItemTemplate="{DynamicResource ListViewTemplate}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
-                            <command:EventToCommand Command="{Binding SelectionChangedCommand}" />
+                            <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </ListView>        
