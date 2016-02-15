@@ -329,7 +329,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <value>
         /// <c>true</c> if this instance is action plan selected; otherwise, <c>false</c>.
         /// </value>
-        public bool IsActionPlanSelected { get; private set; }
+        public bool IsActionPlanSelected { get; set; }
 
         /// <summary>
         /// Called when [show flyouts changed].

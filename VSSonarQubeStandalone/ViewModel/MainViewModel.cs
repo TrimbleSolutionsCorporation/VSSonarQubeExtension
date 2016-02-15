@@ -15,8 +15,14 @@ using GalaSoft.MvvmLight;
 
 namespace VSSonarQubeStandalone.ViewModel
 {
+    using Helpers;
+    using SonarRestService;
+    using System;
+    using System.Windows.Forms;
+    using VSSonarExtensionUi.Model.Helpers;
+    using VSSonarExtensionUi.View.Helpers;
     using VSSonarExtensionUi.ViewModel;
-
+    using VSSonarPlugins.Types;
     /// <summary>
     /// This class contains properties that the main View can data bind to.
     /// <para>
@@ -36,7 +42,32 @@ namespace VSSonarQubeStandalone.ViewModel
         /// </summary>
         public MainViewModel()
         {
+            var address = PromptUserData.Prompt("Server Address", "Insert Server Address", "http://sonar");
+            if (address == null)
+            {
+                throw new Exception("Server Address must not be empty");
+            }
+
+            using (var dialog = new Security.Windows.Forms.UserCredentialsDialog())
+            {
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    if (dialog.SaveChecked)
+                    {
+                        dialog.ConfirmCredentials(true);
+                    }
+
+                    AuthtenticationHelper.EstablishAConnection(new SonarRestService(new JsonSonarConnector()), address, dialog.User, dialog.PasswordToString());
+                }
+                else
+                {
+                    throw new Exception("user name and pass should be set");
+                }
+            }
+
+            
             this.SonarQubeView = new SonarQubeViewModel("standalone");
+            this.SonarQubeView.InitModelFromPackageInitialization(new VsEnvironmentHelper(), new VsStatusBarDummy(), new ServiceProviderDummy(), Environment.CurrentDirectory);
         }
 
         /// <summary>

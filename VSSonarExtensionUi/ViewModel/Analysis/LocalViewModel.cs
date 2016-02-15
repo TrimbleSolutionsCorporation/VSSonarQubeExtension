@@ -427,7 +427,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <value>
         ///   <c>true</c> if [analysis is running]; otherwise, <c>false</c>.
         /// </value>
-        public bool AnalysisIsRunning { get; private set; }
+        public bool AnalysisIsRunning { get; set; }
 
         /// <summary>
         /// Called when [show issues on modified sections of file only changed].

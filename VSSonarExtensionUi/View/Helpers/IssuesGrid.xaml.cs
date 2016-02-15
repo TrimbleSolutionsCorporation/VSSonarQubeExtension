@@ -30,5 +30,10 @@ namespace VSSonarExtensionUi.View.Helpers
         }
 
         #endregion
+
+        private void ComponentTemplateCol_CopyingCellClipboardContent(object sender, System.Windows.Controls.DataGridCellClipboardEventArgs e)
+        {
+
+        }
     }
 }

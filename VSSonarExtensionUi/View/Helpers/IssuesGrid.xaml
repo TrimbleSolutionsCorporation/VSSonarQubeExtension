@@ -284,6 +284,7 @@
           Grid.Row="0"
           IsReadOnly="True"
           GridLinesVisibility="None"
+          AlternationCount="2"
           BorderThickness="1"
           ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}"          
           RowStyle="{DynamicResource IssuesGridRowStyle}"
@@ -294,13 +295,15 @@
           SelectedItem="{Binding SelectedIssue}"
           IsSynchronizedWithCurrentItem="True" 
           ItemsSource="{Binding Issues}"
-          AlternationCount="2" AutoGenerateColumns="False" AlternatingRowBackground="#CCD1E0E6"
+          ClipboardCopyMode="IncludeHeader"
+          AutoGenerateColumns="False" 
           CanUserAddRows="False"
           CanUserDeleteRows="False"
           CanUserResizeRows="True"
           CanUserSortColumns="True"
           CanUserReorderColumns="True" 
           SelectedIndex="{Binding SelectedIndex}">
+            
             <DataGrid.InputBindings>
                 <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding OpenInVsCommand}" CommandParameter="{Binding SelectedItems, ElementName=Datagrid}" />
             </DataGrid.InputBindings>
@@ -318,7 +321,7 @@
 
             <DataGrid.Columns>
 
-                <DataGridTemplateColumn DisplayIndex="{Binding Data.ComponentIndex, FallbackValue=0, Mode=TwoWay, Source={StaticResource Proxy}}"
+                <DataGridTemplateColumn ClipboardContentBinding="{Binding Component}" DisplayIndex="{Binding Data.ComponentIndex, FallbackValue=0, Mode=TwoWay, Source={StaticResource Proxy}}"
                                         MinWidth="250" MaxWidth="350" x:Name="ComponentTemplateCol" Header="Component" CanUserSort="True" SortMemberPath="Component"                                        
                                         IsReadOnly="True" Visibility="{Binding Data.ComponentVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
                     <DataGridTemplateColumn.CellTemplate>
@@ -351,11 +354,11 @@
                     </DataGridTemplateColumn.HeaderTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTextColumn DisplayIndex="{Binding LineIndex, FallbackValue=1, Mode=TwoWay, Source={StaticResource Proxy}}"
+                <DataGridTextColumn  DisplayIndex="{Binding LineIndex, FallbackValue=1, Mode=TwoWay, Source={StaticResource Proxy}}"
                                     Binding="{Binding Line}" MinWidth="50" MaxWidth="50" x:Name="LineTemplateCol" Header="Line" CanUserSort="True" SortMemberPath="Line" 
                                     IsReadOnly="True" Visibility="{Binding Data.LineVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
-                
-                <DataGridTemplateColumn DisplayIndex="{Binding Data.MessageIndex, FallbackValue=2, Mode=TwoWay, Source={StaticResource Proxy}}"
+
+                <DataGridTemplateColumn ClipboardContentBinding="{Binding Message}" DisplayIndex="{Binding Data.MessageIndex, FallbackValue=2, Mode=TwoWay, Source={StaticResource Proxy}}"
                                         MinWidth="250" MaxWidth="350" x:Name="MessageTemplateCol" Header="Message" CanUserSort="True" SortMemberPath="Message"                                         
                                         IsReadOnly="True" Visibility="{Binding Data.MessageVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
                     <DataGridTemplateColumn.CellTemplate>
@@ -388,7 +391,7 @@
                     </DataGridTemplateColumn.HeaderTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn DisplayIndex="{Binding Data.SeverityIndex, FallbackValue=3, Mode=TwoWay, Source={StaticResource Proxy}}"
+                <DataGridTemplateColumn ClipboardContentBinding="{Binding Severity}" DisplayIndex="{Binding Data.SeverityIndex, FallbackValue=3, Mode=TwoWay, Source={StaticResource Proxy}}"
                                         MinWidth="100" MaxWidth="100" x:Name="SeverityTemplateCol" Header="Severity" CanUserSort="True" SortMemberPath="Severity"                                        
                                         IsReadOnly="True" Visibility="{Binding Data.SeverityVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
                     <DataGridTemplateColumn.CellTemplate>
@@ -419,8 +422,8 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.HeaderTemplate>
                 </DataGridTemplateColumn>
-                
-                <DataGridTemplateColumn DisplayIndex="{Binding Data.StatusIndex, FallbackValue=4, Mode=TwoWay, Source={StaticResource Proxy}}"
+
+                <DataGridTemplateColumn ClipboardContentBinding="{Binding Status}" DisplayIndex="{Binding Data.StatusIndex, FallbackValue=4, Mode=TwoWay, Source={StaticResource Proxy}}"
                                         MinWidth="100" MaxWidth="100" x:Name="StatusTemplateCol" Header="Status" CanUserSort="True" SortMemberPath="Status"                                        
                                         IsReadOnly="True" Visibility="{Binding Data.StatusVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
                     <DataGridTemplateColumn.CellTemplate>
@@ -450,14 +453,14 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.HeaderTemplate>
                 </DataGridTemplateColumn>
-                
-                <DataGridTextColumn DisplayIndex="{Binding DebtIndex, FallbackValue=5, Mode=TwoWay, Source={StaticResource Proxy}}"
+
+                <DataGridTextColumn  DisplayIndex="{Binding DebtIndex, FallbackValue=5, Mode=TwoWay, Source={StaticResource Proxy}}"
                                     Binding="{Binding Debt}" MinWidth="80" MaxWidth="80" x:Name="DebtemplateCol"
                                     Header="Debt" CanUserSort="True" SortMemberPath="Debt"                                    
                                     IsReadOnly="True"
                                     Visibility="{Binding Data.DebtVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}" />
-                
-                <DataGridTemplateColumn DisplayIndex="{Binding Data.AssigneeIndex, FallbackValue=6, Mode=TwoWay, Source={StaticResource Proxy}}"
+
+                <DataGridTemplateColumn ClipboardContentBinding="{Binding Assignee}" DisplayIndex="{Binding Data.AssigneeIndex, FallbackValue=6, Mode=TwoWay, Source={StaticResource Proxy}}"
                                         MinWidth="120" MaxWidth="120" x:Name="AssigneeTemplateCol" Header="Assignee" CanUserSort="True" SortMemberPath="Assignee"
                                         IsReadOnly="True" Visibility="{Binding Data.AssigneeVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
                     <DataGridTemplateColumn.CellTemplate>
@@ -488,7 +491,7 @@
                     </DataGridTemplateColumn.HeaderTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn DisplayIndex="{Binding Data.AuthorIndex, FallbackValue=7, Mode=TwoWay, Source={StaticResource Proxy}}"
+                <DataGridTemplateColumn ClipboardContentBinding="{Binding Author}" DisplayIndex="{Binding Data.AuthorIndex, FallbackValue=7, Mode=TwoWay, Source={StaticResource Proxy}}"
                                         MinWidth="120" MaxWidth="250" x:Name="AuthorTemplateCol" Header="Author" CanUserSort="True" SortMemberPath="Author"
                                         IsReadOnly="True" Visibility="{Binding Data.AuhtorVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
                     <DataGridTemplateColumn.CellTemplate>
@@ -519,8 +522,8 @@
                     </DataGridTemplateColumn.HeaderTemplate>
                 </DataGridTemplateColumn>
 
-                
-                <DataGridTemplateColumn DisplayIndex="{Binding Data.IssueTrackerIdIndex, FallbackValue=8, Mode=TwoWay, Source={StaticResource Proxy}}"
+
+                <DataGridTemplateColumn ClipboardContentBinding="{Binding IssueTrackerId}" DisplayIndex="{Binding Data.IssueTrackerIdIndex, FallbackValue=8, Mode=TwoWay, Source={StaticResource Proxy}}"
                                         MinWidth="140" MaxWidth="140" x:Name="IssueTrackerTemplateCol"
                                         Header="Issue Tracker" CanUserSort="True" SortMemberPath="IssueTrackerId"                                        
                                         IsReadOnly="True"
@@ -555,7 +558,7 @@
                     </DataGridTemplateColumn.HeaderTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn DisplayIndex="{Binding Data.IsNewIndex, FallbackValue=9, Mode=TwoWay, Source={StaticResource Proxy}}"
+                <DataGridTemplateColumn ClipboardContentBinding="{Binding IsNew}" DisplayIndex="{Binding Data.IsNewIndex, FallbackValue=9, Mode=TwoWay, Source={StaticResource Proxy}}"
                                         MinWidth="100" x:Name="IsNewTemplateCol" Header="IsNew" CanUserSort="True" SortMemberPath="IsNew"                                        
                                         IsReadOnly="True" Visibility="{Binding Data.IsNewVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
                     <DataGridTemplateColumn.CellTemplate>
