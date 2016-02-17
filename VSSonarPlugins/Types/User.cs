@@ -11,11 +11,14 @@
 // You should have received a copy of the GNU Lesser General Public License along with this program; if not, write to the Free
 // Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 // --------------------------------------------------------------------------------------------------------------------
+using PropertyChanged;
+
 namespace VSSonarPlugins.Types
 {
     /// <summary>
     /// The user.
     /// </summary>
+    [ImplementPropertyChanged]
     public class User
     {
         /// <summary>
@@ -67,5 +70,13 @@ namespace VSSonarPlugins.Types
         /// Gets or sets the email.
         /// </summary>
         public string Email { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="User"/> is selected.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if selected; otherwise, <c>false</c>.
+        /// </value>
+        public bool Selected { get; set; }
     }
 }

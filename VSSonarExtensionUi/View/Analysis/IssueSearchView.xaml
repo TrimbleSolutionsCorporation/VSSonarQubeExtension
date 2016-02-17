@@ -41,6 +41,13 @@
                 </StackPanel>
             </DataTemplate>
 
+            <DataTemplate x:Key="UserSelectionComboBoxDataTemplateMultiSelection">
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox IsChecked="{Binding Selected}" />
+                    <TextBlock Text="{Binding Name}" />
+                </StackPanel>
+            </DataTemplate>
+
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -54,7 +61,7 @@
 
     <DockPanel>
         <controls:FlyoutsControl DockPanel.Dock="Left">
-            <controls:Flyout Header="Search" Position="Left" Width="{Binding SizeOfFlyout, FallbackValue=250}" IsOpen="{Binding ShowLeftFlyOut, FallbackValue=True}" >
+            <controls:Flyout Header="Search" Position="Left" Width="{Binding SizeOfFlyout, FallbackValue=350}" IsOpen="{Binding ShowLeftFlyOut, FallbackValue=True}" >
                 <controls:Flyout.Resources>
 
                     <Style TargetType="{x:Type controls:Flyout}" >
@@ -129,37 +136,35 @@
                                 </Grid.ColumnDefinitions>
                                 <Label
                                         Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                        Content="Reporter" />
+                                        Content="Reporter" Grid.Row="1" />
                                 <Label
                                         Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                        Grid.Row="1" Grid.Column="0"
+                                        Grid.Row="0" Grid.Column="0"
                                         Content="Assignee" />
-                                <ComboBox Grid.Row="0" Grid.Column="1" 
-                                          Style="{DynamicResource VirtualisedMetroComboBox}"
-                                          TextSearch.TextPath="Name"
-                                          controls:TextBoxHelper.Watermark="Type name"
-                                          IsEditable="True"
-                                          SelectedItem="{Binding Reporter, Mode=TwoWay}"
-                                          ItemsSource="{Binding UsersList}"
-                                          MaxDropDownHeight="125"
-                                          ItemTemplate="{DynamicResource UserSelectionComboBoxDataTemplate}">
-                                </ComboBox>
-
                                 <ComboBox Grid.Row="1" Grid.Column="1" 
                                           Style="{DynamicResource VirtualisedMetroComboBox}"
                                           TextSearch.TextPath="Name"
-                                          controls:TextBoxHelper.Watermark="Type name"
+                                          controls:TextBoxHelper.Watermark="Search and select from drop down"
                                           IsEditable="True"
-                                          SelectedItem="{Binding Assignee, Mode=TwoWay}"
-                                          ItemsSource="{Binding UsersList}"
+                                          ItemsSource="{Binding ReporterList}"
                                           MaxDropDownHeight="125"
-                                          ItemTemplate="{DynamicResource UserSelectionComboBoxDataTemplate}">
+                                          ItemTemplate="{DynamicResource UserSelectionComboBoxDataTemplateMultiSelection}">
                                 </ComboBox>
 
-                                <CheckBox Grid.Row="0" Grid.Column="2" Margin="4,0,-4,0"
-                                              IsChecked="{Binding IsReporterChecked}" />
+                                <ComboBox Grid.Row="0" Grid.Column="1" 
+                                          Style="{DynamicResource VirtualisedMetroComboBox}"
+                                          TextSearch.TextPath="Name"
+                                          controls:TextBoxHelper.Watermark="Search and select from drop down"
+                                          IsEditable="True"
+                                          ItemsSource="{Binding AssigneeList}"
+                                          MaxDropDownHeight="125"
+                                          ItemTemplate="{DynamicResource UserSelectionComboBoxDataTemplateMultiSelection}">
+                                </ComboBox>
+
                                 <CheckBox Grid.Row="1" Grid.Column="2" Margin="4,0,-4,0"
-                                              IsChecked="{Binding IsAssigneeChecked}" />
+                                              IsChecked="{Binding IsReporterChecked}" ToolTip="Once unchecked it will clear all selection" />
+                                <CheckBox Grid.Row="0" Grid.Column="2" Margin="4,0,-4,0"
+                                              IsChecked="{Binding IsAssigneeChecked}" ToolTip="Once unchecked it will clear all selection" />
                             </Grid>
                         </Expander>
 

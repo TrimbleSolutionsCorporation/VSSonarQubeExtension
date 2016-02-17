@@ -19,13 +19,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Globalization;
+    using System.Linq;
     using System.Windows;
     using System.Windows.Input;
     using System.Windows.Media;
 
     using GalaSoft.MvvmLight.Command;
     using Helpers;
-    
+
     using Model.Analysis;
     using Model.Menu;
     using PropertyChanged;
@@ -82,7 +83,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.searchModel = searchModel;
             this.Header = "Issues Search";
             this.AvailableActionPlans = new ObservableCollection<SonarActionPlan>();
-            this.UsersList = new ObservableCollection<User>();
+            this.AssigneeList = new ObservableCollection<User>();
+            this.ReporterList = new ObservableCollection<User>();
             this.IssuesGridView = new IssueGridViewModel("SearchView", false, configurationHelper, restService, notificationManager, translator);
             this.IssuesGridView.ContextMenuItems = this.CreateRowContextMenu(restService, translator, analyser);
             this.IssuesGridView.ShowContextMenu = true;
@@ -115,11 +117,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public SonarActionPlan SelectedActionPlan { get; set; }
 
         /// <summary>
-        ///     Gets or sets the assignee in filter.
-        /// </summary>
-        public User Assignee { get; set; }
-
-        /// <summary>
         ///     Gets or sets the back ground color.
         /// </summary>
         public Color BackGroundColor { get; set; }
@@ -148,7 +145,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <value>
         /// The cancel query command.
         /// </value>
-        public ICommand CancelQueryCommand { get; private set;  }
+        public ICommand CancelQueryCommand { get; private set; }
 
         /// <summary>
         ///     Gets or sets the created before date.
@@ -299,11 +296,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public IssueGridViewModel IssuesGridView { get; set; }
 
         /// <summary>
-        ///     Gets or sets the reporter in filter.
-        /// </summary>
-        public User Reporter { get; set; }
-
-        /// <summary>
         ///     Gets or sets the resource in editor.
         /// </summary>
         public Resource ResourceInEditor { get; set; }
@@ -321,10 +313,18 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <summary>
         ///     Gets or sets the users list.
         /// </summary>
-        public ObservableCollection<User> UsersList { get; set; }
+        public ObservableCollection<User> AssigneeList { get; set; }
 
         /// <summary>
-        /// Gets a value indicating whether this instance is action plan selected.
+        /// Gets or sets the reporter list.
+        /// </summary>
+        /// <value>
+        /// The reporter list.
+        /// </value>
+        public ObservableCollection<User> ReporterList { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is action plan selected.
         /// </summary>
         /// <value>
         /// <c>true</c> if this instance is action plan selected; otherwise, <c>false</c>.
@@ -336,7 +336,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         public void OnShowFlyoutsChanged()
         {
-            this.SizeOfFlyout = this.ShowLeftFlyOut ? 250 : 0;
+            this.SizeOfFlyout = this.ShowLeftFlyOut ? 350 : 0;
         }
 
         /// <summary>
@@ -438,6 +438,34 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             this.searchModel.OnAnalysisModeHasChange(EventArgs.Empty);
             Debug.WriteLine("Name Changed");
+        }
+
+        /// <summary>
+        /// Called when [is reporter checked changed].
+        /// </summary>
+        public void OnIsReporterCheckedChanged()
+        {
+            if (!this.IsReporterChecked)
+            {
+                foreach (var user in this.ReporterList)
+                {
+                    user.Selected = false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Called when [is assignee checked changed].
+        /// </summary>
+        public void OnIsAssigneeCheckedChanged()
+        {
+            if (!this.IsAssigneeChecked)
+            {
+                foreach (var user in this.AssigneeList)
+                {
+                    user.Selected = false;
+                }
+            }
         }
 
         /// <summary>
@@ -602,8 +630,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.GetAllMyIssuesCommand = new RelayCommand(this.OnGetAllMyIssuesCommand);
             this.CloseLeftFlyoutCommand = new RelayCommand(this.OnCloseFlyoutIssueSearchCommand);
             this.ReloadPlanDataCommand = new RelayCommand(this.OnReloadPlanDataCommand);
-            this.CancelQueryCommand = new RelayCommand(this.OnCancelQueryCommand);
-            
+            this.CancelQueryCommand = new RelayCommand(this.OnCancelQueryCommand);            
         }
 
         /// <summary>
@@ -755,12 +782,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
 
             if (this.IsAssigneeChecked)
             {
-                request += "&assignees=" + this.Assignee.Login;
+                var users = this.AssigneeList.Where(i => i.Selected).Select(i => i.Login).Aggregate((i, j) => i + "," + j);
+                request += "&assignees=" + users;
             }
 
             if (this.IsReporterChecked)
             {
-                request += "&reporters=" + this.Reporter.Login;
+                var users = this.ReporterList.Where(i => i.Selected).Select(i => i.Login).Aggregate((i, j) => i + "," + j);
+                request += "&reporters=" + users;
             }
 
             if (this.IsDateBeforeChecked)

@@ -199,7 +199,8 @@ namespace VSSonarExtensionUi.Model.Analysis
             List<User> usortedList = this.restService.GetUserList(AuthtenticationHelper.AuthToken);
             if (usortedList != null && usortedList.Count > 0)
             {
-                this.issuesSearchViewModel.UsersList = new ObservableCollection<User>(usortedList.OrderBy(i => i.Name));
+                this.issuesSearchViewModel.AssigneeList = new ObservableCollection<User>(usortedList.OrderBy(i => i.Name));
+                this.issuesSearchViewModel.ReporterList = new ObservableCollection<User>(usortedList.OrderBy(i => i.Name));
             }
 
             this.ReloadPlanData();
