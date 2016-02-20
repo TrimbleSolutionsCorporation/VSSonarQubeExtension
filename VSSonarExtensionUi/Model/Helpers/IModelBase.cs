@@ -29,14 +29,12 @@
         /// <param name="workingDir">The working directory.</param>
         /// <param name="sourceModel">The source model.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
-        /// <param name="availableProjects">The available projects.</param>
         /// <param name="profile">The profile.</param>
         void AssociateWithNewProject(
             Resource project,
             string workingDir,
             ISourceControlProvider sourceModel,
             IIssueTrackerPlugin sourcePlugin,
-            IList<Resource> availableProjects,
             Dictionary<string, Profile> profile);
 
         /// <summary>
@@ -52,7 +50,9 @@
         /// <summary>
         /// Called when [connect to sonar].
         /// </summary>
-        void OnConnectToSonar(ISonarConfiguration configuration);
+        /// <param name="configuration">The configuration.</param>
+        /// <param name="availableProjects">The available projects.</param>
+        void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects);
 
         /// <summary>
         /// Gets the view model.

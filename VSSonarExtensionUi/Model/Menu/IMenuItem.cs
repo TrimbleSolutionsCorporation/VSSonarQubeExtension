@@ -17,6 +17,7 @@ namespace VSSonarExtensionUi.Model.Menu
     using System.Collections.ObjectModel;
     using System.Windows.Input;
     using Helpers;
+    using VSSonarPlugins.Types;
 
     /// <summary>
     ///     The MenuItem interface.
@@ -45,7 +46,6 @@ namespace VSSonarExtensionUi.Model.Menu
         /// </summary>
         ObservableCollection<IMenuItem> SubItems { get; set; }
 
-
         /// <summary>
         /// Refreshes the menu data for menu that have options that
         /// are context dependent on the selected issues.
@@ -56,7 +56,7 @@ namespace VSSonarExtensionUi.Model.Menu
         /// Cancels the refresh data.
         /// </summary>
         void CancelRefreshData();
-        
+
         #endregion
     }
 }

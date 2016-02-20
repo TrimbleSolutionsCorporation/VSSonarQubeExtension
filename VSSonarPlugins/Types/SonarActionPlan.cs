@@ -94,5 +94,13 @@
         /// The description.
         /// </value>
         public string Description { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name plus project key.
+        /// </summary>
+        /// <value>
+        /// The name plus project.
+        /// </value>
+        public string NamePlusProject { get; set; }
     }
 }

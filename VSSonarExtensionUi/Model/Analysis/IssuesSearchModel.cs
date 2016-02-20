@@ -28,8 +28,6 @@ namespace VSSonarExtensionUi.Model.Analysis
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
     using VSSonarExtensionUi.ViewModel.Helpers;
-    
-
 
     /// <summary>
     /// Search model for issues, viewmodel IssuesSearchViewModel
@@ -85,6 +83,7 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// The source model
         /// </summary>
         private ISourceControlProvider sourceModel;
+        private IEnumerable<Resource> availableProjects;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="IssuesSearchModel" /> class.
@@ -134,9 +133,47 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// Called when [connect to sonar].
         /// </summary>
         /// <param name="configuration">sonar configuration</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration)
+        /// <param name="availableProjects">The available projects.</param>
+        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects)
         {
             // does nothing
+            this.availableProjects = availableProjects;
+            this.issuesSearchViewModel.CanQUeryIssues = true;
+            this.notificationmanager.EndedWorking();
+
+            List<User> usortedList = this.restService.GetUserList(AuthtenticationHelper.AuthToken);
+            if (usortedList != null && usortedList.Count > 0)
+            {
+                this.issuesSearchViewModel.AssigneeList = new ObservableCollection<User>(usortedList.OrderBy(i => i.Name));
+                this.issuesSearchViewModel.ReporterList = new ObservableCollection<User>(usortedList.OrderBy(i => i.Name));
+            }
+
+            this.ReloadPlanData();
+        }
+
+        /// <summary>
+        /// The init data association.
+        /// </summary>
+        /// <param name="project">The project.</param>
+        /// <param name="workingDir">The working dir.</param>
+        /// <param name="sourceModelIn">The source model in.</param>
+        /// <param name="sourcePlugin">The source plugin.</param>
+        /// <param name="availableProjects">The available projects.</param>
+        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider sourceModelIn, IIssueTrackerPlugin sourcePlugin, Dictionary<string, Profile> profile)
+        {
+            this.sourceModel = sourceModelIn;
+            this.associatedProject = project;
+            this.issuesSearchViewModel.CanQUeryIssues = true;
+            this.notificationmanager.EndedWorking();
+
+            List<User> usortedList = this.restService.GetUserList(AuthtenticationHelper.AuthToken);
+            if (usortedList != null && usortedList.Count > 0)
+            {
+                this.issuesSearchViewModel.AssigneeList = new ObservableCollection<User>(usortedList.OrderBy(i => i.Name));
+                this.issuesSearchViewModel.ReporterList = new ObservableCollection<User>(usortedList.OrderBy(i => i.Name));
+            }
+
+            this.ReloadPlanData();
         }
 
         /// <summary>
@@ -182,36 +219,38 @@ namespace VSSonarExtensionUi.Model.Analysis
         }
 
         /// <summary>
-        /// The init data association.
-        /// </summary>
-        /// <param name="project">The project.</param>
-        /// <param name="workingDir">The working dir.</param>
-        /// <param name="sourceModelIn">The source model in.</param>
-        /// <param name="sourcePlugin">The source plugin.</param>
-        /// <param name="availableProjects">The available projects.</param>
-        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider sourceModelIn, IIssueTrackerPlugin sourcePlugin, IList<Resource> availableProjects, Dictionary<string, Profile> profile)
-        {
-            this.sourceModel = sourceModelIn;
-            this.associatedProject = project;
-            this.issuesSearchViewModel.CanQUeryIssues = true;
-            this.notificationmanager.EndedWorking();
-
-            List<User> usortedList = this.restService.GetUserList(AuthtenticationHelper.AuthToken);
-            if (usortedList != null && usortedList.Count > 0)
-            {
-                this.issuesSearchViewModel.AssigneeList = new ObservableCollection<User>(usortedList.OrderBy(i => i.Name));
-                this.issuesSearchViewModel.ReporterList = new ObservableCollection<User>(usortedList.OrderBy(i => i.Name));
-            }
-
-            this.ReloadPlanData();
-        }
-
-        /// <summary>
         /// Reloads the plan data.
         /// </summary>
         public void ReloadPlanData()
         {
-            List<SonarActionPlan> usortedListofPlan = this.restService.GetAvailableActionPlan(AuthtenticationHelper.AuthToken, this.associatedProject.Key);
+            var key = string.Empty;
+            if (this.associatedProject == null)
+            {
+                var plans  = new List<SonarActionPlan>();
+                foreach (var project in this.availableProjects)
+                {
+                    try
+                    {
+                        List<SonarActionPlan> projects = this.restService.GetAvailableActionPlan(AuthtenticationHelper.AuthToken, project.Key);
+
+                        if (projects != null && projects.Count > 0)
+                        {
+                            plans.AddRange(projects);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // 
+                    }
+                }
+
+                this.issuesSearchViewModel.AvailableActionPlans = new ObservableCollection<SonarActionPlan>(plans.OrderBy(i => i.NamePlusProject));
+                this.issuesSearchViewModel.UpdatePlanMenuContext();
+
+                return;
+            }
+
+            List<SonarActionPlan> usortedListofPlan = this.restService.GetAvailableActionPlan(AuthtenticationHelper.AuthToken, key);
             if (usortedListofPlan != null && usortedListofPlan.Count > 0)
             {
                 this.issuesSearchViewModel.AvailableActionPlans = new ObservableCollection<SonarActionPlan>(usortedListofPlan.OrderBy(i => i.Name));
@@ -265,6 +304,12 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// <returns>all issues in project</returns>
         public IEnumerable<Issue> GetAllIssuesInProject()
         {
+            if (this.associatedProject == null)
+            {
+                this.notificationmanager.FlagFailure("Feature available only when solution is open.");
+                return new List<Issue>();
+            }
+
             return this.restService.GetIssuesForProjects(AuthtenticationHelper.AuthToken, this.associatedProject.Key);
         }
 
@@ -277,6 +322,12 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// </returns>
         public IEnumerable<Issue> GetUserIssuesInProject(string userName)
         {
+            if (this.associatedProject == null)
+            {
+                this.notificationmanager.FlagFailure("Feature available only when solution is open.");
+                return new List<Issue>();
+            }
+
             return this.restService.GetIssuesByAssigneeInProject(AuthtenticationHelper.AuthToken, this.associatedProject.Key, userName);
         }
 
@@ -288,6 +339,12 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// </returns>
         public IEnumerable<Issue> GetCurrentUserIssuesInProject()
         {
+            if (this.associatedProject == null)
+            {
+                this.notificationmanager.FlagFailure("Feature available only when solution is open.");
+                return new List<Issue>();
+            }
+
             return this.restService.GetIssuesByAssigneeInProject(AuthtenticationHelper.AuthToken, this.associatedProject.Key, AuthtenticationHelper.AuthToken.Username);
         }
 
@@ -362,13 +419,21 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// </returns>
         public IEnumerable<Issue> GetIssuesUsingFilter(string filter, bool filterSSCM)
         {
+            this.notificationmanager.ResetFailure();
             if (AuthtenticationHelper.AuthToken.SonarVersion < 3.6)
             {
                 return this.restService.GetIssuesForProjects(AuthtenticationHelper.AuthToken, this.associatedProject.Key);
             }
 
-            string request = "?componentRoots=" + this.associatedProject.Key + filter;
-            var issues = this.restService.GetIssues(AuthtenticationHelper.AuthToken, request, this.associatedProject.Key);
+            string request = "?" + filter;
+            string key = string.Empty;
+            if (this.associatedProject != null)
+            {
+                request = "?componentRoots=" + this.associatedProject.Key + filter;
+                key = this.associatedProject.Key;
+            }
+
+            var issues = this.restService.GetIssues(AuthtenticationHelper.AuthToken, request, key);
 
             if (!filterSSCM)
             {

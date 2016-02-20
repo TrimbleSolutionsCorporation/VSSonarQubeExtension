@@ -62,6 +62,11 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         private readonly INotificationManager notificationManager;
 
         /// <summary>
+        /// The plan menu
+        /// </summary>
+        private PlanMenu planMenu;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="IssuesSearchViewModel" /> class.
         /// </summary>
         /// <param name="searchModel">The search model.</param>
@@ -259,6 +264,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         ///     Gets or sets a value indicating whether is removed checked.
         /// </summary>
         public bool IsRemovedChecked { get; set; }
+
+        /// <summary>
+        /// Updates the plan menu context.
+        /// </summary>
+        public void UpdatePlanMenuContext()
+        {
+            this.planMenu.UpdateActionPlans(this.AvailableActionPlans);
+        }
 
         /// <summary>
         ///     Gets or sets a value indicating whether is reporter checked.
@@ -849,11 +862,13 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </returns>
         private ObservableCollection<IMenuItem> CreateRowContextMenu(ISonarRestService service, ISQKeyTranslator translator, ISonarLocalAnalyser analyser)
         {
+            this.planMenu = PlanMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager) as PlanMenu;
+
             var menu = new ObservableCollection<IMenuItem>
                            {
                                ChangeStatusMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager),
                                OpenResourceMenu.MakeMenu(service, this.IssuesGridView),
-                               PlanMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager),
+                               this.planMenu,
                                SourceControlMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager, translator),
                                IssueTrackerMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager, translator),
                                AssignMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager),

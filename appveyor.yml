@@ -5,9 +5,9 @@ build_script:
 test:
   # assemblies to test - optional
   assemblies:
-    - BuildDrop\vs15\Test\SonarLocalAnalyser.Test.dll
-    - BuildDrop\vs15\Test\SonarRestService.Test.dll
-    - BuildDrop\vs15\Test\VSSonarExtensionUi.Test.dll
+    - BuildDrop\Test\vs15\SonarLocalAnalyser.Test.dll
+    - BuildDrop\Test\vs15\SonarRestService.Test.dll
+    - BuildDrop\Test\vs15\VSSonarExtensionUi.Test.dll
 after_test:
   - cmd: nuget pack VSSonarExtensionPlugin3Api.nuspec
   - cmd: nuget pack VSSonarExtensionPlugin4Api.nuspec

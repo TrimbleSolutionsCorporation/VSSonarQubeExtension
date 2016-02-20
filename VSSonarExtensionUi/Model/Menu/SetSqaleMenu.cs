@@ -14,7 +14,7 @@
     using Association;
     using SonarLocalAnalyser;
     using View.Helpers;
-
+    using System.Linq;
 
     /// <summary>
     /// Source Control Related Actions
@@ -42,6 +42,11 @@
         private readonly ISQKeyTranslator tranlator;
 
         /// <summary>
+        /// The analyser
+        /// </summary>
+        private readonly ISonarLocalAnalyser analyser;
+
+        /// <summary>
         /// The source control
         /// </summary>
         private ISourceControlProvider sourceControl;
@@ -60,11 +65,6 @@
         /// The available projects
         /// </summary>
         private IList<Resource> availableProjects;
-
-        /// <summary>
-        /// The analyser
-        /// </summary>
-        private readonly ISonarLocalAnalyser analyser;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SourceControlMenu" /> class.
@@ -134,11 +134,10 @@
         /// <param name="workingDir">The working dir.</param>
         /// <param name="sourceModel">The source model.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
-        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider sourceModel, IIssueTrackerPlugin sourcePlugin, IList<Resource> availableProjects, Dictionary<string, Profile> profile)
+        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider sourceModel, IIssueTrackerPlugin sourcePlugin, Dictionary<string, Profile> profile)
         {
             this.sourceControl = sourceModel;
             this.assignProject = project;
-            this.availableProjects = availableProjects;
         }
 
         /// <summary>
@@ -162,9 +161,10 @@
         /// Called when [connect to sonar].
         /// </summary>
         /// <param name="configuration">sonar configuration</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration)
+        /// <param name="availableProjectsIn">The available projects in.</param>
+        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjectsIn)
         {
-            // does nothing
+            this.availableProjects = availableProjectsIn.ToList();
         }
 
         /// <summary>
@@ -180,6 +180,7 @@
         /// </summary>
         public void OnDisconnect()
         {
+            this.availableProjects = null;
         }
 
         /// <summary>
@@ -209,6 +210,12 @@
         /// </summary>
         private void OnSetExclusionsMenuCommand()
         {
+            if (this.assignProject == null)
+            {
+                MessageDisplayBox.DisplayMessage("Technical debt can only be adjusted if project is associated");
+                return;
+            }
+
             if (this.model.SelectedItems == null || this.model.SelectedItems.Count == 0)
             {
                 return;

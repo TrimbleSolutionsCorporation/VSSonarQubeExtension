@@ -29,6 +29,7 @@ namespace VSSonarExtensionUi.Model.Menu
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
     using System.Collections;
+    using System.Linq;
     /// <summary>
     /// The issue handler menu.
     /// </summary>
@@ -78,6 +79,12 @@ namespace VSSonarExtensionUi.Model.Menu
         /// The source plugin
         /// </summary>
         private IIssueTrackerPlugin sourcePlugin;
+
+        /// <summary>
+        /// The available plans
+        /// </summary>
+        private ObservableCollection<SonarActionPlan> availablePlans;
+        private IEnumerable<Resource> availableProjects;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PlanMenu" /> class.
@@ -171,9 +178,11 @@ namespace VSSonarExtensionUi.Model.Menu
         /// Called when [connect to sonar].
         /// </summary>
         /// <param name="configuration">sonar configuration</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration)
+        /// <param name="availableProjectsIn">The available projects in.</param>
+        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjectsIn)
         {
             // does nothing
+            this.availableProjects = availableProjectsIn;
         }
 
         /// <summary>
@@ -198,34 +207,19 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <summary>
         /// Associates the with new project.
         /// </summary>
-        /// <param name="configIn">The configuration in.</param>
         /// <param name="project">The project.</param>
         /// <param name="workingDir">The working dir.</param>
         /// <param name="providerIn">The provider in.</param>
         /// <param name="sourcePluginIn">The source plugin in.</param>
-        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider providerIn, IIssueTrackerPlugin sourcePluginIn, IList<Resource> availableProjects, Dictionary<string, Profile> profile)
+        /// <param name="profile">The profile.</param>
+        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider providerIn, IIssueTrackerPlugin sourcePluginIn, Dictionary<string, Profile> profile)
         {
             this.Profile = profile;
             this.sourcePlugin = sourcePluginIn;
             this.sourceDir = workingDir;
             this.associatedProject = project;
             this.provider = providerIn;
-
-            if (this.CommandText.Equals("Add to Existent Plan"))
-            {
-                Application.Current.Dispatcher.Invoke(
-                    delegate
-                    {
-                        this.SubItems.Clear();
-
-                        foreach (var item in this.rest.GetAvailableActionPlan(AuthtenticationHelper.AuthToken, project.Key))
-                        {
-                            var menu = new PlanMenu(this.rest, this.model, this.manager, null, false) { CommandText = item.Name, IsEnabled = true };
-                            menu.AssociateWithNewProject(project, workingDir, this.provider, this.sourcePlugin, availableProjects, this.Profile);
-                            this.SubItems.Add(menu);
-                        }
-                    });
-            }
+            this.availableProjects = availableProjects;
         }
       
         /// <summary>
@@ -257,54 +251,62 @@ namespace VSSonarExtensionUi.Model.Menu
             {
                 if (this.CommandText.Equals("Associate to new plan"))
                 {
-                    var availablePlans = this.rest.GetAvailableActionPlan(AuthtenticationHelper.AuthToken, this.associatedProject.Key);
-                    var newPlan = PromptUserForNewPlan.Prompt(availablePlans);
+                    var plan = PromptUserForNewPlan.Prompt(this.availablePlans.ToList(), this.availableProjects.ToList<Resource>(), this.associatedProject);
 
-                    if (newPlan == null)
+                    if (plan == null)
                     {
                         return;
                     }
 
-                    this.AssociateToNewPlan(newPlan, this.model.SelectedItems);
+                    this.AssociateToNewPlan(plan, this.model.SelectedItems);
 
+                    return;
                 }
-                else
+
+                if (this.CommandText.Equals("Unplan"))
                 {
-                    if (this.CommandText.Equals("Unplan"))
-                    {                        
-                        this.UnPlanIssues();
+                    this.UnPlanIssues();
 
-                        foreach (var issue in this.model.SelectedItems)
-                        {
-                            (issue as Issue).ActionPlanName = string.Empty;
-                            (issue as Issue).ActionPlan = string.Empty;
-                        }
-                    }
-                    else
+                    foreach (var issue in this.model.SelectedItems)
                     {
-                        var plans = this.rest.GetAvailableActionPlan(AuthtenticationHelper.AuthToken, this.associatedProject.Key);
-                        foreach (var plan in plans)
+                        (issue as Issue).ActionPlanName = string.Empty;
+                        (issue as Issue).ActionPlan = string.Empty;
+                    }
+
+                    return;
+                }
+
+                if (!this.CommandText.Equals("Unplan") && !this.CommandText.Equals("Associate to new plan"))
+                { 
+                    foreach (var plan in this.availablePlans)
+                    {
+                        if (plan.NamePlusProject.Equals(this.CommandText))
                         {
-                            if (plan.Name.Equals(this.CommandText))
+                            this.AttachToExistentPlan(plan);
+                            foreach (var issue in this.model.SelectedItems)
                             {
-                                this.AttachToExistentPlan(plan);
-
-                                foreach (var issue in this.model.SelectedItems)
-                                {
-                                    (issue as Issue).ActionPlanName = plan.Name;
-                                    (issue as Issue).ActionPlan = plan.Key;
-                                }
-
-                                return;
+                                (issue as Issue).ActionPlanName = plan.Name;
+                                (issue as Issue).ActionPlan = plan.Key;
                             }
                         }
                     }
+
+                    return;
                 }
             }
             catch (Exception ex)
             {
                 UserExceptionMessageBox.ShowException("Cannot Perform Operation in Plan: " + ex.Message + " please check vs output log for detailed information", ex);
             }
+        }
+
+        /// <summary>
+        /// Updates the action plans.
+        /// </summary>
+        /// <param name="availableActionPlans">The available action plans.</param>
+        public void UpdateActionPlans(ObservableCollection<SonarActionPlan> availableActionPlans)
+        {
+            this.ReloadPlanData(this, availableActionPlans);
         }
 
         /// <summary>
@@ -370,8 +372,7 @@ namespace VSSonarExtensionUi.Model.Menu
             {
                 bw.RunWorkerCompleted += delegate
                 {
-                    this.ReloadPlanData(this.parent);
-
+                    this.ReloadPlanData(this.parent, newPlan);
                     Application.Current.Dispatcher.Invoke(delegate { this.manager.EndedWorking(); });
                 };
 
@@ -381,8 +382,8 @@ namespace VSSonarExtensionUi.Model.Menu
 
                     try
                     {
-                        var plan = this.rest.CreateNewPlan(AuthtenticationHelper.AuthToken, this.associatedProject.Key, newPlan);
-                        var replies = this.rest.PlanIssues(AuthtenticationHelper.AuthToken, this.model.SelectedItems, plan.Key.ToString());
+                        var plan = this.rest.CreateNewPlan(AuthtenticationHelper.AuthToken, newPlan.Project, newPlan);
+                        var replies = this.rest.PlanIssues(AuthtenticationHelper.AuthToken, selectedItems, plan.Key.ToString());
 
                         foreach (Issue issue in selectedItems)
                         {
@@ -394,8 +395,6 @@ namespace VSSonarExtensionUi.Model.Menu
                         {
                             this.manager.ReportMessage(new Message { Data = "Plan Operation Result: " + itemreply.Key + " : " + itemreply.Value });
                         }
-
-
 
                         this.model.RefreshView();
                     }
@@ -414,7 +413,8 @@ namespace VSSonarExtensionUi.Model.Menu
         /// Reloads the plan data.
         /// </summary>
         /// <param name="parentMenu">The parent menu.</param>
-        private void ReloadPlanData(PlanMenu parentMenu)
+        /// <param name="plan">The plan.</param>
+        private void ReloadPlanData(PlanMenu parentMenu, SonarActionPlan plan)
         {
             foreach (var item in parentMenu.SubItems)
             {
@@ -423,14 +423,78 @@ namespace VSSonarExtensionUi.Model.Menu
                     Application.Current.Dispatcher.Invoke(
                         delegate
                         {
+                            foreach (PlanMenu availablePlan in item.SubItems)
+                            {
+                                if (availablePlan.CommandText.Equals(plan.Project))
+                                {
+                                    var menu = new PlanMenu(this.rest, this.model, this.manager, null, false) { CommandText = plan.NamePlusProject, IsEnabled = true };
+                                    menu.AssociateWithNewProject(this.associatedProject, this.sourceDir, this.provider, this.sourcePlugin, this.Profile);
+                                    availablePlan.SubItems.Add(menu);
+                                }
+                            }
+                        });
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Reloads the plan data.
+        /// </summary>
+        /// <param name="parentMenu">The parent menu.</param>
+        /// <param name="plans">The plans.</param>
+        private void ReloadPlanData(PlanMenu parentMenu, ObservableCollection<SonarActionPlan> plans)
+        {
+            this.availablePlans = plans;
+
+            foreach (PlanMenu item in parentMenu.SubItems)
+            {
+                item.availablePlans = plans;
+
+                if (item.CommandText.Equals("Add to Existent Plan"))
+                {
+                    Application.Current.Dispatcher.Invoke(
+                        delegate
+                        {
+                            // clear data
+                            foreach (var data in item.SubItems)
+                            {
+                                data.SubItems.Clear();
+                            }
+
                             item.SubItems.Clear();
 
-                            foreach (var plan in this.rest.GetAvailableActionPlan(AuthtenticationHelper.AuthToken, this.associatedProject.Key))
+                            var plansPerProject = new Dictionary<string, List<SonarActionPlan>>();
+
+                            foreach (SonarActionPlan plan in this.availablePlans)
                             {
-                                var menu = new PlanMenu(this.rest, this.model, this.manager, null, false) { CommandText = plan.Name, IsEnabled = true };
-                                menu.AssociateWithNewProject(this.associatedProject, this.sourceDir, this.provider, this.sourcePlugin, null, this.Profile);
-                                item.SubItems.Add(menu);
+                                if (!plansPerProject.ContainsKey(plan.Project))
+                                {
+                                    var listofplans = new List<SonarActionPlan>();
+                                    listofplans.Add(plan);
+                                    plansPerProject.Add(plan.Project, listofplans);
+                                }
+                                else
+                                {
+                                    plansPerProject[plan.Project].Add(plan);
+                                }
                             }
+
+
+                            foreach (var planPerProject in plansPerProject)
+                            {
+                                var menu = new PlanMenu(this.rest, this.model, this.manager, null, false) { CommandText = planPerProject.Key, IsEnabled = false };
+                                menu.AssociateWithNewProject(this.associatedProject, this.sourceDir, this.provider, this.sourcePlugin, this.Profile);
+                                foreach (var plan in planPerProject.Value)
+                                {
+                                    var submenu = new PlanMenu(this.rest, this.model, this.manager, null, false) { CommandText = plan.NamePlusProject, IsEnabled = true };
+                                    submenu.AssociateWithNewProject(this.associatedProject, this.sourceDir, this.provider, this.sourcePlugin, this.Profile);
+                                    submenu.UpdateActionPlans(plans);
+                                    menu.SubItems.Add(submenu);
+                                }
+
+                                item.SubItems.Add(menu);
+                            }                            
                         });
                 }
             }

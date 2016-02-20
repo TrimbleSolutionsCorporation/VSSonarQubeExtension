@@ -119,12 +119,12 @@
         /// <summary>
         /// Associates the with new project.
         /// </summary>
-        /// <param name="config">The configuration.</param>
         /// <param name="project">The project.</param>
         /// <param name="workingDir">The working dir.</param>
         /// <param name="sourceModel">The source model.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
-        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider sourceModel, IIssueTrackerPlugin sourcePlugin, IList<Resource> availableProjects, Dictionary<string, Profile> profile)
+        /// <param name="profile">The profile.</param>
+        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider sourceModel, IIssueTrackerPlugin sourcePlugin, Dictionary<string, Profile> profile)
         {
             this.sourceControl = sourceModel;
             this.assignProject = project;
@@ -159,7 +159,7 @@
         /// Called when [connect to sonar].
         /// </summary>
         /// <param name="configuration">sonar configuration</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration)
+        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects)
         {
             // does nothing
         }
@@ -198,6 +198,12 @@
         /// </summary>
         private void OnSourceControlCommand()
         {
+            if (this.assignProject == null)
+            {
+                MessageDisplayBox.DisplayMessage("Source control only available when a project is associated.");
+                return;
+            }
+
             if (this.model.SelectedItems == null || this.model.SelectedItems.Count == 0)
             {
                 return;
@@ -249,6 +255,11 @@
         /// <param name="issue">The issue.</param>
         private void AssignIssueToUser(List<User> users, Issue issue)
         {
+            if (this.assignProject == null)
+            {
+                return;
+            }
+
             try
             {
                 var translatedPath = this.tranlator.TranslateKey(issue.Component, this.vshelper, this.assignProject.BranchName);

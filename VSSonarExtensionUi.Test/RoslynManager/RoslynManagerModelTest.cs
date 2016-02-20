@@ -43,40 +43,9 @@ namespace VSSonarExtensionUi.Test.RoslynManager
             var plugins = new List<IAnalysisPlugin>();
             plugins.Add(pluginAnalysis.Object);
 
-
             var roslynModel = new RoslynManagerModel(plugins, mockNotifier.Object, mockConfiguration.Object, mockRest.Object);
 
-            Assert.That(roslynModel.ExtensionDiagnostics.Count, Is.EqualTo(3));
-            Assert.That(roslynModel.ExtensionDiagnostics["SonarLint.CSharp.dll"].AvailableChecks.Count, Is.EqualTo(121));
-            Assert.That(roslynModel.ExtensionDiagnostics["SonarLint.VisualBasic.dll"].AvailableChecks.Count, Is.EqualTo(30));            
-        }
-
-        [Test]
-        public void AddsRoslynCheckOk()
-        {
-            var mockTranslator = new Mock<ISQKeyTranslator>();
-            var mockNotifier = new Mock<INotificationManager>();
-            var pluginAnalysis = new Mock<IAnalysisPlugin>();
-            var mockRest = new Mock<ISonarRestService>();
-            var mockLogger = new Mock<INotificationManager>();
-            var mockConfiguration = new Mock<IConfigurationHelper>();
-            var mockSourceProvider = new Mock<ISourceControlProvider>();
-            var mockVsHelper = new Mock<IVsEnvironmentHelper>();
-
-
-            mockRest.Setup(x => x.CreateRule(It.IsAny<ISonarConfiguration>(), It.IsAny<Rule>(), It.IsAny<Rule>())).Returns(new List<string>());
-
-            var plugins = new List<IAnalysisPlugin>();
-            plugins.Add(pluginAnalysis.Object);
-
-
-            var roslynModel = new RoslynManagerModel(plugins, mockNotifier.Object, mockConfiguration.Object, mockRest.Object);
-            
-            Assert.That(roslynModel.AddNewRoslynPack(Path.Combine(this.runninPath, "TestData", "CSharp.dll"), false), Is.True);
-            Assert.That(roslynModel.ExtensionDiagnostics.Count, Is.EqualTo(4));
-
-            Assert.That(roslynModel.AddNewRoslynPack(Path.Combine(this.runninPath, "externalAnalysers", "roslynDiagnostics", "SonarLint.dll"), false), Is.False);
-            Assert.That(roslynModel.ExtensionDiagnostics.Count, Is.EqualTo(4));
+            Assert.That(roslynModel.ExtensionDiagnostics.Count, Is.EqualTo(0));
         }
     }
 }

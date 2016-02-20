@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -102,7 +103,7 @@ namespace VSSonarQubeStandalone.Helpers
 
         public void NavigateToResource(string url)
         {
-            throw new NotImplementedException();
+            Process.Start(url);
         }
 
         public void OpenResourceInVisualStudio(string filename, int line, string editorCommandExec = "notepad")

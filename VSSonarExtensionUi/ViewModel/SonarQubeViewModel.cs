@@ -219,6 +219,8 @@ namespace VSSonarExtensionUi.ViewModel
                     this.configurationHelper,
                     this.notificationManager);
 
+
+
             this.VSonarQubeOptionsViewData.ResetUserData();
 
             // start association module after all models are started
@@ -1062,13 +1064,12 @@ namespace VSSonarExtensionUi.ViewModel
             {
                 try
                 {
-                    this.RefreshProjectList(useDispatcher);
-                    this.VSonarQubeOptionsViewData.RoslynModel.OnConnectToSonar(AuthtenticationHelper.AuthToken);
-                    this.VSonarQubeOptionsViewData.RoslynViewModel.SyncDiagInView();
+                    this.RefreshProjectList(useDispatcher);                    
+                    this.AssociationModule.OnConnectToSonar();
+                    this.ConnectionTooltip = "Authenticated, but not associated";
                     this.StatusMessage = string.Empty;
                     this.IsConnected = true;
                     this.AssociationModule.IsAssociated = false;
-                    this.ConnectionTooltip = "Authenticated, but no associated";
                 }
                 catch (Exception ex)
                 {

@@ -146,6 +146,17 @@
         }
 
         /// <summary>
+        /// Called when [connect to sonar].
+        /// </summary>
+        public void OnConnectToSonar()
+        {
+            foreach (IModelBase model in modelPool)
+            {
+                model.OnConnectToSonar(AuthtenticationHelper.AuthToken, this.model.AvailableProjects);
+            }
+        }
+
+        /// <summary>
         /// The on assign project command.
         /// </summary>
         /// <param name="projectIn">The project in.</param>
@@ -631,7 +642,6 @@
                         this.OpenSolutionPath,
                         this.sourcecontrol,
                         this.pluginManager.GetIssueTrackerPlugin(), 
-                        this.model.AvailableProjects,
                         this.Profile);
                 }
                 catch (Exception ex)

@@ -1,12 +1,13 @@
 ﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     x:Class="VSSonarExtensionUi.View.Helpers.PromptUserForNewPlan"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
     WindowStartupLocation="CenterScreen" 
     SizeToContent="WidthAndHeight"
     MinWidth="500"
     MaxWidth="500"
-    MinHeight="180"
-    MaxHeight="180"
+    MinHeight="210"
+    MaxHeight="210"
     ResizeMode="CanMinimize" WindowStyle="None">
 
     <Window.Resources>
@@ -19,6 +20,23 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <DataTemplate x:Key="ProjectSelectionComboBoxDataTemplate">
+                <StackPanel>
+                    <TextBlock Text="{Binding Name}">
+                        <TextBlock.Style>
+                            <Style>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsBranch}" Value="True">
+                                        <Setter Property="TextBlock.Foreground" Value="Red" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+
+                    </TextBlock>
+                </StackPanel>
+            </DataTemplate>
         </ResourceDictionary>
     </Window.Resources>
     <Border BorderBrush="Black"
@@ -35,6 +53,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="50"/>
+                <RowDefinition Height="30"/>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
@@ -43,10 +62,22 @@
             <TextBox Name="nameOfPlan" Grid.Column="1" Grid.Row="0" ToolTip="Name of the plan" TextChanged="TextChanged"/>
             <DatePicker Name="datePicker" Grid.Column="2" Grid.Row="0" />
             <TextBox Name="descriptionPlan" Grid.Column="1" Grid.Row="1" ToolTip="Description of the plan" Grid.ColumnSpan="2"/>
-            <TextBlock TextWrapping="WrapWithOverflow" Grid.Column="0" Grid.Row="2" Text="Available Plans"/>
-            <TextBlock TextWrapping="WrapWithOverflow" Name="availableplans" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2"/>
-                        
-            <WrapPanel Grid.Row="3" HorizontalAlignment="Right" Margin="0,5,0,0" Grid.Column="2" Width="140">
+            <TextBlock TextWrapping="WrapWithOverflow" Grid.Column="0" Grid.Row="3" Text="Available Plans"/>
+            <TextBlock TextWrapping="WrapWithOverflow" Name="availableplans" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2"/>
+
+            <Label Name="Project" Grid.Column="0" Grid.Row="2" Content="Project"/>
+            <Label Name="Status" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="4" Foreground="Red" />
+
+            <ComboBox Name="Projects" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="2"
+                                  Style="{DynamicResource VirtualisedMetroComboBox}"
+                                  TextSearch.TextPath="Name"
+                                  controls:TextBoxHelper.Watermark="Name"
+                                  IsEditable="True"
+                                  SelectionChanged="ComboBox_SelectionChanged"
+                                  MaxDropDownHeight="125"
+                                  ItemTemplate="{DynamicResource ProjectSelectionComboBoxDataTemplate}"/>
+            
+            <WrapPanel Grid.Row="4" HorizontalAlignment="Right" Margin="0,5,0,0" Grid.Column="2" Width="140">
                 <Button x:Name="OkButton" MinWidth="60" Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="_Ok" Click="BtnOkClick"  Margin="0,0,10,0" />
                 <Button MinWidth="60" Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="_Cancel" Click="BtnCancelClick"  Margin="0,0,10,0"/>
             </WrapPanel>

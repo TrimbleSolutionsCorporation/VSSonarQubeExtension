@@ -179,7 +179,7 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <param name="workingDir">The working dir.</param>
         /// <param name="sourceModelIn">The source model in.</param>
         /// <param name="sourcePluginIn">The source plugin in.</param>
-        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider sourceModelIn, IIssueTrackerPlugin sourcePlugin, IList<Resource> availableProjects, Dictionary<string, Profile> profile)
+        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider sourceModelIn, IIssueTrackerPlugin sourcePlugin, Dictionary<string, Profile> profile)
         {
             this.sourceDir = workingDir;
             this.associatedProject = project;
@@ -221,7 +221,7 @@ namespace VSSonarExtensionUi.Model.Menu
         /// Called when [connect to sonar].
         /// </summary>
         /// <param name="configuration">sonar configuration</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration)
+        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects)
         {
             // does nothing
         }
@@ -259,6 +259,12 @@ namespace VSSonarExtensionUi.Model.Menu
         /// </summary>
         private void OnAttachToIssueTracker()
         {
+            if (this.issueTrackerPlugin == null)
+            {
+                MessageDisplayBox.DisplayMessage("Please ensure a issue tracker plugin is installed.");
+                return;
+            }
+
             if (this.model.SelectedItems == null || this.model.SelectedItems.Count == 0)
             {
                 return;

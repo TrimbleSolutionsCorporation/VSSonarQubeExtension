@@ -37,7 +37,7 @@
 
             <DataTemplate x:Key="UserSelectionComboBoxDataTemplate">
                 <StackPanel>
-                    <TextBlock Text="{Binding Name}" />
+                    <TextBlock Text="{Binding NamePlusProject}" />
                 </StackPanel>
             </DataTemplate>
 
@@ -368,6 +368,9 @@
                                         Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
                                         Content="Action Plan" />
                                 <ComboBox Grid.Row="0" Grid.Column="1" IsTextSearchEnabled="True"
+                                              controls:TextBoxHelper.Watermark="Search and select from drop down"
+                                              IsEditable="True"
+                                              TextSearch.TextPath="NamePlusProject"
                                               SelectedItem="{Binding SelectedActionPlan, Mode=TwoWay}"
                                               ItemsSource="{Binding AvailableActionPlans}"
                                               MaxDropDownHeight="101"

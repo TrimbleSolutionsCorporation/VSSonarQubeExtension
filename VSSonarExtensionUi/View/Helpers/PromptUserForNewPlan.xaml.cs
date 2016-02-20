@@ -30,46 +30,56 @@ namespace VSSonarExtensionUi.View.Helpers
         /// </summary>
         private readonly List<SonarActionPlan> plans;
 
-        #region Constructors and Destructors
+        /// <summary>
+        /// The current project
+        /// </summary>
+        private readonly Resource currentProject;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PromptUserForNewPlan"/> class.
+        /// Initializes a new instance of the <see cref="PromptUserForNewPlan" /> class.
         /// </summary>
-        /// <param name="existetPlans">The existet plans.</param>
-        public PromptUserForNewPlan(List<SonarActionPlan> existetPlans)
+        /// <param name="existentPlans">The existent plans.</param>
+        /// <param name="projects">The projects.</param>
+        /// <param name="associatedProject">The associated project.</param>
+        public PromptUserForNewPlan(List<SonarActionPlan> existentPlans, List<Resource> projects, Resource associatedProject)
         {
-            this.plans = existetPlans;
+            this.currentProject = associatedProject;
+            this.plans = existentPlans;
             this.InitializeComponent();
+            this.Projects.ItemsSource = projects;
 
-            this.availableplans.Text = string.Empty;
-
-            foreach (var plan in existetPlans)
+            if (this.currentProject != null)
             {
-                this.availableplans.Text += plan.Name + " ";
+                foreach (Resource item in this.Projects.ItemsSource)
+                {
+                    if (item.Key == this.currentProject.Key)
+                    {
+                        this.Projects.SelectedItem = item;
+                    }
+                }
             }
         }
-
-        #endregion
-
-        #region Public Methods and Operators
 
         /// <summary>
         /// The prompt.
         /// </summary>
-        /// <param name="existetPlans">The existet plans.</param>
+        /// <param name="existentPlans">The existent plans.</param>
+        /// <param name="projects">The projects.</param>
+        /// <param name="associatedProject">The associated project.</param>
         /// <returns>
         /// The <see cref="string" />.
         /// </returns>
-        public static SonarActionPlan Prompt(List<SonarActionPlan> existetPlans)
+        public static SonarActionPlan Prompt(List<SonarActionPlan> existentPlans, List<Resource> projects, Resource associatedProject)
         {
-            var inst = new PromptUserForNewPlan(existetPlans);
+            var inst = new PromptUserForNewPlan(existentPlans, projects, associatedProject);
             inst.ShowDialog();
 
-            if ((bool)inst.DialogResult)
+            if ((bool)inst.DialogResult && inst.Projects.SelectedItem != null)
             {
                 var plan = new SonarActionPlan();
                 plan.Name = inst.nameOfPlan.Text;
                 plan.Description = inst.descriptionPlan.Text;
+                plan.Project = (inst.Projects.SelectedItem as Resource).Key;
                 if (inst.datePicker.SelectedDate.HasValue)
                 {
                     plan.DeadLine = inst.datePicker.SelectedDate.Value;
@@ -81,9 +91,30 @@ namespace VSSonarExtensionUi.View.Helpers
             return null;
         }
 
-        #endregion
+        /// <summary>
+        /// Handles the SelectionChanged event of the ComboBox control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="SelectionChangedEventArgs"/> instance containing the event data.</param>
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var comboBox = sender as ComboBox;
+            var value = comboBox.SelectedItem as Resource;
+            if (value == null)
+            {
+                return;
+            }
 
-        #region Methods
+            this.availableplans.Text = string.Empty;
+
+            foreach (var plan in this.plans)
+            {
+                if (value.Key == plan.Project)
+                {
+                    this.availableplans.Text += plan.Name + " ";
+                }
+            }
+        }
 
         /// <summary>
         /// Handles the TextChanged event of the TextBox control.
@@ -129,10 +160,26 @@ namespace VSSonarExtensionUi.View.Helpers
         /// </param>
         private void BtnOkClick(object sender, RoutedEventArgs e)
         {
+            if (this.Projects.SelectedItem == null)
+            {
+                this.Status.Content = "Please select a project";
+                return;
+            }
+
+            if (this.datePicker.SelectedDate == null)
+            {
+                this.Status.Content = "Please select a deadline";
+                return;
+            }
+
+            if (string.IsNullOrEmpty(this.nameOfPlan.Text))
+            {
+                this.Status.Content = "Please fill in plan name";
+                return;
+            }
+
             this.DialogResult = true;
             this.Close();
         }
-
-        #endregion
     }
 }

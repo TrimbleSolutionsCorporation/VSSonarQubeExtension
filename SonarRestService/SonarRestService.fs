@@ -1277,6 +1277,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 plan.UserLogin <- entry.UserLogin
                 plan.TotalIssues <- entry.TotalIssues
                 plan.UnresolvedIssues <- entry.UnresolvedIssues
+                plan.NamePlusProject <- entry.Name + " " + plan.Project
                 
                 plans.Add(plan)
             plans
