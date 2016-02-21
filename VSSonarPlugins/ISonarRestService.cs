@@ -53,6 +53,7 @@
         /// <returns></returns>
         List<Issue> GetIssuesInResource(ISonarConfiguration config, string resourceKey);
 
+
         /// <summary>
         /// Gets the issues.
         /// </summary>
@@ -208,6 +209,15 @@
         /// <param name="key">The key.</param>
         /// <returns></returns>
         List<Resource> GetResourcesData(ISonarConfiguration conf, string key);
+
+        /// <summary>
+        /// Searches the component.
+        /// </summary>
+        /// <param name="conf">The conf.</param>
+        /// <param name="searchString">The search string.</param>
+        /// <param name="filterBranches">if set to <c>true</c> [filter branches].</param>
+        /// <returns></returns>
+        List<Resource> SearchComponent(ISonarConfiguration conf, string searchString, bool filterBranches, string masterBranch);
 
         /// <summary>
         /// Gets the projects list.

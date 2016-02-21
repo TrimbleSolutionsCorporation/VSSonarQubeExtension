@@ -120,6 +120,36 @@
                                 Content="Cancel query"
                                 Command="{Binding CancelQueryCommand}"/>
 
+                        <Expander Header="Components" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
+                            <Grid
+                                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                    Height="30">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="25" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150" />
+                                    <ColumnDefinition Width="20*" />
+                                    <ColumnDefinition Width="25" />
+                                </Grid.ColumnDefinitions>
+                                <Label
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Grid.Row="0" Grid.Column="0"
+                                        Content="Component Search" />
+                                <Button Style="{DynamicResource MyMetroButton}" Grid.Column="1"
+                                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                x:Name="LaunchCompSearch"
+                                Content="Set Filter..."
+                                Command="{Binding LaunchCompoSearchDialogCommand}"/>
+
+
+
+                                <CheckBox Grid.Row="0" Grid.Column="2" Margin="4,0,-4,0"
+                                              IsChecked="{Binding IsComponenetChecked}" ToolTip="Check to include components" />
+                            </Grid>
+                        </Expander>
+
                         <Expander Header="Users" Grid.Row="5" Grid.ColumnSpan="2"
                                       Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
                             <Grid

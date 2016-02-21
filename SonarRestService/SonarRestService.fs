@@ -1357,6 +1357,48 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             with
                 | ex -> false
 
+        member this.SearchComponent(conf : ISonarConfiguration, searchString : string, filterBranchs : bool, masterBranch : string) = 
+            let url = "/api/components/search?qualifiers=DIR,TRK,PAC,CLA,BRC&q=" + searchString
+            
+
+            let getComponentFromResponse(data : string) = 
+                let resources = new System.Collections.Generic.List<Resource>()
+                let components = ComponentSearchAnswer.Parse(data)
+                for comp in components.Components do
+                    let newRes = new Resource()
+                    newRes.Name <- comp.Name
+                    newRes.Key <- comp.Key
+                    newRes.Qualifier <- comp.Qualifier
+
+                    if filterBranchs then
+                        if comp.Name.Contains(" ") then
+                            let lastElem = comp.Name.Split(' ')
+                            let branchName = lastElem.[lastElem.Length - 1]
+                            if not(comp.Key.EndsWith(":" + branchName)) || branchName = masterBranch then
+                                resources.Add(newRes)
+                        else
+                            resources.Add(newRes)
+                    else
+                        resources.Add(newRes)
+
+                // we need to get all pages
+                let value = int(System.Math.Ceiling(float(components.Paging.Total) / float(components.Paging.PageSize)))
+
+                for i = 2 to value do
+                    if not(cancelRequest) then
+                        let url = url + "&pageIndex=" + Convert.ToString(i)
+                        let response = httpconnector.HttpSonarGetRequest(conf, url)
+                        let components = ComponentSearchAnswer.Parse(data)
+                        for comp in components.Components do
+                            let newRes = new Resource()
+                            newRes.Name <- comp.Name
+                            newRes.Key <- comp.Key
+                            newRes.Qualifier <- comp.Qualifier
+                            resources.Add(newRes)
+                resources
+
+            getComponentFromResponse(httpconnector.HttpSonarGetRequest(conf, url))
+
         member this.GetResourcesData(conf : ISonarConfiguration, resource : string) =
             let url = "/api/resources?resource=" + resource
             getResourcesFromResponseContent(httpconnector.HttpSonarGetRequest(conf, url))

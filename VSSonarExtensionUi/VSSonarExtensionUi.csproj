@@ -240,6 +240,9 @@
     <Compile Include="View\Helpers\QuestionUser.xaml.cs">
       <DependentUpon>QuestionUser.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\Helpers\SearchComponenetDialog.xaml.cs">
+      <DependentUpon>SearchComponenetDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\SonarQubeUserControlVS.xaml.cs">
       <DependentUpon>SonarQubeUserControlVS.xaml</DependentUpon>
     </Compile>
@@ -357,6 +360,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\Helpers\QuestionUser.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Helpers\SearchComponenetDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

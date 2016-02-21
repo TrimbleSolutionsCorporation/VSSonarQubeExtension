@@ -33,7 +33,9 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using SonarLocalAnalyser;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-    
+    using View.Helpers;
+    using Model.Helpers;
+    using System.Collections.Generic;
 
     /// <summary>
     /// The issues search view model.
@@ -45,6 +47,11 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         ///     The issues filter view model key.
         /// </summary>
         private const string IssuesFilterViewModelKey = "IssuesFilterViewModel";
+
+        /// <summary>
+        /// The component list
+        /// </summary>
+        private readonly List<Resource> componentList = new List<Resource>();
 
         /// <summary>
         /// The search model
@@ -62,9 +69,15 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         private readonly INotificationManager notificationManager;
 
         /// <summary>
+        /// The rest service
+        /// </summary>
+        private readonly ISonarRestService restService;
+
+        /// <summary>
         /// The plan menu
         /// </summary>
         private PlanMenu planMenu;
+       
 
         /// <summary>
         /// Initializes a new instance of the <see cref="IssuesSearchViewModel" /> class.
@@ -83,6 +96,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             ISQKeyTranslator translator,
             ISonarLocalAnalyser analyser)
         {
+            this.restService = restService;
             this.notificationManager = notificationManager;
             this.configurationHelper = configurationHelper;
             this.searchModel = searchModel;
@@ -153,6 +167,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public ICommand CancelQueryCommand { get; private set; }
 
         /// <summary>
+        /// Gets the launch compo search dialog command.
+        /// </summary>
+        /// <value>
+        /// The launch compo search dialog command.
+        /// </value>
+        public ICommand LaunchCompoSearchDialogCommand { get; private set; }
+
+        /// <summary>
         ///     Gets or sets the created before date.
         /// </summary>
         public DateTime CreatedBeforeDate { get; set; }
@@ -206,6 +228,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         ///     Gets or sets a value indicating whether is assignee checked.
         /// </summary>
         public bool IsAssigneeChecked { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is componenet checked.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is componenet checked; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsComponenetChecked { get; set; }
 
         /// <summary>
         ///     Gets or sets a value indicating whether is blocker checked.
@@ -343,6 +373,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <c>true</c> if this instance is action plan selected; otherwise, <c>false</c>.
         /// </value>
         public bool IsActionPlanSelected { get; set; }
+
+        /// <summary>
+        /// Gets the available projects.
+        /// </summary>
+        /// <value>
+        /// The available projects.
+        /// </value>
+        public IEnumerable<Resource> AvailableProjects { get; internal set; }
 
         /// <summary>
         /// Called when [show flyouts changed].
@@ -545,6 +583,20 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         }
 
         /// <summary>
+        /// Filters the components keys.
+        /// </summary>
+        /// <returns>filterd keys</returns>
+        private string FilterComponentsKeys()
+        {
+            if (!this.IsComponenetChecked)
+            {
+                return string.Empty;
+            }
+
+            return "&componentKeys=" + this.componentList.Select(i => i.Key).Aggregate((i, j) => i + ',' + j);
+        }
+
+        /// <summary>
         ///     The get filter severities.
         /// </summary>
         /// <returns>
@@ -644,6 +696,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.CloseLeftFlyoutCommand = new RelayCommand(this.OnCloseFlyoutIssueSearchCommand);
             this.ReloadPlanDataCommand = new RelayCommand(this.OnReloadPlanDataCommand);
             this.CancelQueryCommand = new RelayCommand(this.OnCancelQueryCommand);            
+            this.LaunchCompoSearchDialogCommand = new RelayCommand(this.OnLaunchCompoSearchDialogCommand);
         }
 
         /// <summary>
@@ -652,6 +705,16 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         private void OnCancelQueryCommand()
         {
             this.searchModel.CancelQuery();
+        }
+
+        /// <summary>
+        /// Called when [launch compo search dialog command].
+        /// </summary>
+        private void OnLaunchCompoSearchDialogCommand()
+        {
+            var compoenentsList = SearchComponenetDialog.SearchComponents(AuthtenticationHelper.AuthToken, this.restService, this.AvailableProjects.ToList<Resource>(), this.componentList);
+            this.componentList.Clear();
+            this.componentList.AddRange(compoenentsList);
         }
 
         /// <summary>
@@ -821,8 +884,10 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             request += this.FilterStatus();
             request += this.FilterResolutions();
             request += this.FilterActionPlans();
+            request += this.FilterComponentsKeys();
 
-            this.IssuesGridView.UpdateIssues(this.searchModel.GetIssuesUsingFilter(request, this.IsFilterBySSCMChecked), this.AvailableActionPlans);            
+            this.IssuesGridView.UpdateIssues(
+                this.searchModel.GetIssuesUsingFilter(request, this.IsFilterBySSCMChecked, this.componentList.Count > 0 && this.IsComponenetChecked), this.AvailableActionPlans);            
         }
 
         /// <summary>

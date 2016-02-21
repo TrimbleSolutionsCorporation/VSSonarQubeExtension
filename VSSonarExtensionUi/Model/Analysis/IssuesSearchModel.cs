@@ -25,9 +25,9 @@ namespace VSSonarExtensionUi.Model.Analysis
     using SonarLocalAnalyser;
     using ViewModel;
     using ViewModel.Analysis;
+    using VSSonarExtensionUi.ViewModel.Helpers;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-    using VSSonarExtensionUi.ViewModel.Helpers;
 
     /// <summary>
     /// Search model for issues, viewmodel IssuesSearchViewModel
@@ -83,6 +83,10 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// The source model
         /// </summary>
         private ISourceControlProvider sourceModel;
+
+        /// <summary>
+        /// The available projects
+        /// </summary>
         private IEnumerable<Resource> availableProjects;
 
         /// <summary>
@@ -133,11 +137,12 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// Called when [connect to sonar].
         /// </summary>
         /// <param name="configuration">sonar configuration</param>
-        /// <param name="availableProjects">The available projects.</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects)
+        /// <param name="availableProjectsIn">The available projects in.</param>
+        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjectsIn)
         {
             // does nothing
-            this.availableProjects = availableProjects;
+            this.availableProjects = availableProjectsIn;
+            this.issuesSearchViewModel.AvailableProjects = availableProjectsIn;
             this.issuesSearchViewModel.CanQUeryIssues = true;
             this.notificationmanager.EndedWorking();
 
@@ -158,7 +163,7 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// <param name="workingDir">The working dir.</param>
         /// <param name="sourceModelIn">The source model in.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
-        /// <param name="availableProjects">The available projects.</param>
+        /// <param name="profile">The profile.</param>
         public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider sourceModelIn, IIssueTrackerPlugin sourcePlugin, Dictionary<string, Profile> profile)
         {
             this.sourceModel = sourceModelIn;
@@ -240,7 +245,7 @@ namespace VSSonarExtensionUi.Model.Analysis
                     }
                     catch (Exception ex)
                     {
-                        // 
+                        // TODO
                     }
                 }
 
@@ -414,10 +419,11 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// </summary>
         /// <param name="filter">The filter.</param>
         /// <param name="filterSSCM">if set to <c>true</c> [filter SSCM].</param>
+        /// <param name="componentsSet">if set to <c>true</c> [components set].</param>
         /// <returns>
         /// all issues for requested filter
         /// </returns>
-        public IEnumerable<Issue> GetIssuesUsingFilter(string filter, bool filterSSCM)
+        public IEnumerable<Issue> GetIssuesUsingFilter(string filter, bool filterSSCM, bool componentsSet)
         {
             this.notificationmanager.ResetFailure();
             if (AuthtenticationHelper.AuthToken.SonarVersion < 3.6)
@@ -427,7 +433,7 @@ namespace VSSonarExtensionUi.Model.Analysis
 
             string request = "?" + filter;
             string key = string.Empty;
-            if (this.associatedProject != null)
+            if (this.associatedProject != null && !componentsSet)
             {
                 request = "?componentRoots=" + this.associatedProject.Key + filter;
                 key = this.associatedProject.Key;
