@@ -232,15 +232,15 @@
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void RemoveSelectedToListButton(object sender, RoutedEventArgs e)
         {
-            while (SelectedDataGrid.SelectedItems.Count > 0)
+            foreach (Resource item in selectedItems.ToList())
             {
-                if (SelectedDataGrid.SelectedItem == CollectionView.NewItemPlaceholder)
+                foreach (var selected in this.SelectedDataGrid.SelectedItems)
                 {
-                    SelectedDataGrid.SelectedItems.Remove(SelectedDataGrid.SelectedItem);
-                }
-                else
-                {
-                    SelectedDataGrid.Items.Remove(SelectedDataGrid.SelectedItem);
+                    if (selected.Equals(item))
+                    {
+                        this.selectedItems.Remove(item);
+                        break;
+                    }                    
                 }                
             }
         }

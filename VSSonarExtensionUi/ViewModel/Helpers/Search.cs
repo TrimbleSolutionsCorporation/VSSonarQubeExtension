@@ -124,5 +124,13 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         ///   <c>true</c> if [since date enabled]; otherwise, <c>false</c>.
         /// </value>
         public bool SinceDateEnabled { get; set; }
+
+        /// <summary>
+        /// Gets a value indicating whether [filter by SSCM].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [filter by SSCM]; otherwise, <c>false</c>.
+        /// </value>
+        public bool FilterBySSCM { get; set; }
     }
 }

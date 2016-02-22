@@ -20,6 +20,14 @@
         BlameLine GetBlameByLine(string filePath, int line);
 
         /// <summary>
+        /// Gets the blame by line.
+        /// </summary>
+        /// <param name="resource">The resource.</param>
+        /// <param name="line">The line.</param>
+        /// <returns></returns>
+        BlameLine GetBlameByLine(Resource resource, int line);
+
+        /// <summary>
         /// Gets the branch.
         /// </summary>
         /// <returns>
@@ -54,12 +62,20 @@
         private readonly INotificationManager manager;
 
         /// <summary>
+        /// The service
+        /// </summary>
+        private readonly ISonarRestService service;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SourceControlModel" /> class.
         /// </summary>
         /// <param name="sourceControlPlugins">The source control plugins.</param>
         /// <param name="basePath">The base path.</param>
-        public SourceControlModel(IEnumerable<ISourceVersionPlugin> sourceControlPlugins, string basePath, INotificationManager manager)
+        /// <param name="manager">The manager.</param>
+        /// <param name="service">The service.</param>
+        public SourceControlModel(IEnumerable<ISourceVersionPlugin> sourceControlPlugins, string basePath, INotificationManager manager, ISonarRestService service)
         {
+            this.service = service;
             this.manager = manager;
             this.basePath = basePath;
             this.plugins = sourceControlPlugins;
@@ -107,6 +123,11 @@
             }
 
             return null;
+        }
+
+        public BlameLine GetBlameByLine(Resource resource, int line)
+        {
+            return this.service.GetBlameLine(AuthtenticationHelper.AuthToken, resource.Key, line);
         }
 
         /// <summary>

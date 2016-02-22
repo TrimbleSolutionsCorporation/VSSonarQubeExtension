@@ -134,6 +134,7 @@
   <ItemGroup>
     <Compile Include="Model\Analysis\IssuesSearchModel.cs" />
     <Compile Include="Model\Association\AssociationModel.cs" />
+    <Compile Include="Model\Helpers\RestSourceControlModel.cs" />
     <Compile Include="Model\Helpers\SearchModel.cs" />
     <Compile Include="Model\Menu\AssignMenu.cs" />
     <Compile Include="Model\Menu\SetSqaleMenu.cs" />

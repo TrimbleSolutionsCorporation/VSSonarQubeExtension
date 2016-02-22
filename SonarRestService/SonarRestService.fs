@@ -878,6 +878,19 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
         member this.CancelRequest() =
             cancelRequest <- true
         
+        member this.GetBlameLine(conf:ISonarConfiguration, key:string, line:int) = 
+            let url = "/api/sources/scm?key=" + key.Trim() + "&commits_by_line=true&from=" + line.ToString() + "&to=" + line.ToString()
+            let reply = httpconnector.HttpSonarGetRequest(conf, url)
+            let data = ScmAnswer.Parse(reply)
+            let blame = new BlameLine()
+            let scmLine = data.Scm.[0]
+            blame.Author <- scmLine.Strings.[1]
+            blame.Date <- scmLine.DateTime
+            blame.Email <- scmLine.Strings.[1]
+            blame.Line <- scmLine.Number
+
+            blame
+
         member this.ApplyPermissionTemplateToProject(conf:ISonarConfiguration, key:string, name:string) =
             let url = "/api/permissions/search_templates?q=" + name
             try

@@ -430,5 +430,14 @@
         /// <param name="templateName">Name of the template.</param>
         /// <returns>returns error message or empty if ok</returns>
         string ApplyPermissionTemplateToProject(ISonarConfiguration conf, string projectKey, string templateName);
+
+        /// <summary>
+        /// Gets the blame line.
+        /// </summary>
+        /// <param name="conf">The conf.</param>
+        /// <param name="key">The key.</param>
+        /// <param name="line">The line.</param>
+        /// <returns></returns>
+        BlameLine GetBlameLine(ISonarConfiguration conf, string key, int line);
     }
 }

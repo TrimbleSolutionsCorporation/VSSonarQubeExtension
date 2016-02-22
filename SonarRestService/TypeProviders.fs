@@ -21,6 +21,16 @@ type TemplateSearchAnswer = JsonProvider<""" {"permissionTemplates":[{"id":"AVGP
 
 type ComponentSearchAnswer = JsonProvider<""" {"paging":{"pageIndex":1,"pageSize":100,"total":2},"components":[{"id":"0fce4202-4074-449f-a20b-ebe42cbb69f3","key":"Key:key","qualifier":"DIR","name":"name"},{"id":"de508632-5640-4a82-950a-d3fe0c5d7cd4","key":"project:Common:name/interface","qualifier":"DIR","name":"name/interface"}]} """>
 
+type ScmAnswer = JsonProvider<"""
+{
+  "scm": [
+    [1, "julien", "2013-03-13T12:34:56+0100", "a1e2b3e5d6f5"],
+    [2, "julien", "2013-03-14T13:17:22+0100", "b1e2b3e5d6f5"],
+    [3, "simon", "2014-01-01T15:35:36+0100", "c1e2b3e5d6f5"]
+  ]
+}
+""">
+
 type JsonarProfileInheritance = JsonProvider<""" {
   "profile": {
     "key": "xoo-my-bu-profile-23456",

@@ -297,7 +297,8 @@ namespace VSSonarExtensionUi.ViewModel
                     this.sourceControl = new SourceControlModel(
                         this.pluginManager.SourceCodePlugins,
                         this.AssociationModule.OpenSolutionPath,
-                        this.Logger);
+                        this.Logger,
+                        this.sonarRestConnector);
                 }
 
                 return this.sourceControl;
@@ -674,7 +675,8 @@ namespace VSSonarExtensionUi.ViewModel
                 this.sourceControl = new SourceControlModel(
                     this.pluginManager.SourceCodePlugins,
                     solutionPath,
-                    this.Logger);
+                    this.Logger,
+                    this.sonarRestConnector);
             }
             else
             {

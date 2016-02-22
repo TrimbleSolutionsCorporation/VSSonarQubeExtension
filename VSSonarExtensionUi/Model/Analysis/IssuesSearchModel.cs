@@ -90,6 +90,11 @@ namespace VSSonarExtensionUi.Model.Analysis
         private IEnumerable<Resource> availableProjects;
 
         /// <summary>
+        /// The rest source model
+        /// </summary>
+        private readonly ISourceControlProvider restSourceModel;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="IssuesSearchModel" /> class.
         /// </summary>
         /// <param name="configurationHelper">The configuration helper.</param>
@@ -109,6 +114,7 @@ namespace VSSonarExtensionUi.Model.Analysis
             this.configurationHelper = configurationHelper;
             this.restService = restService;
             this.issuesSearchViewModel = new IssuesSearchViewModel(this, manager, this.configurationHelper, restService, translator, analyser);
+            this.restSourceModel = new RestSourceControlModel(manager, restService);
             AssociationModel.RegisterNewModelInPool(this);
         }
 
@@ -497,29 +503,9 @@ namespace VSSonarExtensionUi.Model.Analysis
                 return issue;
             }
 
-            var translatedPath = string.Empty;
-
             try
             {
-                translatedPath = this.keyTranslator.TranslateKey(issue.Component, this.visualStudioHelper, this.associatedProject.BranchName);
-
-                if (!File.Exists(translatedPath))
-                {
-                    var message = "Search Model Failed : Translator Failed:  Key : " + 
-                        issue.Component + " - Path : " + translatedPath + " - KeyType : " + this.keyTranslator.GetLookupType().ToString();
-                    this.notificationmanager.ReportMessage(new Message { Id = "IssuesSearchModel", Data = message });
-                    return null;
-                }
-            }
-            catch (Exception ex)
-            {
-                IssueGridViewModel.ReportTranslationException(issue, translatedPath, this.notificationmanager, this.restService, this.associatedProject, ex);
-                return null;
-            }
-
-            try
-            {
-                var blameLine = this.sourceModel.GetBlameByLine(translatedPath, issue.Line);
+                var blameLine = this.restSourceModel.GetBlameByLine(new Resource { Key = issue.Component }, issue.Line);
                 if (blameLine != null)
                 {
                     if (blameLine.Date < this.issuesSearchViewModel.CreatedSinceDate)
@@ -529,14 +515,53 @@ namespace VSSonarExtensionUi.Model.Analysis
                 }
                 else
                 {
+                    if (this.associatedProject == null)
+                    {
+                        this.notificationmanager.ReportMessage(
+                            new Message
+                            {
+                                Id = "IssuesSearchModel",
+                                Data = "Blame info not available in server, local blame available only associated : " + issue.Component + " : " + issue.Line
+                            });
+
+                        return issue;
+                    }
+
+                    var translatedPath = string.Empty;
+
+                    try
+                    {
+                        translatedPath = this.keyTranslator.TranslateKey(issue.Component, this.visualStudioHelper, this.associatedProject.BranchName);
+
+                        if (!File.Exists(translatedPath))
+                        {
+                            var message = "Search Model Failed : Translator Failed:  Key : " +
+                                issue.Component + " - Path : " + translatedPath + " - KeyType : " + this.keyTranslator.GetLookupType().ToString();
+                            this.notificationmanager.ReportMessage(new Message { Id = "IssuesSearchModel", Data = message });
+                            return issue;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        IssueGridViewModel.ReportTranslationException(issue, translatedPath, this.notificationmanager, this.restService, this.associatedProject, ex);
+                        return issue;
+                    }
+
+                    var blameLocalLine = this.sourceModel.GetBlameByLine(translatedPath, issue.Line);
+                    if (blameLocalLine != null)
+                    {
+                        if (blameLocalLine.Date < this.issuesSearchViewModel.CreatedSinceDate)
+                        {
+                            return null;
+                        }
+                    }
+
                     this.notificationmanager.ReportMessage(
                         new Message
                         {
                             Id = "IssuesSearchModel",
                             Data = "Blame Failed, Filtering Not Available for : " + translatedPath + " : " + issue.Line
                         });
-
-                    return issue;
                 }
             }
             catch (Exception ex)
@@ -549,7 +574,6 @@ namespace VSSonarExtensionUi.Model.Analysis
                     });
 
                 this.notificationmanager.ReportException(ex);
-                return issue;
             }
             
             return issue;

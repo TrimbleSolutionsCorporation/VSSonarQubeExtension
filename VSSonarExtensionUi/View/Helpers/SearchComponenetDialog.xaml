@@ -116,7 +116,7 @@
                     <ColumnDefinition Width="30*"></ColumnDefinition>
                     <ColumnDefinition Width="140"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <Label DockPanel.Dock="Left" x:Name="StatusLabel" Content="this is status message"></Label>
+                <Label DockPanel.Dock="Left" x:Name="StatusLabel"></Label>
                 <WrapPanel DockPanel.Dock="Right" Grid.Column="1">
                     <Button DockPanel.Dock="Right" x:Name="OkButton" Width="60"  Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="_Ok" Click="BtnOkClick"  Margin="0,0,10,0" />
                     <Button DockPanel.Dock="Right"  Width="60" Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="_Cancel" Click="BtnCancelClick"  Margin="0,0,10,0"/>

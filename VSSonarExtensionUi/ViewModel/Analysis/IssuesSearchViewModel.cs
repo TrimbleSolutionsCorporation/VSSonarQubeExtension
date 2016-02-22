@@ -908,14 +908,29 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
 
             if (this.IsAssigneeChecked)
             {
-                var users = this.AssigneeList.Where(i => i.Selected).Select(i => i.Login).Aggregate((i, j) => i + "," + j);
-                request += "&assignees=" + users;
+                try
+                {
+                    var users = this.AssigneeList.Where(i => i.Selected).Select(i => i.Login).Aggregate((i, j) => i + "," + j);
+                    request += "&assignees=" + users;
+                }
+                catch (Exception ex)
+                {
+                    // nothing enable
+                }
             }
 
             if (this.IsReporterChecked)
             {
-                var users = this.ReporterList.Where(i => i.Selected).Select(i => i.Login).Aggregate((i, j) => i + "," + j);
-                request += "&reporters=" + users;
+                try
+                {
+                    var users = this.ReporterList.Where(i => i.Selected).Select(i => i.Login).Aggregate((i, j) => i + "," + j);
+                    request += "&reporters=" + users;
+
+                }
+                catch (Exception)
+                {
+                    // not enabled
+                }
             }
 
             if (this.IsDateBeforeChecked)
@@ -1000,8 +1015,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         private Search GetCurrentSearch()
         {
             var search = new Search();
-
-            search.Components = this.componentList;
+            search.Components = new List<Resource>(this.componentList);
             if (this.IsComponenetChecked)
             {
                 search.ComponenetsEnabled = true;
@@ -1023,6 +1037,10 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             if (this.IsDateSinceChecked)
             {
                 search.SinceDateEnabled = true;
+            }
+            if (this.IsFilterBySSCMChecked)
+            {
+                search.FilterBySSCM = true;
             }
 
             search.BeforeDate = this.CreatedBeforeDate;
@@ -1137,9 +1155,10 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             }
 
             this.IsDateSinceChecked = search.SinceDateEnabled;
-            search.SinceDate = this.CreatedSinceDate;
+            this.IsFilterBySSCMChecked = search.FilterBySSCM;
+            this.CreatedSinceDate = search.SinceDate;
             this.IsDateBeforeChecked = search.BeforeDateEnabled;
-            search.BeforeDate = this.CreatedBeforeDate;
+            this.CreatedBeforeDate = search.BeforeDate;
 
             if (search.Status.Contains(IssueStatus.CLOSED))
             {
