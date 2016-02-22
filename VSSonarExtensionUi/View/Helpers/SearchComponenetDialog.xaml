@@ -51,6 +51,7 @@
                 <RowDefinition Height="30"></RowDefinition>
                 <RowDefinition Height="10*"></RowDefinition>
                 <RowDefinition Height="30"></RowDefinition>
+                <RowDefinition Height="10"></RowDefinition>
             </Grid.RowDefinitions>
             <DataGrid x:Name="SearchDataGrid" BorderBrush="Black" Grid.Row="2"  AutoGenerateColumns="False" CanUserAddRows="False"  >
                 <DataGrid.Columns>
@@ -101,19 +102,31 @@
                 
                 <Label Grid.Row="2" Content="Qualifiers: BRC - Module, DIR - Directories, TRK - Projects"></Label>
             </WrapPanel>
-        
-            
-            <WrapPanel Grid.Row="5" HorizontalAlignment="Right" Margin="0,5,0,0" Grid.Column="2" Width="140">
-                <Button x:Name="OkButton" MinWidth="60" Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="_Ok" Click="BtnOkClick"  Margin="0,0,10,0" />
-                <Button MinWidth="60" Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="_Cancel" Click="BtnCancelClick"  Margin="0,0,10,0"/>
-            </WrapPanel>
+
             <DataGrid x:Name="SelectedDataGrid" BorderBrush="Black" Grid.Row="4"  AutoGenerateColumns="False" CanUserAddRows="False" >
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Qualifier}" MinWidth="100" x:Name="SelectedQualifier" Header="Type" CanUserSort="True" SortMemberPath="Qualifier" IsReadOnly="True" />
                     <DataGridTextColumn Binding="{Binding Name}" MinWidth="100" x:Name="SelectedNameTemplateCol" Header="Name" CanUserSort="True" SortMemberPath="Name" IsReadOnly="True" />
                     <DataGridTextColumn Binding="{Binding Key}" MinWidth="100" x:Name="SelectedTitleTemplateCol" Header="Key" CanUserSort="True" SortMemberPath="Key" IsReadOnly="True" />
                 </DataGrid.Columns>
-            </DataGrid>        
+            </DataGrid>
+        
+            <Grid Grid.Row="5" Margin="0,5,0,0" Grid.Column="2" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30*"></ColumnDefinition>
+                    <ColumnDefinition Width="140"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Label DockPanel.Dock="Left" x:Name="StatusLabel" Content="this is status message"></Label>
+                <WrapPanel DockPanel.Dock="Right" Grid.Column="1">
+                    <Button DockPanel.Dock="Right" x:Name="OkButton" Width="60"  Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="_Ok" Click="BtnOkClick"  Margin="0,0,10,0" />
+                    <Button DockPanel.Dock="Right"  Width="60" Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="_Cancel" Click="BtnCancelClick"  Margin="0,0,10,0"/>
+                </WrapPanel>
+            </Grid>
+            <controls:MetroProgressBar Grid.Row="6" x:Name="ProgressBar"
+                                       Value="{Binding ElementName=horizSlider, Path=Value}"
+                                       Background="LightGray"/>
+
+        
     </Grid>
     </Border>
 </Window>

@@ -106,6 +106,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.configurationHelper = configurationHelper;
             this.searchModel = searchModel;
             this.Header = "Issues Search";
+            this.AvailableProjects = new List<Resource>();
             this.AvailableActionPlans = new ObservableCollection<SonarActionPlan>();
             this.AssigneeList = new ObservableCollection<User>();
             this.ReporterList = new ObservableCollection<User>();

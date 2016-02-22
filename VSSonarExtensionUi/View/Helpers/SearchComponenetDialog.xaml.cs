@@ -1,7 +1,9 @@
 ﻿namespace VSSonarExtensionUi.View.Helpers
 {
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.ComponentModel;
     using System.Linq;
     using System.Windows;
     using System.Windows.Data;
@@ -105,27 +107,62 @@
             if (e.Key == Key.Enter)
             {
                 this.SearchData.IsEnabled = false;
-                var comps = this.rest.SearchComponent(this.conf, this.SearchData.Text, true, "master");
+                this.ProgressBar.IsIndeterminate = true;
 
-                if (this.availableProjects != null)
+                using (var bw = new BackgroundWorker{ WorkerReportsProgress = true })
                 {
-                    if (this.Projects.SelectedItem != null)
-                    {
-                        this.SearchInProject(comps, this.Projects.SelectedItem as Resource);
-                    }
-                    else
-                    {
-                        foreach (var project in this.availableProjects)
-                        {
-                            this.SearchInProject(comps, project);
-                        }
-                    }
-                }
+                    var comps = new List<Resource>();
+                    var projects = new List<Resource>();
+                    var searchData = this.SearchData.Text;
+                    projects.AddRange(this.availableProjects);
 
-                this.SearchDataGrid.ItemsSource = comps;
-                this.SearchDataGrid.Items.Refresh();
-                this.SearchData.IsEnabled = true;
+                    var selectedProject = this.Projects.SelectedItem;
+
+                    bw.RunWorkerCompleted += delegate
+                    {
+                        this.SearchData.IsEnabled = true;
+                        this.ProgressBar.IsIndeterminate = false;
+
+                        this.SearchDataGrid.ItemsSource = comps;
+                        this.SearchDataGrid.Items.Refresh();
+                        this.StatusLabel.Content = "Search Completed.";
+                    };
+
+                    bw.DoWork += delegate
+                    {
+                        comps = this.rest.SearchComponent(this.conf, searchData, true, "master");
+
+                        if (selectedProject != null)
+                        {
+                            this.SearchInProject(comps, selectedProject as Resource, searchData);
+                        }
+                        else
+                        {
+                            foreach (var project in projects)
+                            {
+
+                                bw.ReportProgress(0, "Searching : " + project.Name);
+                                //this.StatusLabel.Content = ;
+                                this.SearchInProject(comps, project, searchData);
+                            }
+                        }
+                    };
+
+                    bw.ProgressChanged += this.ReportStatus;
+
+                    bw.RunWorkerAsync();
+                }
             }
+        }
+
+        /// <summary>
+        /// Reports the status.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="ProgressChangedEventArgs"/> instance containing the event data.</param>
+        private void ReportStatus(object sender, ProgressChangedEventArgs e)
+        {
+            this.StatusLabel.Content = e.UserState;
         }
 
         /// <summary>
@@ -148,7 +185,7 @@
         /// </summary>
         /// <param name="comps">The comps.</param>
         /// <param name="project">The project.</param>
-        private void SearchInProject(List<Resource> comps, Resource project)
+        private void SearchInProject(List<Resource> comps, Resource project, string searchMessage)
         {
             if (project.IsBranch)
             {
@@ -156,14 +193,14 @@
                 {
                     if (branch.BranchName.Equals("master"))
                     {
-                        var compsdirs = this.rest.SearchComponent(this.conf, branch.Key + ":" + this.SearchData.Text, true, "master");
+                        var compsdirs = this.rest.SearchComponent(this.conf, branch.Key + ":" + searchMessage, true, "master");
                         comps.AddRange(compsdirs);
                     }
                 }
             }
             else
             {
-                var compsdirs = this.rest.SearchComponent(this.conf, project.Key + ":" + this.SearchData.Text, true, "master");
+                var compsdirs = this.rest.SearchComponent(this.conf, project.Key + ":" + searchMessage, true, "master");
                 comps.AddRange(compsdirs);
             }
         }
