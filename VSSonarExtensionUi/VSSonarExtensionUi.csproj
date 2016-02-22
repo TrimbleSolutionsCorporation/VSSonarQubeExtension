@@ -134,6 +134,7 @@
   <ItemGroup>
     <Compile Include="Model\Analysis\IssuesSearchModel.cs" />
     <Compile Include="Model\Association\AssociationModel.cs" />
+    <Compile Include="Model\Helpers\SearchModel.cs" />
     <Compile Include="Model\Menu\AssignMenu.cs" />
     <Compile Include="Model\Menu\SetSqaleMenu.cs" />
     <Compile Include="Model\Menu\SetExclusionsMenu.cs" />
@@ -191,6 +192,7 @@
     <Compile Include="ViewModel\Analysis\LocalViewModel.cs" />
     <Compile Include="ViewModel\Configuration\GeneralConfigurationViewModel.cs" />
     <Compile Include="ViewModel\Helpers\IViewModelBase.cs" />
+    <Compile Include="ViewModel\Helpers\Search.cs" />
     <Compile Include="ViewModel\SonarQubeViewModel.cs" />
     <Compile Include="View\Configuration\RoslynManagerView.xaml.cs">
       <DependentUpon>RoslynManagerView.xaml</DependentUpon>

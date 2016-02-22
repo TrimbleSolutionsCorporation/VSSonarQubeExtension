@@ -15,6 +15,7 @@
 namespace VSSonarExtensionUi.ViewModel.Analysis
 {
     using System;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Diagnostics;
@@ -28,14 +29,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using Helpers;
 
     using Model.Analysis;
+    using Model.Helpers;
     using Model.Menu;
     using PropertyChanged;
     using SonarLocalAnalyser;
+    using View.Helpers;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-    using View.Helpers;
-    using Model.Helpers;
-    using System.Collections.Generic;
+    
 
     /// <summary>
     /// The issues search view model.
@@ -74,10 +75,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         private readonly ISonarRestService restService;
 
         /// <summary>
+        /// The saved search model
+        /// </summary>
+        private readonly SearchModel savedSearchModel;
+
+        /// <summary>
         /// The plan menu
         /// </summary>
         private PlanMenu planMenu;
-       
 
         /// <summary>
         /// Initializes a new instance of the <see cref="IssuesSearchViewModel" /> class.
@@ -104,7 +109,9 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.AvailableActionPlans = new ObservableCollection<SonarActionPlan>();
             this.AssigneeList = new ObservableCollection<User>();
             this.ReporterList = new ObservableCollection<User>();
+            this.AvailableSearches = new ObservableCollection<string>();
             this.IssuesGridView = new IssueGridViewModel("SearchView", false, configurationHelper, restService, notificationManager, translator);
+            this.savedSearchModel = new SearchModel(this.AvailableSearches);
             this.IssuesGridView.ContextMenuItems = this.CreateRowContextMenu(restService, translator, analyser);
             this.IssuesGridView.ShowContextMenu = true;
             this.IssuesGridView.ShowLeftFlyoutEvent += this.ShowHideLeftFlyout;
@@ -118,6 +125,22 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
 
             SonarQubeViewModel.RegisterNewViewModelInPool(this);
         }
+
+        /// <summary>
+        /// Gets or sets the selected search.
+        /// </summary>
+        /// <value>
+        /// The selected search.
+        /// </value>
+        public string SelectedSearch { get; set; }
+
+        /// <summary>
+        /// Gets the available searches.
+        /// </summary>
+        /// <value>
+        /// The available searches.
+        /// </value>
+        public ObservableCollection<string> AvailableSearches { get; private set; }
 
         /// <summary>
         /// Gets or sets the available gates.
@@ -173,6 +196,38 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// The launch compo search dialog command.
         /// </value>
         public ICommand LaunchCompoSearchDialogCommand { get; private set; }
+
+        /// <summary>
+        /// Gets the load saved search command.
+        /// </summary>
+        /// <value>
+        /// The load saved search command.
+        /// </value>
+        public ICommand LoadSavedSearchCommand { get; private set; }
+
+        /// <summary>
+        /// Gets the save search command.
+        /// </summary>
+        /// <value>
+        /// The save search command.
+        /// </value>
+        public ICommand SaveSearchCommand { get; private set; }
+
+        /// <summary>
+        /// Gets the save as search command.
+        /// </summary>
+        /// <value>
+        /// The save as search command.
+        /// </value>
+        public ICommand SaveAsSearchCommand { get; private set; }
+
+        /// <summary>
+        /// Gets the delete saved search command.
+        /// </summary>
+        /// <value>
+        /// The delete saved search command.
+        /// </value>
+        public ICommand DeleteSavedSearchCommand { get; private set; }
 
         /// <summary>
         ///     Gets or sets the created before date.
@@ -296,14 +351,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public bool IsRemovedChecked { get; set; }
 
         /// <summary>
-        /// Updates the plan menu context.
-        /// </summary>
-        public void UpdatePlanMenuContext()
-        {
-            this.planMenu.UpdateActionPlans(this.AvailableActionPlans);
-        }
-
-        /// <summary>
         ///     Gets or sets a value indicating whether is reporter checked.
         /// </summary>
         public bool IsReporterChecked { get; set; }
@@ -391,78 +438,11 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         }
 
         /// <summary>
-        ///     The save filter to disk.
+        /// Updates the plan menu context.
         /// </summary>
-        public void SaveFilterToDisk()
+        public void UpdatePlanMenuContext()
         {
-            if (this.configurationHelper != null)
-            {
-                this.configurationHelper.WriteOptionInApplicationData(
-                    Context.UIProperties,
-                    IssuesFilterViewModelKey,
-                    "IsStatusOpenChecked",
-                    this.IsStatusOpenChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
-                    Context.UIProperties,
-                    IssuesFilterViewModelKey,
-                    "IsStatusClosedChecked",
-                    this.IsStatusClosedChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
-                    Context.UIProperties,
-                    IssuesFilterViewModelKey,
-                    "IsStatusResolvedChecked",
-                    this.IsStatusResolvedChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
-                    Context.UIProperties,
-                    IssuesFilterViewModelKey,
-                    "IsStatusConfirmedChecked",
-                    this.IsStatusConfirmedChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
-                    Context.UIProperties,
-                    IssuesFilterViewModelKey,
-                    "IsStatusReopenedChecked",
-                    this.IsStatusReopenedChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
-                    Context.UIProperties,
-                    IssuesFilterViewModelKey,
-                    "IsBlockerChecked",
-                    this.IsBlockerChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
-                    Context.UIProperties,
-                    IssuesFilterViewModelKey,
-                    "IsCriticalChecked",
-                    this.IsCriticalChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
-                    Context.UIProperties,
-                    IssuesFilterViewModelKey,
-                    "IsMajaorChecked",
-                    this.IsMajaorChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
-                    Context.UIProperties,
-                    IssuesFilterViewModelKey,
-                    "IsMinorChecked",
-                    this.IsMinorChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
-                    Context.UIProperties,
-                    IssuesFilterViewModelKey,
-                    "IsInfoChecked",
-                    this.IsInfoChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
-                    Context.UIProperties,
-                    IssuesFilterViewModelKey,
-                    "IsFalsePositiveChecked",
-                    this.IsFalsePositiveChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
-                    Context.UIProperties,
-                    IssuesFilterViewModelKey,
-                    "IsRemovedChecked",
-                    this.IsRemovedChecked.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(
-                    Context.UIProperties,
-                    IssuesFilterViewModelKey,
-                    "IsFixedChecked",
-                    this.IsFixedChecked.ToString(CultureInfo.InvariantCulture));
-            }
+            this.planMenu.UpdateActionPlans(this.AvailableActionPlans);
         }
 
         /// <summary>
@@ -697,6 +677,77 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.ReloadPlanDataCommand = new RelayCommand(this.OnReloadPlanDataCommand);
             this.CancelQueryCommand = new RelayCommand(this.OnCancelQueryCommand);            
             this.LaunchCompoSearchDialogCommand = new RelayCommand(this.OnLaunchCompoSearchDialogCommand);
+
+            this.LoadSavedSearchCommand = new RelayCommand(this.OnLoadSavedSearchCommand);
+            this.SaveSearchCommand = new RelayCommand(this.OnSaveSearchCommand);
+            this.SaveAsSearchCommand = new RelayCommand(this.OnSaveAsSearchCommand);
+            this.DeleteSavedSearchCommand = new RelayCommand(this.OnDeleteSavedSearchCommand);
+        }
+       
+        /// <summary>
+        /// Called when [save as search command].
+        /// </summary>
+        private void OnDeleteSavedSearchCommand()
+        {
+            if (this.SelectedSearch == null)
+            {
+                return;
+            }
+
+            this.savedSearchModel.DeleteSearch(this.SelectedSearch);
+        }
+
+        /// <summary>
+        /// Called when [save as search command].
+        /// </summary>
+        /// <exception cref="System.NotImplementedException"></exception>
+        private void OnSaveAsSearchCommand()
+        {
+            var search = this.GetCurrentSearch();
+            var data = PromptUserData.Prompt("Save as....", "Save as....");
+            if (string.IsNullOrEmpty(data))
+            {
+                return;
+            }
+
+            search.Name = data;
+            this.savedSearchModel.SaveSearch(search);
+        }
+
+        /// <summary>
+        /// Called when [load saved search command].
+        /// </summary>
+        /// <exception cref="System.NotImplementedException"></exception>
+        private void OnLoadSavedSearchCommand()
+        {
+            if (this.SelectedSearch == null)
+            {
+                return;
+            }
+
+            this.ReloadSearch(this.savedSearchModel.GetSearchByName(this.SelectedSearch));
+        }
+
+        /// <summary>
+        /// Called when [save search command].
+        /// </summary>
+        private void OnSaveSearchCommand()
+        {
+            var search = this.GetCurrentSearch();
+
+            if (this.SelectedSearch != null)
+            {
+                var data = QuestionUser.GetInput("You will overwrite " + this.SelectedSearch + ", are you Sure?");
+                if (data)
+                {
+                    search.Name = this.SelectedSearch;
+                    this.savedSearchModel.SaveSearch(search);
+                }
+            }
+            else
+            {
+                this.OnSaveAsSearchCommand();
+            }
         }
 
         /// <summary>
@@ -852,8 +903,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         private void RetrieveIssuesUsingCurrentFilter()
         {
-            this.SaveFilterToDisk();
-
             string request = string.Empty;
 
             if (this.IsAssigneeChecked)
@@ -941,6 +990,273 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                            };
 
             return menu;
+        }
+
+        /// <summary>
+        /// Gets the current search.
+        /// </summary>
+        /// <returns>returns current search in view</returns>
+        private Search GetCurrentSearch()
+        {
+            var search = new Search();
+
+            search.Components = this.componentList;
+            if (this.IsComponenetChecked)
+            {
+                search.ComponenetsEnabled = true;
+            }
+
+            search.Assignees = this.AssigneeList.ToList();
+            if (this.IsAssigneeChecked)
+            {
+                search.AssigneesEnabled = true;
+            }
+
+            search.Reporters = this.ReporterList.ToList();
+            if (this.IsReporterChecked)
+            {
+                search.ReportersEnabled = true;
+            }
+
+            search.SinceDate = this.CreatedSinceDate;
+            if (this.IsDateSinceChecked)
+            {
+                search.SinceDateEnabled = true;
+            }
+
+            search.BeforeDate = this.CreatedBeforeDate;
+            if (this.IsDateBeforeChecked)
+            {
+                search.BeforeDateEnabled = true;
+            }
+
+            search.Status = new List<IssueStatus>();
+            if (this.IsStatusClosedChecked)
+            {
+                search.Status.Add(IssueStatus.CLOSED);
+            }
+
+            if (this.IsStatusOpenChecked)
+            {
+                search.Status.Add(IssueStatus.OPEN);
+            }
+
+            if (this.IsStatusResolvedChecked)
+            {
+                search.Status.Add(IssueStatus.RESOLVED);
+            }
+
+            if (this.IsStatusReopenedChecked)
+            {
+                search.Status.Add(IssueStatus.REOPENED);
+            }
+
+            if (this.IsStatusConfirmedChecked)
+            {
+                search.Status.Add(IssueStatus.CONFIRMED);
+            }
+
+            search.Severities = new List<Severity>();
+            if (this.IsBlockerChecked)
+            {
+                search.Severities.Add(Severity.BLOCKER);
+            }
+
+            if (this.IsCriticalChecked)
+            {
+                search.Severities.Add(Severity.CRITICAL);
+            }
+
+            if (this.IsMajaorChecked)
+            {
+                search.Severities.Add(Severity.MAJOR);
+            }
+
+            if (this.IsMinorChecked)
+            {
+                search.Severities.Add(Severity.MINOR);
+            }
+
+            if (this.IsInfoChecked)
+            {
+                search.Severities.Add(Severity.INFO);
+            }
+
+            search.Resolutions = new List<Resolution>();
+            if (this.IsFalsePositiveChecked)
+            {
+                search.Resolutions.Add(Resolution.FALSE_POSITIVE);
+            }
+
+            if (this.IsRemovedChecked)
+            {
+                search.Resolutions.Add(Resolution.REMOVED);
+            }
+
+            if (this.IsFixedChecked)
+            {
+                search.Resolutions.Add(Resolution.FIXED);
+            }
+
+            return search;
+        }
+
+        /// <summary>
+        /// Reloads the search.
+        /// </summary>
+        /// <param name="search">The search.</param>
+        private void ReloadSearch(Search search)
+        {            
+            this.componentList.Clear();
+            this.componentList.AddRange(search.Components);
+            this.IsComponenetChecked = search.ComponenetsEnabled;
+
+            this.IsAssigneeChecked = search.AssigneesEnabled;
+            foreach (var assignee in search.Assignees)
+            {
+                foreach (var currAssignee in this.AssigneeList)
+                {
+                    if (assignee.Name.Equals(currAssignee.Name))
+                    {
+                        currAssignee.Selected = assignee.Selected;
+                    }
+                }
+            }
+
+            this.IsReporterChecked = search.ReportersEnabled;
+            foreach (var reporter in search.Reporters)
+            {
+                foreach (var currReporter in this.ReporterList)
+                {
+                    if (reporter.Name.Equals(currReporter.Name))
+                    {
+                        currReporter.Selected = reporter.Selected;
+                    }
+                }
+            }
+
+            this.IsDateSinceChecked = search.SinceDateEnabled;
+            search.SinceDate = this.CreatedSinceDate;
+            this.IsDateBeforeChecked = search.BeforeDateEnabled;
+            search.BeforeDate = this.CreatedBeforeDate;
+
+            if (search.Status.Contains(IssueStatus.CLOSED))
+            {
+                this.IsStatusClosedChecked = true;
+            }
+            else
+            {
+                this.IsStatusClosedChecked = false;
+            }
+             
+            if (search.Status.Contains(IssueStatus.CONFIRMED))
+            {
+                this.IsStatusConfirmedChecked = true;
+            }
+            else
+            {
+                this.IsStatusConfirmedChecked = false;
+            }
+
+            if (search.Status.Contains(IssueStatus.OPEN))
+            {
+                this.IsStatusOpenChecked = true;
+            }
+            else
+            {
+                this.IsStatusOpenChecked = false;
+            }
+
+            if (search.Status.Contains(IssueStatus.REOPENED))
+            {
+                this.IsStatusReopenedChecked = true;
+            }
+            else
+            {
+                this.IsStatusReopenedChecked = false;
+            }
+
+            if (search.Status.Contains(IssueStatus.RESOLVED))
+            {
+                this.IsStatusResolvedChecked = true;
+            }
+            else
+            {
+                this.IsStatusResolvedChecked = false;
+            }
+
+
+            if (search.Severities.Contains(Severity.BLOCKER))
+            {
+                this.IsBlockerChecked = true;
+            }
+            else
+            {
+                this.IsBlockerChecked = false;
+            }
+
+            if (search.Severities.Contains(Severity.CRITICAL))
+            {
+                this.IsCriticalChecked = true;
+            }
+            else
+            {
+                this.IsCriticalChecked = false;
+            }
+
+            if (search.Severities.Contains(Severity.INFO))
+            {
+                this.IsInfoChecked = true;
+            }
+            else
+            {
+                this.IsInfoChecked = false;
+            }
+
+            if (search.Severities.Contains(Severity.MAJOR))
+            {
+                this.IsMajaorChecked = true;
+            }
+            else
+            {
+                this.IsMajaorChecked = false;
+            }
+
+            if (search.Severities.Contains(Severity.MINOR))
+            {
+                this.IsMinorChecked = true;
+            }
+            else
+            {
+                this.IsMinorChecked = false;
+            }
+
+            if (search.Resolutions.Contains(Resolution.FALSE_POSITIVE))
+            {
+                this.IsFalsePositiveChecked = true;
+            }
+            else
+            {
+                this.IsFalsePositiveChecked = false;
+            }
+
+            if (search.Resolutions.Contains(Resolution.REMOVED))
+            {
+                this.IsRemovedChecked = true;
+            }
+            else
+            {
+                this.IsRemovedChecked = false;
+            }
+
+            if (search.Resolutions.Contains(Resolution.FIXED))
+            {
+                this.IsFixedChecked = true;
+            }
+            else
+            {
+                this.IsFixedChecked = false;
+            }
         }
     }
 }

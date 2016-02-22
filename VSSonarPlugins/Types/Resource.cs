@@ -19,6 +19,7 @@ namespace VSSonarPlugins.Types
     /// <summary>
     /// The resource.
     /// </summary>
+    [Serializable]
     public class Resource
     {
         /// <summary>

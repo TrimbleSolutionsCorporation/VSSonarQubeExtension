@@ -11,7 +11,7 @@
     mc:Ignorable="d"
     x:Class="VSSonarExtensionUi.View.Analysis.IssueSearchView"
     x:Name="UserControl"
-    d:DesignWidth="1040" d:DesignHeight="580">
+    d:DesignWidth="1040" d:DesignHeight="680">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -33,8 +33,7 @@
             <DataTemplate DataType="{x:Type viewModel:IssueGridViewModel}">
                 <helpers:IssuesGrid />
             </DataTemplate>
-
-
+            
             <DataTemplate x:Key="UserSelectionComboBoxDataTemplate">
                 <StackPanel>
                     <TextBlock Text="{Binding NamePlusProject}" />
@@ -105,6 +104,43 @@
                                         IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}" />
                             </StackPanel>
                         </GroupBox>
+
+                        <Expander Header="Action Plan" Grid.Row="5" Grid.ColumnSpan="2"
+                                      Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
+                            <Grid
+                                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                    Height="60">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="70" />
+                                    <ColumnDefinition Width="20*" />
+                                    <ColumnDefinition Width="25" />
+                                </Grid.ColumnDefinitions>
+                                <Label
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Content="Action Plan" />
+                                <ComboBox Grid.Row="0" Grid.Column="1" IsTextSearchEnabled="True"
+                                              controls:TextBoxHelper.Watermark="Search and select from drop down"
+                                              IsEditable="True"
+                                              TextSearch.TextPath="NamePlusProject"
+                                              SelectedItem="{Binding SelectedActionPlan, Mode=TwoWay}"
+                                              ItemsSource="{Binding AvailableActionPlans}"
+                                              MaxDropDownHeight="101"
+                                              Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                              ItemTemplate="{DynamicResource UserSelectionComboBoxDataTemplate}" />
+                                <CheckBox Grid.Row="0" Grid.Column="2" Margin="4,0,-4,0"
+                                              IsChecked="{Binding IsActionPlanSelected}" />
+                                <Button Grid.Row="1" Grid.ColumnSpan="3" Margin="10 3 10 0"
+                                        Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Style="{DynamicResource MyMetroButton}"
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Content="Reload" Command="{Binding ReloadPlanDataCommand}" />
+                            </Grid>
+                        </Expander>
+
                         <Button Style="{DynamicResource MyMetroButton}"
                                 Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
                                 Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
@@ -119,6 +155,52 @@
                                 x:Name="CancelQuery"
                                 Content="Cancel query"
                                 Command="{Binding CancelQueryCommand}"/>
+
+                        <Expander Header="Saved Search" Grid.Row="5" Grid.ColumnSpan="2" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
+                            <Grid Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Height="60">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="70" />
+                                    <ColumnDefinition Width="20*" />
+                                    <ColumnDefinition Width="25" />
+                                </Grid.ColumnDefinitions>
+                                <Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Content="Search" />
+                                <ComboBox Grid.Row="0" Grid.Column="1" IsTextSearchEnabled="True"
+                                              controls:TextBoxHelper.Watermark="Type to search for a saved search"
+                                              IsEditable="True"
+                                              SelectedItem="{Binding SelectedSearch, Mode=TwoWay}"
+                                              ItemsSource="{Binding AvailableSearches}"
+                                              MaxDropDownHeight="101"
+                                              Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                              Grid.ColumnSpan="3" />
+                                <WrapPanel Grid.Row="1" Grid.ColumnSpan="3" Orientation="Horizontal">
+                                    <Button Grid.Row="1" Grid.ColumnSpan="3" Margin="70 3 0 0"
+                                        Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Style="{DynamicResource MyMetroButton}"
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Content="Load selected" Command="{Binding LoadSavedSearchCommand}" />
+                                    <Button Grid.Row="1" Grid.ColumnSpan="3" Margin="1 3 0 0"
+                                        Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Style="{DynamicResource MyMetroButton}"
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Content="Delete selected" Command="{Binding DeleteSavedSearchCommand}" />
+                                    <Button Grid.Row="1" Grid.ColumnSpan="3" Margin="20 3 0 0"
+                                        Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Style="{DynamicResource MyMetroButton}"
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Content="Save" Command="{Binding SaveSearchCommand}" />
+                                    <Button Grid.Row="1" Grid.ColumnSpan="3" Margin="1 3 0 0"
+                                        Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Style="{DynamicResource MyMetroButton}"
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Content="Save As" Command="{Binding SaveAsSearchCommand}" />
+                                </WrapPanel>
+
+                            </Grid>
+                        </Expander>
 
                         <Expander Header="Components" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
                             <Grid
@@ -367,6 +449,8 @@
                                         Grid.Row="1" Grid.Column="0"
                                         Content="Before" />
 
+                                
+                                
                                 <DatePicker SelectedDate="{Binding CreatedSinceDate}" Grid.Row="0" Grid.Column="1" />
                                 <DatePicker SelectedDate="{Binding CreatedBeforeDate}" Grid.Row="1" Grid.Column="1" />
                                 <CheckBox Grid.Row="0" Grid.Column="2" Margin="4,0,-4,0"
@@ -380,41 +464,6 @@
                             </Grid>
                         </Expander>
 
-                        <Expander Header="Action Plan" Grid.Row="5" Grid.ColumnSpan="2"
-                                      Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
-                            <Grid
-                                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                    Height="60">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="30" />
-                                    <RowDefinition Height="30" />
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="70" />
-                                    <ColumnDefinition Width="20*" />
-                                    <ColumnDefinition Width="25" />
-                                </Grid.ColumnDefinitions>
-                                <Label
-                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                        Content="Action Plan" />
-                                <ComboBox Grid.Row="0" Grid.Column="1" IsTextSearchEnabled="True"
-                                              controls:TextBoxHelper.Watermark="Search and select from drop down"
-                                              IsEditable="True"
-                                              TextSearch.TextPath="NamePlusProject"
-                                              SelectedItem="{Binding SelectedActionPlan, Mode=TwoWay}"
-                                              ItemsSource="{Binding AvailableActionPlans}"
-                                              MaxDropDownHeight="101"
-                                              Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                              ItemTemplate="{DynamicResource UserSelectionComboBoxDataTemplate}" />
-                                <CheckBox Grid.Row="0" Grid.Column="2" Margin="4,0,-4,0"
-                                              IsChecked="{Binding IsActionPlanSelected}" />
-                                <Button Grid.Row="1" Grid.ColumnSpan="3" Margin="10 3 10 0"
-                                        Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                        Style="{DynamicResource MyMetroButton}"
-                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                        Content="Reload" Command="{Binding ReloadPlanDataCommand}" />
-                            </Grid>
-                        </Expander>
 
                     </StackPanel>
                 </ScrollViewer>
