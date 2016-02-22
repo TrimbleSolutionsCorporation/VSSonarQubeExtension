@@ -145,7 +145,15 @@
                             {
                                 tasks[i] = Task.Run(() =>
                                     {
-                                        this.SearchInProject(comps, project, searchData);
+                                        try
+                                        {
+                                            this.SearchInProject(comps, project, searchData);
+                                        }
+                                        catch (Exception)
+                                        {
+                                            // ignore data
+                                        }
+
                                         bw.ReportProgress(0, "Searching : " + project.Name + " : Done");                                        
                                     });
                                 i++;                                
