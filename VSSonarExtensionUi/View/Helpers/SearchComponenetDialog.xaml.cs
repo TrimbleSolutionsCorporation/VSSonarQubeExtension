@@ -5,6 +5,7 @@
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Data;
     using System.Windows.Input;
@@ -138,12 +139,21 @@
                         }
                         else
                         {
+                            var tasks = new Task[projects.Count];
+                            var i = 0;
                             foreach (var project in projects)
                             {
+                                tasks[i] = Task.Run(() =>
+                                    {
+                                        this.SearchInProject(comps, project, searchData);
+                                        bw.ReportProgress(0, "Searching : " + project.Name + " : Done");                                        
+                                    });
+                                i++;                                
+                            }
 
-                                bw.ReportProgress(0, "Searching : " + project.Name);
-                                //this.StatusLabel.Content = ;
-                                this.SearchInProject(comps, project, searchData);
+                            foreach (var task in tasks)
+                            {
+                                task.Wait();
                             }
                         }
                     };
