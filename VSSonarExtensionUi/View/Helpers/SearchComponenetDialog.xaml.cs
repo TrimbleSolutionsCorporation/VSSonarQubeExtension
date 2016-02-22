@@ -1,6 +1,7 @@
 ﻿namespace VSSonarExtensionUi.View.Helpers
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Linq;
     using System.Windows;
     using System.Windows.Data;
@@ -29,6 +30,11 @@
         private readonly IEnumerable<Resource> availableProjects;
 
         /// <summary>
+        /// The selected items
+        /// </summary>
+        private readonly ObservableCollection<Resource> selectedItems;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SearchComponenetDialog" /> class.
         /// </summary>
         /// <param name="conf">The conf.</param>
@@ -37,18 +43,23 @@
         /// <param name="listofSaveComp">The listof save comp.</param>
         public SearchComponenetDialog(ISonarConfiguration conf, ISonarRestService rest, List<Resource> availableProjects, List<Resource> listofSaveComp)
         {
+            this.selectedItems = new ObservableCollection<Resource>();
             this.availableProjects = availableProjects;
             this.conf = conf;
             this.rest = rest;
            
             InitializeComponent();
             this.Projects.ItemsSource = availableProjects;
+            this.SelectedDataGrid.ItemsSource = this.selectedItems;
             if (listofSaveComp != null)
             {
-                this.SearchDataGrid.ItemsSource = listofSaveComp;
-                this.SearchDataGrid.Items.Refresh();
-            } 
+                foreach (var item in listofSaveComp)
+                {
+                    this.selectedItems.Add(item);
+                }
+            }
 
+            
             this.MouseLeftButtonDown += this.MouseLeftButtonDownPressed;
             this.SearchData.KeyDown += new KeyEventHandler(this.KeyboardKeyDown);
         }
@@ -63,12 +74,22 @@
         /// <returns>returns saved component list</returns>
         public static List<Resource> SearchComponents(ISonarConfiguration conf, ISonarRestService rest, List<Resource> availableProjects, List<Resource> listofSaveComp)
         {
+            var savedList = new List<Resource>();
+            foreach (var item in listofSaveComp)
+            {
+                savedList.Add(item);
+            }
+
             var searchComponenetDialog = new SearchComponenetDialog(conf, rest, availableProjects, listofSaveComp);
             searchComponenetDialog.ShowDialog();
 
             if (searchComponenetDialog.DialogResult == true)
             {
                 return searchComponenetDialog.SelectedDataGrid.Items.OfType<Resource>().ToList();
+            }
+            else
+            {
+                return savedList;
             }
 
             return new List<Resource>();
@@ -200,10 +221,10 @@
 
                 if (!found)
                 {
-                    this.SelectedDataGrid.Items.Add(item);
+                    this.selectedItems.Add(item);
                 }
             }
-
+            
             this.SelectedDataGrid.Items.Refresh();
         }
        

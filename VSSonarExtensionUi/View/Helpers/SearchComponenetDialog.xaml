@@ -107,7 +107,7 @@
                 <Button x:Name="OkButton" MinWidth="60" Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="_Ok" Click="BtnOkClick"  Margin="0,0,10,0" />
                 <Button MinWidth="60" Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="_Cancel" Click="BtnCancelClick"  Margin="0,0,10,0"/>
             </WrapPanel>
-            <DataGrid x:Name="SelectedDataGrid" BorderBrush="Black" Grid.Row="4"  AutoGenerateColumns="False" >
+            <DataGrid x:Name="SelectedDataGrid" BorderBrush="Black" Grid.Row="4"  AutoGenerateColumns="False" CanUserAddRows="False" >
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Qualifier}" MinWidth="100" x:Name="SelectedQualifier" Header="Type" CanUserSort="True" SortMemberPath="Qualifier" IsReadOnly="True" />
                     <DataGridTextColumn Binding="{Binding Name}" MinWidth="100" x:Name="SelectedNameTemplateCol" Header="Name" CanUserSort="True" SortMemberPath="Name" IsReadOnly="True" />
