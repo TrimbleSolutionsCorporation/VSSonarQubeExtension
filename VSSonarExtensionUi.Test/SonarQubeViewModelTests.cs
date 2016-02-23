@@ -27,6 +27,7 @@
         Mock<ISourceControlProvider> mockSourceProvider;
         Mock<IVsEnvironmentHelper> mockVsHelper;
         Mock<ISonarLocalAnalyser> mockAnalyser;
+        Mock<IPluginManager> mockPluginManager;
 
         List<Resource> CreatProjects()
         {
@@ -49,6 +50,7 @@
             mockSourceProvider = new Mock<ISourceControlProvider>();
             mockVsHelper = new Mock<IVsEnvironmentHelper>();
             mockAnalyser = new Mock<ISonarLocalAnalyser>();
+            mockPluginManager = new Mock<IPluginManager>();
         }
 
         [Test]
@@ -79,7 +81,7 @@
 
             AuthtenticationHelper.EstablishAConnection(mockRest.Object, "as", "asda", "asd");
 
-            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, locaAnalyser: mockAnalyser.Object);
+            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, locaAnalyser: mockAnalyser.Object, pluginManager:mockPluginManager.Object);
             associationModel.VsHelper = mockVsHelper.Object;
 
             associationModel.OnConnectToSonar(false);
