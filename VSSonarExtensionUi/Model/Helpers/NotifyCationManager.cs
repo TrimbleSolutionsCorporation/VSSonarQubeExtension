@@ -276,16 +276,31 @@
             // not needed
         }
 
+        /// <summary>
+        /// Resets the failure.
+        /// </summary>
         public void ResetFailure()
         {
             this.model.ErrorMessageTooltip = string.Empty;
             this.model.ErrorIsFound = false;
         }
 
+        /// <summary>
+        /// Flags the failure.
+        /// </summary>
+        /// <param name="v">The v.</param>
         public void FlagFailure(string v)
         {
             this.model.ErrorMessageTooltip = v;
             this.model.ErrorIsFound = true;
+        }
+
+        /// <summary>
+        /// Called when [new issues updated].
+        /// </summary>
+        public void OnNewIssuesUpdated()
+        {
+            this.model.RefreshNewListOfIssues();
         }
     }
 }

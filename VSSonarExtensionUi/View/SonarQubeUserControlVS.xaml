@@ -100,7 +100,24 @@
                     </StatusBarItem>
 
                     <StatusBarItem HorizontalAlignment="Right">
+                        
                         <StackPanel Orientation="Horizontal">
+                            <Border BorderBrush="Red" BorderThickness="1" Visibility="{Binding NewIssuesFound, Converter={StaticResource BoolToVis}}" ToolTip="New issues have been added during session. Press button and go to local analysis mode.">
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Width="30"
+                                      Height="30"
+                                      Style="{DynamicResource MetroCircleButtonStyle}"  Command="{Binding ShowNewLocalIssuesCommand}" >
+                                        <Rectangle Width="15" Height="15" Fill="{Binding  ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
+                                            <Rectangle.OpacityMask>
+                                                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_bug}" />
+                                            </Rectangle.OpacityMask>
+                                        </Rectangle>
+                                    </Button>
+                                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding NumberNewIssues, FallbackValue=100}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" />
+                                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="   " Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" />
+                                </StackPanel>
+                            </Border>
+
                             <Menu x:Name="MainMenuIssues" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" >
                                 <MenuItem x:Name="PluginsMenu" Header="Tools" ItemsSource="{Binding ToolsProvidedByPlugins}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center" FlowDirection="RightToLeft">
                                     <MenuItem.ItemContainerStyle>

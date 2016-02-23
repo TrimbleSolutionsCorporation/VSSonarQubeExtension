@@ -22,6 +22,7 @@ namespace VSSonarExtensionUi.ViewModel
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
+    using System.Windows.Input;
     using System.Windows.Media;
 
     using Analysis;
@@ -36,11 +37,10 @@ namespace VSSonarExtensionUi.ViewModel
     using SonarLocalAnalyser;
     using SonarRestService;
     using View.Configuration;
+    using View.Helpers;
+    using VSSonarExtensionUi.Association;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-    using VSSonarExtensionUi.Association;
-    using System.Windows.Input;
-    using View.Helpers;    
 
     /// <summary>
     ///     The changed event handler.
@@ -75,14 +75,14 @@ namespace VSSonarExtensionUi.ViewModel
         private readonly Dictionary<int, IMenuCommandPlugin> menuItemPlugins = new Dictionary<int, IMenuCommandPlugin>();
 
         /// <summary>
+        /// The new added issues
+        /// </summary>
+        private readonly Dictionary<string, List<Issue>> newAddedIssues = new Dictionary<string, List<Issue>>();
+
+        /// <summary>
         /// The configuration helper.
         /// </summary>
         private readonly IConfigurationHelper configurationHelper;
-
-        /// <summary>
-        /// The source control
-        /// </summary>
-        private ISourceControlProvider sourceControl;
 
         /// <summary>
         /// The vs version
@@ -103,6 +103,11 @@ namespace VSSonarExtensionUi.ViewModel
         /// The sonar rest connector
         /// </summary>
         private readonly ISonarRestService sonarRestConnector;
+
+        /// <summary>
+        /// The source control
+        /// </summary>
+        private ISourceControlProvider sourceControl;
 
         /// <summary>
         /// The show flyouts
@@ -153,8 +158,29 @@ namespace VSSonarExtensionUi.ViewModel
             this.ErrorIsFound = false;
             this.IsExtensionBusy = false;
             this.ShowRightFlyout = false;
-            
             this.InitCommands();
+        }
+
+        /// <summary>
+        /// Determines whether this instance [can close solution].
+        /// </summary>
+        /// <returns></returns>
+        public int CanCloseSolution()
+        {
+            if (this.NewIssuesFound)
+            {
+                if (QuestionUser.GetInput(
+                    "You are about the close solution after technical debt has been added. Are you sure you want to exit."))
+                {
+                    return 0;
+                }
+                else
+                {
+                    return 1;
+                }
+            }
+
+            return 0;
         }
 
         /// <summary>
@@ -186,14 +212,18 @@ namespace VSSonarExtensionUi.ViewModel
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SonarQubeViewModel"/> class.
+        /// Initializes a new instance of the <see cref="SonarQubeViewModel" /> class.
         /// </summary>
         /// <param name="vsverionIn">The vsverion in.</param>
         /// <param name="helper">The helper.</param>
         /// <param name="notification">The notification.</param>
         /// <param name="translator">The translator.</param>
         /// <param name="restService">The rest service.</param>
-        public SonarQubeViewModel(string vsverionIn,
+        /// <param name="sourceControl">The source control.</param>
+        /// <param name="pluginManager">The plugin manager.</param>
+        /// <param name="locaAnalyser">The loca analyser.</param>
+        public SonarQubeViewModel(
+            string vsverionIn,
             IConfigurationHelper helper,
             INotificationManager notification,
             ISQKeyTranslator translator,
@@ -218,8 +248,6 @@ namespace VSSonarExtensionUi.ViewModel
                     this.sonarRestConnector,
                     this.configurationHelper,
                     this.notificationManager);
-
-
 
             this.VSonarQubeOptionsViewData.ResetUserData();
 
@@ -480,6 +508,14 @@ namespace VSSonarExtensionUi.ViewModel
         public RelayCommand CloseRightFlyoutCommand { get; private set; }
 
         /// <summary>
+        /// Gets the show new local issues command.
+        /// </summary>
+        /// <value>
+        /// The show new local issues command.
+        /// </value>
+        public ICommand ShowNewLocalIssuesCommand { get; private set; }
+
+        /// <summary>
         /// Gets the provision project command.
         /// </summary>
         /// <value>
@@ -628,6 +664,29 @@ namespace VSSonarExtensionUi.ViewModel
         }
 
         /// <summary>
+        /// Gets or sets the number new issues.
+        /// </summary>
+        /// <value>
+        /// The number new issues.
+        /// </value>
+        [AlsoNotifyFor("NewIssuesFound")]
+        public string NumberNewIssues { get; set; }
+
+        /// <summary>
+        /// Gets a value indicating whether [new issues found].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [new issues found]; otherwise, <c>false</c>.
+        /// </value>
+        public bool NewIssuesFound
+        {
+            get
+            {
+                return !(string.IsNullOrEmpty(this.NumberNewIssues) || this.NumberNewIssues.Equals("0"));
+            }
+        }
+
+        /// <summary>
         /// Gets the logger.
         /// </summary>
         /// <value>
@@ -641,7 +700,20 @@ namespace VSSonarExtensionUi.ViewModel
             }
         }
 
+        /// <summary>
+        /// Gets the loca analyser.
+        /// </summary>
+        /// <value>
+        /// The loca analyser.
+        /// </value>
         public ISonarLocalAnalyser LocaAnalyser { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether [analysis from solution running].
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if [analysis from solution running]; otherwise, <c>false</c>.
+        /// </value>
         public bool AnalysisFromSolutionRunning { get; private set; }
 
         #endregion
@@ -759,6 +831,7 @@ namespace VSSonarExtensionUi.ViewModel
         public void OnSolutionClosed()
         {
             this.IsSolutionOpen = false;
+
             // clear all messages related with association
             this.StatusMessage = string.Empty;
             this.ConnectionTooltip = "Connected but not associated";
@@ -968,67 +1041,6 @@ namespace VSSonarExtensionUi.ViewModel
         }
 
         /// <summary>
-        /// Previews the analysis has completed.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void PreviewAnalysisHasCompleted(object sender, EventArgs e)
-        {
-            this.AnalysisFromSolutionRunning = false;
-            this.LocaAnalyser.LocalAnalysisCompleted -= this.PreviewAnalysisHasCompleted;
-            if (this.LocalViewModel.ErrorsFoundDuringAnalysis)
-            {
-                MessageDisplayBox.DisplayMessage("Analysis as failed, check output log for more information.", helpurl: "https://github.com/TeklaCorp/VSSonarQubeExtension/wiki/Troubleshooting-and-FAQ");
-            }
-
-            this.LocalViewModel.ErrorsFoundDuringAnalysis = false;
-        }
-
-        /// <summary>
-        /// Fulls the analysis has completed.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void FullAnalysisHasCompleted(object sender, EventArgs e)
-        {
-            this.AnalysisFromSolutionRunning = false;
-            this.LocaAnalyser.LocalAnalysisCompleted -= this.FullAnalysisHasCompleted;
-            if (this.LocalViewModel.ErrorsFoundDuringAnalysis)
-            {
-                MessageDisplayBox.DisplayMessage("Analysis as failed, check output log for more information.", helpurl: "https://github.com/TeklaCorp/VSSonarQubeExtension/wiki/Troubleshooting-and-FAQ");
-            }
-            else
-            {
-                MessageDisplayBox.DisplayMessage("You may use server analysis mode, to retrieve analysis results.", helpurl: "https://github.com/TeklaCorp/VSSonarQubeExtension/wiki/Server-Analysis");
-            }
-
-            this.LocalViewModel.ErrorsFoundDuringAnalysis = false;
-        }
-
-        /// <summary>
-        /// Runs the preview analysis after association.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void RunPreviewAnalysisAfterAssociation(object sender, EventArgs e)
-        {
-            this.AnalysisFromSolutionRunning = false;
-            this.LocaAnalyser.AssociateCommandCompeted -= this.RunPreviewAnalysisAfterAssociation;
-            this.LocalViewModel.RunAnalysis(AnalysisTypes.PREVIEW);
-        }
-
-        /// <summary>
-        /// Runs the full analysis after association.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void RunFullAnalysisAfterAssociation(object sender, EventArgs e)
-        {
-            this.LocaAnalyser.AssociateCommandCompeted -= this.RunFullAnalysisAfterAssociation;
-            this.LocalViewModel.RunAnalysis(AnalysisTypes.ANALYSIS);
-        }
-
-        /// <summary>
         /// The connect to sonar.
         /// </summary>
         /// <param name="useDispatcher">if set to <c>true</c> [use dispatcher].</param>
@@ -1125,31 +1137,6 @@ namespace VSSonarExtensionUi.ViewModel
             };
 
             bw.RunWorkerAsync();
-        }
-
-        private void SetupAssociationMessages()
-        {
-            if (!this.AssociationModule.IsAssociated)
-            {
-                this.CanProvision = true;
-                this.SelectedProjectInView = null;
-                this.SelectedProjectKey = null;
-                this.SelectedProjectName = null;
-                this.SelectedProjectVersion = null;
-                this.ErrorIsFound = true;
-                this.StatusMessage = "Was unable to associate with sonar project, use project association dialog to choose a project or to provision project";
-                this.ShowRightFlyout = true;
-            }
-            else
-            {
-                this.CanProvision = false;
-                this.SelectedProjectKey = this.AssociationModule.AssociatedProject.Key;
-                this.SelectedProjectName = this.AssociationModule.AssociatedProject.Name;
-                this.SelectedProjectVersion = this.AssociationModule.AssociatedProject.Version;
-                this.StatusMessage = "successfully associated with : " + this.AssociationModule.AssociatedProject.Name;
-                this.ShowRightFlyout = false;
-                this.ErrorIsFound = false;
-            }
         }
 
         /// <summary>
@@ -1271,21 +1258,6 @@ namespace VSSonarExtensionUi.ViewModel
                     this.notificationManager.WriteException(ex);
                     this.notificationManager.ReportException(ex);
                 }
-            }
-        }
-
-        private void ResetIssuesInViews()
-        {
-            if (this.LocalViewModel != null)
-            {
-                this.LocalViewModel.ClearIssues();
-                this.LocalViewModel.ResetStats();
-            }
-
-            if (this.ServerViewModel != null)
-            {
-                this.ServerViewModel.ClearIssues();
-                this.ServerViewModel.ResetStats();
             }
         }
 
@@ -1416,6 +1388,52 @@ namespace VSSonarExtensionUi.ViewModel
         }
 
         /// <summary>
+        /// Refreshes the new list of issues.
+        /// </summary>
+        public void RefreshNewListOfIssues()
+        {
+            var counterIssues = 0;
+            foreach (var file in this.newAddedIssues)
+            {
+                counterIssues += file.Value.Count;
+            }
+
+            this.NumberNewIssues = counterIssues.ToString();
+        }
+
+        /// <summary>
+        /// Selects the branch from list.
+        /// </summary>
+        /// <returns>returns current branch</returns>
+        public Resource SelectBranchFromList()
+        {
+            var branch = this.SourceControl.GetBranch().Replace("/", "_");
+            Resource masterBranch = null;
+            foreach (var branchdata in this.SelectedProjectInView.BranchResources)
+            {
+                if (branchdata.BranchName.Equals(branch))
+                {
+                    this.StatusMessageAssociation = "Association Ready. Press associate to confirm.";
+                    return branchdata;
+                }
+
+                if (branchdata.BranchName.Equals("master"))
+                {
+                    masterBranch = branchdata;
+                }
+            }
+
+            if (masterBranch != null)
+            {
+                this.StatusMessageAssociation = "Using master branch, because current branch does not exist or source control not supported. Press associate to confirm.";
+                return masterBranch;
+            }
+
+            this.StatusMessageAssociation = "Unable to find branch, please manually choose one from list and confirm.";
+            return null;
+        }
+
+        /// <summary>
         /// The get coverage in editor.
         /// </summary>
         /// <param name="buffer">The buffer.</param>
@@ -1430,6 +1448,38 @@ namespace VSSonarExtensionUi.ViewModel
             }
 
             return new Dictionary<int, CoverageElement>();
+        }
+
+        /// <summary>
+        ///     The on disconnect to sonar.
+        /// </summary>
+        public void OnDisconnectToSonar()
+        {
+            this.ConnectionTooltip = "Not Connected";
+            this.StatusMessage = "Not Connected";
+            this.IsConnected = false;
+            this.ErrorIsFound = false;
+            this.AvailableProjects.Clear();
+            this.SelectedProjectInView = null;
+            this.SelectedBranchProject = null;
+
+            this.SelectedProjectKey = string.Empty;
+            this.SelectedProjectName = string.Empty;
+            this.SelectedProjectVersion = string.Empty;
+            this.ErrorMessageTooltip = string.Empty;
+            this.StatusMessageAssociation = string.Empty;
+            this.AssociationModule.Disconnect();
+            this.ResetIssuesInViews();
+        }
+
+
+        /// <summary>
+        ///     The launch extension properties.
+        /// </summary>
+        public void LaunchExtensionProperties()
+        {
+            var window = new VSonarQubeOptionsView(this.VSonarQubeOptionsViewData);
+            window.ShowDialog();
         }
 
         /// <summary>The on changed.</summary>
@@ -1478,6 +1528,7 @@ namespace VSSonarExtensionUi.ViewModel
             this.DisconnectToServerCommand = new RelayCommand(this.OnDisconnectToSonar);
             this.AssignProjectCommand = new RelayCommand(this.OnAssignProjectCommand);
             this.CloseRightFlyoutCommand = new RelayCommand(this.OnCloseRightFlyoutCommand);
+            this.ShowNewLocalIssuesCommand = new RelayCommand(this.OnShowNewLocalIssuesCommand);
         }
 
         /// <summary>
@@ -1567,6 +1618,14 @@ namespace VSSonarExtensionUi.ViewModel
         }
 
         /// <summary>
+        /// Called when [show new local issues command].
+        /// </summary>
+        private void OnShowNewLocalIssuesCommand()
+        {
+            this.LocalViewModel.ShowNewAddedIssuesAndLock();
+        }
+
+        /// <summary>
         ///     The init menus.
         /// </summary>
         private void InitMenus()
@@ -1599,7 +1658,8 @@ namespace VSSonarExtensionUi.ViewModel
                 this.configurationHelper,
                 this.notificationManager,
                 this.sonarKeyTranslator,
-                this.LocaAnalyser);
+                this.LocaAnalyser,
+                this.newAddedIssues);
 
             this.IssuesSearchModel = new IssuesSearchModel(
                 this.configurationHelper,
@@ -1640,15 +1700,6 @@ namespace VSSonarExtensionUi.ViewModel
         }
 
         /// <summary>
-        ///     The launch extension properties.
-        /// </summary>
-        public void LaunchExtensionProperties()
-        {
-            var window = new VSonarQubeOptionsView(this.VSonarQubeOptionsViewData);
-            window.ShowDialog();
-        }
-
-        /// <summary>
         ///     The on clear cache command.
         /// </summary>
         private void OnClearCacheCommand()
@@ -1669,28 +1720,6 @@ namespace VSSonarExtensionUi.ViewModel
             {
                 this.OnDisconnectToSonar();
             }
-        }
-
-        /// <summary>
-        ///     The on disconnect to sonar.
-        /// </summary>
-        public void OnDisconnectToSonar()
-        {
-            this.ConnectionTooltip = "Not Connected";
-            this.StatusMessage = "Not Connected";
-            this.IsConnected = false;
-            this.ErrorIsFound = false;
-            this.AvailableProjects.Clear();
-            this.SelectedProjectInView = null;
-            this.SelectedBranchProject = null;
-
-            this.SelectedProjectKey = string.Empty;
-            this.SelectedProjectName = string.Empty;
-            this.SelectedProjectVersion = string.Empty;
-            this.ErrorMessageTooltip = string.Empty;
-            this.StatusMessageAssociation = string.Empty;
-            this.AssociationModule.Disconnect();
-            this.ResetIssuesInViews();
         }
 
         /// <summary>
@@ -1755,39 +1784,112 @@ namespace VSSonarExtensionUi.ViewModel
         }
 
         /// <summary>
-        /// Selects the branch from list.
+        /// Resets the issues in views.
         /// </summary>
-        /// <param name="resource">The resource.</param>
-        /// <returns></returns>
-        public Resource SelectBranchFromList()
+        private void ResetIssuesInViews()
         {
-            var branch = this.SourceControl.GetBranch().Replace("/", "_");
-            Resource masterBranch = null;
-            foreach (var branchdata in this.SelectedProjectInView.BranchResources)
+            if (this.LocalViewModel != null)
             {
-                if (branchdata.BranchName.Equals(branch))
-                {
-                    this.StatusMessageAssociation = "Association Ready. Press associate to confirm.";
-                    return branchdata;
-                }
-
-                if (branchdata.BranchName.Equals("master"))
-                {
-                    masterBranch = branchdata;
-                }
+                this.LocalViewModel.ClearIssues();
+                this.LocalViewModel.ResetStats();
             }
 
-            if (masterBranch != null)
+            if (this.ServerViewModel != null)
             {
-                this.StatusMessageAssociation = "Using master branch, because current branch does not exist or source control not supported. Press associate to confirm.";
-                return masterBranch;
+                this.ServerViewModel.ClearIssues();
+                this.ServerViewModel.ResetStats();
+            }
+        }
+
+        /// <summary>
+        /// Setups the association messages.
+        /// </summary>
+        private void SetupAssociationMessages()
+        {
+            if (!this.AssociationModule.IsAssociated)
+            {
+                this.CanProvision = true;
+                this.SelectedProjectInView = null;
+                this.SelectedProjectKey = null;
+                this.SelectedProjectName = null;
+                this.SelectedProjectVersion = null;
+                this.ErrorIsFound = true;
+                this.StatusMessage = "Was unable to associate with sonar project, use project association dialog to choose a project or to provision project";
+                this.ShowRightFlyout = true;
+            }
+            else
+            {
+                this.CanProvision = false;
+                this.SelectedProjectKey = this.AssociationModule.AssociatedProject.Key;
+                this.SelectedProjectName = this.AssociationModule.AssociatedProject.Name;
+                this.SelectedProjectVersion = this.AssociationModule.AssociatedProject.Version;
+                this.StatusMessage = "successfully associated with : " + this.AssociationModule.AssociatedProject.Name;
+                this.ShowRightFlyout = false;
+                this.ErrorIsFound = false;
+            }
+        }
+
+        /// <summary>
+        /// Previews the analysis has completed.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void PreviewAnalysisHasCompleted(object sender, EventArgs e)
+        {
+            this.AnalysisFromSolutionRunning = false;
+            this.LocaAnalyser.LocalAnalysisCompleted -= this.PreviewAnalysisHasCompleted;
+            if (this.LocalViewModel.ErrorsFoundDuringAnalysis)
+            {
+                MessageDisplayBox.DisplayMessage("Analysis as failed, check output log for more information.", helpurl: "https://github.com/TeklaCorp/VSSonarQubeExtension/wiki/Troubleshooting-and-FAQ");
             }
 
-            this.StatusMessageAssociation = "Unable to find branch, please manually choose one from list and confirm.";
-            return null;
+            this.LocalViewModel.ErrorsFoundDuringAnalysis = false;
+        }
+
+        /// <summary>
+        /// Fulls the analysis has completed.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void FullAnalysisHasCompleted(object sender, EventArgs e)
+        {
+            this.AnalysisFromSolutionRunning = false;
+            this.LocaAnalyser.LocalAnalysisCompleted -= this.FullAnalysisHasCompleted;
+            if (this.LocalViewModel.ErrorsFoundDuringAnalysis)
+            {
+                MessageDisplayBox.DisplayMessage("Analysis as failed, check output log for more information.", helpurl: "https://github.com/TeklaCorp/VSSonarQubeExtension/wiki/Troubleshooting-and-FAQ");
+            }
+            else
+            {
+                MessageDisplayBox.DisplayMessage("You may use server analysis mode, to retrieve analysis results.", helpurl: "https://github.com/TeklaCorp/VSSonarQubeExtension/wiki/Server-Analysis");
+            }
+
+            this.LocalViewModel.ErrorsFoundDuringAnalysis = false;
+        }
+
+        /// <summary>
+        /// Runs the preview analysis after association.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void RunPreviewAnalysisAfterAssociation(object sender, EventArgs e)
+        {
+            this.AnalysisFromSolutionRunning = false;
+            this.LocaAnalyser.AssociateCommandCompeted -= this.RunPreviewAnalysisAfterAssociation;
+            this.LocalViewModel.RunAnalysis(AnalysisTypes.PREVIEW);
+        }
+
+        /// <summary>
+        /// Runs the full analysis after association.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void RunFullAnalysisAfterAssociation(object sender, EventArgs e)
+        {
+            this.LocaAnalyser.AssociateCommandCompeted -= this.RunFullAnalysisAfterAssociation;
+            this.LocalViewModel.RunAnalysis(AnalysisTypes.ANALYSIS);
         }
 
         #endregion
-
     }
 }

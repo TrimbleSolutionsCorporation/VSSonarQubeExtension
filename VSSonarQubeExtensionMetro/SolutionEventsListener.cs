@@ -163,6 +163,7 @@ namespace VSSonarQubeExtension
         /// <returns>The <see cref="int"/>.</returns>
         int IVsSolutionEvents.OnQueryCloseSolution(object pUnkReserved, ref int pfCancel)
         {
+            pfCancel = SonarQubeViewModelFactory.SQViewModel.CanCloseSolution();
             return VSConstants.S_OK;
         }
 

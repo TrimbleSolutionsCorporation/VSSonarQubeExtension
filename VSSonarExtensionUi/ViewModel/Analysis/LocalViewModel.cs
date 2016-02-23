@@ -35,10 +35,10 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using PropertyChanged;
     using SonarLocalAnalyser;
     using View.Helpers;
+    using VSSonarExtensionUi.Association;
     using VSSonarPlugins;
-    using VSSonarPlugins.Types;
-    using VSSonarExtensionUi.Association;       
     using VSSonarPlugins.Helpers;
+    using VSSonarPlugins.Types;
         
     /// <summary>
     ///     The analysis types.
@@ -63,7 +63,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <summary>
         ///     The analysis.
         /// </summary>
-        ANALYSIS, 
+        ANALYSIS,
 
         /// <summary>
         ///     The none.
@@ -78,7 +78,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     public class LocalViewModel : IAnalysisModelBase, IViewModelBase, IModelBase
     {
         /// <summary>
-        /// The plugins
+        /// The plugin list
         /// </summary>
         private readonly IList<IAnalysisPlugin> plugins = new List<IAnalysisPlugin>();
 
@@ -93,7 +93,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         private readonly IConfigurationHelper configurationHelper;
 
         /// <summary>
-        /// The local analyser module
+        /// The local analyzer module
         /// </summary>
         private readonly ISonarLocalAnalyser localAnalyserModule;
 
@@ -108,12 +108,32 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         private readonly ISQKeyTranslator keyTranslator;
 
         /// <summary>
-        ///     The show flyouts.
+        /// The project build cache
+        /// </summary>
+        private readonly Dictionary<string, DateTime> projectBuildCache = new Dictionary<string, DateTime>();
+
+        /// <summary>
+        /// The source in server
+        /// </summary>
+        private readonly Dictionary<string, string> sourceInServerCache = new Dictionary<string, string>();
+
+        /// <summary>
+        /// The false positives per resource
+        /// </summary>
+        private readonly Dictionary<string, List<Issue>> falseandwontfixissues = new Dictionary<string, List<Issue>>();
+
+        /// <summary>
+        /// The new added issues
+        /// </summary>
+        private readonly Dictionary<string, List<Issue>> newAddedIssues;
+
+        /// <summary>
+        ///     The show fly outs.
         /// </summary>
         private bool showFlyouts;
 
         /// <summary>
-        /// The vsenvironmenthelper
+        /// The vs environment helper
         /// </summary>
         private IVsEnvironmentHelper vsenvironmenthelper;
 
@@ -123,7 +143,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         private IVSSStatusBar statusBar;
 
         /// <summary>
-        /// The service provier
+        /// The service provider
         /// </summary>
         private IServiceProvider serviceProvier;
 
@@ -148,36 +168,25 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         private string contentInView;
 
         /// <summary>
-        /// The project build cache
-        /// </summary>
-        private readonly Dictionary<string, DateTime> projectBuildCache = new Dictionary<string, DateTime>();
-
-        /// <summary>
-        /// The source in server
-        /// </summary>
-        private readonly Dictionary<string, string> sourceInServerCache = new Dictionary<string, string>();
-
-        /// <summary>
-        /// The false positives per resource
-        /// </summary>
-        private readonly Dictionary<string, List<Issue>> falseandwontfixissues = new Dictionary<string, List<Issue>>();
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="LocalViewModel" /> class.
         /// </summary>
-        /// <param name="pluginsIn">The plugins in. TODO they must be also update table</param>
+        /// <param name="pluginsIn">The plugin data.</param>
         /// <param name="service">The service.</param>
         /// <param name="configurationHelper">The configuration helper.</param>
         /// <param name="notificationManager">The notification manager.</param>
         /// <param name="translator">The translator.</param>
+        /// <param name="analyser">The analyzer.</param>
+        /// <param name="newIssuesList">The new issues list.</param>
         public LocalViewModel(
             IList<IAnalysisPlugin> pluginsIn, 
             ISonarRestService service, 
             IConfigurationHelper configurationHelper,
             INotificationManager notificationManager,
             ISQKeyTranslator translator,
-            ISonarLocalAnalyser analyser)
+            ISonarLocalAnalyser analyser,
+            Dictionary<string, List<Issue>> newIssuesList)
         {
+            this.newAddedIssues = newIssuesList;
             this.keyTranslator = translator;
             this.notificationManager = notificationManager;
             this.restService = service;
@@ -218,6 +227,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public ICommand AnalysisCommand { get; set; }
 
         /// <summary>
+        /// Gets or sets the new issues during session command.
+        /// </summary>
+        /// <value>
+        /// The new issues during session command.
+        /// </value>
+        public ICommand NewIssuesDuringSessionCommand { get; set; }
+
+        /// <summary>
         ///     Gets or sets the back ground color.
         /// </summary>
         public Color BackGroundColor { get; set; }
@@ -228,7 +245,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         [AlsoNotifyFor("CanRunLocalAnalysis")]
         public bool CanRunAnalysis { get; set; }
 
-        /// <summary>Gets or sets the associating text tooltip.</summary>
+        /// <summary>Gets or sets the associating text tool tip.</summary>
         public string AssociatingTextTooltip { get; set; }
 
         /// <summary>
@@ -291,19 +308,18 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             }
         }
         
-
         /// <summary>
         ///     Gets or sets the issues grid view.
         /// </summary>
         public IssueGridViewModel IssuesGridView { get; set; }
 
         /// <summary>
-        ///     Gets or sets the open source dir command.
+        ///     Gets or sets the open source directory command.
         /// </summary>
         public ICommand OpenSourceDirCommand { get; set; }
 
         /// <summary>
-        ///     Gets the close flyout issue search command.
+        ///     Gets the close fly out issue search command.
         /// </summary>
         public RelayCommand CloseLeftFlyoutCommand { get; private set; }
 
@@ -358,7 +374,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public bool PermissionsAreNotAvailable { get; set; }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether show flyouts.
+        ///     Gets or sets a value indicating whether show fly outs.
         /// </summary>
         public bool ShowLeftFlyOut
         {
@@ -380,7 +396,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public int SizeOfFlyout { get; set; }
 
         /// <summary>
-        ///     Gets or sets the source working dir.
+        ///     Gets or sets the source working directory.
         /// </summary>
         public string SourceWorkingDir { get; set; }
 
@@ -422,7 +438,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public string ProjectLink { get; private set; }
 
         /// <summary>
-        /// Gets a value indicating whether [analysis is running].
+        /// Gets or sets a value indicating whether [analysis is running].
         /// </summary>
         /// <value>
         ///   <c>true</c> if [analysis is running]; otherwise, <c>false</c>.
@@ -463,6 +479,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             this.sourceInServerCache.Clear();
             this.falseandwontfixissues.Clear();
+            this.newAddedIssues.Clear();
             this.ClearIssues();
             this.associatedProject = null;
             this.CanRunAnalysis = false;
@@ -475,6 +492,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         public void OnDisconnect()
         {
+            this.newAddedIssues.Clear();
             this.sourceInServerCache.Clear();
             this.falseandwontfixissues.Clear();
             this.localAnalyserModule.OnDisconect();
@@ -484,6 +502,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// Called when [connect to sonar].
         /// </summary>
         /// <param name="configuration">sonar configuration</param>
+        /// <param name="availableProjects">The available projects.</param>
+        /// <param name="issuePlugin">The issue plugin.</param>
         public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IIssueTrackerPlugin issuePlugin)
         {
             // does nothing
@@ -525,8 +545,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <param name="project">The project.</param>
         /// <param name="workingDir">The working dir.</param>
         /// <param name="provider">The provider.</param>
-        /// <param name="sourcePlugin">The source plugin.</param>
-        /// <param name="availableProjects">The available projects.</param>
         /// <param name="profile">The profile.</param>
         public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider provider, Dictionary<string, Profile> profile)
         {
@@ -604,6 +622,21 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.FileAnalysisIsEnabled = false;
             this.notificationManager.StartedWorking("Running Incremental Analysis");
             this.RunLocalAnalysis(AnalysisTypes.INCREMENTAL);
+        }
+
+        /// <summary>
+        /// Shows the new added issues and lock.
+        /// </summary>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public void ShowNewAddedIssuesAndLock()
+        {
+            this.FileAnalysisIsEnabled = true;
+            this.ShowIssuesOnModifiedSectionsOfFileOnly = true;
+            this.notificationManager.StartedWorking("Display current new issues");
+            this.CanRunAnalysis = true;
+            this.AllLog.Clear();
+            this.OutputLog = string.Empty;
+            this.UpdateNewLocalIssues();
         }
 
         /// <summary>
@@ -751,12 +784,15 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.IncrementalCommand = new RelayCommand(this.OnIncrementalCommand);
             this.PreviewCommand = new RelayCommand(this.OnPreviewCommand);
             this.AnalysisCommand = new RelayCommand(this.OnAnalysisCommand);
+            this.NewIssuesDuringSessionCommand = new RelayCommand(this.ShowNewAddedIssuesAndLock);
             this.StopLocalAnalysisCommand = new RelayCommand(this.OnStopLocalAnalysisCommand);
             this.OpenLogCommand = new RelayCommand(this.OnOpenLogCommand);
             this.GoToPrevIssueCommand = new RelayCommand(this.OnGoToPrevIssueCommand);
             this.GoToNextIssueCommand = new RelayCommand(this.OnGoToNextIssueCommand);
             this.CloseLeftFlyoutCommand = new RelayCommand(this.OnCloseLeftFlyoutCommand);
         }
+
+
 
         /// <summary>
         /// Called when [go to next issue command].
@@ -833,9 +869,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <summary>
         /// The run local analysis new.
         /// </summary>
-        /// <param name="analysis">
-        /// The analysis.
-        /// </param>
+        /// <param name="analysis">The analysis.</param>
+        /// <exception cref="System.NotImplementedException"></exception>
         private void RunLocalAnalysis(AnalysisTypes analysis)
         {
             if (this.localAnalyserModule == null)
@@ -874,9 +909,10 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                         }
                         catch (Exception ex)
                         {
-                            this.notificationManager.ReportMessage(new VSSonarPlugins.Message() { Id = "LocalViewModel", Data = "Analysis Failed: " + ex.Message });
+                            this.notificationManager.ReportMessage(new VSSonarPlugins.Message { Id = "LocalViewModel", Data = "Analysis Failed: " + ex.Message });
                             this.notificationManager.ReportException(ex);
                         }
+
                         break;
                     case AnalysisTypes.ANALYSIS:
                         this.ValidateAdminRights();
@@ -911,7 +947,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             }
             catch (Exception ex)
             {
-                this.notificationManager.ReportMessage(new VSSonarPlugins.Message() { Id = "LocalViewModel", Data = "Analysis Failed: " + ex.Message });
+                this.notificationManager.ReportMessage(new VSSonarPlugins.Message { Id = "LocalViewModel", Data = "Analysis Failed: " + ex.Message });
                 this.notificationManager.ReportException(ex);
                 this.notificationManager.EndedWorking();
                 this.notificationManager.FlagFailure(ex.Message);
@@ -949,7 +985,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             };
 
             bw.DoWork +=
-                delegate {
+                delegate
+                {
                     try
                     {
                         var filter = "?componentRoots=" + this.resourceInView.Key.Trim() + "&resolutions=FALSE-POSITIVE,WONTFIX";
@@ -963,6 +1000,25 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 };
 
             bw.RunWorkerAsync();
+        }
+
+
+        /// <summary>
+        /// The update local issues in view.
+        /// </summary>
+        private void UpdateNewLocalIssues()
+        {
+            this.CanRunAnalysis = true;
+            this.AnalysisIsRunning = false;
+            this.notificationManager.EndedWorking();
+            var issues = new List<Issue>();
+            foreach (var item in this.newAddedIssues)
+            {
+                issues.AddRange(item.Value);
+            }
+
+            this.IssuesGridView.UpdateIssues(issues);
+            this.IssuesGridView.RefreshStatistics();
         }
 
         /// <summary>
@@ -1051,9 +1107,30 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                                         issuesWithoutFalsePositives = this.FilterIssuesWithFalsePositives(issues);
                                     }
 
-                                    if (this.ShowIssuesOnModifiedSectionsOfFileOnly)
+                                    var issuesinChangedLines = VsSonarUtils.GetIssuesInModifiedLinesOnly(issuesWithoutFalsePositives, diffReport);
+
+                                    if (!this.newAddedIssues.ContainsKey(this.resourceInView.Key))
                                     {
-                                        var issuesinChangedLines = VsSonarUtils.GetIssuesInModifiedLinesOnly(issuesWithoutFalsePositives, diffReport);
+                                        var newList = new List<Issue>(issuesinChangedLines);
+                                        this.newAddedIssues.Add(this.resourceInView.Key, newList);
+                                        this.notificationManager.OnNewIssuesUpdated();
+                                    }
+                                    else
+                                    {
+                                        var listOfIssues = this.newAddedIssues[this.resourceInView.Key];
+                                        var currentCnt = listOfIssues.Count;
+                                        var newCnt = issuesinChangedLines.Count;
+                                        listOfIssues.Clear();
+                                        listOfIssues.AddRange(issuesinChangedLines);
+
+                                        if (currentCnt != newCnt)
+                                        {
+                                            this.notificationManager.OnNewIssuesUpdated();
+                                        }
+                                    }
+
+                                    if (this.ShowIssuesOnModifiedSectionsOfFileOnly)
+                                    {                                        
                                         this.IssuesGridView.UpdateIssues(issuesinChangedLines);
                                     }
                                     else

@@ -58,6 +58,11 @@ namespace VSSonarPlugins
         void OnIssuesUpdated();
 
         /// <summary>
+        /// Called when [new issues updated].
+        /// </summary>
+        void OnNewIssuesUpdated();
+
+        /// <summary>
         /// Writes the exception.
         /// </summary>
         /// <param name="ex">The ex.</param>
