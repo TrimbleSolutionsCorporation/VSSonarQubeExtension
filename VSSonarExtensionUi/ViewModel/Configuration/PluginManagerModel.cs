@@ -77,6 +77,9 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         private string sourceDir;
 
+        /// <summary>
+        /// The issue tracker plugin
+        /// </summary>
         private IIssueTrackerPlugin issueTrackerPlugin;
 
         #endregion
@@ -111,6 +114,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
             this.InitPluginList(helper, null);
             this.InitCommanding();
+            // select issue tracker plugin to use
+            this.SelectIssueTrackerPlugin();
 
             SonarQubeViewModel.RegisterNewViewModelInPool(this);
         }
@@ -249,7 +254,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// Called when [connect to sonar].
         /// </summary>
         /// <param name="configuration">sonar configuration</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects)
+        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IIssueTrackerPlugin issuePlugin)
         {
             // does nothing
         }
@@ -501,9 +506,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                     Debug.WriteLine(ex.Message);
                 }
             }
-
-            // select issue tracker plugin to use
-            this.SelectIssueTrackerPlugin();
         }
 
         /// <summary>
@@ -643,7 +645,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
             if (cnt > 1)
             {
-                MessageDisplayBox.DisplayMessage("More than on issue tracker plugin is enabled, make sure only one pluing is enabled", builder.ToString());
+                MessageDisplayBox.DisplayMessage("More than on issue tracker plugin is enabled, make sure only one plugin is enabled", builder.ToString());
                 this.issueTrackerPlugin = null;
             }
         }

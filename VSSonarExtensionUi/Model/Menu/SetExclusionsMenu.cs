@@ -135,7 +135,7 @@
         /// <param name="workingDir">The working dir.</param>
         /// <param name="sourceModel">The source model.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
-        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider sourceModel, IIssueTrackerPlugin sourcePlugin, Dictionary<string, Profile> profile)
+        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider sourceModel, Dictionary<string, Profile> profile)
         {
             this.sourceControl = sourceModel;
             this.assignProject = project;
@@ -155,7 +155,9 @@
         /// Called when [connect to sonar].
         /// </summary>
         /// <param name="configuration">sonar configuration</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects)
+        /// <param name="availableProjects">The available projects.</param>
+        /// <param name="issuePlugin">The issue plugin.</param>
+        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IIssueTrackerPlugin issuePlugin)
         {
             // does nothing
         }

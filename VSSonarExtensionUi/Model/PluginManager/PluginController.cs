@@ -25,7 +25,7 @@ namespace VSSonarExtensionUi.Model.PluginManager
     using SonarRestService;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-
+    using Helpers;
     /// <summary>
     ///     The local analyser.
     /// </summary>    
@@ -213,7 +213,7 @@ namespace VSSonarExtensionUi.Model.PluginManager
             {
                 try
                 {
-                    var plugin = this.LoadPlugin(assembly.Value, manager, helper, vshelper);
+                    var plugin = this.LoadPlugin(assembly.Value, manager, helper, vshelper, AuthtenticationHelper.AuthToken);
 
                     if (plugin != null)
                     {
@@ -341,7 +341,16 @@ namespace VSSonarExtensionUi.Model.PluginManager
         }
 
 
-        public IPlugin LoadPlugin(Assembly assembly, INotificationManager manager, IConfigurationHelper helper, IVsEnvironmentHelper vshelper)
+        /// <summary>
+        /// Loads the plugin.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <param name="manager">The manager.</param>
+        /// <param name="helper">The helper.</param>
+        /// <param name="vshelper">The vshelper.</param>
+        /// <param name="userConfig">The user configuration.</param>
+        /// <returns></returns>
+        public IPlugin LoadPlugin(Assembly assembly, INotificationManager manager, IConfigurationHelper helper, IVsEnvironmentHelper vshelper, ISonarConfiguration userConfig)
         {
             var types2 = assembly.GetTypes();
             foreach (var type in types2)
@@ -390,10 +399,10 @@ namespace VSSonarExtensionUi.Model.PluginManager
                     if (typeof(IIssueTrackerPlugin).IsAssignableFrom(type))
                     {
                         Debug.WriteLine("Can Cast Type In Assembly To: " + typeof(IIssueTrackerPlugin).FullName);
-                        var obj = type.GetConstructor(new[] { typeof(INotificationManager) });
+                        var obj = type.GetConstructor(new[] { typeof(INotificationManager), typeof(ISonarConfiguration) });
                         if (obj != null)
                         {
-                            object[] lobject = { manager };
+                            object[] lobject = { manager, userConfig };
                             return (IPlugin)obj.Invoke(lobject);
                         }
                     }

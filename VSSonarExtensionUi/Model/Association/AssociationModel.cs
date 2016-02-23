@@ -152,7 +152,7 @@
         {
             foreach (IModelBase model in modelPool)
             {
-                model.OnConnectToSonar(AuthtenticationHelper.AuthToken, this.model.AvailableProjects);
+                model.OnConnectToSonar(AuthtenticationHelper.AuthToken, this.model.AvailableProjects, this.pluginManager.GetIssueTrackerPlugin());
             }
         }
 
@@ -641,7 +641,6 @@
                         this.AssociatedProject,
                         this.OpenSolutionPath,
                         this.sourcecontrol,
-                        this.pluginManager.GetIssueTrackerPlugin(), 
                         this.Profile);
                 }
                 catch (Exception ex)

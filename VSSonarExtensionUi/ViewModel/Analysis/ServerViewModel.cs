@@ -237,7 +237,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// Called when [connect to sonar].
         /// </summary>
         /// <param name="configuration">sonar configuration</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects)
+        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IIssueTrackerPlugin issuePlugin)
         {
             // does nothing
         }
@@ -402,7 +402,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             Resource associatedProjectIn,
             string workingDir,
             ISourceControlProvider provider,
-            IIssueTrackerPlugin sourcePlugin,
             Dictionary<string, Profile> profile)
         {
             if (associatedProjectIn == null || string.IsNullOrEmpty(associatedProjectIn.SolutionRoot))

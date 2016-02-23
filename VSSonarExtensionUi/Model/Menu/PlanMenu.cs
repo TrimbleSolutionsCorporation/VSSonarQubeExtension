@@ -76,11 +76,6 @@ namespace VSSonarExtensionUi.Model.Menu
         private ISourceControlProvider provider;
 
         /// <summary>
-        /// The source plugin
-        /// </summary>
-        private IIssueTrackerPlugin sourcePlugin;
-
-        /// <summary>
         /// The available plans
         /// </summary>
         private ObservableCollection<SonarActionPlan> availablePlans;
@@ -179,7 +174,7 @@ namespace VSSonarExtensionUi.Model.Menu
         /// </summary>
         /// <param name="configuration">sonar configuration</param>
         /// <param name="availableProjectsIn">The available projects in.</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjectsIn)
+        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjectsIn, IIssueTrackerPlugin sourcePlugin)
         {
             // does nothing
             this.availableProjects = availableProjectsIn;
@@ -212,10 +207,9 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <param name="providerIn">The provider in.</param>
         /// <param name="sourcePluginIn">The source plugin in.</param>
         /// <param name="profile">The profile.</param>
-        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider providerIn, IIssueTrackerPlugin sourcePluginIn, Dictionary<string, Profile> profile)
+        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider providerIn, Dictionary<string, Profile> profile)
         {
             this.Profile = profile;
-            this.sourcePlugin = sourcePluginIn;
             this.sourceDir = workingDir;
             this.associatedProject = project;
             this.provider = providerIn;
@@ -428,7 +422,7 @@ namespace VSSonarExtensionUi.Model.Menu
                                 if (availablePlan.CommandText.Equals(plan.Project))
                                 {
                                     var menu = new PlanMenu(this.rest, this.model, this.manager, null, false) { CommandText = plan.NamePlusProject, IsEnabled = true };
-                                    menu.AssociateWithNewProject(this.associatedProject, this.sourceDir, this.provider, this.sourcePlugin, this.Profile);
+                                    menu.AssociateWithNewProject(this.associatedProject, this.sourceDir, this.provider, this.Profile);
                                     availablePlan.SubItems.Add(menu);
                                 }
                             }
@@ -484,11 +478,11 @@ namespace VSSonarExtensionUi.Model.Menu
                             foreach (var planPerProject in plansPerProject)
                             {
                                 var menu = new PlanMenu(this.rest, this.model, this.manager, null, false) { CommandText = planPerProject.Key, IsEnabled = false };
-                                menu.AssociateWithNewProject(this.associatedProject, this.sourceDir, this.provider, this.sourcePlugin, this.Profile);
+                                menu.AssociateWithNewProject(this.associatedProject, this.sourceDir, this.provider, this.Profile);
                                 foreach (var plan in planPerProject.Value)
                                 {
                                     var submenu = new PlanMenu(this.rest, this.model, this.manager, null, false) { CommandText = plan.NamePlusProject, IsEnabled = true };
-                                    submenu.AssociateWithNewProject(this.associatedProject, this.sourceDir, this.provider, this.sourcePlugin, this.Profile);
+                                    submenu.AssociateWithNewProject(this.associatedProject, this.sourceDir, this.provider, this.Profile);
                                     submenu.UpdateActionPlans(plans);
                                     menu.SubItems.Add(submenu);
                                 }

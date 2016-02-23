@@ -26,15 +26,13 @@
         /// Associates the with new project.
         /// </summary>
         /// <param name="project">The project.</param>
-        /// <param name="workingDir">The working directory.</param>
+        /// <param name="workingDir">The working dir.</param>
         /// <param name="sourceModel">The source model.</param>
-        /// <param name="sourcePlugin">The source plugin.</param>
-        /// <param name="profile">The profile.</param>
+        /// <param name="profile">The quality profile.</param>
         void AssociateWithNewProject(
             Resource project,
             string workingDir,
             ISourceControlProvider sourceModel,
-            IIssueTrackerPlugin sourcePlugin,
             Dictionary<string, Profile> profile);
 
         /// <summary>
@@ -52,7 +50,7 @@
         /// </summary>
         /// <param name="configuration">The configuration.</param>
         /// <param name="availableProjects">The available projects.</param>
-        void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects);
+        void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IIssueTrackerPlugin sourcePlugin);
 
         /// <summary>
         /// Gets the view model.

@@ -179,11 +179,10 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <param name="workingDir">The working dir.</param>
         /// <param name="sourceModelIn">The source model in.</param>
         /// <param name="sourcePluginIn">The source plugin in.</param>
-        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider sourceModelIn, IIssueTrackerPlugin sourcePlugin, Dictionary<string, Profile> profile)
+        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider sourceModelIn, Dictionary<string, Profile> profile)
         {
             this.sourceDir = workingDir;
             this.associatedProject = project;
-            this.issueTrackerPlugin = sourcePlugin;
             this.sourceModel = sourceModelIn;
             this.config = AuthtenticationHelper.AuthToken;
         }
@@ -221,9 +220,10 @@ namespace VSSonarExtensionUi.Model.Menu
         /// Called when [connect to sonar].
         /// </summary>
         /// <param name="configuration">sonar configuration</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects)
+        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IIssueTrackerPlugin issuePlugin)
         {
-            // does nothing
+            this.issueTrackerPlugin = issuePlugin;
+            this.config = AuthtenticationHelper.AuthToken;
         }
 
         /// <summary>

@@ -134,7 +134,7 @@
         /// <param name="workingDir">The working dir.</param>
         /// <param name="sourceModel">The source model.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
-        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider sourceModel, IIssueTrackerPlugin sourcePlugin, Dictionary<string, Profile> profile)
+        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider sourceModel, Dictionary<string, Profile> profile)
         {
             this.sourceControl = sourceModel;
             this.assignProject = project;
@@ -162,7 +162,7 @@
         /// </summary>
         /// <param name="configuration">sonar configuration</param>
         /// <param name="availableProjectsIn">The available projects in.</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjectsIn)
+        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjectsIn, IIssueTrackerPlugin sourcePlugin)
         {
             this.availableProjects = availableProjectsIn.ToList();
         }

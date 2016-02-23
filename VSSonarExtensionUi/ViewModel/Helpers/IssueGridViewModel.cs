@@ -827,7 +827,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// Called when [connect to sonar].
         /// </summary>
         /// <param name="configuration">sonar configuration</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects)
+        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IIssueTrackerPlugin issuePlugin)
         {
             // does nothing
         }
@@ -1179,7 +1179,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// <param name="workingDir">The working dir.</param>
         /// <param name="providerIn">The provider in.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
-        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider providerIn, IIssueTrackerPlugin sourcePlugin, Dictionary<string, Profile> profile)
+        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider providerIn, Dictionary<string, Profile> profile)
         {
             this.sourceWorkDir = workingDir;
             this.associatedProject = project;

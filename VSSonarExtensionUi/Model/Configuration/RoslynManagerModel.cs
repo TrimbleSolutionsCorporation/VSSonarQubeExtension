@@ -97,7 +97,7 @@
         /// Called when [connect to sonar].
         /// </summary>
         /// <param name="configuration">sonar configuration</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects)
+        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IIssueTrackerPlugin issuePlugin)
         {
             this.InitializedServerDiagnostics(configuration);
         }
@@ -251,7 +251,7 @@
         /// <param name="workDir">The work directory.</param>
         /// <param name="sourceModelIn">The source model in.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
-        public void AssociateWithNewProject(Resource project, string workDir, ISourceControlProvider sourceModelIn, IIssueTrackerPlugin sourcePlugin, Dictionary<string, Profile> profile)
+        public void AssociateWithNewProject(Resource project, string workDir, ISourceControlProvider sourceModelIn, Dictionary<string, Profile> profile)
         {
             this.Profile = profile;
             this.SourceDir = workDir;

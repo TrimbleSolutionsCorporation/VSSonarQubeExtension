@@ -329,7 +329,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="projectIn">The project in.</param>
         /// <param name="workingDir">The working dir.</param>
         /// <param name="provider">The provider.</param>
-        public void AssociateWithNewProject(Resource projectIn, string workingDir, ISourceControlProvider provider, IIssueTrackerPlugin sourcePlugin, Dictionary<string, Profile> profile)
+        public void AssociateWithNewProject(Resource projectIn, string workingDir, ISourceControlProvider provider, Dictionary<string, Profile> profile)
         {
             this.project = projectIn;
 
@@ -348,7 +348,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         /// <param name="configuration">sonar configuration</param>
         /// <param name="availableProjects">The available projects.</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects)
+        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IIssueTrackerPlugin sourcePlugin)
         {
             if (this.RoslynViewModel == null)
             {

@@ -144,7 +144,7 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// </summary>
         /// <param name="configuration">sonar configuration</param>
         /// <param name="availableProjectsIn">The available projects in.</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjectsIn)
+        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjectsIn, IIssueTrackerPlugin sourcePlugin)
         {
             // does nothing
             this.availableProjects = availableProjectsIn;
@@ -170,7 +170,7 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// <param name="sourceModelIn">The source model in.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
         /// <param name="profile">The profile.</param>
-        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider sourceModelIn, IIssueTrackerPlugin sourcePlugin, Dictionary<string, Profile> profile)
+        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider sourceModelIn, Dictionary<string, Profile> profile)
         {
             this.sourceModel = sourceModelIn;
             this.associatedProject = project;
