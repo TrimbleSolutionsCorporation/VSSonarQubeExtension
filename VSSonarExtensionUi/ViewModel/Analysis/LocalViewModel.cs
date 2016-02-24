@@ -1098,7 +1098,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                                         sourceInServerCache.Add(this.resourceInView.Key, source);
                                     }
 
-                                    ArrayList diffReport = VsSonarUtils.GetSourceDiffFromStrings(this.contentInView, source, DiffEngineLevel.FastImperfect);
+                                    ArrayList diffReport = VsSonarUtils.GetSourceDiffFromStrings(source, this.contentInView, DiffEngineLevel.FastImperfect);
 
                                     var issuesWithoutFalsePositives = issues;
 
