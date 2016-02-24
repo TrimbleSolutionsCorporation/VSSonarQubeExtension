@@ -125,7 +125,7 @@
                                                                 </Setter.Value>
                                                             </Setter>
                                                         </DataTrigger>
-                                                        <DataTrigger Binding="{Binding Path=ShowRightFlyout}" Value="False">
+                                                        <DataTrigger Binding="{Binding Path=NewIssuesFound}" Value="False">
                                                             <Setter Property="Content" >
                                                                 <Setter.Value>
                                                                     <Rectangle Fill="Green" Width="10" Height="10">
