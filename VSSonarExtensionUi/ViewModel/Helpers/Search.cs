@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VSSonarPlugins.Types;
-
-namespace VSSonarExtensionUi.ViewModel.Helpers
+﻿namespace VSSonarExtensionUi.ViewModel.Helpers
 {
+    using System;
+    using System.Collections.Generic;
+    using VSSonarPlugins.Types;
+
     /// <summary>
-    /// 
+    /// search class
     /// </summary>
     [Serializable]
     public class Search
@@ -22,10 +19,10 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether [componenets enabled].
+        /// Gets or sets a value indicating whether [components enabled].
         /// </summary>
         /// <value>
-        ///   <c>true</c> if [componenets enabled]; otherwise, <c>false</c>.
+        ///   <c>true</c> if [components enabled]; otherwise, <c>false</c>.
         /// </value>
         public bool ComponenetsEnabled { get; set; }
 
@@ -126,11 +123,27 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         public bool SinceDateEnabled { get; set; }
 
         /// <summary>
-        /// Gets a value indicating whether [filter by SSCM].
+        /// Gets or sets a value indicating whether [filter by SSCM].
         /// </summary>
         /// <value>
         ///   <c>true</c> if [filter by SSCM]; otherwise, <c>false</c>.
         /// </value>
         public bool FilterBySSCM { get; set; }
+
+        /// <summary>
+        /// Gets the authors.
+        /// </summary>
+        /// <value>
+        /// The authors.
+        /// </value>
+        public string Authors { get; internal set; }
+
+        /// <summary>
+        /// Gets a value indicating whether [authors enabled].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [authors enabled]; otherwise, <c>false</c>.
+        /// </value>
+        public bool AuthorsEnabled { get; internal set; }
     }
 }
