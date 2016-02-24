@@ -236,8 +236,9 @@
                                       Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
                             <Grid
                                     Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                    Height="55">
+                                    Height="80">
                                 <Grid.RowDefinitions>
+                                    <RowDefinition Height="25" />
                                     <RowDefinition Height="25" />
                                     <RowDefinition Height="25" />
                                 </Grid.RowDefinitions>
@@ -253,6 +254,10 @@
                                         Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
                                         Grid.Row="0" Grid.Column="0"
                                         Content="Assignee" />
+                                <Label
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Grid.Row="2" Grid.Column="0"
+                                        Content="Author" />                                
                                 <ComboBox Grid.Row="1" Grid.Column="1" 
                                           Style="{DynamicResource VirtualisedMetroComboBox}"
                                           TextSearch.TextPath="Name"
@@ -272,11 +277,15 @@
                                           MaxDropDownHeight="125"
                                           ItemTemplate="{DynamicResource UserSelectionComboBoxDataTemplateMultiSelection}">
                                 </ComboBox>
-
+                                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding AuthorSearchQuery}" ToolTip="Comma separated list for author emails.">
+                                </TextBox>
+                                
                                 <CheckBox Grid.Row="1" Grid.Column="2" Margin="4,0,-4,0"
                                               IsChecked="{Binding IsReporterChecked}" ToolTip="Once unchecked it will clear all selection" />
                                 <CheckBox Grid.Row="0" Grid.Column="2" Margin="4,0,-4,0"
                                               IsChecked="{Binding IsAssigneeChecked}" ToolTip="Once unchecked it will clear all selection" />
+                                <CheckBox Grid.Row="3" Grid.Column="2" Margin="4,0,-4,0"
+                                              IsChecked="{Binding IsAuthorEnabled}" ToolTip="Search by author email" />
                             </Grid>
                         </Expander>
 

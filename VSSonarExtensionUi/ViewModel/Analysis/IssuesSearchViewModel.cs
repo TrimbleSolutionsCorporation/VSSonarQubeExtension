@@ -286,6 +286,22 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public bool IsAssigneeChecked { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this instance is author enabled.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is author enabled; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsAuthorEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets the author search query.
+        /// </summary>
+        /// <value>
+        /// The author search query.
+        /// </value>
+        public string AuthorSearchQuery { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether this instance is componenet checked.
         /// </summary>
         /// <value>
@@ -906,6 +922,25 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             string request = string.Empty;
 
+            request += this.FilterByUsers();
+            request += this.FilterByDate();
+            request += this.FilterSeverities();
+            request += this.FilterStatus();
+            request += this.FilterResolutions();
+            request += this.FilterActionPlans();
+            request += this.FilterComponentsKeys();
+
+            this.IssuesGridView.UpdateIssues(
+                this.searchModel.GetIssuesUsingFilter(request, this.IsFilterBySSCMChecked, this.componentList.Count > 0 && this.IsComponenetChecked), this.AvailableActionPlans);
+        }
+
+        /// <summary>
+        /// Filters the by users.
+        /// </summary>
+        /// <returns>use search query</returns>
+        private string FilterByUsers()
+        {
+            var request = string.Empty;
             if (this.IsAssigneeChecked)
             {
                 try
@@ -915,7 +950,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 }
                 catch (Exception ex)
                 {
-                    // nothing enable
+                    Debug.WriteLine(ex.Message);
                 }
             }
 
@@ -925,13 +960,28 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 {
                     var users = this.ReporterList.Where(i => i.Selected).Select(i => i.Login).Aggregate((i, j) => i + "," + j);
                     request += "&reporters=" + users;
-
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    // not enabled
+                    Debug.WriteLine(ex.Message);
                 }
             }
+
+            if (this.IsAuthorEnabled && !string.IsNullOrEmpty(this.AuthorSearchQuery))
+            {
+                request += "&authors=" + this.AuthorSearchQuery;
+            }
+
+            return request;
+        }
+
+        /// <summary>
+        /// Filters the by date.
+        /// </summary>
+        /// <returns>filters date</returns>
+        private string FilterByDate()
+        {
+            var request = string.Empty;
 
             if (this.IsDateBeforeChecked)
             {
@@ -945,14 +995,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                            + Convert.ToString(this.CreatedSinceDate.Day);
             }
 
-            request += this.FilterSeverities();
-            request += this.FilterStatus();
-            request += this.FilterResolutions();
-            request += this.FilterActionPlans();
-            request += this.FilterComponentsKeys();
-
-            this.IssuesGridView.UpdateIssues(
-                this.searchModel.GetIssuesUsingFilter(request, this.IsFilterBySSCMChecked, this.componentList.Count > 0 && this.IsComponenetChecked), this.AvailableActionPlans);            
+            return request;
         }
 
         /// <summary>
@@ -1031,6 +1074,12 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             if (this.IsReporterChecked)
             {
                 search.ReportersEnabled = true;
+            }
+
+            search.Authors = this.AuthorSearchQuery;
+            if (this.IsAuthorEnabled)
+            {
+                search.AuthorsEnabled = true;
             }
 
             search.SinceDate = this.CreatedSinceDate;
@@ -1153,6 +1202,9 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                     }
                 }
             }
+
+            this.IsAuthorEnabled = search.AuthorsEnabled;
+            this.AuthorSearchQuery = search.Authors;
 
             this.IsDateSinceChecked = search.SinceDateEnabled;
             this.IsFilterBySSCMChecked = search.FilterBySSCM;
