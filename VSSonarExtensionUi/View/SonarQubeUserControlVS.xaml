@@ -102,16 +102,48 @@
                     <StatusBarItem HorizontalAlignment="Right">
                         
                         <StackPanel Orientation="Horizontal">
-                            <Border BorderBrush="Red" BorderThickness="1" Visibility="{Binding NewIssuesFound, Converter={StaticResource BoolToVis}}" ToolTip="New issues have been added during session. Press button and go to local analysis mode.">
+                            <Border ToolTip="New issues have been added during session. Press button and go to local analysis mode.">
                                 <StackPanel Orientation="Horizontal">
                                     <Button Width="30"
                                       Height="30"
                                       Style="{DynamicResource MetroCircleButtonStyle}"  Command="{Binding ShowNewLocalIssuesCommand}" >
-                                        <Rectangle Width="15" Height="15" Fill="{Binding  ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
-                                            <Rectangle.OpacityMask>
-                                                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_bug}" />
-                                            </Rectangle.OpacityMask>
-                                        </Rectangle>
+                                        <ContentControl>
+                                            <ContentControl.Style>
+                                                <Style TargetType="{x:Type ContentControl}">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Path=NewIssuesFound}" Value="True">
+                                                            <Setter Property="Content" >
+                                                                <Setter.Value>
+                                                                    <Rectangle Fill="Red" Width="10" Height="10">
+                                                                        <Rectangle.Resources>
+                                                                            <SolidColorBrush x:Key="BlackBrush" Color="Black" />
+                                                                        </Rectangle.Resources>
+                                                                        <Rectangle.OpacityMask>
+                                                                            <VisualBrush Visual="{StaticResource appbar_bug}" Stretch="Fill" />
+                                                                        </Rectangle.OpacityMask>
+                                                                    </Rectangle>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Path=ShowRightFlyout}" Value="False">
+                                                            <Setter Property="Content" >
+                                                                <Setter.Value>
+                                                                    <Rectangle Fill="Green" Width="10" Height="10">
+                                                                        <Rectangle.Resources>
+                                                                            <SolidColorBrush x:Key="BlackBrush" Color="Black" />
+                                                                        </Rectangle.Resources>
+                                                                        <Rectangle.OpacityMask>
+                                                                            <VisualBrush Visual="{StaticResource appbar_check}" Stretch="Fill" />
+                                                                        </Rectangle.OpacityMask>
+                                                                    </Rectangle>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ContentControl.Style>
+                                        </ContentControl>
+                                        
                                     </Button>
                                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding NumberNewIssues, FallbackValue=100}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" />
                                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="   " Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" />
@@ -165,7 +197,7 @@
                                                     <DataTrigger Binding="{Binding Path=ShowRightFlyout}" Value="True">
                                                         <Setter Property="Content" >
                                                             <Setter.Value>
-                                                                <Rectangle Fill="Black" Width="10" Height="10">
+                                                                <Rectangle Fill="{Binding  ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Width="10" Height="10">
                                                                     <Rectangle.Resources>
                                                                         <SolidColorBrush x:Key="BlackBrush" Color="Black" />
                                                                     </Rectangle.Resources>
@@ -179,7 +211,7 @@
                                                     <DataTrigger Binding="{Binding Path=ShowRightFlyout}" Value="False">
                                                         <Setter Property="Content" >
                                                             <Setter.Value>
-                                                                <Rectangle Fill="Black" Width="10" Height="10">
+                                                                <Rectangle Fill="{Binding  ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Width="10" Height="10">
                                                                     <Rectangle.Resources>
                                                                         <SolidColorBrush x:Key="BlackBrush" Color="Black" />
                                                                     </Rectangle.Resources>

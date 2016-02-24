@@ -159,6 +159,7 @@ namespace VSSonarExtensionUi.ViewModel
             this.IsExtensionBusy = false;
             this.ShowRightFlyout = false;
             this.InitCommands();
+            this.NumberNewIssues = "0";
         }
 
         /// <summary>
