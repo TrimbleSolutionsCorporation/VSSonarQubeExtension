@@ -842,6 +842,7 @@ namespace VSSonarExtensionUi.ViewModel
             this.SelectedProjectKey = string.Empty;
             this.SelectedProjectName = string.Empty;
             this.SelectedProjectVersion = string.Empty;
+            this.NumberNewIssues = "0";
 
             this.AssociationModule.OnSolutionClosed();
         }
