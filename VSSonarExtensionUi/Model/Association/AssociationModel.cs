@@ -152,7 +152,15 @@
         {
             foreach (IModelBase model in modelPool)
             {
-                model.OnConnectToSonar(AuthtenticationHelper.AuthToken, this.model.AvailableProjects, this.pluginManager.GetIssueTrackerPlugin());
+                try
+                {
+                    model.OnConnectToSonar(AuthtenticationHelper.AuthToken, this.model.AvailableProjects, this.pluginManager.GetIssueTrackerPlugin());
+                }
+                catch (Exception ex)
+                {
+                    this.logger.ReportMessage(new Message { Id = "Association Model", Data = "Exception for model while connecting : " + model.ToString() });
+                    this.logger.ReportException(ex);
+                }
             }
         }
 
@@ -610,6 +618,10 @@
         /// <param name="e">The e.</param>
         private void LocalAssociationCompleted(object sender, EventArgs e)
         {
+            if (!this.model.IsConnected)
+            {
+                return;
+            }
 
             var listToRemo = new List<IModelBase>();
 
@@ -631,7 +643,14 @@
             {
                 UserExceptionMessageBox.ShowException("Failed to retrieve Profile : Check Log and report : " + ex.Message, ex);
                 return;
-            } 
+            }
+
+            // sync data in plugins
+            this.pluginManager.AssociateWithNewProject(
+                this.AssociatedProject,
+                this.OpenSolutionPath,
+                this.sourcecontrol,
+                this.Profile);
 
             foreach (IModelBase model in modelPool)
             {
@@ -654,14 +673,6 @@
             {
                 modelPool.Remove(item);
             }
-
-
-            // sync data in plugins
-            this.pluginManager.AssociateWithNewProject(
-                this.AssociatedProject,
-                this.OpenSolutionPath,
-                this.sourcecontrol,
-                this.Profile);
         }
     }
 }

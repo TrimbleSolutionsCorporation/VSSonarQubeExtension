@@ -1082,6 +1082,7 @@ namespace VSSonarExtensionUi.ViewModel
                 {
                     this.RefreshProjectList(useDispatcher);                    
                     this.AssociationModule.OnConnectToSonar();
+                    this.VSonarQubeOptionsViewData.RefreshDiagnostics();
                     this.ConnectionTooltip = "Authenticated, but not associated";
                     this.StatusMessage = string.Empty;
                     this.IsConnected = true;
@@ -1116,8 +1117,6 @@ namespace VSSonarExtensionUi.ViewModel
                                     this.LocalViewModel.FileAnalysisIsEnabled = true;
                                 }
                             }
-
-                            this.RefreshDataForResource();
                         }
                         else
                         {

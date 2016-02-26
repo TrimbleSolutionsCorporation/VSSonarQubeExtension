@@ -343,12 +343,21 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
         #region Methods
 
+
         /// <summary>
         /// Called when [connect to sonar].
         /// </summary>
         /// <param name="configuration">sonar configuration</param>
         /// <param name="availableProjects">The available projects.</param>
         public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IIssueTrackerPlugin sourcePlugin)
+        {
+            // does nothing
+        }
+
+        /// <summary>
+        /// Refreshes the diagnostics.
+        /// </summary>
+        public void RefreshDiagnostics()
         {
             if (this.RoslynViewModel == null)
             {
