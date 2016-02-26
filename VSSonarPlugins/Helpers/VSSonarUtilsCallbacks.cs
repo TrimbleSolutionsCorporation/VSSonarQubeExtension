@@ -58,14 +58,25 @@ namespace VSSonarPlugins.Helpers
                         addedViolations.AddRange(issuesIn.Where(issue => change.DestIndex == issue.Line));
                     }
 
-                    if (change.Status != DiffResultSpanStatus.AddDestination)
+                    if (change.Status == DiffResultSpanStatus.NoChange)
                     {
                         continue;
                     }
 
-                    for (var i = change.DestIndex; i < change.DestIndex + change.Length; i++)
+                    if (change.SourceIndex > 0)
                     {
-                        addedViolations.AddRange(issuesIn.Where(issue => i == issue.Line));
+                        for (var i = change.SourceIndex; i < change.SourceIndex + change.Length; i++)
+                        {
+                            addedViolations.AddRange(issuesIn.Where(issue => i == issue.Line));
+                        }
+                    }
+
+                    if (change.DestIndex > 0)
+                    {
+                        for (var i = change.DestIndex; i < change.DestIndex + change.Length; i++)
+                        {
+                            addedViolations.AddRange(issuesIn.Where(issue => i == issue.Line));
+                        }
                     }
                 }
             }

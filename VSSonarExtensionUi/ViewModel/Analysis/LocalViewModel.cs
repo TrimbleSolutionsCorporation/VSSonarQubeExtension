@@ -631,7 +631,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public void ShowNewAddedIssuesAndLock()
         {
             this.FileAnalysisIsEnabled = true;
-            this.ShowIssuesOnModifiedSectionsOfFileOnly = true;
             this.notificationManager.StartedWorking("Display current new issues");
             this.CanRunAnalysis = true;
             this.AllLog.Clear();
