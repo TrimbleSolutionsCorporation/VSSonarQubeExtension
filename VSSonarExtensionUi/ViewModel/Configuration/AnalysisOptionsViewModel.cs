@@ -506,48 +506,44 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             }
 
             var installPath = Path.Combine(this.configurationHelper.ApplicationPath, "Wrapper", this.CxxWrapperVersion);
-        
-            if (File.Exists(Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe")))
-            {
-                this.WrapperPath = Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe");
-                MessageDisplayBox.DisplayMessage("Wrapper installed in  " + Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe") + " : Dont forget to save or apply.");
-                return;
-            }
 
-            var urldownload = "https://github.com/jmecsoftware/sonar-cxx-msbuild-tasks/releases/download/" + this.CxxWrapperVersion + "/CxxSonarQubeMsbuidRunner.zip";
-            var tmpFile = Path.Combine(this.configurationHelper.ApplicationPath, "CxxSonarQubeMsbuidRunner.zip");
-            try
+            if (!File.Exists(Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe")))
             {
-                using (var client = new WebClient())
+                var urldownload = "https://github.com/jmecsoftware/sonar-cxx-msbuild-tasks/releases/download/" + this.CxxWrapperVersion + "/CxxSonarQubeMsbuidRunner.zip";
+                var tmpFile = Path.Combine(this.configurationHelper.ApplicationPath, "CxxSonarQubeMsbuidRunner.zip");
+                try
                 {
-                    if (File.Exists(tmpFile))
+                    using (var client = new WebClient())
                     {
-                        File.Delete(tmpFile);
+                        if (File.Exists(tmpFile))
+                        {
+                            File.Delete(tmpFile);
+                        }
+
+                        client.DownloadFile(urldownload, tmpFile);
+
+                        ZipFile.ExtractToDirectory(tmpFile, installPath);
                     }
 
-                    client.DownloadFile(urldownload, tmpFile);
-
-                    ZipFile.ExtractToDirectory(tmpFile, installPath);
-                    this.InstallTools(Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe"));
+                    if (!File.Exists(Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe")))
+                    {
+                        MessageDisplayBox.DisplayMessage(
+                            "Wrapper installation failed, expected in  " + Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe") + " : download manually and unzip to that folder",
+                            helpurl: "https://github.com/jmecsoftware/sonar-cxx-msbuild-tasks/releases");
+                        return;
+                    }
                 }
-
-                if (!File.Exists(Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe")))
+                catch (Exception ex)
                 {
                     MessageDisplayBox.DisplayMessage(
-                        "Wrapper installation failed, expected in  " + Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe") + " : download manually and unzip to that folder",
+                        "Wrapper installation failed : " + ex.Message + " please be sure you have access to url. If not download manually and change the wrapper path.",
                         helpurl: "https://github.com/jmecsoftware/sonar-cxx-msbuild-tasks/releases");
-                    return;
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageDisplayBox.DisplayMessage(
-                    "Wrapper installation failed : " + ex.Message + " please be sure you have access to url. If not download manually and change the wrapper path.",
-                    helpurl: "https://github.com/jmecsoftware/sonar-cxx-msbuild-tasks/releases");
             }
 
             this.WrapperPath = Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe");
             MessageDisplayBox.DisplayMessage("Wrapper installed in  " + Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe") + " : Dont forget to save or apply.");
+            this.InstallTools(Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe"));
         }
 
         /// <summary>
@@ -556,7 +552,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="cxxwrapper">The cxx wrapper.</param>
         private void InstallTools(string cxxwrapper)
         {
-            if (File.Exists(cxxwrapper))
+            bool canInstall = QuestionUser.GetInput("this will install any third party tools using Chocolatey, elevated rights will be requested. Do you want to proceed?");
+            if (canInstall)
             {
                 Process process = new Process();
                 process.StartInfo.RedirectStandardOutput = true;
@@ -566,6 +563,12 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 process.StartInfo.Arguments = "/i";
                 process.Start();
                 process.WaitForExit();
+            }
+            else
+            {
+                MessageDisplayBox.DisplayMessage("External tools have not been installed.",
+                    "Tools will be installed when the wrapper for preview and full analysis runs. If you dont have permissions, the recommended way is to define tools paths in a configuration file in your home folder.",
+                    helpurl: "https://github.com/jmecsoftware/sonar-cxx-msbuild-tasks#using-the-wrapper-behind-proxy-or-were-admin-rights-are-not-available");
             }
         }
 
@@ -598,7 +601,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
                     ZipFile.ExtractToDirectory(tmpFile, installPath);
                     this.WrapperPath = Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe");
-                    this.InstallTools(this.WrapperPath);
                 }
             }
             catch (Exception ex)
