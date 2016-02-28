@@ -4,7 +4,7 @@
 <package>
     <metadata>
         <id>VSSonarExtensionPlugin4Api</id>
-        <version>5.1.1</version>
+        <version>5.1.2</version>
         <authors>Jorge Costa</authors>
         <owners>Jorge Costa</owners>
         <licenseUrl>https://github.com/TeklaCorp/VSSonarQubeExtension/blob/master/LICENSE.txt</licenseUrl>
@@ -31,6 +31,6 @@
         <file src="references\RestSharp.dll" target="lib" />
         <file src="references\4.4.0.0\FSharp.Data.dll" target="lib" />
         <file src="references\4.4.0.0\FSharp.Data.DesignTime.dll" target="lib" />
-        <file src="references\4.4.0.0\MsbuildAutomationHelper.dll" target="lib" />
+        <file src="BuildDrop\vs15\MsbuildAutomationHelper.dll" target="lib" />
     </files>
 </package>
