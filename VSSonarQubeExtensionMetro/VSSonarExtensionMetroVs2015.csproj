@@ -188,7 +188,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="MsbuildAutomationHelper">
-      <HintPath>..\packages\MsbuildAutomationHelper$(MsbuildAutomationHelperVersion)\MsbuildAutomationHelper.dll</HintPath>
+      <HintPath>..\packages\MsbuildAutomationHelper$(MsbuildAutomationHelperVersion)\lib\MsbuildAutomationHelper.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="FSharp.Compiler.Service, Version=1.4.0.1, Culture=neutral, processorArchitecture=MSIL">
