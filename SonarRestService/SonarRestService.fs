@@ -24,6 +24,7 @@ open System.Web
 open System.Net
 open System.IO
 open System.Text.RegularExpressions
+open System.Linq
 
 open SonarRestService
 
@@ -690,7 +691,10 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             for param in parsedDataRule.Params do
                 let ruleparam  = new RuleParam()
                 ruleparam.Key <- param.Key
-                newRule.Params.Add(ruleparam)
+                let isFound = (List.ofSeq newRule.Params) |> List.tryFind (fun c -> c.Key.Equals(param.Key))
+                match isFound with
+                | Some elem -> ()
+                | _ -> newRule.Params.Add(ruleparam)
         with
         | ex -> ()
 
@@ -763,7 +767,12 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 for param in parsedDataRule.Params do
                     let ruleparam  = new RuleParam()
                     ruleparam.Key <- param.Key
-                    rule.Params.Add(ruleparam)
+
+                    let isFound = (List.ofSeq rule.Params) |> List.tryFind (fun c -> c.Key.Equals(param.Key))
+                    match isFound with
+                    | Some elem -> ()
+                    | _ -> rule.Params.Add(ruleparam)
+
             with
             | ex -> ()
 
@@ -835,7 +844,11 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 for param in parsedDataRule.Params do
                     let ruleparam  = new RuleParam()
                     ruleparam.Key <- param.Key
-                    newRule.Params.Add(ruleparam)
+                    let isFound = (List.ofSeq newRule.Params) |> List.tryFind (fun c -> c.Key.Equals(param.Key))
+                    match isFound with
+                    | Some elem -> ()
+                    | _ -> newRule.Params.Add(ruleparam)
+                    
             with
             | ex -> ()
 
@@ -1133,8 +1146,11 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                             let param = new RuleParam()
                             param.Key <- para.Key
                             param.DefaultValue <- para.Value.ToString()
-                            
-                            newRule.Params.Add(param)
+                            let isFound = (List.ofSeq newRule.Params) |> List.tryFind (fun c -> c.Key.Equals(para.Key))
+                            match isFound with
+                            | Some elem -> ()
+                            | _ -> newRule.Params.Add(param)
+
                     | _ -> ()
 
                     newRule.Severity <- (EnumHelper.asEnum<Severity>(rule.Severity)).Value
