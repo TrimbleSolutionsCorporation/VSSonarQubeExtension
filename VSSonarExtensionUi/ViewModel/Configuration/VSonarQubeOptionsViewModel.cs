@@ -351,7 +351,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="availableProjects">The available projects.</param>
         public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IIssueTrackerPlugin sourcePlugin)
         {
-            // does nothing
+            this.PluginManager.OnConnectToSonar(configuration, availableProjects, sourcePlugin);
+            this.RefreshDiagnostics();
         }
 
         /// <summary>

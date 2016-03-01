@@ -1082,7 +1082,7 @@ namespace VSSonarExtensionUi.ViewModel
                 {
                     this.RefreshProjectList(useDispatcher);                    
                     this.AssociationModule.OnConnectToSonar();
-                    this.VSonarQubeOptionsViewData.RefreshDiagnostics();
+                    this.VSonarQubeOptionsViewData.OnConnectToSonar(AuthtenticationHelper.AuthToken, this.AvailableProjects, this.pluginManager.GetIssueTrackerPlugin());
                     this.ConnectionTooltip = "Authenticated, but not associated";
                     this.StatusMessage = string.Empty;
                     this.IsConnected = true;

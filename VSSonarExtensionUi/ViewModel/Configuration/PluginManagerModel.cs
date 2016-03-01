@@ -256,7 +256,10 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="configuration">sonar configuration</param>
         public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IIssueTrackerPlugin issuePlugin)
         {
-            // does nothing
+            foreach (var plugin in this.plugins)
+            {
+                plugin.OnConnectToSonar(configuration);
+            }
         }
 
         /// <summary>

@@ -166,6 +166,11 @@ namespace VSSonarPlugins
         void AssociateProject(Resource project, ISonarConfiguration configuration, Dictionary<string, Profile> profile);
 
         /// <summary>
+        /// Called when [connect to sonar].
+        /// </summary>
+        void OnConnectToSonar(ISonarConfiguration configuration);
+
+        /// <summary>
         /// DLLs the locations.
         /// </summary>
         /// <returns></returns>
