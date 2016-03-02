@@ -21,7 +21,7 @@ type AdministrationTests() =
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), "/api/users/search") @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/userList.txt"))
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), "/api/users/search?ps=1000") @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/userList.txt"))
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
