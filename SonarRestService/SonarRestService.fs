@@ -1342,7 +1342,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             getViolationsOldAndNewFormat(conf, resource)
         
         member this.GetUserList(newConf : ISonarConfiguration) =
-            let url = "/api/users/search"           
+            let url = "/api/users/search?ps=1000"           
             try
                 let responsecontent = httpconnector.HttpSonarGetRequest(newConf, url)
                 getUserListFromXmlResponse(responsecontent)
