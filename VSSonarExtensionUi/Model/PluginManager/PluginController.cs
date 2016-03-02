@@ -236,7 +236,19 @@ namespace VSSonarExtensionUi.Model.PluginManager
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine(ex.Message);
+                    if (ex is System.Reflection.ReflectionTypeLoadException)
+                    {
+                        var typeLoadException = ex as ReflectionTypeLoadException;
+                        var loaderExceptions = typeLoadException.LoaderExceptions;
+                        foreach (var loadingException in loaderExceptions)
+                        {
+                            Debug.WriteLine(loadingException.Message);
+                            Debug.WriteLine(loadingException.InnerException);                            
+                        }
+
+                    }
+
+                    
                     File.Delete(assembly.Key);
                 }
             }
