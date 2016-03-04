@@ -887,9 +887,14 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
         true
             
+
     interface VSSonarPlugins.ISonarRestService with
         member this.CancelRequest() =
             cancelRequest <- true
+
+        member this.IndexServerResources(conf : ISonarConfiguration, project : Resource) =                   
+            let url = "/api/resources/index?qualifiers=DIR,TRK,BRC&depth=-1&resource=" + project.Key
+            getResourcesFromResponseContent(httpconnector.HttpSonarGetRequest(conf, url))
         
         member this.GetBlameLine(conf:ISonarConfiguration, key:string, line:int) = 
             let url = "/api/sources/scm?key=" + key.Trim() + "&commits_by_line=true&from=" + line.ToString() + "&to=" + line.ToString()
@@ -1475,6 +1480,8 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
         member this.GetProjectsList(conf : ISonarConfiguration) =                   
             let url = "/api/resources"
             getResourcesFromResponseContent(httpconnector.HttpSonarGetRequest(conf, url))
+
+
 
         member this.GetEnabledRulesInProfile(conf : ISonarConfiguration, language : string, profile : string) =
             let url = "/api/profiles?language=" + HttpUtility.UrlEncode(language) + "&name=" + HttpUtility.UrlEncode(profile)

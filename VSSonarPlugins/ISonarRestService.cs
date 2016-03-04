@@ -439,5 +439,13 @@
         /// <param name="line">The line.</param>
         /// <returns></returns>
         BlameLine GetBlameLine(ISonarConfiguration conf, string key, int line);
+
+        /// <summary>
+        /// Indexes the server resources.
+        /// </summary>
+        /// <param name="conf">The conf.</param>
+        /// <param name="project">The project.</param>
+        /// <returns></returns>
+        List<Resource> IndexServerResources(ISonarConfiguration conf, Resource project);
     }
 }

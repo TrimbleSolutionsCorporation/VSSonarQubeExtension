@@ -7,7 +7,6 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Windows;
-    using System.Windows.Data;
     using System.Windows.Input;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
@@ -36,6 +35,11 @@
         /// The selected items
         /// </summary>
         private readonly ObservableCollection<Resource> selectedItems;
+
+        /// <summary>
+        /// The cached resource data
+        /// </summary>
+        private readonly Dictionary<string, List<Resource>> cachedResourceData = new Dictionary<string, List<Resource>>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchComponenetDialog" /> class.
@@ -131,8 +135,6 @@
 
                     bw.DoWork += delegate
                     {
-                        comps = this.rest.SearchComponent(this.conf, searchData, true, "master");
-
                         if (selectedProject != null)
                         {
                             this.SearchInProject(comps, selectedProject as Resource, searchData);
@@ -199,11 +201,60 @@
         }
 
         /// <summary>
+        /// Determines whether [contains] [the specified source].
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="toCheck">To check.</param>
+        /// <returns></returns>
+        private bool Contains(string source, string toCheck)
+        {
+            return source.IndexOf(toCheck, StringComparison.InvariantCultureIgnoreCase) >= 0;
+        }
+
+        /// <summary>
         /// Searches the in project.
         /// </summary>
         /// <param name="comps">The comps.</param>
         /// <param name="project">The project.</param>
         private void SearchInProject(List<Resource> comps, Resource project, string searchMessage)
+        {
+            
+            var mainProj = GetMainProject(project);
+            if (Contains(mainProj.Key, searchMessage))
+            {
+                comps.Add(mainProj);
+            }
+
+            if (this.cachedResourceData.ContainsKey(mainProj.Key))
+            {
+                var resources = this.cachedResourceData[mainProj.Key];
+
+                IEnumerable<Resource> compsdirs =
+                        from resource in resources
+                        where Contains(resource.Key, searchMessage)
+                        select resource;
+
+                comps.AddRange(compsdirs);
+            }
+            else
+            {
+                var resources = this.rest.IndexServerResources(this.conf, mainProj);
+                this.cachedResourceData.Add(mainProj.Key, resources);
+                IEnumerable<Resource> compsdirs =
+                        from resource in resources
+                        where Contains(resource.Key, searchMessage)
+                        select resource;
+
+                comps.AddRange(compsdirs);
+            }
+        }
+
+        /// <summary>
+        /// Gets the main project.
+        /// </summary>
+        /// <param name="project">The project.</param>
+        /// <returns></returns>
+        private Resource GetMainProject(Resource project)
         {
             if (project.IsBranch)
             {
@@ -211,18 +262,17 @@
                 {
                     if (branch.BranchName.Equals("master"))
                     {
-                        var compsdirs = this.rest.SearchComponent(this.conf, branch.Key + ":" + searchMessage, true, "master");
-                        comps.AddRange(compsdirs);
+                        return branch;
                     }
                 }
             }
             else
             {
-                var compsdirs = this.rest.SearchComponent(this.conf, project.Key + ":" + searchMessage, true, "master");
-                comps.AddRange(compsdirs);
+                return project;
             }
-        }
 
+            return project;
+        }
         /// <summary>
         /// Handles the MouseLeftButtonDown event of the YourWindow control.
         /// </summary>
