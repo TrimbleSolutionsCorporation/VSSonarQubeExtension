@@ -40,6 +40,8 @@ namespace VSSonarExtensionUi.Test.RoslynManager
             var mockSourceProvider = new Mock<ISourceControlProvider>();
             var mockVsHelper = new Mock<IVsEnvironmentHelper>();
 
+            mockConfiguration.Setup(x => x.ApplicationPath).Returns(runninPath);
+
             var plugins = new List<IAnalysisPlugin>();
             plugins.Add(pluginAnalysis.Object);
 

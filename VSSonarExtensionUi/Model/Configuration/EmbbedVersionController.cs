@@ -138,6 +138,8 @@
         /// <summary>
         /// Synchronizes the analysers from server.
         /// </summary>
+        /// <param name="authentication">The authentication.</param>
+        /// <param name="versionToUse">The version to use.</param>
         private void SyncAnalysersFromServer(ISonarConfiguration authentication, VersionData versionToUse)
         {
             var tmpFile = Path.GetTempFileName();

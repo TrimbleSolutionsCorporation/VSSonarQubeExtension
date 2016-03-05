@@ -1139,8 +1139,32 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                                 }
                                 catch (Exception ex)
                                 {
-                                    this.notificationManager.ReportMessage(new VSSonarPlugins.Message() { Id = "LocalAnalyserModel", Data = "Failed to check false positives and new issues" });
-                                    this.notificationManager.ReportException(ex);
+                                    if (!this.newAddedIssues.ContainsKey(this.resourceInView.Key))
+                                    {
+                                        var newList = new List<Issue>(issues);
+                                        this.newAddedIssues.Add(this.resourceInView.Key, newList);
+                                        this.notificationManager.OnNewIssuesUpdated();
+                                    }
+                                    else
+                                    {
+                                        var listOfIssues = this.newAddedIssues[this.resourceInView.Key];
+                                        var currentCnt = listOfIssues.Count;
+                                        var newCnt = issues.Count;
+                                        listOfIssues.Clear();
+                                        listOfIssues.AddRange(issues);
+
+                                        if (currentCnt != newCnt)
+                                        {
+                                            this.notificationManager.OnNewIssuesUpdated();
+                                        }
+                                    }
+
+                                    this.notificationManager.ReportMessage(
+                                        new VSSonarPlugins.Message
+                                        {
+                                            Id = "LocalAnalyserModel",
+                                            Data = "Failed to check false positives and new issues : Likely new file : " + ex.Message
+                                        });
                                     this.IssuesGridView.UpdateIssues(issues);
                                 }
 
