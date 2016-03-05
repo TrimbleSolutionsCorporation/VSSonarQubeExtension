@@ -72,6 +72,26 @@
         private readonly ISonarRestService rest;
 
         /// <summary>
+        /// The roslyn default path
+        /// </summary>
+        private readonly string roslynHomePath;
+
+        /// <summary>
+        /// The roslyn external user diag path
+        /// </summary>
+        private readonly string roslynEmbbedDiagPath;
+
+        /// <summary>
+        /// The ver sion controller
+        /// </summary>
+        private readonly EmbbedVersionController embedVersionController;
+
+        /// <summary>
+        /// The roslyn external user diag path
+        /// </summary>
+        private readonly string roslynExternalUserDiagPath;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="RoslynManagerModel" /> class.
         /// </summary>
         /// <param name="pluginsIn">The plugins in.</param>
@@ -83,11 +103,31 @@
             IConfigurationHelper configHelper,
             ISonarRestService rest)
         {
+            this.roslynHomePath = Path.Combine(configHelper.ApplicationPath, "Diagnostics");
+            this.roslynExternalUserDiagPath = Path.Combine(this.roslynHomePath, "UserDiagnostics");
+            this.roslynEmbbedDiagPath = Path.Combine(this.roslynHomePath, "InternalDiagnostics");
+
+            if (!Directory.Exists(this.roslynHomePath))
+            {
+                Directory.CreateDirectory(this.roslynHomePath);
+            }
+
+            if (!Directory.Exists(this.roslynExternalUserDiagPath))
+            {
+                Directory.CreateDirectory(this.roslynExternalUserDiagPath);
+            }
+
+            if (!Directory.Exists(this.roslynEmbbedDiagPath))
+            {
+                Directory.CreateDirectory(this.roslynEmbbedDiagPath);
+            }
+
             this.rest = rest;
             this.confHelper = configHelper;
             this.plugins = pluginsIn;
             this.notificationManager = notificationManagerIn;
             this.ExtensionDiagnostics = new Dictionary<string, VSSonarExtensionDiagnostic>();
+            this.embedVersionController = new EmbbedVersionController(this.notificationManager, rest, configHelper, this.roslynEmbbedDiagPath);
 
             // register model
             AssociationModel.RegisterNewModelInPool(this);
@@ -99,6 +139,8 @@
         /// <param name="configuration">sonar configuration</param>
         public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IIssueTrackerPlugin issuePlugin)
         {
+            this.ExtensionDiagnostics.Clear();
+            this.embedVersionController.InitializedServerDiagnostics(configuration);
             this.InitializedServerDiagnostics(configuration);
         }
 
@@ -477,75 +519,32 @@
         /// </summary>
         public void InitializedServerDiagnostics(ISonarConfiguration authentication)
         {
-            var roslynDefaultPath = Path.Combine(this.confHelper.ApplicationPath, "Diagnostics");
-
-            if (this.confHelper != null)
-            {
-                var tmpFile = Path.GetTempFileName();
-                var tmpDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-
-                if (File.Exists(tmpFile))
-                {
-                    File.Delete(tmpFile);
-                }
-
-                try
-                {                    
-                    Directory.CreateDirectory(roslynDefaultPath);
-                    var urldownload = authentication.Hostname + "/static/csharp/SonarLint.zip";
-                    using (var client = new WebClient())
-                    {
-
-                        client.DownloadFile(urldownload, tmpFile);
-
-                        ZipFile.ExtractToDirectory(tmpFile, tmpDir);
-
-                        var files = Directory.GetFiles(tmpDir);
-
-                        foreach (var file in files)
-                        {
-                            var endPath = Path.Combine(roslynDefaultPath, Path.GetFileName(file));
-
-                            if (File.Exists(endPath))
-                            {
-                                AssemblyName currentAssemblyName = AssemblyName.GetAssemblyName(endPath);
-                                AssemblyName updatedAssemblyName = AssemblyName.GetAssemblyName(file);
-
-                                if (updatedAssemblyName.Version.CompareTo(currentAssemblyName.Version) <= 0)
-                                {
-                                    continue;
-                                }
-                            }
-
-                            File.Copy(file, endPath, true);
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.Message);
-                }
-
-                File.Delete(tmpFile);
-                Directory.Delete(tmpDir, true);
-            }
-
             if (!this.ExtensionDiagnostics.Any())
             {
-                var diagnostics = Directory.GetFiles(roslynDefaultPath);
+                this.LoadDiagnosticsFromPath(this.roslynExternalUserDiagPath);
 
-                foreach (var diagnostic in diagnostics)
+                foreach (var item in this.embedVersionController.GetInstalledPaths())
                 {
-                    var newdata = new VSSonarExtensionDiagnostic(Path.GetFileName(diagnostic), diagnostic);
-
-                    if (newdata.AvailableChecks.Count > 0)
-                    {
-                        this.ExtensionDiagnostics.Add(Path.GetFileName(diagnostic), newdata);
-                    }
-                }
+                    this.LoadDiagnosticsFromPath(item);
+                }                    
             }
 
             this.SyncSettings();
+        }
+
+        private void LoadDiagnosticsFromPath(string folderPath)
+        {
+            var diagnostics = Directory.GetFiles(folderPath);
+
+            foreach (var diagnostic in diagnostics)
+            {
+                var newdata = new VSSonarExtensionDiagnostic(Path.GetFileName(diagnostic), diagnostic);
+
+                if (newdata.AvailableChecks.Count > 0)
+                {
+                    this.ExtensionDiagnostics.Add(Path.GetFileName(diagnostic), newdata);
+                }
+            }
         }
     }
 }

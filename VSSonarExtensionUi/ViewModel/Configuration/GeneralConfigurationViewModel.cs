@@ -87,6 +87,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             INotificationManager notificationManager)
         {
             this.Header = "General Settings";
+            this.StatusMessage = "";
             this.UserName = string.Empty;
             this.Password = string.Empty;
             this.viewModel = viewModel;
@@ -97,6 +98,10 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.ClearCacheCommand = new RelayCommand(this.OnClearCacheCommand);
             this.TestConnectionCommand = new RelayCommand<object>(this.OnTestAndSavePassword);
             this.ClearCredentials = new RelayCommand(this.OnClearCredentials);
+
+            this.ConnectToServerCommand = new RelayCommand<object>(this.OnConnectToServerCommand);
+
+            
 
             this.BackGroundColor = Colors.White;
             this.ForeGroundColor = Colors.Black;
@@ -182,6 +187,14 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         public RelayCommand<object> TestConnectionCommand { get; set; }
 
+        /// <summary>
+        /// Gets or sets the connect to server command.
+        /// </summary>
+        /// <value>
+        /// The connect to server command.
+        /// </value>
+        public RelayCommand<object> ConnectToServerCommand { get; set; }
+        
         /// <summary>
         ///     Gets or sets the user defined editor.
         /// </summary>
@@ -500,6 +513,18 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.ServerAddress = string.Empty;
             this.Password = string.Empty;
             this.UserName = string.Empty;
+        }
+
+        private void OnConnectToServerCommand(object obj)
+        {
+            if (!this.StatusMessage.Equals("Authenticated"))
+            {
+                this.StatusMessage = "Press test connection first";
+                return;
+            }
+
+            this.viewModel.EstablishANewConnectionToServer();
+            this.StatusMessage = "Connected";
         }
 
         /// <summary>

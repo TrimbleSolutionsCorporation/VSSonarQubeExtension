@@ -487,6 +487,14 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.OnRequestClose(this, "Exit");
         }
 
+        /// <summary>
+        /// Establishes a new connection to server.
+        /// </summary>
+        internal void EstablishANewConnectionToServer()
+        {
+            this.notificationManager.ResetAndEstablishANewConnectionToServer();
+        }
+
         #endregion
     }
 }

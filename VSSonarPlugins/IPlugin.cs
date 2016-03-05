@@ -118,6 +118,11 @@ namespace VSSonarPlugins
         /// </summary>
         /// <param name="v">The v.</param>
         void FlagFailure(string v);
+
+        /// <summary>
+        /// Resets the and establish a new connection to server.
+        /// </summary>
+        void ResetAndEstablishANewConnectionToServer();
     }
 
     /// <summary>

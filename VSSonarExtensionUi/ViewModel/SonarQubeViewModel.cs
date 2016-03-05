@@ -1042,6 +1042,13 @@ namespace VSSonarExtensionUi.ViewModel
             }
         }
 
+        public void ResetAndEstablishANewConnectionToServer()
+        {
+            this.OnDisconnectToSonar();
+            this.OnConnectToSonar(true);
+        }
+
+
         /// <summary>
         /// The connect to sonar.
         /// </summary>

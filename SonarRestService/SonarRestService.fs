@@ -969,7 +969,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             let data = PluginsMessage.Parse(reply)
 
             for plugin in data.Plugins do
-                dicret.Add(plugin.Name, plugin.Version.JsonValue.ToString())
+                dicret.Add(plugin.Name, plugin.Version.String.Value)
 
             dicret
 

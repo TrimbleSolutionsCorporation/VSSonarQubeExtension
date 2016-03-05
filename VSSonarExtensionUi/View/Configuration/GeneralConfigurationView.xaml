@@ -67,12 +67,21 @@
                 Command="{Binding ClearCredentials}" 
                 />
             
-            <Button Width="200"
+            <Button 
                 Style="{StaticResource MyMetroButton}"
                 Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
 				Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                Content="Test and Save Connection" 
+                Content="Test Connection" 
                 Command="{Binding TestConnectionCommand}" 
+                CommandParameter="{Binding ElementName=PasswordBox}"
+                />
+
+            <Button 
+                Style="{StaticResource MyMetroButton}"
+                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+				Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                Content="Connect to server" 
+                Command="{Binding ConnectToServerCommand}" 
                 CommandParameter="{Binding ElementName=PasswordBox}"
                 />
             

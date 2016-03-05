@@ -302,5 +302,13 @@
         {
             this.model.RefreshNewListOfIssues();
         }
+
+        /// <summary>
+        /// Resets the and establish a new connection to server.
+        /// </summary>
+        public void ResetAndEstablishANewConnectionToServer()
+        {
+            this.model.ResetAndEstablishANewConnectionToServer();
+        }
     }
 }
