@@ -568,19 +568,19 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.FileAnalysisIsEnabled = false;
             this.notificationManager.StartedWorking("Running Full Analysis");
             this.CanRunAnalysis = false;
-            this.RunLocalAnalysis(AnalysisTypes.ANALYSIS);
+            this.RunLocalAnalysis(AnalysisTypes.ANALYSIS, false);
         }
 
         /// <summary>
         /// Runs the analysis.
         /// </summary>
         /// <param name="mode">The mode.</param>
-        public void RunAnalysis(AnalysisTypes mode)
+        public void RunAnalysis(AnalysisTypes mode, bool fromSave)
         {
             this.FileAnalysisIsEnabled = false;
             this.notificationManager.StartedWorking(mode.ToString());
             this.CanRunAnalysis = false;
-            this.RunLocalAnalysis(mode);
+            this.RunLocalAnalysis(mode, fromSave);
         }
 
         /// <summary>
@@ -609,7 +609,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
 
             if (this.FileAnalysisIsEnabled)
             {
-                this.RunLocalAnalysis(AnalysisTypes.FILE);
+                this.RunLocalAnalysis(AnalysisTypes.FILE, false);
             }
         }
 
@@ -621,7 +621,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.CanRunAnalysis = false;
             this.FileAnalysisIsEnabled = false;
             this.notificationManager.StartedWorking("Running Incremental Analysis");
-            this.RunLocalAnalysis(AnalysisTypes.INCREMENTAL);
+            this.RunLocalAnalysis(AnalysisTypes.INCREMENTAL, false);
         }
 
         /// <summary>
@@ -646,7 +646,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.FileAnalysisIsEnabled = false;
             this.notificationManager.StartedWorking("Running Preview Analysis");
             this.CanRunAnalysis = false;
-            this.RunLocalAnalysis(AnalysisTypes.PREVIEW);
+            this.RunLocalAnalysis(AnalysisTypes.PREVIEW, false);
         }
 
         /// <summary>
@@ -663,7 +663,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <param name="resourceFile">The resource file.</param>
         /// <param name="resourceName">Name of the resource.</param>
         /// <param name="content">The content.</param>
-        public void RefreshDataForResource(Resource resourceFile, string resourceName, string content)
+        public void RefreshDataForResource(Resource resourceFile, string resourceName, string content, bool fromSave)
         {
             this.resourceInView = resourceFile;
             this.resourceNameInView = resourceName;
@@ -672,7 +672,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             if (this.FileAnalysisIsEnabled)
             {
                 this.notificationManager.StartedWorking("Running File Analysis");
-                this.RunLocalAnalysis(AnalysisTypes.FILE);
+                this.RunLocalAnalysis(AnalysisTypes.FILE, fromSave);
             }
             else
             {
@@ -870,7 +870,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         /// <param name="analysis">The analysis.</param>
         /// <exception cref="System.NotImplementedException"></exception>
-        private void RunLocalAnalysis(AnalysisTypes analysis)
+        private void RunLocalAnalysis(AnalysisTypes analysis, bool fromSave)
         {
             if (this.localAnalyserModule == null)
             {
@@ -904,7 +904,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                                 AuthtenticationHelper.AuthToken.SonarVersion,
                                 AuthtenticationHelper.AuthToken,
                                 this.keyTranslator,
-                                this.vsenvironmenthelper);
+                                this.vsenvironmenthelper,
+                                fromSave);
                         }
                         catch (Exception ex)
                         {

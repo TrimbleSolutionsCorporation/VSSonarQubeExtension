@@ -473,7 +473,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <param name="documentInView">
         ///     The document in view.
         /// </param>
-        public void RefreshDataForResource(Resource res, string documentInView, string content)
+        public void RefreshDataForResource(Resource res, string documentInView, string content, bool fromSource)
         {
             this.DocumentInView = documentInView;
             this.ResourceInEditor = res;

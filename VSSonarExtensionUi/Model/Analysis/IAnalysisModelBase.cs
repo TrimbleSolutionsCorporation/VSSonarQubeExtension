@@ -46,7 +46,7 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// <param name="file">The file.</param>
         /// <param name="documentInView">The document in view.</param>
         /// <param name="fileContent">Content of the file.</param>
-        void RefreshDataForResource(Resource file, string documentInView, string fileContent);
+        void RefreshDataForResource(Resource file, string documentInView, string fileContent, bool fromSave);
 
         /// <summary>Reset Stats.</summary>
         void ResetStats();

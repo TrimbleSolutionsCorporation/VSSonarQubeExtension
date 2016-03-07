@@ -761,7 +761,7 @@ namespace VSSonarExtensionUi.ViewModel
 
             if (!string.IsNullOrEmpty(fileInView) && File.Exists(fileInView))
             {
-                this.RefreshDataForResource(fileInView, File.ReadAllText(fileInView));
+                this.RefreshDataForResource(fileInView, File.ReadAllText(fileInView), false);
             }
 
             this.SetupAssociationMessages();
@@ -996,7 +996,7 @@ namespace VSSonarExtensionUi.ViewModel
             this.OnConnectToSonar(true);
         }
 
-        public void StartAnalysisWindow(AnalysisTypes mode)
+        public void StartAnalysisWindow(AnalysisTypes mode, bool fromSave)
         {
             if (!this.IsConnected)
             {
@@ -1038,7 +1038,7 @@ namespace VSSonarExtensionUi.ViewModel
             {
                 this.LocalViewModel.ErrorsFoundDuringAnalysis = false;
                 this.AnalysisFromSolutionRunning = true;
-                this.LocalViewModel.RunAnalysis(mode);
+                this.LocalViewModel.RunAnalysis(mode, fromSave);
             }
         }
 
@@ -1209,7 +1209,7 @@ namespace VSSonarExtensionUi.ViewModel
                 try
                 {
                     this.notificationManager.WriteMessage("RefreshDataForResource: Doc in View: " + this.DocumentInView);
-                    analyser.RefreshDataForResource(this.ResourceInEditor, this.DocumentInView, File.ReadAllText(this.DocumentInView));
+                    analyser.RefreshDataForResource(this.ResourceInEditor, this.DocumentInView, File.ReadAllText(this.DocumentInView), false);
                 }
                 catch (Exception ex)
                 {
@@ -1224,7 +1224,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// The refresh data for resource.
         /// </summary>
         /// <param name="fullName">The full name.</param>
-        public void RefreshDataForResource(string fullName, string contentoffile)
+        public void RefreshDataForResource(string fullName, string contentoffile, bool fromSave)
         {
             this.notificationManager.WriteMessage("Refresh Data For File: " + fullName);
             if (string.IsNullOrEmpty(fullName) || this.AssociationModule.AssociatedProject == null)
@@ -1256,7 +1256,7 @@ namespace VSSonarExtensionUi.ViewModel
                 try
                 {
                     this.notificationManager.WriteMessage("RefreshDataForResource: Doc in View: " + this.DocumentInView);
-                    analyser.RefreshDataForResource(this.ResourceInEditor, this.DocumentInView, contentoffile);
+                    analyser.RefreshDataForResource(this.ResourceInEditor, this.DocumentInView, contentoffile, fromSave);
                     this.StatusMessage = this.ResourceInEditor.Key;
                 }
                 catch (Exception ex)
@@ -1884,7 +1884,7 @@ namespace VSSonarExtensionUi.ViewModel
         {
             this.AnalysisFromSolutionRunning = false;
             this.LocaAnalyser.AssociateCommandCompeted -= this.RunPreviewAnalysisAfterAssociation;
-            this.LocalViewModel.RunAnalysis(AnalysisTypes.PREVIEW);
+            this.LocalViewModel.RunAnalysis(AnalysisTypes.PREVIEW, false);
         }
 
         /// <summary>
@@ -1895,7 +1895,7 @@ namespace VSSonarExtensionUi.ViewModel
         private void RunFullAnalysisAfterAssociation(object sender, EventArgs e)
         {
             this.LocaAnalyser.AssociateCommandCompeted -= this.RunFullAnalysisAfterAssociation;
-            this.LocalViewModel.RunAnalysis(AnalysisTypes.ANALYSIS);
+            this.LocalViewModel.RunAnalysis(AnalysisTypes.ANALYSIS, false);
         }
 
         #endregion

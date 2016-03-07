@@ -295,7 +295,7 @@ namespace VSSonarQubeExtension
         /// </param>
         private void AnalyseSolutionCmd(object sender, EventArgs e)
         {
-            SonarQubeViewModelFactory.SQViewModel.StartAnalysisWindow(AnalysisTypes.ANALYSIS);
+            SonarQubeViewModelFactory.SQViewModel.StartAnalysisWindow(AnalysisTypes.ANALYSIS, false);
         }
 
         /// <summary>
@@ -305,7 +305,7 @@ namespace VSSonarQubeExtension
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void PreviewSolutionCmd(object sender, EventArgs e)
         {
-            SonarQubeViewModelFactory.SQViewModel.StartAnalysisWindow(AnalysisTypes.PREVIEW);
+            SonarQubeViewModelFactory.SQViewModel.StartAnalysisWindow(AnalysisTypes.PREVIEW, false);
         }
         
 

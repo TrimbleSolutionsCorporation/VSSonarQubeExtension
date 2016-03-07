@@ -457,6 +457,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
     member val Project = null : Resource with get, set
     member val Version = 0.0 with get, set
     member val Conf : ISonarConfiguration = null with get, set
+    member val FromSave : bool = true with get, set
     member val ExecutingThread = null with get, set
     member val CurrentAnalysisType = AnalysisMode.File with get, set
     member val RunningLanguageMethod = LanguageType.SingleLang with get, set
@@ -540,7 +541,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                             let profile = cachedProfiles.[project.Name].[plugin.GetLanguageKey(vsprojitem)]
 
                             notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Launch Analysis On  File: " + vsprojitem.FilePath))
-                            let issues = extension.ExecuteAnalysisOnFile(vsprojitem, project, x.Conf)
+                            let issues = extension.ExecuteAnalysisOnFile(vsprojitem, project, x.Conf, false)
                             lock syncLock (
                                 fun () -> 
                                     localissues.AddRange(issues)
@@ -658,7 +659,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                         if cachedProfiles.ContainsKey(x.Project.Name) then
                             if cachedProfiles.[x.Project.Name].ContainsKey(plugin.GetLanguageKey(x.ItemInView)) then
                                 let profile = cachedProfiles.[x.Project.Name].[plugin.GetLanguageKey(x.ItemInView)]
-                                let issues = extension.ExecuteAnalysisOnFile(x.ItemInView, x.Project, x.Conf)
+                                let issues = extension.ExecuteAnalysisOnFile(x.ItemInView, x.Project, x.Conf, x.FromSave)
 
                                 lock syncLock (
                                     fun () ->
@@ -776,7 +777,8 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                              version : double,
                              conf : ISonarConfiguration,
                              sqTranslator : ISQKeyTranslator,
-                             vsInter : IVsEnvironmentHelper) =
+                             vsInter : IVsEnvironmentHelper,
+                             fromSave : bool) =
 
             x.CurrentAnalysisType <- AnalysisMode.File
             x.Conf <- conf
@@ -787,6 +789,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
             x.OnModifyFiles <- onModifiedLinesOnly
             x.SqTranslator <- sqTranslator
             x.VsInter <- vsInter
+            x.FromSave <- fromSave
 
             if not(profileCannotBeRetrived) then
 

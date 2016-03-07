@@ -169,7 +169,10 @@
                     foreach (var file in files)
                     {
                         var endPath = Path.Combine(versionToUse.InstallPath, Path.GetFileName(file));
-                        File.Copy(file, endPath, true);
+                        if (!File.Exists(endPath))
+                        {
+                            File.Copy(file, endPath, true);
+                        }                        
                     }
                 }
             }

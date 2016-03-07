@@ -45,13 +45,17 @@ namespace VSSonarPlugins
     /// </summary>
     public interface IFileAnalyser
     {
-        /// <summary>The execute analysis on file.</summary>
+        /// <summary>
+        /// The execute analysis on file.
+        /// </summary>
         /// <param name="itemInView">The item in view.</param>
-        /// <param name="externlProfile">The externl profile.</param>
         /// <param name="project">The project.</param>
         /// <param name="conf">The conf.</param>
-        /// <returns>The <see cref="List"/>.</returns>
-        List<Issue> ExecuteAnalysisOnFile(VsFileItem itemInView, Resource project, ISonarConfiguration conf);
+        /// <param name="fromSave">if set to <c>true</c> [from save].</param>
+        /// <returns>
+        /// The <see cref="List" />.
+        /// </returns>
+        List<Issue> ExecuteAnalysisOnFile(VsFileItem itemInView, Resource project, ISonarConfiguration conf, bool fromSave);
 
         /// <summary>The get issues.</summary>
         /// <param name="issue">The issue.</param>

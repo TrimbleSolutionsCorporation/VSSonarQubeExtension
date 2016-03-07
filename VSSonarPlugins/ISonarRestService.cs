@@ -53,7 +53,6 @@
         /// <returns></returns>
         List<Issue> GetIssuesInResource(ISonarConfiguration config, string resourceKey);
 
-
         /// <summary>
         /// Gets the issues.
         /// </summary>
@@ -108,7 +107,7 @@
         Dictionary<string, HttpStatusCode> ConfirmIssues(ISonarConfiguration newConf, IList issues, string comment);
 
         /// <summary>
-        /// Uns the confirm issues.
+        /// do not confirm issues.
         /// </summary>
         /// <param name="newConf">The new conf.</param>
         /// <param name="issues">The issues.</param>
@@ -173,7 +172,7 @@
         SonarActionPlan CreateNewPlan(ISonarConfiguration newConf, string projectId, SonarActionPlan plan);
 
         /// <summary>
-        /// Uns the plan issues.
+        /// unplan issues.
         /// </summary>
         /// <param name="newConf">The new conf.</param>
         /// <param name="issues">The issues.</param>
@@ -265,7 +264,7 @@
         /// <param name="id">The identifier.</param>
         /// <param name="value">The value.</param>
         /// <param name="projectIn">The project in, if null it will update global property</param>
-        /// <returns>empty string if ok, error message if fails</returns>
+        /// <returns>empty string if OK, error message if fails</returns>
         string UpdateProperty(ISonarConfiguration conf, string id, string value, Resource projectIn);
 
         /// <summary>
@@ -278,6 +277,13 @@
         /// </returns>
         Dictionary<string, string> GetProperties(ISonarConfiguration props, Resource project);
 
+        /// <summary>
+        /// Gets the enabled rules in profile.
+        /// </summary>
+        /// <param name="conf">The conf.</param>
+        /// <param name="language">The language.</param>
+        /// <param name="profile">The profile.</param>
+        /// <returns></returns>
         List<Profile> GetEnabledRulesInProfile(ISonarConfiguration conf, string language, string profile);
 
         /// <summary>
@@ -316,7 +322,7 @@
         /// <param name="conf">The conf.</param>
         /// <param name="ruleKey">The rule key.</param>
         /// <param name="severity">The severity.</param>
-        /// <param name="profilekey">The profilekey.</param>
+        /// <param name="profilekey">The profile key.</param>
         /// <returns></returns>
         List<string> ActivateRule(ISonarConfiguration conf, string ruleKey, string severity, string profilekey);
 

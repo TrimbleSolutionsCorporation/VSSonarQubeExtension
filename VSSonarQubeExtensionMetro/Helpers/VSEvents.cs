@@ -235,7 +235,8 @@ namespace VSSonarQubeExtension.Helpers
         {
             if (this.LastDocumentWindowWithFocus != null)
             {
-                SonarQubeViewModelFactory.SQViewModel.RefreshDataForResource(this.LastDocumentWindowWithFocus.Document.FullName, File.ReadAllText(this.LastDocumentWindowWithFocus.Document.FullName));
+                SonarQubeViewModelFactory.SQViewModel.RefreshDataForResource(
+                    this.LastDocumentWindowWithFocus.Document.FullName, File.ReadAllText(this.LastDocumentWindowWithFocus.Document.FullName), false);
             }
         }
 
@@ -255,7 +256,7 @@ namespace VSSonarQubeExtension.Helpers
 
             try
             {
-                SonarQubeViewModelFactory.SQViewModel.RefreshDataForResource(document.FullName, File.ReadAllText(document.FullName));
+                SonarQubeViewModelFactory.SQViewModel.RefreshDataForResource(document.FullName, File.ReadAllText(document.FullName), true);
             }
             catch (Exception ex)
             {
@@ -351,7 +352,7 @@ namespace VSSonarQubeExtension.Helpers
 
                 this.LastDocumentWindowWithFocus = gotFocus;
                 this.environment.SetCurrentDocumentInView(gotFocus.Document.FullName);
-                SonarQubeViewModelFactory.SQViewModel.RefreshDataForResource(gotFocus.Document.FullName, File.ReadAllText(gotFocus.Document.FullName));
+                SonarQubeViewModelFactory.SQViewModel.RefreshDataForResource(gotFocus.Document.FullName, File.ReadAllText(gotFocus.Document.FullName), false);
             }
             catch (Exception ex)
             {

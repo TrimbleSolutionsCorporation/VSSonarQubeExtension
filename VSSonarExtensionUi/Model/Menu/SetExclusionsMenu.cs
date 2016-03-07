@@ -183,6 +183,7 @@
         /// </summary>
         public void OnDisconnect()
         {
+            // not needed
         }
 
         /// <summary>
@@ -257,6 +258,12 @@
             }
         }
 
+        /// <summary>
+        /// Gets the main project.
+        /// </summary>
+        /// <param name="projectIn">The project in.</param>
+        /// <param name="projects">The projects.</param>
+        /// <returns></returns>
         public static Resource GetMainProject(Resource projectIn, IList<Resource> projects)
         {
             var projectToUse = projectIn;
