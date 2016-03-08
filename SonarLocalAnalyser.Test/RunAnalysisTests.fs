@@ -70,4 +70,4 @@ type RunAnalysisTests() =
         listofPlugins.Add(mockAPlugin)
         let analyser = new SonarLocalAnalyser(listofPlugins, Mock<ISonarRestService>().Create(), mockAVsinterface, Mock<INotificationManager>().Create(), Mock<IVsEnvironmentHelper>().Create(), "14.0")
         
-        Assert.That((analyser :> ISonarLocalAnalyser).GetResourceKey(vsItem, true), Is.EqualTo("Key"))
+        Assert.That((analyser :> ISonarLocalAnalyser).GetResourceKey(vsItem, true), Is.EqualTo("Key2"))
