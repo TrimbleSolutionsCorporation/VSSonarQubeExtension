@@ -317,7 +317,7 @@
             }
             catch (Exception ex)
             {
-                this.logger.WriteMessage("Unable to create a resource from fullName : " + fullName + " Likely resource not found in server, likely new file : " + ex.Message)
+                this.logger.WriteMessage("Unable to create a resource from fullName : " + fullName + " Likely resource not found in server, likely new file : " + ex.Message);
                 return null;
             }
         }
