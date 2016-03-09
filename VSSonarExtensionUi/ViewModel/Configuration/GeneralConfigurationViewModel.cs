@@ -274,7 +274,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             try
             {
                 string editorTags = this.configurationHelper.ReadSetting(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.DisableEditorTags).Value;
-                this.DisableEditorTags = editorTags.ToLower().Equals("true");
+                this.DisableEditorTags = editorTags.Equals("true", StringComparison.InvariantCultureIgnoreCase);
             }
             catch (Exception ex)
             {
@@ -292,7 +292,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                         Context.GlobalPropsId,
                         OwnersId.ApplicationOwnerId,
                         GlobalIds.ExtensionDebugModeEnabled).Value;
-                this.ExtensionDebugModeEnabled = debugmode.ToLower().Equals("true");
+                this.ExtensionDebugModeEnabled = debugmode.Equals("true", StringComparison.CurrentCultureIgnoreCase);
             }
             catch (Exception ex)
             {
@@ -354,6 +354,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         public void OnDisconnect()
         {
+            // not needed
         }
 
         /// <summary>

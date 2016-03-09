@@ -456,7 +456,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.ForeGroundColor = foreground;
         }
 
-
         /// <summary>
         /// Gets the available model, TODO: needs to be removed after view models are split into models and view models
         /// </summary>
@@ -566,8 +565,10 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             }
             else
             {
-                MessageDisplayBox.DisplayMessage("External tools have not been installed.",
-                    "Tools will be installed when the wrapper for preview and full analysis runs. If you dont have permissions, the recommended way is to define tools paths in a configuration file in your home folder.",
+                MessageDisplayBox.DisplayMessage(
+                    "External tools have not been installed.",
+                    "Tools will be installed when the wrapper for preview and full analysis runs. " +
+                    "If you dont have permissions, the recommended way is to define tools paths in a configuration file in your home folder.",
                     helpurl: "https://github.com/jmecsoftware/sonar-cxx-msbuild-tasks#using-the-wrapper-behind-proxy-or-were-admin-rights-are-not-available");
             }
         }
@@ -607,50 +608,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             {
                 Debug.WriteLine(ex.Message);
             }
-        }
-
-        /// <summary>
-        /// The get general project option from dictionary.
-        /// </summary>
-        /// <param name="options">
-        /// The options.
-        /// </param>
-        /// <param name="key">
-        /// The key.
-        /// </param>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
-        private string GetGeneralProjectOptionFromDictionary(IEnumerable<SonarQubeProperties> options, string key)
-        {
-            foreach (var option in options.Where(option => option.Key.Equals(key)))
-            {
-                return option.Value;
-            }
-
-            return string.Empty;
-        }
-
-        /// <summary>
-        /// The get option from dictionary.
-        /// </summary>
-        /// <param name="options">
-        /// The options.
-        /// </param>
-        /// <param name="key">
-        /// The key.
-        /// </param>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
-        private string GetOptionFromDictionary(IEnumerable<SonarQubeProperties> options, string key)
-        {
-            foreach (var sonarQubePropertiese in options.Where(sonarQubePropertiese => sonarQubePropertiese.Key.Equals(key)))
-            {
-                return sonarQubePropertiese.Value;
-            }
-
-            return string.Empty;
         }
     }
 }

@@ -170,7 +170,7 @@ namespace VSSonarExtensionUi.Model.Helpers
         /// <param name="prop">The property.</param>
         /// <param name="sync">if set to <c>true</c> [synchronize].</param>
         /// <param name="skipifexist">if set to <c>true</c> [skipifexist].</param>
-        public void WriteSetting(SonarQubeProperties prop, bool sync, bool skipifexist)
+        public void WriteSetting(SonarQubeProperties prop, bool sync, bool skipifexist = false)
         {
             if (prop.Value == null)
             {

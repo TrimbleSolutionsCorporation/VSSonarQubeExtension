@@ -310,8 +310,16 @@
                 return null;
             }
 
-            var key = this.keyTranslator.TranslatePath(this.vshelper.VsFileItem(fullName, project, null), this.vshelper, this.sonarService, AuthtenticationHelper.AuthToken);
-            return this.CreateResourceForKey(fullName, key);
+            try
+            {
+                var key = this.keyTranslator.TranslatePath(this.vshelper.VsFileItem(fullName, project, null), this.vshelper, this.sonarService, AuthtenticationHelper.AuthToken);
+                return this.CreateResourceForKey(fullName, key);
+            }
+            catch (Exception ex)
+            {
+                this.logger.WriteMessage("Unable to create a resource from fullName : " + fullName + " Likely resource not found in server, likely new file : " + ex.Message)
+                return null;
+            }
         }
 
         /// <summary>

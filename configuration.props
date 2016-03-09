@@ -38,7 +38,7 @@
         <OBJDir>$(MSBuildThisFileDirectory)ObjDrop\$(OutFolder)\$(Configuration)\$(TSPlatform)</OBJDir>
         <IntermediateOutputPath>$(OBJDir)$(MSBuildProjectName)\</IntermediateOutputPath>
 		
-		<AutomationHelperVersion>1.3.5</AutomationHelperVersion>
+		<AutomationHelperVersion>1.3.7</AutomationHelperVersion>
 		<MsbuildAutomationHelperVersion>431.$(AutomationHelperVersion)</MsbuildAutomationHelperVersion>		
     </PropertyGroup>
     

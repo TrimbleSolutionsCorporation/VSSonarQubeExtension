@@ -351,7 +351,7 @@ type SQKeyTranslator(notificationManager : INotificationManager) =
                 | KeyLookUpType.Module -> ValidateResourceInServer(GetModuleKey(vshelper, fileItem))
                 | KeyLookUpType.VSBootStrapper -> ValidateResourceInServer(GetVSBootStrapperKey(vshelper, fileItem))
                 | KeyLookUpType.ProjectGuid -> ValidateResourceInServer(GetMSbuildRunnerKey(vshelper, fileItem, currentBranch))
-                | _ -> false                
+                | _ -> false
                   
             let allTags : KeyLookUpType seq = unbox (System.Enum.GetValues(typeof<KeyLookUpType>))    
             let data = allTags |> Seq.tryFind(fun elem -> validateResourceInServer(elem))
