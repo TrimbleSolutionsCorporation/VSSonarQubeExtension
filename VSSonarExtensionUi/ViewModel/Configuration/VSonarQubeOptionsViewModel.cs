@@ -9,7 +9,9 @@
 namespace VSSonarExtensionUi.ViewModel.Configuration
 {
     using System;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Diagnostics;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
@@ -22,14 +24,9 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using Model.Helpers;
     using Model.PluginManager;
     using PropertyChanged;
-
-    using SonarLocalAnalyser;
+    using VSSonarExtensionUi.Association;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-    using System.Diagnostics;
-    using VSSonarExtensionUi.Association;
-    using System.Collections.Generic;
-
 
     /// <summary>
     ///     The plugins options model.
@@ -325,10 +322,10 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         /// Associates the with new project.
         /// </summary>
-        /// <param name="config">The configuration.</param>
         /// <param name="projectIn">The project in.</param>
         /// <param name="workingDir">The working dir.</param>
         /// <param name="provider">The provider.</param>
+        /// <param name="profile">The profile.</param>
         public void AssociateWithNewProject(Resource projectIn, string workingDir, ISourceControlProvider provider, Dictionary<string, Profile> profile)
         {
             this.project = projectIn;
@@ -343,12 +340,12 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
         #region Methods
 
-
         /// <summary>
         /// Called when [connect to sonar].
         /// </summary>
-        /// <param name="configuration">sonar configuration</param>
+        /// <param name="configuration">The configuration.</param>
         /// <param name="availableProjects">The available projects.</param>
+        /// <param name="sourcePlugin">The source control plugin.</param>
         public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IIssueTrackerPlugin sourcePlugin)
         {
             if (this.PluginManager != null)
@@ -370,6 +367,14 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             }
 
             this.RoslynViewModel.SyncDiagInView();
+        }
+
+        /// <summary>
+        /// Establishes a new connection to server.
+        /// </summary>
+        public void EstablishANewConnectionToServer()
+        {
+            this.notificationManager.ResetAndEstablishANewConnectionToServer();
         }
 
         /// <summary>The update theme.</summary>
@@ -485,14 +490,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
             this.configurationHelper.SyncSettings();
             this.OnRequestClose(this, "Exit");
-        }
-
-        /// <summary>
-        /// Establishes a new connection to server.
-        /// </summary>
-        internal void EstablishANewConnectionToServer()
-        {
-            this.notificationManager.ResetAndEstablishANewConnectionToServer();
         }
 
         #endregion
