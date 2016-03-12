@@ -194,6 +194,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
 
             this.plugins = pluginsIn;
             this.Header = "Local Analysis";
+            this.ShowFalsePositivesAndResolvedIssues = true;
             this.IssuesGridView = new IssueGridViewModel("LocalView", false, this.configurationHelper, service, notificationManager, translator);
             this.IssuesGridView.ContextMenuItems = this.CreateRowContextMenu(service, translator, analyser);
             this.IssuesGridView.ShowContextMenu = true;
