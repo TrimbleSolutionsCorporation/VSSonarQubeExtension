@@ -36,11 +36,12 @@ namespace VSSonarQubeExtension
     using StatusBar;
     using VSControls;
     using VSSonarExtensionUi.View.Helpers;
+    using VSSonarExtensionUi.ViewModel.Analysis;
     using VSSonarPlugins;
 
     using DColor = System.Drawing.Color;
     using MColor = System.Windows.Media.Color;
-    using VSSonarExtensionUi.ViewModel.Analysis;
+
     /// <summary>
     ///     The vs sonar extension package.
     /// </summary>
@@ -55,7 +56,10 @@ namespace VSSonarQubeExtension
     [Guid(GuidList.GuidVSSonarExtensionPkgString)]
     public sealed partial class VsSonarExtensionPackage : Package
     {
-        #region Constructors and Destructors
+        /// <summary>
+        /// The listener
+        /// </summary>
+        SolutionEventsListener listener = null;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="VsSonarExtensionPackage" /> class.
@@ -65,15 +69,17 @@ namespace VSSonarQubeExtension
             Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this));
         }
 
-        #endregion
-
-        #region Public Properties
-
         /// <summary>
         /// Gets or sets the status bar.
         /// </summary>
         public VSSStatusBar StatusBar { get; set; }
 
+        /// <summary>
+        /// Gets the assembly directory.
+        /// </summary>
+        /// <value>
+        /// The assembly directory.
+        /// </value>
         public string AssemblyDirectory
         {
             get
@@ -92,16 +98,12 @@ namespace VSSonarQubeExtension
         /// The output unique identifier.
         /// </value>
         public string OutputGuid { get; private set; }
-
-        #endregion
-
-        #region Public Methods and Operators
-
+       
         /// <summary>
         /// To the color of the media.
         /// </summary>
         /// <param name="color">The color.</param>
-        /// <returns></returns>
+        /// <returns>current ide color</returns>
         public static MColor ToMediaColor(DColor color)
         {
             return MColor.FromArgb(color.A, color.R, color.G, color.B);
@@ -170,10 +172,6 @@ namespace VSSonarQubeExtension
             var windowFrame = (IVsWindowFrame)window.Frame;
             ErrorHandler.ThrowOnFailure(windowFrame.Show());
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     The initialize.
@@ -263,14 +261,16 @@ namespace VSSonarQubeExtension
             }
         }
 
-        SolutionEventsListener listener = null;
-
+        /// <summary>
+        /// Starts the solution listeners.
+        /// </summary>
+        /// <param name="helper">The helper.</param>
         private void StartSolutionListeners(IVsEnvironmentHelper helper)
         {
-            listener = new SolutionEventsListener(helper);
+            this.listener = new SolutionEventsListener(helper);
             var triedOnceAlready = false;
 
-            listener.OnAfterOpenProject += () =>
+            this.listener.OnAfterOpenProject += () =>
             {
                 if (!SonarQubeViewModelFactory.SQViewModel.AssociationModule.IsAssociated && !triedOnceAlready)
                 {
@@ -418,7 +418,5 @@ namespace VSSonarQubeExtension
 
             ErrorHandler.ThrowOnFailure(windowFrame.Show());
         }
-
-        #endregion
     }
 }
