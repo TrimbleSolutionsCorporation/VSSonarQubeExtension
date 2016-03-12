@@ -576,6 +576,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// Runs the analysis.
         /// </summary>
         /// <param name="mode">The mode.</param>
+        /// <param name="fromSave">if set to <c>true</c> [from save].</param>
         public void RunAnalysis(AnalysisTypes mode, bool fromSave)
         {
             this.FileAnalysisIsEnabled = false;
@@ -628,7 +629,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <summary>
         /// Shows the new added issues and lock.
         /// </summary>
-        /// <exception cref="System.NotImplementedException"></exception>
         public void ShowNewAddedIssuesAndLock()
         {
             this.FileAnalysisIsEnabled = true;
@@ -664,6 +664,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <param name="resourceFile">The resource file.</param>
         /// <param name="resourceName">Name of the resource.</param>
         /// <param name="content">The content.</param>
+        /// <param name="fromSave">if set to <c>true</c> [from save].</param>
         public void RefreshDataForResource(Resource resourceFile, string resourceName, string content, bool fromSave)
         {
             this.resourceInView = resourceFile;
@@ -825,27 +826,29 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         private void OnOpenSourceDirCommand()
         {
-            var filedialog = new OpenFileDialog { Filter = @"visual studio solution|*.sln" };
-            DialogResult result = filedialog.ShowDialog();
-
-            if (result == DialogResult.OK)
+            using (var filedialog = new OpenFileDialog { Filter = @"visual studio solution|*.sln" })
             {
-                if (File.Exists(filedialog.FileName))
+                DialogResult result = filedialog.ShowDialog();
+
+                if (result == DialogResult.OK)
                 {
-                    try
+                    if (File.Exists(filedialog.FileName))
                     {
-                        this.notificationManager.AssociateProjectToSolution(
-                            Path.GetFileName(filedialog.FileName),
-                            Directory.GetParent(filedialog.FileName).ToString());
+                        try
+                        {
+                            this.notificationManager.AssociateProjectToSolution(
+                                Path.GetFileName(filedialog.FileName),
+                                Directory.GetParent(filedialog.FileName).ToString());
+                        }
+                        catch (Exception ex)
+                        {
+                            UserExceptionMessageBox.ShowException(@"Could Not Associate Solution With: " + ex.Message, ex);
+                        }
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        UserExceptionMessageBox.ShowException(@"Could Not Associate Solution With: " + ex.Message, ex);
+                        UserExceptionMessageBox.ShowException(@"Error Choosing File, File Does not exits", null);
                     }
-                }
-                else
-                {
-                    UserExceptionMessageBox.ShowException(@"Error Choosing File, File Does not exits", null);
                 }
             }
         }
@@ -870,6 +873,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// The run local analysis new.
         /// </summary>
         /// <param name="analysis">The analysis.</param>
+        /// <param name="fromSave">if set to <c>true</c> [from save].</param>
         /// <exception cref="System.NotImplementedException"></exception>
         private void RunLocalAnalysis(AnalysisTypes analysis, bool fromSave)
         {
@@ -979,28 +983,29 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 return;
             }
 
-            var bw = new BackgroundWorker { WorkerReportsProgress = true };
-
-            bw.RunWorkerCompleted += delegate
+            using (var bw = new BackgroundWorker { WorkerReportsProgress = true })
             {
-            };
-
-            bw.DoWork +=
-                delegate
+                bw.RunWorkerCompleted += delegate
                 {
-                    try
-                    {
-                        var filter = "?componentRoots=" + this.resourceInView.Key.Trim() + "&resolutions=FALSE-POSITIVE,WONTFIX";
-                        var issues = this.restService.GetIssues(AuthtenticationHelper.AuthToken, filter, this.associatedProject.Key);
-                        this.falseandwontfixissues.Add(this.resourceInView.Key.Trim(), issues);
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine(ex.Message);
-                    }
                 };
 
-            bw.RunWorkerAsync();
+                bw.DoWork +=
+                    delegate
+                    {
+                        try
+                        {
+                            var filter = "?componentRoots=" + this.resourceInView.Key.Trim() + "&resolutions=FALSE-POSITIVE,WONTFIX";
+                            var issues = this.restService.GetIssues(AuthtenticationHelper.AuthToken, filter, this.associatedProject.Key);
+                            this.falseandwontfixissues.Add(this.resourceInView.Key.Trim(), issues);
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine(ex.Message);
+                        }
+                    };
+
+                bw.RunWorkerAsync(); 
+            }
         }
 
 
@@ -1250,10 +1255,10 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
 
             if (exceptionMsg.ErrorMessage.Contains("INFO  - HTML Issues Report generated:"))
             {
-                string [] split = { "INFO  - HTML Issues Report generated:" };
+                string[] split = { "INFO  - HTML Issues Report generated:" };
                 var reportPath = exceptionMsg.ErrorMessage.Split(split, StringSplitOptions.RemoveEmptyEntries)[1].Trim();
                 
-                if(File.Exists(reportPath))
+                if (File.Exists(reportPath))
                 {
                     this.vsenvironmenthelper.NavigateToResource(reportPath);
                 }
