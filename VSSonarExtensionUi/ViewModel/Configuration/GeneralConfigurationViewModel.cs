@@ -509,13 +509,19 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         private void OnClearCredentials()
         {
-            var cm = new Credential { Target = "VSSonarQubeExtension", };
-            cm.Delete();
-            this.ServerAddress = string.Empty;
-            this.Password = string.Empty;
-            this.UserName = string.Empty;
+            using (var cm = new Credential { Target = "VSSonarQubeExtension", })
+            {
+                cm.Delete();
+                this.ServerAddress = string.Empty;
+                this.Password = string.Empty;
+                this.UserName = string.Empty;
+            }
         }
 
+        /// <summary>
+        /// Called when [connect to server command].
+        /// </summary>
+        /// <param name="obj">The object.</param>
         private void OnConnectToServerCommand(object obj)
         {
             if (!this.StatusMessage.Equals("Authenticated"))
@@ -585,14 +591,16 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         private void SetCredentials(string userName, string password)
         {
             this.configurationHelper.WriteSetting(new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, "ServerAddress", this.ServerAddress));
-            var cm = new Credential
+            using (var cm = new Credential
             {
                 Target = "VSSonarQubeExtension",
                 PersistanceType = PersistanceType.Enterprise,
                 Username = userName,
                 SecurePassword = ConnectionConfiguration.ConvertToSecureString(password)
-            };
-            cm.Save();
+            })
+            {
+                cm.Save();
+            }
         }
 
         #endregion Methods

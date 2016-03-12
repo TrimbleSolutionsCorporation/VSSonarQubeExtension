@@ -30,8 +30,11 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using UserControl = System.Windows.Controls.UserControl;
 
     /// <summary>
-    ///     The dummy options controller.
+    /// The dummy options controller.
     /// </summary>
+    /// <seealso cref="VSSonarExtensionUi.ViewModel.Helpers.IOptionsViewModelBase" />
+    /// <seealso cref="VSSonarExtensionUi.Model.Helpers.IOptionsModelBase" />
+    /// <seealso cref="VSSonarExtensionUi.ViewModel.Configuration.IPluginManager" />
     [ImplementPropertyChanged]
     public class PluginManagerModel : IOptionsViewModelBase, IOptionsModelBase, IPluginManager
     {
@@ -114,7 +117,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
             this.InitPluginList(helper, null);
             this.InitCommanding();
-            // select issue tracker plugin to use
             this.SelectIssueTrackerPlugin();
 
             SonarQubeViewModel.RegisterNewViewModelInPool(this);
@@ -254,6 +256,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// Called when [connect to sonar].
         /// </summary>
         /// <param name="configuration">sonar configuration</param>
+        /// <param name="availableProjects">The available projects.</param>
+        /// <param name="issuePlugin">The issue plugin.</param>
         public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IIssueTrackerPlugin issuePlugin)
         {
             foreach (var plugin in this.plugins)
@@ -262,17 +266,18 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             }
         }
 
+
         /// <summary>
         /// Associates the with new project.
         /// </summary>
-        /// <param name="configIn">The configuration in.</param>
         /// <param name="project">The project.</param>
         /// <param name="workingDir">The working dir.</param>
         /// <param name="sourceModel">The source model.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
+        /// <param name="profile">The profile.</param>
         public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider sourceModel, IIssueTrackerPlugin sourcePlugin, Dictionary<string, Profile> profile)
         {
-            // not neccessary
+            // not necessary
         }
 
         /// <summary>
@@ -309,33 +314,35 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         public void OnInstallNewPlugin()
         {
-            var filedialog = new OpenFileDialog { Filter = @"VSSonar Plugin|*.VSQ" };
-            DialogResult result = filedialog.ShowDialog();
-
-            if (result == DialogResult.OK)
+            using (var filedialog = new OpenFileDialog { Filter = @"VSSonar Plugin|*.VSQ" })
             {
-                if (!File.Exists(filedialog.FileName))
-                {
-                    UserExceptionMessageBox.ShowException("Error Choosing File, File Does not exits", null);
-                }
-                else
-                {
-                    var files = this.controller.DeployPlugin(filedialog.FileName);
+                DialogResult result = filedialog.ShowDialog();
 
-                    try
+                if (result == DialogResult.OK)
+                {
+                    if (!File.Exists(filedialog.FileName))
                     {
-                        if (!this.InitPluginList(this.vshelper, files))
-                        {
-                            UserExceptionMessageBox.ShowException("Cannot Install Plugin", new Exception("Error Loading Plugin"), this.controller.GetErrorData());
-                        }
+                        UserExceptionMessageBox.ShowException("Error Choosing File, File Does not exits", null);
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        Debug.WriteLine(ex.Message);
-                        UserExceptionMessageBox.ShowException(
-                            "Cannot Install Plugin", 
-                            new Exception("Error Loading Plugin"), 
-                            this.controller.GetErrorData());
+                        var files = this.controller.DeployPlugin(filedialog.FileName);
+
+                        try
+                        {
+                            if (!this.InitPluginList(this.vshelper, files))
+                            {
+                                UserExceptionMessageBox.ShowException("Cannot Install Plugin", new Exception("Error Loading Plugin"), this.controller.GetErrorData());
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine(ex.Message);
+                            UserExceptionMessageBox.ShowException(
+                                "Cannot Install Plugin",
+                                new Exception("Error Loading Plugin"),
+                                this.controller.GetErrorData());
+                        }
                     }
                 }
             }
@@ -393,6 +400,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         public void OnDisconnect()
         {
+            // on disconnect
         }
 
         /// <summary>
@@ -464,10 +472,10 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         /// Associates the with new project.
         /// </summary>
-        /// <param name="config">The configuration.</param>
         /// <param name="project">The project.</param>
         /// <param name="workDir">The work dir.</param>
         /// <param name="provider">The provider.</param>
+        /// <param name="profile">The profile.</param>
         public void AssociateWithNewProject(Resource project, string workDir, ISourceControlProvider provider, Dictionary<string, Profile> profile)
         {
             this.sourceDir = workDir;

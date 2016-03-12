@@ -241,6 +241,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// Called when [connect to sonar].
         /// </summary>
         /// <param name="configuration">sonar configuration</param>
+        /// <param name="availableProjects">The available projects.</param>
+        /// <param name="issuePlugin">The issue plugin.</param>
         public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IIssueTrackerPlugin issuePlugin)
         {
             // does nothing
@@ -473,8 +475,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="project">The project.</param>
         /// <param name="workDir">The work dir.</param>
         /// <param name="provider">The provider.</param>
-        /// <param name="sourcePlugin">The source plugin.</param>
-        /// <param name="availableProjects">The available projects.</param>
         /// <param name="profile">The profile.</param>
         public void AssociateWithNewProject(Resource project, string workDir, ISourceControlProvider provider, Dictionary<string, Profile> profile)
         {
@@ -496,7 +496,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         private void OnDownloadWrapperCommand()
         {
-            if (string.IsNullOrEmpty((this.CxxWrapperVersion)))
+            if (string.IsNullOrEmpty(this.CxxWrapperVersion))
             {
                 MessageDisplayBox.DisplayMessage(
                     "Version cannot be empty, be sure to use tab in release page of the wrapper.",
@@ -554,14 +554,16 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             bool canInstall = QuestionUser.GetInput("this will install any third party tools using Chocolatey, elevated rights will be requested. Do you want to proceed?");
             if (canInstall)
             {
-                Process process = new Process();
-                process.StartInfo.RedirectStandardOutput = true;
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.CreateNoWindow = true;
-                process.StartInfo.FileName = cxxwrapper;
-                process.StartInfo.Arguments = "/i";
-                process.Start();
-                process.WaitForExit();
+                using (var process = new Process())
+                {
+                    process.StartInfo.RedirectStandardOutput = true;
+                    process.StartInfo.UseShellExecute = false;
+                    process.StartInfo.CreateNoWindow = true;
+                    process.StartInfo.FileName = cxxwrapper;
+                    process.StartInfo.Arguments = "/i";
+                    process.Start();
+                    process.WaitForExit();
+                }
             }
             else
             {
