@@ -50,7 +50,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         private readonly INotificationManager notificationManager;
 
         /// <summary>
-        /// The vsenvironmenthelper
+        /// The vs environment helper
         /// </summary>
         private IVsEnvironmentHelper vsenvironmenthelper;
 
@@ -58,8 +58,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// The project
         /// </summary>
         private Resource project;
-
-        #region Constructors and Destructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VSonarQubeOptionsViewModel" /> class.
@@ -83,18 +81,10 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             SonarQubeViewModel.RegisterNewViewModelInPool(this);
         }
 
-        #endregion
-
-        #region Public Events
-
         /// <summary>
         ///     The request close.
         /// </summary>
         public event Action<object, object> RequestClose;
-
-        #endregion
-
-        #region Public Properties
 
         /// <summary>
         ///     Gets or sets the analysisPlugin in view.
@@ -210,7 +200,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         /// The update services.
         /// </summary>
-        /// <param name="vsenvironmenthelperIn">The vsenvironmenthelper in.</param>
+        /// <param name="vsenvironmenthelperIn">The vs environment helper in.</param>
         /// <param name="statusBar">The status bar.</param>
         /// <param name="provider">The provider.</param>
         public void UpdateServices(
@@ -261,7 +251,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.project = null;
         }
 
-        /// <summary>The update colours.</summary>
+        /// <summary>The update colors.</summary>
         /// <param name="background">The background.</param>
         /// <param name="foreground">The foreground.</param>
         public void UpdateColours(Color background, Color foreground)
@@ -271,10 +261,10 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         }
 
         /// <summary>
-        /// The init pugin system.
+        /// The init plugin system.
         /// </summary>
         /// <param name="helper">The helper.</param>
-        /// <param name="plugincontroller">The plugincontroller.</param>
+        /// <param name="plugincontroller">The plugin controller.</param>
         /// <param name="manager">The manager.</param>
         public void InitPuginSystem(IVsEnvironmentHelper helper, PluginController plugincontroller, INotificationManager manager)
         {
@@ -309,10 +299,10 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         }
 
         /// <summary>
-        /// Gets the available model, TODO: needs to be removed after viewmodels are split into models and view models
+        /// Gets the available model, TODO: needs to be removed after view models are split into models and view models
         /// </summary>
         /// <returns>
-        /// returns optinal model
+        /// returns optional model
         /// </returns>
         public object GetAvailableModel()
         {
@@ -335,10 +325,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 availableOption.ReloadDataFromDisk(projectIn);
             }
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         /// Called when [connect to sonar].
@@ -491,7 +477,5 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.configurationHelper.SyncSettings();
             this.OnRequestClose(this, "Exit");
         }
-
-        #endregion
     }
 }
