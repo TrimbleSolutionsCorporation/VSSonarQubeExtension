@@ -249,7 +249,9 @@ namespace VSSonarExtensionUi.Model.Menu
                 {
                     if (this.model.SelectedItems == null)
                     {
-                        this.model.OnOpenInVsCommand(new List<Issue>(this.model.SelectedIssue));
+                        var listOfIssues = new List<Issue>();
+                        listOfIssues.Add(this.model.SelectedIssue);
+                        this.model.OnOpenInVsCommand(listOfIssues);
                     }
                     else
                     {
