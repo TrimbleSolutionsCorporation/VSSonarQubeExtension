@@ -382,13 +382,7 @@ namespace VSSonarQubeExtension.Helpers
         /// </param>
         public void NavigateToResource(string url)
         {
-            if (this.environment == null)
-            {
-                Process.Start(url);
-                return;
-            }
-
-            (new Thread(() => this.environment.ItemOperations.Navigate(url, vsNavigateOptions.vsNavigateOptionsNewWindow))).Start();
+            Process.Start(url);
         }
 
         /// <summary>
@@ -562,8 +556,6 @@ namespace VSSonarQubeExtension.Helpers
                 }
             }
         }
-
-
 
         /// <summary>
         /// The get saved option.

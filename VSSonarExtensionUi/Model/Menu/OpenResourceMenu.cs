@@ -224,22 +224,38 @@ namespace VSSonarExtensionUi.Model.Menu
             {
                 if (this.CommandText.Equals("Browser"))
                 {
-                    foreach (var issueobj in this.model.SelectedItems)
+                    if (this.model.SelectedItems == null)
                     {
-                        var issue = issueobj as Issue;
-                        if (issue == null)
-                        {
-                            continue;
-                        }
-
-                        var resources = this.rest.GetResourcesData(AuthtenticationHelper.AuthToken, issue.Component);
+                        var resources = this.rest.GetResourcesData(AuthtenticationHelper.AuthToken, this.model.SelectedIssue.Component);
                         this.visualStudioHelper.NavigateToResource(AuthtenticationHelper.AuthToken.Hostname + "/resource/index/" + resources[0].Id);
+                    }
+                    else
+                    {
+                        foreach (var issueobj in this.model.SelectedItems)
+                        {
+                            var issue = issueobj as Issue;
+                            if (issue == null)
+                            {
+                                continue;
+                            }
+
+                            var resources = this.rest.GetResourcesData(AuthtenticationHelper.AuthToken, issue.Component);
+                            this.visualStudioHelper.NavigateToResource(AuthtenticationHelper.AuthToken.Hostname + "/resource/index/" + resources[0].Id);
+                        }
                     }
                 }
 
                 if (this.CommandText.Equals("Visual Studio"))
                 {
-                    this.model.OnOpenInVsCommand(this.model.SelectedItems);
+                    if (this.model.SelectedItems == null)
+                    {
+                        this.model.OnOpenInVsCommand(new List<Issue>(this.model.SelectedIssue));
+                    }
+                    else
+                    {
+                        this.model.OnOpenInVsCommand(this.model.SelectedItems);
+                    }
+                    
                 }
             }
             catch (Exception ex)

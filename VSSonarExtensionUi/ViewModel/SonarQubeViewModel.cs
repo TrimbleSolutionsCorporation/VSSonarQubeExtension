@@ -163,28 +163,6 @@ namespace VSSonarExtensionUi.ViewModel
         }
 
         /// <summary>
-        /// Determines whether this instance [can close solution].
-        /// </summary>
-        /// <returns></returns>
-        public int CanCloseSolution()
-        {
-            if (this.NewIssuesFound)
-            {
-                if (QuestionUser.GetInput(
-                    "You are about the close solution after technical debt has been added. Are you sure you want to exit."))
-                {
-                    return 0;
-                }
-                else
-                {
-                    return 1;
-                }
-            }
-
-            return 0;
-        }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="SonarQubeViewModel" /> class.
         /// </summary>
         /// <param name="vsverionIn">The vsverion in.</param>
@@ -730,6 +708,27 @@ namespace VSSonarExtensionUi.ViewModel
             viewModelPool.Add(viewModel);
         }
 
+        /// <summary>
+        /// Determines whether this instance [can close solution].
+        /// </summary>
+        /// <returns>returns 0 if can close</returns>
+        public int CanCloseSolution()
+        {
+            if (this.NewIssuesFound)
+            {
+                if (QuestionUser.GetInput(
+                    "You are about the close solution after technical debt has been added. Are you sure you want to exit."))
+                {
+                    return 0;
+                }
+                else
+                {
+                    return 1;
+                }
+            }
+
+            return 0;
+        }
 
         /// <summary>
         /// Called when [solution open].
