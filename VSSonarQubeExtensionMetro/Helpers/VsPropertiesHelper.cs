@@ -14,11 +14,11 @@ namespace VSSonarQubeExtension.Helpers
     using System.IO;
     using System.Linq;
     using System.Runtime.InteropServices;
+    using System.Security.Principal;
     using System.Text;
     using System.Windows;
 
     using EnvDTE;
-
     using EnvDTE80;
 
     using Microsoft.VisualStudio;
@@ -29,12 +29,11 @@ namespace VSSonarQubeExtension.Helpers
     using Microsoft.VisualStudio.TextManager.Interop;
 
     using VSSonarPlugins;
+    using VSSonarPlugins.Types;
 
     using Process = System.Diagnostics.Process;
     using Thread = System.Threading.Thread;
-    using VSSonarPlugins.Types;
-    using Microsoft.VisualStudio.Text;
-    using System.Security.Principal;
+
     /// <summary>
     ///     The vs properties helper.
     /// </summary>
@@ -500,6 +499,12 @@ namespace VSSonarQubeExtension.Helpers
             }
         }
 
+        /// <summary>
+        /// The open resource in visual studio.
+        /// </summary>
+        /// <param name="filename">The filename.</param>
+        /// <param name="line">The line.</param>
+        /// <param name="editorCommandExec">The editor command exec.</param>
         public void OpenResourceInVisualStudio(string filename, int line, string editorCommandExec = "notepad")
         {
             if (this.environment == null)
@@ -630,6 +635,11 @@ namespace VSSonarQubeExtension.Helpers
             diff.OpenComparisonWindow(tempfile, tempfile2);
         }
 
+        /// <summary>
+        /// The clear diff file.
+        /// </summary>
+        /// <param name="localFileName">The local file name.</param>
+        /// <param name="serverFileName">The server file name.</param>
         public void ClearDiffFile(string localFileName, string serverFileName)
         {
             string tempfile = Path.Combine(this.TempDataFolder, localFileName);
@@ -863,28 +873,42 @@ namespace VSSonarQubeExtension.Helpers
             }
         }
 
+        /// <summary>
+        /// The active configuration.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="T:System.String" />.
+        /// </returns>
         public string ActiveConfiguration()
         {
             if (this.environment == null)
             {
-                return "";
+                return string.Empty;
             }
 
             try
             {
                 var solutionConfiguration2 = (EnvDTE80.SolutionConfiguration2)this.environment.Solution.SolutionBuild.ActiveConfiguration;
                 return solutionConfiguration2.Name;
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 Debug.WriteLine(ex.Message);
-                return "";
+                return string.Empty;
             }
         }
 
+        /// <summary>
+        /// The active platform.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="T:System.String" />.
+        /// </returns>
         public string ActivePlatform()
         {
             if (this.environment == null)
             {
-                return "";
+                return string.Empty;
             }
 
             try
@@ -895,22 +919,21 @@ namespace VSSonarQubeExtension.Helpers
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                return "";
+                return string.Empty;
             }
         }
-
 
         /// <summary>
         /// Gets the project by name in solution.
         /// </summary>
         /// <param name="name">The name.</param>
-        /// <returns></returns>
+        /// <param name="solutionPath">The solution path.</param>
+        /// <returns>visual studio project item</returns>
         public VsProjectItem GetProjectByNameInSolution(string name, string solutionPath)
         {
             var solutiondata = MSBuildHelper.CreateSolutionData(solutionPath);
             foreach (var project in solutiondata.Projects)
             {
-                var path = project.Value.Path;
                 if (project.Value.Name.ToLower().Equals(name.ToLower()))
                 {
                     return CreateVsProjectItem(project.Value);
@@ -920,12 +943,17 @@ namespace VSSonarQubeExtension.Helpers
             return null;
         }
 
+        /// <summary>
+        /// Gets the project by unique identifier in solution.
+        /// </summary>
+        /// <param name="guid">The unique identifier.</param>
+        /// <param name="solutionPath">The solution path.</param>
+        /// <returns>returns guid for project</returns>
         public VsProjectItem GetProjectByGuidInSolution(string guid, string solutionPath)
         {
             var solutiondata = MSBuildHelper.CreateSolutionData(solutionPath);
             foreach (var project in solutiondata.Projects)
             {
-                var path = project.Value.Path;
                 if (project.Value.Guid.ToString().ToLower().Equals(guid.ToLower()))
                 {
                     return CreateVsProjectItem(project.Value);
@@ -935,12 +963,19 @@ namespace VSSonarQubeExtension.Helpers
             return null;
         }
 
+        /// <summary>
+        /// Gets the project guid from path.
+        /// </summary>
+        /// <param name="projectPath">The project path.</param>
+        /// <param name="solutionPath">The solution path.</param>
+        /// <returns>
+        /// project unique identifier
+        /// </returns>
         public string GetGuidForProject(string projectPath, string solutionPath)
         {
             var solutiondata = MSBuildHelper.CreateSolutionData(solutionPath);
             foreach (var project in solutiondata.Projects)
             {
-                var path = project.Value.Path;
                 if (project.Value.Path.ToLower().Equals(projectPath.ToLower()))
                 {
                     return project.Value.Guid.ToString();
@@ -950,14 +985,14 @@ namespace VSSonarQubeExtension.Helpers
             return null;
         }
 
-
         /// <summary>
-        /// Evaluateds the value for include file.
+        /// Evaluated the value for include file.
         /// </summary>
         /// <param name="msbuildProjectFile">The msbuild project file.</param>
         /// <param name="filePath">The file path.</param>
-        /// <returns></returns>
-        /// <exception cref="System.NotImplementedException"></exception>
+        /// <returns>
+        /// returns evaluated include
+        /// </returns>
         public string EvaluatedValueForIncludeFile(string msbuildProjectFile, string filePath)
         {
             return MSBuildHelper.GetProjectFilePathForFile(msbuildProjectFile, filePath);
@@ -995,10 +1030,21 @@ namespace VSSonarQubeExtension.Helpers
         }
 
         /// <summary>
+        /// Gets the current roslyn solution.
+        /// </summary>
+        /// <returns>
+        /// returns current roslyn solution
+        /// </returns>
+        public Microsoft.CodeAnalysis.Solution GetCurrentRoslynSolution()
+        {
+            return WorspaceProvider.ProvideCurrentRoslynSolution();
+        }
+
+        /// <summary>
         /// Creates the vs project item.
         /// </summary>
         /// <param name="project">The project.</param>
-        /// <returns></returns>
+        /// <returns>return vs project it</returns>
         private static VsProjectItem CreateVsProjectItem(ProjectTypes.Project project)
         {
             var proToRet = new VsProjectItem();

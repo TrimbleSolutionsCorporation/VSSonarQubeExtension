@@ -996,6 +996,11 @@ namespace VSSonarExtensionUi.ViewModel
             this.OnConnectToSonar(true);
         }
 
+        /// <summary>
+        /// Starts the analysis window.
+        /// </summary>
+        /// <param name="mode">The mode.</param>
+        /// <param name="fromSave">if set to <c>true</c> [from save].</param>
         public void StartAnalysisWindow(AnalysisTypes mode, bool fromSave)
         {
             if (!this.IsConnected)
@@ -1042,6 +1047,9 @@ namespace VSSonarExtensionUi.ViewModel
             }
         }
 
+        /// <summary>
+        /// Resets the and establish a new connection to server.
+        /// </summary>
         public void ResetAndEstablishANewConnectionToServer()
         {
             this.OnDisconnectToSonar();

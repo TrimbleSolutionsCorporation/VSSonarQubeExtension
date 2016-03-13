@@ -23,7 +23,7 @@ namespace VSSonarPlugins
         /// <param name="prop">The prop.</param>
         /// <param name="sync">The sync.</param>
         /// <param name="skipIfExist">The skip if exist.</param>
-        void WriteSetting(SonarQubeProperties prop, bool sync = false, bool skipIfExist = false);
+        void    WriteSetting(SonarQubeProperties prop, bool sync = false, bool skipIfExist = false);
 
         /// <summary>The sync settings.</summary>
         void SyncSettings();

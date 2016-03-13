@@ -59,7 +59,7 @@ namespace VSSonarQubeExtension
         /// <summary>
         /// The listener
         /// </summary>
-        SolutionEventsListener listener = null;
+        private SolutionEventsListener listener;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="VsSonarExtensionPackage" /> class.
@@ -209,7 +209,11 @@ namespace VSSonarQubeExtension
                         uniqueId += "Exp";
                     }
 
-                    SonarQubeViewModelFactory.StartupModelWithVsVersion(uniqueId).InitModelFromPackageInitialization(this.visualStudioInterface, this.StatusBar, this, this.AssemblyDirectory);
+                    SonarQubeViewModelFactory.StartupModelWithVsVersion(uniqueId).InitModelFromPackageInitialization(
+                        this.visualStudioInterface,
+                        this.StatusBar,
+                        this,
+                        this.AssemblyDirectory);
                    
                     this.CloseToolsWindows();
                     this.OutputGuid = "CDA8E85D-C469-4855-878B-0E778CD0DD" + int.Parse(uniqueId.Split('.')[0]).ToString(CultureInfo.InvariantCulture);

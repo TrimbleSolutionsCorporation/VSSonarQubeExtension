@@ -1,15 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.CodeAnalysis;
 using VSSonarPlugins;
 using VSSonarPlugins.Types;
 
 namespace VSSonarQubeStandalone.Helpers
 {
-    class VsEnvironmentHelper : IVsEnvironmentHelper
+    /// <summary>
+    /// dummy class
+    /// </summary>
+    /// <seealso cref="VSSonarPlugins.IVsEnvironmentHelper" />
+    public class VsEnvironmentHelper : IVsEnvironmentHelper
     {
         public string ActiveConfiguration()
         {
@@ -72,6 +73,11 @@ namespace VSSonarQubeStandalone.Helpers
         }
 
         public string GetCurrentDocumentInView()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Solution GetCurrentRoslynSolution()
         {
             throw new NotImplementedException();
         }

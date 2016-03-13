@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarPlugins
 {
+    using Microsoft.CodeAnalysis;
     using Types;
 
     /// <summary>
@@ -204,11 +205,11 @@ namespace VSSonarPlugins
         void ClearDiffFile(string localFileName, string serverFileName);
 
         /// <summary>
-        /// Evaluateds the value for include file.
+        /// Evaluated the value for include file.
         /// </summary>
         /// <param name="msbuildProjectFile">The msbuild project file.</param>
         /// <param name="filePath">The file path.</param>
-        /// <returns></returns>
+        /// <returns>returns evaluated include file</returns>
         string EvaluatedValueForIncludeFile(string msbuildProjectFile, string filePath);
 
         /// <summary>
@@ -220,7 +221,7 @@ namespace VSSonarPlugins
         /// <summary>
         /// Gets the current document in view.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>current document in view</returns>
         string GetCurrentDocumentInView();
 
         /// <summary>
@@ -228,5 +229,11 @@ namespace VSSonarPlugins
         /// </summary>
         /// <returns>true if admin</returns>
         bool DoIHaveAdminRights();
+
+        /// <summary>
+        /// Gets the current roslyn solution.
+        /// </summary>
+        /// <returns>returns current roslyn solution</returns>
+        Solution GetCurrentRoslynSolution();
     }
 }

@@ -131,6 +131,7 @@
       <HintPath>..\packages\Microsoft.CodeAnalysis.Workspaces.Common.1.1.1\lib\net45\Microsoft.CodeAnalysis.Workspaces.Desktop.dll</HintPath>
       <Private>True</Private>
     </Reference>
+	<Reference Include="Microsoft.VisualStudio.ComponentModelHost, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.Editor, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
@@ -260,6 +261,7 @@
     <Compile Include="VSControls\IssuesToolWindow.cs" />
     <Compile Include="VSControls\PluginToolWindow.cs" />
     <Compile Include="VSControls\PkgCmdIdList.cs" />
+	<Compile Include="WorkspaceProvider2013.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="PckResources\Resources.resx">

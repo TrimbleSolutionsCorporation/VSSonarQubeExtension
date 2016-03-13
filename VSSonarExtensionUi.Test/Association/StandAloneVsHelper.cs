@@ -2,6 +2,7 @@ namespace VSSonarExtensionUi.Test.Association
 {
     using System;
     using System.Diagnostics;
+    using Microsoft.CodeAnalysis;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
 
@@ -261,6 +262,11 @@ namespace VSSonarExtensionUi.Test.Association
         }
 
         public bool DoIHaveAdminRights()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Solution GetCurrentRoslynSolution()
         {
             throw new NotImplementedException();
         }
