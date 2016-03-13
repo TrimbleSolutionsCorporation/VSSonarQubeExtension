@@ -301,7 +301,6 @@ namespace VSSonarQubeExtension.Helpers
             return textDoc == null ? string.Empty : textDoc.Language.ToLower();
         }
 
-
         /// <summary>
         ///     The get environment.
         /// </summary>
@@ -591,7 +590,6 @@ namespace VSSonarQubeExtension.Helpers
             }
         }
 
-
         /// <summary>
         ///     The restart visual studio.
         /// </summary>
@@ -737,7 +735,6 @@ namespace VSSonarQubeExtension.Helpers
             }
         }
 
-
         /// <summary>The vs file item.</summary>
         /// <param name="fullPath">The full Path.</param>
         /// <param name="projectFullPath">The project Full Path.</param>
@@ -848,7 +845,6 @@ namespace VSSonarQubeExtension.Helpers
             Properties props = this.environment.Properties[category, page];
             props.Item(item).Value = value;
         }
-
 
         /// <summary>
         /// The write to visual studio output.

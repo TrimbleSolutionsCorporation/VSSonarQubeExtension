@@ -200,7 +200,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// <param name="restService">The rest service.</param>
         /// <param name="sourceControl">The source control.</param>
         /// <param name="pluginManager">The plugin manager.</param>
-        /// <param name="locaAnalyser">The loca analyser.</param>
+        /// <param name="locaAnalyser">The local analyser.</param>
         public SonarQubeViewModel(
             string vsverionIn,
             IConfigurationHelper helper,
@@ -365,10 +365,10 @@ namespace VSSonarExtensionUi.ViewModel
         public int SizeOfFlyout { get; set; }
 
         /// <summary>
-        /// Gets or sets the error colour.
+        /// Gets or sets a value indicating whether [error is found].
         /// </summary>
         /// <value>
-        /// The error colour.
+        ///   <c>true</c> if [error is found]; otherwise, <c>false</c>.
         /// </value>
         public bool ErrorIsFound { get; set; }
 
@@ -611,21 +611,26 @@ namespace VSSonarExtensionUi.ViewModel
         public IssuesSearchModel IssuesSearchModel { get; private set; }
 
         /// <summary>
-        /// Gets the sonar qube views.
+        /// Gets the sonarqube views.
         /// </summary>
         /// <value>
-        /// The sonar qube views.
+        /// The sonarqube views.
         /// </value>
         public ObservableCollection<IViewModelBase> SonarQubeViews { get; private set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this instance can provision.
+        /// Gets a value indicating whether this instance can provision.
         /// </summary>
         /// <value>
         /// <c>true</c> if this instance can provision; otherwise, <c>false</c>.
         /// </value>
         public bool CanProvision
         {
+            get
+            {
+                return this.canProvision;
+            }
+
             private set
             {
                 this.canProvision = value;
@@ -633,12 +638,7 @@ namespace VSSonarExtensionUi.ViewModel
                 if (AuthtenticationHelper.AuthToken.SonarVersion < 5.2)
                 {
                     this.canProvision = false;
-                }                
-            }
-
-            get
-            {
-                return this.canProvision;
+                }
             }
         }
 
@@ -680,10 +680,10 @@ namespace VSSonarExtensionUi.ViewModel
         }
 
         /// <summary>
-        /// Gets the loca analyser.
+        /// Gets the local analyses.
         /// </summary>
         /// <value>
-        /// The loca analyser.
+        /// The local analyzer.
         /// </value>
         public ISonarLocalAnalyser LocaAnalyser { get; private set; }
 
@@ -736,6 +736,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// <param name="solutionName">Name of the solution.</param>
         /// <param name="solutionPath">The solution path.</param>
         /// <param name="fileInView">The file in view.</param>
+        /// <param name="sourceProvider">The source provider.</param>
         public void OnSolutionOpen(string solutionName, string solutionPath, string fileInView, ISourceControlProvider sourceProvider = null)
         {
             this.ErrorIsFound = false;
@@ -756,7 +757,6 @@ namespace VSSonarExtensionUi.ViewModel
             }
 
             this.AssociationModule.AssociateProjectToSolution(solutionName, solutionPath, this.AvailableProjects, this.SourceControl);
-
 
             if (!string.IsNullOrEmpty(fileInView) && File.Exists(fileInView))
             {
@@ -871,7 +871,6 @@ namespace VSSonarExtensionUi.ViewModel
                     Debug.WriteLine(ex.Message);
                 }
 
-
                 if (string.IsNullOrEmpty(isEnabled) || isEnabled.Equals("true", StringComparison.CurrentCultureIgnoreCase))
                 {
                     if (this.IsRunningInVisualStudio())
@@ -904,7 +903,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// <summary>
         /// The extension data viewModel update.
         /// </summary>
-        /// <param name="vsenvironmenthelperIn">The vsenvironmenthelper in.</param>
+        /// <param name="vsenvironmenthelperIn">The vs environment helper in.</param>
         /// <param name="statusBar">The status bar.</param>
         /// <param name="provider">The provider.</param>
         /// <param name="extensionFolder">The extension Folder.</param>
@@ -919,7 +918,7 @@ namespace VSSonarExtensionUi.ViewModel
             this.StatusBar = statusBar;
             this.ExtensionFolder = extensionFolder;
 
-            // register notificaton manager, since all messages will be show also for initialization
+            // register notification manager, since all messages will be show also for initialization
             (this.notificationManager as IModelBase).UpdateServices(this.VsHelper, this.StatusBar, this.ServiceProvider);
             this.VSonarQubeOptionsViewData.InitPuginSystem(vsenvironmenthelperIn, this.pluginController, this.notificationManager);
             this.pluginManager = this.VSonarQubeOptionsViewData.PluginManager;
@@ -951,7 +950,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// </summary>
         /// <param name="fileResource">The file Resource.</param>
         /// <param name="fileContent">The file Content.</param>
-        /// <param name="showfalseandresolved">if set to <c>true</c> [showfalseandresolved].</param>
+        /// <param name="showfalseandresolved">if set to <c>true</c> [show false and resolved].</param>
         /// <returns>
         /// The<see><cref>List</cref></see>
         /// .
@@ -1014,7 +1013,6 @@ namespace VSSonarExtensionUi.ViewModel
                 return;
             }
 
-
             if (mode.Equals(AnalysisTypes.ANALYSIS))
             {
                 this.LocaAnalyser.LocalAnalysisCompleted += this.FullAnalysisHasCompleted;
@@ -1032,7 +1030,6 @@ namespace VSSonarExtensionUi.ViewModel
                 }
                 else
                 {
-
                     this.LocaAnalyser.AssociateCommandCompeted += this.RunPreviewAnalysisAfterAssociation;
                 }
 
@@ -1054,7 +1051,6 @@ namespace VSSonarExtensionUi.ViewModel
             this.OnDisconnectToSonar();
             this.OnConnectToSonar(true);
         }
-
 
         /// <summary>
         /// The connect to sonar.
@@ -1083,75 +1079,74 @@ namespace VSSonarExtensionUi.ViewModel
             this.CanConnectEnabled = false;
             this.IsExtensionBusy = true;
 
-            var bw = new BackgroundWorker { WorkerReportsProgress = true };
-            bw.RunWorkerCompleted += delegate
+            using (var bw = new BackgroundWorker { WorkerReportsProgress = true })
             {
-                this.CanConnectEnabled = true;
-                this.IsExtensionBusy = false;
-            };
+                bw.RunWorkerCompleted += delegate
+                {
+                    this.CanConnectEnabled = true;
+                    this.IsExtensionBusy = false;
+                };
 
-            bw.DoWork += delegate
-            {
-                try
+                bw.DoWork += delegate
                 {
-                    this.RefreshProjectList(useDispatcher);                    
-                    this.AssociationModule.OnConnectToSonar();
-                    this.VSonarQubeOptionsViewData.OnConnectToSonar(AuthtenticationHelper.AuthToken, this.AvailableProjects, this.pluginManager.GetIssueTrackerPlugin());
-                    this.ConnectionTooltip = "Authenticated, but not associated";
-                    this.StatusMessage = string.Empty;
-                    this.IsConnected = true;
-                    this.AssociationModule.IsAssociated = false;
-                }
-                catch (Exception ex)
-                {
-                    this.notificationManager.ReportMessage(new Message { Id = "SonarQubeViewModel", Data = "Fail To Connect To SonarQube: " + ex.Message });
-                    this.notificationManager.ReportException(ex);
-                    this.ConnectionTooltip = "No Connection";
-                    this.AssociationModule.Disconnect();
-                    this.StatusMessage = "Failed to Connect to Sonar, check output log for details";
-                    this.IsConnected = false;
-                    return;
-                }
+                    try
+                    {
+                        this.RefreshProjectList(useDispatcher);
+                        this.AssociationModule.OnConnectToSonar();
+                        this.VSonarQubeOptionsViewData.OnConnectToSonar(AuthtenticationHelper.AuthToken, this.AvailableProjects, this.pluginManager.GetIssueTrackerPlugin());
+                        this.ConnectionTooltip = "Authenticated, but not associated";
+                        this.StatusMessage = string.Empty;
+                        this.IsConnected = true;
+                        this.AssociationModule.IsAssociated = false;
+                    }
+                    catch (Exception ex)
+                    {
+                        this.notificationManager.ReportMessage(new Message { Id = "SonarQubeViewModel", Data = "Fail To Connect To SonarQube: " + ex.Message });
+                        this.notificationManager.ReportException(ex);
+                        this.ConnectionTooltip = "No Connection";
+                        this.AssociationModule.Disconnect();
+                        this.StatusMessage = "Failed to Connect to Sonar, check output log for details";
+                        this.IsConnected = false;
+                        return;
+                    }
 
                 // try to associate with open solution
                 if (this.IsSolutionOpen)
-                {                   
-                    try
                     {
-                        this.AssociationModule.AssociateProjectToSolution(this.VsHelper.ActiveSolutionName(), this.VsHelper.ActiveSolutionPath(), this.AvailableProjects, this.SourceControl);
-
-                        if (this.AssociationModule.IsAssociated)
+                        try
                         {
-                            this.CanProvision = false;
+                            this.AssociationModule.AssociateProjectToSolution(this.VsHelper.ActiveSolutionName(), this.VsHelper.ActiveSolutionPath(), this.AvailableProjects, this.SourceControl);
 
-                            if (this.LocalViewModel != null)
+                            if (this.AssociationModule.IsAssociated)
                             {
-                                if (this.SelectedViewModel == this.LocalViewModel)
+                                this.CanProvision = false;
+
+                                if (this.LocalViewModel != null && this.SelectedViewModel == this.LocalViewModel)
                                 {
                                     this.LocalViewModel.FileAnalysisIsEnabled = true;
                                 }
                             }
+                            else
+                            {
+                                this.CanProvision = true;
+                            }
+
+                            this.SetupAssociationMessages();
                         }
-                        else
+                        catch (Exception ex)
                         {
                             this.CanProvision = true;
+                            this.ErrorIsFound = true;
+                            this.ErrorMessageTooltip = ex.Message + "\r\n" + ex.StackTrace;
+                            this.StatusMessage = "Failed to Associate with Solution : " + this.VsHelper.ActiveSolutionName() + " " + ex.Message;
+                            this.notificationManager.ReportMessage(new Message { Id = "SonarQubeViewModel", Data = "Failed to Associate with Solution : " + ex.Message });
+                            this.notificationManager.ReportException(ex);
                         }
-
-                        this.SetupAssociationMessages();
                     }
-                    catch (Exception ex)
-                    {
-                        this.CanProvision = true;
-                        this.ErrorIsFound = true;
-                        this.ErrorMessageTooltip = ex.Message + "\r\n" + ex.StackTrace;
-                        this.StatusMessage = "Failed to Associate with Solution : " + this.VsHelper.ActiveSolutionName() + " " + ex.Message;
-                        this.notificationManager.ReportMessage(new Message { Id = "SonarQubeViewModel", Data = "Failed to Associate with Solution : " + ex.Message });
-                        this.notificationManager.ReportException(ex);
-                    }
-                }
-            };
+                };
 
-            bw.RunWorkerAsync();
+                bw.RunWorkerAsync(); 
+            }
         }
 
         /// <summary>
@@ -1231,6 +1226,8 @@ namespace VSSonarExtensionUi.ViewModel
         /// The refresh data for resource.
         /// </summary>
         /// <param name="fullName">The full name.</param>
+        /// <param name="contentoffile">The content of file.</param>
+        /// <param name="fromSave">if set to <c>true</c> [from save].</param>
         public void RefreshDataForResource(string fullName, string contentoffile, bool fromSave)
         {
             this.notificationManager.WriteMessage("Refresh Data For File: " + fullName);
@@ -1487,7 +1484,6 @@ namespace VSSonarExtensionUi.ViewModel
             this.ResetIssuesInViews();
         }
 
-
         /// <summary>
         ///     The launch extension properties.
         /// </summary>
@@ -1589,7 +1585,6 @@ namespace VSSonarExtensionUi.ViewModel
                         {
                             MessageDisplayBox.DisplayMessage("Unable to provision project.", reply, "http://docs.sonarqube.org/display/SONARQUBE51/Provisioning+Projects");
                             return;
-
                         }
                     }
 
@@ -1776,9 +1771,9 @@ namespace VSSonarExtensionUi.ViewModel
         {
             if (this.SelectedProjectInView == null)
             {
-                this.SelectedProjectName = "";
-                this.SelectedProjectKey = "";
-                this.SelectedProjectVersion = "";
+                this.SelectedProjectName = string.Empty;
+                this.SelectedProjectKey = string.Empty;
+                this.SelectedProjectVersion = string.Empty;
                 this.StatusMessageAssociation = "No project selected, select from above.";
                 return;
             }
@@ -1855,7 +1850,9 @@ namespace VSSonarExtensionUi.ViewModel
             this.LocaAnalyser.LocalAnalysisCompleted -= this.PreviewAnalysisHasCompleted;
             if (this.LocalViewModel.ErrorsFoundDuringAnalysis)
             {
-                MessageDisplayBox.DisplayMessage("Analysis as failed, check output log for more information.", helpurl: "https://github.com/TeklaCorp/VSSonarQubeExtension/wiki/Troubleshooting-and-FAQ");
+                MessageDisplayBox.DisplayMessage(
+                    "Analysis as failed, check output log for more information.",
+                    helpurl: "https://github.com/TeklaCorp/VSSonarQubeExtension/wiki/Troubleshooting-and-FAQ");
             }
 
             this.LocalViewModel.ErrorsFoundDuringAnalysis = false;
@@ -1872,11 +1869,15 @@ namespace VSSonarExtensionUi.ViewModel
             this.LocaAnalyser.LocalAnalysisCompleted -= this.FullAnalysisHasCompleted;
             if (this.LocalViewModel.ErrorsFoundDuringAnalysis)
             {
-                MessageDisplayBox.DisplayMessage("Analysis as failed, check output log for more information.", helpurl: "https://github.com/TeklaCorp/VSSonarQubeExtension/wiki/Troubleshooting-and-FAQ");
+                MessageDisplayBox.DisplayMessage(
+                    "Analysis as failed, check output log for more information.",
+                    helpurl: "https://github.com/TeklaCorp/VSSonarQubeExtension/wiki/Troubleshooting-and-FAQ");
             }
             else
             {
-                MessageDisplayBox.DisplayMessage("You may use server analysis mode, to retrieve analysis results.", helpurl: "https://github.com/TeklaCorp/VSSonarQubeExtension/wiki/Server-Analysis");
+                MessageDisplayBox.DisplayMessage(
+                    "You may use server analysis mode, to retrieve analysis results.",
+                    helpurl: "https://github.com/TeklaCorp/VSSonarQubeExtension/wiki/Server-Analysis");
             }
 
             this.LocalViewModel.ErrorsFoundDuringAnalysis = false;
