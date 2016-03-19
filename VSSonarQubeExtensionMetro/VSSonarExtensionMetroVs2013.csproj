@@ -83,16 +83,20 @@
       <Private>True</Private>
       <SpecificVersion>True</SpecificVersion>
     </Reference>
-    <Reference Include="FSharpLint.Application, Version=0.2.6.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="FSharpLint.Application, Version=0.2.8.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FSharpLint.Core.0.0.14\lib\FSharpLint.Application.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FSharpLint.Framework, Version=0.2.6.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="FSharpLint.Framework, Version=0.2.8.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FSharpLint.Core.0.0.14\lib\FSharpLint.Framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FSharpLint.Rules, Version=0.2.6.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="FSharpLint.Rules, Version=0.2.8.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FSharpLint.Core.0.0.14\lib\FSharpLint.Rules.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FSharpLint.Worker, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FSharpLint.Core.0.0.14\lib\FSharpLint.Worker.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="MahApps.Metro, Version=1.2.4.0, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">

@@ -411,7 +411,7 @@ namespace VSSonarExtensionUi.Model.PluginManager
                     if (typeof(IIssueTrackerPlugin).IsAssignableFrom(type))
                     {
                         Debug.WriteLine("Can Cast Type In Assembly To: " + typeof(IIssueTrackerPlugin).FullName);
-                        var obj = type.GetConstructor(new[] { typeof(INotificationManager), typeof(ISonarConfiguration) });
+                        var obj = type.GetConstructor(new[] { typeof(INotificationManager) });
                         if (obj != null)
                         {
                             object[] lobject = { manager, userConfig };
