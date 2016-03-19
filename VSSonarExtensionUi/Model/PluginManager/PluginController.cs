@@ -414,7 +414,7 @@ namespace VSSonarExtensionUi.Model.PluginManager
                         var obj = type.GetConstructor(new[] { typeof(INotificationManager) });
                         if (obj != null)
                         {
-                            object[] lobject = { manager, userConfig };
+                            object[] lobject = { manager };
                             return (IPlugin)obj.Invoke(lobject);
                         }
                     }
