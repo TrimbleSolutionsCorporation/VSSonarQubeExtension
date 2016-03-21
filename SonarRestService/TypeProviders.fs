@@ -193,7 +193,22 @@ type JsonRuleSearchResponse = JsonProvider<""" {
         }
       ]
       }
-    ]
+    ],
+      "facets": [
+        {
+           "property": "debt_characteristics",
+           "values": [
+             {
+                "val" : "ARCHITECTURE_CHANGEABILITY", "count":1
+             },
+             {
+                "val":"CHANGEABILITY","count":1
+             },
+             {
+                "val":"NONE","count":0
+             }]
+         }
+        ]
 } """>
 
 type JsonInternalData = JsonProvider<""" {

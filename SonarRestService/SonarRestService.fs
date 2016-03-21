@@ -746,8 +746,6 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
         if IfExists("defaultDebtRemFnCoeff") then rule.DefaultDebtRemFnCoeff <- try parsedDataRule.DefaultDebtRemFnCoeff with | ex -> ""
         if IfExists("debtOverloaded") then rule.DebtOverloaded <- try parsedDataRule.DebtOverloaded with | ex -> false
 
-
-
         if IfExists("debtRemFnType") then 
             rule.RemediationFunction <- try (EnumHelper.asEnum<RemediationFunction>(parsedDataRule.DebtRemFnType)).Value with | ex -> RemediationFunction.UNDEFINED
 
@@ -775,6 +773,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
             with
             | ex -> ()
+
 
     let CreateRuleInProfile(parsedDataRule:JsonRuleSearchResponse.Rule, profile : Profile, enabledStatus:bool) =
 
@@ -1122,7 +1121,11 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             errorMessages
 
         member this.UpdateRuleData(conf:ISonarConfiguration, newRule : Rule) = 
-            let url = "/api/rules/search?rule_key=" + HttpUtility.UrlEncode(newRule.Repo + ":" + newRule.Key)
+            let url = 
+                if newRule.Key.StartsWith(newRule.Repo + ":") then
+                    "/api/rules/search?rule_key=" + HttpUtility.UrlEncode(newRule.Key) + "&facets=debt_characteristics"
+                else
+                    "/api/rules/search?rule_key=" + HttpUtility.UrlEncode(newRule.Repo) + ":" + HttpUtility.UrlEncode(newRule.Key) + "&facets=debt_characteristics"
             try
                 System.Diagnostics.Debug.WriteLine(url)
                 let reply = httpconnector.HttpSonarGetRequest(conf, url)
@@ -1130,6 +1133,14 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 if rules.Total = 1 then
                     // update values except for severity, since this is the default severity
                     UpdateRuleInProfile(rules.Rules.[0], newRule, true)
+
+                    try
+                        for facet in rules.Facets do
+                            newRule.Subcategory <- try (EnumHelper.asEnum<SubCategory>(facet.Values.[0].Val)).Value with | ex -> SubCategory.UNDEFINED                                            
+                            newRule.Category <- try (EnumHelper.asEnum<Category>(facet.Values.[1].Val)).Value with | ex -> Category.UNDEFINED                                        
+                    with
+                    | ex -> ()
+
                     newRule.IsParamsRetrivedFromServer <- true
             with
             | ex -> System.Diagnostics.Debug.WriteLine("FAILED: " + url + " : ", ex.Message)
@@ -1212,40 +1223,6 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                     GetRulesFromSearchQuery(rules.Rules, profile, active)
                  
                 ()
-
-
-
-        member this.GetRulesForProfile(conf:ISonarConfiguration , profile:Profile, ruleDetails:bool, active:bool) = 
-            if profile <> null then
-
-                let profileFast = (this :> ISonarRestService).GetEnabledRulesInProfile(conf, profile.Language, profile.Name)
-
-                let url = "/api/profiles/index?language=" + HttpUtility.UrlEncode(profile.Language) + "&name=" + HttpUtility.UrlEncode(profile.Name)
-                let reply = httpconnector.HttpSonarGetRequest(conf, url)
-                let data = JsonProfileAfter44.Parse(reply)
-                let rules = data.[0].Rules
-                for rule in profileFast.[0].GetAllRules() do
-
-                    let url = "/api/rules/show?key=" + HttpUtility.UrlEncode(rule.Key)
-
-                    try
-                        let content = httpconnector.HttpSonarGetRequest(conf, url)
-                        let parsedData = JsonRule.Parse(content)
-                        let parsedDataRule = parsedData.Rule
-
-
-                        let CheckActiveState() =
-                            let mutable ispresent = false
-                            for active in parsedData.Actives do
-                                if active.QProfile.Equals(profile.Name + ":" + profile.Language) then
-                                    ispresent <- true
-
-                            ispresent
-
-                        CreateRuleInProfile2(parsedDataRule, profile)
-
-                    with
-                    | ex -> ()
 
         member this.GetProfilesUsingRulesApp(conf : ISonarConfiguration) = 
             let profiles = new System.Collections.Generic.List<Profile>()

@@ -139,7 +139,7 @@ namespace VSSonarPlugins.Types
 
             if (!string.IsNullOrEmpty(rule.InternalKey))
             {
-                if (this.Rules.ContainsKey(rule.InternalKey))
+                if (this.RulesByIternalKey.ContainsKey(rule.InternalKey))
                 {
                     return;
                 }

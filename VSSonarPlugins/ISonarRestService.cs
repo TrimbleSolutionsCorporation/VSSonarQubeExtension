@@ -294,8 +294,6 @@
         /// <returns></returns>
         List<Resource> GetQualityProfile(ISonarConfiguration conf, Resource project);
 
-        void GetRulesForProfile(ISonarConfiguration conf, Profile profile, bool ruleDetails, bool active);
-
         void GetRulesForProfile(ISonarConfiguration conf, Profile profile, bool searchDetails);
 
         void UpdateRuleData(ISonarConfiguration conf, Rule newRule);
