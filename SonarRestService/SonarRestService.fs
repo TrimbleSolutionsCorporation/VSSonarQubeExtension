@@ -1131,13 +1131,17 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 let reply = httpconnector.HttpSonarGetRequest(conf, url)
                 let rules = JsonRuleSearchResponse.Parse(reply)
                 if rules.Total = 1 then
+                    newRule.DefaultDebtRemFnType <- RemediationFunction.UNDEFINED
+                    newRule.DefaultDebtChar <- Category.UNDEFINED
+                    newRule.DefaultDebtSubChar <- SubCategory.UNDEFINED
                     // update values except for severity, since this is the default severity
                     UpdateRuleInProfile(rules.Rules.[0], newRule, true)
 
                     try
                         for facet in rules.Facets do
-                            newRule.Subcategory <- try (EnumHelper.asEnum<SubCategory>(facet.Values.[0].Val)).Value with | ex -> SubCategory.UNDEFINED                                            
-                            newRule.Category <- try (EnumHelper.asEnum<Category>(facet.Values.[1].Val)).Value with | ex -> Category.UNDEFINED                                        
+                            if facet.Values.[0].Val <> "NONE" then
+                                newRule.Subcategory <- try (EnumHelper.asEnum<SubCategory>(facet.Values.[0].Val)).Value with | ex -> SubCategory.UNDEFINED                                            
+                                newRule.Category <- try (EnumHelper.asEnum<Category>(facet.Values.[1].Val)).Value with | ex -> Category.UNDEFINED                                        
                     with
                     | ex -> ()
 
