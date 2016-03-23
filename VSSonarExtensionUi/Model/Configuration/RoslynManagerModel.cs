@@ -27,11 +27,6 @@
         private const string ID = "RoslynManagerModel";
 
         /// <summary>
-        /// The path key
-        /// </summary>
-        private const string PATHKEY = "RoslynDllPaths";
-
-        /// <summary>
         /// The plugins
         /// </summary>
         private readonly IEnumerable<IAnalysisPlugin> plugins;
@@ -40,21 +35,6 @@
         /// The notification manager
         /// </summary>
         private readonly INotificationManager notificationManager;
-
-        /// <summary>
-        /// The plugins running path
-        /// </summary>
-        private readonly string pluginsRunningPath = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty);
-
-        /// <summary>
-        /// The extension running path
-        /// </summary>
-        private readonly string extensionRunningPath = Directory.GetParent(Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty)).ToString();
-
-        /// <summary>
-        /// The extension running path
-        /// </summary>
-        private readonly string extensionsBasePath = Directory.GetParent(Directory.GetParent(Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty)).ToString()).ToString();
 
         /// <summary>
         /// The conf helper
@@ -159,7 +139,7 @@
                     foreach (var analyser in item.AnalyzerReferences)
                     {
                         var name = Path.GetFileNameWithoutExtension(analyser.FullPath);
-                        if (!paths.ContainsKey(name) && !name.Contains("SonarLint"))
+                        if (!paths.ContainsKey(name) && !name.Contains("SonarLint") && !name.Contains("SonarAnalyzer"))
                         {
                             paths.Add(name, analyser.FullPath);
                         }
@@ -326,7 +306,7 @@
 
                 if (diagnostic.AvailableChecks.Count != 0)
                 {
-                    this.SyncDiagnosticInServer(diagnostic, updateProps);
+                    this.SyncDiagnosticInServer(diagnostic);
                     this.ExtensionDiagnostics.Add(name, diagnostic);
                 }
                 else
@@ -349,7 +329,7 @@
         /// Synchronizes the diagnostic in server.
         /// </summary>
         /// <param name="diagnostic">The diagnostic.</param>
-        private void SyncDiagnosticInServer(VSSonarExtensionDiagnostic diagnostic, bool updateProperties)
+        private void SyncDiagnosticInServer(VSSonarExtensionDiagnostic diagnostic)
         {
             if (diagnostic.AvailableChecks.Count == 0)
             {
@@ -367,36 +347,6 @@
                     }
                 }
             }
-
-            if (updateProperties)
-            {
-                if (this.Profile == null)
-                {
-                    this.UpdateDiagnosticPathInServer(this.rest.GetProperties(AuthtenticationHelper.AuthToken), diagnostic.Path);
-                }
-                else
-                {
-                    this.UpdateDiagnosticPathInServer(this.rest.GetProperties(AuthtenticationHelper.AuthToken, this.associatedProject), diagnostic.Path);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Updates the diagnostic path in server.
-        /// </summary>
-        /// <param name="properties">The properties.</param>
-        /// <param name="path">The path.</param>
-        private void UpdateDiagnosticPathInServer(Dictionary<string, string> properties, string path)
-        {
-            if (properties.ContainsKey("sonar.roslyn.diagnostic.path"))
-            {
-                var value = properties["sonar.roslyn.diagnostic.path"] + ";" + path;
-                this.rest.UpdateProperty(AuthtenticationHelper.AuthToken, "sonar.roslyn.diagnostic.path", value, null);
-            }
-            else
-            {
-                this.rest.UpdateProperty(AuthtenticationHelper.AuthToken, "sonar.roslyn.diagnostic.path", path, null);
-            }
         }
 
         private void CreateRule(string language, DiagnosticDescriptor diag)
@@ -407,8 +357,8 @@
             templaterule.Name = "Template Rule";
             templaterule.Key = "roslyn-cs:TemplateRule";
 
-            var desc = string.Format("<p>%s<a href=\"%s\">Help Url</a></p>", (diag.Description.ToString()), diag.HelpLinkUri);
-            var markdown = string.Format("*%s* [Help Url](%s)", diag.Description.ToString(), diag.HelpLinkUri);
+            var desc = string.Format("<p>{0}<a href=\"{1}\">Help Url</a></p>", (diag.Description.ToString()), diag.HelpLinkUri);
+            var markdown = string.Format("*{0}* [Help Url]({1})", diag.Description.ToString(), diag.HelpLinkUri);
 
             var rule = new Rule();
             rule.HtmlDescription = desc;
@@ -489,12 +439,6 @@
         /// </summary>
         private void SyncSettings()
         {
-            if (this.confHelper != null)
-            {
-                var data = string.Join(";", this.ExtensionDiagnostics.Select(m => m.Value.Path).ToArray());
-                this.confHelper.WriteOptionInApplicationData(Context.AnalysisGeneral, ID, PATHKEY, data, true, false);
-            }
-
             this.SyncDiagnosticsInPlugins();
         }
 
@@ -521,18 +465,37 @@
         {
             if (!this.ExtensionDiagnostics.Any())
             {
-                this.LoadDiagnosticsFromPath(this.roslynExternalUserDiagPath);
+                bool hasRoslynPlugin = VerifyExistenceOfRoslynPlugin();
+
+                if (hasRoslynPlugin)
+                {
+                    // load defined props in server and load up
+                    var props = this.rest.GetProperties(authentication);
+                    if (props.ContainsKey("sonar.roslyn.diagnostic.path"))
+                    {
+                        var folders = props["sonar.roslyn.diagnostic.path"].Split(';');
+                        foreach (var folder in folders)
+                        {
+                            if (Directory.Exists(folder) && !this.roslynExternalUserDiagPath.ToLower().Equals(folder.ToLower()))
+                            {
+                                this.LoadDiagnosticsFromPath(folder, hasRoslynPlugin);
+                            }
+                        }
+                    }
+                }
+
+                this.LoadDiagnosticsFromPath(this.roslynExternalUserDiagPath, hasRoslynPlugin);
 
                 foreach (var item in this.embedVersionController.GetInstalledPaths())
                 {
-                    this.LoadDiagnosticsFromPath(item);
+                    this.LoadDiagnosticsFromPath(item, false);
                 }                    
             }
 
             this.SyncSettings();
         }
 
-        private void LoadDiagnosticsFromPath(string folderPath)
+        private void LoadDiagnosticsFromPath(string folderPath, bool syncInServer)
         {
             var diagnostics = Directory.GetFiles(folderPath);
 
@@ -543,6 +506,11 @@
                 if (newdata.AvailableChecks.Count > 0)
                 {
                     this.ExtensionDiagnostics.Add(Path.GetFileName(diagnostic), newdata);
+
+                    if (syncInServer)
+                    {
+                        this.SyncDiagnosticInServer(newdata);
+                    }
                 }
             }
         }

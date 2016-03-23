@@ -33,7 +33,7 @@ namespace VSSonarQubeExtension.Helpers
 
     using Process = System.Diagnostics.Process;
     using Thread = System.Threading.Thread;
-
+    using System.ComponentModel;
     /// <summary>
     ///     The vs properties helper.
     /// </summary>
@@ -381,7 +381,14 @@ namespace VSSonarQubeExtension.Helpers
         /// </param>
         public void NavigateToResource(string url)
         {
-            Process.Start(url);
+            try
+            {
+                Process.Start(url);
+            }
+            catch (Win32Exception)
+            {
+                Process.Start("IExplore.exe", url);
+            }
         }
 
         /// <summary>

@@ -101,7 +101,7 @@
                         Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
                         Height="30"
                         Margin="0, 0, 0, 0"
-                        ToolTip="Auto detect local installed diagnostics"
+                        ToolTip="Auto detect local installed diagnostics and sync them to server, Roslyn Plugin required."
                         Style="{DynamicResource SquareButtonStyle}" Command="{Binding AutoImportLocalDiagnosticsCommand}" >
                         <Rectangle Width="15"
                                Height="15"

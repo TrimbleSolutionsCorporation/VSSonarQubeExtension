@@ -266,7 +266,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             }
         }
 
-
         /// <summary>
         /// Associates the with new project.
         /// </summary>
