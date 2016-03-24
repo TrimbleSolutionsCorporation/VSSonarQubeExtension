@@ -1096,7 +1096,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             newtags <- newtags.Trim(',')
             dic.Add("tags", newtags)
 
-            (this :> ISonarRestService).UpdateRule(conf, HttpUtility.UrlEncode(rule.Key), dic)
+            (this :> ISonarRestService).UpdateRule(conf, rule.Key, dic)
 
         member this.GetAllTags(conf:ISonarConfiguration) =
             let tags = System.Collections.Generic.List<string>()
@@ -1110,7 +1110,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             tags
 
         member this.UpdateRule(conf:ISonarConfiguration, key:string, optionalProps:System.Collections.Generic.Dictionary<string, string>) = 
-            let url ="/api/rules/update?key=" + key
+            let url ="/api/rules/update?key=" + HttpUtility.UrlEncode(key)
             let errorMessages = new System.Collections.Generic.List<string>()
             let response = httpconnector.HttpSonarPostRequestDic(conf, url, optionalProps)
             if response.StatusCode <> Net.HttpStatusCode.OK then

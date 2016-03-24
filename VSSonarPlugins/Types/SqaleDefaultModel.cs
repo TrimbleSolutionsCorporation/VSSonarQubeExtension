@@ -168,6 +168,7 @@ namespace VSSonarPlugins.Types
             newchar.CreateSubChar(SubCategory.API_ABUSE, "API abuse");
             newchar.CreateSubChar(SubCategory.ERRORS, "Errors");
             newchar.CreateSubChar(SubCategory.INPUT_VALIDATION_AND_REPRESENTATION, "Input validation and representation");
+            newchar.CreateSubChar(SubCategory.SECURITY_FEATURES, "Security features");
             return newchar;
         }
 

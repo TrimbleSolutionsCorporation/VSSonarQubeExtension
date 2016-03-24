@@ -506,7 +506,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                     var menuPlugin = plugin as IMenuCommandPlugin;
                     if (menuPlugin != null)
                     {
-                        menuPlugin.UpdateConfiguration(AuthtenticationHelper.AuthToken, project, this.vshelper);
+                        System.Windows.Application.Current.Dispatcher.Invoke(delegate { menuPlugin.UpdateConfiguration(AuthtenticationHelper.AuthToken, project, this.vshelper); });
                     }
 
                     plugin.AssociateProject(project, AuthtenticationHelper.AuthToken, profile);
