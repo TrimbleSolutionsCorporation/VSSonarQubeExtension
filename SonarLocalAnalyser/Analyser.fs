@@ -903,6 +903,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
             plugin.GetResourceKey(itemInView, safeIsOn)
 
         member x.OnDisconect() =
+            cachedProfiles.Clear()
             profileUpdated <- false        
             profileCannotBeRetrived <- false    
 
