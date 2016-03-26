@@ -1088,10 +1088,13 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
         member this.UpdateTags(conf:ISonarConfiguration, rule:Rule, tags:System.Collections.Generic.List<string>) =
             let errorMessages = new System.Collections.Generic.List<string>()
                     
+            let settags = new System.Collections.Generic.HashSet<string>()
             let dic = new System.Collections.Generic.Dictionary<string, string>()
             let mutable newtags = ""
             for tag in tags do
-                newtags <- newtags + tag + ","
+                if not(settags.Contains(tag)) then
+                    newtags <- newtags + tag + ","
+                    settags.Add(tag) |> ignore
 
             newtags <- newtags.Trim(',')
             dic.Add("tags", newtags)
