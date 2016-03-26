@@ -724,9 +724,13 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
         if IfExists("isTemplate") then rule.IsTemplate <- try parsedDataRule.IsTemplate with | ex -> false
 
-        if IfExists("tags") then
+        if IfExists("tags") then            
             for tag in parsedDataRule.Tags do
-                rule.Tags.Add(tag)
+                let foundAlready = rule.Tags |> Seq.tryFind (fun c -> c.Equals(tag))
+                match foundAlready with 
+                | Some data -> ()
+                | _ -> rule.Tags.Add(tag)
+                
         if IfExists("sysTags") then
             for tag in parsedDataRule.SysTags do
                 rule.SysTags.Add(tag)
