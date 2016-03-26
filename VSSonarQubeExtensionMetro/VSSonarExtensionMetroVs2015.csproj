@@ -255,7 +255,8 @@
     <Compile Include="Coverage\HighlightCoverageTaggerProvider.cs" />
     <Compile Include="Coverage\NotCoveredFormatDefinition.cs" />
     <Compile Include="Coverage\PartialCoveredFormatDefinition.cs" />
-    <Compile Include="Helpers\VSEvents.cs" />
+    <Compile Include="Helpers\VsConfigurationHelper.cs" />
+    <Compile Include="Helpers\VsEvents.cs" />
     <Compile Include="Helpers\VsPropertiesHelper.cs" />
     <Compile Include="InternalStateVariables.cs" />
     <Compile Include="SolutionEventsListener.cs" />

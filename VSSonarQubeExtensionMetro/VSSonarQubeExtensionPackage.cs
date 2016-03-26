@@ -209,7 +209,7 @@ namespace VSSonarQubeExtension
                         uniqueId += "Exp";
                     }
 
-                    SonarQubeViewModelFactory.StartupModelWithVsVersion(uniqueId).InitModelFromPackageInitialization(
+                    SonarQubeViewModelFactory.StartupModelWithVsVersion(uniqueId, this).InitModelFromPackageInitialization(
                         this.visualStudioInterface,
                         this.StatusBar,
                         this,

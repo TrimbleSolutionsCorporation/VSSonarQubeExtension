@@ -13,12 +13,6 @@ namespace VSSonarPlugins
         /// <returns>The <see cref="SonarQubeProperties"/>.</returns>
         SonarQubeProperties ReadSetting(Context context, string owner, string key);
 
-        /// <summary>The read settings.</summary>
-        /// <param name="context">The context.</param>
-        /// <param name="owner">The owner.</param>
-        /// <returns>The <see cref="IEnumerable"/>.</returns>
-        IEnumerable<SonarQubeProperties> ReadSettings(Context context, string owner);
-
         /// <summary>The write setting.</summary>
         /// <param name="prop">The prop.</param>
         /// <param name="sync">The sync.</param>
@@ -28,11 +22,8 @@ namespace VSSonarPlugins
         /// <summary>The sync settings.</summary>
         void SyncSettings();
 
-        /// <summary>The clear non saved settings.</summary>
-        void ClearNonSavedSettings();
-
         /// <summary>The delete settings file.</summary>
-        void DeleteSettingsFile();
+        void ResetAllSettings();
 
         /// <summary>
         ///     The get user app data configuration file.

@@ -411,7 +411,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
-                this.configurationHelper.DeleteSettingsFile();
+                this.configurationHelper.ResetAllSettings();
                 this.vsenvironmenthelper.RestartVisualStudio();
             }
         }
@@ -453,7 +453,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         private void OnCancelAndExitCommand()
         {
-            this.configurationHelper.ClearNonSavedSettings();
             this.OnRequestClose(this, "Exit");
         }
 

@@ -138,14 +138,22 @@ namespace VSSonarExtensionUi.ViewModel
         /// Initializes a new instance of the <see cref="SonarQubeViewModel" /> class. Plugins are initialized in InitModelFromPackageInitialization below
         /// </summary>
         /// <param name="vsverionIn">The vs version.</param>
-        public SonarQubeViewModel(string vsverionIn)
+        public SonarQubeViewModel(string vsverionIn, IConfigurationHelper configurationHelperIn)
         {
             this.vsversion = vsverionIn;
             this.ToolsProvidedByPlugins = new ObservableCollection<MenuItem>();
             this.AvailableProjects = new ObservableCollection<Resource>();
 
             this.notificationManager = new NotifyCationManager(this, vsverionIn);
-            this.configurationHelper = new ConfigurationHelper(vsverionIn, this.notificationManager);
+            if (configurationHelperIn != null)
+            {
+                this.configurationHelper = configurationHelperIn;
+            }
+            else
+            {
+                this.configurationHelper = new ConfigurationHelper(vsverionIn, this.notificationManager);
+            }
+            
             this.sonarKeyTranslator = new SQKeyTranslator(this.notificationManager);
             this.sonarRestConnector = new SonarRestService(new JsonSonarConnector());
             this.VSonarQubeOptionsViewData = new VSonarQubeOptionsViewModel(this.sonarRestConnector, this.configurationHelper, this.notificationManager);
@@ -160,34 +168,6 @@ namespace VSSonarExtensionUi.ViewModel
             this.ShowRightFlyout = false;
             this.InitCommands();
             this.NumberNewIssues = "0";
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SonarQubeViewModel" /> class.
-        /// </summary>
-        /// <param name="vsverionIn">The vsverion in.</param>
-        /// <param name="helper">The helper.</param>
-        public SonarQubeViewModel(string vsverionIn, IConfigurationHelper helper)
-        {
-            this.vsversion = vsverionIn;
-            this.ToolsProvidedByPlugins = new ObservableCollection<MenuItem>();
-            this.AvailableProjects = new ObservableCollection<Resource>();
-
-            this.configurationHelper = helper;
-            this.notificationManager = new NotifyCationManager(this, vsverionIn);
-            this.sonarKeyTranslator = new SQKeyTranslator(this.notificationManager);
-            this.sonarRestConnector = new SonarRestService(new JsonSonarConnector());
-            this.VSonarQubeOptionsViewData = new VSonarQubeOptionsViewModel(this.sonarRestConnector, this.configurationHelper, this.notificationManager);
-            this.VSonarQubeOptionsViewData.ResetUserData();
-
-            this.CanConnectEnabled = true;
-            this.ConnectionTooltip = "Not Connected";
-            this.BackGroundColor = Colors.White;
-            this.ForeGroundColor = Colors.Black;
-            this.ErrorIsFound = true;
-            this.IsExtensionBusy = false;
-
-            this.InitCommands();
         }
 
         /// <summary>

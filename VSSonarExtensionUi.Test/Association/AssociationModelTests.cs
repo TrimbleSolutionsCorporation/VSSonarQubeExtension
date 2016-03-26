@@ -70,7 +70,7 @@
             var mockanalyser = new Mock<ISonarLocalAnalyser>();
 
             AssociationModel associationModel;
-            associationModel = new AssociationModel(mockLogger.Object, mockRest.Object, mockConfiguration.Object, mockTranslator.Object, mockPlugin.Object, new SonarQubeViewModel("test"), mockanalyser.Object);
+            associationModel = new AssociationModel(mockLogger.Object, mockRest.Object, mockConfiguration.Object, mockTranslator.Object, mockPlugin.Object, new SonarQubeViewModel("test", mockConfiguration.Object), mockanalyser.Object);
             associationModel.UpdateServicesInModels(mockVsHelper.Object, null, null);
 
             Assert.That(associationModel.AssignASonarProjectToSolution(new Resource() { IsBranch = true }, null, mockSourceProvider.Object), Is.False);

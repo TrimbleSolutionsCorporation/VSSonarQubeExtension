@@ -16,6 +16,7 @@ namespace VSSonarQubeExtension
     using EnvDTE80;
     using Microsoft.VisualStudio.Shell;
     using SonarRestService;
+    using System;
     using VSSonarExtensionUi.ViewModel;
     using VSSonarPlugins;
     using VSSonarQubeExtension.Helpers;
@@ -105,7 +106,7 @@ namespace VSSonarQubeExtension
             {
                 if (model == null)
                 {
-                    model = new SonarQubeViewModel(string.Empty);
+                    model = new SonarQubeViewModel(string.Empty, null);
                 }
 
                 return model;
@@ -118,11 +119,11 @@ namespace VSSonarQubeExtension
         /// </summary>
         /// <param name="version">The version.</param>
         /// <returns>returns model</returns>
-        public static SonarQubeViewModel StartupModelWithVsVersion(string version)
+        public static SonarQubeViewModel StartupModelWithVsVersion(string version, IServiceProvider provider)
         {
             if (model == null)
             {
-                model = new VSSonarExtensionUi.ViewModel.SonarQubeViewModel(version);
+                model = new SonarQubeViewModel(version, new VsConfigurationHelper(version));
             }
 
             return model;

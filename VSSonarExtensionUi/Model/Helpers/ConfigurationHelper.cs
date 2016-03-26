@@ -278,7 +278,7 @@ namespace VSSonarExtensionUi.Model.Helpers
         /// <summary>
         /// Deletes the settings file.
         /// </summary>
-        public void DeleteSettingsFile()
+        public void ResetAllSettings()
         {
             if (File.Exists(this.ApplicationDataUserSettingsFile))
             {

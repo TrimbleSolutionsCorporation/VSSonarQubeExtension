@@ -473,25 +473,36 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 }
 
                 cm.Load();
+                string address = "http://localhost:9000";
 
                 try
                 {
-                    string address = this.configurationHelper.ReadSetting(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, "ServerAddress").Value;
-                    string bootatstart = this.configurationHelper.ReadSetting(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.IsConnectAtStartOn).Value;
-
-                    if (address != null &&
-                        bootatstart.Equals("true") &&
-                        AuthtenticationHelper.EstablishAConnection(this.restService, address, cm.Username, ConnectionConfiguration.ConvertToUnsecureString(cm.SecurePassword)))
-                    {
-                        this.UserName = cm.Username;
-                        this.ServerAddress = address;
-                        this.Password = ConnectionConfiguration.ConvertToUnsecureString(cm.SecurePassword);
-                    }
+                    address = this.configurationHelper.ReadSetting(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, "ServerAddress").Value;
                 }
                 catch (Exception ex)
                 {
                     this.notificationManager.ReportMessage(new Message { Id = "GeneralConfigurationViewModel", Data = "Failed To Connect To Server: " + ex.Message });
                     this.notificationManager.ReportException(ex);
+                }
+
+                string bootatstart = "false";
+
+                try
+                {
+                    bootatstart = this.configurationHelper.ReadSetting(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.IsConnectAtStartOn).Value;
+                }
+                catch (Exception ex)
+                {
+                    this.notificationManager.ReportMessage(new Message { Id = "GeneralConfigurationViewModel", Data = "Failed To Get Connect at Start: " + ex.Message });
+                }
+
+                this.UserName = cm.Username;
+                this.Password = ConnectionConfiguration.ConvertToUnsecureString(cm.SecurePassword);
+                this.ServerAddress = address;
+
+                if (address != null && bootatstart.Equals("true"))
+                {
+                    AuthtenticationHelper.EstablishAConnection(this.restService, address, cm.Username, ConnectionConfiguration.ConvertToUnsecureString(cm.SecurePassword));
                 }
             }
         }

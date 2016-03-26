@@ -4,7 +4,7 @@
 <package>
     <metadata>
         <id>VSSonarExtensionPlugin4Api</id>
-        <version>5.1.14</version>
+        <version>5.2.0-alpha001</version>
         <authors>Jorge Costa</authors>
         <owners>Jorge Costa</owners>
         <licenseUrl>https://github.com/TeklaCorp/VSSonarQubeExtension/blob/master/LICENSE.txt</licenseUrl>

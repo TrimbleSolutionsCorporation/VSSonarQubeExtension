@@ -66,7 +66,7 @@ namespace VSSonarQubeStandalone.ViewModel
             }
 
             
-            this.SonarQubeView = new SonarQubeViewModel("standalone");
+            this.SonarQubeView = new SonarQubeViewModel("standalone", null);
             this.SonarQubeView.InitModelFromPackageInitialization(new VsEnvironmentHelper(), new VsStatusBarDummy(), new ServiceProviderDummy(), Environment.CurrentDirectory);
         }
 

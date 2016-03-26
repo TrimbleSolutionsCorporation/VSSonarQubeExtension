@@ -104,7 +104,7 @@ namespace VSSonarQubeExtension.Helpers
                 uniqueId += "Exp";
             }
                         
-            SonarQubeViewModelFactory.StartupModelWithVsVersion(uniqueId).AnalysisModeHasChange += this.AnalysisModeHasChange;
+            SonarQubeViewModelFactory.StartupModelWithVsVersion(uniqueId, this.package).AnalysisModeHasChange += this.AnalysisModeHasChange;
             SonarQubeViewModelFactory.SQViewModel.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.ConfigurationHasChanged +=
                 this.AnalysisModeHasChange;
         }
