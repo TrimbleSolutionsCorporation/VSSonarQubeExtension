@@ -234,10 +234,9 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// </summary>
         public void ReloadPlanData()
         {
-            var key = string.Empty;
             if (this.associatedProject == null)
             {
-                var plans  = new List<SonarActionPlan>();
+                var plans = new List<SonarActionPlan>();
                 foreach (var project in this.availableProjects)
                 {
                     try
@@ -259,9 +258,9 @@ namespace VSSonarExtensionUi.Model.Analysis
                 this.issuesSearchViewModel.UpdatePlanMenuContext();
 
                 return;
-            }
+            } 
 
-            List<SonarActionPlan> usortedListofPlan = this.restService.GetAvailableActionPlan(AuthtenticationHelper.AuthToken, key);
+            List<SonarActionPlan> usortedListofPlan = this.restService.GetAvailableActionPlan(AuthtenticationHelper.AuthToken, this.associatedProject.Key);
             if (usortedListofPlan != null && usortedListofPlan.Count > 0)
             {
                 this.issuesSearchViewModel.AvailableActionPlans = new ObservableCollection<SonarActionPlan>(usortedListofPlan.OrderBy(i => i.Name));
