@@ -136,6 +136,7 @@
     <Compile Include="Model\Analysis\IssuesSearchModel.cs" />
     <Compile Include="Model\Association\AssociationModel.cs" />
     <Compile Include="Model\Configuration\EmbbedVersionController.cs" />
+    <Compile Include="Model\Helpers\RelayCommand.cs" />
     <Compile Include="Model\Helpers\RestSourceControlModel.cs" />
     <Compile Include="Model\Helpers\SearchModel.cs" />
     <Compile Include="Model\Menu\AssignMenu.cs" />

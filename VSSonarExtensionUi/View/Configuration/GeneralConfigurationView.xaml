@@ -50,7 +50,7 @@
                 Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"  Grid.Row="0" Content="Server Address"></Label>
         <Label                 Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
                 Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"  Grid.Row="1" Grid.Column="0"
-               Content="UserName"></Label>
+               Content="Login or Token"></Label>
         <Label                 Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
                 Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"  Grid.Row="2" Grid.Column="0" Content="Password"></Label>
         <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding ServerAddress}"></TextBox>
@@ -64,8 +64,14 @@
 				Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"                    
                 Style="{StaticResource MyMetroButton}"
                 Content="Clear Data" 
-                Command="{Binding ClearCredentials}" 
-                />
+                Command="{Binding ClearCredentials}" />
+
+            <Button Width="100"
+                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+				Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"                    
+                Style="{StaticResource MyMetroButton}"
+                Content="Get Token" ToolTip="Available only for 5.4 or above"
+                Command="{Binding GetTokenCommand}" />
             
             <Button 
                 Style="{StaticResource MyMetroButton}"

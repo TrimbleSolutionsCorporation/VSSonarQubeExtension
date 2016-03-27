@@ -75,10 +75,10 @@ type JsonSonarConnector() =
                 req.Method <- "GET"
                 req.ContentType <- "text/json"
 
-                if userConf.Username <> "" && userConf.Password <> "" then
+                if userConf.Username <> ""  then
                     let auth = "Basic " + (userConf.Username + ":" + userConf.Password |> Encoding.UTF8.GetBytes |> Convert.ToBase64String)
                     req.Headers.Add("Authorization", auth)
-
+                
                 let addLine (line:string) =
                     if not(String.IsNullOrEmpty(Environment.GetEnvironmentVariable("VSSONAREXTENSIONDEBUG"))) then
                         use wr = new StreamWriter(userRoamingFile, true)

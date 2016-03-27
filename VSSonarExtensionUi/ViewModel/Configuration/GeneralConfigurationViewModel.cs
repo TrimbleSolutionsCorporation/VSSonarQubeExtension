@@ -15,7 +15,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using System.Windows.Media;
 
     using CredentialManagement;
-    using GalaSoft.MvvmLight.Command;
     using Helpers;
     using Model.Helpers;
     using PropertyChanged;
@@ -95,11 +94,12 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.configurationHelper = configurationHelper;
             this.notificationManager = notificationManager;
 
-            this.ClearCacheCommand = new RelayCommand(this.OnClearCacheCommand);
-            this.TestConnectionCommand = new RelayCommand<object>(this.OnTestAndSavePassword);
-            this.ClearCredentials = new RelayCommand(this.OnClearCredentials);
+            this.GetTokenCommand = new VsRelayCommand(this.OnGetTokenCommand);
+            this.ClearCacheCommand = new VsRelayCommand(this.OnClearCacheCommand);
+            this.TestConnectionCommand = new VsRelayCommand<object>(this.OnTestAndSavePassword);
+            this.ClearCredentials = new VsRelayCommand(this.OnClearCredentials);
 
-            this.ConnectToServerCommand = new RelayCommand<object>(this.OnConnectToServerCommand);
+            this.ConnectToServerCommand = new VsRelayCommand<object>(this.OnConnectToServerCommand);
 
             
 
@@ -136,6 +136,14 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         ///     Gets or sets the on clear cache command.
         /// </summary>
         public ICommand ClearCacheCommand { get; set; }
+
+        /// <summary>
+        /// Gets or sets the get token command.
+        /// </summary>
+        /// <value>
+        /// The get token command.
+        /// </value>
+        public ICommand GetTokenCommand { get; set; }
 
         /// <summary>
         ///     Gets or sets the clear credentials.
@@ -185,7 +193,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         ///     Gets or sets the test connection command.
         /// </summary>
-        public RelayCommand<object> TestConnectionCommand { get; set; }
+        public ICommand TestConnectionCommand { get; set; }
 
         /// <summary>
         /// Gets or sets the connect to server command.
@@ -193,7 +201,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <value>
         /// The connect to server command.
         /// </value>
-        public RelayCommand<object> ConnectToServerCommand { get; set; }
+        public ICommand ConnectToServerCommand { get; set; }
         
         /// <summary>
         ///     Gets or sets the user defined editor.
@@ -371,11 +379,10 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         /// Associates the with new project.
         /// </summary>
-        /// <param name="config">The configuration.</param>
         /// <param name="project">The project.</param>
         /// <param name="workingDir">The working dir.</param>
         /// <param name="provider">The provider.</param>
-        /// <param name="sourcePlugin">The source plugin.</param>
+        /// <param name="profile">The profile.</param>
         public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider provider, Dictionary<string, Profile> profile)
         {
             this.sourceDir = workingDir;
@@ -510,7 +517,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         ///     The on clear cache command.
         /// </summary>
-        private void OnClearCacheCommand()
+        private void OnClearCacheCommand(object data)
         {
             this.notificationManager.ClearCache();
         }
@@ -518,7 +525,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         ///     The on clear credentials.
         /// </summary>
-        private void OnClearCredentials()
+        private void OnClearCredentials(object data)
         {
             using (var cm = new Credential { Target = "VSSonarQubeExtension", })
             {
@@ -544,6 +551,18 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.viewModel.EstablishANewConnectionToServer();
             this.StatusMessage = "Connected";
         }
+
+        private void OnGetTokenCommand(object obj)
+        {
+            if (string.IsNullOrEmpty(this.ServerAddress))
+            {
+                MessageDisplayBox.DisplayMessage("Address not defined, please set adress before trying to generate token");
+                return;
+            }
+
+            this.visualStudioHelper.NavigateToResource(this.ServerAddress + "/account/security");
+        }
+        
 
         /// <summary>
         /// The on test and save password.
