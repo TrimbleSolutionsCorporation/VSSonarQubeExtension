@@ -1368,7 +1368,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             var menu = new ObservableCollection<IMenuItem>
                            {
                                SetExclusionsMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager, translator, analyser),
-                               SetSqaleMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager, translator, analyser)
+                               SetSqaleMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager, translator, analyser),
+                               MoreInfoMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager, translator, analyser)
                            };
 
             return menu;

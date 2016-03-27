@@ -194,6 +194,14 @@ namespace VSSonarPlugins.Types
         public string ActionPlanName { get; set; }
 
         /// <summary>
+        /// Gets or sets the help URL.
+        /// </summary>
+        /// <value>
+        /// The help URL.
+        /// </value>
+        public string HelpUrl { get; set; }
+
+        /// <summary>
         /// The deep copy.
         /// </summary>
         /// <returns>
