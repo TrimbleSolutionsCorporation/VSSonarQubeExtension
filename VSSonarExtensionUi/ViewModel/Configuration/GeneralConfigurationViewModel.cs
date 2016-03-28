@@ -507,7 +507,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 this.Password = ConnectionConfiguration.ConvertToUnsecureString(cm.SecurePassword);
                 this.ServerAddress = address;
 
-                if (address != null && bootatstart.Equals("true"))
+                if (address != null)
                 {
                     AuthtenticationHelper.EstablishAConnection(this.restService, address, cm.Username, ConnectionConfiguration.ConvertToUnsecureString(cm.SecurePassword));
                 }
