@@ -188,5 +188,10 @@ namespace VSSonarQubeExtension.Helpers
 
             return sk1;
         }
+
+        public void WriteSetting(Context context, string owner, string key, string value, bool sync = false, bool skipIfExist = false)
+        {
+            this.WriteSetting(new SonarQubeProperties { Context = context, Owner = owner, Key = key, Value = value }, sync, skipIfExist);
+        }
     }
 }

@@ -279,18 +279,18 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public void SaveData()
         {
             // general props
-            this.configurationHelper.WriteOptionInApplicationData(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.CxxWrapperVersionKey, this.CxxWrapperVersion);
-            this.configurationHelper.WriteOptionInApplicationData(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.SonarQubeMsbuildVersionKey, this.SQMSBuildRunnerVersion);
-            this.configurationHelper.WriteOptionInApplicationData(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.CxxWrapperPathKey, this.WrapperPath);
-            this.configurationHelper.WriteOptionInApplicationData(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.ExcludedPluginsKey, this.ExcludedPlugins);
-            this.configurationHelper.WriteOptionInApplicationData(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.IsDebugAnalysisOnKey, this.DebugIsChecked.ToString());
-            this.configurationHelper.WriteOptionInApplicationData(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.LocalAnalysisTimeoutKey, this.TimeoutValue.ToString());
-            this.configurationHelper.WriteOptionInApplicationData(
+            this.configurationHelper.WriteSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.CxxWrapperVersionKey, this.CxxWrapperVersion);
+            this.configurationHelper.WriteSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.SonarQubeMsbuildVersionKey, this.SQMSBuildRunnerVersion);
+            this.configurationHelper.WriteSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.CxxWrapperPathKey, this.WrapperPath);
+            this.configurationHelper.WriteSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.ExcludedPluginsKey, this.ExcludedPlugins);
+            this.configurationHelper.WriteSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.IsDebugAnalysisOnKey, this.DebugIsChecked.ToString());
+            this.configurationHelper.WriteSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.LocalAnalysisTimeoutKey, this.TimeoutValue.ToString());
+            this.configurationHelper.WriteSetting(
                 Context.AnalysisGeneral,
                 OwnersId.AnalysisOwnerId,
                 GlobalAnalysisIds.LocalAnalysisProjectAnalysisEnabledKey,
                 this.IsProjectAnalysisChecked.ToString());
-            this.configurationHelper.WriteOptionInApplicationData(
+            this.configurationHelper.WriteSetting(
                 Context.AnalysisGeneral,
                 OwnersId.AnalysisOwnerId,
                 GlobalAnalysisIds.LocalAnalysisSolutionAnalysisEnabledKey,

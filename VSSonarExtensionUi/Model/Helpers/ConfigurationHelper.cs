@@ -91,26 +91,6 @@ namespace VSSonarExtensionUi.Model.Helpers
         }
 
         /// <summary>
-        /// Writes the option in application data.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="owner">The owner.</param>
-        /// <param name="key">The key.</param>
-        /// <param name="value">The value.</param>
-        /// <param name="sync">if set to <c>true</c> [synchronize].</param>
-        /// <param name="skipIfExist">if set to <c>true</c> [skip if exist].</param>
-        public void WriteOptionInApplicationData(
-            Context context,
-            string owner,
-            string key,
-            string value,
-            bool sync = false,
-            bool skipIfExist = false)
-        {
-            this.WriteSetting(new SonarQubeProperties(context, owner, key, value), sync, skipIfExist);
-        }
-
-        /// <summary>
         /// Reads the setting.
         /// </summary>
         /// <param name="context">The context.</param>
@@ -295,6 +275,20 @@ namespace VSSonarExtensionUi.Model.Helpers
         public string UserAppDataConfigurationFile()
         {
             return this.ApplicationDataUserSettingsFile;
+        }
+
+        /// <summary>
+        /// The write setting.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="owner">The owner.</param>
+        /// <param name="key">The key.</param>
+        /// <param name="value">The value.</param>
+        /// <param name="sync">The sync.</param>
+        /// <param name="skipIfExist">The skip if exist.</param>
+        public void WriteSetting(Context context, string owner, string key, string value, bool sync = false, bool skipIfExist = false)
+        {
+            this.WriteSetting(new SonarQubeProperties { Context = context, Owner = owner, Key = key, Value = value }, sync, skipIfExist);
         }
     }
 }

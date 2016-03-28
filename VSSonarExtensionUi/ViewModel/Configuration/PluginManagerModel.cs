@@ -440,7 +440,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             {
                 if (pluginDescription.Enabled)
                 {
-                    this.configurationHelper.WriteOptionInApplicationData(
+                    this.configurationHelper.WriteSetting(
                         Context.IssueTrackerProps,
                         this.associatedProject.Name,
                         pluginDescription.Name,
@@ -448,7 +448,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 }
                 else
                 {
-                    this.configurationHelper.WriteOptionInApplicationData(
+                    this.configurationHelper.WriteSetting(
                         Context.IssueTrackerProps,
                         this.associatedProject.Name,
                         pluginDescription.Name,
@@ -497,7 +497,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 }
                 catch (Exception)
                 {
-                    this.configurationHelper.WriteOptionInApplicationData(Context.IssueTrackerProps, project.Name, plugDesc.Name, "true");
+                    this.configurationHelper.WriteSetting(Context.IssueTrackerProps, project.Name, plugDesc.Name, "true");
                     plugDesc.Enabled = true;
                 }
 

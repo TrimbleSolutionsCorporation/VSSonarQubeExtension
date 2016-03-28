@@ -13,11 +13,18 @@ namespace VSSonarPlugins
         /// <returns>The <see cref="SonarQubeProperties"/>.</returns>
         SonarQubeProperties ReadSetting(Context context, string owner, string key);
 
-        /// <summary>The write setting.</summary>
-        /// <param name="prop">The prop.</param>
+        /// <summary>
+        /// The write setting.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="owner">The owner.</param>
+        /// <param name="key">The key.</param>
+        /// <param name="value">The value.</param>
         /// <param name="sync">The sync.</param>
         /// <param name="skipIfExist">The skip if exist.</param>
-        void    WriteSetting(SonarQubeProperties prop, bool sync = false, bool skipIfExist = false);
+        void WriteSetting(Context context, string owner, string key, string value, bool sync = false, bool skipIfExist = false);
+
+        void WriteSetting(SonarQubeProperties prop, bool sync = false, bool skipIfExist = false);
 
         /// <summary>The sync settings.</summary>
         void SyncSettings();
@@ -44,20 +51,5 @@ namespace VSSonarPlugins
         /// The application path.
         /// </value>
         string ApplicationPath { get; set; }
-
-        /// <summary>The write option in application data.</summary>
-        /// <param name="context">The context.</param>
-        /// <param name="owner">The owner.</param>
-        /// <param name="key">The key.</param>
-        /// <param name="value">The value.</param>
-        /// <param name="sync">The sync.</param>
-        /// <param name="skipIfExist">The skip if exist.</param>
-        void WriteOptionInApplicationData(
-        Context context,
-        string owner,
-        string key,
-        string value,
-        bool sync = false,
-        bool skipIfExist = false);
     }
 }

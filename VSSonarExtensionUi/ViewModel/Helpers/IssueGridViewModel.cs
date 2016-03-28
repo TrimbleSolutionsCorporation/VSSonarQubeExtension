@@ -1724,124 +1724,124 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 return;
             }
 
-            this.configurationHelper.WriteOptionInApplicationData(
+            this.configurationHelper.WriteSetting(
                 Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "ComponentIndex", 
                 this.ComponentIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(
+            this.configurationHelper.WriteSetting(
                 Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "LineIndex", 
                 this.LineIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(
+            this.configurationHelper.WriteSetting(
                 Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "AssigneeIndex", 
                 this.AssigneeIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(
+            this.configurationHelper.WriteSetting(
                 Context.UIProperties,
                 this.dataGridOptionsKey,
                 "AuthorIndex",
                 this.AuthorIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(
+            this.configurationHelper.WriteSetting(
                 Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "MessageIndex", 
                 this.MessageIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(
+            this.configurationHelper.WriteSetting(
                 Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "StatusIndex", 
                 this.StatusIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(
+            this.configurationHelper.WriteSetting(
                 Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "SeverityIndex", 
                 this.SeverityIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(
+            this.configurationHelper.WriteSetting(
                 Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "RuleIndex", 
                 this.RuleIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(
+            this.configurationHelper.WriteSetting(
                 Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "CreationDateIndex", 
                 this.CreationDateIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(
+            this.configurationHelper.WriteSetting(
                 Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "ProjectIndex", 
                 this.ProjectIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(
+            this.configurationHelper.WriteSetting(
                 Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "ResolutionIndex", 
                 this.ResolutionIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(
+            this.configurationHelper.WriteSetting(
                 Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "EffortToFixIndex", 
                 this.EffortToFixIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(
+            this.configurationHelper.WriteSetting(
                 Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "UpdateDateIndex", 
                 this.UpdateDateIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(
+            this.configurationHelper.WriteSetting(
                 Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "CloseDateIndex", 
                 this.CloseDateIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(
+            this.configurationHelper.WriteSetting(
                 Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "KeyIndex", 
                 this.KeyIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(
+            this.configurationHelper.WriteSetting(
                 Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "IdIndex", 
                 this.IdIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(
+            this.configurationHelper.WriteSetting(
                 Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "IsNewIndex", 
                 this.IsNewIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(
+            this.configurationHelper.WriteSetting(
                 Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "ViolationIdIndex", 
                 this.ViolationIdIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(
+            this.configurationHelper.WriteSetting(
                 Context.UIProperties,
                 this.dataGridOptionsKey,
                 "ActionPlanIndex",
                 this.ActionPlanIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteOptionInApplicationData(
+            this.configurationHelper.WriteSetting(
                 Context.UIProperties,
                 this.dataGridOptionsKey,
                 "IssueTrackerIdIndex",
                 this.IssueTrackerIdIndex.ToString(CultureInfo.InvariantCulture));
 
-            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, this.dataGridOptionsKey, "CreationDateVisible", this.CreationDateVisible.ToString());
-            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, this.dataGridOptionsKey, "CloseDateVisible", this.CloseDateVisible.ToString());
-            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, this.dataGridOptionsKey, "EffortToFixVisible", this.EffortToFixVisible.ToString());
-            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, this.dataGridOptionsKey, "ProjectVisible", this.ProjectVisible.ToString());
-            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, this.dataGridOptionsKey, "UpdateDateVisible", this.UpdateDateVisible.ToString());
-            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, this.dataGridOptionsKey, "StatusVisible", this.StatusVisible.ToString());
-            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, this.dataGridOptionsKey, "SeverityVisible", this.SeverityVisible.ToString());
-            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, this.dataGridOptionsKey, "RuleVisible", this.RuleVisible.ToString());
-            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, this.dataGridOptionsKey, "ResolutionVisible", this.ResolutionVisible.ToString());
-            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, this.dataGridOptionsKey, "AssigneeVisible", this.AssigneeVisible.ToString());
-            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, this.dataGridOptionsKey, "AuthorVisible", this.AuthorVisible.ToString());
-            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, this.dataGridOptionsKey, "IsNewVisible", this.IsNewVisible.ToString());
-            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, this.dataGridOptionsKey, "KeyVisible", this.KeyVisible.ToString());
-            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, this.dataGridOptionsKey, "IdVisible", this.IdVisible.ToString());
-            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, this.dataGridOptionsKey, "ViolationIdVisible", this.ViolationIdVisible.ToString());
-            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, this.dataGridOptionsKey, "ActionPlanVisible", this.ActionPlanVisible.ToString());
-            this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, this.dataGridOptionsKey, "IssueTrackerIdVisible", this.IssueTrackerIdVisible.ToString());
+            this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "CreationDateVisible", this.CreationDateVisible.ToString());
+            this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "CloseDateVisible", this.CloseDateVisible.ToString());
+            this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "EffortToFixVisible", this.EffortToFixVisible.ToString());
+            this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "ProjectVisible", this.ProjectVisible.ToString());
+            this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "UpdateDateVisible", this.UpdateDateVisible.ToString());
+            this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "StatusVisible", this.StatusVisible.ToString());
+            this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "SeverityVisible", this.SeverityVisible.ToString());
+            this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "RuleVisible", this.RuleVisible.ToString());
+            this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "ResolutionVisible", this.ResolutionVisible.ToString());
+            this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "AssigneeVisible", this.AssigneeVisible.ToString());
+            this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "AuthorVisible", this.AuthorVisible.ToString());
+            this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "IsNewVisible", this.IsNewVisible.ToString());
+            this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "KeyVisible", this.KeyVisible.ToString());
+            this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "IdVisible", this.IdVisible.ToString());
+            this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "ViolationIdVisible", this.ViolationIdVisible.ToString());
+            this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "ActionPlanVisible", this.ActionPlanVisible.ToString());
+            this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "IssueTrackerIdVisible", this.IssueTrackerIdVisible.ToString());
         }
 
 
@@ -1877,12 +1877,12 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             int i = 0;
             foreach (PropertyInfo propertyInfo in typeof(Issue).GetProperties())
             {
-                this.configurationHelper.WriteOptionInApplicationData(
+                this.configurationHelper.WriteSetting(
                     Context.UIProperties, 
                     this.dataGridOptionsKey, 
                     propertyInfo.Name + "Index", 
                     i.ToString(CultureInfo.InvariantCulture));
-                this.configurationHelper.WriteOptionInApplicationData(Context.UIProperties, this.dataGridOptionsKey, propertyInfo.Name + "Visible", "true");
+                this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, propertyInfo.Name + "Visible", "true");
                 i++;
             }
         }
