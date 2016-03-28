@@ -94,7 +94,7 @@ namespace VSSonarExtensionUi.Model.Menu
             this.manager = manager;
             this.tranlator = translator;
 
-            this.ExecuteCommand = new RelayCommand(this.OnSetExclusionsMenuCommand);
+            this.ExecuteCommand = new RelayCommand(this.OnShowMoreInfoCommand);
             this.SubItems = new ObservableCollection<IMenuItem>();
 
             // register menu for data sync
@@ -133,7 +133,7 @@ namespace VSSonarExtensionUi.Model.Menu
         /// </returns>
         public static IMenuItem MakeMenu(ISonarRestService rest, IssueGridViewModel model, INotificationManager manager, ISQKeyTranslator translator, ISonarLocalAnalyser analyser)
         {
-            var topLel = new SetSqaleMenu(rest, model, manager, translator, analyser) { CommandText = "More Info", IsEnabled = true };
+            var topLel = new MoreInfoMenu(rest, model, manager, translator, analyser) { CommandText = "More Info", IsEnabled = true };
             return topLel;
         }
 
@@ -219,7 +219,7 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <summary>
         /// Called when [source control command].
         /// </summary>
-        private void OnSetExclusionsMenuCommand()
+        private void OnShowMoreInfoCommand()
         {
             if (this.model.SelectedItems == null || this.model.SelectedItems.Count == 0)
             {
