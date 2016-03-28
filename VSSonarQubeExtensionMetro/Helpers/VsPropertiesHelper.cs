@@ -971,7 +971,9 @@ namespace VSSonarQubeExtension.Helpers
             var solutiondata = MSBuildHelper.CreateSolutionData(solutionPath);
             foreach (var project in solutiondata.Projects)
             {
-                if (project.Value.Path.ToLower().Equals(projectPath.ToLower()))
+                var fullPathOne = Path.GetFullPath(project.Value.Path).ToLower();
+                var fullPathTwo = Path.GetFullPath(projectPath).ToLower();
+                if (fullPathOne.Equals(fullPathTwo))
                 {
                     return project.Value.Guid.ToString();
                 }
