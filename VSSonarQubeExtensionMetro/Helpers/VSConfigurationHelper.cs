@@ -168,7 +168,7 @@ namespace VSSonarQubeExtension.Helpers
         /// <returns></returns>
         private string GetRegistryKey(SonarQubeProperties prop)
         {
-            return prop.Context + "_" + prop.Key; 
+            return prop.Context + "_" + prop.Owner + "_" + prop.Key; 
         }
 
         /// <summary>
