@@ -484,11 +484,18 @@
                     }
                 }
 
-                this.LoadDiagnosticsFromPath(this.roslynExternalUserDiagPath, hasRoslynPlugin);
-
+                this.LoadDiagnosticsFromPath(this.roslynExternalUserDiagPath, hasRoslynPlugin);                
+                
                 foreach (var item in this.embedVersionController.GetInstalledPaths())
                 {
-                    this.LoadDiagnosticsFromPath(item, false);
+                    try
+                    {
+                        this.LoadDiagnosticsFromPath(item, false);
+                    }
+                    catch (Exception ex)
+                    {
+                        this.notificationManager.WriteMessage("Failed to load diagnostics from: " + item + " : " + ex.Message);
+                    }
                 }                    
             }
 
@@ -501,23 +508,30 @@
 
             foreach (var diagnostic in diagnostics)
             {
-                var fileName = Path.GetFileName(diagnostic);
-
-                if (this.ExtensionDiagnostics.ContainsKey(fileName))
+                try
                 {
-                    continue;
-                }
+                    var fileName = Path.GetFileName(diagnostic);
 
-                var newdata = new VSSonarExtensionDiagnostic(fileName, diagnostic);
-
-                if (newdata.AvailableChecks.Count > 0)
-                {
-                    this.ExtensionDiagnostics.Add(fileName, newdata);
-
-                    if (syncInServer)
+                    if (this.ExtensionDiagnostics.ContainsKey(fileName))
                     {
-                        this.SyncDiagnosticInServer(newdata);
+                        continue;
                     }
+
+                    var newdata = new VSSonarExtensionDiagnostic(fileName, diagnostic);
+
+                    if (newdata.AvailableChecks.Count > 0)
+                    {
+                        this.ExtensionDiagnostics.Add(fileName, newdata);
+
+                        if (syncInServer)
+                        {
+                            this.SyncDiagnosticInServer(newdata);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    this.notificationManager.WriteMessage("Failed to load user diagnostics from: " + diagnostic + " : " + ex.Message);
                 }
             }
         }
