@@ -501,11 +501,18 @@
 
             foreach (var diagnostic in diagnostics)
             {
-                var newdata = new VSSonarExtensionDiagnostic(Path.GetFileName(diagnostic), diagnostic);
+                var fileName = Path.GetFileName(diagnostic);
+
+                if (this.ExtensionDiagnostics.ContainsKey(fileName))
+                {
+                    continue;
+                }
+
+                var newdata = new VSSonarExtensionDiagnostic(fileName, diagnostic);
 
                 if (newdata.AvailableChecks.Count > 0)
                 {
-                    this.ExtensionDiagnostics.Add(Path.GetFileName(diagnostic), newdata);
+                    this.ExtensionDiagnostics.Add(fileName, newdata);
 
                     if (syncInServer)
                     {
