@@ -82,7 +82,7 @@
                                     <CheckBox 
                                       Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
                                       Margin="10, 0, 0, 0"
-                                      IsChecked="{Binding ShowFalsePositivesAndResolvedIssues}" ToolTip="Show false positives and issues marked as resolved." >
+                                      IsChecked="{Binding ShowFalsePositivesAndResolvedIssues}" ToolTip="Hide false positives and issues marked as resolved is server." >
                                     </CheckBox>
                                     
                                     <ToggleButton Width="125"

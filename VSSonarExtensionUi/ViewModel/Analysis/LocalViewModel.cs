@@ -78,6 +78,21 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     public class LocalViewModel : IAnalysisModelBase, IViewModelBase, IModelBase
     {
         /// <summary>
+        /// The model identifier
+        /// </summary>
+        private readonly string LocalViewModelIdentifier = "LocalViewModel";
+
+        /// <summary>
+        /// The modifiend lines on key
+        /// </summary>
+        private readonly string ShowIssuesInModifiedLinesKey = "ModifiendLinesOn";
+
+        /// <summary>
+        /// The hide false positives key
+        /// </summary>
+        private readonly string HideFalsePositivesKey = "HideFalsePositives";
+
+        /// <summary>
         /// The plugin list
         /// </summary>
         private readonly IList<IAnalysisPlugin> plugins = new List<IAnalysisPlugin>();
@@ -211,6 +226,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.ShowFalsePositivesAndResolvedIssues = true;
             this.ForeGroundColor = Colors.Black;
             this.BackGroundColor = Colors.White;
+
+            this.ReloadSavedOptions(this.configurationHelper);
 
             // register model
             AssociationModel.RegisterNewModelInPool(this);
@@ -450,6 +467,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         public void OnShowIssuesOnModifiedSectionsOfFileOnlyChanged()
         {
+            this.configurationHelper.WriteSetting(Context.FileAnalysisProperties, this.LocalViewModelIdentifier, this.ShowIssuesInModifiedLinesKey, this.ShowIssuesOnModifiedSectionsOfFileOnly.ToString().ToLowerInvariant());
             this.UpdateLocalIssues(this, null);
         }
 
@@ -458,6 +476,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         public void OnShowFalsePositivesAndResolvedIssuesChanged()
         {
+            this.configurationHelper.WriteSetting(Context.FileAnalysisProperties, this.LocalViewModelIdentifier, this.HideFalsePositivesKey, this.ShowFalsePositivesAndResolvedIssues.ToString().ToLowerInvariant());
             this.UpdateLocalIssues(this, null);
         }
 
@@ -1373,6 +1392,25 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                            };
 
             return menu;
+        }
+
+        /// <summary>
+        /// Reloads the saved options.
+        /// </summary>
+        /// <param name="configurationHelperIn">The configuration helper in.</param>
+        private void ReloadSavedOptions(IConfigurationHelper configurationHelperIn)
+        {
+            var dataShowOnModified = configurationHelperIn.ReadSetting(Context.FileAnalysisProperties, this.LocalViewModelIdentifier, this.ShowIssuesInModifiedLinesKey);
+            if (dataShowOnModified != null)
+            {
+                this.ShowIssuesOnModifiedSectionsOfFileOnly = dataShowOnModified.Value.Equals("true") ? true : false;
+            }
+
+            var dataShowFalsePositives = configurationHelperIn.ReadSetting(Context.FileAnalysisProperties, this.LocalViewModelIdentifier, this.HideFalsePositivesKey);
+            if (dataShowOnModified != null)
+            {
+                this.ShowFalsePositivesAndResolvedIssues = dataShowFalsePositives.Value.Equals("true") ? true : false;
+            }
         }
     }
 }
