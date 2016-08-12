@@ -780,9 +780,13 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         private void OnLaunchCompoSearchDialogCommand()
         {
-            var compoenentsList = SearchComponenetDialog.SearchComponents(AuthtenticationHelper.AuthToken, this.restService, this.AvailableProjects.ToList<Resource>(), this.componentList);
-            this.componentList.Clear();
-            this.componentList.AddRange(compoenentsList);
+            Application.Current.Dispatcher.Invoke(
+                delegate
+                {
+                    var compoenentsList = SearchComponenetDialog.SearchComponents(AuthtenticationHelper.AuthToken, this.restService, this.AvailableProjects.ToList<Resource>(), this.componentList);
+                    this.componentList.Clear();
+                    this.componentList.AddRange(compoenentsList);
+                });
         }
 
         /// <summary>

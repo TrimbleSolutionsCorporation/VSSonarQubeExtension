@@ -42,6 +42,11 @@
         private readonly Dictionary<string, List<Resource>> cachedResourceData = new Dictionary<string, List<Resource>>();
 
         /// <summary>
+        /// The component list
+        /// </summary>
+        private readonly ObservableCollection<Resource> componentList = new ObservableCollection<Resource>();
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SearchComponenetDialog" /> class.
         /// </summary>
         /// <param name="conf">The conf.</param>
@@ -54,8 +59,10 @@
             this.availableProjects = availableProjects;
             this.conf = conf;
             this.rest = rest;
-           
+
             InitializeComponent();
+            this.SearchDataGrid.ItemsSource = this.componentList;
+            this.SearchDataGrid.Items.Refresh();
             this.Projects.ItemsSource = availableProjects;
             this.SelectedDataGrid.ItemsSource = this.selectedItems;
             if (listofSaveComp != null)
@@ -87,16 +94,24 @@
                 savedList.Add(item);
             }
 
-            var searchComponenetDialog = new SearchComponenetDialog(conf, rest, availableProjects, listofSaveComp);
-            searchComponenetDialog.ShowDialog();
 
-            if (searchComponenetDialog.DialogResult == true)
+            try
             {
-                return searchComponenetDialog.SelectedDataGrid.Items.OfType<Resource>().ToList();
+                var searchComponenetDialog = new SearchComponenetDialog(conf, rest, availableProjects, listofSaveComp);
+                searchComponenetDialog.ShowDialog();
+
+                if (searchComponenetDialog.DialogResult == true)
+                {
+                    return searchComponenetDialog.SelectedDataGrid.Items.OfType<Resource>().ToList();
+                }
+                else
+                {
+                    return savedList;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return savedList;
+                MessageBox.Show("Ups Something wrong has happened. Please Report : " + ex.Message + " -> " + ex.StackTrace);
             }
 
             return new List<Resource>();
@@ -116,11 +131,9 @@
 
                 using (var bw = new BackgroundWorker{ WorkerReportsProgress = true })
                 {
-                    var comps = new List<Resource>();
                     var projects = new List<Resource>();
                     var searchData = this.SearchData.Text;
                     projects.AddRange(this.availableProjects);
-
                     var selectedProject = this.Projects.SelectedItem;
 
                     bw.RunWorkerCompleted += delegate
@@ -128,16 +141,20 @@
                         this.SearchData.IsEnabled = true;
                         this.ProgressBar.IsIndeterminate = false;
 
-                        this.SearchDataGrid.ItemsSource = comps;
-                        this.SearchDataGrid.Items.Refresh();
-                        this.StatusLabel.Content = "Search Completed.";
+                        Application.Current.Dispatcher.Invoke(
+                            delegate
+                            {
+                                this.SearchDataGrid.Items.Refresh();
+                                this.StatusLabel.Content = "Search Completed.";
+                            });
                     };
 
                     bw.DoWork += delegate
                     {
+                        var list = new List<Resource>();
                         if (selectedProject != null)
                         {
-                            this.SearchInProject(comps, selectedProject as Resource, searchData);
+                            this.SearchInProject(list, selectedProject as Resource, searchData);
                         }
                         else
                         {
@@ -149,22 +166,32 @@
                                     {
                                         try
                                         {
-                                            this.SearchInProject(comps, project, searchData);
+                                            this.SearchInProject(list, project, searchData);
                                         }
                                         catch (Exception)
                                         {
                                             // ignore data
                                         }
 
-                                        bw.ReportProgress(0, "Searching : " + project.Name + " : Done");                                        
+                                        bw.ReportProgress(0, "Searching : " + project.Name + " : Done");
                                     });
-                                i++;                                
+                                i++;
                             }
 
                             foreach (var task in tasks)
                             {
                                 task.Wait();
                             }
+
+                            Application.Current.Dispatcher.Invoke(
+                                delegate
+                                {
+                                    this.componentList.Clear();
+                                    foreach (var item in list)
+                                    {
+                                        this.componentList.Add(item);
+                                    }
+                                });
                         }
                     };
 
@@ -310,27 +337,31 @@
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void SendSelectedToListButton(object sender, RoutedEventArgs e)
         {
-            var selectedItems = this.SearchDataGrid.SelectedItems;
-
-            foreach (Resource item in selectedItems)
-            {
-                bool found = false;
-                foreach (Resource picked in this.SelectedDataGrid.Items)
+            Application.Current.Dispatcher.Invoke(
+                delegate
                 {
-                    if (item.Key == picked.Key)
+                    var selectedItems = this.SearchDataGrid.SelectedItems;
+
+                    foreach (Resource item in selectedItems)
                     {
-                        found = true;
-                        break;
-                    }                    
-                }
+                        bool found = false;
+                        foreach (Resource picked in this.SelectedDataGrid.Items)
+                        {
+                            if (item.Key == picked.Key)
+                            {
+                                found = true;
+                                break;
+                            }
+                        }
 
-                if (!found)
-                {
-                    this.selectedItems.Add(item);
-                }
-            }
-            
-            this.SelectedDataGrid.Items.Refresh();
+                        if (!found)
+                        {
+                            this.selectedItems.Add(item);
+                        }
+                    }
+
+                    this.SelectedDataGrid.Items.Refresh();
+                });
         }
        
         /// <summary>
