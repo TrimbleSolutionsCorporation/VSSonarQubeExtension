@@ -159,7 +159,6 @@
     <Compile Include="Model\Helpers\PasswordHelper.cs" />
     <Compile Include="Model\Helpers\SourceControlModel.cs" />
     <Compile Include="Model\Menu\IssueTrackerMenu.cs" />
-    <Compile Include="Model\Menu\PlanMenu.cs" />
     <Compile Include="Model\Menu\SourceControlMenu.cs" />
     <Compile Include="Model\PluginManager\PluginController.cs" />
     <Compile Include="Model\PluginManager\PluginLoader.cs" />
@@ -228,9 +227,6 @@
     </Compile>
     <Compile Include="View\Helpers\ProvisionProject.xaml.cs">
       <DependentUpon>ProvisionProject.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\Helpers\PromptUserForNewPlan.xaml.cs">
-      <DependentUpon>PromptUserForNewPlan.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Helpers\PromptUserData.xaml.cs">
       <DependentUpon>PromptUserData.xaml</DependentUpon>
@@ -339,10 +335,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\Helpers\ProvisionProject.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="View\Helpers\PromptUserForNewPlan.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

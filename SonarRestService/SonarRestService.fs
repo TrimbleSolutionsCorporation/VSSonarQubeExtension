@@ -149,11 +149,6 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 | None -> ()
                 | Some value -> issue.Author <- value
 
-            if not(obj.ReferenceEquals(elem.ActionPlan, null)) then
-                match elem.ActionPlan with
-                | None -> ()
-                | Some value -> issue.ActionPlan <- value
-
             if not(obj.ReferenceEquals(elem.Comments, null)) then
                 for elemC in elem.Comments do issue.Comments.Add(new Comment(elemC.CreatedAt, elemC.HtmlText, elemC.Key, elemC.Login, -1))
 
@@ -204,11 +199,6 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 issue.Severity <- GetSeverity(elem.Severity)
                 issue.Rule <- elem.Rule
                 issue.Key <- elem.Key.ToString()
-
-                if not(obj.ReferenceEquals(elem.ActionPlan, null)) then
-                    match elem.ActionPlan with
-                    | None -> ()
-                    | Some value -> issue.ActionPlan <- value
 
                 if not(obj.ReferenceEquals(elem.Assignee, null)) then
                     issue.Assignee <- elem.Assignee.Value
@@ -1279,33 +1269,8 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
             projects
 
-        member this.GetAvailableActionPlan(conf : ISonarConfiguration, resourceKey : string) = 
-            let url =  "/api/action_plans/search?project=" + resourceKey
-            let plans = new System.Collections.Generic.List<SonarActionPlan>()
-            let reply = httpconnector.HttpSonarGetRequest(conf, url)
-            let plansDat = JsonActionPlan.Parse(reply)
-            for entry in plansDat.ActionPlans do
-                let plan = new SonarActionPlan()
-                plan.Name <- entry.Name
-                plan.CreatedAt <- entry.CreatedAt
-                plan.UpdatedAt <- entry.UpdatedAt
-                
-                match entry.DeadLine with
-                | Some x -> plan.DeadLine <- x
-                | _ -> ()            
-                    
-                plan.Key <- entry.Key.Replace("\"", "")
-                plan.Project <- entry.Project
-                plan.UserLogin <- entry.UserLogin
-                plan.TotalIssues <- entry.TotalIssues
-                plan.UnresolvedIssues <- entry.UnresolvedIssues
-                plan.NamePlusProject <- entry.Name + " " + plan.Project
-                
-                plans.Add(plan)
-            plans
-
         member this.GetIssues(newConf : ISonarConfiguration, query : string, project : string) = 
-            let url =  "/api/issues/search" + query + "&additionalFields=comments,actionPlans&pageSize=200"
+            let url =  "/api/issues/search" + query + "&additionalFields=comments&pageSize=200"
             let oldurlreview = "/api/reviews?projects="+ project
             let oldurlviolations = "/api/violations?resource="+ project + "&depth=-1"
             getIssuesOldAndNewVersions(newConf, url, oldurlreview, oldurlviolations)
@@ -1647,32 +1612,6 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 responseMap.Add(issue.Key.ToString(), data.StatusCode)
 
             responseMap
-
-        member this.CreateNewPlan(newConf : ISonarConfiguration, projectId : string, plan : SonarActionPlan) =
-
-            let responseMap = new System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>()
-            let mutable parameters = Map.empty.Add("name", HttpUtility.UrlEncode(plan.Name))
-                                      .Add("project", projectId)
-                                      .Add("description", HttpUtility.UrlEncode(plan.Description))
-
-            if plan.DeadLine > DateTime.Now then
-                parameters <- parameters.Add("deadLine", plan.DeadLine.Year.ToString() + "-" + plan.DeadLine.Month.ToString() + "-" + plan.DeadLine.Day.ToString())
-
-            let reply = httpconnector.HttpSonarPostRequest(newConf, "/api/action_plans/create", parameters)
-
-            let plansDat = JsonarPlan.Parse(reply.Content)
-            let plan = new SonarActionPlan()
-            plan.Name <- plansDat.ActionPlan.Name
-            plan.CreatedAt <- plansDat.ActionPlan.CreatedAt
-            plan.UpdatedAt <- plansDat.ActionPlan.UpdatedAt
-                
-            if not(obj.ReferenceEquals(plansDat.ActionPlan.JsonValue.TryGetProperty("deadLine"), null)) then
-                plan.DeadLine <- plansDat.ActionPlan.DeadLine
-                    
-            plan.Key <- plansDat.ActionPlan.Key.Replace("\"", "")
-            plan.Project <- plansDat.ActionPlan.Project
-            plan.UserLogin <- plansDat.ActionPlan.UserLogin
-            plan
 
 
         member this.UnPlanIssues(newConf : ISonarConfiguration, issues : System.Collections.IList) =

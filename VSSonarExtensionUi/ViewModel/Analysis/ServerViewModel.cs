@@ -114,7 +114,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.restservice = restservice;
 
             this.Header = "Server Analysis";
-            this.AvailableActionPlans = new ObservableCollection<SonarActionPlan>();
             this.AlreadyOpenDiffs = new SortedSet<string>();
             this.IssuesGridView = new IssueGridViewModel("ServerView", true, this.configurationHelper, this.restservice, this.notificationMan, translator);
             this.IssuesGridView.ContextMenuItems = this.CreateRowContextMenu(restservice, translator);
@@ -196,14 +195,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         ///     Gets or sets the resource in editor.
         /// </summary>
         public Resource ResourceInEditor { get; set; }
-
-        /// <summary>
-        /// Gets or sets the available gates.
-        /// </summary>
-        /// <value>
-        /// The available gates.
-        /// </value>
-        public ObservableCollection<SonarActionPlan> AvailableActionPlans { get; set; }
 
         /// <summary>
         /// Gets or sets the already open diffs.
@@ -418,12 +409,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             {
                 this.IsRunningInVisualStudio = false;
             }
-
-            List<SonarActionPlan> usortedListofPlan = this.restservice.GetAvailableActionPlan(AuthtenticationHelper.AuthToken, this.associatedProject.Key);
-            if (usortedListofPlan != null && usortedListofPlan.Count > 0)
-            {
-                this.AvailableActionPlans = new ObservableCollection<SonarActionPlan>(usortedListofPlan.OrderBy(i => i.Name));
-            }
         }
 
         /// <summary>
@@ -481,7 +466,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             var newSource = VsSonarUtils.GetLinesFromSource(this.restservice.GetSourceForFileResource(AuthtenticationHelper.AuthToken, this.ResourceInEditor.Key), "\r\n");
             var newIssues = this.restservice.GetIssuesInResource(AuthtenticationHelper.AuthToken, this.ResourceInEditor.Key);
 
-            this.IssuesGridView.UpdateIssues(newIssues, this.AvailableActionPlans);
+            this.IssuesGridView.UpdateIssues(newIssues);
             this.localEditorCache.UpdateResourceData(this.ResourceInEditor, newCoverage, newIssues, newSource);
             this.OnSelectedViewChanged();
         }
@@ -620,7 +605,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                            {
                                ChangeStatusMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan),
                                OpenResourceMenu.MakeMenu(service, this.IssuesGridView),
-                               PlanMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan),
                                SourceControlMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan, translator),
                                IssueTrackerMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan, translator),
                                AssignMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan),

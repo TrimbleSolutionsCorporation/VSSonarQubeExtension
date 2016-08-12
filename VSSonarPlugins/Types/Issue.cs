@@ -52,8 +52,6 @@ namespace VSSonarPlugins.Types
             this.Author = string.Empty;
             this.IsNew = false;
             this.Key = string.Empty;
-            this.ActionPlan = string.Empty;
-            this.ActionPlanName = string.Empty;
 
             this.Id = 0;
             this.ViolationId = 0;
@@ -136,11 +134,6 @@ namespace VSSonarPlugins.Types
         public string Author { get; set; }
 
         /// <summary>
-        /// Gets or sets the action plan.
-        /// </summary>
-        public string ActionPlan { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether this instance is new.
         /// </summary>
         /// <value>
@@ -186,14 +179,6 @@ namespace VSSonarPlugins.Types
         public string Debt { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the action plan.
-        /// </summary>
-        /// <value>
-        /// The name of the action plan.
-        /// </value>
-        public string ActionPlanName { get; set; }
-
-        /// <summary>
         /// Gets or sets the help URL.
         /// </summary>
         /// <value>
@@ -228,7 +213,6 @@ namespace VSSonarPlugins.Types
                                     Debt = this.Debt,
                                     ViolationId = this.ViolationId,
                                     Assignee = this.Assignee,
-                                    ActionPlan = this.ActionPlan,
                                     IssueTrackerId = this.IssueTrackerId,
                                     Comments = new List<Comment>()
                                 };

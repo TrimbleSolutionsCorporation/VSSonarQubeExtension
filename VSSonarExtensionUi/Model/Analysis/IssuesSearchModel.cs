@@ -158,8 +158,6 @@ namespace VSSonarExtensionUi.Model.Analysis
                 this.issuesSearchViewModel.AssigneeList = new ObservableCollection<User>(usortedList.OrderBy(i => i.Name));
                 this.issuesSearchViewModel.ReporterList = new ObservableCollection<User>(usortedList.OrderBy(i => i.Name));
             }
-
-            this.ReloadPlanData();
         }
 
         /// <summary>
@@ -183,8 +181,6 @@ namespace VSSonarExtensionUi.Model.Analysis
                 this.issuesSearchViewModel.AssigneeList = new ObservableCollection<User>(usortedList.OrderBy(i => i.Name));
                 this.issuesSearchViewModel.ReporterList = new ObservableCollection<User>(usortedList.OrderBy(i => i.Name));
             }
-
-            this.ReloadPlanData();
         }
 
         /// <summary>
@@ -227,44 +223,6 @@ namespace VSSonarExtensionUi.Model.Analysis
             this.ClearIssues();
             this.associatedProject = null;
             this.issuesSearchViewModel.CanQUeryIssues = false;
-        }
-
-        /// <summary>
-        /// Reloads the plan data.
-        /// </summary>
-        public void ReloadPlanData()
-        {
-            if (this.associatedProject == null)
-            {
-                var plans = new List<SonarActionPlan>();
-                foreach (var project in this.availableProjects)
-                {
-                    try
-                    {
-                        List<SonarActionPlan> projects = this.restService.GetAvailableActionPlan(AuthtenticationHelper.AuthToken, project.Key);
-
-                        if (projects != null && projects.Count > 0)
-                        {
-                            plans.AddRange(projects);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        // TODO
-                    }
-                }
-
-                this.issuesSearchViewModel.AvailableActionPlans = new ObservableCollection<SonarActionPlan>(plans.OrderBy(i => i.NamePlusProject));
-                this.issuesSearchViewModel.UpdatePlanMenuContext();
-
-                return;
-            } 
-
-            List<SonarActionPlan> usortedListofPlan = this.restService.GetAvailableActionPlan(AuthtenticationHelper.AuthToken, this.associatedProject.Key);
-            if (usortedListofPlan != null && usortedListofPlan.Count > 0)
-            {
-                this.issuesSearchViewModel.AvailableActionPlans = new ObservableCollection<SonarActionPlan>(usortedListofPlan.OrderBy(i => i.Name));
-            }
         }
 
         /// <summary>

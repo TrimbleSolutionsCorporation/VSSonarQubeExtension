@@ -80,11 +80,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         private readonly SearchModel savedSearchModel;
 
         /// <summary>
-        /// The plan menu
-        /// </summary>
-        private PlanMenu planMenu;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="IssuesSearchViewModel" /> class.
         /// </summary>
         /// <param name="searchModel">The search model.</param>
@@ -107,7 +102,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.searchModel = searchModel;
             this.Header = "Issues Search";
             this.AvailableProjects = new List<Resource>();
-            this.AvailableActionPlans = new ObservableCollection<SonarActionPlan>();
             this.AssigneeList = new ObservableCollection<User>();
             this.ReporterList = new ObservableCollection<User>();
             this.AvailableSearches = new ObservableCollection<string>();
@@ -144,22 +138,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public ObservableCollection<string> AvailableSearches { get; private set; }
 
         /// <summary>
-        /// Gets or sets the available gates.
-        /// </summary>
-        /// <value>
-        /// The available gates.
-        /// </value>
-        public ObservableCollection<SonarActionPlan> AvailableActionPlans { get; set; }
-
-        /// <summary>
-        /// Gets or sets the selected gate.
-        /// </summary>
-        /// <value>
-        /// The selected gate.
-        /// </value>
-        public SonarActionPlan SelectedActionPlan { get; set; }
-
-        /// <summary>
         ///     Gets or sets the back ground color.
         /// </summary>
         public Color BackGroundColor { get; set; }
@@ -173,14 +151,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         ///     Gets the close flyout issue search command.
         /// </summary>
         public RelayCommand CloseLeftFlyoutCommand { get; private set; }
-
-        /// <summary>
-        /// Gets the reload plan data command.
-        /// </summary>
-        /// <value>
-        /// The reload plan data command.
-        /// </value>
-        public RelayCommand ReloadPlanDataCommand { get; private set; }
 
         /// <summary>
         /// Gets the cancel query command.
@@ -431,14 +401,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public ObservableCollection<User> ReporterList { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this instance is action plan selected.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if this instance is action plan selected; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsActionPlanSelected { get; set; }
-
-        /// <summary>
         /// Gets the available projects.
         /// </summary>
         /// <value>
@@ -452,14 +414,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public void OnShowFlyoutsChanged()
         {
             this.SizeOfFlyout = this.ShowLeftFlyOut ? 350 : 0;
-        }
-
-        /// <summary>
-        /// Updates the plan menu context.
-        /// </summary>
-        public void UpdatePlanMenuContext()
-        {
-            this.planMenu.UpdateActionPlans(this.AvailableActionPlans);
         }
 
         /// <summary>
@@ -556,27 +510,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             }
 
             return "&resolutions=" + str.Substring(0, str.Length - 1);
-        }
-
-        /// <summary>
-        /// Filters the action plans.
-        /// </summary>
-        /// <returns>return filter action plan</returns>
-        private string FilterActionPlans()
-        {
-            string str = string.Empty;
-
-            if (this.IsActionPlanSelected)
-            {
-                str += this.SelectedActionPlan.Key;
-            }
-
-            if (string.IsNullOrEmpty(str))
-            {
-                return string.Empty;
-            }
-
-            return "&actionPlans=" + str;
         }
 
         /// <summary>
@@ -691,8 +624,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.GetMyIssuesInProjectCommand = new RelayCommand(this.OnGetMyIssuesInProjectCommand);
             this.GetAllMyIssuesCommand = new RelayCommand(this.OnGetAllMyIssuesCommand);
             this.CloseLeftFlyoutCommand = new RelayCommand(this.OnCloseFlyoutIssueSearchCommand);
-            this.ReloadPlanDataCommand = new RelayCommand(this.OnReloadPlanDataCommand);
-            this.CancelQueryCommand = new RelayCommand(this.OnCancelQueryCommand);            
+            this.CancelQueryCommand = new RelayCommand(this.OnCancelQueryCommand);
             this.LaunchCompoSearchDialogCommand = new RelayCommand(this.OnLaunchCompoSearchDialogCommand);
 
             this.LoadSavedSearchCommand = new RelayCommand(this.OnLoadSavedSearchCommand);
@@ -821,7 +753,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             };
 
             bw.DoWork +=
-                delegate { this.IssuesGridView.UpdateIssues(this.searchModel.GetAllIssuesInProject(), this.AvailableActionPlans); };
+                delegate { this.IssuesGridView.UpdateIssues(this.searchModel.GetAllIssuesInProject()); };
 
             bw.RunWorkerAsync();
         }
@@ -844,7 +776,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             bw.DoWork +=
                 delegate
                     {
-                        this.IssuesGridView.UpdateIssues(this.searchModel.GetIssuesSinceLastProjectDate(), this.AvailableActionPlans);
+                        this.IssuesGridView.UpdateIssues(this.searchModel.GetIssuesSinceLastProjectDate());
                     };
 
             bw.RunWorkerAsync();
@@ -868,7 +800,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             bw.DoWork +=
                 delegate
                     {
-                        this.IssuesGridView.UpdateIssues(this.searchModel.GetCurrentUserIssues(), this.AvailableActionPlans);
+                        this.IssuesGridView.UpdateIssues(this.searchModel.GetCurrentUserIssues());
                     };
 
             bw.RunWorkerAsync();
@@ -913,7 +845,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 delegate
                     {
                         this.IssuesGridView.UpdateIssues(
-                            this.searchModel.GetCurrentUserIssuesInProject(), this.AvailableActionPlans);
+                            this.searchModel.GetCurrentUserIssuesInProject());
                     };
 
             bw.RunWorkerAsync();
@@ -931,11 +863,10 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             request += this.FilterSeverities();
             request += this.FilterStatus();
             request += this.FilterResolutions();
-            request += this.FilterActionPlans();
             request += this.FilterComponentsKeys();
 
             this.IssuesGridView.UpdateIssues(
-                this.searchModel.GetIssuesUsingFilter(request, this.IsFilterBySSCMChecked, this.componentList.Count > 0 && this.IsComponenetChecked), this.AvailableActionPlans);
+                this.searchModel.GetIssuesUsingFilter(request, this.IsFilterBySSCMChecked, this.componentList.Count > 0 && this.IsComponenetChecked));
         }
 
         /// <summary>
@@ -1019,14 +950,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         }
 
         /// <summary>
-        /// Called when [reload plan data command].
-        /// </summary>
-        private void OnReloadPlanDataCommand()
-        {
-            this.searchModel.ReloadPlanData();
-        }
-
-        /// <summary>
         /// The create row context menu.
         /// </summary>
         /// <param name="service">The service.</param>
@@ -1039,13 +962,10 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </returns>
         private ObservableCollection<IMenuItem> CreateRowContextMenu(ISonarRestService service, ISQKeyTranslator translator, ISonarLocalAnalyser analyser)
         {
-            this.planMenu = PlanMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager) as PlanMenu;
-
             var menu = new ObservableCollection<IMenuItem>
                            {
                                ChangeStatusMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager),
                                OpenResourceMenu.MakeMenu(service, this.IssuesGridView),
-                               this.planMenu,
                                SourceControlMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager, translator),
                                IssueTrackerMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager, translator),
                                AssignMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager),

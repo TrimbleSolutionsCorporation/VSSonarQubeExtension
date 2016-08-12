@@ -105,42 +105,6 @@
                             </StackPanel>
                         </GroupBox>
 
-                        <Expander Header="Action Plan" Grid.Row="5" Grid.ColumnSpan="2"
-                                      Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
-                            <Grid
-                                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                    Height="60">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="30" />
-                                    <RowDefinition Height="30" />
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="70" />
-                                    <ColumnDefinition Width="20*" />
-                                    <ColumnDefinition Width="25" />
-                                </Grid.ColumnDefinitions>
-                                <Label
-                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                        Content="Action Plan" />
-                                <ComboBox Grid.Row="0" Grid.Column="1" IsTextSearchEnabled="True"
-                                              controls:TextBoxHelper.Watermark="Search and select from drop down"
-                                              IsEditable="True"
-                                              TextSearch.TextPath="NamePlusProject"
-                                              SelectedItem="{Binding SelectedActionPlan, Mode=TwoWay}"
-                                              ItemsSource="{Binding AvailableActionPlans}"
-                                              MaxDropDownHeight="101"
-                                              Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                              ItemTemplate="{DynamicResource UserSelectionComboBoxDataTemplate}" />
-                                <CheckBox Grid.Row="0" Grid.Column="2" Margin="4,0,-4,0"
-                                              IsChecked="{Binding IsActionPlanSelected}" />
-                                <Button Grid.Row="1" Grid.ColumnSpan="3" Margin="10 3 10 0"
-                                        Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                        Style="{DynamicResource MyMetroButton}"
-                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                        Content="Reload" Command="{Binding ReloadPlanDataCommand}" />
-                            </Grid>
-                        </Expander>
-
                         <Button Style="{DynamicResource MyMetroButton}"
                                 Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
                                 Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"

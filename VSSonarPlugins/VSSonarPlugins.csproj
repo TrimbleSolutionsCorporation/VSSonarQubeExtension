@@ -131,7 +131,6 @@
     <Compile Include="IVSSStatusBar.cs" />
     <Compile Include="Types\DiagnosticAnalyzerType.cs" />
     <Compile Include="Types\Exclusion.cs" />
-    <Compile Include="Types\SonarActionPlan.cs" />
     <Compile Include="Types\Alert.cs" />
     <Compile Include="Types\BranchCoverage.cs" />
     <Compile Include="Types\Characteristic.cs" />

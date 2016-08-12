@@ -673,22 +673,6 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         public bool IssueTrackerIdVisible { get; set; }
 
         /// <summary>
-        /// Gets or sets the index of the action plan.
-        /// </summary>
-        /// <value>
-        /// The index of the action plan.
-        /// </value>
-        public int ActionPlanIndex { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether [action plan visible].
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if [action plan visible]; otherwise, <c>false</c>.
-        /// </value>
-        public bool ActionPlanVisible { get; set; }
-
-        /// <summary>
         /// Gets or sets the index of the selected.
         /// </summary>
         /// <value>
@@ -953,30 +937,6 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                     MessageDisplayBox.DisplayMessage("Failed to open issue in Issue Tracker", ex.Message);                    
                 }                
             }
-        }
-
-        /// <summary>
-        /// Updates the issues.
-        /// </summary>
-        /// <param name="issues">The issues.</param>
-        /// <param name="availableActionPlans">The available action plans.</param>
-        public void UpdateIssues(IEnumerable<Issue> issues, ObservableCollection<SonarActionPlan> availableActionPlans)
-        {
-            foreach (var issue in issues)
-            {
-                if (string.IsNullOrEmpty(issue.ActionPlan) && string.IsNullOrEmpty(issue.ActionPlanName))
-                {
-                    foreach (var plan in availableActionPlans)
-                    {
-                        if (plan.Key.Equals(issue.ActionPlan))
-                        {
-                            issue.ActionPlanName = plan.Name;
-                        }
-                    }
-                }
-            }
-
-            this.UpdateIssues(issues);
         }
 
         /// <summary>
@@ -1599,20 +1559,19 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 this.StatusIndex = int.Parse(GetValueForOption(options, "StatusIndex", "4", owner), CultureInfo.InvariantCulture);
                 this.SeverityIndex = int.Parse(GetValueForOption(options, "SeverityIndex", "5", owner), CultureInfo.InvariantCulture);
                 this.DebtIndex = int.Parse(GetValueForOption(options, "DebtIndex", "6", owner), CultureInfo.InvariantCulture);
-                this.ActionPlanIndex = int.Parse(GetValueForOption(options, "ActionPlanIndex", "7", owner), CultureInfo.InvariantCulture);
-                this.IssueTrackerIdIndex = int.Parse(GetValueForOption(options, "IssueTrackerIdIndex", "8", owner), CultureInfo.InvariantCulture);
-                this.IsNewIndex = int.Parse(GetValueForOption(options, "IsNewIndex", "9", owner), CultureInfo.InvariantCulture);
-                this.RuleIndex = int.Parse(GetValueForOption(options, "RuleIndex", "10", owner), CultureInfo.InvariantCulture);
-                this.AssigneeIndex = int.Parse(GetValueForOption(options, "AssigneeIndex", "11", owner), CultureInfo.InvariantCulture);
-                this.AuthorIndex = int.Parse(GetValueForOption(options, "AuthorIndex", "12", owner), CultureInfo.InvariantCulture);
-                this.CreationDateIndex = int.Parse(GetValueForOption(options, "CreationDateIndex", "13", owner), CultureInfo.InvariantCulture);
-                this.ProjectIndex = int.Parse(GetValueForOption(options, "ProjectIndex", "14", owner), CultureInfo.InvariantCulture);
-                this.ResolutionIndex = int.Parse(GetValueForOption(options, "ResolutionIndex", "15", owner), CultureInfo.InvariantCulture);
-                this.EffortToFixIndex = int.Parse(GetValueForOption(options, "EffortToFixIndex", "16", owner), CultureInfo.InvariantCulture);
-                this.UpdateDateIndex = int.Parse(GetValueForOption(options, "UpdateDateIndex", "17", owner), CultureInfo.InvariantCulture);
-                this.CloseDateIndex = int.Parse(GetValueForOption(options, "CloseDateIndex", "18", owner), CultureInfo.InvariantCulture);
-                this.KeyIndex = int.Parse(GetValueForOption(options, "KeyIndex", "19", owner), CultureInfo.InvariantCulture);
-                this.IdIndex = int.Parse(GetValueForOption(options, "IdIndex", "20", owner), CultureInfo.InvariantCulture);
+                this.IssueTrackerIdIndex = int.Parse(GetValueForOption(options, "IssueTrackerIdIndex", "7", owner), CultureInfo.InvariantCulture);
+                this.IsNewIndex = int.Parse(GetValueForOption(options, "IsNewIndex", "8", owner), CultureInfo.InvariantCulture);
+                this.RuleIndex = int.Parse(GetValueForOption(options, "RuleIndex", "9", owner), CultureInfo.InvariantCulture);
+                this.AssigneeIndex = int.Parse(GetValueForOption(options, "AssigneeIndex", "10", owner), CultureInfo.InvariantCulture);
+                this.AuthorIndex = int.Parse(GetValueForOption(options, "AuthorIndex", "11", owner), CultureInfo.InvariantCulture);
+                this.CreationDateIndex = int.Parse(GetValueForOption(options, "CreationDateIndex", "12", owner), CultureInfo.InvariantCulture);
+                this.ProjectIndex = int.Parse(GetValueForOption(options, "ProjectIndex", "13", owner), CultureInfo.InvariantCulture);
+                this.ResolutionIndex = int.Parse(GetValueForOption(options, "ResolutionIndex", "14", owner), CultureInfo.InvariantCulture);
+                this.EffortToFixIndex = int.Parse(GetValueForOption(options, "EffortToFixIndex", "15", owner), CultureInfo.InvariantCulture);
+                this.UpdateDateIndex = int.Parse(GetValueForOption(options, "UpdateDateIndex", "16", owner), CultureInfo.InvariantCulture);
+                this.CloseDateIndex = int.Parse(GetValueForOption(options, "CloseDateIndex", "17", owner), CultureInfo.InvariantCulture);
+                this.KeyIndex = int.Parse(GetValueForOption(options, "KeyIndex", "18", owner), CultureInfo.InvariantCulture);
+                this.IdIndex = int.Parse(GetValueForOption(options, "IdIndex", "19", owner), CultureInfo.InvariantCulture);
 
 
                 this.ComponentVisible = bool.Parse(GetValueForOption(options, "ComponentVisible", "true", owner));
@@ -1622,7 +1581,6 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 this.SeverityVisible = bool.Parse(GetValueForOption(options, "SeverityVisible", "true", owner));
                 this.DebtVisible = bool.Parse(GetValueForOption(options, "DebtVisible", "true", owner));
                 this.IssueTrackerIdVisible = bool.Parse(GetValueForOption(options, "IssueTrackerIdVisible", "true", owner));
-                this.ActionPlanVisible = bool.Parse(GetValueForOption(options, "ActionPlanVisible", "true", owner));
                 this.AssigneeVisible = bool.Parse(GetValueForOption(options, "AssigneeVisible", "true", owner));
                 this.AuthorVisible = bool.Parse(GetValueForOption(options, "AuthorVisible", "true", owner));
                 this.RuleVisible = bool.Parse(GetValueForOption(options, "RuleVisible", "true", owner));
@@ -1659,7 +1617,6 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.AuthorIndex = this.GetIndex(ref index);
             this.IssueTrackerIdIndex = this.GetIndex(ref index);
             this.IsNewIndex = this.GetIndex(ref index);
-            this.ActionPlanIndex = this.GetIndex(ref index);
 
             // other values
             this.CreationDateIndex = this.GetIndex(ref index);
@@ -1684,7 +1641,6 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.AuthorVisible = true;
             this.IssueTrackerIdVisible = true;
             this.IsNewVisible = true;
-            this.ActionPlanVisible = true;
 
             // other 
             this.RuleVisible = false;
@@ -1817,11 +1773,6 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.configurationHelper.WriteSetting(
                 Context.UIProperties,
                 this.dataGridOptionsKey,
-                "ActionPlanIndex",
-                this.ActionPlanIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteSetting(
-                Context.UIProperties,
-                this.dataGridOptionsKey,
                 "IssueTrackerIdIndex",
                 this.IssueTrackerIdIndex.ToString(CultureInfo.InvariantCulture));
 
@@ -1840,7 +1791,6 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "KeyVisible", this.KeyVisible.ToString());
             this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "IdVisible", this.IdVisible.ToString());
             this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "ViolationIdVisible", this.ViolationIdVisible.ToString());
-            this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "ActionPlanVisible", this.ActionPlanVisible.ToString());
             this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "IssueTrackerIdVisible", this.IssueTrackerIdVisible.ToString());
         }
 

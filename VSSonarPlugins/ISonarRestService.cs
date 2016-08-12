@@ -161,31 +161,12 @@
         Dictionary<string, HttpStatusCode> PlanIssues(ISonarConfiguration newConf, IList issues, string planId);
 
         /// <summary>
-        /// Creates the new plan.
-        /// </summary>
-        /// <param name="newConf">The new conf.</param>
-        /// <param name="projectId">The project identifier.</param>
-        /// <param name="plan">The plan.</param>
-        /// <returns>
-        /// created action plan
-        /// </returns>
-        SonarActionPlan CreateNewPlan(ISonarConfiguration newConf, string projectId, SonarActionPlan plan);
-
-        /// <summary>
         /// unplan issues.
         /// </summary>
         /// <param name="newConf">The new conf.</param>
         /// <param name="issues">The issues.</param>
         /// <returns>status of operation</returns>
         Dictionary<string, HttpStatusCode> UnPlanIssues(ISonarConfiguration newConf, IList issues);
-
-        /// <summary>
-        /// Gets the available action plan.
-        /// </summary>
-        /// <param name="conf">The conf.</param>
-        /// <param name="resourceKey">The resource key.</param>
-        /// <returns>returns actions plans</returns>
-        List<SonarActionPlan> GetAvailableActionPlan(ISonarConfiguration conf, string resourceKey);
 
         /// <summary>
         /// Gets the user list.
