@@ -176,6 +176,22 @@
         List<User> GetUserList(ISonarConfiguration conf);
 
         /// <summary>
+        /// Gets the available tags.
+        /// </summary>
+        /// <param name="conf">The conf.</param>
+        /// <returns></returns>
+        List<string> GetAvailableTags(ISonarConfiguration conf);
+
+        /// <summary>
+        /// Sets the issue tags.
+        /// </summary>
+        /// <param name="conf">The conf.</param>
+        /// <param name="issue">The issue.</param>
+        /// <param name="tags">The tags.</param>
+        /// <returns>status of operation</returns>
+        string SetIssueTags(ISonarConfiguration conf, Issue issue, List<string> tags);
+
+        /// <summary>
         /// Authenticates the user.
         /// </summary>
         /// <param name="conf">The conf.</param>

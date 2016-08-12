@@ -32,6 +32,7 @@ namespace VSSonarPlugins.Types
         /// </summary>
         public Issue()
         {
+            this.Tags = new SortedSet<string>();
             this.Comments = new List<Comment>();
             this.Message = string.Empty;
             this.CreationDate = DateTime.Now;
@@ -163,6 +164,13 @@ namespace VSSonarPlugins.Types
         /// </summary>
         public List<Comment> Comments { get; set; }
 
+        /// <summary>
+        /// Gets or sets the tags.
+        /// </summary>
+        /// <value>
+        /// The tags.
+        /// </value>
+        public SortedSet<string> Tags { get; set; }
 
         /// <summary>
         /// Gets or sets the effort.

@@ -162,6 +162,9 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 | None -> ()
                 | Some value -> issue.Effort <- value
 
+            if not(obj.ReferenceEquals(elem.Tags, null)) then
+                for tag in elem.Tags do issue.Tags.Add(tag)
+
             if issue.Comments.Count <> 0 then
                 for comment in issue.Comments do
                     if comment.HtmlText.StartsWith("[VSSonarQubeExtension] Attached to issue: ") then
@@ -1287,7 +1290,30 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
         member this.GetIssuesInResource(conf : ISonarConfiguration, resource : string) =
             getViolationsOldAndNewFormat(conf, resource)
-        
+
+        member this.SetIssueTags(conf : ISonarConfiguration, issue : Issue, tags : System.Collections.Generic.List<string>) =
+            let url = "/api/issues/set_tags"
+            let tags = List.ofSeq tags |> String.concat ","
+            try
+                let parameters = Map.empty.Add("key", issue.Key).Add("tags", tags)
+                let reply = httpconnector.HttpSonarPostRequest(conf, url, parameters)
+                reply.StatusCode.ToString()
+            with
+            | ex -> "Error : Cannot set tag: " + ex.Message
+
+        member this.GetAvailableTags(newConf : ISonarConfiguration) =
+            let url = "/api/issues/tags?ps=1000"
+            let listOfTags = new System.Collections.Generic.List<string>();
+            try
+                let responsecontent = httpconnector.HttpSonarGetRequest(newConf, url)
+                let tags = JsonTags.Parse(responsecontent)
+                for tag in tags.Tags do
+                    listOfTags.Add(tag)
+            with
+            | _ -> ()
+
+            listOfTags
+
         member this.GetUserList(newConf : ISonarConfiguration) =
             let url = "/api/users/search?ps=1000"           
             try

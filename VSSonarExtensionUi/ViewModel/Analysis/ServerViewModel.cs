@@ -608,6 +608,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                                SourceControlMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan, translator),
                                IssueTrackerMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan, translator),
                                AssignMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan),
+                               AssignTagMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan),
                                SetExclusionsMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan, translator, this.analyser),
                                SetSqaleMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan, translator, this.analyser)
                            };

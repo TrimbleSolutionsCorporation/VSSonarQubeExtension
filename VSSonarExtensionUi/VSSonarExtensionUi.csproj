@@ -139,6 +139,7 @@
     <Compile Include="Model\Helpers\RelayCommand.cs" />
     <Compile Include="Model\Helpers\RestSourceControlModel.cs" />
     <Compile Include="Model\Helpers\SearchModel.cs" />
+    <Compile Include="Model\Menu\AssignTagMenu.cs" />
     <Compile Include="Model\Menu\AssignMenu.cs" />
     <Compile Include="Model\Menu\MoreInfoMenu.cs" />
     <Compile Include="Model\Menu\SetSqaleMenu.cs" />
@@ -221,6 +222,9 @@
     </Compile>
     <Compile Include="View\Configuration\PluginManagerView.xaml.cs">
       <DependentUpon>PluginManagerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Helpers\PromptForTagIssue.xaml.cs">
+      <DependentUpon>PromptForTagIssue.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Helpers\PromptForAssignUser.xaml.cs">
       <DependentUpon>PromptForAssignUser.xaml</DependentUpon>
@@ -327,6 +331,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\Configuration\PluginManagerView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Helpers\PromptForTagIssue.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
