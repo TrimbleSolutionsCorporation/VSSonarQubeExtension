@@ -169,32 +169,32 @@ namespace VSSonarPlugins.Types
         public DateTime CreatedAt { get; set; }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether debt overloaded.
+        ///     Gets or sets a value indicating whether effort overloaded.
         /// </summary>
         public bool DebtOverloaded { get; set; }
 
         /// <summary>
-        ///     Gets or sets the debt rem fn coeff.
+        ///     Gets or sets the effort rem fn coeff.
         /// </summary>
         public string DebtRemFnCoeff { get; set; }
 
         /// <summary>
-        ///     Gets or sets the default debt char.
+        ///     Gets or sets the default effort char.
         /// </summary>
         public Category DefaultDebtChar { get; set; }
 
         /// <summary>
-        ///     Gets or sets the default debt rem fn coeff.
+        ///     Gets or sets the default effort rem fn coeff.
         /// </summary>
         public string DefaultDebtRemFnCoeff { get; set; }
 
         /// <summary>
-        ///     Gets or sets the default debt rem fn type.
+        ///     Gets or sets the default effort rem fn type.
         /// </summary>
         public RemediationFunction DefaultDebtRemFnType { get; set; }
 
         /// <summary>
-        ///     Gets or sets the default debt sub char.
+        ///     Gets or sets the default effort sub char.
         /// </summary>
         public SubCategory DefaultDebtSubChar { get; set; }
 

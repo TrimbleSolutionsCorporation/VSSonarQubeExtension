@@ -273,7 +273,7 @@
                 <TextBlock Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Text="{Binding NumberOfMajorsStr, FallbackValue=Majors}"></TextBlock>
             </StatusBarItem>
             <StatusBarItem HorizontalAlignment="Left" >
-                <TextBlock Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Text="{Binding TechnicalDebtStr, FallbackValue=Debt}"></TextBlock>
+                <TextBlock Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Text="{Binding TotalEffortStr, FallbackValue=Effort}"></TextBlock>
             </StatusBarItem>
             <StatusBarItem HorizontalAlignment="Left" >
                 <TextBlock Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Text="{Binding SqaleRatingStr, FallbackValue=A}"></TextBlock>
@@ -454,11 +454,11 @@
                     </DataGridTemplateColumn.HeaderTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTextColumn  DisplayIndex="{Binding DebtIndex, FallbackValue=5, Mode=TwoWay, Source={StaticResource Proxy}}"
-                                    Binding="{Binding Debt}" MinWidth="80" MaxWidth="80" x:Name="DebtemplateCol"
-                                    Header="Debt" CanUserSort="True" SortMemberPath="Debt"                                    
+                <DataGridTextColumn  DisplayIndex="{Binding EffortIndex, FallbackValue=5, Mode=TwoWay, Source={StaticResource Proxy}}"
+                                    Binding="{Binding Effort}" MinWidth="80" MaxWidth="80" x:Name="DebtemplateCol"
+                                    Header="Effort" CanUserSort="True" SortMemberPath="Effort" 
                                     IsReadOnly="True"
-                                    Visibility="{Binding Data.DebtVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}" />
+                                    Visibility="{Binding Data.EffortVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}" />
 
                 <DataGridTemplateColumn ClipboardContentBinding="{Binding Assignee}" DisplayIndex="{Binding Data.AssigneeIndex, FallbackValue=6, Mode=TwoWay, Source={StaticResource Proxy}}"
                                         MinWidth="120" MaxWidth="120" x:Name="AssigneeTemplateCol" Header="Assignee" CanUserSort="True" SortMemberPath="Assignee"
@@ -599,9 +599,9 @@
                                     Binding="{Binding CloseDate}" MinWidth="120" MaxWidth="120" x:Name="CloseDateTemplateCol" Header="CloseDate" CanUserSort="True" SortMemberPath="CloseDate"                                    
                                     IsReadOnly="True" Visibility="{Binding Data.CloseDateVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
 
-                <DataGridTextColumn DisplayIndex="{Binding EffortToFixIndex, FallbackValue=12, Mode=TwoWay, Source={StaticResource Proxy}}"
-                                    Binding="{Binding EffortToFix}" MinWidth="100" MaxWidth="100" x:Name="EffortToFixTemplateCol" Header="EffortToFix" CanUserSort="True" SortMemberPath="EffortToFix"                                    
-                                    IsReadOnly="True" Visibility="{Binding Data.EffortToFixVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
+                <DataGridTextColumn DisplayIndex="{Binding EffortIndex, FallbackValue=12, Mode=TwoWay, Source={StaticResource Proxy}}"
+                                    Binding="{Binding Effort}" MinWidth="100" MaxWidth="100" x:Name="EffortTemplateCol" Header="Effort" CanUserSort="True" SortMemberPath="Effort"                                    
+                                    IsReadOnly="True" Visibility="{Binding Data.EffortVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
                
                 <DataGridTemplateColumn DisplayIndex="{Binding Data.ProjectIndex, FallbackValue=13, Mode=TwoWay, Source={StaticResource Proxy}}"
                                         MinWidth="120" x:Name="ProjectTemplateCol" Header="Project" CanUserSort="True" SortMemberPath="Project"                                        

@@ -758,7 +758,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                             try
                                 let profile = cachedProfiles.[project.Name].[plug.GetLanguageKey(new VsFileItem(FileName = c.Component))]
                                 let rule = profile.GetRule(c.Rule)
-                                c.Debt <- rule.DebtRemFnCoeff
+                                c.Effort <- rule.DebtRemFnCoeff
                             with
                             | ex -> ()
                             lock _lock (fun () -> localissues.Add(c))

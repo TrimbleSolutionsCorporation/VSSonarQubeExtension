@@ -122,7 +122,7 @@
         {
             var topLel = new SetSqaleMenu(rest, model, manager, translator, analyser) { CommandText = "Sqale", IsEnabled = false };
             
-            topLel.SubItems.Add(new SetSqaleMenu(rest, model, manager, translator, analyser) { CommandText = "adjust debt", IsEnabled = true });
+            topLel.SubItems.Add(new SetSqaleMenu(rest, model, manager, translator, analyser) { CommandText = "adjust effort", IsEnabled = true });
             return topLel;
         }
 
@@ -212,7 +212,7 @@
         {
             if (this.assignProject == null)
             {
-                MessageDisplayBox.DisplayMessage("Technical debt can only be adjusted if project is associated");
+                MessageDisplayBox.DisplayMessage("Effort can only be adjusted if project is associated");
                 return;
             }
 
@@ -225,9 +225,9 @@
             {
                 Resource projectToUse = SetExclusionsMenu.GetMainProject(this.assignProject, this.availableProjects);
 
-                if (this.CommandText.Equals("adjust debt"))
+                if (this.CommandText.Equals("adjust effort"))
                 {
-                    this.AdjustDebtForRule();
+                    this.AdjustEffortForRule();
                 }
             }
             catch (Exception ex)
@@ -238,11 +238,11 @@
         }
 
         /// <summary>
-        /// Adjusts the debt for rule.
+        /// Adjusts the effort for rule.
         /// </summary>
-        private void AdjustDebtForRule()
+        private void AdjustEffortForRule()
         {
-            var minutes = PromptUserData.Prompt("debt in minutes", "new value in minutes");
+            var minutes = PromptUserData.Prompt("effort in minutes", "new value in minutes");
             var min = 0;
 
             if (string.IsNullOrEmpty(minutes) || !int.TryParse(minutes, out min))
@@ -284,11 +284,11 @@
                 List<string> reply = this.rest.UpdateRule(AuthtenticationHelper.AuthToken, rule.Key, dic);
                 if (reply != null && reply.Count != 0)
                 {
-                    this.manager.ReportMessage(new Message { Id = "SetSqaleMenu", Data = "Failed to change debt value for: " + issue.Rule + " : do you have the correct permissions"});
+                    this.manager.ReportMessage(new Message { Id = "SetSqaleMenu", Data = "Failed to change effort value for: " + issue.Rule + " : do you have the correct permissions"});
                 }
                 else
                 {
-                    this.manager.ReportMessage(new Message { Id = "SetSqaleMenu", Data = "New value for debt was taken into use" });
+                    this.manager.ReportMessage(new Message { Id = "SetSqaleMenu", Data = "New value for effort was taken into use" });
                 }
             }
         }

@@ -95,11 +95,6 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
         if not(obj.ReferenceEquals(data.JsonValue.TryGetProperty("comments"), null)) then
             for elemC in data.Comments do issue.Comments.Add(new Comment(elemC.CreatedAt, elemC.HtmlText, elemC.Key, elemC.Login, -1))
-            
-        if not(obj.ReferenceEquals(data.JsonValue.TryGetProperty("effortToFix"), null)) then
-            let itemValue = data.JsonValue.Item("effortToFix")
-            match itemValue with
-            | decimal -> issue.EffortToFix <- itemValue.AsDecimal()
 
         if not(obj.ReferenceEquals(data.JsonValue.TryGetProperty("closeDate"), null)) then
             issue.CloseDate <- data.CloseDate
@@ -162,10 +157,10 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 | None -> ()
                 | Some value -> issue.Resolution <- (EnumHelper.asEnum<Resolution>(value.Replace("-", "_"))).Value
 
-            if not(obj.ReferenceEquals(elem.Debt, null)) then
-                match elem.Debt with
+            if not(obj.ReferenceEquals(elem.Effort, null)) then
+                match elem.Effort with
                 | None -> ()
-                | Some value -> issue.Debt <- value
+                | Some value -> issue.Effort <- value
 
             if issue.Comments.Count <> 0 then
                 for comment in issue.Comments do
@@ -214,12 +209,6 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
                 if not(obj.ReferenceEquals(elem.Resolution, null)) then
                     issue.Resolution <- (EnumHelper.asEnum<Resolution>(elem.Resolution.Value.Replace("-", "_"))).Value
-
-                if not(obj.ReferenceEquals(elem.EffortToFix, null)) then
-                    let itemValue = elem.JsonValue.Item("effortToFix")
-                    issue.EffortToFix <- 0.0m
-                    match itemValue with
-                    | decimal -> issue.EffortToFix <- itemValue.AsDecimal()
 
                 if issue.Comments.Count <> 0 then
                     for comment in issue.Comments do

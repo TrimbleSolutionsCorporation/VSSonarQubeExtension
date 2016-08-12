@@ -697,7 +697,7 @@ namespace VSSonarExtensionUi.ViewModel
             if (this.NewIssuesFound)
             {
                 if (QuestionUser.GetInput(
-                    "You are about the close solution after technical debt has been added. Are you sure you want to exit."))
+                    "You are about the close solution after new issues have been introduced. Are you sure you want to exit."))
                 {
                     return 0;
                 }

@@ -38,7 +38,6 @@ namespace VSSonarPlugins.Types
             this.CloseDate = DateTime.Now;
             this.Component = string.Empty;
 
-            this.EffortToFix = -1;
             this.Line = -1;
             this.Project = string.Empty;
             this.UpdateDate = DateTime.Now;
@@ -79,11 +78,6 @@ namespace VSSonarPlugins.Types
         /// Gets or sets the component.
         /// </summary>
         public string Component { get; set; }
-
-        /// <summary>
-        /// Gets or sets the effort to fix.
-        /// </summary>
-        public decimal EffortToFix { get; set; }
 
         /// <summary>
         /// Gets or sets the line.
@@ -171,12 +165,12 @@ namespace VSSonarPlugins.Types
 
 
         /// <summary>
-        /// Gets or sets the debt.
+        /// Gets or sets the effort.
         /// </summary>
         /// <value>
-        /// The debt.
+        /// The effort.
         /// </value>
-        public string Debt { get; set; }
+        public string Effort { get; set; }
 
         /// <summary>
         /// Gets or sets the help URL.
@@ -209,8 +203,7 @@ namespace VSSonarPlugins.Types
                                     CloseDate = this.CloseDate,
                                     Component = this.Component,
                                     CreationDate = this.CreationDate,
-                                    EffortToFix = this.EffortToFix,
-                                    Debt = this.Debt,
+                                    Effort = this.Effort,
                                     ViolationId = this.ViolationId,
                                     Assignee = this.Assignee,
                                     IssueTrackerId = this.IssueTrackerId,

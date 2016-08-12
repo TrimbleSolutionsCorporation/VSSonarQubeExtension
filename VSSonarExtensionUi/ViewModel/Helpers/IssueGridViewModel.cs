@@ -384,12 +384,12 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// <summary>
         ///     Gets or sets the effort to fix index.
         /// </summary>
-        public int EffortToFixIndex { get; set; }
+        public int EffortIndex { get; set; }
 
         /// <summary>
         ///     Gets or sets a value indicating whether effort to fix is visible.
         /// </summary>
-        public bool EffortToFixVisible { get; set; }
+        public bool EffortVisible { get; set; }
 
         /// <summary>
         ///     Gets or sets a value indicating whether extension is busy.
@@ -681,12 +681,12 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         public int SelectedIndex { get; set; }
 
         /// <summary>
-        /// Gets or sets the technical debt.
+        /// Gets or sets the effort to fix.
         /// </summary>
         /// <value>
-        /// The technical debt.
+        /// The effort to fix.
         /// </value>
-        public long TechnicalDebt { get; set; }
+        public long TotalEffort { get; set; }
 
         /// <summary>
         /// Gets or sets the number of issues.
@@ -721,12 +721,12 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         public int NumberOfBlockers { get; set; }
 
         /// <summary>
-        /// Gets or sets the technical debt string.
+        /// Gets or sets the effort to fix string.
         /// </summary>
         /// <value>
-        /// The technical debt string.
+        /// The effort to fix string.
         /// </value>
-        public string TechnicalDebtStr { get; set; }
+        public string TotalEffortStr { get; set; }
 
         /// <summary>
         /// Gets or sets the number of issues string.
@@ -783,17 +783,6 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// The sqale rating string.
         /// </value>
         public string SqaleRatingStr { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether [debt visible].
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if [debt visible]; otherwise, <c>false</c>.
-        /// </value>
-        public bool DebtVisible { get; set; }
-
-        /// <summary>Gets or sets the debt index.</summary>
-        public int DebtIndex { get; set; }
 
         /// <summary>
         /// Gets the close flyout command.
@@ -872,7 +861,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.NumberOfCriticals = 0;
             this.NumberOfMajors = 0;
             this.NumberOfIssues = 0;
-            this.TechnicalDebt = 0;
+            this.TotalEffort = 0;
 
             this.UpdateStatistics();
         }
@@ -1463,7 +1452,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.NumberOfBlockersStr = "Blockers: " + this.NumberOfBlockers;
             this.NumberOfCriticalsStr = "Criticals: " + this.NumberOfCriticals;
             this.NumberOfMajorsStr = "Majors: " + this.NumberOfMajors;
-            this.TechnicalDebtStr = "Debt: " + this.TechnicalDebt + " mn";
+            this.TotalEffortStr = "Effort: " + this.TotalEffort + " min";
         }
 
         /// <summary>
@@ -1486,12 +1475,12 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                     break;
             }
 
-            if (!string.IsNullOrEmpty(issue.Debt))
+            if (!string.IsNullOrEmpty(issue.Effort))
             {
                 try
                 {
-                    var debt = issue.Debt.Replace("min", "").Replace("sec", "").Replace("hour", "").Replace("day", "").Replace("d", "").Replace("h", "");
-                    this.TechnicalDebt += int.Parse(debt);
+                    var effort = issue.Effort.Replace("min", "").Replace("sec", "").Replace("hour", "").Replace("day", "").Replace("d", "").Replace("h", "");
+                    this.TotalEffort += int.Parse(effort);
                 }
                 catch (Exception ex)
                 {
@@ -1558,7 +1547,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 this.MessageIndex = int.Parse(GetValueForOption(options, "MessageIndex", "3", owner), CultureInfo.InvariantCulture);
                 this.StatusIndex = int.Parse(GetValueForOption(options, "StatusIndex", "4", owner), CultureInfo.InvariantCulture);
                 this.SeverityIndex = int.Parse(GetValueForOption(options, "SeverityIndex", "5", owner), CultureInfo.InvariantCulture);
-                this.DebtIndex = int.Parse(GetValueForOption(options, "DebtIndex", "6", owner), CultureInfo.InvariantCulture);
+                this.EffortIndex = int.Parse(GetValueForOption(options, "EffortIndex", "6", owner), CultureInfo.InvariantCulture);
                 this.IssueTrackerIdIndex = int.Parse(GetValueForOption(options, "IssueTrackerIdIndex", "7", owner), CultureInfo.InvariantCulture);
                 this.IsNewIndex = int.Parse(GetValueForOption(options, "IsNewIndex", "8", owner), CultureInfo.InvariantCulture);
                 this.RuleIndex = int.Parse(GetValueForOption(options, "RuleIndex", "9", owner), CultureInfo.InvariantCulture);
@@ -1567,7 +1556,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 this.CreationDateIndex = int.Parse(GetValueForOption(options, "CreationDateIndex", "12", owner), CultureInfo.InvariantCulture);
                 this.ProjectIndex = int.Parse(GetValueForOption(options, "ProjectIndex", "13", owner), CultureInfo.InvariantCulture);
                 this.ResolutionIndex = int.Parse(GetValueForOption(options, "ResolutionIndex", "14", owner), CultureInfo.InvariantCulture);
-                this.EffortToFixIndex = int.Parse(GetValueForOption(options, "EffortToFixIndex", "15", owner), CultureInfo.InvariantCulture);
+                this.EffortIndex = int.Parse(GetValueForOption(options, "EffortIndex", "15", owner), CultureInfo.InvariantCulture);
                 this.UpdateDateIndex = int.Parse(GetValueForOption(options, "UpdateDateIndex", "16", owner), CultureInfo.InvariantCulture);
                 this.CloseDateIndex = int.Parse(GetValueForOption(options, "CloseDateIndex", "17", owner), CultureInfo.InvariantCulture);
                 this.KeyIndex = int.Parse(GetValueForOption(options, "KeyIndex", "18", owner), CultureInfo.InvariantCulture);
@@ -1579,7 +1568,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 this.MessageVisible = bool.Parse(GetValueForOption(options, "MessageVisible", "true", owner));
                 this.StatusVisible = bool.Parse(GetValueForOption(options, "StatusVisible", "true", owner));
                 this.SeverityVisible = bool.Parse(GetValueForOption(options, "SeverityVisible", "true", owner));
-                this.DebtVisible = bool.Parse(GetValueForOption(options, "DebtVisible", "true", owner));
+                this.EffortVisible = bool.Parse(GetValueForOption(options, "EffortVisible", "true", owner));
                 this.IssueTrackerIdVisible = bool.Parse(GetValueForOption(options, "IssueTrackerIdVisible", "true", owner));
                 this.AssigneeVisible = bool.Parse(GetValueForOption(options, "AssigneeVisible", "true", owner));
                 this.AuthorVisible = bool.Parse(GetValueForOption(options, "AuthorVisible", "true", owner));
@@ -1587,7 +1576,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 this.CreationDateVisible = bool.Parse(GetValueForOption(options, "CreationDateVisible", "false", owner));
                 this.ProjectVisible = bool.Parse(GetValueForOption(options, "ProjectVisible", "false", owner));
                 this.ResolutionVisible = bool.Parse(GetValueForOption(options, "ResolutionVisible", "false", owner));
-                this.EffortToFixVisible = bool.Parse(GetValueForOption(options, "EffortToFixVisible", "false", owner));
+                this.EffortVisible = bool.Parse(GetValueForOption(options, "EffortVisible", "false", owner));
                 this.UpdateDateVisible = bool.Parse(GetValueForOption(options, "UpdateDateVisible", "false", owner));
                 this.CloseDateVisible = bool.Parse(GetValueForOption(options, "CloseDateVisible", "false", owner));
                 this.KeyVisible = bool.Parse(GetValueForOption(options, "KeyVisible", "false", owner));
@@ -1612,7 +1601,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.MessageIndex = this.GetIndex(ref index);
             this.SeverityIndex = this.GetIndex(ref index);
             this.StatusIndex = this.GetIndex(ref index);
-            this.DebtIndex = this.GetIndex(ref index);
+            this.EffortIndex = this.GetIndex(ref index);
             this.AssigneeIndex = this.GetIndex(ref index);
             this.AuthorIndex = this.GetIndex(ref index);
             this.IssueTrackerIdIndex = this.GetIndex(ref index);
@@ -1621,7 +1610,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             // other values
             this.CreationDateIndex = this.GetIndex(ref index);
             this.CloseDateIndex = this.GetIndex(ref index);
-            this.EffortToFixIndex = this.GetIndex(ref index);
+            this.EffortIndex = this.GetIndex(ref index);
             this.ProjectIndex = this.GetIndex(ref index);
             this.UpdateDateIndex = this.GetIndex(ref index);            
             this.RuleIndex = this.GetIndex(ref index);
@@ -1636,7 +1625,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.MessageVisible = true;
             this.SeverityVisible = true;
             this.StatusVisible = true;
-            this.DebtVisible = true;
+            this.EffortVisible = true;
             this.AssigneeVisible = true;
             this.AuthorVisible = true;
             this.IssueTrackerIdVisible = true;
@@ -1647,7 +1636,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.CreationDateVisible = false;
             this.ProjectVisible = false;
             this.ResolutionVisible = false;
-            this.EffortToFixVisible = false;
+            this.EffortVisible = false;
             this.UpdateDateVisible = false;
             this.CloseDateVisible = false;
             this.KeyVisible = false;
@@ -1674,7 +1663,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         private void SaveWindowOptions()
         {
             if (this.ComponentIndex < 0 || this.LineIndex < 0 || this.AuthorIndex < 0  || this.AssigneeIndex < 0 || this.MessageIndex < 0 || this.StatusIndex < 0
-                || this.RuleIndex < 0 || this.CreationDateIndex < 0 || this.ProjectIndex < 0 || this.ResolutionIndex < 0 || this.EffortToFixIndex < 0
+                || this.RuleIndex < 0 || this.CreationDateIndex < 0 || this.ProjectIndex < 0 || this.ResolutionIndex < 0 || this.EffortIndex < 0
                 || this.UpdateDateIndex < 0 || this.CloseDateIndex < 0 || this.KeyIndex < 0 || this.IsNewIndex < 0 || this.ViolationIdIndex < 0)
             {
                 return;
@@ -1738,8 +1727,8 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.configurationHelper.WriteSetting(
                 Context.UIProperties, 
                 this.dataGridOptionsKey, 
-                "EffortToFixIndex", 
-                this.EffortToFixIndex.ToString(CultureInfo.InvariantCulture));
+                "EffortIndex", 
+                this.EffortIndex.ToString(CultureInfo.InvariantCulture));
             this.configurationHelper.WriteSetting(
                 Context.UIProperties, 
                 this.dataGridOptionsKey, 
@@ -1778,7 +1767,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
 
             this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "CreationDateVisible", this.CreationDateVisible.ToString());
             this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "CloseDateVisible", this.CloseDateVisible.ToString());
-            this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "EffortToFixVisible", this.EffortToFixVisible.ToString());
+            this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "EffortVisible", this.EffortVisible.ToString());
             this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "ProjectVisible", this.ProjectVisible.ToString());
             this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "UpdateDateVisible", this.UpdateDateVisible.ToString());
             this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "StatusVisible", this.StatusVisible.ToString());
