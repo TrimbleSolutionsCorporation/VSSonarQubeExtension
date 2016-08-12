@@ -145,5 +145,21 @@
         ///   <c>true</c> if [authors enabled]; otherwise, <c>false</c>.
         /// </value>
         public bool AuthorsEnabled { get; internal set; }
+
+        /// <summary>
+        /// Gets or sets the tags.
+        /// </summary>
+        /// <value>
+        /// The tags.
+        /// </value>
+        public string Tags { get; set; }
+
+        /// <summary>
+        /// Gets a value indicating whether [tag search enabled].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [tag search enabled]; otherwise, <c>false</c>.
+        /// </value>
+        public bool TagSearchEnabled { get; internal set; }
     }
 }

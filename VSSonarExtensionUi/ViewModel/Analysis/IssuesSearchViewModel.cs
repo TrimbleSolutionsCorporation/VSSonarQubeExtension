@@ -272,6 +272,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public string AuthorSearchQuery { get; set; }
 
         /// <summary>
+        /// Gets or sets the tag search query.
+        /// </summary>
+        /// <value>
+        /// The tag search query.
+        /// </value>
+        public string TagSearchQuery { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether this instance is componenet checked.
         /// </summary>
         /// <value>
@@ -316,6 +324,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         ///     Gets or sets a value indicating whether is fixed checked.
         /// </summary>
         public bool IsFixedChecked { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is tag search enabled.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is tag search enabled; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsTagSearchEnabled { get; set; }
 
         /// <summary>
         ///     Gets or sets a value indicating whether is info checked.
@@ -907,6 +923,11 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 request += "&authors=" + this.AuthorSearchQuery;
             }
 
+            if (this.IsTagSearchEnabled && !string.IsNullOrEmpty(this.TagSearchQuery))
+            {
+                request += "&tags=" + this.TagSearchQuery;
+            }
+
             return request;
         }
 
@@ -1005,6 +1026,12 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             if (this.IsAuthorEnabled)
             {
                 search.AuthorsEnabled = true;
+            }
+
+            search.Tags = this.TagSearchQuery;
+            if (this.IsTagSearchEnabled)
+            {
+                search.TagSearchEnabled = true;
             }
 
             search.SinceDate = this.CreatedSinceDate;
@@ -1130,6 +1157,9 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
 
             this.IsAuthorEnabled = search.AuthorsEnabled;
             this.AuthorSearchQuery = search.Authors;
+
+            this.IsTagSearchEnabled = search.TagSearchEnabled;
+            this.TagSearchQuery = search.Tags;
 
             this.IsDateSinceChecked = search.SinceDateEnabled;
             this.IsFilterBySSCMChecked = search.FilterBySSCM;

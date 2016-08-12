@@ -166,6 +166,39 @@
                             </Grid>
                         </Expander>
 
+                        <Expander Header="Tags" Grid.Row="5" Grid.ColumnSpan="2"
+                                      Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
+                            <Grid
+                                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                    Height="30">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="25" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="60" />
+                                    <ColumnDefinition Width="20*" />
+                                    <ColumnDefinition Width="25" />
+                                </Grid.ColumnDefinitions>
+                                <Label
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Grid.Row="0" Grid.Column="0"
+                                        Content="Tags" />
+
+                                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding TagSearchQuery}" ToolTip="Comma separated list for tags.">
+                                </TextBox>
+
+                                <ComboBox Margin="5" x:Name="TagBox"
+                                    Style="{DynamicResource VirtualisedMetroComboBox}"
+                                    controls:TextBoxHelper.Watermark="Type tag"
+                                    IsEditable="True"
+                                    MaxDropDownHeight="125">
+                                    
+
+                                    <CheckBox Grid.Row="0" Grid.Column="2" Margin="4,0,-4,0"
+                                              IsChecked="{Binding IsTagSearchEnabled}" ToolTip="Search by author email" />
+                            </Grid>
+                        </Expander>
+                        
                         <Expander Header="Components" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
                             <Grid
                                     Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
