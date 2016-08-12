@@ -187,14 +187,7 @@
                                 <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding TagSearchQuery}" ToolTip="Comma separated list for tags.">
                                 </TextBox>
 
-                                <ComboBox Margin="5" x:Name="TagBox"
-                                    Style="{DynamicResource VirtualisedMetroComboBox}"
-                                    controls:TextBoxHelper.Watermark="Type tag"
-                                    IsEditable="True"
-                                    MaxDropDownHeight="125">
-                                    
-
-                                    <CheckBox Grid.Row="0" Grid.Column="2" Margin="4,0,-4,0"
+                                <CheckBox Grid.Row="0" Grid.Column="2" Margin="4,0,-4,0"
                                               IsChecked="{Binding IsTagSearchEnabled}" ToolTip="Search by author email" />
                             </Grid>
                         </Expander>
