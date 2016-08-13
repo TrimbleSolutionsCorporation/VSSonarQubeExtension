@@ -103,7 +103,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.Header = "Issues Search";
             this.AvailableProjects = new List<Resource>();
             this.AssigneeList = new ObservableCollection<User>();
-            this.ReporterList = new ObservableCollection<User>();
             this.AvailableSearches = new ObservableCollection<string>();
             this.IssuesGridView = new IssueGridViewModel("SearchView", false, configurationHelper, restService, notificationManager, translator);
             this.savedSearchModel = new SearchModel(this.AvailableSearches);
@@ -354,11 +353,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public bool IsRemovedChecked { get; set; }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether is reporter checked.
-        /// </summary>
-        public bool IsReporterChecked { get; set; }
-
-        /// <summary>
         ///     Gets or sets a value indicating whether is status closed checked.
         /// </summary>
         public bool IsStatusClosedChecked { get; set; }
@@ -409,14 +403,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public ObservableCollection<User> AssigneeList { get; set; }
 
         /// <summary>
-        /// Gets or sets the reporter list.
-        /// </summary>
-        /// <value>
-        /// The reporter list.
-        /// </value>
-        public ObservableCollection<User> ReporterList { get; set; }
-
-        /// <summary>
         /// Gets the available projects.
         /// </summary>
         /// <value>
@@ -456,20 +442,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             this.searchModel.OnAnalysisModeHasChange(EventArgs.Empty);
             Debug.WriteLine("Name Changed");
-        }
-
-        /// <summary>
-        /// Called when [is reporter checked changed].
-        /// </summary>
-        public void OnIsReporterCheckedChanged()
-        {
-            if (!this.IsReporterChecked)
-            {
-                foreach (var user in this.ReporterList)
-                {
-                    user.Selected = false;
-                }
-            }
         }
 
         /// <summary>
@@ -905,19 +877,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 }
             }
 
-            if (this.IsReporterChecked)
-            {
-                try
-                {
-                    var users = this.ReporterList.Where(i => i.Selected).Select(i => i.Login).Aggregate((i, j) => i + "," + j);
-                    request += "&reporters=" + users;
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.Message);
-                }
-            }
-
             if (this.IsAuthorEnabled && !string.IsNullOrEmpty(this.AuthorSearchQuery))
             {
                 request += "&authors=" + this.AuthorSearchQuery;
@@ -1014,12 +973,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             if (this.IsAssigneeChecked)
             {
                 search.AssigneesEnabled = true;
-            }
-
-            search.Reporters = this.ReporterList.ToList();
-            if (this.IsReporterChecked)
-            {
-                search.ReportersEnabled = true;
             }
 
             search.Authors = this.AuthorSearchQuery;
@@ -1139,18 +1092,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                     if (assignee.Name.Equals(currAssignee.Name))
                     {
                         currAssignee.Selected = assignee.Selected;
-                    }
-                }
-            }
-
-            this.IsReporterChecked = search.ReportersEnabled;
-            foreach (var reporter in search.Reporters)
-            {
-                foreach (var currReporter in this.ReporterList)
-                {
-                    if (reporter.Name.Equals(currReporter.Name))
-                    {
-                        currReporter.Selected = reporter.Selected;
                     }
                 }
             }

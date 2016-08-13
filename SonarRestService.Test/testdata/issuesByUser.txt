@@ -16,7 +16,6 @@
 "severity": "MAJOR",
 "message": "please change this",
 "line": "4",
-"reporter": "login1",
 "assignee": "login",
 "creationDate": "2013-04-08T13:38:53+0300",
 "updateDate": "2013-04-08T13:39:27+0300",
@@ -44,7 +43,6 @@
 "severity": "MAJOR",
 "message": "Try to detect when size is used without size_t",
 "line": "35",
-"reporter": "login",
 "assignee": "login",
 "creationDate": "2012-10-08T10:20:04+0300",
 "updateDate": "2012-10-08T10:20:04+0300"

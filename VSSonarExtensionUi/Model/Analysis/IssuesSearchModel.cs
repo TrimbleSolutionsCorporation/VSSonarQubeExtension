@@ -156,7 +156,6 @@ namespace VSSonarExtensionUi.Model.Analysis
             if (usortedList != null && usortedList.Count > 0)
             {
                 this.issuesSearchViewModel.AssigneeList = new ObservableCollection<User>(usortedList.OrderBy(i => i.Name));
-                this.issuesSearchViewModel.ReporterList = new ObservableCollection<User>(usortedList.OrderBy(i => i.Name));
             }
         }
 
@@ -179,7 +178,6 @@ namespace VSSonarExtensionUi.Model.Analysis
             if (usortedList != null && usortedList.Count > 0)
             {
                 this.issuesSearchViewModel.AssigneeList = new ObservableCollection<User>(usortedList.OrderBy(i => i.Name));
-                this.issuesSearchViewModel.ReporterList = new ObservableCollection<User>(usortedList.OrderBy(i => i.Name));
             }
         }
 

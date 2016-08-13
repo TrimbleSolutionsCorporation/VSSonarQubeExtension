@@ -51,22 +51,6 @@
         public bool AssigneesEnabled { get; set; }
 
         /// <summary>
-        /// Gets or sets the reporters.
-        /// </summary>
-        /// <value>
-        /// The reporters.
-        /// </value>
-        public List<User> Reporters { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether [reporters enabled].
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if [reporters enabled]; otherwise, <c>false</c>.
-        /// </value>
-        public bool ReportersEnabled { get; set; }
-
-        /// <summary>
         /// Gets or sets the status.
         /// </summary>
         /// <value>
