@@ -1761,7 +1761,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             let issuesInFile = JSonIssuesOld.Parse(File.ReadAllText(path))
             let currentListOfIssues = new System.Collections.Generic.List<Issue>()
 
-            let CreateIssue(resource : string, elem : JsonValue) =                
+            let CreateIssue(resource : string, elem : JsonValue) =
                 let issue = new Issue()
                 let message = elem.GetProperty("message")
                 let severity = elem.GetProperty("severity")

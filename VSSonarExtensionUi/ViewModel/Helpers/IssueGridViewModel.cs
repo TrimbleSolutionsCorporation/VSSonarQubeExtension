@@ -1556,12 +1556,10 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 this.CreationDateIndex = int.Parse(GetValueForOption(options, "CreationDateIndex", "12", owner), CultureInfo.InvariantCulture);
                 this.ProjectIndex = int.Parse(GetValueForOption(options, "ProjectIndex", "13", owner), CultureInfo.InvariantCulture);
                 this.ResolutionIndex = int.Parse(GetValueForOption(options, "ResolutionIndex", "14", owner), CultureInfo.InvariantCulture);
-                this.EffortIndex = int.Parse(GetValueForOption(options, "EffortIndex", "15", owner), CultureInfo.InvariantCulture);
-                this.UpdateDateIndex = int.Parse(GetValueForOption(options, "UpdateDateIndex", "16", owner), CultureInfo.InvariantCulture);
-                this.CloseDateIndex = int.Parse(GetValueForOption(options, "CloseDateIndex", "17", owner), CultureInfo.InvariantCulture);
-                this.KeyIndex = int.Parse(GetValueForOption(options, "KeyIndex", "18", owner), CultureInfo.InvariantCulture);
-                this.IdIndex = int.Parse(GetValueForOption(options, "IdIndex", "19", owner), CultureInfo.InvariantCulture);
-
+                this.UpdateDateIndex = int.Parse(GetValueForOption(options, "UpdateDateIndex", "15", owner), CultureInfo.InvariantCulture);
+                this.CloseDateIndex = int.Parse(GetValueForOption(options, "CloseDateIndex", "16", owner), CultureInfo.InvariantCulture);
+                this.KeyIndex = int.Parse(GetValueForOption(options, "KeyIndex", "17", owner), CultureInfo.InvariantCulture);
+                this.IdIndex = int.Parse(GetValueForOption(options, "IdIndex", "18", owner), CultureInfo.InvariantCulture);
 
                 this.ComponentVisible = bool.Parse(GetValueForOption(options, "ComponentVisible", "true", owner));
                 this.LineVisible = bool.Parse(GetValueForOption(options, "LineVisible", "true", owner));
@@ -1576,12 +1574,12 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 this.CreationDateVisible = bool.Parse(GetValueForOption(options, "CreationDateVisible", "false", owner));
                 this.ProjectVisible = bool.Parse(GetValueForOption(options, "ProjectVisible", "false", owner));
                 this.ResolutionVisible = bool.Parse(GetValueForOption(options, "ResolutionVisible", "false", owner));
-                this.EffortVisible = bool.Parse(GetValueForOption(options, "EffortVisible", "false", owner));
                 this.UpdateDateVisible = bool.Parse(GetValueForOption(options, "UpdateDateVisible", "false", owner));
                 this.CloseDateVisible = bool.Parse(GetValueForOption(options, "CloseDateVisible", "false", owner));
                 this.KeyVisible = bool.Parse(GetValueForOption(options, "KeyVisible", "false", owner));
                 this.IdVisible = bool.Parse(GetValueForOption(options, "IdVisible", "false", owner));
                 this.IsNewVisible = bool.Parse(GetValueForOption(options, "IsNewVisible", "false", owner));
+                
             }
             catch (Exception ex)
             {
@@ -1596,7 +1594,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         {
             int index = -1;
             // visible items
-            this.ComponentIndex = this.GetIndex(ref index);            
+            this.ComponentIndex = this.GetIndex(ref index);
             this.LineIndex = this.GetIndex(ref index);
             this.MessageIndex = this.GetIndex(ref index);
             this.SeverityIndex = this.GetIndex(ref index);
@@ -1610,11 +1608,10 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             // other values
             this.CreationDateIndex = this.GetIndex(ref index);
             this.CloseDateIndex = this.GetIndex(ref index);
-            this.EffortIndex = this.GetIndex(ref index);
             this.ProjectIndex = this.GetIndex(ref index);
-            this.UpdateDateIndex = this.GetIndex(ref index);            
+            this.UpdateDateIndex = this.GetIndex(ref index);
             this.RuleIndex = this.GetIndex(ref index);
-            this.ResolutionIndex = this.GetIndex(ref index);            
+            this.ResolutionIndex = this.GetIndex(ref index);
             this.KeyIndex = this.GetIndex(ref index);
             this.IdIndex = this.GetIndex(ref index);
             this.ViolationIdIndex = this.GetIndex(ref index);
@@ -1636,7 +1633,6 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.CreationDateVisible = false;
             this.ProjectVisible = false;
             this.ResolutionVisible = false;
-            this.EffortVisible = false;
             this.UpdateDateVisible = false;
             this.CloseDateVisible = false;
             this.KeyVisible = false;

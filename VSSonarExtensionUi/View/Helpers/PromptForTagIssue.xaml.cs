@@ -31,12 +31,13 @@ namespace VSSonarExtensionUi.View.Helpers
         /// <param name="question">The question.</param>
         /// <param name="title">The title.</param>
         /// <param name="tags">The tags.</param>
-        public PromptForTagIssue(string question, string title, List<string> tags)
+        public PromptForTagIssue(string question, string title, List<string> tags, string startTags = "")
         {
             this.InitializeComponent();
             this.TagBox.ItemsSource = tags;
             this.txtQuestion.Text = question;
             this.Title = title;
+            this.txtNewTag.Text = startTags;
         }
 
         #endregion
@@ -53,9 +54,9 @@ namespace VSSonarExtensionUi.View.Helpers
         /// <returns>
         /// The <see cref="string" />.
         /// </returns>
-        public static string Prompt(string question, string title, List<string> tags, out string newTag)
+        public static string Prompt(string question, string title, List<string> tags, out string newTag, string startTags = "")
         {
-            var inst = new PromptForTagIssue(question, title, tags);
+            var inst = new PromptForTagIssue(question, title, tags, startTags);
             inst.ShowDialog();
 
             if (inst.DialogResult == true)

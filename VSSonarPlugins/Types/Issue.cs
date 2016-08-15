@@ -170,6 +170,7 @@ namespace VSSonarPlugins.Types
         /// <value>
         /// The tags.
         /// </value>
+        [DoNotNotify]
         public SortedSet<string> Tags { get; set; }
 
         /// <summary>

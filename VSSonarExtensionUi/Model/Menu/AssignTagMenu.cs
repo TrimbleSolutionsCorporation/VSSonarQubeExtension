@@ -27,6 +27,7 @@ namespace VSSonarExtensionUi.Model.Menu
     using ViewModel.Helpers;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
+    using System.Linq;
 
     /// <summary>
     /// The issue handler menu.
@@ -106,6 +107,7 @@ namespace VSSonarExtensionUi.Model.Menu
         {
             var topLel = new AssignTagMenu(rest, model, notmanager) { CommandText = "Tags", IsEnabled = false };
             topLel.SubItems.Add(new AssignTagMenu(rest, model, notmanager) { CommandText = "assign tag", IsEnabled = true });
+            topLel.SubItems.Add(new AssignTagMenu(rest, model, notmanager) { CommandText = "remove tags", IsEnabled = true });
             return topLel;
         }
 
@@ -213,13 +215,15 @@ namespace VSSonarExtensionUi.Model.Menu
                                 var issuesToAssign = new List<Issue>();
                                 foreach (Issue issue in issues)
                                 {
+                                    var finalTags = new List<string>();
+                                    finalTags.AddRange(tagsToApply);
                                     foreach (var tag in issue.Tags)
                                     {
-                                        tagsToApply.Add(tag);
+                                        finalTags.Add(tag);
                                     }
 
-                                    this.manager.ReportMessage(new Message { Id = "AssignTagMenu", Data = "Assign tags:" + this.rest.SetIssueTags(AuthtenticationHelper.AuthToken, issue as Issue, tagsToApply) });
-                                    foreach (var tag in tagsToApply)
+                                    this.manager.ReportMessage(new Message { Id = "AssignTagMenu", Data = "Assign tags:" + this.rest.SetIssueTags(AuthtenticationHelper.AuthToken, issue as Issue, finalTags) });
+                                    foreach (var tag in finalTags)
                                     {
                                         if(!issue.Tags.Contains(tag))
                                         {
@@ -235,6 +239,86 @@ namespace VSSonarExtensionUi.Model.Menu
                     }
                 }
 
+                if (this.CommandText.Equals("remove tags"))
+                {
+                    var issues = this.model.SelectedItems;
+                    var listOfUniqueTags = new SortedSet<string>();
+                    var uniqueTags = "";
+                    foreach (Issue issue in issues)
+                    {
+                        foreach (var item in issue.Tags)
+                        {
+                            if (!listOfUniqueTags.Contains(item))
+                            {
+                                listOfUniqueTags.Add(item);
+                                uniqueTags = uniqueTags + item + ",";
+                            }
+                        }
+                    }
+
+                    string newtag = string.Empty;
+                    var tags = this.rest.GetAvailableTags(AuthtenticationHelper.AuthToken);
+                    var seletectTag = PromptForTagIssue.Prompt("Choose tag to remove", "Tag selection", tags, out newtag, uniqueTags.TrimEnd(','));
+                    var tagsToRemove = new List<string>();
+
+                    if (!string.IsNullOrEmpty(newtag))
+                    {
+                        tagsToRemove.AddRange(newtag.Split(',').ToList());
+                    }
+
+                    if (!string.IsNullOrEmpty(seletectTag))
+                    {
+                        tagsToRemove.Add(seletectTag);
+                    }
+
+                    if (tagsToRemove.Count == 0)
+                    {
+                        return;
+                    }
+
+                    using (var bw = new BackgroundWorker { WorkerReportsProgress = false })
+                    {
+                        bw.RunWorkerCompleted += delegate { Application.Current.Dispatcher.Invoke(delegate { this.manager.EndedWorking(); }); };
+
+                        bw.DoWork += delegate
+                        {
+                            var issuesToAssign = new List<Issue>();
+                            foreach (Issue issue in issues)
+                            {
+                                var finalTags = new List<string>();
+
+                                foreach (var tag in issue.Tags)
+                                {
+                                    bool inList = false;
+                                    foreach (var item in tagsToRemove)
+                                    {
+                                        if (tag.Equals(item))
+                                        {
+                                            inList = true;
+                                        }
+                                    }
+
+                                    if (!inList)
+                                    {
+                                        finalTags.Add(tag);
+                                    }
+                                }
+
+                                this.manager.ReportMessage(new Message { Id = "AssignTagMenu", Data = "Assign tags:" + this.rest.SetIssueTags(AuthtenticationHelper.AuthToken, issue as Issue, finalTags) });
+                                issue.Tags.Clear();
+
+                                foreach (var tag in finalTags)
+                                {
+                                    issue.Tags.Add(tag);
+                                }
+                            }
+
+                            this.model.RefreshView();
+                        };
+
+                        bw.RunWorkerAsync();
+                    }
+                }
             }
             catch (Exception ex)
             {

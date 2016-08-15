@@ -454,7 +454,7 @@
                     </DataGridTemplateColumn.HeaderTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTextColumn  DisplayIndex="{Binding EffortIndex, FallbackValue=5, Mode=TwoWay, Source={StaticResource Proxy}}"
+                <DataGridTextColumn  DisplayIndex="{Binding Data.EffortIndex, FallbackValue=5, Mode=TwoWay, Source={StaticResource Proxy}}"
                                     Binding="{Binding Effort}" MinWidth="80" MaxWidth="80" x:Name="DebtemplateCol"
                                     Header="Effort" CanUserSort="True" SortMemberPath="Effort" 
                                     IsReadOnly="True"
@@ -493,7 +493,7 @@
 
                 <DataGridTemplateColumn ClipboardContentBinding="{Binding Author}" DisplayIndex="{Binding Data.AuthorIndex, FallbackValue=7, Mode=TwoWay, Source={StaticResource Proxy}}"
                                         MinWidth="120" MaxWidth="250" x:Name="AuthorTemplateCol" Header="Author" CanUserSort="True" SortMemberPath="Author"
-                                        IsReadOnly="True" Visibility="{Binding Data.AuhtorVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
+                                        IsReadOnly="True" Visibility="{Binding Data.AuthorVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Author, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"  TextWrapping="WrapWithOverflow"  />
@@ -590,20 +590,16 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.HeaderTemplate>
                 </DataGridTemplateColumn>
-                
-                <DataGridTextColumn DisplayIndex="{Binding CreationDateIndex, FallbackValue=10, Mode=TwoWay, Source={StaticResource Proxy}}"
+
+                <DataGridTextColumn DisplayIndex="{Binding Data.CreationDateIndex, FallbackValue=10, Mode=TwoWay, Source={StaticResource Proxy}}"
                                     Binding="{Binding CreationDate}" MinWidth="120" MaxWidth="120" x:Name="CreationDateTemplateCol" Header="CreationDate" CanUserSort="True" SortMemberPath="CreationDate"
                                     IsReadOnly="True" Visibility="{Binding Data.CreationDateVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
 
-                <DataGridTextColumn DisplayIndex="{Binding CloseDateIndex, FallbackValue=11, Mode=TwoWay, Source={StaticResource Proxy}}"
+                <DataGridTextColumn DisplayIndex="{Binding Data.CloseDateIndex, FallbackValue=11, Mode=TwoWay, Source={StaticResource Proxy}}"
                                     Binding="{Binding CloseDate}" MinWidth="120" MaxWidth="120" x:Name="CloseDateTemplateCol" Header="CloseDate" CanUserSort="True" SortMemberPath="CloseDate"                                    
                                     IsReadOnly="True" Visibility="{Binding Data.CloseDateVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
 
-                <DataGridTextColumn DisplayIndex="{Binding EffortIndex, FallbackValue=12, Mode=TwoWay, Source={StaticResource Proxy}}"
-                                    Binding="{Binding Effort}" MinWidth="100" MaxWidth="100" x:Name="EffortTemplateCol" Header="Effort" CanUserSort="True" SortMemberPath="Effort"                                    
-                                    IsReadOnly="True" Visibility="{Binding Data.EffortVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
-               
-                <DataGridTemplateColumn DisplayIndex="{Binding Data.ProjectIndex, FallbackValue=13, Mode=TwoWay, Source={StaticResource Proxy}}"
+                <DataGridTemplateColumn DisplayIndex="{Binding Data.ProjectIndex, FallbackValue=12, Mode=TwoWay, Source={StaticResource Proxy}}"
                                         MinWidth="120" x:Name="ProjectTemplateCol" Header="Project" CanUserSort="True" SortMemberPath="Project"                                        
                                         IsReadOnly="True" Visibility="{Binding Data.ProjectVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
                     <DataGridTemplateColumn.CellTemplate>
@@ -636,11 +632,11 @@
                     </DataGridTemplateColumn.HeaderTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTextColumn DisplayIndex="{Binding Data.UpdateDateIndex, FallbackValue=14, Mode=TwoWay, Source={StaticResource Proxy}}" 
+                <DataGridTextColumn DisplayIndex="{Binding Data.UpdateDateIndex, FallbackValue=13, Mode=TwoWay, Source={StaticResource Proxy}}" 
                                     MinWidth="120" MaxWidth="120" x:Name="UpdateDateTemplateCol" Header="UpdateDate" CanUserSort="True" SortMemberPath="UpdateDate"
                                     IsReadOnly="True" Visibility="{Binding Data.UpdateDateVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
 
-                <DataGridTemplateColumn DisplayIndex="{Binding Data.RuleIndex, FallbackValue=15, Mode=TwoWay, Source={StaticResource Proxy}}"
+                <DataGridTemplateColumn DisplayIndex="{Binding Data.RuleIndex, FallbackValue=14, Mode=TwoWay, Source={StaticResource Proxy}}"
                                         MinWidth="120" x:Name="RuleTemplateCol" Header="Rule" CanUserSort="True" SortMemberPath="Rule"                                        
                                         IsReadOnly="True" Visibility="{Binding Data.RuleVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
                     <DataGridTemplateColumn.CellTemplate>
@@ -673,7 +669,7 @@
                     </DataGridTemplateColumn.HeaderTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn DisplayIndex="{Binding Data.ResolutionIndex, FallbackValue=16, Mode=TwoWay, Source={StaticResource Proxy}}"
+                <DataGridTemplateColumn DisplayIndex="{Binding Data.ResolutionIndex, FallbackValue=15, Mode=TwoWay, Source={StaticResource Proxy}}"
                                         MinWidth="120" MaxWidth="120" x:Name="ResolutionTemplateCol" Header="Resolution" CanUserSort="True" SortMemberPath="Resolution"                                        
                                         IsReadOnly="True" Visibility="{Binding Data.ResolutionVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}">
                     <DataGridTemplateColumn.CellTemplate>
@@ -703,18 +699,17 @@
                     </DataGridTemplateColumn.HeaderTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTextColumn DisplayIndex="{Binding KeyIndex, FallbackValue=17, Mode=TwoWay, Source={StaticResource Proxy}}" 
+                <DataGridTextColumn DisplayIndex="{Binding Data.KeyIndex, FallbackValue=16, Mode=TwoWay, Source={StaticResource Proxy}}" 
                                     Binding="{Binding Key}" MinWidth="120" x:Name="KeyTemplateCol" Header="Key" CanUserSort="True" SortMemberPath="Key"                                    
                                     IsReadOnly="True" Visibility="{Binding Data.KeyVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
 
-                <DataGridTextColumn DisplayIndex="{Binding IdIndex, FallbackValue=18, Mode=TwoWay, Source={StaticResource Proxy}}"
-                                    Binding="{Binding Id}" MinWidth="120" x:Name="IdTemplateCol" Header="Id" CanUserSort="True" SortMemberPath="Id"                                     
+                <DataGridTextColumn DisplayIndex="{Binding Data.IdIndex, FallbackValue=17, Mode=TwoWay, Source={StaticResource Proxy}}"
+                                    Binding="{Binding Id}" MinWidth="120" x:Name="IdTemplateCol" Header="Id" CanUserSort="True" SortMemberPath="Id"
                                     IsReadOnly="True" Visibility="{Binding Data.IdVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
-                
-                <DataGridTextColumn DisplayIndex="{Binding ViolationIdIndex, FallbackValue=19, Mode=TwoWay, Source={StaticResource Proxy}}"
-                                    Binding="{Binding ViolationId}" MinWidth="120" x:Name="ViolationIdTemplateCol" Header="ViolationId" CanUserSort="true" SortMemberPath="ViolationId"                                    
+
+                <DataGridTextColumn DisplayIndex="{Binding Data.ViolationIdIndex, FallbackValue=18, Mode=TwoWay, Source={StaticResource Proxy}}"
+                                    Binding="{Binding ViolationId}" MinWidth="120" x:Name="ViolationIdTemplateCol" Header="ViolationId" CanUserSort="true" SortMemberPath="ViolationId"
                                     IsReadOnly="True" Visibility="{Binding Data.ViolationIdVisible, Converter={StaticResource BoolToVis}, Source={StaticResource Proxy}}"/>
-                
             </DataGrid.Columns>
 
 

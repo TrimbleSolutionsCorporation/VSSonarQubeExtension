@@ -242,7 +242,7 @@
         <DockPanel HorizontalAlignment="Stretch" LastChildFill="True">
 
             <controls:FlyoutsControl DockPanel.Dock="Right">
-                <controls:Flyout Header="Project Options" Position="Right" Width="{Binding SizeOfFlyout, FallbackValue=250}" IsOpen="{Binding ShowLeftFlyOut, FallbackValue=True}" >
+                <controls:Flyout Header="Project Options" Position="Right" Width="{Binding SizeOfFlyout, FallbackValue=250}" IsOpen="{Binding ShowRightFlyout, FallbackValue=True}" >
                     <controls:Flyout.Resources>
                         <Style TargetType="{x:Type controls:Flyout}" >
                             <Setter Property="HeaderTemplate" Value="{StaticResource CustomFlyoutHeaderTemplateRight}" />
