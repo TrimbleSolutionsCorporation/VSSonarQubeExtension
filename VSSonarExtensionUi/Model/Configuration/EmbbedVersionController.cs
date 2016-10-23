@@ -6,6 +6,7 @@
     using System.IO;
     using System.IO.Compression;
     using System.Net;
+    using System.Reflection;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
 
@@ -49,10 +50,6 @@
         /// </summary>
         private class VersionData
         {
-            public string LowVersion { get; set; }
-
-            public string HighVersion { get; set; }
-
             public string DownloadPath { get; set; }
 
             public string InstallPath { get; set; } 
@@ -99,13 +96,11 @@
         private void GenerateVersionData()
         {
             var version = new VersionData();
-            version.HighVersion = "4.9";
-            version.LowVersion = "4.0";
             version.DownloadPath = "/static/csharp/SonarLint.zip";
+            version.InstallPath = Path.Combine(this.roslynHomeDiagPath, "csharp", "lint");
             this.InternalVersionsCsharp.Add(version);
             version = new VersionData();
-            version.HighVersion = "";
-            version.LowVersion = "5.0";
+            version.InstallPath = Path.Combine(this.roslynHomeDiagPath, "csharp", "analyser");
             version.DownloadPath = "/static/csharp/SonarAnalyzer.zip";
             this.InternalVersionsCsharp.Add(version);
         }
@@ -122,9 +117,18 @@
                 this.SelectCSharpZipFileToUse(configuration);
                 if (this.InUsePluginsWithDiagnostics.Count > 0)
                 {
+                    List<VersionData> elementsToRemove = new List<VersionData>();
                     foreach (var item in this.InUsePluginsWithDiagnostics)
                     {
-                        this.SyncAnalysersFromServer(configuration, item);
+                        if (!this.SyncAnalysersFromServer(configuration, item))
+                        {
+                            elementsToRemove.Add(item);
+                        }
+                    }
+
+                    foreach (var item in elementsToRemove)
+                    {
+                        this.InUsePluginsWithDiagnostics.Remove(item);
                     }
                     
                 }          
@@ -140,41 +144,20 @@
         /// </summary>
         /// <param name="authentication">The authentication.</param>
         /// <param name="versionToUse">The version to use.</param>
-        private void SyncAnalysersFromServer(ISonarConfiguration authentication, VersionData versionToUse)
+        private bool SyncAnalysersFromServer(ISonarConfiguration authentication, VersionData versionToUse)
         {
             var tmpFile = Path.GetTempFileName();
             var tmpDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            bool isOk = false;
 
             if (File.Exists(tmpFile))
             {
                 File.Delete(tmpFile);
             }
 
-            if (!Directory.Exists(versionToUse.InstallPath))
-            {
-                Directory.CreateDirectory(versionToUse.InstallPath);
-            }
-
             try
             {
-                var urldownload = authentication.Hostname + versionToUse.DownloadPath;
-                using (var client = new WebClient())
-                {
-                    client.DownloadFile(urldownload, tmpFile);
-
-                    ZipFile.ExtractToDirectory(tmpFile, tmpDir);
-
-                    var files = Directory.GetFiles(tmpDir);
-
-                    foreach (var file in files)
-                    {
-                        var endPath = Path.Combine(versionToUse.InstallPath, Path.GetFileName(file));
-                        if (!File.Exists(endPath))
-                        {
-                            File.Copy(file, endPath, true);
-                        }                        
-                    }
-                }
+                isOk = DownloadFileFromServer(authentication, versionToUse, tmpFile, tmpDir);
             }
             catch (Exception ex)
             {
@@ -190,6 +173,53 @@
             {
                 Directory.Delete(tmpDir, true);
             }
+
+            return isOk;
+        }
+
+        private static bool DownloadFileFromServer(ISonarConfiguration authentication, VersionData versionToUse, string tmpFile, string tmpDir)
+        {
+            try
+            {
+                var urldownload = authentication.Hostname + versionToUse.DownloadPath;
+                using (var client = new WebClient())
+                {
+                    client.DownloadFile(urldownload, tmpFile);
+
+                    ZipFile.ExtractToDirectory(tmpFile, tmpDir);
+
+                    var files = Directory.GetFiles(tmpDir);
+                    var versionDir = "";
+
+                    foreach (var file in files)
+                    {
+                        if (string.IsNullOrEmpty(versionDir))
+                        {
+                            FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(file);
+                            string ver = fvi.FileVersion;
+                            versionDir = Path.Combine(versionToUse.InstallPath, ver);
+                            versionToUse.InstallPath = Path.Combine(versionToUse.InstallPath, ver);
+
+                            if (!Directory.Exists(versionToUse.InstallPath))
+                            {
+                                Directory.CreateDirectory(versionToUse.InstallPath);
+                            }
+                        }
+
+                        var endPath = Path.Combine(versionToUse.InstallPath, Path.GetFileName(file));
+                        if (!File.Exists(endPath))
+                        {
+                            File.Copy(file, endPath, true);
+                        }
+                    }
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -198,32 +228,10 @@
         private void SelectCSharpZipFileToUse(ISonarConfiguration configuration)
         {
             this.InUsePluginsWithDiagnostics.Clear();
-            var pluginVersion = this.rest.GetInstalledPlugins(configuration)["C#"];
-            var versionInServer = new Version(pluginVersion.Split('-')[0]);
             foreach (var version in this.InternalVersionsCsharp)
             {
-                var versionLower = new Version(version.LowVersion);
-                var result = versionInServer.CompareTo(versionLower);
-                if (result >= 0)
-                {
-                    if (string.IsNullOrEmpty(version.HighVersion))
-                    {
-                        version.InstallPath = Path.Combine(this.roslynHomeDiagPath, "csharp", pluginVersion);
-                        this.InUsePluginsWithDiagnostics.Add(version);
-                        break;
-                    }
-                    else
-                    {
-                        var versionHigher = new Version(version.HighVersion);
-                        var result2 = versionInServer.CompareTo(versionHigher);
-                        if (result2 <= 0)
-                        {
-                            version.InstallPath = Path.Combine(this.roslynHomeDiagPath, "csharp", pluginVersion);
-                            this.InUsePluginsWithDiagnostics.Add(version);
-                            break;
-                        }
-                    }
-                }
+                version.InstallPath = Path.Combine(this.roslynHomeDiagPath, "csharp");
+                this.InUsePluginsWithDiagnostics.Add(version);
             }
         }
     }

@@ -174,7 +174,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                     {
                         MessageDisplayBox.DisplayMessage(
                             "Adding new diagnostics analyzers requires Roslyn plugin installed in your SonarQube server." +
-                            "Administer Quality Profiles and Gates and Provision Projects permissions must be available to user.",
+                            "Administration rights, Administer Quality Profiles and Gates and Provision Projects permissions must be available to user.",
                             helpurl: "https://visualstudiogallery.msdn.microsoft.com/7fc312c3-f1ab-49f8-b286-dbf7fff37305");
                         return;
                     }

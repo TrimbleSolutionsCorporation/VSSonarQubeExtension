@@ -950,11 +950,16 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
         member this.GetInstalledPlugins(conf:ISonarConfiguration) =
             let dicret = new System.Collections.Generic.Dictionary<string, string>()
             let url = "/api/plugins/installed"
-            let reply = httpconnector.HttpSonarGetRequest(conf, url)                        
-            let data = PluginsMessage.Parse(reply)
 
-            for plugin in data.Plugins do
-                dicret.Add(plugin.Name, plugin.Version.String.Value)
+            try
+                let reply = httpconnector.HttpSonarGetRequest(conf, url)
+                let data = PluginsMessage.Parse(reply)
+
+                for plugin in data.Plugins do
+                    dicret.Add(plugin.Name, plugin.Version.String.Value)
+
+            with
+            |_ -> ()
 
             dicret
 
@@ -1112,9 +1117,9 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
         member this.UpdateRuleData(conf:ISonarConfiguration, newRule : Rule) = 
             let url = 
                 if newRule.Key.StartsWith(newRule.Repo + ":") then
-                    "/api/rules/search?rule_key=" + HttpUtility.UrlEncode(newRule.Key) + "&facets=debt_characteristics"
+                    "/api/rules/search?rule_key=" + HttpUtility.UrlEncode(newRule.Key) + "&facets=types"
                 else
-                    "/api/rules/search?rule_key=" + HttpUtility.UrlEncode(newRule.Repo) + ":" + HttpUtility.UrlEncode(newRule.Key) + "&facets=debt_characteristics"
+                    "/api/rules/search?rule_key=" + HttpUtility.UrlEncode(newRule.Repo) + ":" + HttpUtility.UrlEncode(newRule.Key) + "&facets=types"
             try
                 System.Diagnostics.Debug.WriteLine(url)
                 let reply = httpconnector.HttpSonarGetRequest(conf, url)

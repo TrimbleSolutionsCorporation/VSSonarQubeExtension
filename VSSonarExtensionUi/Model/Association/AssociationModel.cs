@@ -539,7 +539,7 @@
                 }
                 catch (Exception ex)
                 {
-                    this.model.StatusMessageAssociation = "Associated Project does not exist in server, please configure association";
+                    this.model.StatusMessageAssociation = "Associated Project does not exist in server, please configure association: " + ex.Message;
                     return null;
                 }
             }

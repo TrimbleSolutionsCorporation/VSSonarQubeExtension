@@ -467,24 +467,21 @@
             {
                 bool hasRoslynPlugin = VerifyExistenceOfRoslynPlugin();
 
-                if (hasRoslynPlugin)
+                // load defined props in server and load up
+                var props = this.rest.GetProperties(authentication);
+                if (props.ContainsKey("sonar.roslyn.diagnostic.path"))
                 {
-                    // load defined props in server and load up
-                    var props = this.rest.GetProperties(authentication);
-                    if (props.ContainsKey("sonar.roslyn.diagnostic.path"))
+                    var folders = props["sonar.roslyn.diagnostic.path"].Split(';');
+                    foreach (var folder in folders)
                     {
-                        var folders = props["sonar.roslyn.diagnostic.path"].Split(';');
-                        foreach (var folder in folders)
+                        if (Directory.Exists(folder) && !this.roslynExternalUserDiagPath.ToLower().Equals(folder.ToLower()))
                         {
-                            if (Directory.Exists(folder) && !this.roslynExternalUserDiagPath.ToLower().Equals(folder.ToLower()))
-                            {
-                                this.LoadDiagnosticsFromPath(folder, hasRoslynPlugin);
-                            }
+                            this.LoadDiagnosticsFromPath(folder, hasRoslynPlugin);
                         }
                     }
                 }
 
-                this.LoadDiagnosticsFromPath(this.roslynExternalUserDiagPath, hasRoslynPlugin);                
+                this.LoadDiagnosticsFromPath(this.roslynExternalUserDiagPath, hasRoslynPlugin);
                 
                 foreach (var item in this.embedVersionController.GetInstalledPaths())
                 {
