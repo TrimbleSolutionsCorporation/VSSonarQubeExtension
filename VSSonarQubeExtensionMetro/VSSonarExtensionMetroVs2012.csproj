@@ -78,7 +78,7 @@
       <HintPath>..\packages\FSharp.Compiler.Service.2.0.0.3\lib\net45\FSharp.Compiler.Service.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FSharp.Data, Version=$(TargetFSharpDataVersion), Culture=neutral, PublicKeyToken=null">
+    <Reference Include="FSharp.Data, Version=$(TargetFSharpDataVersion), Culture=neutral, PublicKeyToken=2f04dbe497b71114">
       <HintPath>..\References\$(TargetFSharpCoreVersion)\FSharp.Data.dll</HintPath>
       <Private>True</Private>
       <SpecificVersion>True</SpecificVersion>

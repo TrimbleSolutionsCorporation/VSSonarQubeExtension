@@ -141,11 +141,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public string Header { get; set; }
 
         /// <summary>
-        ///     Gets or sets the license manager.
-        /// </summary>
-        public LicenseViewerViewModel LicenseManager { get; set; }
-
-        /// <summary>
         ///     Gets or sets the options in view.
         /// </summary>
         public UserControl OptionsInView { get; set; }
@@ -274,17 +269,13 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 manager,
                 helper);
 
-            this.LicenseManager = new LicenseViewerViewModel(this.PluginManager, this.configurationHelper);
-
             this.RoslynModel = new RoslynManagerModel(this.PluginManager.AnalysisPlugins, manager, this.configurationHelper, this.restService);
             this.RoslynViewModel = new RoslynManagerViewModel(this.RoslynModel);
 
             this.AvailableOptionsViews.Add(this.PluginManager);
-            this.AvailableOptionsViews.Add(this.LicenseManager);
             this.AvailableOptionsViews.Add(this.RoslynViewModel);
 
             this.AvailableOptionsModels.Add(this.PluginManager);
-            this.AvailableOptionsModels.Add(this.LicenseManager);
             this.AvailableOptionsModels.Add(this.RoslynModel);
 
             // sync checks to plugins

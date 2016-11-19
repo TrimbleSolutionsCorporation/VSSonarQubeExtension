@@ -139,7 +139,6 @@
         {
             this.sourceControl = sourceModel;
             this.assignProject = project;
-            this.availableProjects = availableProjects;
         }
 
         /// <summary>

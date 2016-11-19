@@ -136,16 +136,6 @@ namespace VSSonarPlugins
         /// <returns>The <see cref="UserControl"/>.</returns>
         IPluginControlOption GetPluginControlOptions(Resource project, ISonarConfiguration configuration);
 
-        /// <summary>The get licenses.</summary>
-        /// <param name="configuration">The configuration.</param>
-        /// <returns>The <see cref="List"/>.</returns>
-        Dictionary<string, VsLicense> GetLicenses(ISonarConfiguration configuration);
-
-        /// <summary>The generate token id.</summary>
-        /// <param name="configuration">The configuration.</param>
-        /// <returns>The <see cref="string"/>.</returns>
-        string GenerateTokenId(ISonarConfiguration configuration);
-
         /// <summary>
         ///     The get plugin descritpion.
         /// </summary>

@@ -122,3 +122,5 @@ buildlog2015tekla.txt
 buildlog2012.txt
 buildlog2013.txt
 buildlog2015.txt
+.vs/**
+buildlog2017.txt

@@ -102,11 +102,6 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// </summary>
         private string sourceWorkDir;
 
-        /// <summary>
-        /// The issue tracker menu
-        /// </summary>
-        private IMenuItem issueTrackerMenu;
-
         #endregion
 
         #region Constructors and Destructors

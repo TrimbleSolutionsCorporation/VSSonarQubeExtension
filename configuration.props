@@ -7,30 +7,33 @@
 
         
         <!-- Version settings -->
-        <MajorVersionNumber           Condition="'$(MajorVersionNumber)'==''">5</MajorVersionNumber>
-        <MinorVersionNumber           Condition="'$(MinorVersionNumber)'==''">1</MinorVersionNumber>
-        <BuildNumber                  Condition="'$(BuildNumber)'==''">1</BuildNumber>
+        <MajorVersionNumber           Condition="'$(MajorVersionNumber)'==''">6</MajorVersionNumber>
+        <MinorVersionNumber           Condition="'$(MinorVersionNumber)'==''">0</MinorVersionNumber>
+        <BuildNumber                  Condition="'$(BuildNumber)'==''">0</BuildNumber>
         <RevisionNumber               Condition="'$(RevisionNumber)'==''">0</RevisionNumber>
         <AssemblyPatcherTaskOn        Condition="'$(AssemblyPatcherTaskOn)'==''">false</AssemblyPatcherTaskOn>
-        <NunitRunnerTaskEnabled       Condition="'$(NunitRunnerTaskEnabled)'==''">false</NunitRunnerTaskEnabled>
+        <NunitRunnerTaskEnabled       Condition="'$(NunitRunnerTaskEnabled)'==''">true</NunitRunnerTaskEnabled>
 		<ProduceCoverage       Condition="'$(ProduceCoverage)'==''">false</ProduceCoverage>
 
         <VSVersion Condition="'$(VSVersion)'==''">$(VisualStudioVersion)</VSVersion>
-        <TargetFSharpDataVersion>2.2.5.0</TargetFSharpDataVersion>
+        <TargetFSharpDataVersion>3.0.0.0</TargetFSharpDataVersion>
         
         <TargetFSharpCoreVersion Condition="'$(VSVersion)'=='11.0'">4.3.1.0</TargetFSharpCoreVersion>
         <TargetFSharpCoreVersion Condition="'$(VSVersion)'=='12.0'">4.3.1.0</TargetFSharpCoreVersion>
         <TargetFSharpCoreVersion Condition="'$(VSVersion)'=='14.0'">4.4.0.0</TargetFSharpCoreVersion>
+        <TargetFSharpCoreVersion Condition="'$(VSVersion)'=='15.0'">4.4.1.0</TargetFSharpCoreVersion>
         
         <FSharpFolder Condition="'$(TargetFSharpCoreVersion)'=='4.3.1.0'">FSharp431</FSharpFolder>
         <FSharpFolder Condition="'$(TargetFSharpCoreVersion)'=='4.3.1.0'">FSharp431</FSharpFolder>
         <FSharpFolder Condition="'$(TargetFSharpCoreVersion)'=='4.4.0.0'">FSharp440</FSharpFolder>
+        <FSharpFolder Condition="'$(TargetFSharpCoreVersion)'=='4.4.1.0'">FSharp441</FSharpFolder>
         <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
         
         
         <OutFolder Condition="'$(VSVersion)'=='11.0'">vs12</OutFolder>
         <OutFolder Condition="'$(VSVersion)'=='12.0'">vs13</OutFolder>        
         <OutFolder Condition="'$(VSVersion)'=='14.0'">vs15</OutFolder>
+        <OutFolder Condition="'$(VSVersion)'=='15.0'">vs17</OutFolder>
 
         
         <ExtensionOutputPath     Condition="'$(ExtensionOutputPath)'==''">$(MSBuildThisFileDirectory)BuildDrop\$(OutFolder)\</ExtensionOutputPath>
@@ -38,8 +41,12 @@
         <OBJDir>$(MSBuildThisFileDirectory)ObjDrop\$(OutFolder)\$(Configuration)\$(TSPlatform)</OBJDir>
         <IntermediateOutputPath>$(OBJDir)$(MSBuildProjectName)\</IntermediateOutputPath>
 		
-		<AutomationHelperVersion>1.3.7</AutomationHelperVersion>
-		<MsbuildAutomationHelperVersion>431.$(AutomationHelperVersion)</MsbuildAutomationHelperVersion>		
+		<AutomationHelperVersion>1.4.0</AutomationHelperVersion>
+        
+        <MsbuildAutomationHelperVersion Condition="'$(VSVersion)'=='11.0'">431.$(AutomationHelperVersion)</MsbuildAutomationHelperVersion>
+        <MsbuildAutomationHelperVersion Condition="'$(VSVersion)'=='12.0'">431.$(AutomationHelperVersion)</MsbuildAutomationHelperVersion>        
+        <MsbuildAutomationHelperVersion Condition="'$(VSVersion)'=='14.0'">440.$(AutomationHelperVersion)</MsbuildAutomationHelperVersion>
+        <MsbuildAutomationHelperVersion Condition="'$(VSVersion)'=='15.0'">441.$(AutomationHelperVersion)</MsbuildAutomationHelperVersion>
     </PropertyGroup>
     
     <!-- Basic settings -->

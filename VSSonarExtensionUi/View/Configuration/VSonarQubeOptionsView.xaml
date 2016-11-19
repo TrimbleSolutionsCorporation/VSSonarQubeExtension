@@ -22,10 +22,6 @@
                 <ResourceDictionary Source="/VSSonarExtensionUi;component/Styles/ButtonStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <DataTemplate DataType="{x:Type configuration:LicenseViewerViewModel}">
-                <viewconfiguration:LicenseViewerView />
-            </DataTemplate>
-
             <DataTemplate DataType="{x:Type configuration:RoslynManagerViewModel}">
                 <viewconfiguration:RoslynManagerView />
             </DataTemplate>

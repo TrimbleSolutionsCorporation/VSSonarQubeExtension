@@ -22,7 +22,6 @@ namespace VSSonarQubeStandalone.ViewModel
     using VSSonarExtensionUi.Model.Helpers;
     using VSSonarExtensionUi.View.Helpers;
     using VSSonarExtensionUi.ViewModel;
-    using VSSonarPlugins.Types;
     /// <summary>
     /// This class contains properties that the main View can data bind to.
     /// <para>
