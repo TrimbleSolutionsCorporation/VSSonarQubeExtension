@@ -8,7 +8,19 @@ VSSonarQubeExtension
 This is a Extension for Visual Studio to interact wiht SonarQube (TM).
 
 # Installation
-Use the Visual Studio Extension Manager and search for VSSonarExtension, Visual Studio 2012, 2013 and 2015 are supported.
+Use the Visual Studio Extension Manager and search for VSSonarExtension, Visual Studio 2012, 2013, 2015 and 2017 are supported.
+
+# Alternatives
+SonarLint is the official extension provided by SonarSource. It support C# and VB.Net. 
+
+# Why this extension
+There are several reasons why we use this extension, first this extension existed before SonarLint and it has been maitained since its inception. Currently it provides some features that SonarLint does not provide so we will continue its support until we find there is use for it.
+
+Now the features that are provided:
+- it supports C++ open source plugin, https://github.com/SonarOpenCommunity/sonar-cxx. This is a free alternative to the official c++ plugin provided by SonarSource. 
+- Its less invasive then SonarLint, in our context we have to handle multiple solutions that share a similar quality profile,   s
+
+
 
 # Getting Started
 All information on configuration and usage will be found in the wiki pages. [Home](https://github.com/TeklaCorp/VSSonarQubeExtension/wiki)
