@@ -18,7 +18,7 @@ There are several reasons why we use this extension, first this extension existe
 
 Now the features that are provided:
 - it supports C++ open source plugin, https://github.com/SonarOpenCommunity/sonar-cxx. This is a free alternative to the official c++ plugin provided by SonarSource. 
-- Its less invasive then SonarLint, in our context we have to handle multiple solutions that share a similar quality profile,   s
+- Its less invasive then SonarLint. In our context we have to handle multiple solutions that share or not a similar quality profile, this extension allow checking of issues without the need of installing any diagnostics into the projects the solutions. Upgrades are non existent, since everything is handled by the extension  assas sada  sa 
 
 
 
