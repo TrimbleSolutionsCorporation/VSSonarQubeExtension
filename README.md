@@ -8,14 +8,30 @@ VSSonarQubeExtension
 This is a Extension for Visual Studio to interact wiht SonarQube (TM).
 
 # Installation
-Use the Visual Studio Extension Manager and search for VSSonarExtension, Visual Studio 2012, 2013 and 2015 are supported.
+Use the Visual Studio Extension Manager and search for VSSonarExtension, Visual Studio 2012, 2013, 2015 and 2017 are supported.
+
+# Alternatives
+SonarLint is the official extension provided by SonarSource. It support C# and VB.Net. 
+
+# Why this extension
+There are several reasons why we use this extension, first this extension existed before SonarLint and it has been maitained since its inception. Currently it provides some features that SonarLint does not provide so we will continue its support until we find there is use for it. And in the good spirit of open source, as long as, someone is willing to maintain a piece of software that others use its worth keeping.
+
+Now the features that are provided
+- it supports C++ open source plugin, https://github.com/SonarOpenCommunity/sonar-cxx. This is a free alternative to the official c++ plugin provided by SonarSource. 
+- Its less invasive then SonarLint. In our context we have to handle multiple solutions that share or not a similar quality profile, this extension allow checking of issues without the need of installing any diagnostics into the projects the solutions. Upgrades are non existent, since everything is handled by the extension you dont need to worry about updating those diagnostics.
+- F# is supported, we include FSharplint runner and with sonar-fsharp-plugin you can start analysing F# in SonarQube
+- Coverage, you can display sonar coverage in visual studio
+- Custom Roslyn Runner (https://github.com/jmecsoftware/sonarqube-roslyn-plugin), in conjunction with this plugin the extension can run your custom diagnostics automatically. Again in non intrusive way. And no Sdk needed.
+- SonarLing roslyn diagnostics are supported (https://github.com/jmecsoftware/DotNetAndFSharpPlugin)
+- we have many other plugins that integrate with other systems, like git, testtrack.
+
 
 # Getting Started
 All information on configuration and usage will be found in the wiki pages. [Home](https://github.com/TeklaCorp/VSSonarQubeExtension/wiki)
 
 # Getting Involved
 
-Versions of Visual Studio 2012, 2013 and 2015 can be used. There is one solution for each version. VS Extensability part is kept in separe project for each version. 
+Versions of Visual Studio 2012, 2013 and 2015 can be used. There is one solution for each version. VS Extensibility part is kept in separe project for each version. 
 
 Submit pull request if you have bug fixes or improvements.
 
