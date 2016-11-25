@@ -14,15 +14,15 @@ Use the Visual Studio Extension Manager and search for VSSonarExtension, Visual 
 SonarLint is the official extension provided by SonarSource. It support C# and VB.Net. 
 
 # Why this extension
-There are several reasons why we use this extension, first this extension existed before SonarLint and it has been maitained since its inception. Currently it provides some features that SonarLint does not provide so we will continue its support until we find there is use for it. And in the good spirit of open source, as long as, someone is willing to maintain a piece of software that others use its worth keeping.
+There are several reasons why we use this extension, first this extension existed before SonarLint and it has been maintained since its inception. Currently it provides some features that SonarLint does not provide so we will continue its support until we find there is use for it. And in the good spirit of open source, as long as, someone is willing to maintain a piece of software that others use its worth keeping.
 
 Now the features that are provided
-- it supports C++ open source plugin, https://github.com/SonarOpenCommunity/sonar-cxx. This is a free alternative to the official c++ plugin provided by SonarSource. 
-- Its less invasive then SonarLint. In our context we have to handle multiple solutions that share or not a similar quality profile, this extension allow checking of issues without the need of installing any diagnostics into the projects the solutions. Upgrades are non existent, since everything is handled by the extension you dont need to worry about updating those diagnostics.
-- F# is supported, we include FSharplint runner and with sonar-fsharp-plugin you can start analysing F# in SonarQube
+- It supports C++ open source plugin, https://github.com/SonarOpenCommunity/sonar-cxx. This is a free alternative to the official c++ plugin provided by SonarSource. 
+- It's less invasive then SonarLint. In our context we have to handle multiple solutions that share or not a similar quality profile, this extension allows checking of issues without the need of installing any diagnostics into the projects the solutions. Upgrades are nonexistent, since everything is handled by the extension you don't need to worry about updating those diagnostics.
+- F# is supported, we include FSharplint runner and with sonar-fsharp-plugin (https://github.com/jmecsoftware/sonar-fsharp-plugin) you can start analyzing F# in SonarQube
 - Coverage, you can display sonar coverage in visual studio
-- Custom Roslyn Runner (https://github.com/jmecsoftware/sonarqube-roslyn-plugin), in conjunction with this plugin the extension can run your custom diagnostics automatically. Again in non intrusive way. And no Sdk needed.
-- SonarLing roslyn diagnostics are supported (https://github.com/jmecsoftware/DotNetAndFSharpPlugin)
+- Custom Roslyn Runner (https://github.com/jmecsoftware/sonarqube-roslyn-plugin), in conjunction with this plugin the extension can run your custom diagnostics automatically. Again in nonintrusive way. And no Sdk needed.
+- SonarLing Roslyn diagnostics are supported (https://github.com/jmecsoftware/DotNetAndFSharpPlugin)
 - we have many other plugins that integrate with other systems, like git, testtrack.
 
 
