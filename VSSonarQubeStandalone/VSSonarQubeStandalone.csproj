@@ -213,7 +213,6 @@
         $(OutputPath)\MahApps.Metro.dll;
         $(OutputPath)\Microsoft.Practices.ServiceLocation.dll;
         $(OutputPath)\RestSharp.dll;
-        $(OutputPath)\Rhino.Licensing.dll;
         $(OutputPath)\SonarLocalAnalyser.dll;
         $(OutputPath)\SonarRestService.dll;
         $(OutputPath)\System.Windows.Interactivity.dll;

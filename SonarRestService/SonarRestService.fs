@@ -548,6 +548,9 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
         source.Lines <- arrayOfLines
         source
 
+    let GetSourceFromRaw(raw : string) =
+        new Source(Lines = Regex.Split(raw, "\r\n|\r|\n"))
+
     let GetDuplicationsFromContent(responsecontent : string) = 
         let dups = JSonDuplications.Parse(responsecontent)
         let duplicationData = new Collections.Generic.List<DuplicationData>()
@@ -1478,8 +1481,10 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             float32 (elems.[0] + "." + Regex.Replace(elems.[1], @"[^\d]", ""))
             
         member this.GetSourceForFileResource(conf : ISonarConfiguration, resource : string) =
-            let url = "/api/sources?resource=" + resource
-            GetSourceFromContent(httpconnector.HttpSonarGetRequest(conf, url))
+            if conf.SonarVersion < 5.0 then
+                GetSourceFromContent(httpconnector.HttpSonarGetRequest(conf, "/api/sources?resource=" + resource))
+            else
+                GetSourceFromRaw(httpconnector.HttpSonarGetRequest(conf, "/api/sources/raw?key=" + resource))
 
         member this.GetCoverageInResource(conf : ISonarConfiguration, resource : string) =
             let url = "/api/resources?resource=" + resource + "&metrics=coverage_line_hits_data,conditions_by_line,covered_conditions_by_line";
