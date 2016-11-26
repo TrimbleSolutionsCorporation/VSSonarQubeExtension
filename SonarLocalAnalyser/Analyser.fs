@@ -790,6 +790,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
             x.SqTranslator <- sqTranslator
             x.VsInter <- vsInter
             x.FromSave <- fromSave
+            localissues.Clear()
 
             if not(profileCannotBeRetrived) then
 
@@ -811,7 +812,6 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                             raise(new ResourceNotSupportedException())
             
                         x.AnalysisIsRunning <- true
-                        localissues.Clear()
 
                         if File.Exists(Path.Combine(x.Project.SolutionRoot, ".sonar", "sonar-report.json")) then
                             File.Delete(Path.Combine(x.Project.SolutionRoot, ".sonar", "sonar-report.json"))
