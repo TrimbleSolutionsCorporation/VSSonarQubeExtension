@@ -22,7 +22,7 @@
             var mockanalyser = new Mock<ISonarLocalAnalyser>();
             AssociationModel associationModel;
             associationModel =
-              new AssociationModel(null, null, null, null, null, null, mockanalyser.Object);
+              new AssociationModel(null, null, null, null, null, null, mockanalyser.Object, "14.0");
             Assert.That(associationModel.CreateResourcePathFile(null, null), Is.Null);
         }
 
@@ -33,7 +33,7 @@
             AssociationModel associationModel;
             Resource resource;
             StandAloneVsHelper s0 = new StandAloneVsHelper();
-            associationModel = new AssociationModel(null, null, null, null, null, null, mockanalyser.Object);
+            associationModel = new AssociationModel(null, null, null, null, null, null, mockanalyser.Object, "14.0");
             associationModel.UpdateServicesInModels(s0, null, null);
             Assert.Throws<NotImplementedException>(() => resource = associationModel.CreateResourcePathFile((string)null, (Resource)null));
         }
@@ -51,7 +51,7 @@
             var mockanalyser = new Mock<ISonarLocalAnalyser>();
 
             AssociationModel associationModel;            
-            associationModel = new AssociationModel(mockLogger.Object, mockRest.Object, mockConfiguration.Object, mockTranslator.Object, mockPlugin.Object, null, mockanalyser.Object);
+            associationModel = new AssociationModel(mockLogger.Object, mockRest.Object, mockConfiguration.Object, mockTranslator.Object, mockPlugin.Object, null, mockanalyser.Object, "14.0");
             associationModel.UpdateServicesInModels(mockVsHelper.Object, null, null);
 
             Assert.That(associationModel.AssignASonarProjectToSolution(null, null, mockSourceProvider.Object), Is.False);
@@ -70,7 +70,7 @@
             var mockanalyser = new Mock<ISonarLocalAnalyser>();
 
             AssociationModel associationModel;
-            associationModel = new AssociationModel(mockLogger.Object, mockRest.Object, mockConfiguration.Object, mockTranslator.Object, mockPlugin.Object, new SonarQubeViewModel("test", mockConfiguration.Object), mockanalyser.Object);
+            associationModel = new AssociationModel(mockLogger.Object, mockRest.Object, mockConfiguration.Object, mockTranslator.Object, mockPlugin.Object, new SonarQubeViewModel("test", mockConfiguration.Object), mockanalyser.Object, "14.0");
             associationModel.UpdateServicesInModels(mockVsHelper.Object, null, null);
 
             Assert.That(associationModel.AssignASonarProjectToSolution(new Resource() { IsBranch = true }, null, mockSourceProvider.Object), Is.False);
@@ -93,7 +93,7 @@
             var mockObj = mockConfiguration.Object;
 
             AssociationModel associationModel;
-            associationModel = new AssociationModel(mockLogger.Object, mockRest.Object, mockObj, mockTranslator.Object, mockPlugin.Object, new SonarQubeViewModel("test", mockObj), mockanalyser.Object);
+            associationModel = new AssociationModel(mockLogger.Object, mockRest.Object, mockObj, mockTranslator.Object, mockPlugin.Object, new SonarQubeViewModel("test", mockObj), mockanalyser.Object, "14.0");
             associationModel.UpdateServicesInModels(mockVsHelper.Object, null, null);
 
             Assert.That(associationModel.AssignASonarProjectToSolution(new Resource() { IsBranch = false }, null, mockSourceProvider.Object), Is.True);
@@ -116,7 +116,7 @@
             var mockObj = mockConfiguration.Object;
 
             AssociationModel associationModel;
-            associationModel = new AssociationModel(mockLogger.Object, mockRest.Object, mockObj, mockTranslator.Object, mockPlugin.Object, new SonarQubeViewModel("test", mockObj), mockanalyser.Object);
+            associationModel = new AssociationModel(mockLogger.Object, mockRest.Object, mockObj, mockTranslator.Object, mockPlugin.Object, new SonarQubeViewModel("test", mockObj), mockanalyser.Object, "14.0");
             associationModel.UpdateServicesInModels(mockVsHelper.Object, null, null);
 
             Assert.That(associationModel.AssignASonarProjectToSolution(new Resource() { IsBranch = false }, new Resource() { Default = true }, mockSourceProvider.Object), Is.True);
