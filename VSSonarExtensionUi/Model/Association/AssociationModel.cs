@@ -77,6 +77,11 @@
         private ISourceControlProvider sourcecontrol;
 
         /// <summary>
+        /// The vs version
+        /// </summary>
+        private readonly string vsVersion;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="AssociationModel" /> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
@@ -92,8 +97,10 @@
             ISQKeyTranslator translator,
             IPluginManager pluginManager,
             SonarQubeViewModel model,
-            ISonarLocalAnalyser localAnalyeser)
+            ISonarLocalAnalyser localAnalyeser,
+            string vsVersion)
         {
+            this.vsVersion = vsVersion;
             this.keyTranslator = translator;
             this.pluginManager = pluginManager;
             this.model = model;
@@ -658,7 +665,8 @@
                 this.AssociatedProject,
                 this.OpenSolutionPath,
                 this.sourcecontrol,
-                this.Profile);
+                this.Profile,
+                this.vsVersion);
 
             foreach (IModelBase model in modelPool)
             {
@@ -668,7 +676,8 @@
                         this.AssociatedProject,
                         this.OpenSolutionPath,
                         this.sourcecontrol,
-                        this.Profile);
+                        this.Profile,
+                        this.vsVersion);
                 }
                 catch (Exception ex)
                 {

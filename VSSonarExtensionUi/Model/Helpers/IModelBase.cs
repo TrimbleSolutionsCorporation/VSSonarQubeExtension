@@ -33,7 +33,8 @@
             Resource project,
             string workingDir,
             ISourceControlProvider sourceModel,
-            Dictionary<string, Profile> profile);
+            Dictionary<string, Profile> profile,
+            string visualStudioVersion);
 
         /// <summary>
         /// The end data association.

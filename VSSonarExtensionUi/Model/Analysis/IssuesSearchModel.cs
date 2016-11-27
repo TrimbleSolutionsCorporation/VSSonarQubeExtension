@@ -167,7 +167,12 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// <param name="sourceModelIn">The source model in.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
         /// <param name="profile">The profile.</param>
-        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider sourceModelIn, Dictionary<string, Profile> profile)
+        public void AssociateWithNewProject(
+            Resource project,
+            string workingDir,
+            ISourceControlProvider sourceModelIn,
+            Dictionary<string, Profile> profile,
+            string visualStudioVersion)
         {
             this.sourceModel = sourceModelIn;
             this.associatedProject = project;

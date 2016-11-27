@@ -263,7 +263,12 @@
         /// <param name="workingDir">The working dir.</param>
         /// <param name="provider">The provider.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
-        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider provider, Dictionary<string, Profile> profile)
+        public void AssociateWithNewProject(
+            Resource project,
+            string workingDir,
+            ISourceControlProvider provider,
+            Dictionary<string, Profile> profile,
+            string visualStudioVersion)
         {
             // not needed
         }

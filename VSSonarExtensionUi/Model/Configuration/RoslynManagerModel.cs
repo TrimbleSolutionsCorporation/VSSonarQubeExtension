@@ -273,7 +273,12 @@
         /// <param name="workDir">The work directory.</param>
         /// <param name="sourceModelIn">The source model in.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
-        public void AssociateWithNewProject(Resource project, string workDir, ISourceControlProvider sourceModelIn, Dictionary<string, Profile> profile)
+        public void AssociateWithNewProject(
+            Resource project,
+            string workDir,
+            ISourceControlProvider sourceModelIn,
+            Dictionary<string, Profile> profile,
+            string visualStudioVersion)
         {
             this.Profile = profile;
             this.SourceDir = workDir;

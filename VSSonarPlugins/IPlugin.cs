@@ -158,7 +158,11 @@ namespace VSSonarPlugins
         /// <param name="project">The project.</param>
         /// <param name="configuration">The configuration.</param>
         /// <param name="profile">The profile.</param>
-        void AssociateProject(Resource project, ISonarConfiguration configuration, Dictionary<string, Profile> profile);
+        void AssociateProject(
+            Resource project,
+            ISonarConfiguration configuration,
+            Dictionary<string, Profile> profile,
+            string visualStudioVersion);
 
         /// <summary>
         /// Called when [connect to sonar].

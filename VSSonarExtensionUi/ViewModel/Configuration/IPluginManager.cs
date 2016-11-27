@@ -69,6 +69,11 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="associatedProject">The associated project.</param>
         /// <param name="openSolutionPath">The open solution path.</param>
         /// <param name="sourceControl">The source control.</param>
-        void AssociateWithNewProject(Resource associatedProject, string openSolutionPath, ISourceControlProvider sourceControl, Dictionary<string, Profile> profile);
+        void AssociateWithNewProject(
+            Resource associatedProject,
+            string openSolutionPath,
+            ISourceControlProvider sourceControl,
+            Dictionary<string, Profile> profile,
+            string visualStudioVersion);
     }
 }

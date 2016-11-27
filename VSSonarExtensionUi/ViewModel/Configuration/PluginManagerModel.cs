@@ -274,7 +274,12 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="sourceModel">The source model.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
         /// <param name="profile">The profile.</param>
-        public void AssociateWithNewProject(Resource project, string workingDir, ISourceControlProvider sourceModel, IIssueTrackerPlugin sourcePlugin, Dictionary<string, Profile> profile)
+        public void AssociateWithNewProject(
+            Resource project,
+            string workingDir,
+            ISourceControlProvider sourceModel,
+            IIssueTrackerPlugin sourcePlugin,
+            Dictionary<string, Profile> profile)
         {
             // not necessary
         }
@@ -475,7 +480,12 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="workDir">The work dir.</param>
         /// <param name="provider">The provider.</param>
         /// <param name="profile">The profile.</param>
-        public void AssociateWithNewProject(Resource project, string workDir, ISourceControlProvider provider, Dictionary<string, Profile> profile)
+        public void AssociateWithNewProject(
+            Resource project,
+            string workDir,
+            ISourceControlProvider provider,
+            Dictionary<string, Profile> profile,
+            string visualStudioVersion)
         {
             this.sourceDir = workDir;
             this.associatedProject = project;
@@ -509,7 +519,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                         System.Windows.Application.Current.Dispatcher.Invoke(delegate { menuPlugin.UpdateConfiguration(AuthtenticationHelper.AuthToken, project, this.vshelper); });
                     }
 
-                    plugin.AssociateProject(project, AuthtenticationHelper.AuthToken, profile);
+                    plugin.AssociateProject(project, AuthtenticationHelper.AuthToken, profile, visualStudioVersion);
                 }
                 catch (Exception ex)
                 {

@@ -393,7 +393,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             Resource associatedProjectIn,
             string workingDir,
             ISourceControlProvider provider,
-            Dictionary<string, Profile> profile)
+            Dictionary<string, Profile> profile,
+            string visualStudioVersion)
         {
             if (associatedProjectIn == null || string.IsNullOrEmpty(associatedProjectIn.SolutionRoot))
             {
