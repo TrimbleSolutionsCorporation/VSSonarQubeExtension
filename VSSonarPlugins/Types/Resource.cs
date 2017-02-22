@@ -36,6 +36,22 @@ namespace VSSonarPlugins.Types
         public int Id { get; set; }
 
         /// <summary>
+        /// Gets or sets the path.
+        /// </summary>
+        /// <value>
+        /// The path.
+        /// </value>
+        public string Path { get; set; }
+
+        /// <summary>
+        /// Gets or sets the type of the identifier.
+        /// </summary>
+        /// <value>
+        /// The type of the identifier.
+        /// </value>
+        public string IdType { get; set; }
+
+        /// <summary>
         /// Gets or sets the key.
         /// </summary>
         public string Key { get; set; }

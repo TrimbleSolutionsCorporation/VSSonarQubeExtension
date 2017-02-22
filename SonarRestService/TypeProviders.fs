@@ -90,6 +90,8 @@ type PluginsMessage = JsonProvider<""" {"plugins":[{"key":"csharp","name":"C#","
 
 type JsonErrorMessage = JsonProvider<""" {"errors":[{"msg":"Linear functions must only have a non empty coefficient"}]} """>
 
+type JsonarRuleShowResponse = JsonProvider<""" {"rule":{"key":"xml:IllegalTabCheck","repo":"xml","name":"Tabulation characters should not be used","createdAt":"2016-09-10T09:42:07+0300","htmlDesc":"<p>\n  Developers should not need to configure the tab width of their text editors in order to be able to read source code.\n  So the use of tabulation character must be banned.\n</p>","mdDesc":"<p>\n  Developers should not need to configure the tab width of their text editors in order to be able to read source code.\n  So the use of tabulation character must be banned.\n</p>","severity":"MINOR","status":"READY","isTemplate":false,"tags":[],"sysTags":["convention"],"lang":"xml","langName":"XML","params":[{"key":"markAll","htmlDesc":"Mark all tab errors","defaultValue":"false","type":"BOOLEAN"}],"defaultDebtRemFnType":"CONSTANT_ISSUE","defaultDebtRemFnOffset":"2min","debtOverloaded":false,"debtRemFnType":"CONSTANT_ISSUE","debtRemFnOffset":"2min","defaultRemFnType":"CONSTANT_ISSUE","defaultRemFnBaseEffort":"2min","remFnType":"CONSTANT_ISSUE","remFnBaseEffort":"2min","remFnOverloaded":false,"type":"CODE_SMELL"},"actives":[{"qProfile":"xmlsss-sonar-way-85839","inherit":"NONE","severity":"MINOR","params":[{"key":"dummu","value":"false"},{"key":"dummy","value":"sdasa"}],"createdAt":"2016-09-10T09:42:16+0300"}]} """>
+
 type JsonRuleSearchResponse = JsonProvider<""" {
   "total": 641,
   "p": 1,
@@ -126,9 +128,11 @@ type JsonRuleSearchResponse = JsonProvider<""" {
       "debtOverloaded": false,
       "debtRemFnType": "LINEAR",
       "debtRemFnCoeff": "5min",
-      "params": []
+      "params": [],
+      "type" : "CODE_SMELL"
     },
     {
+      "type" : "CODE_SMELL",
       "key": "cppcheck:arrayIndexOutOfBounds",
       "repo": "cppcheck",
       "name": "Array index out of bounds",
@@ -157,7 +161,8 @@ type JsonRuleSearchResponse = JsonProvider<""" {
         {
           "key": "CheckId",
           "type": "STRING",
-          "defaultValue": "TE0027"
+          "defaultValue": "TE0027",
+          "htmlDesc": "description"
         }
       ]
       }
@@ -400,6 +405,10 @@ type JsonProfileAfter44 = JsonProvider<""" [
     ]
   }
 ] """>
+
+type JsonComponentShow = JsonProvider<""" {"component":{"organization":"default-organization","id":"AVdhu8i3reqscUIhfy2g","key":"org:prj:file.cpp","name":"file.cpp","qualifier":"FIL","path":"file.cpp","language":"c++"},"ancestors":[{"organization":"default-organization","id":"AVdhu8i4reqscUIhfy28","key":"org:proj:lib","name":"lib","qualifier":"DIR","path":"libprofdb"},{"organization":"default-organization","id":"AVdhu8OxiJrVXuW77K-o","key":"org:prj","name":"proj","qualifier":"TRK"}]} """>
+type JsonQualityProfiles63 = JsonProvider<""" {"profiles":[{"key":"ail-sonar-way-92014","name":"Sonar way","language":"ail","languageName":"AIL","isInherited":false,"isDefault":true,"activeRuleCount":1,"activeDeprecatedRuleCount":0,"rulesUpdatedAt":"2016-09-10T06:42:16+0000","lastUsed":"2016-10-25T21:55:27+0300"},{"key":"c++-defaultteklac++-75560","name":"DefaultTeklaC++","language":"c++","languageName":"c++","isInherited":false,"isDefault":true,"activeRuleCount":1386,"activeDeprecatedRuleCount":0,"rulesUpdatedAt":"2016-09-10T06:55:42+0000","lastUsed":"2016-10-25T21:55:41+0300","userUpdatedAt":"2016-09-10T09:55:42+0300"},{"key":"cs-default-tekla-c-roslyn-76974","name":"Default Tekla C# - Roslyn","language":"cs","languageName":"C#","isInherited":false,"isDefault":true,"activeRuleCount":266,"activeDeprecatedRuleCount":0,"rulesUpdatedAt":"2016-09-26T18:56:30+0000","lastUsed":"2016-11-11T18:15:09+0200","userUpdatedAt":"2016-09-26T21:56:30+0300"},{"key":"fs-sonar-way-83735","name":"Sonar way","language":"fs","languageName":"F#","isInherited":false,"isDefault":true,"activeRuleCount":38,"activeDeprecatedRuleCount":0,"rulesUpdatedAt":"2016-09-10T06:42:16+0000","lastUsed":"2016-11-11T18:15:09+0200"},{"key":"java-sonar-way-02421","name":"Sonar way","language":"java","languageName":"Java","isInherited":false,"isDefault":true,"activeRuleCount":266,"activeDeprecatedRuleCount":0,"rulesUpdatedAt":"2016-09-10T06:42:16+0000"},{"key":"js-sonar-way-94233","name":"Sonar way","language":"js","languageName":"JavaScript","isInherited":false,"isDefault":true,"activeRuleCount":89,"activeDeprecatedRuleCount":1,"rulesUpdatedAt":"2016-09-10T06:42:16+0000"},{"key":"msbuild-default-msbuild-profile-42378","name":"Default MSBuild Profile","language":"msbuild","languageName":"MSBuild","isInherited":false,"isDefault":true,"activeRuleCount":30,"activeDeprecatedRuleCount":0,"rulesUpdatedAt":"2016-09-26T06:54:03+0000","lastUsed":"2016-11-11T18:15:09+0200","userUpdatedAt":"2016-09-26T09:54:03+0300"},{"key":"py-sonar-way-65505","name":"Sonar way","language":"py","languageName":"Python","isInherited":false,"isDefault":true,"activeRuleCount":35,"activeDeprecatedRuleCount":0,"rulesUpdatedAt":"2016-09-10T06:42:16+0000"},{"key":"xml-sonar-way-85839","name":"Sonar way","language":"xml","languageName":"XML","isInherited":false,"isDefault":true,"activeRuleCount":4,"activeDeprecatedRuleCount":0,"rulesUpdatedAt":"2016-09-10T06:42:16+0000","lastUsed":"2016-11-11T18:15:09+0200"}]} """>
+type JsonComponents = JsonProvider<""" {"paging":{"pageIndex":1,"pageSize":100,"total":15},"components":[{"organization":"default-organization","id":"AVdiEzKfrCEH-mFKGDOE","key":"Org2.core:Analysis","name":"Analysis","qualifier":"TRK"},{"organization":"default-organization","id":"AVdho8PGiJrVXuW77K-i","key":"Org2.Tools.BuildAllExtension","name":"BuildAllExtension","qualifier":"TRK"},{"organization":"default-organization","id":"AVdhu8OxiJrVXuW77K-o","key":"Org2.core:Catalogs","name":"Catalogs","qualifier":"TRK"},{"organization":"default-organization","id":"AVcTD_XvCqG-VILNsN8K","key":"Org2.core:Common","name":"Common","qualifier":"TRK"},{"organization":"default-organization","id":"AVdhsdkhiJrVXuW77K-m","key":"Org2.core:Dimensioning","name":"Dimensioning","qualifier":"TRK"},{"organization":"default-organization","id":"AVdlhcSgrCEH-mFKGDOS","key":"Org2.core:Drawings","name":"Drawings","qualifier":"TRK"},{"organization":"default-organization","id":"AVdjXA7zrCEH-mFKGDON","key":"Org2.core:DrawingTester","name":"DrawingTester","qualifier":"TRK"},{"organization":"default-organization","id":"AVdhxtAuiJrVXuW77K-q","key":"Org2.core:Environment","name":"Environment","qualifier":"TRK"},{"organization":"default-organization","id":"AVdlmdD2rCEH-mFKGDOU","key":"Org2.core:Model","name":"Model","qualifier":"TRK"},{"organization":"default-organization","id":"AVdjM-7KrCEH-mFKGDOG","key":"Org2.core:ModelTester","name":"ModelTester","qualifier":"TRK"},{"organization":"default-organization","id":"AVdhx_VWiJrVXuW77K-s","key":"Org2.core:Reinforcement","name":"Reinforcement","qualifier":"TRK"},{"organization":"default-organization","id":"AVdn2VqWrCEH-mFKGDQY","key":"Org.Connect.Desktop:feature_TCD-991_SlideShow-2","name":"Org.Connect.Desktop feature_TCD-991_SlideShow-2","qualifier":"TRK"},{"organization":"default-organization","id":"AVdnuwwzrCEH-mFKGDOW","key":"Org.Connect.Desktop:master","name":"Org.Connect.Desktop master","qualifier":"TRK"}]} """>
 
 type JsonResourceWithMetrics = JsonProvider<""" [{"id":1,"key":"GroupId:ProjectId","name":"Common","scope":"PRJ","branch":"whatever","qualifier":"TRK","date":"2013-07-03T12:50:52+0300","lname":"Common","lang":"c++","version":"work","description":"","msr":[{"key":"ncloc","val":45499.0,"frmt_val":"45,499"},{"key":"coverage","val":54.7,"frmt_val":"54.7%"},{"key":"profile","val":7.0,"frmt_val":"7.0","data":"DefaultTeklaC++"}]}] """>
 

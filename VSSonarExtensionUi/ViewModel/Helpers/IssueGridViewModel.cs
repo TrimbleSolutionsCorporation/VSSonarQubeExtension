@@ -951,10 +951,14 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 try
                 {
                     translatedPath = this.keyTranslator.TranslateKey(issue.Component, this.vsenvironmenthelper, this.associatedProject.BranchName);
-                    if (string.IsNullOrEmpty(translatedPath))
+                    if (string.IsNullOrEmpty(translatedPath) && string.IsNullOrEmpty(issue.LocalPath))
                     {
                         IssueGridViewModel.ReportTranslationException(issue, translatedPath, this.notificationManager, this.restService, this.associatedProject);
                         return;
+                    }
+
+                    if (string.IsNullOrEmpty(translatedPath)) {
+                        translatedPath = issue.LocalPath;
                     }
 
                     this.vsenvironmenthelper.OpenResourceInVisualStudio(this.sourceWorkDir, translatedPath, issue.Line);

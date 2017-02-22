@@ -149,6 +149,14 @@ namespace VSSonarPlugins.Types
         }
 
         /// <summary>
+        /// Gets or sets the type.
+        /// </summary>
+        /// <value>
+        /// The type.
+        /// </value>
+        public string Type { get; set; }
+
+        /// <summary>
         ///     Gets or sets the severity.
         /// </summary>
         public bool Enabled { get; set; }

@@ -664,8 +664,9 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                                 lock syncLock (
                                     fun () ->
 
+                                        let key = x.SqTranslator.TranslatePath(x.ItemInView, x.VsInter, restService, sonarConfig)
                                         for issue in issues do
-                                            issue.Component <- x.SqTranslator.TranslatePath(x.ItemInView, x.VsInter, restService, sonarConfig)
+                                            issue.Component <- key
                                             if x.Exclusions = null then
                                                 localissues.Add(issue)
                                             else

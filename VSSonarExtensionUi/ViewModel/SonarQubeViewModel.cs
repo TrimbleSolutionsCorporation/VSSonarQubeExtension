@@ -1743,7 +1743,7 @@ namespace VSSonarExtensionUi.ViewModel
 
             this.ErrorIsFound = false;
             this.ErrorMessageTooltip = "Could not associate, something failed. Check output log for error messages.";
-            this.StatusMessageAssociation = "Error : Not Associated";
+            this.StatusMessageAssociation = "Error : Not Associated. Solution needs to be open.";
         }
 
         /// <summary>

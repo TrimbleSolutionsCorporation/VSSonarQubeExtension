@@ -186,6 +186,11 @@
                 return false;
             }
 
+            if (this.OpenSolutionName == null)
+            {
+                return false;
+            }
+
             if (project.IsBranch)
             {
                 if (branchProject == null)
@@ -292,9 +297,9 @@
                 return null;
             }
 
-            var key = this.keyTranslator.TranslatePath(this.vshelper.VsFileItem(fullName, project, null), this.vshelper, this.sonarService, AuthtenticationHelper.AuthToken);
+            // key empty because translator failed, new file
             var localRes = new Resource();
-            localRes.Key = key;
+            localRes.Key = "";
             localRes.Scope = "FIL";
             string fileName = Path.GetFileName(fullName);
             localRes.Name = fileName;
