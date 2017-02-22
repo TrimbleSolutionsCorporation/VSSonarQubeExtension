@@ -9,7 +9,7 @@
         <!-- Version settings -->
         <MajorVersionNumber           Condition="'$(MajorVersionNumber)'==''">6</MajorVersionNumber>
         <MinorVersionNumber           Condition="'$(MinorVersionNumber)'==''">0</MinorVersionNumber>
-        <BuildNumber                  Condition="'$(BuildNumber)'==''">0</BuildNumber>
+        <BuildNumber                  Condition="'$(BuildNumber)'==''">3</BuildNumber>
         <RevisionNumber               Condition="'$(RevisionNumber)'==''">0</RevisionNumber>
         <AssemblyPatcherTaskOn        Condition="'$(AssemblyPatcherTaskOn)'==''">false</AssemblyPatcherTaskOn>
         <NunitRunnerTaskEnabled       Condition="'$(NunitRunnerTaskEnabled)'==''">true</NunitRunnerTaskEnabled>
