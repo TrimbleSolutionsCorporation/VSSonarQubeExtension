@@ -663,9 +663,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
 
                                 lock syncLock (
                                     fun () ->
-
-                                        let key = x.SqTranslator.TranslatePath(x.ItemInView, x.VsInter, restService, sonarConfig)
-                                        for issue in issues do
+                                        let ProcessIssue(issue:Issue, key:string) = 
                                             issue.Component <- key
                                             if x.Exclusions = null then
                                                 localissues.Add(issue)
@@ -680,6 +678,9 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
 
                                                 if not(excluded) then
                                                     localissues.Add(issue)
+
+                                        let keydata = x.SqTranslator.TranslatePath(x.ItemInView, x.VsInter, restService, sonarConfig)
+                                        issues |> Seq.iter (fun issue -> ProcessIssue(issue, keydata))
                                     )
                         else
                             (x :> ISonarLocalAnalyser).AssociateWithProject(x.Project, x.Conf)
