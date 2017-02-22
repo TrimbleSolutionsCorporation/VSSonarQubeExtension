@@ -17,28 +17,6 @@
     class AssociationModelTests
     {
         [Test]
-        public void CreateResourcePathFileIsNull()
-        {
-            var mockanalyser = new Mock<ISonarLocalAnalyser>();
-            AssociationModel associationModel;
-            associationModel =
-              new AssociationModel(null, null, null, null, null, null, mockanalyser.Object, "14.0");
-            Assert.That(associationModel.CreateResourcePathFile(null, null), Is.Null);
-        }
-
-        [Test]
-        public void CreateResourcePathFileThrowsNotImplementedException170()
-        {
-            var mockanalyser = new Mock<ISonarLocalAnalyser>();
-            AssociationModel associationModel;
-            Resource resource;
-            StandAloneVsHelper s0 = new StandAloneVsHelper();
-            associationModel = new AssociationModel(null, null, null, null, null, null, mockanalyser.Object, "14.0");
-            associationModel.UpdateServicesInModels(s0, null, null);
-            Assert.Throws<NotImplementedException>(() => resource = associationModel.CreateResourcePathFile((string)null, (Resource)null));
-        }
-
-        [Test]
         public void AssignWhenNoProjectDefinedReturnsFalse()
         {
             var mockTranslator = new Mock<ISQKeyTranslator>();
@@ -95,13 +73,16 @@
             AssociationModel associationModel;
             associationModel = new AssociationModel(mockLogger.Object, mockRest.Object, mockObj, mockTranslator.Object, mockPlugin.Object, new SonarQubeViewModel("test", mockObj), mockanalyser.Object, "14.0");
             associationModel.UpdateServicesInModels(mockVsHelper.Object, null, null);
+            associationModel.OpenSolutionName = "solution";
+            associationModel.OpenSolutionPath = "path";
+
 
             Assert.That(associationModel.AssignASonarProjectToSolution(new Resource() { IsBranch = false }, null, mockSourceProvider.Object), Is.True);
             Assert.That(associationModel.IsAssociated, Is.True);
         }
 
         [Test]
-        public void AssignProjectIsMainReturnsTrueWhenBranchIsDefined()
+        public void AssociateProjectFailesIfPathNotDefined()
         {
             var mockTranslator = new Mock<ISQKeyTranslator>();
             var mockRest = new Mock<ISonarRestService>();
@@ -118,9 +99,7 @@
             AssociationModel associationModel;
             associationModel = new AssociationModel(mockLogger.Object, mockRest.Object, mockObj, mockTranslator.Object, mockPlugin.Object, new SonarQubeViewModel("test", mockObj), mockanalyser.Object, "14.0");
             associationModel.UpdateServicesInModels(mockVsHelper.Object, null, null);
-
-            Assert.That(associationModel.AssignASonarProjectToSolution(new Resource() { IsBranch = false }, new Resource() { Default = true }, mockSourceProvider.Object), Is.True);
-            Assert.That(associationModel.IsAssociated, Is.True);
+            Assert.IsFalse(associationModel.AssignASonarProjectToSolution(new Resource() { IsBranch = false }, new Resource() { Default = true }, mockSourceProvider.Object));
         }
     }
 }

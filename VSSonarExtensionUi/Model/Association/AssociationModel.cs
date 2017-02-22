@@ -181,23 +181,15 @@
         /// </returns>
         public bool AssignASonarProjectToSolution(Resource project, Resource branchProject, ISourceControlProvider sourceControl, bool skipRegisterModels = false)
         {
-            if (project == null)
-            {
-                return false;
-            }
-
-            if (this.OpenSolutionName == null)
+             if (project == null ||
+                (this.OpenSolutionName == null || this.OpenSolutionPath == null) ||
+                (project.IsBranch && branchProject == null))
             {
                 return false;
             }
 
             if (project.IsBranch)
             {
-                if (branchProject == null)
-                {
-                    return false;
-                }
-
                 this.AssociatedProject = branchProject;
             }
             else
@@ -206,22 +198,10 @@
             }
 
             this.IsAssociated = true;
-
-            if (!string.IsNullOrEmpty(this.OpenSolutionName))
-            {
-                this.SaveAssociationToDisk(this.AssociatedProject);
-                this.AssociatedProject.SolutionRoot = this.OpenSolutionPath;
-                this.AssociatedProject.SolutionName = this.OpenSolutionName;
-                if (string.IsNullOrEmpty(this.OpenSolutionPath))
-                {
-                    this.keyTranslator.SetProjectKeyAndBaseDir(this.AssociatedProject.Key, this.OpenSolutionPath, this.AssociatedProject.BranchName, "");
-                }
-                else
-                {
-                    this.keyTranslator.SetProjectKeyAndBaseDir(this.AssociatedProject.Key, this.OpenSolutionPath, this.AssociatedProject.BranchName, Path.Combine(this.OpenSolutionPath, this.OpenSolutionName));
-                }
-            }
-
+            this.SaveAssociationToDisk(this.AssociatedProject);
+            this.AssociatedProject.SolutionRoot = this.OpenSolutionPath;
+            this.AssociatedProject.SolutionName = this.OpenSolutionName;
+            this.keyTranslator.SetProjectKeyAndBaseDir(this.AssociatedProject.Key, this.OpenSolutionPath, this.AssociatedProject.BranchName, Path.Combine(this.OpenSolutionPath, this.OpenSolutionName));
             this.configurationHelper.SyncSettings();
             if (!skipRegisterModels)
             {
@@ -290,7 +270,7 @@
         /// <param name="fullName">The full name.</param>
         /// <param name="project">The project.</param>
         /// <returns>retruns resource for given path</returns>
-        public Resource CreateResourcePathFile(string fullName, Resource project)
+        private Resource CreateResourcePathFile(string fullName, Resource project)
         {
             if (this.vshelper == null)
             {
@@ -330,7 +310,7 @@
             catch (Exception ex)
             {
                 this.logger.WriteMessage("Unable to create a resource from fullName : " + fullName + " Likely resource not found in server, likely new file : " + ex.Message);
-                return null;
+                return this.CreateResourcePathFile(fullName, this.AssociatedProject); ;
             }
         }
 

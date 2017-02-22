@@ -74,8 +74,8 @@ namespace VSSonarExtensionUi.ViewModel
         /// </summary>
         private readonly Dictionary<int, IMenuCommandPlugin> menuItemPlugins = new Dictionary<int, IMenuCommandPlugin>();
 
-        /// <summary>
         /// The new added issues
+        /// <summary>
         /// </summary>
         private readonly Dictionary<string, List<Issue>> newAddedIssues = new Dictionary<string, List<Issue>>();
 
@@ -1223,13 +1223,7 @@ namespace VSSonarExtensionUi.ViewModel
             this.ResetIssuesInViews();
 
             this.ResourceInEditor = this.AssociationModule.CreateAValidResourceFromServer(fullName, this.AssociationModule.AssociatedProject);
-            if (this.ResourceInEditor == null &&
-                this.SelectedModel == this.LocalViewModel &&
-                this.LocalViewModel.FileAnalysisIsEnabled)
-            {
-                this.ResourceInEditor = this.AssociationModule.CreateResourcePathFile(fullName, this.AssociationModule.AssociatedProject);
-            }
-
+            
             if (this.ResourceInEditor == null)
             {
                 this.StatusMessage = "Could not check key type for resource, see VSonarOutput Window for more details and report";
