@@ -84,7 +84,7 @@ type AdministrationTests() =
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), "/api/server") @>).Returns("""{"id":"20130712144608","version":"3.6","status":"UP"}""")
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), "/api/server/version") @>).Returns("3.6")
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
@@ -96,7 +96,7 @@ type AdministrationTests() =
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), "/api/server") @>).Returns("""{"id":"20130712144608","version":"3,6","status":"UP"}""")
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), "/api/server/version") @>).Returns("3.6")
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
@@ -108,7 +108,7 @@ type AdministrationTests() =
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), "/api/server") @>).Returns("""{"id":"20130712144608","version":"3.6-SNAPSHOT","status":"UP"}""")
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), "/api/server/version") @>).Returns("3.6-SNAPSHOT")
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
@@ -120,7 +120,7 @@ type AdministrationTests() =
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), "/api/server") @>).Returns("""{"id":"20130712144608","version":"3,6-SNAPSHOT","status":"UP"}""")
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), "/api/server/version") @>).Returns("3.6-SNAPSHOT")
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
@@ -132,7 +132,7 @@ type AdministrationTests() =
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), "/api/server") @>).Returns("""{"id":"20130712144608","version":"3.6.1","status":"UP"}""")
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), "/api/server/version") @>).Returns("3.6.1")
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
@@ -144,7 +144,7 @@ type AdministrationTests() =
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), "/api/server") @>).Returns("""{"id":"20130712144608","version":"3.6.1-SNAPSHOT","status":"UP"}""")
+                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), "/api/server/version") @>).Returns("3.6.1-SNAPSHOT")
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
