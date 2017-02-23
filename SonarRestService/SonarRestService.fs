@@ -1184,7 +1184,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
         member this.GetRulesForProfile(conf:ISonarConfiguration, profile:Profile, searchData:bool) = 
             if profile <> null then
-                if conf.SonarVersion < 5.6 then
+                if conf.SonarVersion < 5.2 then
                     let url = "/api/profiles/index?language=" + HttpUtility.UrlEncode(profile.Language) + "&name=" + HttpUtility.UrlEncode(profile.Name)
                     System.Diagnostics.Debug.WriteLine(url)
                     let reply = httpconnector.HttpSonarGetRequest(conf, url)
@@ -1505,7 +1505,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                     else
                         project.Key
                     
-            if conf.SonarVersion >= 6.3 then
+            if conf.SonarVersion >= 5.2 then
                 let url = "/api/qualityprofiles/search?projectKey=" + resource
                 let response = httpconnector.HttpSonarGetRequest(conf, url)
                 let profilesJson = JsonQualityProfiles63.Parse(response)
