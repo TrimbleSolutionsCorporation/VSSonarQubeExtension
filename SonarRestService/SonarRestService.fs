@@ -765,6 +765,9 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 with
                 | ex -> System.Diagnostics.Debug.WriteLine("Error Show rule: " + ex.Message)
                         JsonarRuleShowResponse.GetSample()
+
+            if IfExists("templateKey") then
+                rule.TemplateKey <- parsedDataRule.TemplateKey.Value.Replace(rule.Repo + ":", "")
             
             let AddParam(param:JsonRuleSearchResponse.Param) =
                 try

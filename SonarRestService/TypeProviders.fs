@@ -106,6 +106,7 @@ type JsonRuleSearchResponse = JsonProvider<""" {
       "status": "READY",
       "internalKey": "unreadVariable",
       "isTemplate": false,
+      "templateKey": "cxx:CommentRegularExpression",
       "tags": [
         "pitfall",
         "unused"

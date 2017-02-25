@@ -240,6 +240,14 @@ namespace VSSonarPlugins.Types
         public string Key { get; set; }
 
         /// <summary>
+        /// Gets or sets the template key.
+        /// </summary>
+        /// <value>
+        /// The template key.
+        /// </value>
+        public string TemplateKey { get; set; }
+
+        /// <summary>
         ///     Gets or sets the lang.
         /// </summary>
         public string Lang { get; set; }
