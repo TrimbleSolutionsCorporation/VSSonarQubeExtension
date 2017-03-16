@@ -61,7 +61,17 @@ type TraTests() =
         item.Project <- new VsProjectItem()
         item.Project.Solution <- new VsSolutionItem()
         item.Project.Solution.SolutionPath <- Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject")
-        Assert.That((translator :> ISQKeyTranslator).TranslatePath(item, mockAVsinterface, mockRest, mockConfigurtion), Is.EqualTo("AB:ProjectX_CPP:A:1:a:dup.cpp"))
+
+        let listOfResources = new System.Collections.Generic.List<Resource>()
+        let resource = new Resource()
+        resource.Key <- "AB:ProjectX_CPP:A:1:a:dup.cpp"
+        listOfResources.Add(resource)
+        let rest =
+            Mock<ISonarRestService>()
+                .Setup(fun x -> <@ x.GetResourcesData(any(), "AB:ProjectX_CPP:A:1:a:dup.cpp") @>).Returns(listOfResources)
+                .Create()
+
+        Assert.That((translator :> ISQKeyTranslator).TranslatePath(item, mockAVsinterface, rest, mockConfigurtion).Key, Is.EqualTo("AB:ProjectX_CPP:A:1:a:dup.cpp"))
 
     [<Test>]
     member test.``Should Return Path Correctly When Multi Module`` () =
@@ -88,10 +98,20 @@ type TraTests() =
         item.FileName <- "dup.cpp"
         item.FilePath <- Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject\\A\\1\\a\\dup.cpp")
         item.Project <- new VsProjectItem()
+        item.Project.ProjectFilePath <- Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject\\A\\1\\a\\dup.cpp")
         item.Project.Solution <- new VsSolutionItem()
         item.Project.Solution.SolutionPath <- Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject")
 
-        Assert.That((translator :> ISQKeyTranslator).TranslatePath(item, mockAVsinterface, mockRest, mockConfigurtion), Is.EqualTo("AB:ProjectX_CPP_Flat:A/1/a/dup.cpp"))
+        let listOfResources = new System.Collections.Generic.List<Resource>()
+        let resource = new Resource()
+        resource.Key <- "AB:ProjectX_CPP_Flat:A/1/a/dup.cpp"
+        listOfResources.Add(resource)
+        let rest =
+            Mock<ISonarRestService>()
+                .Setup(fun x -> <@ x.GetResourcesData(any(), "AB:ProjectX_CPP_Flat:A/1/a/dup.cpp") @>).Returns(listOfResources)
+                .Create()
+
+        Assert.That((translator :> ISQKeyTranslator).TranslatePath(item, mockAVsinterface, rest, mockConfigurtion).Key, Is.EqualTo("AB:ProjectX_CPP_Flat:A/1/a/dup.cpp"))
 
     [<Test>]
     member test.``Should Return Path Correctly With Flat Structure`` () =
@@ -124,7 +144,16 @@ type TraTests() =
         item.Project.Solution <- new VsSolutionItem()
         item.Project.Solution.SolutionPath <- Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\VisualBootStrapper")
 
-        Assert.That((translator :> ISQKeyTranslator).TranslatePath(item, mockAVsinterface, mockRest, mockConfigurtion), Is.EqualTo("AB:ProjectX_CPP_BootStrapper:a1a:dup.cpp"))
+        let listOfResources = new System.Collections.Generic.List<Resource>()
+        let resource = new Resource()
+        resource.Key <- "AB:ProjectX_CPP_BootStrapper:a1a:dup.cpp"
+        listOfResources.Add(resource)
+        let rest =
+            Mock<ISonarRestService>()
+                .Setup(fun x -> <@ x.GetResourcesData(any(), "AB:ProjectX_CPP_BootStrapper:a1a:dup.cpp") @>).Returns(listOfResources)
+                .Create()
+
+        Assert.That((translator :> ISQKeyTranslator).TranslatePath(item, mockAVsinterface, rest, mockConfigurtion).Key, Is.EqualTo("AB:ProjectX_CPP_BootStrapper:a1a:dup.cpp"))
 
     [<Test>]
     member test.``Should Return Path Correctly With Visual Studio BootStrapper`` () =
@@ -175,10 +204,19 @@ type TraTests() =
         item.Project <- new VsProjectItem()
         item.Project.ProjectFilePath <- Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\ModulesDefinedAllInOnePropertiesFile\\lib\\lib.vcxproj")
         item.Project.ProjectName <- "a1a"
+
+        let listOfResources = new System.Collections.Generic.List<Resource>()
+        let resource = new Resource()
+        resource.Key <- "cpp-multimodule-project:lib:dup.cpp"
+        listOfResources.Add(resource)
+        let rest =
+            Mock<ISonarRestService>()
+                .Setup(fun x -> <@ x.GetResourcesData(any(), "cpp-multimodule-project:lib:dup.cpp") @>).Returns(listOfResources)
+                .Create()
         item.Project.Solution <- new VsSolutionItem()
         item.Project.Solution.SolutionPath <- Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\ModulesDefinedAllInOnePropertiesFile")
 
-        Assert.That((translator :> ISQKeyTranslator).TranslatePath(item, mockAVsinterface, mockRest, mockConfigurtion), Is.EqualTo("cpp-multimodule-project:lib:dup.cpp"))
+        Assert.That((translator :> ISQKeyTranslator).TranslatePath(item, mockAVsinterface, rest, mockConfigurtion).Key, Is.EqualTo("cpp-multimodule-project:lib:dup.cpp"))
 
 
     [<Test>]
@@ -247,7 +285,7 @@ type TraTests() =
         item.Project.Solution.SolutionPath <- assemblyRunningPath
 
         let key = translator.TranslatePath(item, mockAVsinterface, mockRest, mockConfigurtion)
-        Assert.That(key, Is.EqualTo("Company:Group:Company:Group:{GUID}:Folder/file.cs"))
+        Assert.That(key.Key, Is.EqualTo("Company:Group:Company:Group:{GUID}:Folder/file.cs"))
 
     [<Test>]
     member test.``Should Return Key Correctly With MSBuild Runner when Branch is Detected`` () =
@@ -271,5 +309,5 @@ type TraTests() =
         item.Project.Solution.SolutionPath <- assemblyRunningPath
 
         let key = translator.TranslatePath(item, mockAVsinterface, mockRest, mockConfigurtion)
-        Assert.That(key, Is.EqualTo("Company:Group:Company:Group:{GUID}:master:Folder/file.cs"))
+        Assert.That(key.Key, Is.EqualTo("Company:Group:Company:Group:{GUID}:master:Folder/file.cs"))
 
