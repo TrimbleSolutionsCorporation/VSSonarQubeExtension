@@ -324,8 +324,9 @@ type SQKeyTranslator(notificationManager : INotificationManager) =
 
         lookupType
 
+    let mutable resource : Resource = new Resource()
     let GuessLookupTypeFromPath(vshelper : IVsEnvironmentHelper, fileItem : VsFileItem, rest : ISonarRestService, configuration : ISonarConfiguration) = 
-        let mutable resource : Resource = new Resource()
+        resource <- new Resource()
         let validateResourceInServer(keyType : VSSonarPlugins.Types.KeyLookupType) = 
 
             let ValidateResourceInServer(key : string) =
