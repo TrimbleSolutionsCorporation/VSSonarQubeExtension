@@ -1476,6 +1476,12 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 resource.IdType <- componentData.Component.Id
                 resource.Key <- componentData.Component.Key
                 resource.Name <- componentData.Component.Name
+                let keysElements = componentData.Component.Key.Split(':')
+                if componentData.Component.Name.EndsWith(" " + keysElements.[keysElements.Length - 1]) then
+                    // this is brancnh
+                    resource.IsBranch <- true
+                    resource.BranchName <- keysElements.[keysElements.Length - 1]
+
                 resource.Qualifier <- componentData.Component.Qualifier
                 resource.Path <- componentData.Component.Path
                 let resourcelist = System.Collections.Generic.List<Resource>()
@@ -1558,6 +1564,12 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                         let resource = new Resource()
                         resource.Key <- elem.Key
                         resource.Name <- elem.Name
+                        let keysElements = elem.Key.Split(':')
+                        if elem.Name.EndsWith(" " + keysElements.[keysElements.Length - 1]) then
+                            // this is brancnh
+                            resource.IsBranch <- true
+                            resource.BranchName <- keysElements.[keysElements.Length - 1]
+
                         resource.IdType <- elem.Id
                         resource.Qualifier <- elem.Qualifier
                         resourcelist.Add(resource)
@@ -1601,12 +1613,20 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 GetSourceFromRaw(httpconnector.HttpSonarGetRequest(conf, "/api/sources/raw?key=" + resource))
 
         member this.GetCoverageInResource(conf : ISonarConfiguration, resource : string) =
-            let url = "/api/resources?resource=" + resource + "&metrics=coverage_line_hits_data,conditions_by_line,covered_conditions_by_line";
-            GetCoverageFromContent(httpconnector.HttpSonarGetRequest(conf, url))
+            if conf.SonarVersion < 6.3 then
+                let url = "/api/resources?resource=" + resource + "&metrics=coverage_line_hits_data,conditions_by_line,covered_conditions_by_line"
+                GetCoverageFromContent(httpconnector.HttpSonarGetRequest(conf, url))
+            else
+                let url = "/api/measures/component?componentKey=" + resource + "&metricKeys=coverage_line_hits_data,conditions_by_line,covered_conditions_by_line"
+                MeasuresService.GetCoverageFromMeasures(httpconnector.HttpSonarGetRequest(conf, url))
 
         member this.GetDuplicationsDataInResource(conf : ISonarConfiguration, resource : string) =
-            let url = "/api/resources?resource=" + resource + "&metrics=duplications_data&depth=-1";
-            GetDuplicationsFromContent(httpconnector.HttpSonarGetRequest(conf, url))
+            if conf.SonarVersion < 6.3 then
+                let url = "/api/resources?resource=" + resource + "&metrics=duplications_data";
+                GetDuplicationsFromContent(httpconnector.HttpSonarGetRequest(conf, url))
+            else
+                let url = "/api/measures/component?componentKey=" + resource + "&metricKeys=duplications_data";
+                GetDuplicationsFromContent(httpconnector.HttpSonarGetRequest(conf, url))
 
         member this.CommentOnIssues(newConf : ISonarConfiguration, issues : System.Collections.IList, comment : string) =
             let responseMap = new System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>()

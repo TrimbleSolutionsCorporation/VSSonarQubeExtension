@@ -5,13 +5,6 @@ open VSSonarPlugins
 open System.IO
 open System.Text
 
-type KeyLookUpType =
-   // the name
-   | Module = 0
-   | Flat = 1
-   | VSBootStrapper = 2
-   | Invalid = 3
-   | ProjectGuid = 4
 
 [<AllowNullLiteral>]
 type SonarModule() = 
@@ -29,13 +22,13 @@ type ISQKeyTranslator =
   abstract member GetProjectKey : unit -> string 
   abstract member GetProjectName : unit -> string
   abstract member GetSources : unit -> string
-  abstract member GetLookupType : unit -> KeyLookUpType
-  abstract member SetLookupType : key:KeyLookUpType -> unit
+  abstract member GetLookupType : unit -> VSSonarPlugins.Types.KeyLookupType
+  abstract member SetLookupType : key:VSSonarPlugins.Types.KeyLookupType -> unit
   abstract member SetProjectKeyAndBaseDir : key:string * path:string * currentBranch:string * solutionPath:string -> unit
   abstract member SetProjectKey : key:string -> unit
   abstract member GetModules : unit -> List<SonarModule>  
   abstract member TranslateKey : key:string * vshelper:IVsEnvironmentHelper * branch:string -> string
-  abstract member TranslatePath : key:VsFileItem * vshelper:IVsEnvironmentHelper * rest:ISonarRestService * configuration:ISonarConfiguration -> string
+  abstract member TranslatePath : key:VsFileItem * vshelper:IVsEnvironmentHelper * rest:ISonarRestService * configuration:ISonarConfiguration -> Resource
   
 
 [<AllowNullLiteral>]
@@ -49,7 +42,7 @@ type SQKeyTranslator(notificationManager : INotificationManager) =
     let mutable currentBranch : string = ""
     let mutable modules : SonarModule List = List.Empty
 
-    let mutable lookupType : KeyLookUpType = KeyLookUpType.Invalid
+    let mutable lookupType : VSSonarPlugins.Types.KeyLookupType = VSSonarPlugins.Types.KeyLookupType.Invalid
 
     let rec SearchModule(modl : SonarModule, moduleName : string) =
         let mutable modReturn : SonarModule = null
@@ -138,7 +131,7 @@ type SQKeyTranslator(notificationManager : INotificationManager) =
 
             let lineElem = lines |> Seq.tryFind (fun c -> c.Contains("sonar.visualstudio.enable=true"))
             match lineElem with
-            | Some value -> lookupType <- KeyLookUpType.VSBootStrapper
+            | Some value -> lookupType <- VSSonarPlugins.Types.KeyLookupType.VSBootStrapper
             | _ -> ()
 
             let moduleData = lines |> Seq.tryFind (fun c -> c.Trim().StartsWith("sonar.projectKey="))
@@ -169,7 +162,7 @@ type SQKeyTranslator(notificationManager : INotificationManager) =
                        if curreModule <> null then
                         curreModule.Sources <- ""
 
-                       lookupType <- KeyLookUpType.Module
+                       lookupType <- VSSonarPlugins.Types.KeyLookupType.Module
                        for modl in modulesNames do
                            let newModule = new SonarModule()
                            newModule.Name <- modl
@@ -188,7 +181,7 @@ type SQKeyTranslator(notificationManager : INotificationManager) =
         | _ -> if curreModule = null then
                     let lineElem = lines |> Seq.tryFind (fun c -> c.Contains("sonar.visualstudio.enable=true"))
                     match lineElem with
-                    | Some value -> lookupType <- KeyLookUpType.VSBootStrapper
+                    | Some value -> lookupType <- VSSonarPlugins.Types.KeyLookupType.VSBootStrapper
                     | _ -> ()
                else
                     UpdateModule("", based, lines, curreModule)
@@ -319,47 +312,62 @@ type SQKeyTranslator(notificationManager : INotificationManager) =
             else
                 ":" + branchIn + ":"
 
-        if lookupType = KeyLookUpType.Invalid then
+        if lookupType = VSSonarPlugins.Types.KeyLookupType.Invalid then
             if File.Exists(GetFlatPath(key, branch)) then
-                lookupType <- KeyLookUpType.Flat
+                lookupType <- VSSonarPlugins.Types.KeyLookupType.Flat
             elif File.Exists(GetModulePath(key, branch)) then
-                lookupType <- KeyLookUpType.Module
+                lookupType <- VSSonarPlugins.Types.KeyLookupType.Module
             elif File.Exists(GetVSBootStrapperPath(key, branch, vshelper)) then
-                lookupType <- KeyLookUpType.VSBootStrapper
+                lookupType <- VSSonarPlugins.Types.KeyLookupType.VSBootStrapper
             elif File.Exists(GetMSbuildRunnerPath(key, branchIn, vshelper)) then
-                lookupType <- KeyLookUpType.ProjectGuid
+                lookupType <- VSSonarPlugins.Types.KeyLookupType.ProjectGuid
 
         lookupType
 
     let GuessLookupTypeFromPath(vshelper : IVsEnvironmentHelper, fileItem : VsFileItem, rest : ISonarRestService, configuration : ISonarConfiguration) = 
+        let mutable resource : Resource = new Resource()
+        let validateResourceInServer(keyType : VSSonarPlugins.Types.KeyLookupType) = 
 
-        if lookupType = KeyLookUpType.Invalid then
+            let ValidateResourceInServer(key : string) =
+                try
+                    rest.GetResourcesData(configuration, key).[0]
+                with
+                | ex -> null
 
-            let validateResourceInServer(keyType : KeyLookUpType) = 
-
-                let ValidateResourceInServer(key : string) =
-                    try
-                        if rest.GetResourcesData(configuration, key).[0] <> null then
-                            true
-                        else
-                            false
-                    with
-                    | ex -> false
-
-                match keyType with
-                | KeyLookUpType.Flat -> ValidateResourceInServer(GetFlatKey(vshelper, fileItem))
-                | KeyLookUpType.Module -> ValidateResourceInServer(GetModuleKey(vshelper, fileItem))
-                | KeyLookUpType.VSBootStrapper -> ValidateResourceInServer(GetVSBootStrapperKey(vshelper, fileItem))
-                | KeyLookUpType.ProjectGuid -> ValidateResourceInServer(GetMSbuildRunnerKey(vshelper, fileItem, currentBranch))
-                | _ -> false
+            match keyType with
+            | VSSonarPlugins.Types.KeyLookupType.Flat -> resource <- ValidateResourceInServer(GetFlatKey(vshelper, fileItem))
+                                                         resource <> null
+            | VSSonarPlugins.Types.KeyLookupType.Module -> resource <- ValidateResourceInServer(GetModuleKey(vshelper, fileItem))
+                                                           resource <> null
+            | VSSonarPlugins.Types.KeyLookupType.VSBootStrapper -> resource <- ValidateResourceInServer(GetVSBootStrapperKey(vshelper, fileItem))
+                                                                   resource <> null
+            | VSSonarPlugins.Types.KeyLookupType.ProjectGuid -> resource <- ValidateResourceInServer(GetMSbuildRunnerKey(vshelper, fileItem, currentBranch))
+                                                                resource <> null
+            | _ -> lookupType <- VSSonarPlugins.Types.KeyLookupType.Invalid
+                   false
                   
-            let allTags : KeyLookUpType seq = unbox (System.Enum.GetValues(typeof<KeyLookUpType>))    
-            let data = allTags |> Seq.tryFind(fun elem -> validateResourceInServer(elem))
-            match data with
-            | Some elem -> lookupType <- elem
-            | _ -> lookupType <- KeyLookUpType.Invalid
+        let allTags : VSSonarPlugins.Types.KeyLookupType seq = unbox (System.Enum.GetValues(typeof<VSSonarPlugins.Types.KeyLookupType>))
+        let data = allTags |> Seq.tryFind(fun elem -> validateResourceInServer(elem))
+        match data with
+        | Some elem ->
+            lookupType <- elem
+            resource.KeyType <- elem
+        | _ -> 
+            lookupType <- VSSonarPlugins.Types.KeyLookupType.Invalid
+            // create a dummy resource file to allow local analysis
+            resource <- new Resource()
+            resource.Key <- GetMSbuildRunnerKey(vshelper, fileItem, currentBranch)
+            resource.Qualifier <- "FIL"
+            resource.KeyType <- VSSonarPlugins.Types.KeyLookupType.ProjectGuid
+            resource.FoundInServer <- false
 
-        lookupType
+        resource.Lname <- Path.GetFileName(fileItem.FileName)
+        resource.Name <- Path.GetFileName(fileItem.FileName)
+        resource.SolutionName <- fileItem.Project.Solution.SolutionName
+        resource.SolutionRoot <- fileItem.Project.Solution.SolutionPath
+        resource.Path <- fileItem.FilePath
+
+        resource
 
     interface ISQKeyTranslator with
         member this.SetProjectKeyAndBaseDir(key:string, path:string, branch:string, solutionPathIn : string) =
@@ -389,7 +397,7 @@ type SQKeyTranslator(notificationManager : INotificationManager) =
         member this.GetLookupType() = 
             lookupType
 
-        member this.SetLookupType(typein : KeyLookUpType) = 
+        member this.SetLookupType(typein : VSSonarPlugins.Types.KeyLookupType) = 
             lookupType <- typein
             
         member this.GetProjectKey() =
@@ -402,13 +410,7 @@ type SQKeyTranslator(notificationManager : INotificationManager) =
             sonarSources
 
         member this.TranslatePath(fileItem : VsFileItem, vshelper : IVsEnvironmentHelper, rest : ISonarRestService, configuration : ISonarConfiguration) =
-
-            match GuessLookupTypeFromPath(vshelper, fileItem, rest, configuration) with
-            | KeyLookUpType.Flat -> GetFlatKey(vshelper, fileItem)
-            | KeyLookUpType.Module -> GetModuleKey(vshelper, fileItem)
-            | KeyLookUpType.VSBootStrapper -> GetVSBootStrapperKey(vshelper, fileItem)
-            | KeyLookUpType.ProjectGuid -> GetMSbuildRunnerKey(vshelper, fileItem, currentBranch)
-            | _ -> ""
+            GuessLookupTypeFromPath(vshelper, fileItem, rest, configuration)
 
         member this.TranslateKey(key : string, vshelper : IVsEnvironmentHelper, branchIn:string) =
 
@@ -421,8 +423,8 @@ type SQKeyTranslator(notificationManager : INotificationManager) =
                     ":" + branchIn + ":"
 
             match GuessLookupTypeFromKey(key, branchIn, vshelper) with
-            | KeyLookUpType.Flat -> GetFlatPath(key, branch)
-            | KeyLookUpType.Module -> GetModulePath(key, branch)
-            | KeyLookUpType.VSBootStrapper -> GetVSBootStrapperPath(key, branch, vshelper)
-            | KeyLookUpType.ProjectGuid -> GetMSbuildRunnerPath(key, branchIn, vshelper)
+            | VSSonarPlugins.Types.KeyLookupType.Flat -> GetFlatPath(key, branch)
+            | VSSonarPlugins.Types.KeyLookupType.Module -> GetModulePath(key, branch)
+            | VSSonarPlugins.Types.KeyLookupType.VSBootStrapper -> GetVSBootStrapperPath(key, branch, vshelper)
+            | VSSonarPlugins.Types.KeyLookupType.ProjectGuid -> GetMSbuildRunnerPath(key, branchIn, vshelper)
             | _ -> ""

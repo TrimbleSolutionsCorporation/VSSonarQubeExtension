@@ -319,7 +319,13 @@ namespace VSSonarQubeExtension.Squiggle
                     return;
                 }
 
-                if (!document.Replace('\\', '/').ToLower().EndsWith(resource.Lname.ToLower(), StringComparison.OrdinalIgnoreCase))
+
+                if (resource.Lname != null && !document.Replace('\\', '/').ToLower().EndsWith(resource.Lname.ToLower(), StringComparison.OrdinalIgnoreCase))
+                {
+                    return;
+                }
+
+                if (resource.Name != null && !document.Replace('\\', '/').ToLower().EndsWith(resource.Name.ToLower(), StringComparison.OrdinalIgnoreCase))
                 {
                     return;
                 }

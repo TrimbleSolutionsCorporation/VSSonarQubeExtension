@@ -123,6 +123,7 @@
     <Compile Include="IVsEnvironmentHelper.cs" />
     <Compile Include="Types\ISonarConfiguration.cs" />
     <Compile Include="Types\Issue.cs" />
+    <Compile Include="Types\KeyLookupType.cs" />
     <Compile Include="Types\Line.cs" />
     <Compile Include="Types\LineCoverage.cs" />
     <Compile Include="Types\LocalAnalysisEventArgs.cs" />

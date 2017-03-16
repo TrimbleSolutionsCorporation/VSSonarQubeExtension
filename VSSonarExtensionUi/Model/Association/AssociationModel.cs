@@ -304,13 +304,12 @@
 
             try
             {
-                var key = this.keyTranslator.TranslatePath(this.vshelper.VsFileItem(fullName, project, null), this.vshelper, this.sonarService, AuthtenticationHelper.AuthToken);
-                return this.CreateResourceForKey(fullName, key);
+                return this.keyTranslator.TranslatePath(this.vshelper.VsFileItem(fullName, project, null), this.vshelper, this.sonarService, AuthtenticationHelper.AuthToken);
             }
             catch (Exception ex)
             {
-                this.logger.WriteMessage("Unable to create a resource from fullName : " + fullName + " Likely resource not found in server, likely new file : " + ex.Message);
-                return this.CreateResourcePathFile(fullName, this.AssociatedProject); ;
+                this.logger.WriteMessage("Please report this error: Resource should be always created. " + ex.Message);
+                return null;
             }
         }
 
@@ -486,7 +485,7 @@
         {
             this.AssociatedProject = null;
             this.IsAssociated = false;
-            this.keyTranslator.SetLookupType(KeyLookUpType.Invalid);
+            this.keyTranslator.SetLookupType(KeyLookupType.Invalid);
             foreach (var item in modelPool)
             {
                 item.OnDisconnect();
@@ -571,38 +570,6 @@
         }
 
         /// <summary>
-        /// Validates the resource in server.
-        /// </summary>
-        /// <param name="fullName">The full name.</param>
-        /// <param name="key">The key.</param>
-        /// <returns>valid resource in server</returns>
-        private Resource CreateResourceForKey(string fullName, string key)
-        {
-            try
-            {
-                this.logger.WriteMessage(this.AssociatedProject.Key + " = Lookup Resource: " + fullName + " with Key: " + key);
-                Resource toReturn =
-                    this.sonarService.GetResourcesData(
-                        AuthtenticationHelper.AuthToken,
-                        key)[0];
-                string fileName = Path.GetFileName(fullName);
-                toReturn.Name = fileName;
-                toReturn.Lname = fileName;
-                this.logger.WriteMessage("Resource found: " + toReturn.Key);
-                return toReturn;
-            }
-            catch (Exception ex)
-            {
-                this.logger.WriteMessage("Resource not found for: " + fullName);
-                this.logger.WriteException(ex);
-            }
-
-            this.logger.WriteMessage("Resource not found in Server");
-
-            return null;
-        }
-
-        /// <summary>
         /// Updates the services.
         /// </summary>
         private void InitiateAssociationToSonarProject(ISourceControlProvider sourceControl)
@@ -625,7 +592,7 @@
 
             var listToRemo = new List<IModelBase>();
 
-            this.keyTranslator.SetLookupType(KeyLookUpType.Invalid);
+            this.keyTranslator.SetLookupType(KeyLookupType.Invalid);
             if (string.IsNullOrEmpty(this.OpenSolutionPath))
             {
                 this.keyTranslator.SetProjectKeyAndBaseDir(this.AssociatedProject.Key, this.OpenSolutionPath, this.AssociatedProject.BranchName, "");

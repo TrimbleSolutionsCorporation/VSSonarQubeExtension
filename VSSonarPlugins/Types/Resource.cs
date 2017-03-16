@@ -28,7 +28,18 @@ namespace VSSonarPlugins.Types
         public Resource()
         {
             this.BranchResources = new List<Resource>();
+            this.KeyType = KeyLookupType.Invalid;
         }
+
+        public KeyLookupType KeyType { get; set; } 
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [found in server].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [found in server]; otherwise, <c>false</c>.
+        /// </value>
+        public bool FoundInServer { get; set; }
 
         /// <summary>
         /// Gets or sets the id.

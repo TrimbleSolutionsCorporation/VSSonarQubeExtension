@@ -680,7 +680,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                                                     localissues.Add(issue)
 
                                         let keydata = x.SqTranslator.TranslatePath(x.ItemInView, x.VsInter, restService, sonarConfig)
-                                        issues |> Seq.iter (fun issue -> ProcessIssue(issue, keydata))
+                                        issues |> Seq.iter (fun issue -> ProcessIssue(issue, keydata.Key))
                                     )
                         else
                             (x :> ISonarLocalAnalyser).AssociateWithProject(x.Project, x.Conf)
