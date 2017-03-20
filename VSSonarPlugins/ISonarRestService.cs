@@ -252,7 +252,27 @@
         /// <returns>
         /// list of properties for server
         /// </returns>
+        [Obsolete("GetProperties deprecated after sonarqube 6.3, use GetSettings")]
         Dictionary<string, string> GetProperties(ISonarConfiguration props);
+
+        /// <summary>
+        /// Gets the settings.
+        /// </summary>
+        /// <param name="props">The props.</param>
+        /// <param name="project">The project, in can its null returns server properties.</param>
+        /// <returns>
+        /// Settings for project or server
+        /// </returns>
+        IEnumerable<Setting> GetSettings(ISonarConfiguration props, Resource project = null);
+
+        /// <summary>
+        /// Sets the setting.
+        /// </summary>
+        /// <param name="props">The props.</param>
+        /// <param name="setting">The setting.</param>
+        /// <param name="project">The project.</param>
+        /// <returns>status of the operation</returns>
+        string SetSetting(ISonarConfiguration props, Setting setting, Resource project = null);
 
         /// <summary>
         /// Updates the property.
@@ -272,6 +292,7 @@
         /// <returns>
         /// list of properties for project
         /// </returns>
+        [Obsolete("GetProperties deprecated after sonarqube 6.3, use GetSettings")]
         Dictionary<string, string> GetProperties(ISonarConfiguration props, Resource project);
 
         /// <summary>

@@ -135,6 +135,7 @@
     <Compile Include="Types\Resource.cs" />
     <Compile Include="Types\Rule.cs" />
     <Compile Include="Types\RuleParam.cs" />
+    <Compile Include="Types\Setting.cs" />
     <Compile Include="Types\SonarProject.cs" />
     <Compile Include="Types\SonarQubeProperties.cs" />
     <Compile Include="Types\Source.cs" />

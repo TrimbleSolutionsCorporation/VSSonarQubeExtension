@@ -53,6 +53,19 @@ type JsonSonarConnector() =
 
             client.Execute(request)
 
+        member this.HttpSonarPostRequestTuple(userConf : ISonarConfiguration, url : string, data : System.Collections.Generic.List<Tuple<string,string>>) =
+
+            let client = new RestClient(userConf.Hostname)
+            client.Authenticator <- new HttpBasicAuthenticator(userConf.Username, userConf.Password)
+            let request = new RestRequest(url, Method.POST);
+
+            for elem in data do
+                request.AddParameter(elem.Item1, elem.Item2) |> ignore
+
+            request.RequestFormat <- DataFormat.Json
+
+            client.Execute(request)
+
         member this.HttpSonarPostRequestDic(userConf : ISonarConfiguration, url : string, data : System.Collections.Generic.Dictionary<string, string>) =
 
             let client = new RestClient(userConf.Hostname)
