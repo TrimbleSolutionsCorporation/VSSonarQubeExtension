@@ -105,7 +105,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             ISonarRestService restservice,
             INotificationManager notificationManager,
             ISQKeyTranslator translator,
-            ISonarLocalAnalyser analyser)
+            ISonarLocalAnalyser analyser,
+            IList<IIssueTrackerPlugin> issuetracketplugins)
         {
             this.analyser = analyser;
             this.notificationMan = notificationManager;
@@ -116,7 +117,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.Header = "Server Analysis";
             this.AlreadyOpenDiffs = new SortedSet<string>();
             this.IssuesGridView = new IssueGridViewModel("ServerView", true, this.configurationHelper, this.restservice, this.notificationMan, translator);
-            this.IssuesGridView.ContextMenuItems = this.CreateRowContextMenu(restservice, translator);
+            this.IssuesGridView.ContextMenuItems = this.CreateRowContextMenu(restservice, translator, issuetracketplugins);
             this.IssuesGridView.ShowContextMenu = true;
             this.IssuesGridView.ShowLeftFlyoutEvent += this.ShowHideLeftFlyout;
             this.InitCommanding();
@@ -228,7 +229,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// Called when [connect to sonar].
         /// </summary>
         /// <param name="configuration">sonar configuration</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IIssueTrackerPlugin issuePlugin)
+        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IList<IIssueTrackerPlugin> issuePlugin)
         {
             // does nothing
         }
@@ -600,14 +601,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <see><cref>ObservableCollection</cref></see>
         /// .
         /// </returns>
-        private ObservableCollection<IMenuItem> CreateRowContextMenu(ISonarRestService service, ISQKeyTranslator translator)
+        private ObservableCollection<IMenuItem> CreateRowContextMenu(ISonarRestService service, ISQKeyTranslator translator, IList<IIssueTrackerPlugin> issuetracketplugins)
         {
             var menu = new ObservableCollection<IMenuItem>
                            {
                                ChangeStatusMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan),
                                OpenResourceMenu.MakeMenu(service, this.IssuesGridView),
                                SourceControlMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan, translator),
-                               IssueTrackerMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan, translator),
+                               IssueTrackerMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan, translator, issuetracketplugins),
                                AssignMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan),
                                AssignTagMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan),
                                SetExclusionsMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan, translator, this.analyser),

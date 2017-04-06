@@ -57,12 +57,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         IList<IMenuCommandPlugin> MenuPlugins { get; }
 
         /// <summary>
-        /// Gets the issue tracker plugin.
-        /// </summary>
-        /// <returns>returns issue tracker plugin</returns>
-        IIssueTrackerPlugin GetIssueTrackerPlugin();
-
-        /// <summary>
         /// Associates the with new project.
         /// </summary>
         /// <param name="authToken">The authentication token.</param>

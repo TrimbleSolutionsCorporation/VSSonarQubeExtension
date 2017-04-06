@@ -328,7 +328,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="configuration">The configuration.</param>
         /// <param name="availableProjects">The available projects.</param>
         /// <param name="sourcePlugin">The source control plugin.</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IIssueTrackerPlugin sourcePlugin)
+        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IList<IIssueTrackerPlugin> sourcePlugin)
         {
             if (this.PluginManager != null)
             {

@@ -178,7 +178,7 @@ namespace VSSonarExtensionUi.Model.Menu
         /// </summary>
         /// <param name="configuration">sonar configuration</param>
         /// <param name="availableProjectsIn">The available projects in.</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjectsIn, IIssueTrackerPlugin sourcePlugin)
+        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjectsIn, IList<IIssueTrackerPlugin> sourcePlugin)
         {
             this.availableProjects = availableProjectsIn.ToList();
         }

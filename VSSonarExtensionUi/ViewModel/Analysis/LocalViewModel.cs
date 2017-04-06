@@ -523,7 +523,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <param name="configuration">sonar configuration</param>
         /// <param name="availableProjects">The available projects.</param>
         /// <param name="issuePlugin">The issue plugin.</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IIssueTrackerPlugin issuePlugin)
+        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IList<IIssueTrackerPlugin> issuePlugin)
         {
             // does nothing
         }

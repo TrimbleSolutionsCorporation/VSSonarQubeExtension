@@ -164,7 +164,7 @@
         /// Called when [connect to sonar].
         /// </summary>
         /// <param name="configuration">sonar configuration</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IIssueTrackerPlugin sourcePlugin)
+        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IList<IIssueTrackerPlugin> sourcePlugin)
         {
             // does nothing
         }

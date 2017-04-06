@@ -146,7 +146,7 @@ namespace VSSonarExtensionUi.Model.Menu
         /// Called when [connect to sonar].
         /// </summary>
         /// <param name="configuration">sonar configuration</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IIssueTrackerPlugin issuePlugin)
+        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IList<IIssueTrackerPlugin> issuePlugin)
         {
             // does nothing
         }
@@ -244,8 +244,15 @@ namespace VSSonarExtensionUi.Model.Menu
                                 continue;
                             }
 
-                            var resources = this.rest.GetResourcesData(AuthtenticationHelper.AuthToken, issue.Component);
-                            this.visualStudioHelper.NavigateToResource(AuthtenticationHelper.AuthToken.Hostname + "/resource/index/" + resources[0].Id);
+                            if (AuthtenticationHelper.AuthToken.SonarVersion < 6.3)
+                            {
+                                var resources = this.rest.GetResourcesData(AuthtenticationHelper.AuthToken, issue.Component);
+                                this.visualStudioHelper.NavigateToResource(AuthtenticationHelper.AuthToken.Hostname + "/resource/index/" + resources[0].Id);
+                            }
+                            else
+                            {
+                                this.visualStudioHelper.NavigateToResource(AuthtenticationHelper.AuthToken.Hostname + "/component?id=" + issue.Component + "&line=" + issue.Line);
+                            }
                         }
                     }
                 }

@@ -80,11 +80,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         private string sourceDir;
 
-        /// <summary>
-        /// The issue tracker plugin
-        /// </summary>
-        private IIssueTrackerPlugin issueTrackerPlugin;
-
         #endregion
 
         #region Constructors and Destructors
@@ -117,7 +112,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
             this.InitPluginList(helper, null);
             this.InitCommanding();
-            this.SelectIssueTrackerPlugin();
 
             SonarQubeViewModel.RegisterNewViewModelInPool(this);
         }
@@ -258,7 +252,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="configuration">sonar configuration</param>
         /// <param name="availableProjects">The available projects.</param>
         /// <param name="issuePlugin">The issue plugin.</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IIssueTrackerPlugin issuePlugin)
+        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IList<IIssueTrackerPlugin> issuePlugin)
         {
             foreach (var plugin in this.plugins)
             {
@@ -282,15 +276,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             Dictionary<string, Profile> profile)
         {
             // not necessary
-        }
-
-        /// <summary>
-        /// Gets the issue tracker plugin.
-        /// </summary>
-        /// <returns>enabled plugin</returns>
-        public IIssueTrackerPlugin GetIssueTrackerPlugin()
-        {
-            return this.issueTrackerPlugin;
         }
 
         /// <summary>
@@ -643,30 +628,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
                     return;
                 }
-            }
-        }
-
-        /// <summary>
-        /// Selects the issue tracker plugin.
-        /// </summary>
-        private void SelectIssueTrackerPlugin()
-        {
-            int cnt = 0;
-            var builder = new StringBuilder();
-            foreach (IPlugin plugin in this.IssueTrackerPlugins)
-            {
-                if (plugin.GetPluginDescription().Enabled)
-                {
-                    this.issueTrackerPlugin = plugin as IIssueTrackerPlugin;
-                    builder.AppendLine("Plugin Enabled: " + plugin.GetPluginDescription().Name);
-                    cnt++;
-                }
-            }
-
-            if (cnt > 1)
-            {
-                MessageDisplayBox.DisplayMessage("More than on issue tracker plugin is enabled, make sure only one plugin is enabled", builder.ToString());
-                this.issueTrackerPlugin = null;
             }
         }
 

@@ -107,13 +107,14 @@ namespace VSSonarExtensionUi.Model.Analysis
             ISonarRestService restService,
             INotificationManager manager,
             ISQKeyTranslator translator,
-            ISonarLocalAnalyser analyser)
+            ISonarLocalAnalyser analyser,
+            IList<IIssueTrackerPlugin> issuetrackerplugins)
         {
             this.keyTranslator = translator;
             this.notificationmanager = manager;
             this.configurationHelper = configurationHelper;
             this.restService = restService;
-            this.issuesSearchViewModel = new IssuesSearchViewModel(this, manager, this.configurationHelper, restService, translator, analyser);
+            this.issuesSearchViewModel = new IssuesSearchViewModel(this, manager, this.configurationHelper, restService, translator, analyser, issuetrackerplugins);
             this.restSourceModel = new RestSourceControlModel(manager, restService);
             AssociationModel.RegisterNewModelInPool(this);
         }
@@ -144,7 +145,7 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// </summary>
         /// <param name="configuration">sonar configuration</param>
         /// <param name="availableProjectsIn">The available projects in.</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjectsIn, IIssueTrackerPlugin sourcePlugin)
+        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjectsIn, IList<IIssueTrackerPlugin> sourcePlugin)
         {
             // does nothing
             this.availableProjects = availableProjectsIn;

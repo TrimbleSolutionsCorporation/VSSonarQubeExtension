@@ -95,7 +95,7 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <summary>
         /// The source plugin
         /// </summary>
-        private IIssueTrackerPlugin issueTrackerPlugin;
+        private readonly IIssueTrackerPlugin issueTrackerPlugin;
 
         /// <summary>
         /// The source model
@@ -116,8 +116,9 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <param name="translator">The translator.</param>
         /// <param name="parent">The parent.</param>
         /// <param name="registerPool">if set to <c>true</c> [register pool].</param>
-        private IssueTrackerMenu(ISonarRestService rest, IssueGridViewModel model, INotificationManager manager, ISQKeyTranslator translator, IssueTrackerMenu parent = null, bool registerPool = true)
+        private IssueTrackerMenu(ISonarRestService rest, IssueGridViewModel model, INotificationManager manager, ISQKeyTranslator translator, IIssueTrackerPlugin plugin, IssueTrackerMenu parent = null, bool registerPool = true)
         {
+            this.issueTrackerPlugin = plugin;
             this.translator = translator;
             this.manager = manager;
             this.model = model;
@@ -163,11 +164,18 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <returns>
         /// The <see cref="IMenuItem" />.
         /// </returns>
-        public static IMenuItem MakeMenu(ISonarRestService rest, IssueGridViewModel model, INotificationManager manager, ISQKeyTranslator translator)
+        public static IMenuItem MakeMenu(ISonarRestService rest, IssueGridViewModel model, INotificationManager manager, ISQKeyTranslator translator, IList<IIssueTrackerPlugin> plugins)
         {
-            var topLel = new IssueTrackerMenu(rest, model, manager, translator) { CommandText = "Issue Tracker", IsEnabled = false };
-            topLel.SubItems.Add(new IssueTrackerMenu(rest, model, manager, translator) { CommandText = "new issue and attach", IsEnabled = true });
-            topLel.SubItems.Add(new IssueTrackerMenu(rest, model, manager, translator) { CommandText = "attach to existent", IsEnabled = true });
+            var topLel = new IssueTrackerMenu(rest, model, manager, translator, null) { CommandText = "Issue Tracker", IsEnabled = false };
+
+            foreach (var plugin in plugins)
+            {
+                var topLevelPlugin = new IssueTrackerMenu(rest, model, manager, translator, null) { CommandText = plugin.GetPluginDescription().Name, IsEnabled = false };
+                topLevelPlugin.SubItems.Add(new IssueTrackerMenu(rest, model, manager, translator, plugin) { CommandText = "new issue and attach", IsEnabled = true });
+                topLevelPlugin.SubItems.Add(new IssueTrackerMenu(rest, model, manager, translator, plugin) { CommandText = "attach to existent", IsEnabled = true });
+                topLel.SubItems.Add(topLevelPlugin);
+            }
+
             return topLel;
         }
 
@@ -225,9 +233,8 @@ namespace VSSonarExtensionUi.Model.Menu
         /// Called when [connect to sonar].
         /// </summary>
         /// <param name="configuration">sonar configuration</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IIssueTrackerPlugin issuePlugin)
+        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IList<IIssueTrackerPlugin> issuePlugins)
         {
-            this.issueTrackerPlugin = issuePlugin;
             this.config = AuthtenticationHelper.AuthToken;
         }
 
@@ -298,7 +305,16 @@ namespace VSSonarExtensionUi.Model.Menu
                     var builder = new StringBuilder();
                     builder.AppendLine(CommentMessageForIssue + id);
                     builder.AppendLine(replydata);
-                    this.rest.CommentOnIssues(this.config, issues, builder.ToString());
+                    try
+                    {
+                        this.rest.CommentOnIssues(this.config, issues, builder.ToString());
+                    }
+                    catch (Exception ex)
+                    {
+                        this.manager.ReportMessage(new Message { Id = "IssueTrackerMenu", Data = "Failed to attach to comment: " + ex.Message });
+                        this.manager.ReportException(ex);
+                        return;
+                    }
                 }
 
                 if (this.CommandText.Equals("attach to existent"))

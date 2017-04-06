@@ -103,7 +103,7 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <param name="configuration">sonar configuration</param>
         /// <param name="availableProjects">The available projects.</param>
         /// <param name="plugin">The plugin.</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IIssueTrackerPlugin plugin)
+        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IList<IIssueTrackerPlugin> plugin)
         {
             // does nothing
         }

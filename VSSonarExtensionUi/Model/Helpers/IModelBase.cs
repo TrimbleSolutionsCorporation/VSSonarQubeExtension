@@ -51,7 +51,7 @@
         /// </summary>
         /// <param name="configuration">The configuration.</param>
         /// <param name="availableProjects">The available projects.</param>
-        void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IIssueTrackerPlugin sourcePlugin);
+        void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IList<IIssueTrackerPlugin> sourcePlugin);
 
         /// <summary>
         /// Gets the view model.

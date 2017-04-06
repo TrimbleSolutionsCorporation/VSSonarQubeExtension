@@ -161,7 +161,7 @@
             {
                 try
                 {
-                    model.OnConnectToSonar(AuthtenticationHelper.AuthToken, this.model.AvailableProjects, this.pluginManager.GetIssueTrackerPlugin());
+                    model.OnConnectToSonar(AuthtenticationHelper.AuthToken, this.model.AvailableProjects, this.pluginManager.IssueTrackerPlugins);
                 }
                 catch (Exception ex)
                 {

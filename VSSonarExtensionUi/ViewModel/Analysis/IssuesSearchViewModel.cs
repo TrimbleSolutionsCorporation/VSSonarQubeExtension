@@ -94,7 +94,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             IConfigurationHelper configurationHelper,
             ISonarRestService restService,
             ISQKeyTranslator translator,
-            ISonarLocalAnalyser analyser)
+            ISonarLocalAnalyser analyser,
+            IList<IIssueTrackerPlugin> plugins)
         {
             this.restService = restService;
             this.notificationManager = notificationManager;
@@ -106,7 +107,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.AvailableSearches = new ObservableCollection<string>();
             this.IssuesGridView = new IssueGridViewModel("SearchView", false, configurationHelper, restService, notificationManager, translator);
             this.savedSearchModel = new SearchModel(this.AvailableSearches);
-            this.IssuesGridView.ContextMenuItems = this.CreateRowContextMenu(restService, translator, analyser);
+            this.IssuesGridView.ContextMenuItems = this.CreateRowContextMenu(restService, translator, analyser, plugins);
             this.IssuesGridView.ShowContextMenu = true;
             this.IssuesGridView.ShowLeftFlyoutEvent += this.ShowHideLeftFlyout;
             this.SizeOfFlyout = 0;
@@ -940,14 +941,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <see><cref>ObservableCollection</cref></see>
         /// .
         /// </returns>
-        private ObservableCollection<IMenuItem> CreateRowContextMenu(ISonarRestService service, ISQKeyTranslator translator, ISonarLocalAnalyser analyser)
+        private ObservableCollection<IMenuItem> CreateRowContextMenu(ISonarRestService service, ISQKeyTranslator translator, ISonarLocalAnalyser analyser, IList<IIssueTrackerPlugin> plugins)
         {
             var menu = new ObservableCollection<IMenuItem>
                            {
                                ChangeStatusMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager),
                                OpenResourceMenu.MakeMenu(service, this.IssuesGridView),
                                SourceControlMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager, translator),
-                               IssueTrackerMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager, translator),
+                               IssueTrackerMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager, translator, plugins),
                                AssignMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager),
                                AssignTagMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager),
                                SetSqaleMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager, translator, analyser)

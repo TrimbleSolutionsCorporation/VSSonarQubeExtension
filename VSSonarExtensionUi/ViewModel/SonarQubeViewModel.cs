@@ -1075,7 +1075,7 @@ namespace VSSonarExtensionUi.ViewModel
                     {
                         this.RefreshProjectList(useDispatcher);
                         this.AssociationModule.OnConnectToSonar();
-                        this.VSonarQubeOptionsViewData.OnConnectToSonar(AuthtenticationHelper.AuthToken, this.AvailableProjects, this.pluginManager.GetIssueTrackerPlugin());
+                        this.VSonarQubeOptionsViewData.OnConnectToSonar(AuthtenticationHelper.AuthToken, this.AvailableProjects, this.pluginManager.IssueTrackerPlugins);
                         this.ConnectionTooltip = "Authenticated, but not associated";
                         this.StatusMessage = string.Empty;
                         this.IsConnected = true;
@@ -1636,7 +1636,8 @@ namespace VSSonarExtensionUi.ViewModel
                 this.sonarRestConnector,
                 this.notificationManager,
                 this.sonarKeyTranslator,
-                this.LocaAnalyser);
+                this.LocaAnalyser,
+                this.pluginManager.IssueTrackerPlugins);
 
             this.LocalViewModel = new LocalViewModel(
                 this.pluginManager.AnalysisPlugins,
@@ -1652,7 +1653,8 @@ namespace VSSonarExtensionUi.ViewModel
                 this.sonarRestConnector, 
                 this.notificationManager, 
                 this.sonarKeyTranslator,
-                this.LocaAnalyser);
+                this.LocaAnalyser,
+                this.pluginManager.IssueTrackerPlugins);
             
             this.SonarQubeModels = new ObservableCollection<IAnalysisModelBase>
                                       {
