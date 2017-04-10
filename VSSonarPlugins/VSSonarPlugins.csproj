@@ -104,6 +104,7 @@
     <Compile Include="IPluginControlOption.cs" />
     <Compile Include="ISonarRestService.cs" />
     <Compile Include="IVSSStatusBar.cs" />
+    <Compile Include="Types\CoverageDifferencial.cs" />
     <Compile Include="Types\DiagnosticAnalyzerType.cs" />
     <Compile Include="Types\Exclusion.cs" />
     <Compile Include="Types\Alert.cs" />

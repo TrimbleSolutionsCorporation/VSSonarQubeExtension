@@ -7,7 +7,7 @@
              xmlns:local="clr-namespace:VSSonarExtensionUi.View.Helpers"
             WindowStartupLocation="CenterScreen" 
             Width="700"
-            Height="410"
+            Height="430"
             WindowStyle="None">
 
     <Window.Resources>
@@ -50,6 +50,7 @@
                 <RowDefinition Height="10*"></RowDefinition>
                 <RowDefinition Height="30"></RowDefinition>
                 <RowDefinition Height="10*"></RowDefinition>
+                <RowDefinition Height="30"></RowDefinition>
                 <RowDefinition Height="30"></RowDefinition>
                 <RowDefinition Height="10"></RowDefinition>
             </Grid.RowDefinitions>
@@ -110,19 +111,28 @@
                     <DataGridTextColumn Binding="{Binding Key}" MinWidth="100" x:Name="SelectedTitleTemplateCol" Header="Key" CanUserSort="True" SortMemberPath="Key" IsReadOnly="True" />
                 </DataGrid.Columns>
             </DataGrid>
-        
-            <Grid Grid.Row="5" Margin="0,5,0,0" Grid.Column="2" >
+
+            <Label Grid.Row="5" x:Name="StatusLabel"></Label>
+
+            <Grid Grid.Row="6" Margin="0,5,0,0" Grid.Column="2" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="30*"></ColumnDefinition>
                     <ColumnDefinition Width="140"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <Label DockPanel.Dock="Left" x:Name="StatusLabel"></Label>
+                
+                <WrapPanel DockPanel.Dock="Left" Grid.Column="0">
+                    <DatePicker x:Name="DatePick" Grid.Row="0" Grid.Column="1" />
+                    <TextBox x:Name="VersionName" Width="100"></TextBox>
+                    <Button DockPanel.Dock="Right" x:Name="CreateVersion" Width="100"  Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="_Create Version" Click="CreateVersionClick"  Margin="0,0,10,0" />
+                    <Button DockPanel.Dock="Right" x:Name="GetNewCoverageOnLeak" Width="150"  Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="_Generate Cov Leak Report" Click="GetCoverageOnLeakClick"  Margin="0,0,10,0" />
+
+                </WrapPanel>                
                 <WrapPanel DockPanel.Dock="Right" Grid.Column="1">
                     <Button DockPanel.Dock="Right" x:Name="OkButton" Width="60"  Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="_Ok" Click="BtnOkClick"  Margin="0,0,10,0" />
                     <Button DockPanel.Dock="Right"  Width="60" Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="_Cancel" Click="BtnCancelClick"  Margin="0,0,10,0"/>
                 </WrapPanel>
             </Grid>
-            <controls:MetroProgressBar Grid.Row="6" x:Name="ProgressBar"
+            <controls:MetroProgressBar Grid.Row="7" x:Name="ProgressBar"
                                        Value="{Binding ElementName=horizSlider, Path=Value}"
                                        Background="LightGray"/>
 

@@ -8,8 +8,8 @@
         
         <!-- Version settings -->
         <MajorVersionNumber           Condition="'$(MajorVersionNumber)'==''">6</MajorVersionNumber>
-        <MinorVersionNumber           Condition="'$(MinorVersionNumber)'==''">1</MinorVersionNumber>
-        <BuildNumber                  Condition="'$(BuildNumber)'==''">1</BuildNumber>
+        <MinorVersionNumber           Condition="'$(MinorVersionNumber)'==''">2</MinorVersionNumber>
+        <BuildNumber                  Condition="'$(BuildNumber)'==''">0</BuildNumber>
         <RevisionNumber               Condition="'$(RevisionNumber)'==''">0</RevisionNumber>
         <AssemblyPatcherTaskOn        Condition="'$(AssemblyPatcherTaskOn)'==''">true</AssemblyPatcherTaskOn>
         <NunitRunnerTaskEnabled       Condition="'$(NunitRunnerTaskEnabled)'==''">true</NunitRunnerTaskEnabled>

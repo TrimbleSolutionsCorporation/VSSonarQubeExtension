@@ -28,6 +28,7 @@ namespace VSSonarPlugins.Types
         public Resource()
         {
             this.BranchResources = new List<Resource>();
+            this.Lines = new Dictionary<int, Line>();
             this.KeyType = KeyLookupType.Invalid;
         }
 
@@ -45,6 +46,14 @@ namespace VSSonarPlugins.Types
         /// Gets or sets the id.
         /// </summary>
         public int Id { get; set; }
+
+        /// <summary>
+        /// Gets or sets the identifier string.
+        /// </summary>
+        /// <value>
+        /// The identifier string.
+        /// </value>
+        public string IdString { get; set; }
 
         /// <summary>
         /// Gets or sets the path.
@@ -135,12 +144,44 @@ namespace VSSonarPlugins.Types
         /// </value>
         public string SolutionName { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="Resource"/> is default.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if default; otherwise, <c>false</c>.
+        /// </value>
         public bool Default { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is branch.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is branch; otherwise, <c>false</c>.
+        /// </value>
         public bool IsBranch { get; set; }
 
+        /// <summary>
+        /// Gets or sets the name of the branch.
+        /// </summary>
+        /// <value>
+        /// The name of the branch.
+        /// </value>
         public string BranchName { get; set; }
 
+        /// <summary>
+        /// Gets or sets the branch resources.
+        /// </summary>
+        /// <value>
+        /// The branch resources.
+        /// </value>
         public List<Resource> BranchResources { get; set; }
+
+        /// <summary>
+        /// Gets or sets the lines.
+        /// </summary>
+        /// <value>
+        /// The lines.
+        /// </value>
+        public Dictionary<int, Line> Lines { get; set; }
     }
 }

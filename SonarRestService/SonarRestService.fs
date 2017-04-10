@@ -314,9 +314,11 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
                 for i = 2 to value do
                     if not(cancelRequest) then
-                        let url = newurl + "&pageIndex=" + Convert.ToString(i)
-                        let newresponse = httpconnector.HttpSonarGetRequest(userConf, url)
-                        AddElements(getIssuesFromStringAfter45(newresponse))
+                        try
+                            let url = newurl + "&pageIndex=" + Convert.ToString(i)
+                            let newresponse = httpconnector.HttpSonarGetRequest(userConf, url)
+                            AddElements(getIssuesFromStringAfter45(newresponse))
+                        with | ex -> ()
             with
             | ex -> 
                 let responsecontent = httpconnector.HttpSonarGetRequest(userConf, newurl)
@@ -886,6 +888,19 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             CreateRuleInProfile(parsedDataRule, profile, enabledStatus)
 
     interface VSSonarPlugins.ISonarRestService with
+        // ================================
+        // Project Analysis Service Calls
+        // ================================
+        member this.CreateVersion(conf: ISonarConfiguration, project: Resource, version: string, date : DateTime) =
+            let id, date, error = AnalysisService.GetAnalysisId(conf, project, date, httpconnector)
+            if id <> null then
+                AnalysisService.CreateVersion(conf, id, version, httpconnector)
+            else
+                error
+
+        member this.GetCoverageReportOnNewCodeOnLeak(conf: ISonarConfiguration, project: Resource) =
+            DifferencialService.GetCoverageReportOnNewCodeOnLeak(conf, project, httpconnector)
+
         // ======================
         // Settings Service Calls
         // ======================

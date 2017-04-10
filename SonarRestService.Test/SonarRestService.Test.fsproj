@@ -54,6 +54,9 @@
   <ItemGroup>
     <Compile Include="MetricsTests.fs" />
     <Compile Include="IssuesTests.fs" />
+    <Compile Include="DifferentialServiceTest.fs" />
+    <Compile Include="SourceServiceTests.fs" />
+    <Compile Include="AnalysisServiceTests.fs" />
     <Compile Include="SettingsServiceTests.fs" />
     <Compile Include="AdministrationTests.fs" />
     <Compile Include="ResourceTests.fs" />

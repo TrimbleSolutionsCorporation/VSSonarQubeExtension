@@ -80,6 +80,11 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         private readonly SearchModel savedSearchModel;
 
         /// <summary>
+        /// The vshelper
+        /// </summary>
+        private IVsEnvironmentHelper vshelper;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="IssuesSearchViewModel" /> class.
         /// </summary>
         /// <param name="searchModel">The search model.</param>
@@ -119,6 +124,11 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.CreatedSinceDate = DateTime.Now;
 
             SonarQubeViewModel.RegisterNewViewModelInPool(this);
+        }
+
+        internal void UpdateServices(IVsEnvironmentHelper visualStudioHelper)
+        {
+            this.vshelper = visualStudioHelper;
         }
 
         /// <summary>
@@ -704,7 +714,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             Application.Current.Dispatcher.Invoke(
                 delegate
                 {
-                    var compoenentsList = SearchComponenetDialog.SearchComponents(AuthtenticationHelper.AuthToken, this.restService, this.AvailableProjects.ToList<Resource>(), this.componentList);
+                    var compoenentsList = SearchComponenetDialog.SearchComponents(AuthtenticationHelper.AuthToken, this.restService, this.AvailableProjects.ToList<Resource>(), this.componentList, this.vshelper);
                     this.componentList.Clear();
                     this.componentList.AddRange(compoenentsList);
                 });

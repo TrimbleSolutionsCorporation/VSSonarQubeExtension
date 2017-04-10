@@ -275,6 +275,23 @@
         string SetSetting(ISonarConfiguration props, Setting setting, Resource project = null);
 
         /// <summary>
+        /// Creates the version.
+        /// </summary>
+        /// <param name="props">The props.</param>
+        /// <param name="project">The project.</param>
+        /// <param name="version">The version.</param>
+        /// <returns></returns>
+        string CreateVersion(ISonarConfiguration props, Resource project, string version, DateTime date);
+
+        /// <summary>
+        /// Gets the coverage report on new code on leak.
+        /// </summary>
+        /// <param name="props">The props.</param>
+        /// <param name="project">The project.</param>
+        /// <returns></returns>
+        Dictionary<string, CoverageDifferencial> GetCoverageReportOnNewCodeOnLeak(ISonarConfiguration props, Resource project);
+
+        /// <summary>
         /// Updates the property.
         /// </summary>
         /// <param name="conf">The conf.</param>

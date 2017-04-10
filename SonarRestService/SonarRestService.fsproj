@@ -57,6 +57,9 @@
     <Compile Include="TypeProviders.fs" />
     <Compile Include="SqaleDefaultModel.fs" />
     <Compile Include="XmlTypeProviders.fs" />
+    <Compile Include="SourceService.fs" />
+    <Compile Include="DifferencialService.fs" />
+    <Compile Include="AnalysisService.fs" />
     <Compile Include="SettingsService.fs" />
     <Compile Include="MeasuresService.fs" />
     <Compile Include="SonarRestService.fs" />

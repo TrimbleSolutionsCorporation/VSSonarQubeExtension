@@ -138,6 +138,7 @@ namespace VSSonarExtensionUi.Model.Analysis
             this.visualStudioHelper = vsenvironmenthelperIn;
             this.statusBar = statusBarIn;
             this.serviceProvier = provider;
+            this.issuesSearchViewModel.UpdateServices(this.visualStudioHelper);
         }
 
         /// <summary>
