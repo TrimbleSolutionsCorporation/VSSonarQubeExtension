@@ -270,5 +270,10 @@ namespace VSSonarExtensionUi.Test.Association
         {
             throw new NotImplementedException();
         }
+
+        public string VsVersion()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
