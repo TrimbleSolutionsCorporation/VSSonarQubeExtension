@@ -11,7 +11,7 @@
         <MinorVersionNumber           Condition="'$(MinorVersionNumber)'==''">3</MinorVersionNumber>
         <BuildNumber                  Condition="'$(BuildNumber)'==''">0</BuildNumber>
         <RevisionNumber               Condition="'$(RevisionNumber)'==''">0</RevisionNumber>
-        <AssemblyPatcherTaskOn        Condition="'$(AssemblyPatcherTaskOn)'==''">true</AssemblyPatcherTaskOn>
+        <AssemblyPatcherTaskOn        Condition="'$(AssemblyPatcherTaskOn)'==''">false</AssemblyPatcherTaskOn>
         <NunitRunnerTaskEnabled       Condition="'$(NunitRunnerTaskEnabled)'==''">false</NunitRunnerTaskEnabled>
 		<ProduceCoverage       Condition="'$(ProduceCoverage)'==''">false</ProduceCoverage>
 
