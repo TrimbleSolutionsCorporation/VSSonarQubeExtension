@@ -34,6 +34,7 @@ namespace VSSonarPlugins.Types
         {
             this.Tags = new SortedSet<string>();
             this.Comments = new List<Comment>();
+            this.Explanation = new List<ExplanationLine>();
             this.Message = string.Empty;
             this.CreationDate = DateTime.Now;
             this.CloseDate = DateTime.Now;
@@ -84,6 +85,14 @@ namespace VSSonarPlugins.Types
         /// Gets or sets the line.
         /// </summary>
         public int Line { get; set; }
+
+        /// <summary>
+        /// Gets or sets the column.
+        /// </summary>
+        /// <value>
+        /// The column.
+        /// </value>
+        public int Column { get; set; }
 
         /// <summary>
         /// Gets or sets the project.
@@ -163,6 +172,14 @@ namespace VSSonarPlugins.Types
         /// Gets or sets the comments.
         /// </summary>
         public List<Comment> Comments { get; set; }
+
+        /// <summary>
+        /// Gets or sets the explanation.
+        /// </summary>
+        /// <value>
+        /// The explanation.
+        /// </value>
+        public List<ExplanationLine> Explanation { get; set; }
 
         /// <summary>
         /// Gets or sets the tags.

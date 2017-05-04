@@ -36,6 +36,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
     using VSSonarPlugins.Types;
     using View.Helpers;
     using VSSonarExtensionUi.Association;
+    using VSSonarExtensionUi.ViewModel.Analysis;
 
     /// <summary>
     /// The issue grid view viewModel.
@@ -101,6 +102,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// The source work dir
         /// </summary>
         private string sourceWorkDir;
+        private readonly ILocalAnalyserViewModel localanalyser;
 
         #endregion
 
@@ -122,8 +124,10 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             IConfigurationHelper helper,
             ISonarRestService restServiceIn,
             INotificationManager notManager,
-            ISQKeyTranslator keyTranslatorIn)
+            ISQKeyTranslator keyTranslatorIn,
+            ILocalAnalyserViewModel localanalyser = null)
         {
+            this.localanalyser = localanalyser;
             this.keyTranslator = keyTranslatorIn;
             this.notificationManager = notManager;
             this.restService = restServiceIn;
@@ -161,6 +165,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
 
             this.ShowSqaleRating = showSqaleRating;
             this.CommentsFlyoutEnabled = true;
+            this.ExplanationFlyoutEnabled = true;
 
             // register model
             AssociationModel.RegisterNewModelInPool(this);
@@ -201,6 +206,14 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// <c>true</c> if [comments flyout enabled]; otherwise, <c>false</c>.
         /// </value>
         public bool CommentsFlyoutEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [explanation flyout enabled].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [explanation flyout enabled]; otherwise, <c>false</c>.
+        /// </value>
+        public bool ExplanationFlyoutEnabled { get; set; }
 
         /// <summary>Gets or sets the go to next issue command.</summary>
         public ICommand GoToNextIssueCommand { get; set; }
@@ -787,6 +800,22 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// </value>
         public ICommand CloseFlyoutCommand { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the selected explanation item.
+        /// </summary>
+        /// <value>
+        /// The selected explanation item.
+        /// </value>
+        public ExplanationLine SelectedExplanationItem { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is explanation enabled.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is explanation enabled; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsExplanationEnabled { get; set; }
+
         #endregion
 
         #region Public Methods and Operators
@@ -818,13 +847,52 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// </summary>
         public void OnSelectedIssueChanged()
         {
-            if (!this.CommentsFlyoutEnabled)
+            this.ValidateCommentFlyout();
+            this.ValidateExplanationFlyout();
+
+        }
+
+        /// <summary>
+        /// Called when [selected explanation item changed].
+        /// </summary>
+        public void OnSelectedExplanationItemChanged()
+        {
+            if(this.localanalyser == null || this.SelectedExplanationItem == null)
+            {
+                return;
+            }
+
+            this.localanalyser.NavigatinExplanation = true;
+            this.vsenvironmenthelper.OpenResourceInVisualStudio(this.sourceWorkDir, this.SelectedExplanationItem.Path, this.SelectedExplanationItem.Line);
+        }
+
+        private void ValidateExplanationFlyout()
+        {
+            if(!this.ExplanationFlyoutEnabled)
+            {
+                this.IsExplanationEnabled = false;
+                return;
+            }
+
+            if(this.SelectedIssue != null && this.SelectedIssue.Explanation.Count != 0)
+            {
+                this.IsExplanationEnabled = true;
+            }
+            else
+            {
+                this.IsExplanationEnabled = false;
+            }
+        }
+
+        private void ValidateCommentFlyout()
+        {
+            if(!this.CommentsFlyoutEnabled)
             {
                 this.IsCommentEnabled = false;
                 return;
             }
 
-            if (this.SelectedIssue != null && this.SelectedIssue.Comments.Count != 0)
+            if(this.SelectedIssue != null && this.SelectedIssue.Comments.Count != 0)
             {
                 this.IsCommentEnabled = true;
             }
@@ -1046,6 +1114,8 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                             this.AllIssues.Add(listOfIssue);
                             this.Issues.Add(listOfIssue);
                         }
+
+                        this.notificationManager.OnNewIssuesUpdated();
                     });
 
 

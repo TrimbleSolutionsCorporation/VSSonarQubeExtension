@@ -53,6 +53,12 @@ namespace VSSonarPlugins
         void ReportMessage(Message messages);
 
         /// <summary>
+        /// Reports the message.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        void ReportMessage(string message);
+
+        /// <summary>
         /// News the issues are ready to be updated in view
         /// </summary>
         void OnIssuesUpdated();

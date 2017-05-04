@@ -79,6 +79,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// The source dir
         /// </summary>
         private string sourceDir;
+        private readonly string userPluginInstallPath;
 
         #endregion
 
@@ -102,6 +103,12 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.configurationHelper = configurationHelper;
             this.controller = controller;
             this.vshelper = helper;
+            this.userPluginInstallPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "vssonarextension", vshelper.VsVersion(), "plugins");
+
+            if(!Directory.Exists(this.userPluginInstallPath))
+            {
+                Directory.CreateDirectory(this.userPluginInstallPath);
+            }
 
             this.plugins = new List<IPlugin>();
 
@@ -110,7 +117,9 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.SourceCodePlugins = new List<ISourceVersionPlugin>();
             this.IssueTrackerPlugins = new List<IIssueTrackerPlugin>();
 
-            this.InitPluginList(helper, null);
+            var defaultPluginsFolder = Path.Combine(this.controller.ExtensionFolder, "plugins");
+            this.InitPluginList(helper, null, defaultPluginsFolder);
+            this.InitPluginList(helper, null, this.userPluginInstallPath);
             this.InitCommanding();
 
             SonarQubeViewModel.RegisterNewViewModelInPool(this);
@@ -315,11 +324,11 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                     }
                     else
                     {
-                        var files = this.controller.DeployPlugin(filedialog.FileName);
+                        var files = this.controller.DeployPlugin(filedialog.FileName, this.userPluginInstallPath);
 
                         try
                         {
-                            if (!this.InitPluginList(this.vshelper, files))
+                            if (!this.InitPluginList(this.vshelper, files, this.userPluginInstallPath))
                             {
                                 UserExceptionMessageBox.ShowException("Cannot Install Plugin", new Exception("Error Loading Plugin"), this.controller.GetErrorData());
                             }
@@ -543,11 +552,11 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="visualStudioHelper">The visual studio helper.</param>
         /// <param name="files">The files.</param>
         /// <returns>true on ok</returns>
-        private bool InitPluginList(IVsEnvironmentHelper visualStudioHelper, IEnumerable<string> files)
+        private bool InitPluginList(IVsEnvironmentHelper visualStudioHelper, IEnumerable<string> files, string folder)
         {
             bool loaded = false;
 
-            foreach (var plugin in this.controller.LoadPluginsFromPluginFolder(this.notificationManager, this.configurationHelper, visualStudioHelper, files))
+            foreach (var plugin in this.controller.LoadPluginsFromPluginFolder(this.notificationManager, this.configurationHelper, visualStudioHelper, files, folder))
             {
                 var plugindata = plugin as IAnalysisPlugin;
                 if (plugindata != null)
@@ -556,7 +565,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                     this.PluginList.Add(plugindata.GetPluginDescription());
                     this.plugins.Add(plugin);
                     loaded = true;
-                    continue;                    
+                    continue;
                 }
 
                 var pluginMenu = plugin as IMenuCommandPlugin;

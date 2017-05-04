@@ -1,0 +1,14 @@
+﻿<Types:Issue xmlns:Types="clr-namespace:VSSonarPlugins.Types;assembly=VSSonarPlugins" xmlns:System="clr-namespace:System;assembly=mscorlib" Author="Fusce cursus nunc blandit amet" Assignee="Congue etiam aliquet" CreationDate="05/02/2017 11:04:42" Component="Cras curae vestibulum aptent sed" CloseDate="05/02/2017 11:04:42" Column="77" Effort="Maecenas himenaeos vitae nam sed" HelpUrl="Praesent accumsan" Id="98" IsNew="True" IssueTrackerId="Conubia elementum" Key="Commodo lorem dignissim ante" Line="99" LocalPath="Nam aenean aliquam integer mauris" Message="Class curabitur maecenas nullam" Project="Dis donec quisque auctor phasellus" Resolution="FALSE_POSITIVE" Rule="Duis vivamus consequat aliquam convallis" Severity="BLOCKER" Status="REOPENED" UpdateDate="05/02/2017 11:04:42" ViolationId="91">
+	<Types:Issue.Tags>
+		<System:String>Neque netus</System:String>
+		<System:String>Erat vestibulum elementum semper</System:String>
+		<System:String>Facilisis eros</System:String>
+		<System:String>Nulla sit nibh nisi</System:String>
+		<System:String>Nisl adipiscing</System:String>
+		<System:String>Aliquet porta fermentum sociis taciti</System:String>
+		<System:String>Nunc fringilla vel</System:String>
+		<System:String>Purus parturient tellus tempor</System:String>
+		<System:String>Habitasse risus vestibulum blandit</System:String>
+		<System:String>Velit hendrerit odio orci</System:String>
+	</Types:Issue.Tags>
+</Types:Issue>

@@ -419,7 +419,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <param name="e">
         ///     The e.
         /// </param>
-        public void OnAnalysisModeHasChange(EventArgs e)
+        public void RefreshIssuesEditor(EventArgs e)
         {
             if (this.IssuesReadyForCollecting != null)
             {
@@ -447,7 +447,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         public void OnSelectedViewChanged()
         {
-            this.OnAnalysisModeHasChange(EventArgs.Empty);
+            this.RefreshIssuesEditor(EventArgs.Empty);
             this.notificationMan.WriteMessage("OnSelectedViewChanged Changed");
         }
 

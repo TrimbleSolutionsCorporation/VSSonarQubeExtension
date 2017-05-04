@@ -303,17 +303,6 @@ namespace VSSonarQubeExtension
         }
 
         /// <summary>
-        /// Previews the solution command.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void PreviewSolutionCmd(object sender, EventArgs e)
-        {
-            SonarQubeViewModelFactory.SQViewModel.StartAnalysisWindow(AnalysisTypes.PREVIEW, false);
-        }
-        
-
-        /// <summary>
         ///     The setup menu commands.
         /// </summary>
         private void SetupMenuCommands()
@@ -342,10 +331,6 @@ namespace VSSonarQubeExtension
             menuCommandId = new CommandID(GuidList.GuidStartAnalysisSolutionCTXCmdSet, PkgCmdIdList.CmdidRunAnalysisInSolution);
             this.runAnalysisCmd = new OleMenuCommand(this.AnalyseSolutionCmd, menuCommandId);
             mcs.AddCommand(this.runAnalysisCmd);
-
-            menuCommandId = new CommandID(GuidList.GuidStartPreviewAnalysisSolutionCTXCmdSet, PkgCmdIdList.cmdidRunPreviewAnalysisInSolution);
-            this.runPreviewInProjectCmd = new OleMenuCommand(this.PreviewSolutionCmd, menuCommandId);
-            mcs.AddCommand(this.runPreviewInProjectCmd);
         }
 
         /// <summary>

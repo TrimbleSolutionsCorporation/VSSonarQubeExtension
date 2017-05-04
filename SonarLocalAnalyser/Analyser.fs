@@ -199,7 +199,6 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
     let mutable profileUpdated = false
     let mutable profileCannotBeRetrived = false
     let jsonReports : System.Collections.Generic.List<String> = new System.Collections.Generic.List<String>()
-    let localissues : System.Collections.Generic.List<Issue> = new System.Collections.Generic.List<Issue>()
     let cachedProfiles : System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, Profile>> =
                     let data = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, Profile>>()
                     data
@@ -267,7 +266,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
         true
 
     let triggerException(x, msg : string, ex : Exception) = 
-        let errorInExecution = new LocalAnalysisEventArgs("LA: ", "INVALID OPTIONS: " + msg, ex)
+        let errorInExecution = new LocalAnalysisExceptionEventArgs("INVALID OPTIONS: " + msg, ex)
         completionEvent.Trigger([|x; errorInExecution|])
 
     let GetAPluginInListThatSupportSingleLanguage(project : Resource, conf : ISonarConfiguration) = 
@@ -469,17 +468,6 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
     member val SqTranslator : ISQKeyTranslator = null with get, set
     member val VsInter : IVsEnvironmentHelper = null with get, set
 
-
-    member x.ProcessExecutionEventComplete(e : EventArgs) =
-        let data = e :?> LocalAnalysisEventArgs
-        let message = new LocalAnalysisEventArgs("LA: ", data.ErrorMessage, null)
-        completionEvent.Trigger([|x; message|])
-          
-    member x.ProcessOutputPluginData(e : EventArgs) = 
-        let data = e :?> LocalAnalysisEventArgs
-        let message = new LocalAnalysisEventArgs("LA:", data.ErrorMessage, null)
-        stdOutEvent.Trigger([|x; message|])
-
     member x.GetFileToBeAnalysedFromSonarLog(line : string) =
         let separator = [| "Populating index from" |]
         let mutable fileName = line.Split(separator, StringSplitOptions.RemoveEmptyEntries).[1]
@@ -498,88 +486,63 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
             fileName <- Path.Combine(baseDir, relativePath)
 
         fileName    
-                                 
-    member x.ProcessOutputDataReceived(e : DataReceivedEventArgs) =
-        try
-            if e.Data <> null && not(x.Abort) then
-                if e.Data.EndsWith(".json") then
-                    let elems = e.Data.Split(' ');
-                    jsonReports.Add(elems.[elems.Length-1])
-
-                let message = new LocalAnalysisEventArgs("LA:", e.Data, null)
-                stdOutEvent.Trigger([|x; message|])
-                    
-                if x.Conf.SonarVersion < 5.2 && e.Data.Contains("DEBUG - Populating index from") then
-                    let message = new LocalAnalysisEventArgs("LA:", e.Data, null)
-                    stdOutEvent.Trigger([|x; message|])
-                    let fileName = x.GetFileToBeAnalysedFromSonarLog(e.Data)
-
-                    if File.Exists(fileName) then
-                        let vsprojitem = new VsFileItem(FileName = Path.GetFileName(fileName), FilePath = fileName)
-                        let plugin = GetPluginThatSupportsResource(vsprojitem)
-                        let extension = 
-                            if plugin <> null then
-                                plugin.GetLocalAnalysisExtension(x.Conf)
-                            else
-                                null
-
-                        let extension = GetExtensionThatSupportsThisFile(vsprojitem, x.Conf)
-                        if extension <> null then
-                            let plugin = GetPluginThatSupportsResource(vsprojitem)
-                            let project = new Resource()
-                            project.Date <- x.Project.Date
-                            project.Lang <- x.Project.Lang
-                            project.Id <- x.Project.Id
-                            project.Key <- x.Project.Key
-                            project.Lname <- x.Project.Lname
-                            project.Version <- x.Project.Version
-                            project.Name <- x.Project.Name
-                            project.Qualifier <- x.Project.Qualifier
-                            project.Scope <- x.Project.Scope
-                            project.Lang <- plugin.GetLanguageKey(vsprojitem)
-
-                            let profile = cachedProfiles.[project.Name].[plugin.GetLanguageKey(vsprojitem)]
-
-                            notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Launch Analysis On  File: " + vsprojitem.FilePath))
-                            let issues = extension.ExecuteAnalysisOnFile(vsprojitem, project, x.Conf, false)
-                            lock syncLock (
-                                fun () -> 
-                                    localissues.AddRange(issues)
-                                )
-                            notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "ENDED Analysis On  File: " + vsprojitem.FilePath))
-            with
-            | ex -> ()
-
 
     member x.generateCommandArgs(mode : AnalysisMode, version : double, conf : ISonarConfiguration, project : Resource) =
         GenerateCommonArgumentsForAnalysis(mode, version, conf, project).ToString()
-                            
-    member x.RunPreviewBuild() =
-        try
-            jsonReports.Clear()
-
-            let runnerexec = vsinter.ReadSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.CxxWrapperPathKey).Value;
-
-            let incrementalArgs = x.generateCommandArgs(AnalysisMode.Preview, x.Version, x.Conf, x.Project) + " /d:sonar.issuesReport.html.enable=true"
-            if not(String.IsNullOrEmpty(x.Conf.Password)) then
-                let message = sprintf "[%s] %s %s" x.ProjectRoot runnerexec (incrementalArgs.Replace(x.Conf.Password, "xxxxx"))
-                let commandData = new LocalAnalysisEventArgs("CMD: ", message, null)
-                stdOutEvent.Trigger([|x; commandData|])
-        
-            let errorCode = exec.ExecuteCommand(runnerexec, incrementalArgs, Map.empty, x.ProcessOutputDataReceived, x.ProcessOutputDataReceived, x.ProjectRoot)
-            if errorCode > 0 then
-                let errorInExecution = new LocalAnalysisEventArgs("LA", "Failed To Execute", new Exception("Error Code: " + errorCode.ToString()))
-                completionEvent.Trigger([|x; errorInExecution|])
-            else
-                completionEvent.Trigger([|x; null|])
-        with
-        | ex ->
-            let errorInExecution = new LocalAnalysisEventArgs("LA", "Exception while executing", ex)
-            completionEvent.Trigger([|x; errorInExecution|])
-
-        x.AnalysisIsRunning <- false
 
     member x.RunFullBuild() =
+        let localissues : System.Collections.Generic.List<Issue> = new System.Collections.Generic.List<Issue>()
+        let ProcessOutputDataReceivedFullBuild(e : DataReceivedEventArgs) =
+            try
+                if e.Data <> null && not(x.Abort) then
+                    if e.Data.EndsWith(".json") then
+                        let elems = e.Data.Split(' ');
+                        jsonReports.Add(elems.[elems.Length-1])
+
+                    let message = new LocalAnalysisStdoutMessage(e.Data)
+                    stdOutEvent.Trigger([|x; message|])
+                    
+                    if x.Conf.SonarVersion < 5.2 && e.Data.Contains("DEBUG - Populating index from") then
+                        let message = new LocalAnalysisStdoutMessage(e.Data)
+                        stdOutEvent.Trigger([|x; message|])
+                        let fileName = x.GetFileToBeAnalysedFromSonarLog(e.Data)
+
+                        if File.Exists(fileName) then
+                            let vsprojitem = new VsFileItem(FileName = Path.GetFileName(fileName), FilePath = fileName)
+                            let plugin = GetPluginThatSupportsResource(vsprojitem)
+                            let extension = 
+                                if plugin <> null then
+                                    plugin.GetLocalAnalysisExtension(x.Conf)
+                                else
+                                    null
+
+                            let extension = GetExtensionThatSupportsThisFile(vsprojitem, x.Conf)
+                            if extension <> null then
+                                let plugin = GetPluginThatSupportsResource(vsprojitem)
+                                let project = new Resource()
+                                project.Date <- x.Project.Date
+                                project.Lang <- x.Project.Lang
+                                project.Id <- x.Project.Id
+                                project.Key <- x.Project.Key
+                                project.Lname <- x.Project.Lname
+                                project.Version <- x.Project.Version
+                                project.Name <- x.Project.Name
+                                project.Qualifier <- x.Project.Qualifier
+                                project.Scope <- x.Project.Scope
+                                project.Lang <- plugin.GetLanguageKey(vsprojitem)
+
+                                let profile = cachedProfiles.[project.Name].[plugin.GetLanguageKey(vsprojitem)]
+
+                                notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Launch Analysis On  File: " + vsprojitem.FilePath))
+                                let issues = extension.ExecuteAnalysisOnFile(vsprojitem, project, x.Conf, false)
+                                lock syncLock (
+                                    fun () -> 
+                                        localissues.AddRange(issues)
+                                    )
+                                notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "ENDED Analysis On  File: " + vsprojitem.FilePath))
+                with
+                | ex -> ()
+
         try
             jsonReports.Clear()
             localissues.Clear()
@@ -589,65 +552,41 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
 
             if not(String.IsNullOrEmpty(x.Conf.Password)) then
                 let message = sprintf "[%s] %s %s" x.ProjectRoot runnerexec (incrementalArgs.Replace(x.Conf.Password, "xxxxx"))
-                let commandData = new LocalAnalysisEventArgs("TODO SORT KEY", message, null)
+                let commandData = new LocalAnalysisStdoutMessage("CMD: " + message)
                 stdOutEvent.Trigger([|x; commandData|])
           
-            let errorCode = exec.ExecuteCommand(runnerexec, incrementalArgs, Map.empty, x.ProcessOutputDataReceived, x.ProcessOutputDataReceived, x.ProjectRoot)
+            let errorCode = exec.ExecuteCommand(runnerexec, incrementalArgs, Map.empty, ProcessOutputDataReceivedFullBuild, ProcessOutputDataReceivedFullBuild, x.ProjectRoot)
             if errorCode > 0 then
-                let errorInExecution = new LocalAnalysisEventArgs("Local Analysis", "Failed To Execute: Check Output Log", new Exception("Error Code: " + errorCode.ToString()))
-                completionEvent.Trigger([|x; errorInExecution|])               
+                let errorInExecution = new LocalAnalysisExceptionEventArgs("Local Analysis Failed To Execute: Check Output Log", new Exception("Error Code: " + errorCode.ToString()))
+                completionEvent.Trigger([|x; errorInExecution|])
             else
-                completionEvent.Trigger([|x; null|])
+                let errorInExecution = new LocalAnalysisEventFullAnalsysisComplete(localissues);
+                completionEvent.Trigger([|x; errorInExecution|])
         with
         | ex ->
-            let errorInExecution = new LocalAnalysisEventArgs("Local Analysis", "Failed To Execute: Check Output Log", ex)
-            completionEvent.Trigger([|x; errorInExecution|])
-
-        x.AnalysisIsRunning <- false
-
-    member x.RunIncrementalBuild() = 
-        try
-            jsonReports.Clear()
-            localissues.Clear()
-            let runnerexec = vsinter.ReadSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.CxxWrapperPathKey).Value;
-
-            let incrementalArgs = x.generateCommandArgs(AnalysisMode.Incremental, x.Version, x.Conf, x.Project)
-
-            if not(String.IsNullOrEmpty(x.Conf.Password)) then
-                let message = sprintf "[%s] %s %s" x.ProjectRoot runnerexec (incrementalArgs.Replace(x.Conf.Password, "xxxxx"))
-                let commandData = new LocalAnalysisEventArgs("CMD: ", message, null)
-                stdOutEvent.Trigger([|x; commandData|])         
-         
-            let errorCode = exec.ExecuteCommand(runnerexec, incrementalArgs, Map.empty, x.ProcessOutputDataReceived, x.ProcessOutputDataReceived, x.ProjectRoot)
-            if errorCode > 0 then
-                let errorInExecution = new LocalAnalysisEventArgs("LA", "Failed To Execute", new Exception("Error Code: " + errorCode.ToString()))
-                completionEvent.Trigger([|x; errorInExecution|])               
-            else
-                completionEvent.Trigger([|x; null|])
-        with
-        | ex ->
-            let errorInExecution = new LocalAnalysisEventArgs("LA", "Exception while executing", ex)
+            let errorInExecution = new LocalAnalysisExceptionEventArgs("Local Analysis Failed To Execute: Check Output Log", ex)
             completionEvent.Trigger([|x; errorInExecution|])
 
         x.AnalysisIsRunning <- false
 
     member x.RunFileAnalysisThread() = 
-
-            let plugin = GetPluginThatSupportsResource(x.ItemInView)
+            let itemInAnalysis = x.ItemInView
+            let localissues : System.Collections.Generic.List<Issue> = new System.Collections.Generic.List<Issue>()
+            let plugin = GetPluginThatSupportsResource(itemInAnalysis)
             if plugin = null then
-                let errorInExecution = new LocalAnalysisEventArgs("Local Analyser", "Cannot Run Analyis: Not Supported: ", new ResourceNotSupportedException())
+                let errorInExecution = new LocalAnalysisExceptionEventArgs("Local Analyser Cannot Run Analyis: Not Supported: ", new ResourceNotSupportedException())
                 completionEvent.Trigger([|x; errorInExecution|])
                 x.AnalysisIsRunning <- false
             else
                 let GetSourceFromServer() = 
                     try
-                        let keyOfItem = (x :> ISonarLocalAnalyser).GetResourceKey(x.ItemInView, true)
+                        let keyOfItem = (x :> ISonarLocalAnalyser).GetResourceKey(itemInAnalysis, true)
                         let source = restService.GetSourceForFileResource(x.Conf, keyOfItem)
                         VsSonarUtils.GetLinesFromSource(source, "\r\n")
                     with
                     | ex ->
                         try
-                            let keyOfItem = (x :> ISonarLocalAnalyser).GetResourceKey(x.ItemInView, false)
+                            let keyOfItem = (x :> ISonarLocalAnalyser).GetResourceKey(itemInAnalysis, false)
                             let source = restService.GetSourceForFileResource(x.Conf, keyOfItem)
                             VsSonarUtils.GetLinesFromSource(source, "\r\n")
                         with
@@ -657,10 +596,8 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                 if extension <> null then
                     try
                         if cachedProfiles.ContainsKey(x.Project.Name) then
-                            if cachedProfiles.[x.Project.Name].ContainsKey(plugin.GetLanguageKey(x.ItemInView)) then
-                                let profile = cachedProfiles.[x.Project.Name].[plugin.GetLanguageKey(x.ItemInView)]
-                                let issues = extension.ExecuteAnalysisOnFile(x.ItemInView, x.Project, x.Conf, x.FromSave)
-
+                            if cachedProfiles.[x.Project.Name].ContainsKey(plugin.GetLanguageKey(itemInAnalysis)) then
+                                let issues = extension.ExecuteAnalysisOnFile(itemInAnalysis, x.Project, x.Conf, x.FromSave)
                                 lock syncLock (
                                     fun () ->
                                         let ProcessIssue(issue:Issue, key:string) = 
@@ -679,7 +616,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                                                 if not(excluded) then
                                                     localissues.Add(issue)
 
-                                        let keydata = x.SqTranslator.TranslatePath(x.ItemInView, x.VsInter, restService, sonarConfig)
+                                        let keydata = x.SqTranslator.TranslatePath(itemInAnalysis, x.VsInter, restService, sonarConfig)
                                         issues |> Seq.iter (fun issue -> ProcessIssue(issue, keydata.Key))
                                     )
                         else
@@ -687,10 +624,11 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
 
                     with
                     | ex -> 
-                        notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Failed to analyse file : " + x.ItemInView.FilePath + " : " + ex.Message))
+                        notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Failed to analyse file : " + itemInAnalysis.FilePath + " : " + ex.Message))
                         notificationManager.ReportException(ex)
 
-                completionEvent.Trigger([|x; null|])
+                let executionComplete = new LocalAnalysisEventFileAnalsysisComplete(itemInAnalysis, localissues);
+                completionEvent.Trigger([|x; executionComplete|])
                 x.AnalysisIsRunning <- false
 
     member x.CancelExecution(thread : Thread) =
@@ -733,46 +671,6 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                 if plugin <> null then
                     plugin.LaunchAnalysisOnProject(project, conf)
 
-        member x.GetIssues(conf : ISonarConfiguration, project : Resource) =
-            let issues = new System.Collections.Generic.List<Issue>()
-
-            let ParseReport(report : string) =
-                if File.Exists(report) then
-                    try
-                        issues.AddRange(restService.ParseReportOfIssues(report))
-                    with
-                    | ex -> try
-                                issues.AddRange(restService.ParseDryRunReportOfIssues(report));
-                            with 
-                            | ex -> try
-                                        issues.AddRange(restService.ParseReportOfIssuesOld(report));
-                                    with
-                                    | ex -> ()
-
-            List.ofSeq jsonReports |> Seq.iter (fun m -> ParseReport(m))
-            let _lock = new Object()
-
-            let GetIssuesFromPlugins(plug : IAnalysisPlugin) =
-                let extension = plug.GetLocalAnalysisExtension(conf)
-                try
-                    let AddIssueToLocalIssues(c : Issue) =
-                        if extension.IsIssueSupported(c, conf) then
-                            try
-                                let profile = cachedProfiles.[project.Name].[plug.GetLanguageKey(new VsFileItem(FileName = c.Component))]
-                                let rule = profile.GetRule(c.Rule)
-                                c.Effort <- rule.DebtRemFnCoeff
-                            with
-                            | ex -> ()
-                            lock _lock (fun () -> localissues.Add(c))
-
-                    issues |> PSeq.iter (fun c -> AddIssueToLocalIssues(c))
-                with
-                | ex -> ()
-
-            List.ofSeq plugins |> Seq.iter (fun m -> GetIssuesFromPlugins(m))
-
-            localissues
-
         member x.AnalyseFile(itemInView : VsFileItem,
                              project : Resource,
                              onModifiedLinesOnly : bool,
@@ -792,7 +690,6 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
             x.SqTranslator <- sqTranslator
             x.VsInter <- vsInter
             x.FromSave <- fromSave
-            localissues.Clear()
 
             if not(profileCannotBeRetrived) then
 
@@ -823,42 +720,6 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
             else
                 raise(new Exception("A earlier error prevents the profiles from being restored, please disconnect and connect again to try again."))
 
-        member x.RunIncrementalAnalysis(project : Resource, version : double, conf : ISonarConfiguration) =
-            if profileUpdated then
-                x.CurrentAnalysisType <- AnalysisMode.Incremental
-                x.ProjectRoot <- project.SolutionRoot
-                x.Conf <- conf
-                x.Version <- version
-                x.Abort <- false
-                x.Project <- project
-
-                if not(String.IsNullOrEmpty(project.Lang)) then
-                    x.RunningLanguageMethod <- LanguageType.SingleLang
-                else
-                    x.RunningLanguageMethod <- LanguageType.MultiLang
-
-                localissues.Clear()
-                x.AnalysisIsRunning <- true
-                (new Thread(new ThreadStart(x.RunIncrementalBuild))).Start()
-            
-        member x.RunPreviewAnalysis(project : Resource, version : double, conf : ISonarConfiguration) =
-            if profileUpdated then
-                x.CurrentAnalysisType <- AnalysisMode.Preview
-                x.ProjectRoot <- project.SolutionRoot
-                x.Project <- project
-                x.Conf <- conf
-                x.Version <- version
-                x.Abort <- false
-
-                if not(String.IsNullOrEmpty(project.Lang)) then
-                    x.RunningLanguageMethod <- LanguageType.SingleLang
-                else
-                    x.RunningLanguageMethod <- LanguageType.MultiLang
-
-                localissues.Clear()
-                x.AnalysisIsRunning <- true
-                (new Thread(new ThreadStart(x.RunPreviewBuild))).Start()
-                                
         member x.RunFullAnalysis(project : Resource,  version : double, conf : ISonarConfiguration) =
             if profileUpdated then
                 x.CurrentAnalysisType <- AnalysisMode.Full
@@ -871,7 +732,6 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                 if project.Lang = null then
                     x.RunningLanguageMethod <- LanguageType.MultiLang
 
-                localissues.Clear()
                 x.AnalysisIsRunning <- true
                 (new Thread(new ThreadStart(x.RunFullBuild))).Start()
 

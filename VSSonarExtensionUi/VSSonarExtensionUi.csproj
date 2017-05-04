@@ -142,6 +142,8 @@
     <Compile Include="Model\Menu\MoreInfoMenu.cs" />
     <Compile Include="Model\Menu\SetSqaleMenu.cs" />
     <Compile Include="Model\Menu\SetExclusionsMenu.cs" />
+    <Compile Include="ViewModel\Analysis\ILocalAnalyserViewModel.cs" />
+    <Compile Include="ViewModel\Analysis\PluginCommandWrapper.cs" />
     <Compile Include="ViewModel\Configuration\IPluginManager.cs" />
     <Compile Include="Model\Cache\EditorData.cs" />
     <Compile Include="Model\Cache\ModelEditorCache.cs" />
@@ -265,6 +267,14 @@
       <SubType>Designer</SubType>
     </Page>
     <DesignData Include="SampleData\IssueGridViewModelSampleData.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </DesignData>
+    <DesignData Include="SampleData\IssueGridViewModelSampleData1.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </DesignData>
+    <DesignData Include="SampleData\IssueSampleData.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </DesignData>

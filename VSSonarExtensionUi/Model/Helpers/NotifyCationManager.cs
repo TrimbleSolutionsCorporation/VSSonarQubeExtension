@@ -129,6 +129,20 @@
         }
 
         /// <summary>
+        /// Reports the message.
+        /// </summary>
+        /// <param name="message">The messages.</param>
+        public void ReportMessage(string message)
+        {
+            if(this.helper == null)
+            {
+                return;
+            }
+
+            this.helper.WriteToVisualStudioOutput(DateTime.Now + ":" + message);
+        }
+
+        /// <summary>
         /// Starteds the working.
         /// </summary>
         /// <param name="busyMessage">The busy message.</param>

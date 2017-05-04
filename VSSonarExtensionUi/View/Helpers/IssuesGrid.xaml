@@ -87,7 +87,7 @@
                        FontSize="12"
                        Margin="10,0,0,0"
                        VerticalAlignment="Center" />
-                        <TextBlock FontSize="12" Margin="120,7,0,0"><Hyperlink ToolTip="Open issue in issue tracker, if available" Command="{Binding DataContext.OpenInIssueTrackerCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"><Run Text="Open In Issue Tracker"/></Hyperlink></TextBlock>
+
 
                 </DockPanel>
                                             </Border>
@@ -149,7 +149,27 @@
             <Style x:Key="DataGridColumnHeaderStyle" TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource DefaultDataGridColumnHeaderStyle}" >
                 <Setter Property="ContextMenu" Value="{StaticResource HeaderContextMenu}" />
             </Style>
-                       
+
+
+            <DataTemplate x:Key="ExplanationTemplate">
+                <Border BorderThickness="1">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition Width="300"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="10"/>
+                            <RowDefinition Height="20"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" TextWrapping="WrapWithOverflow" Text="{Binding Path, FallbackValue=kdsffaasda}"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Line, FallbackValue=lefflsjdhlf}"/>
+                        <TextBlock Grid.Row="1" Grid.Column="2" TextWrapping="WrapWithOverflow" Text="{Binding Message, FallbackValue=al;ksd;lask}"/>
+                    </Grid>
+                </Border>
+            </DataTemplate>
+            
             <DataTemplate x:Key="CommentTemplate">
                 <Border BorderThickness="1">
                     <Grid>
@@ -233,22 +253,38 @@
                             </Rectangle.OpacityMask>
                         </Rectangle>
                     </Button>
-                    
-                        <ToggleButton Width="30"
+
+                    <ToggleButton Width="30"
                                       Height="30"
                                       Margin="0, 0, 0, 0"
                                       ToolTip="Enable Disables the Comments Flyout in the Right"
                                       Style="{DynamicResource MetroCircleToggleButtonStyle}"  IsChecked="{Binding CommentsFlyoutEnabled}" IsEnabled="True">
-              
-                            <Rectangle Width="15"
+
+                        <Rectangle Width="15"
                                        Height="15"
                                        Fill="{Binding  ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}">
-                                <Rectangle.OpacityMask>
-                                    <VisualBrush Stretch="Fill"
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Stretch="Fill"
                                                  Visual="{StaticResource appbar_chat}" />
-                                </Rectangle.OpacityMask>
-                            </Rectangle>
-                        </ToggleButton>                     
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                    </ToggleButton>
+                    <ToggleButton Width="30"
+                                      Height="30"
+                                      Margin="0, 0, 0, 0"
+                                      ToolTip="Enable Disables the Explanation Flyout in the Right"
+                                      Style="{DynamicResource MetroCircleToggleButtonStyle}"  IsChecked="{Binding ExplanationFlyoutEnabled}" IsEnabled="True">
+
+                        <Rectangle Width="15"
+                                       Height="15"
+                                       Fill="{Binding  ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}">
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Stretch="Fill"
+                                                 Visual="{StaticResource appbar_book_open}" />
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                    </ToggleButton>
+
                 </StackPanel>
 
             </StatusBarItem>            
@@ -286,7 +322,7 @@
           GridLinesVisibility="None"
           AlternationCount="2"
           BorderThickness="1"
-          ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}"          
+          ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}"
           RowStyle="{DynamicResource IssuesGridRowStyle}"
           HeadersVisibility="Column"
           RowHeaderWidth="0"
@@ -734,7 +770,45 @@
                 </Border>
 
             </Controls:Flyout>
+            <Controls:Flyout Header="Explanation" Position="Right" Width="450" IsOpen="{Binding IsExplanationEnabled, FallbackValue=True}">
+                <Controls:Flyout.Resources>
+                    <Style TargetType="{x:Type Controls:Flyout}" >
+                        <Setter Property="HeaderTemplate" Value="{StaticResource CustomFlyoutHeaderTemplate}" />
+                    </Style>
+                </Controls:Flyout.Resources>
+                <Border BorderBrush="LightBlue" BorderThickness="1" >
+
+
+                    <ListBox
+                        SelectedItem="{Binding SelectedExplanationItem}"
+                        Name="listBoxeExplanation" Grid.Row="1" Grid.Column="0"
+                        ItemsSource="{Binding SelectedIssue.Explanation}" d:DataContext="{d:DesignData /SampleData/IssueGridViewModelSampleData.xaml}"
+                        Margin="1"
+                        HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.CloseFlyoutCommand }" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border Margin="1" BorderThickness="1" BorderBrush="AliceBlue" CornerRadius="0">
+                                    <Grid>
+                                        <StackPanel Grid.Column="1">
+                                            <TextBlock FontWeight="Bold" TextWrapping="Wrap" Text="{Binding Path=Path}" />
+                                            <TextBlock FontWeight="Bold" Text="{Binding Path=Line}" />
+                                            <TextBlock Text="{Binding Path=Message}" TextWrapping="Wrap" />
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    
+                </Border>
+            </Controls:Flyout>
         </Controls:FlyoutsControl>
 
+        
     </Grid>
 </UserControl>

@@ -235,5 +235,11 @@ namespace VSSonarPlugins
         /// </summary>
         /// <returns>returns current roslyn solution</returns>
         Solution GetCurrentRoslynSolution();
+
+        /// <summary>
+        /// Vses the version.
+        /// </summary>
+        /// <returns></returns>
+        string VsVersion();
     }
 }

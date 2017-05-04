@@ -236,7 +236,7 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// <param name="e">
         /// The e.
         /// </param>
-        public void OnAnalysisModeHasChange(EventArgs e)
+        public void RefreshIssuesEditor(EventArgs e)
         {
             if (this.IssuesReadyForCollecting != null)
             {

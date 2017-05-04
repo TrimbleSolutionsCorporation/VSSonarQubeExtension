@@ -38,7 +38,7 @@ namespace VSSonarExtensionUi.Model.Analysis
         
         /// <summary>The on analysis mode has change.</summary>
         /// <param name="e">The e.</param>
-        void OnAnalysisModeHasChange(EventArgs e);
+        void RefreshIssuesEditor(EventArgs e);
 
         /// <summary>
         /// The refresh data for resource.

@@ -53,9 +53,8 @@ namespace VSSonarExtensionUi.Model.PluginManager
                 return;
             }
 
-            this.ExtensionFolder = this.ExtensionFolder.Replace("file:\\", string.Empty);            
+            this.ExtensionFolder = this.ExtensionFolder.Replace("file:\\", string.Empty);
             this.TempInstallPathFolder = Path.Combine(this.ExtensionFolder, Tempinstallfolder);
-            this.PluginsFolder = Path.Combine(this.ExtensionFolder, "plugins");
 
             var pluginLoader = new PluginLoader();
             AppDomain.CurrentDomain.AssemblyResolve += this.CurrentDomainAssemblyResolve;
@@ -101,8 +100,6 @@ namespace VSSonarExtensionUi.Model.PluginManager
         /// </summary>
         public string InstallPathFile { get; set; }
 
-        public string PluginsFolder { get; set; }
-        
         /// <summary>
         ///     Gets or sets the temp install path folder.
         /// </summary>
@@ -178,18 +175,17 @@ namespace VSSonarExtensionUi.Model.PluginManager
             return this.ErrorMessage;
         }
 
-        public List<IPlugin> LoadPluginsFromPluginFolder(INotificationManager manager, IConfigurationHelper helper, IVsEnvironmentHelper vshelper, IEnumerable<string> files)
+        public List<IPlugin> LoadPluginsFromPluginFolder(INotificationManager manager, IConfigurationHelper helper, IVsEnvironmentHelper vshelper, IEnumerable<string> files, string pluginsFolder)
         {
-            var folder = this.PluginsFolder;
             var pluginsData = new List<IPlugin>();
 
             var assemblies = new Dictionary<string, Assembly>();
-            if (!Directory.Exists(folder))
+            if (!Directory.Exists(pluginsFolder))
             {
-                Directory.CreateDirectory(folder);
+                Directory.CreateDirectory(pluginsFolder);
             }
 
-            var filesToUse = Directory.GetFiles(folder);
+            var filesToUse = Directory.GetFiles(pluginsFolder);
 
             if (files != null && files.Any())
             {
@@ -222,7 +218,7 @@ namespace VSSonarExtensionUi.Model.PluginManager
                         foreach (var assemblyref in references)
                         {
                             var fileName = assemblyref.Name + ".dll";
-                            var file = Path.Combine(this.PluginsFolder, fileName);
+                            var file = Path.Combine(pluginsFolder, fileName);
 
                             if (File.Exists(file))
                             {
@@ -256,9 +252,9 @@ namespace VSSonarExtensionUi.Model.PluginManager
             return pluginsData;
         }
 
-        public List<string> DeployPlugin(string fileName)
+        public List<string> DeployPlugin(string fileName, string pluginsFolder)
         {
-            return this.UnzipFiles(fileName, this.PluginsFolder);
+            return this.UnzipFiles(fileName, pluginsFolder);
         }
 
 
@@ -266,7 +262,8 @@ namespace VSSonarExtensionUi.Model.PluginManager
             ISonarConfiguration conf,
             IConfigurationHelper helper,
             INotificationManager manager,
-            IVsEnvironmentHelper vshelper)
+            IVsEnvironmentHelper vshelper,
+            string pluginsFolder)
         {
             var assembliesInFile = this.UnzipFiles(fileName, this.TempInstallPathFolder);
             var assembliesToTempFolder = this.GetAssembliesInTempFolder();
@@ -278,13 +275,13 @@ namespace VSSonarExtensionUi.Model.PluginManager
             if (plugin != null)
             {
                 Directory.Delete(this.TempInstallPathFolder, true);
-                this.UnzipFiles(fileName, this.PluginsFolder);
+                this.UnzipFiles(fileName, pluginsFolder);
             }
 
             foreach (string path in assembliesInFile)
             {
                 var file = Path.GetFileName(path);
-                plugin.SetDllLocation(Path.Combine(this.PluginsFolder, file));
+                plugin.SetDllLocation(Path.Combine(pluginsFolder, file));
             }
 
             return plugin;

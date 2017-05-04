@@ -13,6 +13,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarPlugins
 {
+    using System;
     using System.Collections.Generic;
 
     using VSSonarPlugins.Types;
@@ -92,5 +93,13 @@ namespace VSSonarPlugins
         /// <param name="solution">The solution.</param>
         /// <param name="configuration">The configuration.</param>
         void LaunchAnalysisOnSolution(VsSolutionItem solution, ISonarConfiguration configuration);
+
+        /// <summary>
+        /// Gets the additional commands.
+        /// </summary>
+        /// <returns></returns>
+        List<IPluginCommand> AdditionalCommands(Dictionary<string, Profile> profile);
     }
 }
+
+

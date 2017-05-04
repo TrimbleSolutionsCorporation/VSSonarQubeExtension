@@ -1010,10 +1010,6 @@ namespace VSSonarExtensionUi.ViewModel
                 {
                     this.LocaAnalyser.AssociateCommandCompeted += this.RunFullAnalysisAfterAssociation;
                 }
-                else
-                {
-                    this.LocaAnalyser.AssociateCommandCompeted += this.RunPreviewAnalysisAfterAssociation;
-                }
 
                 this.ProvisionProject(false);
             }
@@ -1136,7 +1132,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// </summary>
         public void OnIssuesChangeEvent()
         {
-            this.SelectedModel.OnAnalysisModeHasChange(EventArgs.Empty);
+            this.SelectedModel.RefreshIssuesEditor(EventArgs.Empty);
         }
 
         /// <summary>
@@ -1223,7 +1219,12 @@ namespace VSSonarExtensionUi.ViewModel
             this.ResetIssuesInViews();
 
             this.ResourceInEditor = this.AssociationModule.CreateAValidResourceFromServer(fullName, this.AssociationModule.AssociatedProject);
-            
+
+            if(!this.ResourceInEditor.Path.ToLower().Contains(this.ResourceInEditor.SolutionRoot.ToLower()))
+            {
+                return;
+            }
+
             if (this.ResourceInEditor == null)
             {
                 this.StatusMessage = "Could not check key type for resource, see VSonarOutput Window for more details and report";
@@ -1658,9 +1659,9 @@ namespace VSSonarExtensionUi.ViewModel
             
             this.SonarQubeModels = new ObservableCollection<IAnalysisModelBase>
                                       {
-                                          this.ServerViewModel, 
-                                          this.LocalViewModel, 
-                                          this.IssuesSearchModel
+                                          this.LocalViewModel,
+                                          this.IssuesSearchModel,
+                                          this.ServerViewModel
                                       };
 
             this.SonarQubeViews = new ObservableCollection<IViewModelBase>
@@ -1859,18 +1860,6 @@ namespace VSSonarExtensionUi.ViewModel
             }
 
             this.LocalViewModel.ErrorsFoundDuringAnalysis = false;
-        }
-
-        /// <summary>
-        /// Runs the preview analysis after association.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void RunPreviewAnalysisAfterAssociation(object sender, EventArgs e)
-        {
-            this.AnalysisFromSolutionRunning = false;
-            this.LocaAnalyser.AssociateCommandCompeted -= this.RunPreviewAnalysisAfterAssociation;
-            this.LocalViewModel.RunAnalysis(AnalysisTypes.PREVIEW, false);
         }
 
         /// <summary>

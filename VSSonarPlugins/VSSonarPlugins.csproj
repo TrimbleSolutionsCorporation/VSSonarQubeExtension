@@ -91,7 +91,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandCompleEventHandler.cs" />
     <Compile Include="Defect.cs" />
+    <Compile Include="Types\ExplanationLine.cs" />
     <Compile Include="IConfigurationHelper.cs" />
     <Compile Include="Types\BlameInformation.cs" />
     <Compile Include="Helpers\VSSonarUtils.cs" />
@@ -129,6 +131,7 @@
     <Compile Include="Types\LineCoverage.cs" />
     <Compile Include="Types\LocalAnalysisEventArgs.cs" />
     <Compile Include="Types\Metric.cs" />
+    <Compile Include="Types\IPluginCommand.cs" />
     <Compile Include="Types\PluginDescription.cs" />
     <Compile Include="Types\PluginException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

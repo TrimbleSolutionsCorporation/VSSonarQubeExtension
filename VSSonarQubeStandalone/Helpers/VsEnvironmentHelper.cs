@@ -157,6 +157,11 @@ namespace VSSonarQubeStandalone.Helpers
             throw new NotImplementedException();
         }
 
+        public string VsVersion()
+        {
+            throw new NotImplementedException();
+        }
+
         public void WriteDefaultOption(string sonarOptions, string communityOptions, string item, string value)
         {
             throw new NotImplementedException();

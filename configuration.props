@@ -8,11 +8,11 @@
         
         <!-- Version settings -->
         <MajorVersionNumber           Condition="'$(MajorVersionNumber)'==''">6</MajorVersionNumber>
-        <MinorVersionNumber           Condition="'$(MinorVersionNumber)'==''">2</MinorVersionNumber>
+        <MinorVersionNumber           Condition="'$(MinorVersionNumber)'==''">3</MinorVersionNumber>
         <BuildNumber                  Condition="'$(BuildNumber)'==''">0</BuildNumber>
         <RevisionNumber               Condition="'$(RevisionNumber)'==''">0</RevisionNumber>
         <AssemblyPatcherTaskOn        Condition="'$(AssemblyPatcherTaskOn)'==''">true</AssemblyPatcherTaskOn>
-        <NunitRunnerTaskEnabled       Condition="'$(NunitRunnerTaskEnabled)'==''">true</NunitRunnerTaskEnabled>
+        <NunitRunnerTaskEnabled       Condition="'$(NunitRunnerTaskEnabled)'==''">false</NunitRunnerTaskEnabled>
 		<ProduceCoverage       Condition="'$(ProduceCoverage)'==''">false</ProduceCoverage>
 
         <VSVersion Condition="'$(VSVersion)'==''">$(VisualStudioVersion)</VSVersion>
@@ -41,7 +41,7 @@
         <OBJDir>$(MSBuildThisFileDirectory)ObjDrop\$(OutFolder)\$(Configuration)\$(TSPlatform)</OBJDir>
         <IntermediateOutputPath>$(OBJDir)$(MSBuildProjectName)\</IntermediateOutputPath>
 		
-		<AutomationHelperVersion>1.4.6</AutomationHelperVersion>
+		<AutomationHelperVersion>1.4.7</AutomationHelperVersion>
         
         <MsbuildAutomationHelperVersion Condition="'$(VSVersion)'=='11.0'">431.$(AutomationHelperVersion)</MsbuildAutomationHelperVersion>
         <MsbuildAutomationHelperVersion Condition="'$(VSVersion)'=='12.0'">431.$(AutomationHelperVersion)</MsbuildAutomationHelperVersion>        

@@ -27,16 +27,13 @@ open Microsoft.Build.Utilities
 open VSSonarPlugins.Types
 open System.ComponentModel
 
-type ISonarLocalAnalyser =     
+type ISonarLocalAnalyser = 
   abstract member StopAllExecution : unit -> unit
   abstract member IsExecuting : unit -> bool
   abstract member GetResourceKey : VsFileItem * safeIsOn:bool -> string
   abstract member AnalyseFile : VsFileItem * Resource * onModifiedLinesOnly:bool *  version:double * ISonarConfiguration * ISQKeyTranslator * vsInter : IVsEnvironmentHelper * fromSave : bool -> unit
   abstract member RunProjectAnalysis : project : VsProjectItem * conf : ISonarConfiguration -> unit
-  abstract member RunIncrementalAnalysis : Resource * version:double * ISonarConfiguration -> unit
-  abstract member RunPreviewAnalysis : Resource * version:double * ISonarConfiguration -> unit
   abstract member RunFullAnalysis : Resource * version:double * ISonarConfiguration -> unit
-  abstract member GetIssues : config:ISonarConfiguration * project:Resource -> System.Collections.Generic.List<Issue>
   abstract member AssociateWithProject : project:Resource * conf:ISonarConfiguration -> unit
   abstract member OnDisconect : unit -> unit 
   abstract member ResetInitialization : unit -> unit

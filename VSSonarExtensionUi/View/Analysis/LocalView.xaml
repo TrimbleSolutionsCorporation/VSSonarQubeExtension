@@ -59,16 +59,6 @@
 
                 <ScrollViewer>
                     <StackPanel>
-                        <Button 
-                            Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                            Margin="0, 0, 0, 0"
-                                Content="Source Folder"
-                            ToolTip="Select Root Path for Project"
-                            Style="{DynamicResource SquareButtonStyle}" Command="{Binding OpenSourceDirCommand}"
-                            IsEnabled="{Binding IsAssociatedWithProject}">
-
-                        </Button>
-
                         <GroupBox Header="Analysis">
                             <StackPanel Orientation="Vertical">
                                 <StackPanel Orientation="Horizontal">
@@ -84,7 +74,7 @@
                                       Margin="10, 0, 0, 0"
                                       IsChecked="{Binding ShowFalsePositivesAndResolvedIssues}" ToolTip="Hide false positives and issues marked as resolved is server." >
                                     </CheckBox>
-                                    
+
                                     <ToggleButton Width="125"
                                         Margin="20, 0, 0, 1"
                                     	Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
@@ -92,21 +82,7 @@
                                     	IsChecked="{Binding FileAnalysisIsEnabled}" IsEnabled="{Binding CanRunLocalAnalysis}"/>
                                 </StackPanel>
 
-                                <Button 
-                                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                    Margin="0, 0, 0, 0"
-                                    Content="Incremental Analysis"
-                                    Style="{DynamicResource SquareButtonStyle}" Command="{Binding IncrementalCommand}"
-                                    IsEnabled="{Binding CanRunLocalAnalysis}">
-                                </Button>
 
-                                <Button 
-                                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                    Margin="0, 0, 0, 0"
-                                    Content="Preview Analysis"
-                                    Style="{DynamicResource SquareButtonStyle}" Command="{Binding PreviewCommand}"
-                                    IsEnabled="{Binding CanRunLocalAnalysis}">
-                                </Button>
 
                                 <Button 
                                     Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
@@ -129,18 +105,29 @@
                             Content="Open Analysis Log"
                             Style="{DynamicResource SquareButtonStyle}" Command="{Binding OpenLogCommand}"
                             IsEnabled="{Binding CanRunLocalAnalysis}">
-
                                 </Button>
-                                <controls:ProgressRing IsActive="{Binding AnalysisIsRunning}" ToolTip="Running Analysis" Foreground="{DynamicResource AccentColorBrush}"/>
-                                
-                            <controls:MetroProgressBar Grid.Row="1" IsIndeterminate="{Binding LoadingSonarData}"
+
+                                <controls:MetroProgressBar Grid.Row="1" IsIndeterminate="{Binding LoadingSonarData}"
                                                Value="{Binding ElementName=horizSlider, Path=Value}"
                                                ToolTip="{Binding AssociatingTextTooltip}"
-                                               Foreground="{DynamicResource AccentColorBrush}"/>                                
+                                               Foreground="{DynamicResource AccentColorBrush}"/>
                             </StackPanel>
                         </GroupBox>
-                        
-                        
+
+                        <ItemsControl ItemsSource="{Binding PluginsCommands}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Button 
+                                        Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Margin="0, 0, 0, 0"
+                                        Content="{Binding Name}" Style="{DynamicResource SquareButtonStyle}" Command="{Binding ExecuteCommand}" 
+                                        IsEnabled="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.CanRunLocalAnalysis}"
+                                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.VsFileItemInView}"
+                                        >
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
                     </StackPanel>
 
 

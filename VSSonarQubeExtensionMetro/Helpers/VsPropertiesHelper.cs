@@ -1114,5 +1114,14 @@ namespace VSSonarQubeExtension.Helpers
                 Debug.WriteLine(ex.Message);
             }
         }
+
+        /// <summary>
+        /// Vses the version.
+        /// </summary>
+        /// <returns></returns>
+        public string VsVersion()
+        {
+            return this.environment.Version;
+        }
     }
 }

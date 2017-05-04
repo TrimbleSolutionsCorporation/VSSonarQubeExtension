@@ -11,7 +11,8 @@ open System.Runtime.InteropServices
 open VSSonarPlugins
 
 type VSSonarQubeCmdExecutor(timeout : int64) =
-    let addEnvironmentVariable (startInfo:ProcessStartInfo) a b = startInfo.EnvironmentVariables.Add(a, b)
+    let addEnvironmentVariable (startInfo:ProcessStartInfo) a b = 
+        if not(startInfo.EnvironmentVariables.ContainsKey(a)) then startInfo.EnvironmentVariables.Add(a, b)
 
     let output : System.Collections.Generic.List<string> = new System.Collections.Generic.List<string>()
     let error : System.Collections.Generic.List<string> = new System.Collections.Generic.List<string>()

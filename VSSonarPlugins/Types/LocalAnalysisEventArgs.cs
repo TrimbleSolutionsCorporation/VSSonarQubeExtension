@@ -14,17 +14,87 @@
 namespace VSSonarPlugins.Types
 {
     using System;
+    using System.Collections.Generic;
+
+    public class LocalAnalysisEventFileAnalsysisComplete : EventArgs
+    {
+        /// <summary>
+        /// The ex.
+        /// </summary>
+        public readonly VsFileItem resource;
+
+        /// <summary>
+        /// The issues
+        /// </summary>
+        public readonly List<Issue> issues;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LocalAnalysisEventFileAnalsysisComplete"/> class.
+        /// </summary>
+        /// <param name="resource">The resource.</param>
+        /// <param name="issues">The issues.</param>
+        public LocalAnalysisEventFileAnalsysisComplete(VsFileItem resource, List<Issue> issues)
+        {
+            this.resource = resource;
+            this.issues = issues;
+        }
+    }
+
+    public class LocalAnalysisEventCommandAnalsysisComplete : EventArgs
+    {
+        /// <summary>
+        /// The ex.
+        /// </summary>
+        public readonly VsFileItem itemInView;
+
+        /// <summary>
+        /// The issues
+        /// </summary>
+        public readonly List<Issue> issues;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LocalAnalysisEventCommandAnalsysisComplete"/> class.
+        /// </summary>
+        /// <param name="resource">The resource.</param>
+        /// <param name="issues">The issues.</param>
+        public LocalAnalysisEventCommandAnalsysisComplete(VsFileItem itemInView, List<Issue> issues)
+        {
+            this.itemInView = itemInView;
+            this.issues = issues;
+        }
+    }
+
+    public class LocalAnalysisEventFullAnalsysisComplete : EventArgs
+    {
+        /// <summary>
+        /// The issues
+        /// </summary>
+        public readonly List<Issue> issues;
+
+        public LocalAnalysisEventFullAnalsysisComplete(List<Issue> issues)
+        {
+            this.issues = issues;
+        }
+    }
+
+    public class LocalAnalysisStdoutMessage : EventArgs
+    {
+        /// <summary>
+        /// The ex.
+        /// </summary>
+        public readonly string message;
+
+        public LocalAnalysisStdoutMessage(string message)
+        {
+            this.message = message;
+        }
+    }
 
     /// <summary>
     /// The model expectes this argument to be sent refering the plugin key
     /// </summary>
-    public class LocalAnalysisEventArgs : EventArgs
+    public class LocalAnalysisExceptionEventArgs : EventArgs
     {
-        /// <summary>
-        /// The key.
-        /// </summary>
-        public readonly string Key;
-
         /// <summary>
         /// The error message.
         /// </summary>
@@ -47,9 +117,8 @@ namespace VSSonarPlugins.Types
         /// <param name="ex">
         /// The ex.
         /// </param>
-        public LocalAnalysisEventArgs(string key, string errorMessage, Exception ex)
+        public LocalAnalysisExceptionEventArgs(string errorMessage, Exception ex)
         {
-            this.Key = key;
             this.Ex = ex;
             this.ErrorMessage = errorMessage;
         }

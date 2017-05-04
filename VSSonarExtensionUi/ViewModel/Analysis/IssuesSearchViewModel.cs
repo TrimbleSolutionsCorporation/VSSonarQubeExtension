@@ -451,7 +451,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         public void OnSelectedViewChanged()
         {
-            this.searchModel.OnAnalysisModeHasChange(EventArgs.Empty);
+            this.searchModel.RefreshIssuesEditor(EventArgs.Empty);
             Debug.WriteLine("Name Changed");
         }
 
