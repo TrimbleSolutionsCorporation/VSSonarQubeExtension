@@ -1,9 +1,9 @@
 ﻿namespace VSSonarPlugins.Types
 {
     /// <summary>
-    /// 
+    /// CoverageReport helper
     /// </summary>
-    public class CoverageDifferencial
+    public class CoverageReport
     {
         /// <summary>
         /// Gets or sets the identifier.
@@ -27,7 +27,7 @@
         /// <value>
         /// The uncovered conditons.
         /// </value>
-        public int UncoveredConditons { get; set; }
+        public long LinesOfCode { get; set; }
 
         /// <summary>
         /// Gets or sets the uncovered lines.
@@ -35,7 +35,7 @@
         /// <value>
         /// The uncovered lines.
         /// </value>
-        public int UncoveredLines { get; set; }
+        public long NewLines { get; set; }
 
         /// <summary>
         /// Gets or sets the new coverage.
@@ -44,5 +44,13 @@
         /// The new coverage.
         /// </value>
         public decimal NewCoverage { get; set; }
+
+        /// <summary>
+        /// Gets or sets the coverage.
+        /// </summary>
+        /// <value>
+        /// The coverage.
+        /// </value>
+        public decimal Coverage { get; set; }
     }
 }

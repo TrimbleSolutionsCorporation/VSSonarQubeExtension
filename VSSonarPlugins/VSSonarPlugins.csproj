@@ -93,6 +93,7 @@
   <ItemGroup>
     <Compile Include="CommandCompleEventHandler.cs" />
     <Compile Include="Defect.cs" />
+    <Compile Include="Types\CoverageReport.cs" />
     <Compile Include="Types\ExplanationLine.cs" />
     <Compile Include="IConfigurationHelper.cs" />
     <Compile Include="Types\BlameInformation.cs" />

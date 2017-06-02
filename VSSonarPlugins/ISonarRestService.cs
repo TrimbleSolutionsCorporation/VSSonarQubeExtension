@@ -292,6 +292,14 @@
         Dictionary<string, CoverageDifferencial> GetCoverageReportOnNewCodeOnLeak(ISonarConfiguration props, Resource project);
 
         /// <summary>
+        /// Gets the coverage report.
+        /// </summary>
+        /// <param name="props">The props.</param>
+        /// <param name="project">The project.</param>
+        /// <returns></returns>
+        Dictionary<string, CoverageReport> GetCoverageReport(ISonarConfiguration props, Resource project);
+
+        /// <summary>
         /// Updates the property.
         /// </summary>
         /// <param name="conf">The conf.</param>

@@ -901,6 +901,9 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
         member this.GetCoverageReportOnNewCodeOnLeak(conf: ISonarConfiguration, project: Resource) =
             DifferencialService.GetCoverageReportOnNewCodeOnLeak(conf, project, httpconnector)
 
+        member this.GetCoverageReport(conf: ISonarConfiguration, project: Resource) =
+            DifferencialService.GetCoverageReport(conf, project, httpconnector)
+
         // ======================
         // Settings Service Calls
         // ======================

@@ -6,7 +6,7 @@
         xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:local="clr-namespace:VSSonarExtensionUi.View.Helpers"
             WindowStartupLocation="CenterScreen" 
-            Width="700"
+            Width="900"
             Height="430"
             WindowStyle="None">
 
@@ -125,6 +125,7 @@
                     <TextBox x:Name="VersionName" Width="100"></TextBox>
                     <Button DockPanel.Dock="Right" x:Name="CreateVersion" Width="100"  Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="_Create Version" Click="CreateVersionClick"  Margin="0,0,10,0" />
                     <Button DockPanel.Dock="Right" x:Name="GetNewCoverageOnLeak" Width="150"  Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="_Generate Cov Leak Report" Click="GetCoverageOnLeakClick"  Margin="0,0,10,0" />
+                    <Button DockPanel.Dock="Right" x:Name="GetCoverageReport" Width="150"  Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="_Generate Cov Report" Click="GetCoverageReportDetailed"  Margin="0,0,10,0" />
 
                 </WrapPanel>                
                 <WrapPanel DockPanel.Dock="Right" Grid.Column="1">
