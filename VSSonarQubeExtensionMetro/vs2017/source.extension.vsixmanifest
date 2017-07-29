@@ -1,6 +1,6 @@
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="VSSonarExtension2017-6FC41A4F-2B69-4DFB-98D0-08D50056643E" Version="6.3.3" Language="en-US" Publisher="Trimble Solutions Ltd" />
+        <Identity Id="VSSonarExtension2017-6FC41A4F-2B69-4DFB-98D0-08D50056643E" Version="6.3.4" Language="en-US" Publisher="Trimble Solutions Ltd" />
         <DisplayName>VSSonarExtension2017</DisplayName>
         <Description xml:space="preserve">Visual Studio Extension For SonarQube(TM) Version 2017 - Rosylin</Description>
         <License>LICENSE.txt</License>

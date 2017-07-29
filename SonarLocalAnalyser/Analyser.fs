@@ -222,7 +222,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                 let currentVersion = rk.GetValue("CurrentVersion").ToString();
                 use  key = rk.OpenSubKey(currentVersion)
                 pathdata <- key.GetValue("JavaHome").ToString()
-            else                
+            else
                 use rk = localKey64.OpenSubKey(JAVA_KEY)
                 if rk <> null then
                     let currentVersion = rk.GetValue("CurrentVersion").ToString();
@@ -570,66 +570,68 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
         x.AnalysisIsRunning <- false
 
     member x.RunFileAnalysisThread() = 
+
             let itemInAnalysis = x.ItemInView
             let localissues : System.Collections.Generic.List<Issue> = new System.Collections.Generic.List<Issue>()
-            let plugin = GetPluginThatSupportsResource(itemInAnalysis)
-            if plugin = null then
-                let errorInExecution = new LocalAnalysisExceptionEventArgs("Local Analyser Cannot Run Analyis: Not Supported: ", new ResourceNotSupportedException())
-                completionEvent.Trigger([|x; errorInExecution|])
-                x.AnalysisIsRunning <- false
-            else
-                let GetSourceFromServer() = 
-                    try
-                        let keyOfItem = (x :> ISonarLocalAnalyser).GetResourceKey(itemInAnalysis, true)
-                        let source = restService.GetSourceForFileResource(x.Conf, keyOfItem)
-                        VsSonarUtils.GetLinesFromSource(source, "\r\n")
-                    with
-                    | ex ->
+            try
+                let plugin = GetPluginThatSupportsResource(itemInAnalysis)
+                if plugin = null then
+                    let errorInExecution = new LocalAnalysisExceptionEventArgs("Local Analyser Cannot Run Analyis: Not Supported: ", new ResourceNotSupportedException())
+                    completionEvent.Trigger([|x; errorInExecution|])
+                    x.AnalysisIsRunning <- false
+                else
+                    let GetSourceFromServer() = 
                         try
-                            let keyOfItem = (x :> ISonarLocalAnalyser).GetResourceKey(itemInAnalysis, false)
+                            let keyOfItem = (x :> ISonarLocalAnalyser).GetResourceKey(itemInAnalysis, true)
                             let source = restService.GetSourceForFileResource(x.Conf, keyOfItem)
                             VsSonarUtils.GetLinesFromSource(source, "\r\n")
                         with
-                        | ex -> ""
+                        | ex ->
+                            try
+                                let keyOfItem = (x :> ISonarLocalAnalyser).GetResourceKey(itemInAnalysis, false)
+                                let source = restService.GetSourceForFileResource(x.Conf, keyOfItem)
+                                VsSonarUtils.GetLinesFromSource(source, "\r\n")
+                            with
+                            | ex -> ""
                
-                let extension = plugin.GetLocalAnalysisExtension(x.Conf)
-                if extension <> null then
-                    try
-                        if cachedProfiles.ContainsKey(x.Project.Name) then
-                            if cachedProfiles.[x.Project.Name].ContainsKey(plugin.GetLanguageKey(itemInAnalysis)) then
-                                let issues = extension.ExecuteAnalysisOnFile(itemInAnalysis, x.Project, x.Conf, x.FromSave)
-                                lock syncLock (
-                                    fun () ->
-                                        let ProcessIssue(issue:Issue, key:string) = 
-                                            issue.Component <- key
-                                            if x.Exclusions = null then
-                                                localissues.Add(issue)
-                                            else
-                                                let mutable excluded = false
-                                                for exclusion in x.Exclusions do
-                                                    if issue.Component.Contains(exclusion.FileRegx) && issue.Rule.Equals(exclusion.RuleRegx) then
-                                                        excluded <- true
+                    let extension = plugin.GetLocalAnalysisExtension(x.Conf)
+                    if extension <> null then
 
-                                                    if issue.Component.Contains(exclusion.FileRegx) && exclusion.RuleRegx.Equals("*") then
-                                                        excluded <- true
-
-                                                if not(excluded) then
+                            if cachedProfiles.ContainsKey(x.Project.Name) then
+                                if cachedProfiles.[x.Project.Name].ContainsKey(plugin.GetLanguageKey(itemInAnalysis)) then
+                                    let issues = extension.ExecuteAnalysisOnFile(itemInAnalysis, x.Project, x.Conf, x.FromSave)
+                                    lock syncLock (
+                                        fun () ->
+                                            let ProcessIssue(issue:Issue, key:string) = 
+                                                issue.Component <- key
+                                                if x.Exclusions = null then
                                                     localissues.Add(issue)
+                                                else
+                                                    let mutable excluded = false
+                                                    for exclusion in x.Exclusions do
+                                                        if issue.Component.Contains(exclusion.FileRegx) && issue.Rule.Equals(exclusion.RuleRegx) then
+                                                            excluded <- true
 
-                                        let keydata = x.SqTranslator.TranslatePath(itemInAnalysis, x.VsInter, restService, sonarConfig)
-                                        issues |> Seq.iter (fun issue -> ProcessIssue(issue, keydata.Key))
-                                    )
-                        else
-                            (x :> ISonarLocalAnalyser).AssociateWithProject(x.Project, x.Conf)
+                                                        if issue.Component.Contains(exclusion.FileRegx) && exclusion.RuleRegx.Equals("*") then
+                                                            excluded <- true
 
-                    with
-                    | ex -> 
-                        notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Failed to analyse file : " + itemInAnalysis.FilePath + " : " + ex.Message))
-                        notificationManager.ReportException(ex)
+                                                    if not(excluded) then
+                                                        localissues.Add(issue)
 
-                let executionComplete = new LocalAnalysisEventFileAnalsysisComplete(itemInAnalysis, localissues);
-                completionEvent.Trigger([|x; executionComplete|])
-                x.AnalysisIsRunning <- false
+                                            let keydata = x.SqTranslator.TranslatePath(itemInAnalysis, x.VsInter, restService, sonarConfig)
+                                            issues |> Seq.iter (fun issue -> ProcessIssue(issue, keydata.Key))
+                                        )
+                            else
+                                (x :> ISonarLocalAnalyser).AssociateWithProject(x.Project, x.Conf)
+
+            with
+            | ex -> 
+                notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Failed to analyse file : " + itemInAnalysis.FilePath + " : " + ex.Message))
+                notificationManager.ReportException(ex)
+
+            let executionComplete = new LocalAnalysisEventFileAnalsysisComplete(itemInAnalysis, localissues);
+            completionEvent.Trigger([|x; executionComplete|])
+            x.AnalysisIsRunning <- false
 
     member x.CancelExecution(thread : Thread) =
         if not(obj.ReferenceEquals(exec, null)) then
@@ -766,8 +768,8 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
 
         member x.OnDisconect() =
             cachedProfiles.Clear()
-            profileUpdated <- false        
-            profileCannotBeRetrived <- false    
+            profileUpdated <- false
+            profileCannotBeRetrived <- false
 
         member x.AssociateWithProject(project : Resource, conf:ISonarConfiguration) =
             if project <> null && conf <> null then
@@ -798,7 +800,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                     notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Start Update profile"))
                     GetQualityProfiles(conf, project, x)
                 with
-                | ex ->                    
+                | ex ->
                     notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Failed to Update profile"))
                     notificationManager.ReportException(ex)
                     profileUpdated <- true
@@ -825,4 +827,3 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
 
             else
                 null
-                
