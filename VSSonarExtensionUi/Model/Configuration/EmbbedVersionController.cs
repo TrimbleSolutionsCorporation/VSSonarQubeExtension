@@ -5,6 +5,7 @@
     using System.Diagnostics;
     using System.IO;
     using System.IO.Compression;
+    using System.Linq;
     using System.Net;
     using System.Reflection;
     using VSSonarPlugins;
@@ -72,7 +73,6 @@
             this.notificationManager = notificationManager;
             this.configHelper = configHelper;
             this.rest = restService;
-            this.GenerateVersionData();
         }
 
         /// <summary>
@@ -93,7 +93,7 @@
         /// <summary>
         /// Generates the version data.
         /// </summary>
-        private void GenerateVersionData()
+        private void GenerateVersionData(ISonarConfiguration configuration)
         {
             var version = new VersionData();
             version.DownloadPath = "/static/csharp/SonarLint.zip";
@@ -103,6 +103,18 @@
             version.InstallPath = Path.Combine(this.roslynHomeDiagPath, "csharp", "analyser");
             version.DownloadPath = "/static/csharp/SonarAnalyzer.zip";
             this.InternalVersionsCsharp.Add(version);
+
+            var settings = this.rest.GetSettings(configuration);
+            version = new VersionData();
+            version.InstallPath = Path.Combine(this.roslynHomeDiagPath, "csharp", "analyser");
+
+            var result = settings.Where(x => x.key == "sonaranalyzer-cs.staticResourceName").FirstOrDefault();
+
+            if (result != null)
+            {
+                version.DownloadPath = "/static/csharp/" + result.Value;
+                this.InternalVersionsCsharp.Add(version);
+            }
         }
 
         /// <summary>
@@ -111,9 +123,9 @@
         /// <param name="configuration">The configuration.</param>
         internal void InitializedServerDiagnostics(ISonarConfiguration configuration)
         {
+
             try
             {
-                this.InUsePluginsWithDiagnostics.Clear();
                 this.SelectCSharpZipFileToUse(configuration);
                 if (this.InUsePluginsWithDiagnostics.Count > 0)
                 {
@@ -228,6 +240,7 @@
         /// </summary>
         private void SelectCSharpZipFileToUse(ISonarConfiguration configuration)
         {
+            this.GenerateVersionData(configuration);
             this.InUsePluginsWithDiagnostics.Clear();
             foreach (var version in this.InternalVersionsCsharp)
             {
