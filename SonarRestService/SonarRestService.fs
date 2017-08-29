@@ -1563,8 +1563,10 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                         ()
 
                     answer.Components |> Seq.iter (fun elem -> ProcessComponents(elem))
+                    let length = answer.Components.Length
+                    let size = answer.Paging.PageSize
 
-                    if answer.Paging.PageSize = answer.Components.Length then
+                    if answer.Components.Length > 0 then
                         GetComponentsRec(page + 1)
 
                 GetComponentsRec(1)
