@@ -1543,7 +1543,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 let resourcelist = System.Collections.Generic.List<Resource>()
 
                 let rec GetComponentsRec(page:int) = 
-                    let url = sprintf "/api/components/search?qualifiers=TRK&ps=100&p=%i" page
+                    let url = sprintf "/api/components/search_projects?ps=100&p=%i" page
                     let response = httpconnector.HttpSonarGetRequest(conf, url)
                     let answer = JsonComponents.Parse(response)
 

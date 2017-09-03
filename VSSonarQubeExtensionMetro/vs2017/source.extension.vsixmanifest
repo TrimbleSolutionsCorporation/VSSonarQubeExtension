@@ -1,25 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
-    <Metadata>
-        <Identity Id="VSSonarExtension2017-6FC41A4F-2B69-4DFB-98D0-08D50056643E" Version="6.3.4" Language="en-US" Publisher="Trimble Solutions Ltd" />
-        <DisplayName>VSSonarExtension2017</DisplayName>
-        <Description xml:space="preserve">Visual Studio Extension For SonarQube(TM) Version 2017 - Rosylin</Description>
-        <License>LICENSE.txt</License>
-        <Icon>Resources\Package.ico</Icon>
-        <PreviewImage>Resources\vsiximage.png</PreviewImage>
-    </Metadata>
-    <Installation>
-        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[15.0]" />
-        <InstallationTarget Version="[15.0]" Id="Microsoft.VisualStudio.Pro" />
-        <InstallationTarget Version="[15.0]" Id="Microsoft.VisualStudio.Enterprise" />
-    </Installation>
-    <Dependencies>
-        <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" Version="[4.5,)" />
-    </Dependencies>
-    <Assets>
-        <Asset Type="Microsoft.VisualStudio.VsPackage" Path="VSSonarExtensionMetroVs2015.pkgdef" />
-        <Asset Type="Microsoft.VisualStudio.MefComponent" Path="VSSonarExtensionMetroVs2017.dll" />
-    </Assets>
-    <Prerequisites>
-        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,16.0)" DisplayName="Visual Studio core editor" />
-    </Prerequisites>
+  <Metadata>
+    <Identity Id="VSSonarExtension2017.3abe7dac-900d-4091-b2e4-46158654c502" Version="6.3.6" Language="en-US" Publisher="Jorge Costa" />
+    <DisplayName>VSSonarExtension2017</DisplayName>
+    <Description xml:space="preserve">Visual Studio Extension For SonarQube(TM) Version 2017 - Rosylin</Description>
+    <License>LICENSE.txt</License>
+    <Icon>Resources\Package.ico</Icon>
+    <PreviewImage>Resources\vsiximage.png</PreviewImage>
+  </Metadata>
+  <Installation>
+    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[15.0]" />
+  </Installation>
+  <Dependencies>
+    <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
+  </Dependencies>
+  <Assets>
+    <Asset Type="Microsoft.VisualStudio.VsPackage" Path="VSSonarExtensionMetroVs2015.pkgdef" />
+    <Asset Type="Microsoft.VisualStudio.MefComponent" Path="VSSonarExtensionMetroVs2017.dll" />
+  </Assets>
+  <Prerequisites>
+    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,16.0)" DisplayName="Visual Studio core editor" />
+  </Prerequisites>
 </PackageManifest>
