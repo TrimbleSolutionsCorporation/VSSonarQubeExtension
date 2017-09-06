@@ -39,9 +39,9 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using VSSonarPlugins;
     using VSSonarPlugins.Helpers;
     using VSSonarPlugins.Types;
-        
+
     /// <summary>
-    ///     The analysis types.
+    /// The analysis types.
     /// </summary>
     public enum AnalysisTypes
     {
@@ -54,6 +54,11 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         ///     The analysis.
         /// </summary>
         ANALYSIS,
+
+        /// <summary>
+        /// The issues
+        /// </summary>
+        ISSUES,
 
         /// <summary>
         ///     The none.
@@ -260,6 +265,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         ///     Gets or sets the analysis command.
         /// </summary>
         public ICommand AnalysisCommand { get; set; }
+
+        /// <summary>
+        /// Gets or sets the preview analysis command.
+        /// </summary>
+        /// <value>
+        /// The preview analysis command.
+        /// </value>
+        public ICommand PreviewAnalysisCommand { get; set; }
 
         /// <summary>
         /// Gets or sets the new issues during session command.
@@ -629,6 +642,17 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         }
 
         /// <summary>
+        /// Called when [preview analysis command].
+        /// </summary>
+        public void OnPreviewAnalysisCommand()
+        {
+            this.FileAnalysisIsEnabled = false;
+            this.notificationManager.StartedWorking("Running Preview Analysis");
+            this.CanRunAnalysis = false;
+            this.RunLocalAnalysis(AnalysisTypes.ISSUES, false, null);
+        }
+
+        /// <summary>
         /// Runs the analysis.
         /// </summary>
         /// <param name="mode">The mode.</param>
@@ -822,6 +846,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         private void InitCommanding()
         {
             this.AnalysisCommand = new RelayCommand(this.OnAnalysisCommand);
+            this.PreviewAnalysisCommand = new RelayCommand(this.OnPreviewAnalysisCommand);
             this.NewIssuesDuringSessionCommand = new RelayCommand(this.ShowNewAddedIssuesAndLock);
             this.StopLocalAnalysisCommand = new RelayCommand(this.OnStopLocalAnalysisCommand);
             this.OpenLogCommand = new RelayCommand(this.OnOpenLogCommand);
@@ -940,7 +965,16 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                         this.localAnalyserModule.RunFullAnalysis(
                             this.associatedProject,
                             AuthtenticationHelper.AuthToken.SonarVersion,
-                            AuthtenticationHelper.AuthToken);
+                            AuthtenticationHelper.AuthToken, false);
+                        break;
+                    case AnalysisTypes.ISSUES:
+                        this.ValidateAdminRights();
+                        this.AllLog.Clear();
+                        this.OutputLog = string.Empty;
+                        this.localAnalyserModule.RunFullAnalysis(
+                            this.associatedProject,
+                            AuthtenticationHelper.AuthToken.SonarVersion,
+                            AuthtenticationHelper.AuthToken, true);
                         break;
                     default:
                         throw new NotImplementedException();

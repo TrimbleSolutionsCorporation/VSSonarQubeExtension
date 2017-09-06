@@ -33,7 +33,7 @@ type ISonarLocalAnalyser =
   abstract member GetResourceKey : VsFileItem * safeIsOn:bool -> string
   abstract member AnalyseFile : VsFileItem * Resource * onModifiedLinesOnly:bool *  version:double * ISonarConfiguration * ISQKeyTranslator * vsInter : IVsEnvironmentHelper * fromSave : bool -> unit
   abstract member RunProjectAnalysis : project : VsProjectItem * conf : ISonarConfiguration -> unit
-  abstract member RunFullAnalysis : Resource * version:double * ISonarConfiguration -> unit
+  abstract member RunFullAnalysis : Resource * version:double * ISonarConfiguration * IsPreview:bool -> unit
   abstract member AssociateWithProject : project:Resource * conf:ISonarConfiguration -> unit
   abstract member OnDisconect : unit -> unit 
   abstract member ResetInitialization : unit -> unit

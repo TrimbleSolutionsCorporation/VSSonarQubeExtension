@@ -46,7 +46,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         /// The minimum version
         /// </summary>
-        public static readonly string MinimumVersion = "1.9.3";
+        public static readonly string MinimumVersion = "1.9.13";
 
         /// <summary>
         ///     The default value sonar sources.
@@ -332,7 +332,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                this.SQMSBuildRunnerVersion = "1.1";
+                this.SQMSBuildRunnerVersion = "3.0.2.656";
             }
 
             try

@@ -125,3 +125,6 @@ buildlog2015.txt
 .vs/**
 buildlog2017.txt
 *.nupkg
+/.clang-tidy
+/compile_commands.json
+/UpgradeLog.htm
