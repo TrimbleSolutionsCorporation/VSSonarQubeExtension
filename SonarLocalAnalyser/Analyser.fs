@@ -504,7 +504,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                     let message = new LocalAnalysisStdoutMessage(e.Data)
                     stdOutEvent.Trigger([|x; message|])
                     
-                    if e.Data.Contains("INFO: Light HTML Issues Report generated:") then
+                    if e.Data.Contains("HTML Issues Report generated:") then
                         let sep = [| "HTML Issues Report generated:" |]
                         let path = e.Data.Split(sep, StringSplitOptions.RemoveEmptyEntries).[1].Trim()
                         if File.Exists(path) then
