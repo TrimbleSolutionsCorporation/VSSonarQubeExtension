@@ -22,7 +22,12 @@ open VSSonarPlugins.Types
 open RestSharp
 
 type JsonSonarConnector() = 
-    let userRoamingFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "VSSonarExtension\\restCalls.log");
+
+    let userRoamingFile =
+        // required to call https://sonarqube.com 
+        // not convinced on the scalability of this approach should Tls12 become vulnerable
+        ServicePointManager.SecurityProtocol <- SecurityProtocolType.Tls12
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "VSSonarExtension\\restCalls.log");
 
     interface IHttpSonarConnector with
         member this.HttpSonarPutRequest(userConf : ISonarConfiguration, url : string, data : Map<string, string>) =
