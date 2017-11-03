@@ -66,9 +66,9 @@ let SetSetting(newConf : ISonarConfiguration, setting: Setting, project : Resour
 
     let setValuesOption = 
         if setting.Values.Count <> 0 then
-            setting.Values |> Seq.iter (fun elem -> options.Add(new System.Tuple<string,string>("values", elem)))
+            setting.Values |> Seq.iter (fun elem -> options.Add(("values", elem)))
         elif setting.Value <> null then
-            options.Add(new System.Tuple<string,string>("value", setting.Value))
+            options.Add(("value", setting.Value))
 
         if setting.FieldValues.Count <> 0 then
             let GetValuesOfField(values:System.Collections.Generic.List<string * string>)=
@@ -79,14 +79,14 @@ let SetSetting(newConf : ISonarConfiguration, setting: Setting, project : Resour
                 data
 
             setting.FieldValues
-            |> Seq.iter (fun elem -> options.Add(new System.Tuple<string,string>("fieldValues", GetValuesOfField(elem.Values))) )
+            |> Seq.iter (fun elem -> options.Add(("fieldValues", GetValuesOfField(elem.Values))) )
 
     if project = null then
-        options.Add(new System.Tuple<string,string>("key", setting.key))
+        options.Add(("key", setting.key))
         setValuesOption
     else
-        options.Add(new System.Tuple<string,string>("component", project.Key))
-        options.Add(new System.Tuple<string,string>("key", setting.key))
+        options.Add(("component", project.Key))
+        options.Add(("key", setting.key))
         setValuesOption
 
     let response = httpconnector.HttpSonarPostRequestTuple(newConf, url, options)

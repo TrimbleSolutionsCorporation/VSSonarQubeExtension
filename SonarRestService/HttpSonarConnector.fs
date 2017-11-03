@@ -64,8 +64,8 @@ type JsonSonarConnector() =
             client.Authenticator <- new HttpBasicAuthenticator(userConf.Username, userConf.Password)
             let request = new RestRequest(url, Method.POST);
 
-            for elem in data do
-                request.AddParameter(elem.Item1, elem.Item2) |> ignore
+            for elem1,elem2 in data do
+                request.AddParameter(elem1, elem2) |> ignore
 
             request.RequestFormat <- DataFormat.Json
 

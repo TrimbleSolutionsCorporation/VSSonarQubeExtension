@@ -711,13 +711,16 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         private void OnLaunchCompoSearchDialogCommand()
         {
-            Application.Current.Dispatcher.Invoke(
-                delegate
-                {
-                    var compoenentsList = SearchComponenetDialog.SearchComponents(AuthtenticationHelper.AuthToken, this.restService, this.AvailableProjects.ToList<Resource>(), this.componentList, this.vshelper);
-                    this.componentList.Clear();
-                    this.componentList.AddRange(compoenentsList);
-                });
+            try
+            {
+                var compoenentsList = SearchComponenetDialog.SearchComponents(AuthtenticationHelper.AuthToken, this.restService, this.AvailableProjects.ToList<Resource>(), this.componentList, this.vshelper);
+                this.componentList.Clear();
+                this.componentList.AddRange(compoenentsList);
+            }
+            catch(Exception ex)
+            {
+                Debug.WriteLine("Dialog has Crashed: " + ex.Message);
+            }
         }
 
         /// <summary>

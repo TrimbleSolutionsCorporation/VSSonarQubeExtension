@@ -719,7 +719,8 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                 notificationManager.ReportException(ex)
 
             let executionComplete = new LocalAnalysisEventFileAnalsysisComplete(itemInAnalysis, localissues);
-            completionEvent.Trigger([|x; executionComplete|])
+
+            try completionEvent.Trigger([|x; executionComplete|]) with | ex -> ()
             x.AnalysisIsRunning <- false
 
     member x.CancelExecution(thread : Thread) =

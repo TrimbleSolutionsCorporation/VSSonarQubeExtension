@@ -934,10 +934,14 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
         member this.CancelRequest() =
             cancelRequest <- true
 
-        member this.IndexServerResources(conf : ISonarConfiguration, project : Resource) =                   
-            let url = "/api/resources/index?qualifiers=DIR,TRK,BRC&depth=-1&resource=" + project.Key
-            getResourcesFromResponseContent(httpconnector.HttpSonarGetRequest(conf, url))
-        
+        member this.IndexServerResources(conf : ISonarConfiguration, project : Resource) = 
+            
+            if conf.SonarVersion < 6.3 then
+                let url = "/api/resources/index?qualifiers=DIR,TRK,BRC&depth=-1&resource=" + project.Key
+                getResourcesFromResponseContent(httpconnector.HttpSonarGetRequest(conf, url))
+            else
+                ComponentService.IndexServerResources(conf, project, httpconnector)
+
         member this.GetBlameLine(conf:ISonarConfiguration, key:string, line:int) = 
             let url = "/api/sources/scm?key=" + key.Trim() + "&commits_by_line=true&from=" + line.ToString() + "&to=" + line.ToString()
             let reply = httpconnector.HttpSonarGetRequest(conf, url)
@@ -1539,40 +1543,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 let url = "/api/resources"
                 getResourcesFromResponseContent(httpconnector.HttpSonarGetRequest(conf, url))
             else
-
-                let resourcelist = System.Collections.Generic.List<Resource>()
-
-                let rec GetComponentsRec(page:int) = 
-                    let url = sprintf "/api/components/search_projects?ps=100&p=%i" page
-                    let response = httpconnector.HttpSonarGetRequest(conf, url)
-                    let answer = JsonComponents.Parse(response)
-
-                    let ProcessComponents(elem:JsonComponents.Component) =
-                        let resource = new Resource()
-                        resource.Key <- elem.Key
-                        resource.Name <- elem.Name
-                        let keysElements = elem.Key.Split(':')
-                        if elem.Name.EndsWith(" " + keysElements.[keysElements.Length - 1]) then
-                            // this is brancnh
-                            resource.IsBranch <- true
-                            resource.BranchName <- keysElements.[keysElements.Length - 1]
-
-                        resource.IdType <- elem.Id
-                        resource.Qualifier <- elem.Qualifier
-                        resourcelist.Add(resource)
-                        ()
-
-                    answer.Components |> Seq.iter (fun elem -> ProcessComponents(elem))
-                    let length = answer.Components.Length
-                    let size = answer.Paging.PageSize
-
-                    if answer.Components.Length > 0 then
-                        GetComponentsRec(page + 1)
-
-                GetComponentsRec(1)
-                resourcelist
-
-
+                ComponentService.SearchProjects(conf, httpconnector)
 
         member this.GetEnabledRulesInProfile(conf : ISonarConfiguration, language : string, profile : string) =
             let url = "/api/profiles?language=" + HttpUtility.UrlEncode(language) + "&name=" + HttpUtility.UrlEncode(profile)

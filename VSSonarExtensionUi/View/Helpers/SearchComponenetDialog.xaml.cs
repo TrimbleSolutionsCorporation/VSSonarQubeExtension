@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -46,7 +47,7 @@
         /// <summary>
         /// The component list
         /// </summary>
-        private readonly ObservableCollection<Resource> componentList = new ObservableCollection<Resource>();
+        private readonly ObservableCollection<Resource> componentList;
 
         /// <summary>
         /// The vshelper
@@ -60,30 +61,86 @@
         /// <param name="rest">The rest.</param>
         /// <param name="availableProjects">The available projects.</param>
         /// <param name="listofSaveComp">The listof save comp.</param>
-        public SearchComponenetDialog(ISonarConfiguration conf, ISonarRestService rest, List<Resource> availableProjects, List<Resource> listofSaveComp, IVsEnvironmentHelper vshelper)
+        /// <param name="vshelper">The vshelper.</param>
+        public SearchComponenetDialog(ISonarConfiguration conf,
+            ISonarRestService rest,
+            List<Resource> availableProjectsIn,
+            List<Resource> listofSaveComp,
+            IVsEnvironmentHelper vshelper)
         {
             this.selectedItems = new ObservableCollection<Resource>();
-            this.availableProjects = availableProjects;
+            this.availableProjects = new ObservableCollection<Resource>(availableProjectsIn);
+            this.componentList = new ObservableCollection<Resource>();
+
             this.conf = conf;
             this.rest = rest;
             this.vshelper = vshelper;
 
             InitializeComponent();
-            this.SearchDataGrid.ItemsSource = this.componentList;
-            this.SearchDataGrid.Items.Refresh();
-            this.Projects.ItemsSource = availableProjects;
+
+            this.Projects.ItemsSource = this.availableProjects;
             this.SelectedDataGrid.ItemsSource = this.selectedItems;
+            this.SearchDataGrid.ItemsSource = this.componentList;
+            
             if (listofSaveComp != null)
             {
                 foreach (var item in listofSaveComp)
                 {
-                    this.selectedItems.Add(item);
+                    try
+                    {
+                        IEnumerable<Resource> resourcesWithSameKey =
+                                from resource in this.availableProjects
+                                where this.CompareKeysInProjects(resource, item.Key)
+                                select resource;
+
+                        var element = resourcesWithSameKey.First();
+
+                        if(element.BranchResources.Count != 0)
+                        {
+                            element = element.BranchResources.First(x => x.Key.Equals(item.Key));
+                        }
+
+                        element.Qualifier = "TRK";
+
+                        this.selectedItems.Add(element);
+                    }
+                    catch(Exception ex)
+                    {
+                        Debug.WriteLine("Failed to import project: ", ex.Message);
+                    }
                 }
+
+                this.SearchDataGrid.Items.Refresh();
             }
 
             
             this.MouseLeftButtonDown += this.MouseLeftButtonDownPressed;
             this.SearchData.KeyDown += new KeyEventHandler(this.KeyboardKeyDown);
+        }
+
+        /// <summary>
+        /// Compares the keys in projects.
+        /// </summary>
+        /// <param name="resource">The resource.</param>
+        /// <param name="key">The key.</param>
+        /// <returns></returns>
+        private bool CompareKeysInProjects(Resource resource, string key)
+        {
+            if(resource.BranchResources.Count != 0)
+            {
+                try
+                {
+                    return resource.BranchResources.First(x => x.Key.Equals(key)) != null;
+                }
+                catch(Exception)
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return resource.Key.Equals(key);
+            }
         }
 
         /// <summary>
@@ -94,7 +151,12 @@
         /// <param name="availableProjects">The available projects.</param>
         /// <param name="listofSaveComp">The listof save comp.</param>
         /// <returns>returns saved component list</returns>
-        public static List<Resource> SearchComponents(ISonarConfiguration conf, ISonarRestService rest, List<Resource> availableProjects, List<Resource> listofSaveComp, IVsEnvironmentHelper helper)
+        public static List<Resource> SearchComponents(
+            ISonarConfiguration conf, 
+            ISonarRestService rest, 
+            List<Resource> availableProjects, 
+            List<Resource> listofSaveComp, 
+            IVsEnvironmentHelper helper)
         {
             var savedList = new List<Resource>();
             foreach (var item in listofSaveComp)
@@ -190,17 +252,17 @@
                             {
                                 task.Wait();
                             }
-
-                            Application.Current.Dispatcher.Invoke(
-                                delegate
-                                {
-                                    this.componentList.Clear();
-                                    foreach (var item in list)
-                                    {
-                                        this.componentList.Add(item);
-                                    }
-                                });
                         }
+
+                        Application.Current.Dispatcher.Invoke(
+                            delegate
+                            {
+                                this.componentList.Clear();
+                                foreach(var item in list)
+                                {
+                                    this.componentList.Add(item);
+                                }
+                            });
                     };
 
                     bw.ProgressChanged += this.ReportStatus;
@@ -232,7 +294,13 @@
         private void BtnCancelClick(object sender, RoutedEventArgs e)
         {
             this.DialogResult = false;
-            this.Close();
+            try
+            {
+                this.Close();
+            }
+            catch(Exception)
+            {
+            }
         }
 
         /// <summary>
@@ -266,18 +334,18 @@
 
                 IEnumerable<Resource> compsdirs =
                         from resource in resources
-                        where Contains(resource.Key, searchMessage)
+                        where Contains(resource.Name, searchMessage)
                         select resource;
 
                 comps.AddRange(compsdirs);
             }
             else
             {
-                var resources = this.rest.IndexServerResources(this.conf, mainProj);
-                this.cachedResourceData.Add(mainProj.Key, resources);
+                var resourcesServer = this.rest.IndexServerResources(this.conf, mainProj);
+                this.cachedResourceData.Add(mainProj.Key, resourcesServer);
                 IEnumerable<Resource> compsdirs =
-                        from resource in resources
-                        where Contains(resource.Key, searchMessage)
+                        from resource in resourcesServer
+                        where Contains(resource.Name, searchMessage)
                         select resource;
 
                 comps.AddRange(compsdirs);
