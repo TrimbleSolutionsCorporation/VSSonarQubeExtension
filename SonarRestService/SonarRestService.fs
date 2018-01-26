@@ -163,7 +163,8 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 | Some value -> issue.Effort <- value
 
             if not(obj.ReferenceEquals(elem.Tags, null)) then
-                for tag in elem.Tags do issue.Tags.Add(tag)
+                for tag in elem.Tags do
+                    issue.Tags.Add(tag) |> ignore
 
             if issue.Comments.Count <> 0 then
                 for comment in issue.Comments do

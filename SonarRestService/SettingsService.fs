@@ -62,7 +62,7 @@ let mutable data = "{"
 let SetSetting(newConf : ISonarConfiguration, setting: Setting, project : Resource,httpconnector : IHttpSonarConnector) =
     
     let url = "/api/settings/set"
-    let options = new System.Collections.Generic.List<System.Tuple<string,string>>()
+    let options = new System.Collections.Generic.Dictionary<string,string>()
 
     let setValuesOption = 
         if setting.Values.Count <> 0 then
@@ -89,7 +89,7 @@ let SetSetting(newConf : ISonarConfiguration, setting: Setting, project : Resour
         options.Add(("key", setting.key))
         setValuesOption
 
-    let response = httpconnector.HttpSonarPostRequestTuple(newConf, url, options)
+    let response = httpconnector.HttpSonarPostRequestDic(newConf, url, options)
     if response.StatusCode <> Net.HttpStatusCode.NoContent then
         "Failed to set prop: " + response.Content
     else
