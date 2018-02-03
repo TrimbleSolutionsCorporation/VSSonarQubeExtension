@@ -10,6 +10,9 @@ This is a Extension for Visual Studio to interact wiht SonarQube (TM).
 # Installation
 Use the Visual Studio Extension Manager and search for VSSonarExtension, Visual Studio 2012, 2013, 2015 and 2017 are supported.
 
+## Issues with Resharper
+In case you cant see anything in the options dialog, first uninstall Resharper and open the options dialog. After this you can install Resharper again (go figure)!. 
+
 # Alternatives
 SonarLint is the official extension provided by SonarSource. It support C# and VB.Net. 
 
