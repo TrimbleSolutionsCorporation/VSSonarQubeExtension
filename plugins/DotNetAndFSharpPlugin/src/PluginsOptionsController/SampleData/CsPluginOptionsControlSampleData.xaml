@@ -1,0 +1,14 @@
+﻿<CsPluginOptionsControl:CsPluginOptionsControl xmlns:CsPluginOptionsControl="clr-namespace:CsPluginOptionsController">
+	<CsPluginOptionsControl:CsPluginOptionsControl.PluginProperties>
+		<CsPluginOptionsControl:SonarQubeProperties Key="Curabitur phasellus vestibulum maecenas nam" Value="Sed aenean aliquam integer cras" ValueInServer="Adipiscing dis class consequat mauris"/>
+		<CsPluginOptionsControl:SonarQubeProperties Key="Nullam praesent accumsan est" Value="Aptent parturient" ValueInServer="Curae hac"/>
+		<CsPluginOptionsControl:SonarQubeProperties Key="Quisque auctor duis" Value="Vestibulum nunc vestibulum amet" ValueInServer="Donec convallis leo bibendum"/>
+		<CsPluginOptionsControl:SonarQubeProperties Key="Mus congue" Value="Adipiscing dignissim etiam vivamus nec" ValueInServer="Dictumst cursus"/>
+		<CsPluginOptionsControl:SonarQubeProperties Key="Elementum parturient facilisis" Value="Fusce dictum fermentum non ante" ValueInServer="Arcu lectus vestibulum"/>
+		<CsPluginOptionsControl:SonarQubeProperties Key="Lorem aliquam eleifend" Value="Morbi nulla vestibulum per" ValueInServer="Diam facilisi libero adipiscing"/>
+		<CsPluginOptionsControl:SonarQubeProperties Key="Sed parturient" Value="Faucibus habitant sem" ValueInServer="Aliquet vestibulum ligula blandit proin"/>
+		<CsPluginOptionsControl:SonarQubeProperties Key="Augue vestibulum eget" Value="Inceptos commodo" ValueInServer="Fringilla litora luctus habitasse"/>
+		<CsPluginOptionsControl:SonarQubeProperties Key="Sit vel magnis" Value="Elit dolor" ValueInServer="Conubia interdum cubilia mattis mauris"/>
+		<CsPluginOptionsControl:SonarQubeProperties Key="Mollis adipiscing" Value="Parturient vestibulum vestibulum hendrerit adipiscing" ValueInServer="Lobortis himenaeos"/>
+	</CsPluginOptionsControl:CsPluginOptionsControl.PluginProperties>
+</CsPluginOptionsControl:CsPluginOptionsControl>

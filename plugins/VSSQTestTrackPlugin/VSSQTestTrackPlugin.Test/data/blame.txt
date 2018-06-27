@@ -1,0 +1,1092 @@
+﻿cb3bb974be4e86eb1a48f186ab7de988f9a65620 1 1 3
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1326731468
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1326731468
+committer-tz +0000
+summary Create doxygen repository
+boundary
+filename pom.xml
+	<?xml version="1.0" encoding="UTF-8"?>
+cb3bb974be4e86eb1a48f186ab7de988f9a65620 2 2
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1326731468
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1326731468
+committer-tz +0000
+summary Create doxygen repository
+boundary
+filename pom.xml
+	<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+cb3bb974be4e86eb1a48f186ab7de988f9a65620 3 3
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1326731468
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1326731468
+committer-tz +0000
+summary Create doxygen repository
+boundary
+filename pom.xml
+	  <modelVersion>4.0.0</modelVersion>
+37e0a106efdbcd14916276e4e0373fdfc1153bca 4 4 4
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1326816968
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1326816968
+committer-tz +0000
+summary Code: Reformatted according to Sonar conventions
+previous cb3bb974be4e86eb1a48f186ab7de988f9a65620 pom.xml
+filename pom.xml
+	  
+37e0a106efdbcd14916276e4e0373fdfc1153bca 5 5
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1326816968
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1326816968
+committer-tz +0000
+summary Code: Reformatted according to Sonar conventions
+previous cb3bb974be4e86eb1a48f186ab7de988f9a65620 pom.xml
+filename pom.xml
+	  <parent>
+37e0a106efdbcd14916276e4e0373fdfc1153bca 6 6
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1326816968
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1326816968
+committer-tz +0000
+summary Code: Reformatted according to Sonar conventions
+previous cb3bb974be4e86eb1a48f186ab7de988f9a65620 pom.xml
+filename pom.xml
+	    <groupId>org.codehaus.sonar-plugins</groupId>
+37e0a106efdbcd14916276e4e0373fdfc1153bca 7 7
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1326816968
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1326816968
+committer-tz +0000
+summary Code: Reformatted according to Sonar conventions
+previous cb3bb974be4e86eb1a48f186ab7de988f9a65620 pom.xml
+filename pom.xml
+	    <artifactId>parent</artifactId>
+ad7f1251ec9413ce5ac25958773ced860aa4f77b 8 8 1
+author Jorge Costa
+author-mail <jorge.costa@tekla.com>
+author-time 1400415567
+author-tz +0300
+committer Jorge Costa
+committer-mail <jorge.costa@tekla.com>
+committer-time 1400415567
+committer-tz +0300
+summary Update license and minimum sonar version
+previous 8aa9ca6ac1e13321de4074e13eaffad69fe047b6 pom.xml
+filename pom.xml
+	    <version>18</version>
+37e0a106efdbcd14916276e4e0373fdfc1153bca 10 9 2
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1326816968
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1326816968
+committer-tz +0000
+summary Code: Reformatted according to Sonar conventions
+previous cb3bb974be4e86eb1a48f186ab7de988f9a65620 pom.xml
+filename pom.xml
+	  </parent>
+37e0a106efdbcd14916276e4e0373fdfc1153bca 11 10
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1326816968
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1326816968
+committer-tz +0000
+summary Code: Reformatted according to Sonar conventions
+previous cb3bb974be4e86eb1a48f186ab7de988f9a65620 pom.xml
+filename pom.xml
+	  
+ad53b8b2841136599c9cd3339703fd712cc348d0 11 11 2
+author Jorge Costa
+author-mail <jorge.costa@tekla.com>
+author-time 1404979348
+author-tz +0300
+committer Jorge Costa
+committer-mail <jorge.costa@tekla.com>
+committer-time 1404979348
+committer-tz +0300
+summary SONARPLUGINS-3776 remove ability  to generate documentation
+previous 6edf15d2571aa98c08852da0956c4e32635427c5 pom.xml
+filename pom.xml
+	  <artifactId>sonar-doxygen-plugin</artifactId>
+ad53b8b2841136599c9cd3339703fd712cc348d0 12 12
+author Jorge Costa
+author-mail <jorge.costa@tekla.com>
+author-time 1404979348
+author-tz +0300
+committer Jorge Costa
+committer-mail <jorge.costa@tekla.com>
+committer-time 1404979348
+committer-tz +0300
+summary SONARPLUGINS-3776 remove ability  to generate documentation
+previous 6edf15d2571aa98c08852da0956c4e32635427c5 pom.xml
+filename pom.xml
+	  <packaging>sonar-plugin</packaging>
+ad7f1251ec9413ce5ac25958773ced860aa4f77b 13 13 3
+author Jorge Costa
+author-mail <jorge.costa@tekla.com>
+author-time 1400415567
+author-tz +0300
+committer Jorge Costa
+committer-mail <jorge.costa@tekla.com>
+committer-time 1400415567
+committer-tz +0300
+summary Update license and minimum sonar version
+previous 8aa9ca6ac1e13321de4074e13eaffad69fe047b6 pom.xml
+filename pom.xml
+	  <version>1.0-SNAPSHOT</version>
+ad7f1251ec9413ce5ac25958773ced860aa4f77b 14 14
+author Jorge Costa
+author-mail <jorge.costa@tekla.com>
+author-time 1400415567
+author-tz +0300
+committer Jorge Costa
+committer-mail <jorge.costa@tekla.com>
+committer-time 1400415567
+committer-tz +0300
+summary Update license and minimum sonar version
+previous 8aa9ca6ac1e13321de4074e13eaffad69fe047b6 pom.xml
+filename pom.xml
+	  
+ad7f1251ec9413ce5ac25958773ced860aa4f77b 15 15
+author Jorge Costa
+author-mail <jorge.costa@tekla.com>
+author-time 1400415567
+author-tz +0300
+committer Jorge Costa
+committer-mail <jorge.costa@tekla.com>
+committer-time 1400415567
+committer-tz +0300
+summary Update license and minimum sonar version
+previous 8aa9ca6ac1e13321de4074e13eaffad69fe047b6 pom.xml
+filename pom.xml
+	  <name>Doxygen</name>
+cb3bb974be4e86eb1a48f186ab7de988f9a65620 9 16 1
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1326731468
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1326731468
+committer-tz +0000
+summary Create doxygen repository
+boundary
+filename pom.xml
+	  <description>Generate project documentation</description>
+ab41cbe8c08c7ec9563eac660021879b15494e75 17 17 1
+author Jorge Costa
+author-mail <jmecosta@gmail.com>
+author-time 1430251185
+author-tz +0300
+committer Jorge Costa
+committer-mail <jmecosta@gmail.com>
+committer-time 1430251185
+committer-tz +0300
+summary Update pom.xml
+previous 28e0fec4446c8a996bec76a739e769476805630a pom.xml
+filename pom.xml
+	  <url>https://github.com/SonarCommunity/sonar-doxygen</url>    
+40e222ff653bf369f829f624dee4b455a74bd461 19 18 1
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1330706884
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1330706884
+committer-tz +0000
+summary SONARPLUGINS-1673: Plugin Initialization
+previous 82d79f1a192dd43d663344095ce04e18d9b8fbae pom.xml
+filename pom.xml
+	  <inceptionYear>2012</inceptionYear>
+cb3bb974be4e86eb1a48f186ab7de988f9a65620 15 19 1
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1326731468
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1326731468
+committer-tz +0000
+summary Create doxygen repository
+boundary
+filename pom.xml
+	  <organization>
+ad7f1251ec9413ce5ac25958773ced860aa4f77b 20 20 2
+author Jorge Costa
+author-mail <jorge.costa@tekla.com>
+author-time 1400415567
+author-tz +0300
+committer Jorge Costa
+committer-mail <jorge.costa@tekla.com>
+committer-time 1400415567
+committer-tz +0300
+summary Update license and minimum sonar version
+previous 8aa9ca6ac1e13321de4074e13eaffad69fe047b6 pom.xml
+filename pom.xml
+	    <name>SonarSource</name>
+ad7f1251ec9413ce5ac25958773ced860aa4f77b 21 21
+author Jorge Costa
+author-mail <jorge.costa@tekla.com>
+author-time 1400415567
+author-tz +0300
+committer Jorge Costa
+committer-mail <jorge.costa@tekla.com>
+committer-time 1400415567
+committer-tz +0300
+summary Update license and minimum sonar version
+previous 8aa9ca6ac1e13321de4074e13eaffad69fe047b6 pom.xml
+filename pom.xml
+	    <url>http://www.sonarsource.com</url>
+cb3bb974be4e86eb1a48f186ab7de988f9a65620 18 22 1
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1326731468
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1326731468
+committer-tz +0000
+summary Create doxygen repository
+boundary
+filename pom.xml
+	  </organization>
+ad7f1251ec9413ce5ac25958773ced860aa4f77b 23 23 7
+author Jorge Costa
+author-mail <jorge.costa@tekla.com>
+author-time 1400415567
+author-tz +0300
+committer Jorge Costa
+committer-mail <jorge.costa@tekla.com>
+committer-time 1400415567
+committer-tz +0300
+summary Update license and minimum sonar version
+previous 8aa9ca6ac1e13321de4074e13eaffad69fe047b6 pom.xml
+filename pom.xml
+	  <licenses>
+ad7f1251ec9413ce5ac25958773ced860aa4f77b 24 24
+author Jorge Costa
+author-mail <jorge.costa@tekla.com>
+author-time 1400415567
+author-tz +0300
+committer Jorge Costa
+committer-mail <jorge.costa@tekla.com>
+committer-time 1400415567
+committer-tz +0300
+summary Update license and minimum sonar version
+previous 8aa9ca6ac1e13321de4074e13eaffad69fe047b6 pom.xml
+filename pom.xml
+	    <license>
+ad7f1251ec9413ce5ac25958773ced860aa4f77b 25 25
+author Jorge Costa
+author-mail <jorge.costa@tekla.com>
+author-time 1400415567
+author-tz +0300
+committer Jorge Costa
+committer-mail <jorge.costa@tekla.com>
+committer-time 1400415567
+committer-tz +0300
+summary Update license and minimum sonar version
+previous 8aa9ca6ac1e13321de4074e13eaffad69fe047b6 pom.xml
+filename pom.xml
+	      <name>The Apache Software License, Version 2.0</name>
+ad7f1251ec9413ce5ac25958773ced860aa4f77b 26 26
+author Jorge Costa
+author-mail <jorge.costa@tekla.com>
+author-time 1400415567
+author-tz +0300
+committer Jorge Costa
+committer-mail <jorge.costa@tekla.com>
+committer-time 1400415567
+committer-tz +0300
+summary Update license and minimum sonar version
+previous 8aa9ca6ac1e13321de4074e13eaffad69fe047b6 pom.xml
+filename pom.xml
+	      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+ad7f1251ec9413ce5ac25958773ced860aa4f77b 27 27
+author Jorge Costa
+author-mail <jorge.costa@tekla.com>
+author-time 1400415567
+author-tz +0300
+committer Jorge Costa
+committer-mail <jorge.costa@tekla.com>
+committer-time 1400415567
+committer-tz +0300
+summary Update license and minimum sonar version
+previous 8aa9ca6ac1e13321de4074e13eaffad69fe047b6 pom.xml
+filename pom.xml
+	      <distribution>repo</distribution>
+ad7f1251ec9413ce5ac25958773ced860aa4f77b 28 28
+author Jorge Costa
+author-mail <jorge.costa@tekla.com>
+author-time 1400415567
+author-tz +0300
+committer Jorge Costa
+committer-mail <jorge.costa@tekla.com>
+committer-time 1400415567
+committer-tz +0300
+summary Update license and minimum sonar version
+previous 8aa9ca6ac1e13321de4074e13eaffad69fe047b6 pom.xml
+filename pom.xml
+	    </license>
+ad7f1251ec9413ce5ac25958773ced860aa4f77b 29 29
+author Jorge Costa
+author-mail <jorge.costa@tekla.com>
+author-time 1400415567
+author-tz +0300
+committer Jorge Costa
+committer-mail <jorge.costa@tekla.com>
+committer-time 1400415567
+committer-tz +0300
+summary Update license and minimum sonar version
+previous 8aa9ca6ac1e13321de4074e13eaffad69fe047b6 pom.xml
+filename pom.xml
+	  </licenses>
+cb3bb974be4e86eb1a48f186ab7de988f9a65620 26 30 1
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1326731468
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1326731468
+committer-tz +0000
+summary Create doxygen repository
+boundary
+filename pom.xml
+	  
+1ae687cda3208b7cd042247629e95089a45cbddb 35 31 5
+author Evgeny Mandrikov
+author-mail <mandrikov@gmail.com>
+author-time 1327490203
+author-tz +0000
+committer Evgeny Mandrikov
+committer-mail <mandrikov@gmail.com>
+committer-time 1327490203
+committer-tz +0000
+summary DOXYGEN: pom.xml
+previous 720fdace6056d34a3a321ced6d056968613ac91f pom.xml
+filename pom.xml
+	  <issueManagement>
+1ae687cda3208b7cd042247629e95089a45cbddb 36 32
+author Evgeny Mandrikov
+author-mail <mandrikov@gmail.com>
+author-time 1327490203
+author-tz +0000
+committer Evgeny Mandrikov
+committer-mail <mandrikov@gmail.com>
+committer-time 1327490203
+committer-tz +0000
+summary DOXYGEN: pom.xml
+previous 720fdace6056d34a3a321ced6d056968613ac91f pom.xml
+filename pom.xml
+	    <system>JIRA</system>
+1ae687cda3208b7cd042247629e95089a45cbddb 37 33
+author Evgeny Mandrikov
+author-mail <mandrikov@gmail.com>
+author-time 1327490203
+author-tz +0000
+committer Evgeny Mandrikov
+committer-mail <mandrikov@gmail.com>
+committer-time 1327490203
+committer-tz +0000
+summary DOXYGEN: pom.xml
+previous 720fdace6056d34a3a321ced6d056968613ac91f pom.xml
+filename pom.xml
+	    <url>http://jira.codehaus.org/browse/SONARPLUGINS/component/15460</url>
+1ae687cda3208b7cd042247629e95089a45cbddb 38 34
+author Evgeny Mandrikov
+author-mail <mandrikov@gmail.com>
+author-time 1327490203
+author-tz +0000
+committer Evgeny Mandrikov
+committer-mail <mandrikov@gmail.com>
+committer-time 1327490203
+committer-tz +0000
+summary DOXYGEN: pom.xml
+previous 720fdace6056d34a3a321ced6d056968613ac91f pom.xml
+filename pom.xml
+	  </issueManagement>
+1ae687cda3208b7cd042247629e95089a45cbddb 39 35
+author Evgeny Mandrikov
+author-mail <mandrikov@gmail.com>
+author-time 1327490203
+author-tz +0000
+committer Evgeny Mandrikov
+committer-mail <mandrikov@gmail.com>
+committer-time 1327490203
+committer-tz +0000
+summary DOXYGEN: pom.xml
+previous 720fdace6056d34a3a321ced6d056968613ac91f pom.xml
+filename pom.xml
+	  <ciManagement>
+40e222ff653bf369f829f624dee4b455a74bd461 30 36 1
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1330706884
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1330706884
+committer-tz +0000
+summary SONARPLUGINS-1673: Plugin Initialization
+previous 82d79f1a192dd43d663344095ce04e18d9b8fbae pom.xml
+filename pom.xml
+	    <system>BAMBOO</system>
+1ae687cda3208b7cd042247629e95089a45cbddb 41 37 2
+author Evgeny Mandrikov
+author-mail <mandrikov@gmail.com>
+author-time 1327490203
+author-tz +0000
+committer Evgeny Mandrikov
+committer-mail <mandrikov@gmail.com>
+committer-time 1327490203
+committer-tz +0000
+summary DOXYGEN: pom.xml
+previous 720fdace6056d34a3a321ced6d056968613ac91f pom.xml
+filename pom.xml
+	    <url>http://bamboo.ci.codehaus.org/browse/SONAR-DOXYGEN</url>
+1ae687cda3208b7cd042247629e95089a45cbddb 42 38
+author Evgeny Mandrikov
+author-mail <mandrikov@gmail.com>
+author-time 1327490203
+author-tz +0000
+committer Evgeny Mandrikov
+committer-mail <mandrikov@gmail.com>
+committer-time 1327490203
+committer-tz +0000
+summary DOXYGEN: pom.xml
+previous 720fdace6056d34a3a321ced6d056968613ac91f pom.xml
+filename pom.xml
+	  </ciManagement>
+40e222ff653bf369f829f624dee4b455a74bd461 33 39 1
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1330706884
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1330706884
+committer-tz +0000
+summary SONARPLUGINS-1673: Plugin Initialization
+previous 82d79f1a192dd43d663344095ce04e18d9b8fbae pom.xml
+filename pom.xml
+	  <scm>
+007e5451c97c84820f6f3840351aec58a757a326 34 40 3
+author Eric Hartmann
+author-mail <hartmann.eric@gmail.com>
+author-time 1387807875
+author-tz +0100
+committer Eric Hartmann
+committer-mail <hartmann.eric@gmail.com>
+committer-time 1387807875
+committer-tz +0100
+summary Update SCM information
+previous 724fbda4d5d56573db5e0f32b3b295a5cb3051d1 pom.xml
+filename pom.xml
+	    <connection>scm:git:https://github.com/SonarCommunity/sonar-doxygen.git</connection>
+007e5451c97c84820f6f3840351aec58a757a326 35 41
+author Eric Hartmann
+author-mail <hartmann.eric@gmail.com>
+author-time 1387807875
+author-tz +0100
+committer Eric Hartmann
+committer-mail <hartmann.eric@gmail.com>
+committer-time 1387807875
+committer-tz +0100
+summary Update SCM information
+previous 724fbda4d5d56573db5e0f32b3b295a5cb3051d1 pom.xml
+filename pom.xml
+	    <developerConnection>scm:git:git@github.com:SonarCommunity/sonar-doxygen.git</developerConnection>
+007e5451c97c84820f6f3840351aec58a757a326 36 42
+author Eric Hartmann
+author-mail <hartmann.eric@gmail.com>
+author-time 1387807875
+author-tz +0100
+committer Eric Hartmann
+committer-mail <hartmann.eric@gmail.com>
+committer-time 1387807875
+committer-tz +0100
+summary Update SCM information
+previous 724fbda4d5d56573db5e0f32b3b295a5cb3051d1 pom.xml
+filename pom.xml
+	    <url>https://github.com/SonarCommunity/sonar-doxygen</url>
+40e222ff653bf369f829f624dee4b455a74bd461 37 43 2
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1330706884
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1330706884
+committer-tz +0000
+summary SONARPLUGINS-1673: Plugin Initialization
+previous 82d79f1a192dd43d663344095ce04e18d9b8fbae pom.xml
+filename pom.xml
+	  </scm>
+40e222ff653bf369f829f624dee4b455a74bd461 38 44
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1330706884
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1330706884
+committer-tz +0000
+summary SONARPLUGINS-1673: Plugin Initialization
+previous 82d79f1a192dd43d663344095ce04e18d9b8fbae pom.xml
+filename pom.xml
+	    
+1ae687cda3208b7cd042247629e95089a45cbddb 44 45 1
+author Evgeny Mandrikov
+author-mail <mandrikov@gmail.com>
+author-time 1327490203
+author-tz +0000
+committer Evgeny Mandrikov
+committer-mail <mandrikov@gmail.com>
+committer-time 1327490203
+committer-tz +0000
+summary DOXYGEN: pom.xml
+previous 720fdace6056d34a3a321ced6d056968613ac91f pom.xml
+filename pom.xml
+	  <properties>
+c8449123ffb4d501fc583b8abf3e9eb987952aba 46 46 1
+author Jorge Costa
+author-mail <Jorge.Costa@tekla.com>
+author-time 1430250278
+author-tz +0300
+committer Jorge Costa
+committer-mail <Jorge.Costa@tekla.com>
+committer-time 1430250298
+committer-tz +0300
+summary #7 compatibility wiht sonar 5.1
+previous 2ceaeceb195d11bf3d217dcabd2ab666a9c75f9f pom.xml
+filename pom.xml
+	    <sonar.version>5.1</sonar.version>
+1ae687cda3208b7cd042247629e95089a45cbddb 46 47 2
+author Evgeny Mandrikov
+author-mail <mandrikov@gmail.com>
+author-time 1327490203
+author-tz +0000
+committer Evgeny Mandrikov
+committer-mail <mandrikov@gmail.com>
+committer-time 1327490203
+committer-tz +0000
+summary DOXYGEN: pom.xml
+previous 720fdace6056d34a3a321ced6d056968613ac91f pom.xml
+filename pom.xml
+	    <sonar.pluginName>Doxygen</sonar.pluginName>
+1ae687cda3208b7cd042247629e95089a45cbddb 47 48
+author Evgeny Mandrikov
+author-mail <mandrikov@gmail.com>
+author-time 1327490203
+author-tz +0000
+committer Evgeny Mandrikov
+committer-mail <mandrikov@gmail.com>
+committer-time 1327490203
+committer-tz +0000
+summary DOXYGEN: pom.xml
+previous 720fdace6056d34a3a321ced6d056968613ac91f pom.xml
+filename pom.xml
+	    <sonar.pluginClass>org.sonar.plugins.doxygen.DoxygenPlugin</sonar.pluginClass>   
+ad7f1251ec9413ce5ac25958773ced860aa4f77b 49 49 1
+author Jorge Costa
+author-mail <jorge.costa@tekla.com>
+author-time 1400415567
+author-tz +0300
+committer Jorge Costa
+committer-mail <jorge.costa@tekla.com>
+committer-time 1400415567
+committer-tz +0300
+summary Update license and minimum sonar version
+previous 8aa9ca6ac1e13321de4074e13eaffad69fe047b6 pom.xml
+filename pom.xml
+	    <license.title>SonarQube Doxygen Plugin</license.title>
+40e222ff653bf369f829f624dee4b455a74bd461 50 50 1
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1330706884
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1330706884
+committer-tz +0000
+summary SONARPLUGINS-1673: Plugin Initialization
+previous 82d79f1a192dd43d663344095ce04e18d9b8fbae pom.xml
+filename pom.xml
+	    <license.name>AL2</license.name>
+1ae687cda3208b7cd042247629e95089a45cbddb 48 51 1
+author Evgeny Mandrikov
+author-mail <mandrikov@gmail.com>
+author-time 1327490203
+author-tz +0000
+committer Evgeny Mandrikov
+committer-mail <mandrikov@gmail.com>
+committer-time 1327490203
+committer-tz +0000
+summary DOXYGEN: pom.xml
+previous 720fdace6056d34a3a321ced6d056968613ac91f pom.xml
+filename pom.xml
+	  </properties>
+cb3bb974be4e86eb1a48f186ab7de988f9a65620 32 52 6
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1326731468
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1326731468
+committer-tz +0000
+summary Create doxygen repository
+boundary
+filename pom.xml
+	  
+cb3bb974be4e86eb1a48f186ab7de988f9a65620 33 53
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1326731468
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1326731468
+committer-tz +0000
+summary Create doxygen repository
+boundary
+filename pom.xml
+	  <dependencies>
+cb3bb974be4e86eb1a48f186ab7de988f9a65620 34 54
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1326731468
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1326731468
+committer-tz +0000
+summary Create doxygen repository
+boundary
+filename pom.xml
+	    <dependency>
+cb3bb974be4e86eb1a48f186ab7de988f9a65620 35 55
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1326731468
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1326731468
+committer-tz +0000
+summary Create doxygen repository
+boundary
+filename pom.xml
+	      <groupId>org.codehaus.sonar</groupId>
+cb3bb974be4e86eb1a48f186ab7de988f9a65620 36 56
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1326731468
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1326731468
+committer-tz +0000
+summary Create doxygen repository
+boundary
+filename pom.xml
+	      <artifactId>sonar-plugin-api</artifactId>
+cb3bb974be4e86eb1a48f186ab7de988f9a65620 37 57
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1326731468
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1326731468
+committer-tz +0000
+summary Create doxygen repository
+boundary
+filename pom.xml
+	      <version>${sonar.version}</version>
+37e0a106efdbcd14916276e4e0373fdfc1153bca 47 58 1
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1326816968
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1326816968
+committer-tz +0000
+summary Code: Reformatted according to Sonar conventions
+previous cb3bb974be4e86eb1a48f186ab7de988f9a65620 pom.xml
+filename pom.xml
+	      <scope>provided</scope>
+cb3bb974be4e86eb1a48f186ab7de988f9a65620 38 59 2
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1326731468
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1326731468
+committer-tz +0000
+summary Create doxygen repository
+boundary
+filename pom.xml
+	    </dependency>
+cb3bb974be4e86eb1a48f186ab7de988f9a65620 39 60
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1326731468
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1326731468
+committer-tz +0000
+summary Create doxygen repository
+boundary
+filename pom.xml
+	    
+40e222ff653bf369f829f624dee4b455a74bd461 61 61 2
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1330706884
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1330706884
+committer-tz +0000
+summary SONARPLUGINS-1673: Plugin Initialization
+previous 82d79f1a192dd43d663344095ce04e18d9b8fbae pom.xml
+filename pom.xml
+	    <!-- add your dependencies here -->
+40e222ff653bf369f829f624dee4b455a74bd461 62 62
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1330706884
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1330706884
+committer-tz +0000
+summary SONARPLUGINS-1673: Plugin Initialization
+previous 82d79f1a192dd43d663344095ce04e18d9b8fbae pom.xml
+filename pom.xml
+	    
+cb3bb974be4e86eb1a48f186ab7de988f9a65620 42 63 7
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1326731468
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1326731468
+committer-tz +0000
+summary Create doxygen repository
+boundary
+filename pom.xml
+	    <!-- unit tests -->
+cb3bb974be4e86eb1a48f186ab7de988f9a65620 43 64
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1326731468
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1326731468
+committer-tz +0000
+summary Create doxygen repository
+boundary
+filename pom.xml
+	    <dependency>
+cb3bb974be4e86eb1a48f186ab7de988f9a65620 44 65
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1326731468
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1326731468
+committer-tz +0000
+summary Create doxygen repository
+boundary
+filename pom.xml
+	      <groupId>org.codehaus.sonar</groupId>
+cb3bb974be4e86eb1a48f186ab7de988f9a65620 45 66
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1326731468
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1326731468
+committer-tz +0000
+summary Create doxygen repository
+boundary
+filename pom.xml
+	      <artifactId>sonar-testing-harness</artifactId>
+cb3bb974be4e86eb1a48f186ab7de988f9a65620 46 67
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1326731468
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1326731468
+committer-tz +0000
+summary Create doxygen repository
+boundary
+filename pom.xml
+	      <version>${sonar.version}</version>
+cb3bb974be4e86eb1a48f186ab7de988f9a65620 47 68
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1326731468
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1326731468
+committer-tz +0000
+summary Create doxygen repository
+boundary
+filename pom.xml
+	      <scope>test</scope>
+cb3bb974be4e86eb1a48f186ab7de988f9a65620 48 69
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1326731468
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1326731468
+committer-tz +0000
+summary Create doxygen repository
+boundary
+filename pom.xml
+	    </dependency>
+ad53b8b2841136599c9cd3339703fd712cc348d0 70 70 6
+author Jorge Costa
+author-mail <jorge.costa@tekla.com>
+author-time 1404979348
+author-tz +0300
+committer Jorge Costa
+committer-mail <jorge.costa@tekla.com>
+committer-time 1404979348
+committer-tz +0300
+summary SONARPLUGINS-3776 remove ability  to generate documentation
+previous 6edf15d2571aa98c08852da0956c4e32635427c5 pom.xml
+filename pom.xml
+	    <dependency>    
+ad53b8b2841136599c9cd3339703fd712cc348d0 71 71
+author Jorge Costa
+author-mail <jorge.costa@tekla.com>
+author-time 1404979348
+author-tz +0300
+committer Jorge Costa
+committer-mail <jorge.costa@tekla.com>
+committer-time 1404979348
+committer-tz +0300
+summary SONARPLUGINS-3776 remove ability  to generate documentation
+previous 6edf15d2571aa98c08852da0956c4e32635427c5 pom.xml
+filename pom.xml
+	    <groupId>org.apache.maven</groupId>
+ad53b8b2841136599c9cd3339703fd712cc348d0 72 72
+author Jorge Costa
+author-mail <jorge.costa@tekla.com>
+author-time 1404979348
+author-tz +0300
+committer Jorge Costa
+committer-mail <jorge.costa@tekla.com>
+committer-time 1404979348
+committer-tz +0300
+summary SONARPLUGINS-3776 remove ability  to generate documentation
+previous 6edf15d2571aa98c08852da0956c4e32635427c5 pom.xml
+filename pom.xml
+	    <artifactId>maven-project</artifactId>
+ad53b8b2841136599c9cd3339703fd712cc348d0 73 73
+author Jorge Costa
+author-mail <jorge.costa@tekla.com>
+author-time 1404979348
+author-tz +0300
+committer Jorge Costa
+committer-mail <jorge.costa@tekla.com>
+committer-time 1404979348
+committer-tz +0300
+summary SONARPLUGINS-3776 remove ability  to generate documentation
+previous 6edf15d2571aa98c08852da0956c4e32635427c5 pom.xml
+filename pom.xml
+	    <version>2.0.6</version>
+ad53b8b2841136599c9cd3339703fd712cc348d0 74 74
+author Jorge Costa
+author-mail <jorge.costa@tekla.com>
+author-time 1404979348
+author-tz +0300
+committer Jorge Costa
+committer-mail <jorge.costa@tekla.com>
+committer-time 1404979348
+committer-tz +0300
+summary SONARPLUGINS-3776 remove ability  to generate documentation
+previous 6edf15d2571aa98c08852da0956c4e32635427c5 pom.xml
+filename pom.xml
+	    <scope>test</scope>
+ad53b8b2841136599c9cd3339703fd712cc348d0 75 75
+author Jorge Costa
+author-mail <jorge.costa@tekla.com>
+author-time 1404979348
+author-tz +0300
+committer Jorge Costa
+committer-mail <jorge.costa@tekla.com>
+committer-time 1404979348
+committer-tz +0300
+summary SONARPLUGINS-3776 remove ability  to generate documentation
+previous 6edf15d2571aa98c08852da0956c4e32635427c5 pom.xml
+filename pom.xml
+	    </dependency>
+c8449123ffb4d501fc583b8abf3e9eb987952aba 76 76 6
+author Jorge Costa
+author-mail <Jorge.Costa@tekla.com>
+author-time 1430250278
+author-tz +0300
+committer Jorge Costa
+committer-mail <Jorge.Costa@tekla.com>
+committer-time 1430250298
+committer-tz +0300
+summary #7 compatibility wiht sonar 5.1
+previous 2ceaeceb195d11bf3d217dcabd2ab666a9c75f9f pom.xml
+filename pom.xml
+	    <dependency>
+c8449123ffb4d501fc583b8abf3e9eb987952aba 77 77
+author Jorge Costa
+author-mail <Jorge.Costa@tekla.com>
+author-time 1430250278
+author-tz +0300
+committer Jorge Costa
+committer-mail <Jorge.Costa@tekla.com>
+committer-time 1430250298
+committer-tz +0300
+summary #7 compatibility wiht sonar 5.1
+previous 2ceaeceb195d11bf3d217dcabd2ab666a9c75f9f pom.xml
+filename pom.xml
+	      <groupId>org.slf4j</groupId>
+c8449123ffb4d501fc583b8abf3e9eb987952aba 78 78
+author Jorge Costa
+author-mail <Jorge.Costa@tekla.com>
+author-time 1430250278
+author-tz +0300
+committer Jorge Costa
+committer-mail <Jorge.Costa@tekla.com>
+committer-time 1430250298
+committer-tz +0300
+summary #7 compatibility wiht sonar 5.1
+previous 2ceaeceb195d11bf3d217dcabd2ab666a9c75f9f pom.xml
+filename pom.xml
+	      <artifactId>slf4j-api</artifactId>
+c8449123ffb4d501fc583b8abf3e9eb987952aba 79 79
+author Jorge Costa
+author-mail <Jorge.Costa@tekla.com>
+author-time 1430250278
+author-tz +0300
+committer Jorge Costa
+committer-mail <Jorge.Costa@tekla.com>
+committer-time 1430250298
+committer-tz +0300
+summary #7 compatibility wiht sonar 5.1
+previous 2ceaeceb195d11bf3d217dcabd2ab666a9c75f9f pom.xml
+filename pom.xml
+	      <version>1.7.5</version>
+c8449123ffb4d501fc583b8abf3e9eb987952aba 80 80
+author Jorge Costa
+author-mail <Jorge.Costa@tekla.com>
+author-time 1430250278
+author-tz +0300
+committer Jorge Costa
+committer-mail <Jorge.Costa@tekla.com>
+committer-time 1430250298
+committer-tz +0300
+summary #7 compatibility wiht sonar 5.1
+previous 2ceaeceb195d11bf3d217dcabd2ab666a9c75f9f pom.xml
+filename pom.xml
+	      <type>jar</type>
+c8449123ffb4d501fc583b8abf3e9eb987952aba 81 81
+author Jorge Costa
+author-mail <Jorge.Costa@tekla.com>
+author-time 1430250278
+author-tz +0300
+committer Jorge Costa
+committer-mail <Jorge.Costa@tekla.com>
+committer-time 1430250298
+committer-tz +0300
+summary #7 compatibility wiht sonar 5.1
+previous 2ceaeceb195d11bf3d217dcabd2ab666a9c75f9f pom.xml
+filename pom.xml
+	    </dependency>
+cb3bb974be4e86eb1a48f186ab7de988f9a65620 49 82 2
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1326731468
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1326731468
+committer-tz +0000
+summary Create doxygen repository
+boundary
+filename pom.xml
+	  </dependencies>
+cb3bb974be4e86eb1a48f186ab7de988f9a65620 50 83
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1326731468
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1326731468
+committer-tz +0000
+summary Create doxygen repository
+boundary
+filename pom.xml
+	  
+cb3bb974be4e86eb1a48f186ab7de988f9a65620 74 84 1
+author David Francois
+author-mail <david.francois@logica.com>
+author-time 1326731468
+author-tz +0000
+committer David Francois
+committer-mail <david.francois@logica.com>
+committer-time 1326731468
+committer-tz +0000
+summary Create doxygen repository
+boundary
+filename pom.xml
+	</project>

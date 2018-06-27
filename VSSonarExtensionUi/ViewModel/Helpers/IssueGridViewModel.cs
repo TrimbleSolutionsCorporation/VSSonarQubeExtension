@@ -41,7 +41,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
     /// <summary>
     /// The issue grid view viewModel.
     /// </summary>
-    [ImplementPropertyChanged]
+    [AddINotifyPropertyChangedInterface]
     public class IssueGridViewModel : IViewModelBase, IDataModel, IFilterCommand, IFilterOption, IModelBase
     {
         #region Fields
@@ -1103,19 +1103,18 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                         {
                             this.Issues.Clear();
                             this.AllIssues.Clear();
+                            foreach (Issue listOfIssue in listOfIssues)
+                            {
+                                this.AllIssues.Add(listOfIssue);
+                                this.Issues.Add(listOfIssue);
+                            }
+
+                            this.notificationManager.OnNewIssuesUpdated();
                         }
                         catch (Exception ex)
                         {
                             Debug.WriteLine("Message: " + ex.Message);
                         }
-
-                        foreach (Issue listOfIssue in listOfIssues)
-                        {
-                            this.AllIssues.Add(listOfIssue);
-                            this.Issues.Add(listOfIssue);
-                        }
-
-                        this.notificationManager.OnNewIssuesUpdated();
                     });
 
 
@@ -1508,7 +1507,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 }
                 catch (Exception ex)
                 {
-                    this.notificationManager.WriteMessage("Filter Failed: " + ex.Message);
+                    this.notificationManager.WriteMessageToLog("Filter Failed: " + ex.Message);
                     this.Issues.Add(issue);
                 }
             }

@@ -20,7 +20,7 @@ namespace VSSonarPlugins.Types
     /// <summary>
     /// The sonar project.
     /// </summary>
-    [ImplementPropertyChanged]
+    [AddINotifyPropertyChangedInterface]
     public class SonarProject
     {
         #region Constructors and Destructors

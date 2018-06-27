@@ -31,7 +31,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     /// <summary>
     ///     The plugins options model.
     /// </summary>
-    [ImplementPropertyChanged]
+    [AddINotifyPropertyChangedInterface]
     public class VSonarQubeOptionsViewModel : IOptionsViewModelBase, IModelBase
     {
         /// <summary>

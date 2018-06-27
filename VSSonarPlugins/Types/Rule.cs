@@ -22,7 +22,7 @@ namespace VSSonarPlugins.Types
     /// <summary>
     ///     The rule.
     /// </summary>
-    [ImplementPropertyChanged]
+    [AddINotifyPropertyChangedInterface]
     [Serializable]
     public class Rule : ICloneable
     {

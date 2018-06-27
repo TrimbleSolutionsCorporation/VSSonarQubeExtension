@@ -72,13 +72,13 @@ namespace VSSonarPlugins
         /// Writes the exception.
         /// </summary>
         /// <param name="ex">The ex.</param>
-        void WriteException(Exception ex);
+        void WriteExceptionToLog(Exception ex);
 
         /// <summary>
         /// Writes the message.
         /// </summary>
         /// <param name="msg">The MSG.</param>
-        void WriteMessage(string msg);
+        void WriteMessageToLog(string msg);
 
         /// <summary>
         /// Starteds the working.

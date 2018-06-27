@@ -1,0 +1,831 @@
+﻿<ViewModel:CreateRuleViewModel xmlns:ViewModel="clr-namespace:SqaleUi.ViewModel" xmlns:Command="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.WPF45" xmlns:ExtensionTypes="clr-namespace:ExtensionTypes;assembly=ExtensionTypes" xmlns:System="clr-namespace:System;assembly=mscorlib" xmlns:View="clr-namespace:SqaleUi.View" xmlns:SqaleManager="clr-namespace:SqaleManager;assembly=SqaleManager" CanExecuteCreateCustomRuleCommand="True">
+	<ViewModel:CreateRuleViewModel.CreateCustomRuleCommand>
+		<Command:RelayCommand/>
+	</ViewModel:CreateRuleViewModel.CreateCustomRuleCommand>
+	<ViewModel:CreateRuleViewModel.Model>
+		<ViewModel:SqaleGridVm CanImportSqaleModelCommand="True" CanSendToWorkAreaCommand="True" CanImportFromSonarServer="True" CanExportSaqleModelCommand="False" CanImportXmlProfileCommand="False" CanImportProfileCommand="False" CanSendToProject="False" CanRemoveRuleCommand="True" CanAddNewRuleCommand="True" FilterActive="False" FilterTermEnabled="Ante vivamus vestibulum" FilterTermName="Aliquam integer amet quisque" FilterTermConfigKey="Phasellus sed" FilterTermRepo="Est hac" FilterTermKey="Nullam nunc consequat" FilterTermDescription="Vestibulum dis maecenas praesent donec" FilterTermTag="Etiam convallis accumsan bibendum arcu" Header="Aptent adipiscing auctor" IsInDesignMode="True" IsInDesignModeStatic="False" IsDirty="True" ProjectFile="Consequat vel dictumst quis" RulesCounter="Morbi pulvinar nam neque" SelectedProfile="Class semper curae sociis" ConnectedToSonarServer="False" ShowContextMenu="True">
+			<ViewModel:SqaleGridVm.Configuration>
+				<ExtensionTypes:ConnectionConfiguration Hostname="Cras class aenean" Password="Vestibulum curae adipiscing parturient mauris" Username="Duis curabitur nam"/>
+			</ViewModel:SqaleGridVm.Configuration>
+			<ViewModel:SqaleGridVm.ProjectQualityViewerModel>
+				<ViewModel:QualityViewerViewModel CanExecuteImportProfileCommand="False" ShowOnlyProfiles="False">
+					<ViewModel:QualityViewerViewModel.Configuration>
+						<ExtensionTypes:ConnectionConfiguration Hostname="Fringilla pretium" Password="Est rhoncus" Username="Vestibulum inceptos interdum vestibulum"/>
+					</ViewModel:QualityViewerViewModel.Configuration>
+					<ViewModel:QualityViewerViewModel.Model>
+						<ViewModel:SqaleGridVm CanImportSqaleModelCommand="True" CanSendToWorkAreaCommand="True" CanImportFromSonarServer="True" CanExportSaqleModelCommand="False" CanImportXmlProfileCommand="False" CanImportProfileCommand="False" CanSendToProject="False" CanRemoveRuleCommand="True" CanAddNewRuleCommand="True" FilterActive="False" FilterTermEnabled="Enim parturient" FilterTermName="Habitasse elit nec hendrerit sodales" FilterTermConfigKey="Lobortis amet" FilterTermRepo="Viverra himenaeos" FilterTermKey="Diam eget nascetur leo mus" FilterTermDescription="Taciti ante adipiscing hac arcu" FilterTermTag="Imperdiet aliquam" Header="Malesuada dolor tellus tempor" IsInDesignMode="False" IsInDesignModeStatic="True" IsDirty="True" ProjectFile="Tempus non pharetra tortor per" RulesCounter="Vestibulum turpis placerat" SelectedProfile="Erat integer quisque" ConnectedToSonarServer="True" ShowContextMenu="False"/>
+					</ViewModel:QualityViewerViewModel.Model>
+					<ViewModel:QualityViewerViewModel.Profiles>
+						<ExtensionTypes:Profile Default="True" Key="Feugiat adipiscing nisi" Language="Vestibulum netus vestibulum" Name="Nibh sed egestas euismod dictum"/>
+						<ExtensionTypes:Profile Default="False" Key="Porta purus penatibus" Language="Parturient vestibulum" Name="Sagittis vestibulum nulla lectus"/>
+						<ExtensionTypes:Profile Default="True" Key="Sociosqu ligula litora suscipit" Language="Gravida risus senectus dis libero" Name="Est porttitor adipiscing tincidunt nisl"/>
+						<ExtensionTypes:Profile Default="False" Key="Nunc luctus odio" Language="Velit hac torquent vitae class" Name="Leo ultrices tristique parturient curae"/>
+						<ExtensionTypes:Profile Default="True" Key="Maecenas praesent venenatis vulputate adipiscing" Language="Vehicula vestibulum volutpat" Name="Iaculis vestibulum donec orci ultricies"/>
+						<ExtensionTypes:Profile Default="False" Key="Fusce mattis" Language="Accumsan lacinia laoreet magnis etiam" Name="Bibendum natoque"/>
+						<ExtensionTypes:Profile Default="True" Key="Curabitur morbi nulla" Language="Parturient dictumst mus vestibulum" Name="Lorem pede"/>
+						<ExtensionTypes:Profile Default="False" Key="Quis eleifend facilisi per" Language="Phasellus nec consequat" Name="Quam non"/>
+						<ExtensionTypes:Profile Default="True" Key="Sed cras posuere sem nostra" Language="Urna convallis faucibus" Name="Mauris dignissim mollis proin montes"/>
+						<ExtensionTypes:Profile Default="False" Key="Sit vel nam sed" Language="Elementum vestibulum duis adipiscing" Name="Parturient ornare"/>
+					</ViewModel:QualityViewerViewModel.Profiles>
+					<ViewModel:QualityViewerViewModel.Projects>
+						<ExtensionTypes:SonarProject Id="75" Key="Aenean pulvinar" Name="Eros varius" Qualifier="Aliquet mauris sed" Scope="Fames nibh vivamus vestibulum aliquam"/>
+						<ExtensionTypes:SonarProject Id="73" Key="Parturient commodo conubia sociosqu" Name="Sem nullam sit" Qualifier="Vel cubilia felis" Scope="Blandit penatibus adipiscing sagittis senectus"/>
+						<ExtensionTypes:SonarProject Id="26" Key="Nam sed aptent nunc" Name="Vestibulum nisi" Qualifier="Egestas odio euismod orci adipiscing" Scope="Ipsum dapibus vestibulum nisl"/>
+						<ExtensionTypes:SonarProject Id="83" Key="Tincidunt congue adipiscing" Name="Suscipit porttitor parturient vestibulum feugiat" Qualifier="Ultrices vehicula tristique volutpat pede" Scope="Vestibulum dis auctor torquent"/>
+						<ExtensionTypes:SonarProject Id="22" Key="Iaculis lacus" Name="Parturient maecenas praesent justo cursus" Qualifier="Lorem accumsan leo lacinia vestibulum" Scope="Est gravida vestibulum hac dictum"/>
+						<ExtensionTypes:SonarProject Id="52" Key="Adipiscing magna parturient eleifend facilisi" Name="Ultricies bibendum" Qualifier="Faucibus lectus quam libero" Scope="Dictumst mus"/>
+						<ExtensionTypes:SonarProject Id="71" Key="Metus vestibulum litora habitant morbi" Name="Massa laoreet" Qualifier="Venenatis luctus" Scope="Natoque ligula"/>
+						<ExtensionTypes:SonarProject Id="38" Key="Non neque quis magnis" Name="Nec posuere" Qualifier="Mattis inceptos vestibulum per adipiscing" Scope="Potenti pretium"/>
+						<ExtensionTypes:SonarProject Id="63" Key="Nascetur pharetra vel parturient" Name="Sed sem netus interdum rhoncus" Qualifier="Placerat vestibulum mauris nam" Scope="Lobortis nulla sit"/>
+						<ExtensionTypes:SonarProject Id="45" Key="Pulvinar nostra sagittis" Name="Sed porta mollis vestibulum purus" Qualifier="Risus sodales est vulputate senectus" Scope="Dis montes"/>
+					</ViewModel:QualityViewerViewModel.Projects>
+					<ViewModel:QualityViewerViewModel.RefreshDataCommand>
+						<Command:RelayCommand/>
+					</ViewModel:QualityViewerViewModel.RefreshDataCommand>
+					<ViewModel:QualityViewerViewModel.SelectedProject>
+						<ExtensionTypes:SonarProject Id="96" Key="Platea vitae adipiscing primis" Name="Ornare viverra sociosqu velit urna" Qualifier="Integer rutrum sapien phasellus" Scope="Suscipit curabitur cras torquent aliquam"/>
+					</ViewModel:QualityViewerViewModel.SelectedProject>
+					<ViewModel:QualityViewerViewModel.SelectedProfile>
+						<ExtensionTypes:Profile Default="True" Key="Potenti habitant semper sociis" Language="Platea augue dis facilisis nunc" Name="Primis rutrum sapien fermentum"/>
+					</ViewModel:QualityViewerViewModel.SelectedProfile>
+				</ViewModel:QualityViewerViewModel>
+			</ViewModel:SqaleGridVm.ProjectQualityViewerModel>
+			<ViewModel:SqaleGridVm.ProfileRules>
+				<ExtensionTypes:Rule Category="EFFICIENCY" ConfigKey="Leo diam eget parturient" CreatedAt="09/07/2014 22:34:03" CategoryName="Aliquam dignissim dictumst aliquet eleifend" DefaultDebtRemFnType="UNDEFINED" DefaultDebtRemFnCoeff="Nec faucibus" DebtOverloaded="False" Description="Enim commodo facilisis" DebtRemFnCoeff="Mus elementum elit facilisi blandit" DefaultDebtChar="SECURITY" DefaultDebtSubChar="ERRORS" EnableSetDeafaults="True" InternalKey="Fusce habitant conubia congue vestibulum" IsTemplate="False" Key="Lorem vestibulum" Lang="Cubilia inceptos non" LangName="Morbi fermentum dapibus" Name="Interdum erat fringilla" RemediationOffsetVal="59" RemediationFactorVal="35" RemediationOffsetTxt="UNDEFINED" RemediationFunction="LINEAR" Repo="Nisl ligula natoque" RemediationFactorTxt="H" Severity="BLOCKER" SubcategoryName="Imperdiet posuere fames sem potenti" Status="BETA" Subcategory="CPU_EFFICIENCY">
+					<ExtensionTypes:Rule.Params>
+						<ExtensionTypes:RuleParam Desc="Egestas cursus" DefaultValue="37" Key="Eros adipiscing dictum"/>
+						<ExtensionTypes:RuleParam Desc="Parturient lectus" DefaultValue="50" Key="Nibh euismod"/>
+						<ExtensionTypes:RuleParam Desc="Nisi vestibulum" DefaultValue="94" Key="Nulla lobortis nascetur"/>
+						<ExtensionTypes:RuleParam Desc="Per libero feugiat gravida iaculis" DefaultValue="19" Key="Habitasse vestibulum proin hendrerit"/>
+						<ExtensionTypes:RuleParam Desc="Augue himenaeos" DefaultValue="95" Key="Lacinia laoreet sed pharetra dolor"/>
+					</ExtensionTypes:Rule.Params>
+					<ExtensionTypes:Rule.SysTags>
+						<System:String>Litora luctus felis magnis</System:String>
+						<System:String>Adipiscing malesuada mattis pretium</System:String>
+						<System:String>Penatibus parturient sit porttitor nunc</System:String>
+						<System:String>Vestibulum vel mauris tincidunt</System:String>
+						<System:String>Odio placerat</System:String>
+					</ExtensionTypes:Rule.SysTags>
+					<ExtensionTypes:Rule.SubcategoryValues>
+						<ExtensionTypes:SubCategory>API_ABUSE</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>LANGUAGE_RELATED_PORTABILITY</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>ARCHITECTURE_CHANGEABILITY</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>ARCHITECTURE_CHANGEABILITY</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>MEMORY_EFFICIENCY</ExtensionTypes:SubCategory>
+					</ExtensionTypes:Rule.SubcategoryValues>
+					<ExtensionTypes:Rule.Tags>
+						<System:String>Tristique orci vestibulum ipsum justo</System:String>
+						<System:String>Rhoncus lacus adipiscing mollis</System:String>
+						<System:String>Ultricies venenatis pede</System:String>
+						<System:String>Pulvinar montes parturient quam quis</System:String>
+						<System:String>Nostra sodales ornare vestibulum vestibulum</System:String>
+					</ExtensionTypes:Rule.Tags>
+				</ExtensionTypes:Rule>
+				<ExtensionTypes:Rule Category="REUSABILITY" ConfigKey="Senectus nam vulputate sed" CreatedAt="09/07/2014 22:34:03" CategoryName="Lorem sagittis" DefaultDebtRemFnType="UNDEFINED" DefaultDebtRemFnCoeff="Massa sociosqu" DebtOverloaded="True" Description="Cras platea primis duis hac" DebtRemFnCoeff="Urna magna dis est" DefaultDebtChar="UNDEFINED" DefaultDebtSubChar="DATA_RELIABILITY" EnableSetDeafaults="False" InternalKey="Curabitur suscipit phasellus adipiscing" IsTemplate="True" Key="Torquent parturient consequat metus" Lang="Morbi nunc ultrices" LangName="Vestibulum vestibulum amet" Name="Convallis vehicula dignissim adipiscing" RemediationOffsetVal="99" RemediationFactorVal="55" RemediationOffsetTxt="D" RemediationFunction="CONSTANT_ISSUE" Repo="Parturient elit" RemediationFactorTxt="H" Severity="UNDEFINED" SubcategoryName="Vestibulum enim" Status="UNDEFINED" Subcategory="SECURITY_FEATURES">
+					<ExtensionTypes:Rule.Params>
+						<ExtensionTypes:RuleParam Desc="Ante volutpat neque elementum arcu" DefaultValue="53" Key="Maecenas leo praesent"/>
+						<ExtensionTypes:RuleParam Desc="Facilisis parturient" DefaultValue="27" Key="Mus netus"/>
+						<ExtensionTypes:RuleParam Desc="Viverra fermentum nec rutrum accumsan" DefaultValue="87" Key="Bibendum non per aliquam fringilla"/>
+						<ExtensionTypes:RuleParam Desc="Habitasse hendrerit sapien himenaeos" DefaultValue="50" Key="Integer semper diam vestibulum sociis"/>
+						<ExtensionTypes:RuleParam Desc="Vestibulum nulla quisque porta taciti" DefaultValue="78" Key="Imperdiet sed tellus eget adipiscing"/>
+					</ExtensionTypes:Rule.Params>
+					<ExtensionTypes:Rule.SysTags>
+						<System:String>Sem dictumst</System:String>
+						<System:String>Vestibulum malesuada</System:String>
+						<System:String>Vivamus tempor erat eleifend penatibus</System:String>
+						<System:String>Purus tempus porttitor</System:String>
+						<System:String>Tortor risus turpis</System:String>
+					</ExtensionTypes:Rule.SysTags>
+					<ExtensionTypes:Rule.SubcategoryValues>
+						<ExtensionTypes:SubCategory>SECURITY_FEATURES</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>OS_RELATED_PORTABILITY</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>INTEGRATION_TESTABILITY</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>CPU_EFFICIENCY</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>SYNCHRONIZATION_RELIABILITY</ExtensionTypes:SubCategory>
+					</ExtensionTypes:Rule.SubcategoryValues>
+					<ExtensionTypes:Rule.Tags>
+						<System:String>Eros aliquam aliquet adipiscing</System:String>
+						<System:String>Varius nibh parturient vestibulum</System:String>
+						<System:String>Blandit commodo facilisi</System:String>
+						<System:String>Faucibus nisi vestibulum sit</System:String>
+						<System:String>Conubia habitant tincidunt cubilia velit</System:String>
+					</ExtensionTypes:Rule.Tags>
+				</ExtensionTypes:Rule>
+				<ExtensionTypes:Rule Category="EFFICIENCY" ConfigKey="Egestas aenean" CreatedAt="09/07/2014 22:34:03" CategoryName="Vel dapibus inceptos" DefaultDebtRemFnType="LINEAR" DefaultDebtRemFnCoeff="Mauris curae adipiscing euismod" DebtOverloaded="False" Description="Donec tristique parturient vestibulum" DebtRemFnCoeff="Vitae class" DefaultDebtChar="MAINTAINABILITY" DefaultDebtSubChar="OS_RELATED_PORTABILITY" EnableSetDeafaults="True" InternalKey="Etiam nullam" IsTemplate="False" Key="Fusce aptent vestibulum" Lang="Nisl ultricies" LangName="Auctor nunc" Name="Adipiscing venenatis parturient interdum" RemediationOffsetVal="34" RemediationFactorVal="44" RemediationOffsetTxt="H" RemediationFunction="LINEAR" Repo="Quis senectus augue consequat" RemediationFactorTxt="D" Severity="MAJOR" SubcategoryName="Natoque dolor" Status="BETA" Subcategory="UNIT_TESTABILITY">
+					<ExtensionTypes:Rule.Params>
+						<ExtensionTypes:RuleParam Desc="Vulputate lobortis nascetur" DefaultValue="26" Key="Vestibulum vestibulum adipiscing congue feugiat"/>
+						<ExtensionTypes:RuleParam Desc="Parturient nam cursus odio vestibulum" DefaultValue="34" Key="Dictum pharetra"/>
+						<ExtensionTypes:RuleParam Desc="Gravida vestibulum lorem curabitur" DefaultValue="81" Key="Morbi adipiscing phasellus orci lectus"/>
+						<ExtensionTypes:RuleParam Desc="Libero iaculis pede nulla" DefaultValue="20" Key="Quam ligula"/>
+						<ExtensionTypes:RuleParam Desc="Placerat pulvinar" DefaultValue="44" Key="Proin lacinia sagittis laoreet"/>
+					</ExtensionTypes:Rule.Params>
+					<ExtensionTypes:Rule.SysTags>
+						<System:String>Litora fames convallis felis sed</System:String>
+						<System:String>Sociosqu dis</System:String>
+						<System:String>Dignissim urna posuere</System:String>
+						<System:String>Parturient suscipit elementum est</System:String>
+						<System:String>Potenti ipsum pretium</System:String>
+					</ExtensionTypes:Rule.SysTags>
+					<ExtensionTypes:Rule.SubcategoryValues>
+						<ExtensionTypes:SubCategory>SECURITY_FEATURES</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>LOGIC_RELIABILITY</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>SECURITY_FEATURES</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>MEMORY_EFFICIENCY</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>TIME_ZONE_RELATED_PORTABILITY</ExtensionTypes:SubCategory>
+					</ExtensionTypes:Rule.SubcategoryValues>
+					<ExtensionTypes:Rule.Tags>
+						<System:String>Justo torquent hac luctus</System:String>
+						<System:String>Rhoncus lacus facilisis</System:String>
+						<System:String>Fermentum magnis fringilla cras mattis</System:String>
+						<System:String>Lorem vestibulum leo ultrices</System:String>
+						<System:String>Sodales magna</System:String>
+					</ExtensionTypes:Rule.Tags>
+				</ExtensionTypes:Rule>
+				<ExtensionTypes:Rule Category="SECURITY" ConfigKey="Nunc massa amet mus vehicula" CreatedAt="09/07/2014 22:34:03" CategoryName="Habitasse viverra duis aliquam integer" DefaultDebtRemFnType="CONSTANT_ISSUE" DefaultDebtRemFnCoeff="Praesent nec vestibulum non per" DebtOverloaded="True" Description="Ante mauris adipiscing hendrerit parturient" DebtRemFnCoeff="Volutpat maecenas" DefaultDebtChar="CHANGEABILITY" DefaultDebtSubChar="COMPILER_RELATED_PORTABILITY" EnableSetDeafaults="False" InternalKey="Sed mollis accumsan" IsTemplate="True" Key="Himenaeos vestibulum montes" Lang="Imperdiet quisque vestibulum adipiscing" LangName="Arcu bibendum dictumst eleifend" Name="Nostra malesuada diam parturient" RemediationOffsetVal="81" RemediationFactorVal="35" RemediationOffsetTxt="H" RemediationFunction="UNDEFINED" Repo="Interdum vestibulum" RemediationFactorTxt="D" Severity="UNDEFINED" SubcategoryName="Erat adipiscing tristique lobortis ultricies" Status="BETA" Subcategory="UNDEFINED">
+					<ExtensionTypes:Rule.Params>
+						<ExtensionTypes:RuleParam Desc="Sem metus morbi sit" DefaultValue="30" Key="Eget facilisi vel elit"/>
+						<ExtensionTypes:RuleParam Desc="Vivamus neque vestibulum vestibulum" DefaultValue="44" Key="Netus faucibus aliquam"/>
+						<ExtensionTypes:RuleParam Desc="Adipiscing aliquet" DefaultValue="20" Key="Habitant parturient inceptos nulla"/>
+						<ExtensionTypes:RuleParam Desc="Vestibulum porta ornare penatibus" DefaultValue="32" Key="Porttitor blandit nam"/>
+						<ExtensionTypes:RuleParam Desc="Purus enim commodo risus sed" DefaultValue="32" Key="Conubia tincidunt cubilia"/>
+					</ExtensionTypes:Rule.Params>
+					<ExtensionTypes:Rule.SysTags>
+						<System:String>Dapibus egestas</System:String>
+						<System:String>Dis euismod</System:String>
+						<System:String>Platea est venenatis</System:String>
+						<System:String>Hac nascetur</System:String>
+						<System:String>Vulputate primis</System:String>
+					</ExtensionTypes:Rule.SysTags>
+					<ExtensionTypes:Rule.SubcategoryValues>
+						<ExtensionTypes:SubCategory>TIME_ZONE_RELATED_PORTABILITY</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>DATA_CHANGEABILITY</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>UNDEFINED</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>TRANSPORTABILITY</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>HARDWARE_RELATED_PORTABILITY</ExtensionTypes:SubCategory>
+					</ExtensionTypes:Rule.SubcategoryValues>
+					<ExtensionTypes:Rule.Tags>
+						<System:String>Feugiat leo mus curabitur velit</System:String>
+						<System:String>Vitae nec parturient phasellus</System:String>
+						<System:String>Class pharetra placerat consequat convallis</System:String>
+						<System:String>Dignissim vestibulum eros gravida</System:String>
+						<System:String>Rutrum vestibulum</System:String>
+					</ExtensionTypes:Rule.Tags>
+				</ExtensionTypes:Rule>
+				<ExtensionTypes:Rule Category="SECURITY" ConfigKey="Facilisis nisi" CreatedAt="09/07/2014 22:34:03" CategoryName="Adipiscing iaculis nibh elementum parturient" DefaultDebtRemFnType="CONSTANT_ISSUE" DefaultDebtRemFnCoeff="Sapien laoreet" DebtOverloaded="False" Description="Sed pulvinar" DebtRemFnCoeff="Non vestibulum lacinia per fermentum" DefaultDebtChar="REUSABILITY" DefaultDebtSubChar="LOGIC_CHANGEABILITY" EnableSetDeafaults="True" InternalKey="Semper vestibulum sagittis adipiscing fringilla" IsTemplate="False" Key="Habitasse parturient natoque hendrerit vestibulum" Lang="Nisl himenaeos posuere" LangName="Sem potenti pretium nunc vestibulum" Name="Rhoncus adipiscing parturient" RemediationOffsetVal="74" RemediationFactorVal="67" RemediationOffsetTxt="UNDEFINED" RemediationFunction="LINEAR_OFFSET" Repo="Hac porttitor lorem adipiscing pede" RemediationFactorTxt="MN" Severity="MINOR" SubcategoryName="Tincidunt tristique ultricies" Status="BETA" Subcategory="CPU_EFFICIENCY">
+					<ExtensionTypes:Rule.Params>
+						<ExtensionTypes:RuleParam Desc="Odio vestibulum" DefaultValue="75" Key="Sodales sit"/>
+						<ExtensionTypes:RuleParam Desc="Vestibulum vel curae" DefaultValue="11" Key="Orci imperdiet"/>
+						<ExtensionTypes:RuleParam Desc="Donec etiam malesuada" DefaultValue="80" Key="Nam viverra"/>
+						<ExtensionTypes:RuleParam Desc="Fusce adipiscing aliquam sed" DefaultValue="37" Key="Dis senectus integer parturient"/>
+						<ExtensionTypes:RuleParam Desc="Vestibulum quisque sociis taciti penatibus" DefaultValue="77" Key="Vestibulum vivamus sociosqu aliquam est"/>
+					</ExtensionTypes:Rule.Params>
+					<ExtensionTypes:Rule.SysTags>
+						<System:String>Suscipit morbi parturient aliquet vestibulum</System:String>
+						<System:String>Leo blandit commodo nulla torquent</System:String>
+						<System:String>Ultrices venenatis tellus proin</System:String>
+						<System:String>Augue dolor vestibulum adipiscing vehicula</System:String>
+						<System:String>Conubia quam fames</System:String>
+					</ExtensionTypes:Rule.SysTags>
+					<ExtensionTypes:Rule.SubcategoryValues>
+						<ExtensionTypes:SubCategory>CPU_EFFICIENCY</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>MEMORY_EFFICIENCY</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>FAULT_TOLERANCE</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>INSTRUCTION_RELIABILITY</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>SOFTWARE_RELATED_PORTABILITY</ExtensionTypes:SubCategory>
+					</ExtensionTypes:Rule.SubcategoryValues>
+					<ExtensionTypes:Rule.Tags>
+						<System:String>Volutpat quis vulputate urna maecenas</System:String>
+						<System:String>Felis ipsum justo</System:String>
+						<System:String>Praesent curabitur cras</System:String>
+						<System:String>Lacus mus lorem parturient magna</System:String>
+						<System:String>Accumsan massa vestibulum duis</System:String>
+					</ExtensionTypes:Rule.Tags>
+				</ExtensionTypes:Rule>
+				<ExtensionTypes:Rule Category="RELIABILITY" ConfigKey="Phasellus tempor parturient nec" CreatedAt="09/07/2014 22:34:03" CategoryName="Bibendum vestibulum adipiscing dictumst eleifend" DefaultDebtRemFnType="LINEAR_OFFSET" DefaultDebtRemFnCoeff="Neque dapibus consequat" DebtOverloaded="True" Description="Convallis facilisi netus" DebtRemFnCoeff="Metus non morbi cubilia" DefaultDebtChar="MAINTAINABILITY" DefaultDebtSubChar="EXCEPTION_HANDLING" EnableSetDeafaults="False" InternalKey="Nunc nulla vestibulum vestibulum adipiscing" IsTemplate="True" Key="Egestas per porta" Lang="Sed purus euismod amet tempus" LangName="Feugiat parturient faucibus dignissim" Name="Risus sem gravida vestibulum" RemediationOffsetVal="94" RemediationFactorVal="51" RemediationOffsetTxt="MN" RemediationFunction="LINEAR" Repo="Curae dis pulvinar posuere diam" RemediationFactorTxt="MN" Severity="BLOCKER" SubcategoryName="Sagittis donec potenti etiam est" Status="UNDEFINED" Subcategory="EXCEPTION_HANDLING">
+					<ExtensionTypes:Rule.Params>
+						<ExtensionTypes:RuleParam Desc="Vestibulum velit vitae tortor" DefaultValue="90" Key="Habitant elementum facilisis inceptos"/>
+						<ExtensionTypes:RuleParam Desc="Interdum ante turpis sit adipiscing" DefaultValue="61" Key="Fermentum parturient"/>
+						<ExtensionTypes:RuleParam Desc="Lobortis vestibulum vel arcu" DefaultValue="18" Key="Iaculis lacinia"/>
+						<ExtensionTypes:RuleParam Desc="Class nascetur varius nam" DefaultValue="81" Key="Pharetra fringilla laoreet placerat habitasse"/>
+						<ExtensionTypes:RuleParam Desc="Natoque hendrerit" DefaultValue="74" Key="Sed aenean"/>
+					</ExtensionTypes:Rule.Params>
+					<ExtensionTypes:Rule.SysTags>
+						<System:String>Hac eget</System:String>
+						<System:String>Mauris himenaeos leo vestibulum</System:String>
+						<System:String>Imperdiet elit malesuada</System:String>
+						<System:String>Mus nullam</System:String>
+						<System:String>Pretium senectus adipiscing</System:String>
+					</ExtensionTypes:Rule.SysTags>
+					<ExtensionTypes:Rule.SubcategoryValues>
+						<ExtensionTypes:SubCategory>LOGIC_RELIABILITY</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>FAULT_TOLERANCE</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>DATA_RELIABILITY</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>OS_RELATED_PORTABILITY</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>MODULARITY</ExtensionTypes:SubCategory>
+					</ExtensionTypes:Rule.SubcategoryValues>
+					<ExtensionTypes:Rule.Tags>
+						<System:String>Aptent parturient nec</System:String>
+						<System:String>Enim non penatibus</System:String>
+						<System:String>Sociosqu suscipit</System:String>
+						<System:String>Vestibulum rhoncus</System:String>
+						<System:String>Auctor porttitor vestibulum congue</System:String>
+					</ExtensionTypes:Rule.Tags>
+				</ExtensionTypes:Rule>
+				<ExtensionTypes:Rule Category="TESTABILITY" ConfigKey="Vestibulum viverra lorem" CreatedAt="09/07/2014 22:34:03" CategoryName="Adipiscing sodales fusce parturient" DefaultDebtRemFnType="LINEAR_OFFSET" DefaultDebtRemFnCoeff="Per aliquam torquent sed nulla" DebtOverloaded="False" Description="Vestibulum sem sit ultrices" DebtRemFnCoeff="Tincidunt morbi" DefaultDebtChar="EFFICIENCY" DefaultDebtSubChar="LANGUAGE_RELATED_PORTABILITY" EnableSetDeafaults="True" InternalKey="Cursus tristique erat eros vehicula" IsTemplate="False" Key="Nibh integer dictum lectus" Lang="Libero proin adipiscing augue" LangName="Dolor vel" Name="Fames felis" RemediationOffsetVal="71" RemediationFactorVal="87" RemediationOffsetTxt="H" RemediationFunction="CONSTANT_ISSUE" Repo="Lorem bibendum" RemediationFactorTxt="UNDEFINED" Severity="BLOCKER" SubcategoryName="Dictumst dis eleifend magna conubia" Status="DEPRECATED" Subcategory="DATA_RELIABILITY">
+					<ExtensionTypes:Rule.Params>
+						<ExtensionTypes:RuleParam Desc="Ipsum ultricies ligula" DefaultValue="99" Key="Quisque nisi volutpat"/>
+						<ExtensionTypes:RuleParam Desc="Vivamus maecenas parturient aliquam justo" DefaultValue="29" Key="Venenatis litora"/>
+						<ExtensionTypes:RuleParam Desc="Praesent vestibulum" DefaultValue="65" Key="Aliquet vulputate luctus nisl"/>
+						<ExtensionTypes:RuleParam Desc="Lacus accumsan vestibulum" DefaultValue="72" Key="Nam magnis blandit"/>
+						<ExtensionTypes:RuleParam Desc="Sed curabitur" DefaultValue="26" Key="Commodo mattis phasellus"/>
+					</ExtensionTypes:Rule.Params>
+					<ExtensionTypes:Rule.SysTags>
+						<System:String>Nunc odio orci cubilia dapibus</System:String>
+						<System:String>Facilisi egestas</System:String>
+						<System:String>Pede faucibus est</System:String>
+						<System:String>Habitant massa</System:String>
+						<System:String>Mauris mollis</System:String>
+					</ExtensionTypes:Rule.SysTags>
+					<ExtensionTypes:Rule.SubcategoryValues>
+						<ExtensionTypes:SubCategory>SECURITY_FEATURES</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>COMPILER_RELATED_PORTABILITY</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>TRANSPORTABILITY</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>ARCHITECTURE_CHANGEABILITY</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>SYNCHRONIZATION_RELIABILITY</ExtensionTypes:SubCategory>
+					</ExtensionTypes:Rule.SubcategoryValues>
+					<ExtensionTypes:Rule.Tags>
+						<System:String>Consequat convallis hac</System:String>
+						<System:String>Inceptos montes interdum leo</System:String>
+						<System:String>Mus nec</System:String>
+						<System:String>Dignissim non metus</System:String>
+						<System:String>Quam morbi lobortis</System:String>
+					</ExtensionTypes:Rule.Tags>
+				</ExtensionTypes:Rule>
+				<ExtensionTypes:Rule Category="EFFICIENCY" ConfigKey="Nascetur adipiscing" CreatedAt="09/07/2014 22:34:03" CategoryName="Quis neque per" DefaultDebtRemFnType="UNDEFINED" DefaultDebtRemFnCoeff="Sed elementum cras" DebtOverloaded="True" Description="Duis euismod" DebtRemFnCoeff="Pharetra urna" DefaultDebtChar="SECURITY" DefaultDebtSubChar="UNDEFINED" EnableSetDeafaults="False" InternalKey="Nunc facilisis sem amet" IsTemplate="True" Key="Ante sit netus nostra" Lang="Parturient feugiat ornare arcu" LangName="Gravida platea" Name="Vel diam nulla iaculis" RemediationOffsetVal="17" RemediationFactorVal="46" RemediationOffsetTxt="UNDEFINED" RemediationFunction="CONSTANT_ISSUE" Repo="Tempor viverra tempus vestibulum nisi" RemediationFactorTxt="H" Severity="INFO" SubcategoryName="Velit adipiscing parturient tortor" Status="UNDEFINED" Subcategory="HARDWARE_RELATED_PORTABILITY">
+					<ExtensionTypes:Rule.Params>
+						<ExtensionTypes:RuleParam Desc="Eget primis porta lacinia rutrum" DefaultValue="69" Key="Placerat laoreet pulvinar sapien fermentum"/>
+						<ExtensionTypes:RuleParam Desc="Natoque sagittis purus" DefaultValue="48" Key="Semper elit enim vestibulum"/>
+						<ExtensionTypes:RuleParam Desc="Erat nam posuere fringilla eros" DefaultValue="49" Key="Vestibulum habitasse"/>
+						<ExtensionTypes:RuleParam Desc="Hendrerit potenti adipiscing parturient sed" DefaultValue="56" Key="Sociis pretium dis senectus nibh"/>
+						<ExtensionTypes:RuleParam Desc="Vestibulum sociosqu risus rhoncus taciti" DefaultValue="80" Key="Tellus sodales"/>
+					</ExtensionTypes:Rule.Params>
+					<ExtensionTypes:Rule.SysTags>
+						<System:String>Aliquam himenaeos est</System:String>
+						<System:String>Imperdiet suscipit hac integer turpis</System:String>
+						<System:String>Malesuada vestibulum torquent quisque</System:String>
+						<System:String>Ultrices vestibulum vitae varius adipiscing</System:String>
+						<System:String>Leo vivamus aliquam</System:String>
+					</ExtensionTypes:Rule.SysTags>
+					<ExtensionTypes:Rule.SubcategoryValues>
+						<ExtensionTypes:SubCategory>EXCEPTION_HANDLING</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>OS_RELATED_PORTABILITY</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>READABILITY</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>UNIT_TESTS</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>UNIT_TESTS</ExtensionTypes:SubCategory>
+					</ExtensionTypes:Rule.SubcategoryValues>
+					<ExtensionTypes:Rule.Tags>
+						<System:String>Parturient class penatibus</System:String>
+						<System:String>Vehicula vestibulum curae volutpat aenean</System:String>
+						<System:String>Vestibulum aliquet nisl</System:String>
+						<System:String>Mus adipiscing</System:String>
+						<System:String>Blandit parturient</System:String>
+					</ExtensionTypes:Rule.Tags>
+				</ExtensionTypes:Rule>
+				<ExtensionTypes:Rule Category="MAINTAINABILITY" ConfigKey="Adipiscing nec porttitor tincidunt mauris" CreatedAt="09/07/2014 22:34:03" CategoryName="Maecenas vestibulum vestibulum commodo" DefaultDebtRemFnType="UNDEFINED" DefaultDebtRemFnCoeff="Tristique accumsan nunc nullam odio" DebtOverloaded="False" Description="Donec etiam aptent conubia fusce" DebtRemFnCoeff="Praesent non" DefaultDebtChar="CHANGEABILITY" DefaultDebtSubChar="READABILITY" EnableSetDeafaults="True" InternalKey="Per auctor ultricies congue cursus" IsTemplate="False" Key="Orci cubilia pede" Lang="Bibendum dapibus egestas sed" LangName="Sem euismod feugiat parturient" Name="Gravida dictumst dictum sit" RemediationOffsetVal="78" RemediationFactorVal="78" RemediationOffsetTxt="MN" RemediationFunction="LINEAR" Repo="Magnis vestibulum" RemediationFactorTxt="UNDEFINED" Severity="MAJOR" SubcategoryName="Dis consequat nascetur" Status="DEPRECATED" Subcategory="UNIT_TESTABILITY">
+					<ExtensionTypes:Rule.Params>
+						<ExtensionTypes:RuleParam Desc="Lectus lorem" DefaultValue="15" Key="Vestibulum vestibulum libero adipiscing"/>
+						<ExtensionTypes:RuleParam Desc="Morbi iaculis ligula parturient eleifend" DefaultValue="84" Key="Lacinia vel"/>
+						<ExtensionTypes:RuleParam Desc="Laoreet facilisi litora quam nam" DefaultValue="87" Key="Natoque vestibulum nulla faucibus venenatis"/>
+						<ExtensionTypes:RuleParam Desc="Sed luctus habitant" DefaultValue="72" Key="Posuere inceptos vestibulum quis vulputate"/>
+						<ExtensionTypes:RuleParam Desc="Interdum adipiscing potenti curabitur" DefaultValue="99" Key="Lobortis pretium phasellus parturient"/>
+					</ExtensionTypes:Rule.Params>
+					<ExtensionTypes:Rule.SysTags>
+						<System:String>Vestibulum est hac mattis</System:String>
+						<System:String>Convallis leo dignissim mauris</System:String>
+						<System:String>Urna mollis pharetra elementum</System:String>
+						<System:String>Rhoncus facilisis sodales</System:String>
+						<System:String>Fermentum montes viverra aliquam cras</System:String>
+					</ExtensionTypes:Rule.SysTags>
+					<ExtensionTypes:Rule.SubcategoryValues>
+						<ExtensionTypes:SubCategory>DATA_RELIABILITY</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>MODULARITY</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>UNDEFINED</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>UNDEFINED</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>TIME_ZONE_RELATED_PORTABILITY</ExtensionTypes:SubCategory>
+					</ExtensionTypes:Rule.SubcategoryValues>
+					<ExtensionTypes:Rule.Tags>
+						<System:String>Duis mus</System:String>
+						<System:String>Integer quisque fringilla</System:String>
+						<System:String>Nec adipiscing nostra</System:String>
+						<System:String>Nunc non per proin habitasse</System:String>
+						<System:String>Sed amet augue placerat sem</System:String>
+					</ExtensionTypes:Rule.Tags>
+				</ExtensionTypes:Rule>
+				<ExtensionTypes:Rule Category="MAINTAINABILITY" ConfigKey="Dolor vivamus aliquam hendrerit sit" CreatedAt="09/07/2014 22:34:03" CategoryName="Parturient vestibulum ornare" DefaultDebtRemFnType="CONSTANT_ISSUE" DefaultDebtRemFnCoeff="Ante arcu vestibulum" DebtOverloaded="True" Description="Fames platea sagittis aliquet" DebtRemFnCoeff="Vel pulvinar" DefaultDebtChar="UNDEFINED" DefaultDebtSubChar="SOFTWARE_RELATED_PORTABILITY" EnableSetDeafaults="False" InternalKey="Himenaeos primis" IsTemplate="True" Key="Blandit senectus" Lang="Sociosqu nam" LangName="Rutrum felis sed" Name="Ipsum sapien adipiscing" RemediationOffsetVal="36" RemediationFactorVal="34" RemediationOffsetTxt="H" RemediationFunction="CONSTANT_ISSUE" Repo="Dapibus egestas volutpat vestibulum" RemediationFactorTxt="UNDEFINED" Severity="CRITICAL" SubcategoryName="Maecenas lorem magna vestibulum" Status="DEPRECATED" Subcategory="MEMORY_EFFICIENCY">
+					<ExtensionTypes:Rule.Params>
+						<ExtensionTypes:RuleParam Desc="Commodo suscipit diam" DefaultValue="25" Key="Eget semper torquent"/>
+						<ExtensionTypes:RuleParam Desc="Ultrices imperdiet malesuada conubia" DefaultValue="16" Key="Dis vehicula penatibus parturient"/>
+						<ExtensionTypes:RuleParam Desc="Elit enim vestibulum erat porttitor" DefaultValue="23" Key="Vestibulum eros sociis"/>
+						<ExtensionTypes:RuleParam Desc="Justo adipiscing" DefaultValue="11" Key="Est lacus nibh tincidunt"/>
+						<ExtensionTypes:RuleParam Desc="Hac leo taciti nisi tellus" DefaultValue="87" Key="Mus cubilia nec parturient non"/>
+					</ExtensionTypes:Rule.Params>
+					<ExtensionTypes:Rule.SysTags>
+						<System:String>Adipiscing tristique ultricies nisl massa</System:String>
+						<System:String>Venenatis euismod</System:String>
+						<System:String>Tempor praesent per</System:String>
+						<System:String>Metus morbi sed</System:String>
+						<System:String>Sem feugiat</System:String>
+					</ExtensionTypes:Rule.SysTags>
+					<ExtensionTypes:Rule.SubcategoryValues>
+						<ExtensionTypes:SubCategory>TIME_ZONE_RELATED_PORTABILITY</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>READABILITY</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>INPUT_VALIDATION_AND_REPRESENTATION</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>UNDEFINED</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>ERRORS</ExtensionTypes:SubCategory>
+					</ExtensionTypes:Rule.SubcategoryValues>
+					<ExtensionTypes:Rule.Tags>
+						<System:String>Parturient accumsan vulputate sit</System:String>
+						<System:String>Curabitur nunc</System:String>
+						<System:String>Phasellus tempus odio</System:String>
+						<System:String>Orci vestibulum bibendum</System:String>
+						<System:String>Pede quam neque</System:String>
+					</ExtensionTypes:Rule.Tags>
+				</ExtensionTypes:Rule>
+			</ViewModel:SqaleGridVm.ProfileRules>
+			<ViewModel:SqaleGridVm.ProfileSelectionWindow>
+				<View:QualityProfileViewer/>
+			</ViewModel:SqaleGridVm.ProfileSelectionWindow>
+			<ViewModel:SqaleGridVm.ProjectProfileSelectionWindow>
+				<View:ProjectProfileViewer/>
+			</ViewModel:SqaleGridVm.ProjectProfileSelectionWindow>
+			<ViewModel:SqaleGridVm.QualityViewerModel>
+				<ViewModel:QualityViewerViewModel CanExecuteImportProfileCommand="True" ShowOnlyProfiles="True">
+					<ViewModel:QualityViewerViewModel.Configuration>
+						<ExtensionTypes:ConnectionConfiguration Hostname="Sociosqu sodales nec viverra" Password="Suscipit torquent vestibulum" Username="Parturient justo urna"/>
+					</ViewModel:QualityViewerViewModel.Configuration>
+					<ViewModel:QualityViewerViewModel.Model>
+						<ViewModel:SqaleGridVm CanImportSqaleModelCommand="False" CanSendToWorkAreaCommand="False" CanImportFromSonarServer="False" CanExportSaqleModelCommand="True" CanImportXmlProfileCommand="True" CanImportProfileCommand="True" CanSendToProject="True" CanRemoveRuleCommand="False" CanAddNewRuleCommand="False" FilterActive="True" FilterTermEnabled="Adipiscing himenaeos vivamus metus" FilterTermName="Magna vestibulum massa" FilterTermConfigKey="Non aliquam integer ultrices" FilterTermRepo="Duis nunc aliquam amet aliquet" FilterTermKey="Quisque ligula volutpat cras maecenas" FilterTermDescription="Vehicula lacus lorem hendrerit" FilterTermTag="Blandit litora" Header="Luctus imperdiet malesuada" IsInDesignMode="True" IsInDesignModeStatic="False" IsDirty="False" ProjectFile="Praesent parturient" RulesCounter="Penatibus porttitor tincidunt" SelectedProfile="Vestibulum magnis" ConnectedToSonarServer="False" ShowContextMenu="True"/>
+					</ViewModel:QualityViewerViewModel.Model>
+					<ViewModel:QualityViewerViewModel.Profiles>
+						<ExtensionTypes:Profile Default="False" Key="Eleifend gravida" Language="Tortor netus" Name="Vestibulum convallis"/>
+						<ExtensionTypes:Profile Default="True" Key="Nam dignissim" Language="Facilisi adipiscing nulla turpis faucibus" Name="Habitant parturient iaculis"/>
+						<ExtensionTypes:Profile Default="False" Key="Vestibulum purus nunc" Language="Urna elementum cras" Name="Varius inceptos duis porta interdum"/>
+						<ExtensionTypes:Profile Default="True" Key="Lacinia amet adipiscing parturient ante" Language="Risus velit" Name="Aenean vitae class lobortis vestibulum"/>
+						<ExtensionTypes:Profile Default="False" Key="Nullam natoque sed diam eget" Language="Laoreet arcu curae" Name="Mauris vestibulum"/>
+						<ExtensionTypes:Profile Default="True" Key="Dis fusce adipiscing lorem morbi" Language="Donec elit vestibulum facilisis" Name="Enim posuere etiam"/>
+						<ExtensionTypes:Profile Default="False" Key="Vestibulum fermentum" Language="Nulla nascetur parturient erat" Name="Aptent est hac"/>
+						<ExtensionTypes:Profile Default="True" Key="Eros congue fames leo nibh" Language="Vestibulum proin pharetra" Name="Placerat augue dolor pulvinar auctor"/>
+						<ExtensionTypes:Profile Default="False" Key="Nunc potenti parturient" Language="Adipiscing nisi felis cursus dictum" Name="Lectus nisl"/>
+						<ExtensionTypes:Profile Default="True" Key="Orci ipsum" Language="Fringilla odio habitasse sagittis pretium" Name="Senectus vestibulum rhoncus mus"/>
+					</ViewModel:QualityViewerViewModel.Profiles>
+					<ViewModel:QualityViewerViewModel.Projects>
+						<ExtensionTypes:SonarProject Id="73" Key="Bibendum mauris mollis montes tristique" Name="Mattis accumsan per" Qualifier="Ultricies dictumst eleifend nostra" Scope="Commodo morbi"/>
+						<ExtensionTypes:SonarProject Id="72" Key="Sem adipiscing venenatis sit faucibus" Name="Neque ante ornare facilisi" Qualifier="Vulputate curabitur netus" Scope="Vestibulum sed platea arcu"/>
+						<ExtensionTypes:SonarProject Id="38" Key="Phasellus conubia" Name="Parturient primis vestibulum vestibulum rutrum" Qualifier="Eget inceptos vel consequat interdum" Scope="Diam sapien habitant"/>
+						<ExtensionTypes:SonarProject Id="69" Key="Parturient vestibulum porta" Name="Convallis elit semper" Qualifier="Nascetur enim" Scope="Nulla lobortis sociis nam adipiscing"/>
+						<ExtensionTypes:SonarProject Id="92" Key="Erat adipiscing risus pulvinar" Name="Pharetra purus vestibulum" Qualifier="Sagittis parturient sed dignissim" Scope="Cubilia placerat"/>
+						<ExtensionTypes:SonarProject Id="39" Key="Est facilisis vitae" Name="Senectus vestibulum taciti elementum" Qualifier="Dapibus hac" Scope="Sociosqu dis velit eros"/>
+						<ExtensionTypes:SonarProject Id="30" Key="Euismod class" Name="Vestibulum fermentum egestas leo" Qualifier="Parturient tellus feugiat gravida mus" Scope="Adipiscing nibh"/>
+						<ExtensionTypes:SonarProject Id="25" Key="Tempor tempus nisi" Name="Vestibulum fringilla" Qualifier="Vestibulum habitasse non iaculis per" Scope="Curae nec"/>
+						<ExtensionTypes:SonarProject Id="55" Key="Etiam sem" Name="Donec nisl tortor adipiscing" Qualifier="Hendrerit vehicula himenaeos imperdiet" Scope="Suscipit lacinia torquent sed ultrices"/>
+						<ExtensionTypes:SonarProject Id="60" Key="Nunc varius malesuada" Name="Laoreet turpis volutpat natoque" Qualifier="Vestibulum lorem penatibus morbi" Scope="Parturient fusce maecenas"/>
+					</ViewModel:QualityViewerViewModel.Projects>
+					<ViewModel:QualityViewerViewModel.RefreshDataCommand>
+						<Command:RelayCommand/>
+					</ViewModel:QualityViewerViewModel.RefreshDataCommand>
+					<ViewModel:QualityViewerViewModel.SelectedProject>
+						<ExtensionTypes:SonarProject Id="15" Key="Accumsan sed odio nulla" Name="Sit vel praesent" Qualifier="Orci adipiscing" Scope="Nam vestibulum"/>
+					</ViewModel:QualityViewerViewModel.SelectedProject>
+					<ViewModel:QualityViewerViewModel.SelectedProfile>
+						<ExtensionTypes:Profile Default="False" Key="Adipiscing quis" Language="Libero vestibulum" Name="Pede quam"/>
+					</ViewModel:QualityViewerViewModel.SelectedProfile>
+				</ViewModel:QualityViewerViewModel>
+			</ViewModel:SqaleGridVm.QualityViewerModel>
+			<ViewModel:SqaleGridVm.Solution>
+				<ExtensionTypes:Resource Date="09/07/2014 22:34:03" Id="19" Key="Porttitor non orci natoque fusce" Lname="Sed ultricies posuere quam vestibulum" Lang="Quis tempor" NonSafeKey="Metus vestibulum adipiscing parturient" Name="Pede tincidunt per tristique" Qualifier="Tellus venenatis lorem" Scope="Praesent accumsan" Version="Morbi urna tempus vulputate">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Potenti adipiscing proin pretium" FormatedValue="Nulla sit" Key="Bibendum sem curabitur"/>
+						<ExtensionTypes:Metric Data="Sodales tortor" FormatedValue="Vestibulum vel vestibulum nam" Key="Dictumst rhoncus eleifend parturient"/>
+						<ExtensionTypes:Metric Data="Est phasellus viverra" FormatedValue="Facilisi sed dis" Key="Turpis cras"/>
+						<ExtensionTypes:Metric Data="Quisque hac" FormatedValue="Duis varius consequat convallis faucibus" Key="Aliquam integer"/>
+						<ExtensionTypes:Metric Data="Augue aliquam dolor nunc leo" FormatedValue="Inceptos vivamus dignissim" Key="Adipiscing habitant"/>
+						<ExtensionTypes:Metric Data="Facilisis parturient blandit mus nec" FormatedValue="Felis interdum" Key="Aliquet elementum amet fames"/>
+						<ExtensionTypes:Metric Data="Arcu lobortis habitasse" FormatedValue="Ante non aenean fringilla mauris" Key="Fermentum ipsum"/>
+						<ExtensionTypes:Metric Data="Sed pharetra himenaeos parturient justo" FormatedValue="Aptent hendrerit vestibulum nascetur adipiscing" Key="Diam nullam per vestibulum"/>
+						<ExtensionTypes:Metric Data="Elit congue" FormatedValue="Sem vestibulum sit auctor vel" Key="Imperdiet lacus eget malesuada placerat"/>
+						<ExtensionTypes:Metric Data="Lorem magna massa eros" FormatedValue="Cubilia enim erat dapibus" Key="Commodo conubia cursus"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ViewModel:SqaleGridVm.Solution>
+			<ViewModel:SqaleGridVm.SqaleManager>
+				<SqaleManager:SqaleManager/>
+			</ViewModel:SqaleGridVm.SqaleManager>
+			<ViewModel:SqaleGridVm.SelectedRule>
+				<ExtensionTypes:Rule Category="UNDEFINED" ConfigKey="Bibendum dictumst posuere mauris" CreatedAt="09/07/2014 22:34:03" CategoryName="Porttitor aenean proin" DefaultDebtRemFnType="LINEAR" DefaultDebtRemFnCoeff="Nullam dis pretium rhoncus" DebtOverloaded="False" Description="Tincidunt faucibus" DebtRemFnCoeff="Eleifend potenti facilisi" DefaultDebtChar="RELIABILITY" DefaultDebtSubChar="ARCHITECTURE_RELIABILITY" EnableSetDeafaults="True" InternalKey="Parturient vestibulum est tristique pede" IsTemplate="False" Key="Ultricies venenatis sodales quam aptent" Lang="Vulputate habitant quis" LangName="Curabitur augue urna auctor" Name="Viverra hac phasellus dolor" RemediationOffsetVal="31" RemediationFactorVal="76" RemediationOffsetTxt="MN" RemediationFunction="LINEAR" Repo="Mauris elit porta" RemediationFactorTxt="MN" Severity="MAJOR" SubcategoryName="Mollis montes vestibulum" Status="BETA" Subcategory="UNIT_TESTS">
+					<ExtensionTypes:Rule.Params>
+						<ExtensionTypes:RuleParam Desc="Aliquam inceptos fames" DefaultValue="48" Key="Congue interdum felis integer"/>
+						<ExtensionTypes:RuleParam Desc="Quisque leo mus cursus" DefaultValue="19" Key="Cras vestibulum nec ipsum duis"/>
+						<ExtensionTypes:RuleParam Desc="Dictum lobortis" DefaultValue="16" Key="Adipiscing nascetur consequat lectus"/>
+						<ExtensionTypes:RuleParam Desc="Justo convallis pharetra libero" DefaultValue="63" Key="Dignissim ligula"/>
+						<ExtensionTypes:RuleParam Desc="Lacus vivamus parturient" DefaultValue="41" Key="Aliquam vestibulum lorem magna nunc"/>
+						<ExtensionTypes:RuleParam Desc="Elementum massa" DefaultValue="80" Key="Litora aliquet amet"/>
+						<ExtensionTypes:RuleParam Desc="Vestibulum non" DefaultValue="97" Key="Metus morbi blandit"/>
+						<ExtensionTypes:RuleParam Desc="Ante placerat per adipiscing sed" DefaultValue="31" Key="Parturient sem arcu luctus"/>
+						<ExtensionTypes:RuleParam Desc="Sit magnis commodo facilisis" DefaultValue="67" Key="Neque mattis"/>
+						<ExtensionTypes:RuleParam Desc="Diam netus conubia eget" DefaultValue="84" Key="Vestibulum nulla pulvinar fermentum vel"/>
+					</ExtensionTypes:Rule.Params>
+					<ExtensionTypes:Rule.SysTags>
+						<System:String>Nostra adipiscing</System:String>
+						<System:String>Ornare nam enim</System:String>
+						<System:String>Erat purus platea cubilia</System:String>
+						<System:String>Sed primis</System:String>
+						<System:String>Sagittis fringilla risus habitasse</System:String>
+						<System:String>Eros rutrum nibh dis</System:String>
+						<System:String>Parturient senectus dapibus nisi</System:String>
+						<System:String>Sapien velit egestas</System:String>
+						<System:String>Vestibulum est euismod</System:String>
+						<System:String>Hendrerit feugiat sociosqu suscipit gravida</System:String>
+					</ExtensionTypes:Rule.SysTags>
+					<ExtensionTypes:Rule.SubcategoryValues>
+						<ExtensionTypes:SubCategory>ARCHITECTURE_RELIABILITY</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>COMPILER_RELATED_PORTABILITY</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>CPU_EFFICIENCY</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>LOGIC_RELIABILITY</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>UNIT_TESTABILITY</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>MEMORY_EFFICIENCY</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>UNDEFINED</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>SOFTWARE_RELATED_PORTABILITY</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>UNIT_TESTABILITY</ExtensionTypes:SubCategory>
+						<ExtensionTypes:SubCategory>TIME_ZONE_RELATED_PORTABILITY</ExtensionTypes:SubCategory>
+					</ExtensionTypes:Rule.SubcategoryValues>
+					<ExtensionTypes:Rule.Tags>
+						<System:String>Torquent semper hac</System:String>
+						<System:String>Ultrices leo</System:String>
+						<System:String>Vitae vestibulum adipiscing parturient</System:String>
+						<System:String>Mus sociis iaculis</System:String>
+						<System:String>Himenaeos taciti</System:String>
+						<System:String>Class nisl vehicula nunc</System:String>
+						<System:String>Curae lacinia odio</System:String>
+						<System:String>Imperdiet malesuada nec penatibus volutpat</System:String>
+						<System:String>Donec etiam</System:String>
+						<System:String>Vestibulum maecenas laoreet</System:String>
+					</ExtensionTypes:Rule.Tags>
+				</ExtensionTypes:Rule>
+			</ViewModel:SqaleGridVm.SelectedRule>
+		</ViewModel:SqaleGridVm>
+	</ViewModel:CreateRuleViewModel.Model>
+	<ViewModel:CreateRuleViewModel.SelectedRule>
+		<ExtensionTypes:Rule Category="SECURITY" ConfigKey="Parturient ultrices" CreatedAt="09/07/2014 22:34:03" CategoryName="Duis quisque" DefaultDebtRemFnType="UNDEFINED" DefaultDebtRemFnCoeff="Etiam vehicula vestibulum vestibulum" DebtOverloaded="False" Description="Adipiscing volutpat taciti" DebtRemFnCoeff="Vivamus donec consequat" DefaultDebtChar="MAINTAINABILITY" DefaultDebtSubChar="ARCHITECTURE_RELIABILITY" EnableSetDeafaults="True" InternalKey="Hac aliquam nunc" IsTemplate="False" Key="Tellus amet ante convallis" Lang="Fusce parturient dignissim tempor lorem" LangName="Elementum morbi facilisis" Name="Fermentum maecenas" RemediationOffsetVal="68" RemediationFactorVal="61" RemediationOffsetTxt="MN" RemediationFunction="UNDEFINED" Repo="Litora tincidunt adipiscing" RemediationFactorTxt="H" Severity="MAJOR" SubcategoryName="Feugiat luctus lorem" Status="READY" Subcategory="TRANSPORTABILITY">
+			<ExtensionTypes:Rule.Params>
+				<ExtensionTypes:RuleParam Desc="Tempus tortor vestibulum nulla leo" DefaultValue="76" Key="Turpis aliquet"/>
+				<ExtensionTypes:RuleParam Desc="Mus varius proin" DefaultValue="20" Key="Augue fringilla"/>
+				<ExtensionTypes:RuleParam Desc="Aenean mauris vestibulum" DefaultValue="86" Key="Habitasse arcu"/>
+				<ExtensionTypes:RuleParam Desc="Dolor adipiscing blandit parturient" DefaultValue="88" Key="Diam eget praesent"/>
+				<ExtensionTypes:RuleParam Desc="Hendrerit accumsan elit enim fames" DefaultValue="16" Key="Nullam commodo aptent vestibulum felis"/>
+				<ExtensionTypes:RuleParam Desc="Conubia cubilia himenaeos nec" DefaultValue="86" Key="Vestibulum non dapibus ipsum imperdiet"/>
+				<ExtensionTypes:RuleParam Desc="Malesuada auctor egestas" DefaultValue="90" Key="Euismod justo congue cursus bibendum"/>
+				<ExtensionTypes:RuleParam Desc="Adipiscing parturient erat penatibus" DefaultValue="39" Key="Lacus eros nibh dictum lectus"/>
+				<ExtensionTypes:RuleParam Desc="Nisi libero dictumst per" DefaultValue="37" Key="Eleifend porttitor vestibulum sed"/>
+				<ExtensionTypes:RuleParam Desc="Vestibulum ligula" DefaultValue="66" Key="Sem sit"/>
+			</ExtensionTypes:Rule.Params>
+			<ExtensionTypes:Rule.SysTags>
+				<System:String>Nisl magna</System:String>
+				<System:String>Vel tristique</System:String>
+				<System:String>Facilisi ultricies</System:String>
+				<System:String>Venenatis faucibus gravida habitant iaculis</System:String>
+				<System:String>Massa metus lacinia</System:String>
+				<System:String>Laoreet magnis parturient</System:String>
+				<System:String>Nunc natoque inceptos odio</System:String>
+				<System:String>Interdum posuere mattis mauris nam</System:String>
+				<System:String>Mollis potenti</System:String>
+				<System:String>Montes sed orci pede vulputate</System:String>
+			</ExtensionTypes:Rule.SysTags>
+			<ExtensionTypes:Rule.SubcategoryValues>
+				<ExtensionTypes:SubCategory>LOGIC_CHANGEABILITY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>INPUT_VALIDATION_AND_REPRESENTATION</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>ARCHITECTURE_CHANGEABILITY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>OS_RELATED_PORTABILITY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>SYNCHRONIZATION_RELIABILITY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>UNDERSTANDABILITY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>UNDEFINED</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>UNDERSTANDABILITY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>COMPILER_RELATED_PORTABILITY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>READABILITY</ExtensionTypes:SubCategory>
+			</ExtensionTypes:Rule.SubcategoryValues>
+			<ExtensionTypes:Rule.Tags>
+				<System:String>Vestibulum dis quam</System:String>
+				<System:String>Morbi neque</System:String>
+				<System:String>Lobortis vestibulum quis adipiscing</System:String>
+				<System:String>Netus nulla pretium</System:String>
+				<System:String>Nascetur urna rhoncus</System:String>
+				<System:String>Nostra est</System:String>
+				<System:String>Parturient pharetra</System:String>
+				<System:String>Vestibulum placerat cras sodales</System:String>
+				<System:String>Pulvinar sagittis porta</System:String>
+				<System:String>Senectus ornare duis purus</System:String>
+			</ExtensionTypes:Rule.Tags>
+		</ExtensionTypes:Rule>
+	</ViewModel:CreateRuleViewModel.SelectedRule>
+	<ViewModel:CreateRuleViewModel.TemplateRules>
+		<ExtensionTypes:Rule Category="PORTABILITY" ConfigKey="Sapien semper hac aliquam" CreatedAt="09/07/2014 22:34:03" CategoryName="Viverra platea risus primis rutrum" DefaultDebtRemFnType="UNDEFINED" DefaultDebtRemFnCoeff="Velit vestibulum" DebtOverloaded="True" Description="Curabitur adipiscing parturient leo" DebtRemFnCoeff="Integer sociosqu quisque nunc sociis" DefaultDebtChar="RELIABILITY" DefaultDebtSubChar="UNDERSTANDABILITY" EnableSetDeafaults="False" InternalKey="Taciti mus vivamus" IsTemplate="True" Key="Amet ante" Lang="Phasellus aliquam tellus suscipit" LangName="Vestibulum nec tempor vestibulum" Name="Torquent ultrices" RemediationOffsetVal="67" RemediationFactorVal="66" RemediationOffsetTxt="UNDEFINED" RemediationFunction="UNDEFINED" Repo="Cubilia accumsan dapibus bibendum" RemediationFactorTxt="H" Severity="MAJOR" SubcategoryName="Egestas eros" Status="DEPRECATED" Subcategory="UNDEFINED">
+			<ExtensionTypes:Rule.Params>
+				<ExtensionTypes:RuleParam Desc="Consequat arcu vitae vehicula" DefaultValue="71" Key="Non per adipiscing"/>
+				<ExtensionTypes:RuleParam Desc="Tempus diam class sed parturient" DefaultValue="62" Key="Eget curae volutpat"/>
+				<ExtensionTypes:RuleParam Desc="Aliquet maecenas" DefaultValue="75" Key="Blandit elit vestibulum"/>
+				<ExtensionTypes:RuleParam Desc="Tortor vestibulum" DefaultValue="42" Key="Enim erat praesent"/>
+				<ExtensionTypes:RuleParam Desc="Adipiscing parturient donec commodo" DefaultValue="14" Key="Turpis etiam conubia"/>
+			</ExtensionTypes:Rule.Params>
+			<ExtensionTypes:Rule.SysTags>
+				<System:String>Convallis sem varius dictumst fusce</System:String>
+				<System:String>Vestibulum sit dignissim lorem vel</System:String>
+				<System:String>Nam aenean morbi</System:String>
+				<System:String>Elementum facilisis</System:String>
+				<System:String>Eleifend nulla</System:String>
+			</ExtensionTypes:Rule.SysTags>
+			<ExtensionTypes:Rule.SubcategoryValues>
+				<ExtensionTypes:SubCategory>TIME_ZONE_RELATED_PORTABILITY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>LOGIC_RELIABILITY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>CPU_EFFICIENCY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>EXCEPTION_HANDLING</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>ARCHITECTURE_RELIABILITY</ExtensionTypes:SubCategory>
+			</ExtensionTypes:Rule.SubcategoryValues>
+			<ExtensionTypes:Rule.Tags>
+				<System:String>Vestibulum sed dis</System:String>
+				<System:String>Est nibh hac</System:String>
+				<System:String>Euismod adipiscing facilisi parturient</System:String>
+				<System:String>Feugiat proin gravida</System:String>
+				<System:String>Fermentum leo vestibulum iaculis</System:String>
+			</ExtensionTypes:Rule.Tags>
+		</ExtensionTypes:Rule>
+		<ExtensionTypes:Rule Category="REUSABILITY" ConfigKey="Laoreet nisl mus hendrerit natoque" CreatedAt="09/07/2014 22:34:03" CategoryName="Fringilla nisi lacinia habitasse" DefaultDebtRemFnType="CONSTANT_ISSUE" DefaultDebtRemFnCoeff="Mauris faucibus vestibulum" DebtOverloaded="False" Description="Nullam habitant" DebtRemFnCoeff="Himenaeos augue nec nunc" DefaultDebtChar="TESTABILITY" DefaultDebtSubChar="HARDWARE_RELATED_PORTABILITY" EnableSetDeafaults="True" InternalKey="Posuere potenti odio inceptos adipiscing" IsTemplate="False" Key="Imperdiet malesuada" Lang="Pretium parturient rhoncus sodales penatibus" LangName="Dolor vestibulum viverra" Name="Porttitor non" RemediationOffsetVal="23" RemediationFactorVal="28" RemediationOffsetTxt="D" RemediationFunction="UNDEFINED" Repo="Quisque ligula vivamus litora luctus" RemediationFactorTxt="H" Severity="BLOCKER" SubcategoryName="Sit nascetur" Status="BETA" Subcategory="SOFTWARE_RELATED_PORTABILITY">
+			<ExtensionTypes:Rule.Params>
+				<ExtensionTypes:RuleParam Desc="Interdum orci" DefaultValue="51" Key="Aptent fames tincidunt per pede"/>
+				<ExtensionTypes:RuleParam Desc="Aliquam quam" DefaultValue="96" Key="Felis tristique integer auctor ultricies"/>
+				<ExtensionTypes:RuleParam Desc="Congue quis urna" DefaultValue="50" Key="Cursus dictum"/>
+				<ExtensionTypes:RuleParam Desc="Lectus cras" DefaultValue="29" Key="Duis lobortis"/>
+				<ExtensionTypes:RuleParam Desc="Sed sem" DefaultValue="93" Key="Ipsum libero justo venenatis"/>
+			</ExtensionTypes:Rule.Params>
+			<ExtensionTypes:Rule.SysTags>
+				<System:String>Vestibulum lacus</System:String>
+				<System:String>Pharetra magnis adipiscing vel</System:String>
+				<System:String>Placerat aliquam parturient vestibulum mattis</System:String>
+				<System:String>Pulvinar nunc</System:String>
+				<System:String>Sagittis nam mauris sed mollis</System:String>
+			</ExtensionTypes:Rule.SysTags>
+			<ExtensionTypes:Rule.SubcategoryValues>
+				<ExtensionTypes:SubCategory>OS_RELATED_PORTABILITY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>CPU_EFFICIENCY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>UNDERSTANDABILITY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>SOFTWARE_RELATED_PORTABILITY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>CPU_EFFICIENCY</ExtensionTypes:SubCategory>
+			</ExtensionTypes:Rule.SubcategoryValues>
+			<ExtensionTypes:Rule.Tags>
+				<System:String>Vestibulum montes nostra lorem</System:String>
+				<System:String>Amet aliquet blandit</System:String>
+				<System:String>Adipiscing vulputate senectus parturient</System:String>
+				<System:String>Magna ante dis</System:String>
+				<System:String>Curabitur sociosqu</System:String>
+			</ExtensionTypes:Rule.Tags>
+		</ExtensionTypes:Rule>
+		<ExtensionTypes:Rule Category="CHANGEABILITY" ConfigKey="Ornare est" CreatedAt="09/07/2014 22:34:03" CategoryName="Arcu phasellus suscipit vestibulum" DefaultDebtRemFnType="UNDEFINED" DefaultDebtRemFnCoeff="Consequat leo" DebtOverloaded="True" Description="Mus commodo adipiscing primis nec" DebtRemFnCoeff="Platea diam eget hac vestibulum" DefaultDebtChar="EFFICIENCY" DefaultDebtSubChar="ARCHITECTURE_CHANGEABILITY" EnableSetDeafaults="False" InternalKey="Conubia cubilia elit dapibus" IsTemplate="True" Key="Enim erat parturient" Lang="Non massa" LangName="Per egestas torquent" Name="Convallis rutrum vestibulum sapien euismod" RemediationOffsetVal="74" RemediationFactorVal="85" RemediationOffsetTxt="MN" RemediationFunction="CONSTANT_ISSUE" Repo="Potenti vestibulum tempor adipiscing" RemediationFactorTxt="D" Severity="CRITICAL" SubcategoryName="Pretium sit urna rhoncus parturient" Status="UNDEFINED" Subcategory="TIME_ZONE_RELATED_PORTABILITY">
+			<ExtensionTypes:Rule.Params>
+				<ExtensionTypes:RuleParam Desc="Eros ultrices nibh vestibulum dignissim" DefaultValue="46" Key="Adipiscing metus nisi"/>
+				<ExtensionTypes:RuleParam Desc="Nisl feugiat elementum facilisis fermentum" DefaultValue="12" Key="Nunc parturient vestibulum odio semper"/>
+				<ExtensionTypes:RuleParam Desc="Orci gravida iaculis vehicula" DefaultValue="12" Key="Lacinia sed sociis"/>
+				<ExtensionTypes:RuleParam Desc="Fringilla taciti laoreet tellus" DefaultValue="89" Key="Pede natoque habitasse volutpat posuere"/>
+				<ExtensionTypes:RuleParam Desc="Morbi quam" DefaultValue="77" Key="Quis sem hendrerit"/>
+			</ExtensionTypes:Rule.Params>
+			<ExtensionTypes:Rule.SysTags>
+				<System:String>Sodales himenaeos maecenas vestibulum</System:String>
+				<System:String>Imperdiet vestibulum adipiscing viverra</System:String>
+				<System:String>Cras vel aliquam nam integer</System:String>
+				<System:String>Praesent accumsan parturient sed dis</System:String>
+				<System:String>Duis nunc vestibulum malesuada</System:String>
+			</ExtensionTypes:Rule.SysTags>
+			<ExtensionTypes:Rule.SubcategoryValues>
+				<ExtensionTypes:SubCategory>OS_RELATED_PORTABILITY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>OS_RELATED_PORTABILITY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>UNIT_TESTS</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>INSTRUCTION_RELIABILITY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>ARCHITECTURE_RELIABILITY</ExtensionTypes:SubCategory>
+			</ExtensionTypes:Rule.SubcategoryValues>
+			<ExtensionTypes:Rule.Tags>
+				<System:String>Bibendum est</System:String>
+				<System:String>Dictumst quisque</System:String>
+				<System:String>Vivamus amet eleifend vestibulum</System:String>
+				<System:String>Adipiscing neque ante aliquam</System:String>
+				<System:String>Parturient facilisi aliquet blandit</System:String>
+			</ExtensionTypes:Rule.Tags>
+		</ExtensionTypes:Rule>
+		<ExtensionTypes:Rule Category="EFFICIENCY" ConfigKey="Arcu conubia" CreatedAt="09/07/2014 22:34:03" CategoryName="Vestibulum penatibus commodo faucibus hac" DefaultDebtRemFnType="LINEAR" DefaultDebtRemFnCoeff="Inceptos mus" DebtOverloaded="False" Description="Cubilia nec" DebtRemFnCoeff="Habitant leo diam" DefaultDebtChar="PORTABILITY" DefaultDebtSubChar="MEMORY_EFFICIENCY" EnableSetDeafaults="True" InternalKey="Non netus per" IsTemplate="False" Key="Porttitor sed interdum" Lang="Eget elit nulla" LangName="Tincidunt tristique porta enim purus" Name="Ultricies sem lobortis sit risus" RemediationOffsetVal="80" RemediationFactorVal="25" RemediationOffsetTxt="H" RemediationFunction="UNDEFINED" Repo="Sociosqu lacinia parturient" RemediationFactorTxt="H" Severity="INFO" SubcategoryName="Dis laoreet est nisl natoque" Status="BETA" Subcategory="HARDWARE_RELATED_PORTABILITY">
+			<ExtensionTypes:Rule.Params>
+				<ExtensionTypes:RuleParam Desc="Dapibus vel velit" DefaultValue="20" Key="Nascetur erat"/>
+				<ExtensionTypes:RuleParam Desc="Venenatis egestas" DefaultValue="86" Key="Euismod nam feugiat tempus"/>
+				<ExtensionTypes:RuleParam Desc="Tortor pharetra turpis vulputate eros" DefaultValue="30" Key="Vestibulum varius nibh gravida adipiscing"/>
+				<ExtensionTypes:RuleParam Desc="Vitae curabitur iaculis placerat" DefaultValue="93" Key="Parturient pulvinar vestibulum"/>
+				<ExtensionTypes:RuleParam Desc="Nisi phasellus vestibulum aenean sagittis" DefaultValue="18" Key="Senectus adipiscing sed"/>
+			</ExtensionTypes:Rule.Params>
+			<ExtensionTypes:Rule.SysTags>
+				<System:String>Consequat mauris nunc</System:String>
+				<System:String>Vestibulum class hac vestibulum</System:String>
+				<System:String>Posuere potenti nullam aptent</System:String>
+				<System:String>Odio orci</System:String>
+				<System:String>Convallis leo pede</System:String>
+			</ExtensionTypes:Rule.SysTags>
+			<ExtensionTypes:Rule.SubcategoryValues>
+				<ExtensionTypes:SubCategory>MEMORY_EFFICIENCY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>CPU_EFFICIENCY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>LOGIC_CHANGEABILITY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>COMPILER_RELATED_PORTABILITY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>READABILITY</ExtensionTypes:SubCategory>
+			</ExtensionTypes:Rule.SubcategoryValues>
+			<ExtensionTypes:Rule.Tags>
+				<System:String>Mus pretium curae quam rhoncus</System:String>
+				<System:String>Adipiscing dignissim</System:String>
+				<System:String>Parturient auctor suscipit</System:String>
+				<System:String>Sodales donec viverra quis vestibulum</System:String>
+				<System:String>Elementum nec urna torquent</System:String>
+			</ExtensionTypes:Rule.Tags>
+		</ExtensionTypes:Rule>
+		<ExtensionTypes:Rule Category="SECURITY" ConfigKey="Fermentum aliquam cras" CreatedAt="09/07/2014 22:34:03" CategoryName="Etiam facilisis" DefaultDebtRemFnType="CONSTANT_ISSUE" DefaultDebtRemFnCoeff="Nunc fringilla parturient vestibulum integer" DebtOverloaded="True" Description="Ultrices vestibulum non" DebtRemFnCoeff="Vestibulum congue adipiscing duis" DefaultDebtChar="EFFICIENCY" DefaultDebtSubChar="COMPILER_RELATED_PORTABILITY" EnableSetDeafaults="False" InternalKey="Habitasse per adipiscing" IsTemplate="True" Key="Parturient quisque amet" Lang="Cursus vivamus aliquam" LangName="Aliquet vestibulum dictum lectus" Name="Vehicula sed vestibulum sem" RemediationOffsetVal="54" RemediationFactorVal="15" RemediationOffsetTxt="MN" RemediationFunction="LINEAR_OFFSET" Repo="Adipiscing lorem porttitor enim" RemediationFactorTxt="D" Severity="BLOCKER" SubcategoryName="Faucibus tincidunt tristique" Status="BETA" Subcategory="READABILITY">
+			<ExtensionTypes:Rule.Params>
+				<ExtensionTypes:RuleParam Desc="Volutpat fusce ante adipiscing" DefaultValue="94" Key="Sit arcu diam vel"/>
+				<ExtensionTypes:RuleParam Desc="Blandit maecenas praesent hendrerit" DefaultValue="47" Key="Commodo accumsan himenaeos"/>
+				<ExtensionTypes:RuleParam Desc="Eget parturient vestibulum" DefaultValue="94" Key="Nam elit"/>
+				<ExtensionTypes:RuleParam Desc="Imperdiet bibendum" DefaultValue="52" Key="Dictumst libero sed eleifend"/>
+				<ExtensionTypes:RuleParam Desc="Ligula litora conubia" DefaultValue="24" Key="Malesuada cubilia facilisi vestibulum penatibus"/>
+			</ExtensionTypes:Rule.Params>
+			<ExtensionTypes:Rule.SysTags>
+				<System:String>Parturient dis</System:String>
+				<System:String>Luctus ultricies habitant vestibulum venenatis</System:String>
+				<System:String>Est morbi dapibus inceptos</System:String>
+				<System:String>Hac interdum nulla vestibulum</System:String>
+				<System:String>Lobortis vulputate adipiscing</System:String>
+			</ExtensionTypes:Rule.SysTags>
+			<ExtensionTypes:Rule.SubcategoryValues>
+				<ExtensionTypes:SubCategory>API_ABUSE</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>DATA_CHANGEABILITY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>HARDWARE_RELATED_PORTABILITY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>SYNCHRONIZATION_RELIABILITY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>SECURITY_FEATURES</ExtensionTypes:SubCategory>
+			</ExtensionTypes:Rule.SubcategoryValues>
+			<ExtensionTypes:Rule.Tags>
+				<System:String>Magnis curabitur nascetur mattis phasellus</System:String>
+				<System:String>Erat leo</System:String>
+				<System:String>Parturient pharetra consequat egestas</System:String>
+				<System:String>Mauris convallis</System:String>
+				<System:String>Eros nibh mollis</System:String>
+			</ExtensionTypes:Rule.Tags>
+		</ExtensionTypes:Rule>
+		<ExtensionTypes:Rule Category="PORTABILITY" ConfigKey="Elementum feugiat montes nisl" CreatedAt="09/07/2014 22:34:03" CategoryName="Dignissim placerat nisi euismod proin" DefaultDebtRemFnType="UNDEFINED" DefaultDebtRemFnCoeff="Gravida nunc iaculis vestibulum pulvinar" DebtOverloaded="False" Description="Vestibulum odio" DebtRemFnCoeff="Augue facilisis" DefaultDebtChar="CHANGEABILITY" DefaultDebtSubChar="DATA_RELIABILITY" EnableSetDeafaults="True" InternalKey="Dolor mus orci nostra pede" IsTemplate="False" Key="Fames fermentum fringilla quam" Lang="Adipiscing lacinia" LangName="Habitasse hendrerit" Name="Ornare himenaeos felis platea" RemediationOffsetVal="93" RemediationFactorVal="95" RemediationOffsetTxt="H" RemediationFunction="CONSTANT_ISSUE" Repo="Rhoncus nec sociosqu sodales suscipit" RemediationFactorTxt="H" Severity="BLOCKER" SubcategoryName="Ultricies adipiscing" Status="DEPRECATED" Subcategory="SECURITY_FEATURES">
+			<ExtensionTypes:Rule.Params>
+				<ExtensionTypes:RuleParam Desc="Ipsum laoreet justo sagittis" DefaultValue="31" Key="Natoque lacus quis lorem posuere"/>
+				<ExtensionTypes:RuleParam Desc="Magna primis imperdiet" DefaultValue="47" Key="Urna parturient malesuada rutrum"/>
+				<ExtensionTypes:RuleParam Desc="Potenti vestibulum" DefaultValue="20" Key="Cras duis"/>
+				<ExtensionTypes:RuleParam Desc="Sapien semper vestibulum penatibus" DefaultValue="66" Key="Sociis senectus"/>
+				<ExtensionTypes:RuleParam Desc="Pretium porttitor taciti tellus" DefaultValue="72" Key="Massa tincidunt tristique nunc"/>
+			</ExtensionTypes:Rule.Params>
+			<ExtensionTypes:Rule.SysTags>
+				<System:String>Amet torquent parturient metus non</System:String>
+				<System:String>Vestibulum per ultrices morbi</System:String>
+				<System:String>Neque viverra</System:String>
+				<System:String>Vehicula ante sed venenatis</System:String>
+				<System:String>Volutpat tempor</System:String>
+			</ExtensionTypes:Rule.SysTags>
+			<ExtensionTypes:Rule.SubcategoryValues>
+				<ExtensionTypes:SubCategory>FAULT_TOLERANCE</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>INPUT_VALIDATION_AND_REPRESENTATION</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>DATA_RELIABILITY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>ERRORS</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>INSTRUCTION_RELIABILITY</ExtensionTypes:SubCategory>
+			</ExtensionTypes:Rule.SubcategoryValues>
+			<ExtensionTypes:Rule.Tags>
+				<System:String>Arcu vestibulum maecenas tempus vulputate</System:String>
+				<System:String>Sem adipiscing praesent parturient sit</System:String>
+				<System:String>Tortor accumsan curabitur</System:String>
+				<System:String>Vestibulum diam</System:String>
+				<System:String>Turpis eget netus phasellus vestibulum</System:String>
+			</ExtensionTypes:Rule.Tags>
+		</ExtensionTypes:Rule>
+		<ExtensionTypes:Rule Category="MAINTAINABILITY" ConfigKey="Aliquam vel" CreatedAt="09/07/2014 22:34:03" CategoryName="Varius aenean bibendum" DefaultDebtRemFnType="LINEAR_OFFSET" DefaultDebtRemFnCoeff="Dictumst dis convallis mauris enim" DebtOverloaded="True" Description="Nullam eleifend est" DebtRemFnCoeff="Nam elit consequat sed" DefaultDebtChar="REUSABILITY" DefaultDebtSubChar="INSTRUCTION_RELIABILITY" EnableSetDeafaults="False" InternalKey="Integer nulla facilisi adipiscing" IsTemplate="True" Key="Faucibus hac" Lang="Parturient quisque vestibulum" LangName="Vivamus porta" Name="Purus risus vestibulum" RemediationOffsetVal="49" RemediationFactorVal="92" RemediationOffsetTxt="MN" RemediationFunction="LINEAR_OFFSET" Repo="Fringilla habitasse" RemediationFactorTxt="H" Severity="CRITICAL" SubcategoryName="Etiam hendrerit pharetra fusce" Status="BETA" Subcategory="INTEGRATION_TESTABILITY">
+			<ExtensionTypes:Rule.Params>
+				<ExtensionTypes:RuleParam Desc="Dignissim leo habitant adipiscing inceptos" DefaultValue="99" Key="Velit erat"/>
+				<ExtensionTypes:RuleParam Desc="Vitae elementum facilisis eros" DefaultValue="35" Key="Aliquam class parturient"/>
+				<ExtensionTypes:RuleParam Desc="Aliquet curae blandit" DefaultValue="90" Key="Aptent auctor donec interdum vestibulum"/>
+				<ExtensionTypes:RuleParam Desc="Nibh vestibulum lobortis" DefaultValue="92" Key="Congue nascetur adipiscing"/>
+				<ExtensionTypes:RuleParam Desc="Nisi cursus" DefaultValue="69" Key="Fermentum dictum"/>
+			</ExtensionTypes:Rule.Params>
+			<ExtensionTypes:Rule.SysTags>
+				<System:String>Himenaeos lectus parturient lorem</System:String>
+				<System:String>Libero imperdiet placerat nisl malesuada</System:String>
+				<System:String>Vestibulum mus pulvinar vestibulum adipiscing</System:String>
+				<System:String>Parturient vestibulum nunc</System:String>
+				<System:String>Penatibus porttitor sagittis morbi</System:String>
+			</ExtensionTypes:Rule.SysTags>
+			<ExtensionTypes:Rule.SubcategoryValues>
+				<ExtensionTypes:SubCategory>LOGIC_CHANGEABILITY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>MODULARITY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>API_ABUSE</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>OS_RELATED_PORTABILITY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>SOFTWARE_RELATED_PORTABILITY</ExtensionTypes:SubCategory>
+			</ExtensionTypes:Rule.SubcategoryValues>
+			<ExtensionTypes:Rule.Tags>
+				<System:String>Nulla commodo odio</System:String>
+				<System:String>Orci ligula vestibulum tincidunt tristique</System:String>
+				<System:String>Conubia cubilia ultricies dapibus</System:String>
+				<System:String>Proin senectus</System:String>
+				<System:String>Nec litora augue egestas</System:String>
+			</ExtensionTypes:Rule.Tags>
+		</ExtensionTypes:Rule>
+		<ExtensionTypes:Rule Category="RELIABILITY" ConfigKey="Sociosqu suscipit adipiscing luctus feugiat" CreatedAt="09/07/2014 22:34:03" CategoryName="Dolor pede euismod" DefaultDebtRemFnType="CONSTANT_ISSUE" DefaultDebtRemFnCoeff="Iaculis lacinia vestibulum" DebtOverloaded="False" Description="Non vestibulum laoreet vulputate torquent" DebtRemFnCoeff="Parturient gravida venenatis" DefaultDebtChar="EFFICIENCY" DefaultDebtSubChar="TRANSPORTABILITY" EnableSetDeafaults="True" InternalKey="Quam per curabitur" IsTemplate="False" Key="Adipiscing magnis quis mattis urna" Lang="Cras natoque" LangName="Duis phasellus" Name="Mauris consequat fames" RemediationOffsetVal="61" RemediationFactorVal="93" RemediationOffsetTxt="H" RemediationFunction="UNDEFINED" Repo="Magna sodales" RemediationFactorTxt="UNDEFINED" Severity="BLOCKER" SubcategoryName="Massa adipiscing" Status="BETA" Subcategory="UNDEFINED">
+			<ExtensionTypes:Rule.Params>
+				<ExtensionTypes:RuleParam Desc="Posuere mollis ultrices potenti" DefaultValue="87" Key="Convallis felis vehicula"/>
+				<ExtensionTypes:RuleParam Desc="Dignissim sed nunc" DefaultValue="36" Key="Parturient sem sit vestibulum"/>
+				<ExtensionTypes:RuleParam Desc="Pretium ipsum amet ante elementum" DefaultValue="48" Key="Arcu montes rhoncus justo"/>
+				<ExtensionTypes:RuleParam Desc="Vel nostra" DefaultValue="89" Key="Lacus volutpat"/>
+				<ExtensionTypes:RuleParam Desc="Lorem vestibulum maecenas" DefaultValue="76" Key="Praesent ornare accumsan diam"/>
+			</ExtensionTypes:Rule.Params>
+			<ExtensionTypes:Rule.SysTags>
+				<System:String>Parturient platea primis eget facilisis</System:String>
+				<System:String>Bibendum viverra elit metus morbi</System:String>
+				<System:String>Dictumst enim nam</System:String>
+				<System:String>Eleifend facilisi faucibus fermentum sed</System:String>
+				<System:String>Erat aliquam eros integer quisque</System:String>
+			</ExtensionTypes:Rule.SysTags>
+			<ExtensionTypes:Rule.SubcategoryValues>
+				<ExtensionTypes:SubCategory>UNIT_TESTABILITY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>INSTRUCTION_RELIABILITY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>FAULT_TOLERANCE</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>DATA_CHANGEABILITY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>DATA_RELIABILITY</ExtensionTypes:SubCategory>
+			</ExtensionTypes:Rule.SubcategoryValues>
+			<ExtensionTypes:Rule.Tags>
+				<System:String>Rutrum vestibulum neque vivamus aliquam</System:String>
+				<System:String>Sapien fringilla</System:String>
+				<System:String>Aliquet vestibulum dis nibh</System:String>
+				<System:String>Nisi semper habitant</System:String>
+				<System:String>Netus inceptos blandit</System:String>
+			</ExtensionTypes:Rule.Tags>
+		</ExtensionTypes:Rule>
+		<ExtensionTypes:Rule Category="REUSABILITY" ConfigKey="Sociis interdum" CreatedAt="09/07/2014 22:34:03" CategoryName="Commodo nulla adipiscing" DefaultDebtRemFnType="LINEAR_OFFSET" DefaultDebtRemFnCoeff="Taciti porta purus pharetra hendrerit" DebtOverloaded="True" Description="Tellus himenaeos" DebtRemFnCoeff="Habitasse lobortis est nascetur parturient" DefaultDebtChar="TESTABILITY" DefaultDebtSubChar="ARCHITECTURE_CHANGEABILITY" EnableSetDeafaults="False" InternalKey="Hac risus" IsTemplate="True" Key="Tempor nisl" Lang="Leo imperdiet" LangName="Conubia malesuada placerat" Name="Mus penatibus" RemediationOffsetVal="57" RemediationFactorVal="86" RemediationOffsetTxt="UNDEFINED" RemediationFunction="UNDEFINED" Repo="Class per" RemediationFactorTxt="D" Severity="MINOR" SubcategoryName="Parturient sed sociosqu" Status="UNDEFINED" Subcategory="UNIT_TESTABILITY">
+			<ExtensionTypes:Rule.Params>
+				<ExtensionTypes:RuleParam Desc="Tempus velit vestibulum tortor vitae" DefaultValue="75" Key="Cubilia nec vestibulum dapibus nunc"/>
+				<ExtensionTypes:RuleParam Desc="Pulvinar odio sagittis egestas porttitor" DefaultValue="54" Key="Turpis varius"/>
+				<ExtensionTypes:RuleParam Desc="Orci euismod aenean" DefaultValue="48" Key="Mauris tincidunt"/>
+				<ExtensionTypes:RuleParam Desc="Feugiat gravida non pede" DefaultValue="95" Key="Nullam iaculis"/>
+				<ExtensionTypes:RuleParam Desc="Aptent auctor lacinia" DefaultValue="51" Key="Adipiscing senectus tristique laoreet"/>
+			</ExtensionTypes:Rule.Params>
+			<ExtensionTypes:Rule.SysTags>
+				<System:String>Suscipit ultricies vestibulum</System:String>
+				<System:String>Natoque congue</System:String>
+				<System:String>Quam venenatis posuere quis cursus</System:String>
+				<System:String>Urna potenti sem</System:String>
+				<System:String>Torquent curae ultrices vehicula donec</System:String>
+			</ExtensionTypes:Rule.SysTags>
+			<ExtensionTypes:Rule.SubcategoryValues>
+				<ExtensionTypes:SubCategory>LOGIC_RELIABILITY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>DATA_RELIABILITY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>DATA_RELIABILITY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>LOGIC_CHANGEABILITY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>UNDEFINED</ExtensionTypes:SubCategory>
+			</ExtensionTypes:Rule.SubcategoryValues>
+			<ExtensionTypes:Rule.Tags>
+				<System:String>Dictum sit</System:String>
+				<System:String>Cras lectus libero</System:String>
+				<System:String>Vel pretium volutpat ligula vulputate</System:String>
+				<System:String>Vestibulum litora luctus magnis duis</System:String>
+				<System:String>Adipiscing curabitur rhoncus phasellus</System:String>
+			</ExtensionTypes:Rule.Tags>
+		</ExtensionTypes:Rule>
+		<ExtensionTypes:Rule Category="TESTABILITY" ConfigKey="Fusce sed lorem" CreatedAt="09/07/2014 22:34:03" CategoryName="Nam nunc parturient etiam consequat" DefaultDebtRemFnType="LINEAR_OFFSET" DefaultDebtRemFnCoeff="Vestibulum sodales adipiscing" DebtOverloaded="False" Description="Maecenas praesent viverra parturient aliquam" DebtRemFnCoeff="Dis vestibulum" DefaultDebtChar="RELIABILITY" DefaultDebtSubChar="READABILITY" EnableSetDeafaults="True" InternalKey="Amet mattis convallis vestibulum accumsan" IsTemplate="False" Key="Bibendum est dictumst eleifend" Lang="Vestibulum facilisi mauris ante adipiscing" LangName="Faucibus dignissim" Name="Integer arcu quisque" RemediationOffsetVal="25" RemediationFactorVal="69" RemediationOffsetTxt="UNDEFINED" RemediationFunction="UNDEFINED" Repo="Fringilla non habitasse" RemediationFactorTxt="UNDEFINED" Severity="CRITICAL" SubcategoryName="Per sed cubilia vestibulum eros" Status="UNDEFINED" Subcategory="INSTRUCTION_RELIABILITY">
+			<ExtensionTypes:Rule.Params>
+				<ExtensionTypes:RuleParam Desc="Habitant mollis" DefaultValue="58" Key="Hac morbi"/>
+				<ExtensionTypes:RuleParam Desc="Elementum vivamus" DefaultValue="56" Key="Facilisis aliquam"/>
+				<ExtensionTypes:RuleParam Desc="Diam leo" DefaultValue="77" Key="Fermentum inceptos parturient"/>
+				<ExtensionTypes:RuleParam Desc="Eget nulla aliquet elit" DefaultValue="79" Key="Mus enim blandit proin augue"/>
+				<ExtensionTypes:RuleParam Desc="Erat commodo nec" DefaultValue="23" Key="Conubia interdum"/>
+			</ExtensionTypes:Rule.Params>
+			<ExtensionTypes:Rule.SysTags>
+				<System:String>Sem sit</System:String>
+				<System:String>Vel vestibulum dolor hendrerit nam</System:String>
+				<System:String>Himenaeos dapibus adipiscing nibh</System:String>
+				<System:String>Imperdiet nisi malesuada fames</System:String>
+				<System:String>Egestas lobortis</System:String>
+			</ExtensionTypes:Rule.SysTags>
+			<ExtensionTypes:Rule.SubcategoryValues>
+				<ExtensionTypes:SubCategory>READABILITY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>SOFTWARE_RELATED_PORTABILITY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>COMPILER_RELATED_PORTABILITY</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>FAULT_TOLERANCE</ExtensionTypes:SubCategory>
+				<ExtensionTypes:SubCategory>ARCHITECTURE_RELIABILITY</ExtensionTypes:SubCategory>
+			</ExtensionTypes:Rule.SubcategoryValues>
+			<ExtensionTypes:Rule.Tags>
+				<System:String>Montes euismod nisl nostra</System:String>
+				<System:String>Felis feugiat ipsum</System:String>
+				<System:String>Justo parturient</System:String>
+				<System:String>Sed gravida ornare vestibulum</System:String>
+				<System:String>Nascetur nunc vestibulum</System:String>
+			</ExtensionTypes:Rule.Tags>
+		</ExtensionTypes:Rule>
+	</ViewModel:CreateRuleViewModel.TemplateRules>
+</ViewModel:CreateRuleViewModel>

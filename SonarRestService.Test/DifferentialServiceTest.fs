@@ -18,6 +18,7 @@ type DifferentialServiceTest() =
    
     let assemblyRunningPath = Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString()
     let leakFromToday = """ {"component":{"id":"14170a50-b95b-4506-8f1a-19856f187137","key":"Project:ProjectName","name":"ProjectName","qualifier":"TRK","measures":[{"metric":"new_coverage","periods":[{"index":1,"value":"24.5416078984485"}]}]},"periods":[{"index":1,"mode":"previous_version","date":"2018-05-05T00:11:53+0200","parameter":"VersionName"}]} """
+    let mockNotMan = Mock<INotificationManager>()
 
     [<Test>]
     member test.``No new Lines Get Coverage On Leak`` () =
@@ -44,7 +45,7 @@ type DifferentialServiceTest() =
                 .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), url5) @>).Returns("{\"sources\":[]}")
 
         let resource = new Resource( Key = "projectKey", IdString = "id")
-        let resources = DifferencialService.GetCoverageReportOnNewCodeOnLeak(conf, resource, mockHttpReq.Create())
+        let resources = DifferencialService.GetCoverageReportOnNewCodeOnLeak(conf, resource, mockHttpReq.Create(), mockNotMan.Create())
         Assert.That(resources.Count, Is.EqualTo(2))
         let covme = resources.["Project:ComponentBla:Project:ComponentBla:9AC47FE5-B1C8-416A-BFB4-632B7171E031:UndoRedoBlaModel.cs"]
         Assert.That(covme.Id, Is.EqualTo("AVEzWO92k3Oz8Oa46je4"))
@@ -75,7 +76,7 @@ type DifferentialServiceTest() =
                 .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), url5) @>).Returns("{\"sources\":[]}")
 
         let resource = new Resource( Key = "projectKey", IdString = "id")
-        let resources = DifferencialService.GetCoverageReportOnNewCodeOnLeak(conf, resource, mockHttpReq.Create())
+        let resources = DifferencialService.GetCoverageReportOnNewCodeOnLeak(conf, resource, mockHttpReq.Create(), mockNotMan.Create())
         Assert.That(resources.Count, Is.EqualTo(2))
         let covme = resources.["Project:ComponentBla:Project:ComponentBla:9AC47FE5-B1C8-416A-BFB4-632B7171E031:UndoRedoBlaModel.cs"]
         Assert.That(covme.Id, Is.EqualTo("AVEzWO92k3Oz8Oa46je4"))

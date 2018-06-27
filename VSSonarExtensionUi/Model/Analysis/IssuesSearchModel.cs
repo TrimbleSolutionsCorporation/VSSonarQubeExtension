@@ -18,7 +18,8 @@ namespace VSSonarExtensionUi.Model.Analysis
     using System.Collections.ObjectModel;
     using System.IO;
     using System.Linq;
-
+    using System.Threading;
+    using System.Threading.Tasks;
     using Association;
     using Helpers;
 
@@ -34,6 +35,11 @@ namespace VSSonarExtensionUi.Model.Analysis
     /// </summary>
     public class IssuesSearchModel : IAnalysisModelBase, IModelBase
     {
+        /// <summary>
+        /// The ct
+        /// </summary>
+        private CancellationTokenSource ct;
+
         /// <summary>
         /// The configuration helper
         /// </summary>
@@ -275,7 +281,7 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// Gets all issues in project.
         /// </summary>
         /// <returns>all issues in project</returns>
-        public IEnumerable<Issue> GetAllIssuesInProject()
+        public async Task<IEnumerable<Issue>> GetAllIssuesInProject()
         {
             if (this.associatedProject == null)
             {
@@ -283,7 +289,12 @@ namespace VSSonarExtensionUi.Model.Analysis
                 return new List<Issue>();
             }
 
-            return this.restService.GetIssuesForProjects(AuthtenticationHelper.AuthToken, this.associatedProject.Key);
+            this.CreateNewTokenOrUseOldOne();
+
+            return await Task.Run(() =>
+            {
+                return this.restService.GetIssuesForProjects(AuthtenticationHelper.AuthToken, this.associatedProject.Key, this.ct.Token, this.notificationmanager);
+            }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -293,7 +304,7 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// <returns>
         /// returs all issues in project
         /// </returns>
-        public IEnumerable<Issue> GetUserIssuesInProject(string userName)
+        public async Task<IEnumerable<Issue>> GetUserIssuesInProject(string userName)
         {
             if (this.associatedProject == null)
             {
@@ -301,7 +312,12 @@ namespace VSSonarExtensionUi.Model.Analysis
                 return new List<Issue>();
             }
 
-            return this.restService.GetIssuesByAssigneeInProject(AuthtenticationHelper.AuthToken, this.associatedProject.Key, userName);
+            this.CreateNewTokenOrUseOldOne();
+
+            return await Task.Run(() =>
+            {
+                return this.restService.GetIssuesByAssigneeInProject(AuthtenticationHelper.AuthToken, this.associatedProject.Key, userName, this.ct.Token, this.notificationmanager);
+            }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -310,7 +326,7 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// <returns>
         /// returs all issues in project for current user
         /// </returns>
-        public IEnumerable<Issue> GetCurrentUserIssuesInProject()
+        public async Task<IEnumerable<Issue>> GetCurrentUserIssuesInProject()
         {
             if (this.associatedProject == null)
             {
@@ -318,7 +334,12 @@ namespace VSSonarExtensionUi.Model.Analysis
                 return new List<Issue>();
             }
 
-            return this.restService.GetIssuesByAssigneeInProject(AuthtenticationHelper.AuthToken, this.associatedProject.Key, AuthtenticationHelper.AuthToken.Username);
+            this.CreateNewTokenOrUseOldOne();
+
+            return await Task.Run(() =>
+            {
+                return this.restService.GetIssuesByAssigneeInProject(AuthtenticationHelper.AuthToken, this.associatedProject.Key, AuthtenticationHelper.AuthToken.Username, this.ct.Token, this.notificationmanager);
+            }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -328,18 +349,27 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// <returns>
         /// returns all users issues
         /// </returns>
-        public IEnumerable<Issue> GetUserIssues(string userName)
+        public async Task<IEnumerable<Issue>> GetUserIssues(string userName)
         {
-            return this.restService.GetAllIssuesByAssignee(AuthtenticationHelper.AuthToken, userName);
+            this.CreateNewTokenOrUseOldOne();
+
+            return await Task.Run(() =>
+            {
+                return this.restService.GetAllIssuesByAssignee(AuthtenticationHelper.AuthToken, userName, this.ct.Token, this.notificationmanager);
+            }).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Gets the current user issues.
         /// </summary>
         /// <returns>gets current logged user issues</returns>
-        public IEnumerable<Issue> GetCurrentUserIssues()
+        public async Task<IEnumerable<Issue>> GetCurrentUserIssues()
         {
-            return this.restService.GetAllIssuesByAssignee(AuthtenticationHelper.AuthToken, AuthtenticationHelper.AuthToken.Username);
+            this.CreateNewTokenOrUseOldOne();
+            return await Task.Run(() =>
+            {
+                return this.restService.GetAllIssuesByAssignee(AuthtenticationHelper.AuthToken, AuthtenticationHelper.AuthToken.Username, this.ct.Token, this.notificationmanager);
+            }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -368,18 +398,26 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// <returns>
         /// returns issues since a date
         /// </returns>
-        public IEnumerable<Issue> GetIssuesSinceSinceDate(DateTime date)
+        public async Task<IEnumerable<Issue>> GetIssuesSinceSinceDate(DateTime date)
         {
-            return this.restService.GetIssuesForProjectsCreatedAfterDate(AuthtenticationHelper.AuthToken, this.associatedProject.Key, date);
+            this.CreateNewTokenOrUseOldOne();
+            return await Task.Run(() =>
+            {
+                return this.restService.GetIssuesForProjectsCreatedAfterDate(AuthtenticationHelper.AuthToken, this.associatedProject.Key, date, this.ct.Token, this.notificationmanager);
+            }).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Gets the issues since last project date.
         /// </summary>
         /// <returns>returns issues since last project update date</returns>
-        public IEnumerable<Issue> GetIssuesSinceLastProjectDate()
+        public async Task<IEnumerable<Issue>> GetIssuesSinceLastProjectDate()
         {
-            return this.restService.GetIssuesForProjectsCreatedAfterDate(AuthtenticationHelper.AuthToken, this.associatedProject.Key, this.associatedProject.Date);
+            this.CreateNewTokenOrUseOldOne();
+            return await Task.Run(() =>
+            {
+                return this.restService.GetIssuesForProjectsCreatedAfterDate(AuthtenticationHelper.AuthToken, this.associatedProject.Key, this.associatedProject.Date, this.ct.Token, this.notificationmanager);
+            }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -391,14 +429,9 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// <returns>
         /// all issues for requested filter
         /// </returns>
-        public IEnumerable<Issue> GetIssuesUsingFilter(string filter, bool filterSSCM, bool componentsSet)
+        public async Task<IEnumerable<Issue>> GetIssuesUsingFilter(string filter, bool filterSSCM, bool componentsSet)
         {
             this.notificationmanager.ResetFailure();
-            if (AuthtenticationHelper.AuthToken.SonarVersion < 3.6)
-            {
-                return this.restService.GetIssuesForProjects(AuthtenticationHelper.AuthToken, this.associatedProject.Key);
-            }
-
             string request = "?" + filter;
             string key = string.Empty;
             if (this.associatedProject != null && !componentsSet)
@@ -407,15 +440,21 @@ namespace VSSonarExtensionUi.Model.Analysis
                 key = this.associatedProject.Key;
             }
 
-            var issues = this.restService.GetIssues(AuthtenticationHelper.AuthToken, request, key);
+            this.CreateNewTokenOrUseOldOne();
+            var issues = await Task.Run(() =>
+            {
+                return this.restService.GetIssues(AuthtenticationHelper.AuthToken, request, key, this.ct.Token, this.notificationmanager);
+            }).ConfigureAwait(false);
 
             if (!filterSSCM)
             {
                 return issues;
             }
 
-
-            return this.FilterIssuesBySSCM(issues);
+            return await Task.Run(() =>
+            {
+                return this.FilterIssuesBySSCM(issues);
+            }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -434,20 +473,31 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// </summary>
         /// <param name="issues">The issues.</param>
         /// <returns>Returns all filtered issues</returns>
-        private IEnumerable<Issue> FilterIssuesBySSCM(List<Issue> issues)
+        public async Task<IEnumerable<Issue>> FilterIssuesBySSCM(List<Issue> issues)
         {
             var filteredIssues = new List<Issue>();
 
-            foreach (var issue in issues)
+            return await Task.Run(() =>
             {
-                var issueFiltered = this.FilterIssuesBySSCM(issue);
-                if (issueFiltered != null)
+                foreach (var issue in issues)
                 {
-                    filteredIssues.Add(issueFiltered);
+                    var issueFiltered = this.FilterIssuesBySSCM(issue);
+                    if (issueFiltered != null)
+                    {
+                        filteredIssues.Add(issueFiltered);
+                    }
                 }
-            }
 
-            return filteredIssues;
+                return filteredIssues;
+            }).ConfigureAwait(false);
+        }
+
+        private void CreateNewTokenOrUseOldOne()
+        {
+            if (this.ct == null || this.ct.IsCancellationRequested)
+            {
+                this.ct = new CancellationTokenSource();
+            }
         }
 
         /// <summary>
@@ -546,6 +596,7 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// </summary>
         internal void CancelQuery()
         {
+            this.ct.Cancel();
             this.restService.CancelRequest();
         }
     }

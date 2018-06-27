@@ -1,0 +1,181 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="..\..\..\configuration.props" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3755A099-7EE1-4593-9BB0-50DA67039C99}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CxxPlugin</RootNamespace>
+    <AssemblyName>CxxPlugin</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <ExpressionBlendVersion>12.0.41002.1</ExpressionBlendVersion>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>$(ExtensionOutputPath)\plugins</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>$(ExtensionOutputPath)\plugins</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Commands\CxxOpenFileCommand.cs" />
+    <Compile Include="CxxPlugin.cs" />
+    <Compile Include="LocalExtensions\ASensor.cs" />
+    <Compile Include="LocalExtensions\ClangTidySensor.cs" />
+    <Compile Include="LocalExtensions\CppCheckSensor.cs" />
+    <Compile Include="LocalExtensions\CxxLintSensor.cs" />
+    <Compile Include="LocalExtensions\PcLintSensor.cs" />
+    <Compile Include="LocalExtensions\CxxExternalSensor.cs" />
+    <Compile Include="LocalExtensions\CxxLocalExtension.cs" />
+    <Compile Include="LocalExtensions\RatsSensor.cs" />
+    <Compile Include="LocalExtensions\VeraSensor.cs" />
+    <Compile Include="Options\CxxOptionsController.cs" />
+    <Compile Include="Options\CxxService.cs" />
+    <Compile Include="Options\CxxUserControl.xaml.cs">
+      <DependentUpon>CxxUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Commands\ICxxIOService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Options\CxxUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Properties\DesignTimeResources.xaml" Condition="'$(DesignTime)'=='true' OR ('$(SolutionPath)'!='' AND Exists('$(SolutionPath)') AND '$(BuildingInsideVisualStudio)'!='true' AND '$(BuildingInsideExpressionBlend)'!='true')">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <ContainsDesignTimeResources>true</ContainsDesignTimeResources>
+    </Page>
+    <Page Include="Resources\Icons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ServerExtensions\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="CxxPlugin.licenseheader" />
+    <None Include="packages.config" />
+    <None Include="Resources\Entypo.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="FodyWeavers.xml" />
+    <EmbeddedResource Include="Resources\cxx-lint-0.9.5-SNAPSHOT.jar" />
+    <EmbeddedResource Include="Resources\clang-tidy" />
+    <Content Include="Resources\Entypo-license.txt" />
+    <Content Include="Resources\WindowsIcons-license.txt" />
+    <EmbeddedResource Include="Resources\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="GalaSoft.MvvmLight, Version=5.3.0.19026, Culture=neutral, PublicKeyToken=e7570ab207bcb616, processorArchitecture=MSIL">
+      <Private>False</Private>
+      <HintPath>..\..\..\packages\MvvmLightLibs.5.3.0.0\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Extras, Version=5.3.0.19032, Culture=neutral, PublicKeyToken=669f0b5e8f868abf, processorArchitecture=MSIL">
+      <Private>False</Private>
+      <HintPath>..\..\..\packages\MvvmLightLibs.5.3.0.0\lib\net45\GalaSoft.MvvmLight.Extras.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Platform, Version=5.3.0.19032, Culture=neutral, PublicKeyToken=5f873c45e98af8a1, processorArchitecture=MSIL">
+      <Private>False</Private>
+      <HintPath>..\..\..\packages\MvvmLightLibs.5.3.0.0\lib\net45\GalaSoft.MvvmLight.Platform.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="MahApps.Metro, Version=1.5.0.23, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
+      <Private>False</Private>
+      <Private>False</Private>
+      <HintPath>..\..\..\packages\MahApps.Metro.1.5.0\lib\net45\MahApps.Metro.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Build" />
+    <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>False</Private>
+      <HintPath>..\..\..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="MsbuildAutomationHelper">
+      <HintPath>..\..\..\packages\MsbuildAutomationHelper$(MsbuildAutomationHelperVersion)\lib\MsbuildAutomationHelper.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="PropertyChanged, Version=2.2.2.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
+      <Private>False</Private>
+      <HintPath>..\..\..\packages\PropertyChanged.Fody.2.2.2.0\lib\net452\PropertyChanged.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="RestSharp">
+      <Private>False</Private>
+      <HintPath>..\..\..\references\RestSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <SpecificVersion>True</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>False</Private>
+      <HintPath>..\..\..\packages\MvvmLightLibs.5.3.0.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\VSSonarPlugins\VSSonarPlugins.csproj">
+      <Project>{3311c918-b662-436d-8bc8-f38b447b1414}</Project>
+      <Name>VSSonarPlugins</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\VSSonarQubeCmdExecutor\VSSonarQubeCmdExecutor.fsproj">
+      <Project>{9b154406-0af6-45a9-bf32-9c5c23822b6b}</Project>
+      <Name>VSSonarQubeCmdExecutor</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\..\packages\AssemblyPatcherTask.1.0.5\build\AssemblyPatcherTask.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\AssemblyPatcherTask.1.0.5\build\AssemblyPatcherTask.targets'))" />
+    <Error Condition="!Exists('..\..\..\packages\Fody.2.2.1.0\build\net452\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Fody.2.2.1.0\build\net452\Fody.targets'))" />
+  </Target>
+  <Import Project="..\..\..\packages\AssemblyPatcherTask.1.0.5\build\AssemblyPatcherTask.targets" Condition="Exists('..\..\..\packages\AssemblyPatcherTask.1.0.5\build\AssemblyPatcherTask.targets')" />
+  <Import Project="..\..\..\packages\Fody.2.2.1.0\build\net452\Fody.targets" Condition="Exists('..\..\..\packages\Fody.2.2.1.0\build\net452\Fody.targets')" />
+</Project>

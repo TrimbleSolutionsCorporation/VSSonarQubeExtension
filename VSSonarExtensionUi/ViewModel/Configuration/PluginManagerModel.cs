@@ -35,7 +35,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     /// <seealso cref="VSSonarExtensionUi.ViewModel.Helpers.IOptionsViewModelBase" />
     /// <seealso cref="VSSonarExtensionUi.Model.Helpers.IOptionsModelBase" />
     /// <seealso cref="VSSonarExtensionUi.ViewModel.Configuration.IPluginManager" />
-    [ImplementPropertyChanged]
+    [AddINotifyPropertyChangedInterface]
     public class PluginManagerModel : IOptionsViewModelBase, IOptionsModelBase, IPluginManager
     {
         #region Fields

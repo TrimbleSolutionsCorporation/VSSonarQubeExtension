@@ -43,7 +43,7 @@ type SettingsServiceTest() =
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarPostRequestTuple(any(), any(), any()) @>).Returns(mockRestResponse)
+                .Setup(fun x -> <@ x.HttpSonarPostRequest(any(), any(), any()) @>).Returns(mockRestResponse)
                 .Create()
 
         let setting = new Setting()
@@ -64,7 +64,7 @@ type SettingsServiceTest() =
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarPostRequestTuple(any(), any(), any()) @>).Returns(mockRestResponse)
+                .Setup(fun x -> <@ x.HttpSonarPostRequest(any(), any(), any()) @>).Returns(mockRestResponse)
                 .Create()
 
         let setting = new Setting()
@@ -88,7 +88,7 @@ type SettingsServiceTest() =
 
         let mockHttpReq =
             Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarPostRequestTuple(any(), any(), any()) @>).Returns(mockRestResponse)
+                .Setup(fun x -> <@ x.HttpSonarPostRequest(any(), any(), any()) @>).Returns(mockRestResponse)
                 .Create()
 
         let setting = new Setting()

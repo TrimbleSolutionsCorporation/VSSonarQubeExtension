@@ -1,0 +1,193 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="..\..\..\..\configuration.props" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>ab78a0f2-0c05-4822-b0b8-0f9486498774</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>NSonarQubeRunner</RootNamespace>
+    <AssemblyName>NSonarQubeRunner</AssemblyName>
+    <Name>NSonarQubeRunner</Name>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>eae1745c</NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <Tailcalls>false</Tailcalls>
+    <OutputPath>$(ExtensionOutputPath)\plugins</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <WarningLevel>3</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>$(ExtensionOutputPath)\plugins</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <WarningLevel>3</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
+  </PropertyGroup>
+  <Choose>
+    <When Condition="'$(VisualStudioVersion)' == '11.0'">
+      <PropertyGroup Condition="Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets')">
+        <FSharpTargetsPath>$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets</FSharpTargetsPath>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\FSharp\Microsoft.FSharp.Targets')">
+        <FSharpTargetsPath>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\FSharp\Microsoft.FSharp.Targets</FSharpTargetsPath>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+  <Import Project="$(FSharpTargetsPath)" />
+  <ItemGroup>
+    <None Include="packages.config" />
+    <Compile Include="Types.fs" />
+    <Compile Include="ProxyDomain.fs" />
+    <Compile Include="LocalHelpers.fs" />
+    <Compile Include="ServerHelpers.fs" />
+    <Compile Include="Analysers.fs" />
+    <Compile Include="NSonarQubeRunner.fs" />
+    <Compile Include="AssemblyInfo.fs" />
+    <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="FSharp.Data.TypeProviders">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Build" />
+    <Reference Include="Microsoft.Build.Engine" />
+    <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Microsoft.CodeAnalysis">
+      <Private>False</Private>
+      <HintPath>..\..\..\..\packages\Microsoft.CodeAnalysis.Common.1.1.1\lib\net45\Microsoft.CodeAnalysis.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.CSharp">
+      <Private>False</Private>
+      <HintPath>..\..\..\..\packages\Microsoft.CodeAnalysis.CSharp.1.1.1\lib\net45\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.CSharp.Workspaces">
+      <Private>False</Private>
+      <HintPath>..\..\..\..\packages\Microsoft.CodeAnalysis.CSharp.Workspaces.1.1.1\lib\net45\Microsoft.CodeAnalysis.CSharp.Workspaces.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.VisualBasic">
+      <Private>False</Private>
+      <HintPath>..\..\..\..\packages\Microsoft.CodeAnalysis.VisualBasic.1.1.1\lib\net45\Microsoft.CodeAnalysis.VisualBasic.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces">
+      <Private>False</Private>
+      <HintPath>..\..\..\..\packages\Microsoft.CodeAnalysis.VisualBasic.Workspaces.1.1.1\lib\net45\Microsoft.CodeAnalysis.VisualBasic.Workspaces.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.Workspaces, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <Private>False</Private>
+      <HintPath>..\..\..\..\packages\Microsoft.CodeAnalysis.Workspaces.Common.1.1.1\lib\net45\Microsoft.CodeAnalysis.Workspaces.dll</HintPath>
+      <Private>False</Private>
+      <SpecificVersion>True</SpecificVersion>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.Workspaces.Desktop">
+      <Private>False</Private>
+      <HintPath>..\..\..\..\packages\Microsoft.CodeAnalysis.Workspaces.Common.1.1.1\lib\net45\Microsoft.CodeAnalysis.Workspaces.Desktop.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Collections.Immutable">
+      <Private>False</Private>
+      <HintPath>..\..\..\..\packages\System.Collections.Immutable.1.3.1\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="MsbuildAutomationHelper">
+      <Private>False</Private>
+      <HintPath>..\..\..\..\packages\MsbuildAutomationHelper$(MsbuildAutomationHelperVersion)\lib\MsbuildAutomationHelper.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="FSharp.Data, Version=$(TargetFSharpDataVersion), Culture=neutral, PublicKeyToken=2f04dbe497b71114">
+      <Private>False</Private>
+      <HintPath>..\..\..\..\References\$(TargetFSharpCoreVersion)\FSharp.Data.dll</HintPath>
+      <Private>False</Private>
+      <SpecificVersion>True</SpecificVersion>
+    </Reference>
+    <Reference Include="FSharp.Data.DesignTime, Version=$(TargetFSharpDataVersion), Culture=neutral, PublicKeyToken=2f04dbe497b71114">
+      <Private>False</Private>
+      <HintPath>..\..\..\..\References\$(TargetFSharpCoreVersion)\FSharp.Data.DesignTime.dll</HintPath>
+      <Private>False</Private>
+      <SpecificVersion>True</SpecificVersion>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.IO, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Reflection.Metadata">
+      <Private>False</Private>
+      <HintPath>..\..\..\..\packages\System.Reflection.Metadata.1.4.2\lib\portable-net45+win8\System.Reflection.Metadata.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Encoding" />
+    <Reference Include="System.Threading.Tasks" />
+    <Reference Include="System.Composition.AttributedModel">
+      <Private>False</Private>
+      <HintPath>..\..\..\..\packages\Microsoft.Composition.1.0.30\lib\portable-net45+win8+wp8+wpa81\System.Composition.AttributedModel.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Composition.Convention">
+      <Private>False</Private>
+      <HintPath>..\..\..\..\packages\Microsoft.Composition.1.0.30\lib\portable-net45+win8+wp8+wpa81\System.Composition.Convention.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Composition.Hosting">
+      <Private>False</Private>
+      <HintPath>..\..\..\..\packages\Microsoft.Composition.1.0.30\lib\portable-net45+win8+wp8+wpa81\System.Composition.Hosting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Composition.Runtime">
+      <Private>False</Private>
+      <HintPath>..\..\..\..\packages\Microsoft.Composition.1.0.30\lib\portable-net45+win8+wp8+wpa81\System.Composition.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Composition.TypedParts">
+      <Private>False</Private>
+      <HintPath>..\..\..\..\packages\Microsoft.Composition.1.0.30\lib\portable-net45+win8+wp8+wpa81\System.Composition.TypedParts.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib" />
+    <Reference Include="System.RunTime" />
+    <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <SpecificVersion>True</SpecificVersion>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\VSSonarPlugins\VSSonarPlugins.csproj">
+      <Name>VSSonarPlugins</Name>
+      <Project>{3311c918-b662-436d-8bc8-f38b447b1414}</Project>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\VSSonarQubeCmdExecutor\VSSonarQubeCmdExecutor.fsproj">
+      <Name>VSSonarQubeCmdExecutor</Name>
+      <Project>{9b154406-0af6-45a9-bf32-9c5c23822b6b}</Project>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="..\..\..\..\packages\AssemblyPatcherTask.1.0.5\build\AssemblyPatcherTask.targets" Condition="Exists('..\..\..\..\packages\AssemblyPatcherTask.1.0.5\build\AssemblyPatcherTask.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\..\..\packages\AssemblyPatcherTask.1.0.5\build\AssemblyPatcherTask.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\..\packages\AssemblyPatcherTask.1.0.5\build\AssemblyPatcherTask.targets'))" />
+  </Target>
+</Project>

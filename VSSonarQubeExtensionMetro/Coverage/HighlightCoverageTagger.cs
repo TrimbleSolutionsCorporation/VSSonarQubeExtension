@@ -171,7 +171,7 @@ namespace VSSonarQubeExtension.Coverage
         {
             try
             {
-                SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Coverage Changed Event Correctly Triggered");
+                SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessageToLog("Coverage Changed Event Correctly Triggered");
 
                 var document = VsEvents.GetPropertyFromBuffer<ITextDocument>(this.SourceBuffer);
                 Resource resource = SonarQubeViewModelFactory.SQViewModel.ResourceInEditor;
@@ -186,11 +186,11 @@ namespace VSSonarQubeExtension.Coverage
                     return;
                 }
 
-                SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Getting Coverage");
+                SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessageToLog("Getting Coverage");
                 Dictionary<int, CoverageElement> coverageLine =
                     SonarQubeViewModelFactory.SQViewModel.GetCoverageInEditor(this.SourceBuffer.CurrentSnapshot.GetText());
 
-                SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Got Cov Measures: " + coverageLine.Count);
+                SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessageToLog("Got Cov Measures: " + coverageLine.Count);
                 this.coverageTags.Clear();
 
                 if (coverageLine.Count == 0)
@@ -208,7 +208,7 @@ namespace VSSonarQubeExtension.Coverage
             }
             catch (Exception ex)
             {
-                SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Failed To Update Issues: " + ex.Message + " : " + ex.StackTrace);
+                SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessageToLog("Failed To Update Issues: " + ex.Message + " : " + ex.StackTrace);
             }
         }
 
@@ -227,7 +227,7 @@ namespace VSSonarQubeExtension.Coverage
 
             if (disposing)
             {
-                SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Dispose File");
+                SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessageToLog("Dispose File");
                 SonarQubeViewModelFactory.SQViewModel.AnalysisModeHasChange -= this.CoverageDataChanged;
                 SonarQubeViewModelFactory.SQViewModel.ServerViewModel.CoverageWasModified -= this.CoverageDataChanged;
 
@@ -309,7 +309,7 @@ namespace VSSonarQubeExtension.Coverage
         /// </summary>
         private void ScheduleUpdate(object state)
         {
-            SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Schedulle Update After Constructor");
+            SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessageToLog("Schedulle Update After Constructor");
             Thread.Sleep(2);
             this.CoverageDataChanged(state, EventArgs.Empty);
         }

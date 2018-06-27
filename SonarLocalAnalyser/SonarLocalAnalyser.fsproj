@@ -69,7 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Collections.ParallelSeq, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\references\$(TargetFSharpCoreVersion)\FSharp.Collections.ParallelSeq.dll</HintPath>
+      <Private>False</Private><HintPath>..\references\$(TargetFSharpCoreVersion)\FSharp.Collections.ParallelSeq.dll</HintPath>
       <SpecificVersion>True</SpecificVersion>
     </Reference>
     <Reference Include="Microsoft.Build.Framework" />
@@ -77,7 +77,7 @@
     <Reference Include="mscorlib" />
     <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <SpecificVersion>True</SpecificVersion>
-      <Private>True</Private>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -86,12 +86,12 @@
     <ProjectReference Include="..\SonarRestService\SonarRestService.fsproj">
       <Name>SonarRestService</Name>
       <Project>{64728a55-1166-4ec6-b066-22c4e01fc1c7}</Project>
-      <Private>True</Private>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\VSSonarPlugins\VSSonarPlugins.csproj">
       <Name>VSSonarPlugins</Name>
       <Project>{3311c918-b662-436d-8bc8-f38b447b1414}</Project>
-      <Private>True</Private>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
 </Project>

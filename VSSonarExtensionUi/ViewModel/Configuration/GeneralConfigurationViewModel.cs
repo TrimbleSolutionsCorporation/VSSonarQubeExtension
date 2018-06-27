@@ -28,7 +28,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     /// <summary>
     /// The sonar configuration view viewModel.
     /// </summary>
-    [ImplementPropertyChanged]
+    [AddINotifyPropertyChangedInterface]
     public class GeneralConfigurationViewModel : IOptionsViewModelBase, IOptionsModelBase
     {
         #region Fields

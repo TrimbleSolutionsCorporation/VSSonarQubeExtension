@@ -59,6 +59,7 @@
     <Compile Include="XmlTypeProviders.fs" />
     <Compile Include="SourceService.fs" />
     <Compile Include="DifferencialService.fs" />
+    <Compile Include="IssuesService.fs" />
     <Compile Include="AnalysisService.fs" />
     <Compile Include="ComponentService.fs" />
     <Compile Include="SettingsService.fs" />
@@ -75,22 +76,22 @@
   <ItemGroup>
     <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <SpecificVersion>True</SpecificVersion>
-      <Private>True</Private>
+      <Private>False</Private>
     </Reference>
     <Reference Include="FSharp.Data, Version=$(TargetFSharpDataVersion), Culture=neutral, PublicKeyToken=2f04dbe497b71114">
-      <HintPath>..\References\$(TargetFSharpCoreVersion)\FSharp.Data.dll</HintPath>
-      <Private>True</Private>
+      <Private>False</Private><HintPath>..\References\$(TargetFSharpCoreVersion)\FSharp.Data.dll</HintPath>
+      <Private>False</Private>
       <SpecificVersion>True</SpecificVersion>
     </Reference>
     <Reference Include="FSharp.Data.DesignTime, Version=$(TargetFSharpDataVersion), Culture=neutral, PublicKeyToken=2f04dbe497b71114">
-      <HintPath>..\References\$(TargetFSharpCoreVersion)\FSharp.Data.DesignTime.dll</HintPath>
-      <Private>True</Private>
+      <Private>False</Private><HintPath>..\References\$(TargetFSharpCoreVersion)\FSharp.Data.DesignTime.dll</HintPath>
+      <Private>False</Private>
       <SpecificVersion>True</SpecificVersion>
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="RestSharp">
-      <HintPath>$(ReferencesFolder)\RestSharp.dll</HintPath>
-      <Private>True</Private>
+      <Private>False</Private><HintPath>$(ReferencesFolder)\RestSharp.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -105,7 +106,7 @@
     <ProjectReference Include="..\VSSonarPlugins\VSSonarPlugins.csproj">
       <Name>VSSonarPlugins</Name>
       <Project>{3311c918-b662-436d-8bc8-f38b447b1414}</Project>
-      <Private>True</Private>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="..\packages\AssemblyPatcherTask.1.0.5\build\AssemblyPatcherTask.targets" Condition="Exists('..\packages\AssemblyPatcherTask.1.0.5\build\AssemblyPatcherTask.targets')" />

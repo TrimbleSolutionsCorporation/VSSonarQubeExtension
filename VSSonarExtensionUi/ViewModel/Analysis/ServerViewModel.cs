@@ -18,6 +18,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using System.Collections.ObjectModel;
     using System.IO;
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
     using System.Windows.Input;
     using System.Windows.Media;
 
@@ -40,7 +42,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     /// <summary>
     ///     The server view model.
     /// </summary>
-    [ImplementPropertyChanged]
+    [AddINotifyPropertyChangedInterface]
     public class ServerViewModel : IAnalysisModelBase, IViewModelBase, IModelBase
     {
         /// <summary>
@@ -72,6 +74,11 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// The status bar
         /// </summary>
         private IVSSStatusBar statusBar;
+
+        /// <summary>
+        /// The ct
+        /// </summary>
+        private CancellationTokenSource ct;
 
         /// <summary>
         /// The service provier
@@ -350,7 +357,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             if (this.CoverageInEditorEnabled)
             {
-                this.notificationMan.WriteMessage("Requested Coverage - Coverage enabled");
+                this.notificationMan.WriteMessageToLog("Requested Coverage - Coverage enabled");
                 return this.localEditorCache.GetCoverageDataForResource(this.ResourceInEditor, currentSourceBuffer);
             }
 
@@ -423,11 +430,11 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             if (this.IssuesReadyForCollecting != null)
             {
-                this.notificationMan.WriteMessage("Trigger issues update");
+                this.notificationMan.WriteMessageToLog("Trigger issues update");
                 this.IssuesReadyForCollecting(this, e);
                 if (this.CoverageWasModified != null)
                 {
-                    this.notificationMan.WriteMessage("Trigger Coverage Update");
+                    this.notificationMan.WriteMessageToLog("Trigger Coverage Update");
                     this.CoverageWasModified(this, e);
                 }
             }
@@ -439,7 +446,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public void OnCoverageInEditorEnabledChanged()
         {
             this.OnCoverageWasModified(EventArgs.Empty);
-            this.notificationMan.WriteMessage("CoverageInEditorEnabled Changed");
+            this.notificationMan.WriteMessageToLog("CoverageInEditorEnabled Changed");
         }
 
         /// <summary>
@@ -448,7 +455,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public void OnSelectedViewChanged()
         {
             this.RefreshIssuesEditor(EventArgs.Empty);
-            this.notificationMan.WriteMessage("OnSelectedViewChanged Changed");
+            this.notificationMan.WriteMessageToLog("OnSelectedViewChanged Changed");
         }
 
         /// <summary>
@@ -460,17 +467,36 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <param name="documentInView">
         ///     The document in view.
         /// </param>
-        public void RefreshDataForResource(Resource res, string documentInView, string content, bool fromSource)
+        public async void RefreshDataForResource(Resource res, string documentInView, string content, bool fromSource)
         {
-            this.DocumentInView = documentInView;
-            this.ResourceInEditor = res;
-            var newCoverage = this.restservice.GetCoverageInResource(AuthtenticationHelper.AuthToken, this.ResourceInEditor.Key);
-            var newSource = VsSonarUtils.GetLinesFromSource(this.restservice.GetSourceForFileResource(AuthtenticationHelper.AuthToken, this.ResourceInEditor.Key), "\r\n");
-            var newIssues = this.restservice.GetIssuesInResource(AuthtenticationHelper.AuthToken, this.ResourceInEditor.Key);
+            try
+            {
+                this.DocumentInView = documentInView;
+                this.ResourceInEditor = res;
+                var newCoverage = await Task.Run(() =>
+                {
+                    return this.restservice.GetCoverageInResource(AuthtenticationHelper.AuthToken, this.ResourceInEditor.Key);
+                }).ConfigureAwait(false);
 
-            this.IssuesGridView.UpdateIssues(newIssues);
-            this.localEditorCache.UpdateResourceData(this.ResourceInEditor, newCoverage, newIssues, newSource);
-            this.OnSelectedViewChanged();
+                var newSource = await Task.Run(() =>
+                {
+                    return VsSonarUtils.GetLinesFromSource(this.restservice.GetSourceForFileResource(AuthtenticationHelper.AuthToken, this.ResourceInEditor.Key), "\r\n");
+                }).ConfigureAwait(false);
+
+                this.CreateNewTokenOrUseOldOne();
+                var newIssues = await Task.Run(() =>
+                {
+                    return this.restservice.GetIssuesInResource(AuthtenticationHelper.AuthToken, this.ResourceInEditor.Key, this.ct.Token, this.notificationMan);
+                }).ConfigureAwait(false);
+
+                this.IssuesGridView.UpdateIssues(newIssues);
+                this.localEditorCache.UpdateResourceData(this.ResourceInEditor, newCoverage, newIssues, newSource);
+                this.OnSelectedViewChanged();
+            }
+            catch (Exception ex)
+            {
+                this.notificationMan.WriteMessageToLog("Failed to refresh data for resource: " + ex.Message);
+            }
         }
 
         /// <summary>
@@ -514,7 +540,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             if (this.CoverageWasModified != null)
             {
-                this.notificationMan.WriteMessage("Triggering Event: OnCoverageWasModified");
+                this.notificationMan.WriteMessageToLog("Triggering Event: OnCoverageWasModified");
                 this.CoverageWasModified(this, e);
             }
         }
@@ -530,6 +556,17 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         #endregion
 
         #region Methods
+        
+        /// <summary>
+        /// Creates the new token or use old one.
+        /// </summary>
+        private void CreateNewTokenOrUseOldOne()
+        {
+            if (this.ct == null || this.ct.IsCancellationRequested)
+            {
+                this.ct = new CancellationTokenSource();
+            }
+        }
 
         /// <summary>
         ///     The init commanding.

@@ -14,7 +14,7 @@ namespace VSSonarPlugins.Types
     /// <summary>
     /// The vs project item.
     /// </summary>
-    [ImplementPropertyChanged]
+    [AddINotifyPropertyChangedInterface]
     public class VsFileItem
     {
         /// <summary>Initializes a new instance of the <see cref="VsFileItem"/> class.</summary>

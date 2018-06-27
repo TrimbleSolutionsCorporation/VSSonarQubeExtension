@@ -248,7 +248,7 @@ namespace VSSonarQubeExtension.Helpers
         /// </param>
         private void DoumentSaved(Document document)
         {
-            SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("DoumentSaved : " + document);
+            SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessageToLog("DoumentSaved : " + document);
             if (document == null)
             {
                 return;
@@ -269,7 +269,7 @@ namespace VSSonarQubeExtension.Helpers
         /// </summary>
         private void SolutionClosed()
         {
-            SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Solution Closed");
+            SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessageToLog("Solution Closed");
             SonarQubeViewModelFactory.SQViewModel.OnSolutionClosed();
         }
 
@@ -281,7 +281,7 @@ namespace VSSonarQubeExtension.Helpers
             string solutionName = this.environment.ActiveSolutionName();
             string solutionPath = this.environment.ActiveSolutionPath();
             string fileName = this.environment.ActiveFileFullPath();
-            SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Solution Opened: " + solutionName + " : " + solutionPath);
+            SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessageToLog("Solution Opened: " + solutionName + " : " + solutionPath);
             SonarQubeViewModelFactory.SQViewModel.OnSolutionOpen(solutionName, solutionPath, fileName);
         }
 
@@ -332,7 +332,7 @@ namespace VSSonarQubeExtension.Helpers
         /// </param>
         private void WindowActivated(Window gotFocus, Window lostFocus)
         {
-            SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Window Activated: Kind: " + gotFocus.Kind);
+            SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessageToLog("Window Activated: Kind: " + gotFocus.Kind);
 
             if (gotFocus.Kind != "Document")
             {
@@ -344,11 +344,11 @@ namespace VSSonarQubeExtension.Helpers
             {
                 if (this.LastDocumentWindowWithFocus == gotFocus)
                 {
-                    SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Last and Current Window are the same");
+                    SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessageToLog("Last and Current Window are the same");
                     return;
                 }
 
-                SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("New Document Open: " + gotFocus.Document.FullName);
+                SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessageToLog("New Document Open: " + gotFocus.Document.FullName);
 
                 this.LastDocumentWindowWithFocus = gotFocus;
                 this.environment.SetCurrentDocumentInView(gotFocus.Document.FullName);

@@ -1,0 +1,781 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:system="clr-namespace:System;assembly=mscorlib"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+
+    xmlns:command="http://www.galasoft.ch/mvvmlight" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:extensionTypes="clr-namespace:VSSonarPlugins.Types;assembly=VSSonarPlugins"
+    xmlns:helpers="clr-namespace:SqaleUi.helpers"
+    mc:Ignorable="d" x:Class="SqaleUi.View.SqaleGrid"
+    d:DesignHeight="188.209">
+    <UserControl.Resources>
+
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+                <ResourceDictionary Source="/SqaleUi;component/Styles/DatagridStyles.xaml" />
+
+            </ResourceDictionary.MergedDictionaries>
+
+            <Image x:Key="ToWorkArea" Source="/SqaleUi;component/Images/toworkarea.png" />
+            <Image x:Key="ToProject" Source="/SqaleUi;component/Images/toproject.png" />
+            <Image x:Key="AddSign" Source="/SqaleUi;component/Images/addtab.png" />
+            <Image x:Key="RemoveSign" Source="/SqaleUi;component/Images/removetab.png" />
+            <Image x:Key="ImportXmlProfile" Source="/SqaleUi;component/Images/importXMLProfile.png" />
+            <Image x:Key="ImportPrioritiesProfile" Source="/SqaleUi;component/Images/importXmlPriorities.png" />
+            <Image x:Key="ImportSqaleDefinition" Source="/SqaleUi;component/Images/imporSqaleDefinition.png" />
+            <Image x:Key="ExportSqaleModel" Source="/SqaleUi;component/Images/exportSqaleModel.png" />
+            <Image x:Key="ImportServerQualityProfile" Source="/SqaleUi;component/Images/importQualityProfile.png" />
+            <Image x:Key="ImportQualityProfileFromProject"
+                   Source="/SqaleUi;component/Images/importQualityProfileFromProject.png" />
+
+            <helpers:ActivityToBrushConverter x:Key="BrushConverter" />
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />
+
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type system:Enum}" x:Key="GetCategoryEnumValues">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="extensionTypes:Category" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type system:Enum}" x:Key="GetSeverityEnumValues">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="extensionTypes:Severity" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+
+
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type system:Enum}"
+                                x:Key="GetSubCategoryEnumValues">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="extensionTypes:SubCategory" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type system:Enum}"
+                                x:Key="GetRemediationUnitEnumValues">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="extensionTypes:RemediationUnit" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type system:Enum}"
+                                x:Key="GetRemediationFunctionEnumValues">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="extensionTypes:RemediationFunction" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+
+            <ContextMenu
+                Visibility="{Binding PlacementTarget.Tag.ShowContextMenu, RelativeSource={RelativeSource Self}, Converter={StaticResource BoolToVis}}"
+                x:Key="DatagridContextMenu"
+                ItemsSource="{Binding PlacementTarget.Tag.ContextMenuItems, RelativeSource={RelativeSource Self}}">
+                <ContextMenu.ItemTemplate>
+                    <HierarchicalDataTemplate ItemsSource="{Binding SubItems}">
+                        <MenuItem Header="{Binding CommandText}" Command="{Binding AssociatedCommand}"
+                                  IsEnabled="{Binding IsEnabled}" />
+                        <HierarchicalDataTemplate.ItemContainerStyle>
+                            <Style TargetType="{x:Type MenuItem}">
+                                <Setter Property="Command" Value="{Binding AssociatedCommand}" />
+                            </Style>
+                        </HierarchicalDataTemplate.ItemContainerStyle>
+                    </HierarchicalDataTemplate>
+                </ContextMenu.ItemTemplate>
+            </ContextMenu>
+
+            <Style x:Key="IssuesGridRowStyle" TargetType="{x:Type DataGridRow}"
+                   BasedOn="{StaticResource RowStyleWithAlternation}" />
+        </ResourceDictionary>
+
+    </UserControl.Resources>
+    <UserControl.Background>
+        <SolidColorBrush Color="{Binding BackGroundColor, FallbackValue=Black}" />
+    </UserControl.Background>
+
+    <UserControl.Foreground>
+        <SolidColorBrush Color="{Binding ForeGroundColor, FallbackValue=White}" />
+    </UserControl.Foreground>
+    <Grid x:Name="LayoutRoot">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25" />
+            <RowDefinition Height="3*" />
+            <RowDefinition Height="25" />
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <Button Margin="0,0,0,0" ToolTip="Send All Content from Grid to New Work Area"
+                    Content="{DynamicResource ToWorkArea}" Background="Transparent"
+                    Command="{Binding SendToWorkAreaCommand}" />
+            <Button Margin="0,0,5,0" ToolTip="Merge Content to Project" Content="{DynamicResource ToProject}"
+                    Background="Transparent" Command="{Binding SendToProject}" />
+            <Button Margin="0,0,0,0" ToolTip="Create New Rule" Content="{DynamicResource AddSign}"
+                    Background="Transparent" Command="{Binding AddNewRuleCommand}" />
+            <Button Margin="0,0,5,0" ToolTip="Remove Selected Rule" Content="{DynamicResource RemoveSign}"
+                    Background="Transparent" Command="{Binding RemoveRuleCommand}" IsEnabled="{Binding CanRemoveRuleCommand}" />
+
+            <Button Margin="0,0,0,0" ToolTip="Import Xml Rule Definition" Content="{DynamicResource ImportXmlProfile}"
+                    Background="Transparent" Command="{Binding ImportXmlProfileCommand}" />
+            <Button Margin="0,0,0,0" ToolTip="Import A Quality Profile Definition"
+                    Content="{DynamicResource ImportPrioritiesProfile}" Background="Transparent"
+                    Command="{Binding ImportProfileCommand}" />
+            <Button Margin="0,0,5,0" ToolTip="Import A Sqale Model" Content="{DynamicResource ImportSqaleDefinition}"
+                    Background="Transparent" Command="{Binding ImportSqaleModelCommand}" />
+
+            <Button Margin="0,0,0,0" ToolTip="Modify Server Profile"
+                    Content="{DynamicResource ImportServerQualityProfile}" Background="Transparent"
+                    Command="{Binding ImportServerQualityProfileCommand}" IsEnabled="{Binding IsConnected}" />
+            <Button Margin="0,0,5,0" ToolTip="Modify Profile For Project"
+                    Content="{DynamicResource ImportQualityProfileFromProject}" Background="Transparent"
+                    Command="{Binding ImportServerQualityProfileFromProjectCommand}" IsEnabled="{Binding IsConnected}" />
+
+            <Button Margin="0,0,0,0" ToolTip="Export Sqale Model" Content="{DynamicResource ExportSqaleModel}"
+                    Background="Transparent" Command="{Binding ExportSaqleModelCommand}" />
+            <TextBlock Margin="2">
+                <Hyperlink
+                    Command="{Binding DataContext.FilterClearAllCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
+                    <Run Text="Clear All Filters" />
+                </Hyperlink>
+            </TextBlock>
+        </StackPanel>
+        <DataGrid
+            Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type UserControl}, Mode=FindAncestor}}"
+            ContextMenu="{StaticResource DatagridContextMenu}" x:Name="Datagrid" Grid.Row="1"
+            SelectedItem="{Binding SelectedRule}" IsSynchronizedWithCurrentItem="True" ItemsSource="{Binding Profile}"
+            CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="True"
+            RowStyle="{DynamicResource IssuesGridRowStyle}"
+            AlternationCount="2" AutoGenerateColumns="False" AlternatingRowBackground="#CCD1E0E6"
+            CanUserSortColumns="True">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseRightButtonUp">
+                    <i:InvokeCommandAction Command="{Binding MouseEventCommand}"  />
+                </i:EventTrigger>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}"
+                                            CommandParameter="{Binding SelectedItems, ElementName=Datagrid}" />
+                </i:EventTrigger>
+
+            </i:Interaction.Triggers>
+
+
+            <DataGrid.Columns>
+
+                <DataGridTemplateColumn x:Name="EnabledTemplateCol" Header="Enabled" CanUserSort="True"
+                                        SortMemberPath="Enabled">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox Width="Auto"
+                                      IsChecked="{Binding Enabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black"
+                                      HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <!--NAME COLUMN-->
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid IsHitTestVisible="True">
+                                <Expander Header="{TemplateBinding Content}" IsHitTestVisible="True"
+                                          VerticalAlignment="Top" Margin="0 0 0 0" ToolTip="RuleFilter"
+                                          HorizontalAlignment="Left" Width="Auto" Height="Auto">
+                                    <Border IsHitTestVisible="True" BorderThickness="1" Margin="0 0 0 0">
+                                        <StackPanel Margin="0 2 0 0">
+                                            <!--FILTER TEXTBOX-->
+                                            <ComboBox Width="Auto"
+                                                      SelectedValue="{Binding DataContext.FilterTermEnabled, Mode=TwoWay, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                      Background="{Binding DataContext.FilterActive, Converter={StaticResource BrushConverter}, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                      BorderBrush="{x:Null}" Foreground="Black">
+                                                <ComboBoxItem Content="Enabled" />
+                                                <ComboBoxItem Content="Disabled" />
+                                            </ComboBox>
+                                            <!--FILTER BUTTONS-->
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <TextBlock Margin="2" FontFamily="Segoe UI">
+                                                    <Hyperlink
+                                                        Command="{Binding DataContext.FilterApplyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
+                                                        <Run Text="Apply" />
+                                                    </Hyperlink>
+                                                </TextBlock>
+                                                <TextBlock Margin="2">
+                                                    <Hyperlink
+                                                        Command="{Binding DataContext.FilterClearEnabledCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
+                                                        <Run Text="Clear" />
+                                                    </Hyperlink>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </Expander>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn x:Name="KeyColumnTempl" Header="Key" CanUserSort="True" SortMemberPath="Key"
+                                        MinWidth="110">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox IsEnabled="false" Text="{Binding Key, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                     Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0"
+                                     Foreground="Black"
+                                     Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}, Mode=FindAncestor}}"
+                                     ContextMenu="{StaticResource DatagridContextMenu}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <!--NAME COLUMN-->
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid IsHitTestVisible="True">
+                                <Expander Header="{TemplateBinding Content}" IsHitTestVisible="True"
+                                          VerticalAlignment="Top"
+                                          Margin="0 0 0 0" ToolTip="RuleFilter">
+                                    <Border IsHitTestVisible="True" BorderThickness="1" Margin="0 0 0 0">
+                                        <StackPanel Margin="0 2 0 0">
+                                            <!--FILTER TEXTBOX-->
+                                            <TextBox
+                                                Text="{Binding DataContext.FilterTermKey, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                Background="{Binding DataContext.FilterActive, Converter={StaticResource BrushConverter}, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                ToolTip="Enter filter term" Width="100" Height="18" FontSize="9"
+                                                BorderThickness="1" />
+                                            <!--FILTER BUTTONS-->
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <TextBlock Margin="2" FontFamily="Segoe UI">
+                                                    <Hyperlink
+                                                        Command="{Binding DataContext.FilterApplyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
+                                                        <Run Text="Apply" />
+                                                    </Hyperlink>
+                                                </TextBlock>
+                                                <TextBlock Margin="2">
+                                                    <Hyperlink
+                                                        Command="{Binding DataContext.FilterClearKeyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
+                                                        <Run Text="Clear" />
+                                                    </Hyperlink>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </Expander>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn x:Name="NameColumnTempl" Header="Name" CanUserSort="True" SortMemberPath="Name"
+                                        MinWidth="110">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox MaxWidth="300" TextWrapping="Wrap"
+                                     Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                     Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0"
+                                     Foreground="Black"
+                                     Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}, Mode=FindAncestor}}"
+                                     ContextMenu="{StaticResource DatagridContextMenu}" TextAlignment="Justify" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <!--NAME COLUMN-->
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid IsHitTestVisible="True">
+                                <!--FILTER EXPANDER-->
+                                <Expander Header="{TemplateBinding Content}" IsHitTestVisible="True"
+                                          VerticalAlignment="Top"
+                                          Margin="0 0 0 0" ToolTip="RuleFilter">
+                                    <Border IsHitTestVisible="True" BorderThickness="1" Margin="0 0 0 0">
+                                        <StackPanel Margin="0 2 0 0">
+                                            <!--FILTER TEXTBOX-->
+                                            <TextBox
+                                                Text="{Binding DataContext.FilterTermName, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                Background="{Binding DataContext.FilterActive, Converter={StaticResource BrushConverter}, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                ToolTip="Enter filter term" Width="100" Height="18" FontSize="9"
+                                                BorderThickness="1" />
+                                            <!--FILTER BUTTONS-->
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <TextBlock Margin="2" FontFamily="Segoe UI">
+                                                    <Hyperlink
+                                                        Command="{Binding DataContext.FilterApplyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
+                                                        <Run Text="Apply" />
+                                                    </Hyperlink>
+                                                </TextBlock>
+                                                <TextBlock Margin="2">
+                                                    <Hyperlink
+                                                        Command="{Binding DataContext.FilterClearNameCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
+                                                        <Run Text="Clear" />
+                                                    </Hyperlink>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </Expander>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn x:Name="RepoColumnTempl" Header="Repo" CanUserSort="True" SortMemberPath="Repo"
+                                        MinWidth="110">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Repo, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                     Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0"
+                                     Foreground="Black"
+                                     Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}, Mode=FindAncestor}}"
+                                     ContextMenu="{StaticResource DatagridContextMenu}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <!--NAME COLUMN-->
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid IsHitTestVisible="True">
+                                <Expander Header="{TemplateBinding Content}" IsHitTestVisible="True"
+                                          VerticalAlignment="Top"
+                                          Margin="0 0 0 0" ToolTip="RuleFilter">
+                                    <Border IsHitTestVisible="True" BorderThickness="1" Margin="0 0 0 0">
+                                        <StackPanel Margin="0 2 0 0">
+                                            <!--FILTER TEXTBOX-->
+                                            <TextBox
+                                                Text="{Binding DataContext.FilterTermRepo, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                Background="{Binding DataContext.FilterActive, Converter={StaticResource BrushConverter}, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                ToolTip="Enter filter term" Width="100" Height="18" FontSize="9"
+                                                BorderThickness="1" />
+                                            <!--FILTER BUTTONS-->
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <TextBlock Margin="2" FontFamily="Segoe UI">
+                                                    <Hyperlink
+                                                        Command="{Binding DataContext.FilterApplyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
+                                                        <Run Text="Apply" />
+                                                    </Hyperlink>
+                                                </TextBlock>
+                                                <TextBlock Margin="2">
+                                                    <Hyperlink
+                                                        Command="{Binding DataContext.FilterClearRepoCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
+                                                        <Run Text="Clear" />
+                                                    </Hyperlink>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </Expander>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn x:Name="SeverityTemplateCol" Header="Severity" CanUserSort="True"
+                                        SortMemberPath="Severity" MinWidth="110">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding Source={StaticResource GetSeverityEnumValues}}"
+                                      Width="Auto"
+                                      SelectedValue="{Binding Severity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <!--NAME COLUMN-->
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid IsHitTestVisible="True">
+                                <!--FILTER EXPANDER-->
+                                <Expander Header="{TemplateBinding Content}" IsHitTestVisible="True"
+                                          VerticalAlignment="Top"
+                                          Margin="0 0 0 0" ToolTip="RuleFilter">
+                                    <Border IsHitTestVisible="True" BorderThickness="1" Margin="0 0 0 0">
+                                        <StackPanel Margin="0 2 0 0">
+                                            <!--FILTER TEXTBOX-->
+                                            <ComboBox
+                                                ItemsSource="{Binding Source={StaticResource GetSeverityEnumValues}}"
+                                                Width="Auto"
+                                                SelectedValue="{Binding DataContext.FilterTermSeverity, Mode=TwoWay, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                Background="{Binding DataContext.FilterActive, Converter={StaticResource BrushConverter}, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                BorderBrush="{x:Null}" Foreground="Black" />
+                                            <!--TextBox Text="{Binding DataContext.FilterTermSeverity, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                    Background="{Binding DataContext.FilterActive,  RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource activityToBrushConverter}}" 
+                                                                    ToolTip="Enter filter term" Width="100" Height="18" FontSize="9" BorderThickness="1" /-->
+                                            <!--FILTER BUTTONS-->
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <TextBlock Margin="2" FontFamily="Segoe UI">
+                                                    <Hyperlink
+                                                        Command="{Binding DataContext.FilterApplyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
+                                                        <Run Text="Apply" />
+                                                    </Hyperlink>
+                                                </TextBlock>
+                                                <TextBlock Margin="2">
+                                                    <Hyperlink
+                                                        Command="{Binding DataContext.FilterClearSeverityCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
+                                                        <Run Text="Clear" />
+                                                    </Hyperlink>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </Expander>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn x:Name="TagsColumnTempl" Header="Tags" CanUserSort="True" SortMemberPath="Tags"
+                                        MinWidth="110">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ItemsControl ItemsSource="{Binding Tags}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <!--NAME COLUMN-->
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid IsHitTestVisible="True">
+
+                                <!--FILTER EXPANDER-->
+                                <Expander Header="{TemplateBinding Content}" IsHitTestVisible="True"
+                                          VerticalAlignment="Top"
+                                          Margin="0 0 0 0" ToolTip="RuleFilter">
+                                    <Border IsHitTestVisible="True" BorderThickness="1" Margin="0 0 0 0">
+                                        <StackPanel Margin="0 2 0 0">
+                                            <!--FILTER TEXTBOX-->
+                                            <TextBox
+                                                Text="{Binding DataContext.FilterTermTag, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                Background="{Binding DataContext.FilterActive, Converter={StaticResource BrushConverter}, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                ToolTip="Enter filter term" Width="100" Height="18" FontSize="9"
+                                                BorderThickness="1" />
+                                            <!--FILTER BUTTONS-->
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <TextBlock Margin="2" FontFamily="Segoe UI">
+                                                    <Hyperlink
+                                                        Command="{Binding DataContext.FilterApplyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
+                                                        <Run Text="Apply" />
+                                                    </Hyperlink>
+                                                </TextBlock>
+                                                <TextBlock Margin="2">
+                                                    <Hyperlink
+                                                        Command="{Binding DataContext.FilterClearTagCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
+                                                        <Run Text="Clear" />
+                                                    </Hyperlink>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </Expander>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                </DataGridTemplateColumn>
+
+
+                <DataGridTemplateColumn x:Name="CategotyTemplateCol" Header="Category" CanUserSort="True"
+                                        SortMemberPath="Category" MinWidth="110">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding Source={StaticResource GetCategoryEnumValues}}"
+                                      Width="Auto"
+                                      SelectedValue="{Binding Category, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <!--NAME COLUMN-->
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid IsHitTestVisible="True">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+
+                                <!--FILTER EXPANDER-->
+                                <Expander Header="{TemplateBinding Content}" IsHitTestVisible="True"
+                                          VerticalAlignment="Top"
+                                          Margin="0 0 0 0" ToolTip="RuleFilter">
+                                    <Border IsHitTestVisible="True" BorderThickness="1" Margin="0 0 0 0">
+                                        <StackPanel Margin="0 2 0 0">
+                                            <!--FILTER TEXTBOX-->
+                                            <ComboBox
+                                                ItemsSource="{Binding Source={StaticResource GetCategoryEnumValues}}"
+                                                Width="Auto"
+                                                SelectedValue="{Binding DataContext.FilterTermCategory, Mode=TwoWay, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                Background="{Binding DataContext.FilterActive, Converter={StaticResource BrushConverter}, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                BorderBrush="{x:Null}" Foreground="Black" />
+                                            <!--TextBox Text="{Binding DataContext.FilterTermSeverity, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                    Background="{Binding DataContext.FilterActive,  RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource activityToBrushConverter}}" 
+                                                                    ToolTip="Enter filter term" Width="100" Height="18" FontSize="9" BorderThickness="1" /-->
+                                            <!--FILTER BUTTONS-->
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <TextBlock Margin="2" FontFamily="Segoe UI">
+                                                    <Hyperlink
+                                                        Command="{Binding DataContext.FilterApplyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
+                                                        <Run Text="Apply" />
+                                                    </Hyperlink>
+                                                </TextBlock>
+                                                <TextBlock Margin="2">
+                                                    <Hyperlink
+                                                        Command="{Binding DataContext.FilterClearCategoryCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
+                                                        <Run Text="Clear" />
+                                                    </Hyperlink>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </Expander>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                </DataGridTemplateColumn>
+
+
+                <DataGridTemplateColumn x:Name="SubCategotyTemplateCol" Header="Sub Category" CanUserSort="True"
+                                        SortMemberPath="Subcategory" MinWidth="110">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding SubcategoryValues}" Width="Auto"
+                                      SelectedValue="{Binding Subcategory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <!--NAME COLUMN-->
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid IsHitTestVisible="True">
+                                <!--FILTER EXPANDER-->
+                                <Expander Header="{TemplateBinding Content}" IsHitTestVisible="True"
+                                          VerticalAlignment="Top"
+                                          Margin="0 0 0 0" ToolTip="RuleFilter">
+                                    <Border IsHitTestVisible="True" BorderThickness="1" Margin="0 0 0 0">
+                                        <StackPanel Margin="0 2 0 0">
+                                            <!--FILTER TEXTBOX-->
+                                            <ComboBox
+                                                ItemsSource="{Binding Source={StaticResource GetSubCategoryEnumValues}}"
+                                                Width="Auto"
+                                                SelectedValue="{Binding DataContext.FilterTermSubCategory, Mode=TwoWay, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                Background="{Binding DataContext.FilterActive, Converter={StaticResource BrushConverter}, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                BorderBrush="{x:Null}" Foreground="Black" />
+                                            <!--TextBox Text="{Binding DataContext.FilterTermSeverity, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                    Background="{Binding DataContext.FilterActive,  RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource activityToBrushConverter}}" 
+                                                                    ToolTip="Enter filter term" Width="100" Height="18" FontSize="9" BorderThickness="1" /-->
+                                            <!--FILTER BUTTONS-->
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <TextBlock Margin="2" FontFamily="Segoe UI">
+                                                    <Hyperlink
+                                                        Command="{Binding DataContext.FilterApplyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
+                                                        <Run Text="Apply" />
+                                                    </Hyperlink>
+                                                </TextBlock>
+                                                <TextBlock Margin="2">
+                                                    <Hyperlink
+                                                        Command="{Binding DataContext.FilterClearSubCategoryCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
+                                                        <Run Text="Clear" />
+                                                    </Hyperlink>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </Expander>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                </DataGridTemplateColumn>
+
+
+                <DataGridTemplateColumn x:Name="RemediationFunctionTemplateCol" Header="Remediation Function"
+                                        CanUserSort="True" SortMemberPath="RemediationFunction" MinWidth="110">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding Source={StaticResource GetRemediationFunctionEnumValues}}"
+                                      Width="Auto"
+                                      SelectedValue="{Binding RemediationFunction, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <!--NAME COLUMN-->
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid IsHitTestVisible="True">
+
+                                <!--FILTER EXPANDER-->
+                                <Expander Header="{TemplateBinding Content}" IsHitTestVisible="True"
+                                          VerticalAlignment="Top"
+                                          Margin="0 0 0 0" ToolTip="RuleFilter">
+                                    <Border IsHitTestVisible="True" BorderThickness="1" Margin="0 0 0 0">
+                                        <StackPanel Margin="0 2 0 0">
+                                            <!--FILTER TEXTBOX-->
+                                            <ComboBox
+                                                ItemsSource="{Binding Source={StaticResource GetRemediationFunctionEnumValues}}"
+                                                Width="Auto"
+                                                SelectedValue="{Binding DataContext.FilterTermRemediationFunction, Mode=TwoWay, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                Background="{Binding DataContext.FilterActive, Converter={StaticResource BrushConverter}, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                BorderBrush="{x:Null}" Foreground="Black" />
+                                            <!--TextBox Text="{Binding DataContext.FilterTermSeverity, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                    Background="{Binding DataContext.FilterActive,  RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource activityToBrushConverter}}" 
+                                                                    ToolTip="Enter filter term" Width="100" Height="18" FontSize="9" BorderThickness="1" /-->
+                                            <!--FILTER BUTTONS-->
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <TextBlock Margin="2" FontFamily="Segoe UI">
+                                                    <Hyperlink
+                                                        Command="{Binding DataContext.FilterApplyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
+                                                        <Run Text="Apply" />
+                                                    </Hyperlink>
+                                                </TextBlock>
+                                                <TextBlock Margin="2">
+                                                    <Hyperlink
+                                                        Command="{Binding DataContext.FilterClearRemediationFunctionCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
+                                                        <Run Text="Clear" />
+                                                    </Hyperlink>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </Expander>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                </DataGridTemplateColumn>
+
+
+                <DataGridTextColumn
+                    Binding="{Binding RemediationFactorVal, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                    Header="Remediation Value" MinWidth="100" CanUserSort="True" />
+                <DataGridComboBoxColumn Header="Remediation Factor Unit"
+                                        ItemsSource="{Binding Source={StaticResource GetRemediationUnitEnumValues}}"
+                                        Width="100"
+                                        SelectedValueBinding="{Binding RemediationFactorTxt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        CanUserSort="True" />
+
+
+                <DataGridTextColumn
+                    Binding="{Binding RemediationOffsetVal, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                    Header="Remediation Ofset" MinWidth="100" CanUserSort="True" />
+                <DataGridComboBoxColumn Header="Remediation Offset Unit"
+                                        ItemsSource="{Binding Source={StaticResource GetRemediationUnitEnumValues}}"
+                                        Width="100"
+                                        SelectedValueBinding="{Binding RemediationOffsetTxt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        CanUserSort="True" />
+
+
+                <DataGridTemplateColumn Header="Config Key" CanUserSort="True" SortMemberPath="ConfigKey"
+                                        MinWidth="110">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox TextAlignment="Justify" MaxWidth="300" TextWrapping="Wrap"
+                                     Text="{Binding ConfigKey, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                     Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}, Mode=FindAncestor}}"
+                                     ContextMenu="{StaticResource DatagridContextMenu}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <!--NAME COLUMN-->
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid IsHitTestVisible="True">
+
+                                <!--FILTER EXPANDER-->
+                                <Expander Header="{TemplateBinding Content}" IsHitTestVisible="True"
+                                          VerticalAlignment="Top"
+                                          Margin="0 0 0 0" ToolTip="RuleFilter">
+                                    <Border IsHitTestVisible="True" BorderThickness="1" Margin="0 0 0 0">
+                                        <StackPanel Margin="0 2 0 0">
+                                            <!--FILTER TEXTBOX-->
+                                            <TextBox
+                                                Text="{Binding DataContext.FilterTermConfigKey, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                Background="{Binding DataContext.FilterActive, Converter={StaticResource BrushConverter}, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                ToolTip="Enter filter term" Width="100" Height="18" FontSize="9"
+                                                BorderThickness="1" />
+                                            <!--FILTER BUTTONS-->
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <TextBlock Margin="2" FontFamily="Segoe UI">
+                                                    <Hyperlink
+                                                        Command="{Binding DataContext.FilterApplyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
+                                                        <Run Text="Apply" />
+                                                    </Hyperlink>
+                                                </TextBlock>
+                                                <TextBlock Margin="2">
+                                                    <Hyperlink
+                                                        Command="{Binding DataContext.FilterClearConfigKeyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
+                                                        <Run Text="Clear" />
+                                                    </Hyperlink>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </Expander>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Description" CanUserSort="True" SortMemberPath="Description"
+                                        MinWidth="400" Width="400" MaxWidth="400">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox TextAlignment="Justify" MaxHeight="100" MaxWidth="400" TextWrapping="Wrap"
+                                     VerticalScrollBarVisibility="Auto"
+                                     Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                     Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}, Mode=FindAncestor}}"
+                                     ContextMenu="{StaticResource DatagridContextMenu}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <!--NAME COLUMN-->
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid IsHitTestVisible="True">
+
+                                <!--FILTER EXPANDER-->
+                                <Expander Header="{TemplateBinding Content}" IsHitTestVisible="True"
+                                          VerticalAlignment="Top"
+                                          Margin="0 0 0 0" ToolTip="RuleFilter">
+                                    <Border IsHitTestVisible="True" BorderThickness="1" Margin="0 0 0 0">
+                                        <StackPanel Margin="0 2 0 0">
+                                            <!--FILTER TEXTBOX-->
+                                            <TextBox
+                                                Text="{Binding DataContext.FilterTermDescription, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                Background="{Binding DataContext.FilterActive, Converter={StaticResource BrushConverter}, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                ToolTip="Enter filter term" Width="100" Height="18" FontSize="9"
+                                                BorderThickness="1" />
+                                            <!--FILTER BUTTONS-->
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <TextBlock Margin="2" FontFamily="Segoe UI">
+                                                    <Hyperlink
+                                                        Command="{Binding DataContext.FilterApplyCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
+                                                        <Run Text="Apply" />
+                                                    </Hyperlink>
+                                                </TextBlock>
+                                                <TextBlock Margin="2">
+                                                    <Hyperlink
+                                                        Command="{Binding DataContext.FilterClearDescriptionCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
+                                                        <Run Text="Clear" />
+                                                    </Hyperlink>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </Expander>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="1931*" />
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="0">
+                <TextBlock TextWrapping="Wrap" Text="#Rules: " HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+            <Border Grid.Column="1">
+                <TextBlock TextWrapping="Wrap" Text="{Binding RulesCounter}" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+            </Border>
+            <Border Grid.Column="2">
+                <TextBlock TextWrapping="Wrap" Text="Profile: " HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+            <Border Grid.Column="3">
+                <TextBlock TextWrapping="Wrap" Text="{Binding SelectedProfile.Name}" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+            </Border>
+        </Grid>
+
+    </Grid>
+</UserControl>

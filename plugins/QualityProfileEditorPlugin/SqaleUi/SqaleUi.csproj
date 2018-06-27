@@ -1,0 +1,334 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="..\configuration.props" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6994EF3B-E408-4C5E-B9CF-1BCEE08E58F9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SqaleUi</RootNamespace>
+    <AssemblyName>SqaleUi</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ExpressionBlendVersion>12.0.50716.0</ExpressionBlendVersion>
+    <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>$(PluginsOutputPath)</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>$(PluginsOutputPath)</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="EnvDTE80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <SpecificVersion>True</SpecificVersion>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FSharp.Data">
+      <HintPath>..\packages\VSSonarExtensionPlugin$(VSSonarExtensionVersion)\lib\FSharp.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="FSharp.Data.DesignTime">
+      <HintPath>..\packages\VSSonarExtensionPlugin$(VSSonarExtensionVersion)\lib\FSharp.Data.DesignTime.dll</HintPath>
+    </Reference>
+    <Reference Include="MahApps.Metro, Version=1.2.4.0, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.1.2.4.0\lib\net45\MahApps.Metro.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeAnalysis.Common.1.1.0\lib\net45\Microsoft.CodeAnalysis.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.CSharp, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeAnalysis.CSharp.1.1.0\lib\net45\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.Workspaces, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeAnalysis.Workspaces.Common.1.1.0\lib\net45\Microsoft.CodeAnalysis.Workspaces.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.Workspaces.Desktop, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeAnalysis.Workspaces.Common.1.1.0\lib\net45\Microsoft.CodeAnalysis.Workspaces.Desktop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation">
+      <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.Text.UI, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.Text.UI.Wpf, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="PropertyChanged, Version=1.50.4.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
+      <HintPath>..\packages\PropertyChanged.Fody.1.50.4\lib\dotnet\PropertyChanged.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="RestSharp">
+      <HintPath>..\packages\VSSonarExtensionPlugin$(VSSonarExtensionVersion)\lib\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="SonarRestService">
+      <HintPath>..\packages\VSSonarExtensionPlugin$(VSSonarExtensionVersion)\lib\SonarRestService.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable, Version=1.1.37.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.1.1.37\lib\dotnet\System.Collections.Immutable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Composition.AttributedModel, Version=1.0.27.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Composition.1.0.27\lib\portable-net45+win8+wp8+wpa81\System.Composition.AttributedModel.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Composition.Convention, Version=1.0.27.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Composition.1.0.27\lib\portable-net45+win8+wp8+wpa81\System.Composition.Convention.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Composition.Hosting, Version=1.0.27.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Composition.1.0.27\lib\portable-net45+win8+wp8+wpa81\System.Composition.Hosting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Composition.Runtime, Version=1.0.27.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Composition.1.0.27\lib\portable-net45+win8+wp8+wpa81\System.Composition.Runtime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Composition.TypedParts, Version=1.0.27.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Composition.1.0.27\lib\portable-net45+win8+wp8+wpa81\System.Composition.TypedParts.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Reflection.Metadata, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reflection.Metadata.1.1.0\lib\dotnet5.2\System.Reflection.Metadata.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.ObjectModel" />
+    <Reference Include="System.Runtime" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.1.2.4.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Presentation">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UserCredentialsDialog">
+      <HintPath>..\References\UserCredentialsDialog.dll</HintPath>
+    </Reference>
+    <Reference Include="VSSonarPlugins">
+      <HintPath>..\packages\VSSonarExtensionPlugin$(VSSonarExtensionVersion)\lib\VSSonarPlugins.dll</HintPath>
+    </Reference>
+    <Reference Include="VSSonarQubeCmdExecutor">
+      <HintPath>..\packages\VSSonarExtensionPlugin$(VSSonarExtensionVersion)\lib\VSSonarQubeCmdExecutor.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="helpers\BoolenInverter.cs" />
+    <Compile Include="Menus\ISqaleGridVm.cs" />
+    <Compile Include="ViewModel\CreateRuleViewModel.cs" />
+    <Compile Include="ViewModel\IViewModelTheme.cs" />
+    <Compile Include="ViewModel\ProjectViewModel.cs" />
+    <Compile Include="ViewModel\SqaleGridVmVs.cs" />
+    <Compile Include="ViewModel\TagEditorViewModel.cs" />
+    <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="QualityEditorPlugin.cs" />
+    <Compile Include="helpers\ActivityToBrushConverter.cs" />
+    <Compile Include="helpers\IDataModel.cs" />
+    <Compile Include="ViewModel\ImportLogViewModel.cs" />
+    <Compile Include="helpers\ItemsChangeObservableCollection.cs" />
+    <Compile Include="Menus\SelectKeyMenuItem.cs" />
+    <Compile Include="Menus\SendItemToWorkAreaMenu.cs" />
+    <Compile Include="ViewModel\QualityViewerViewModel.cs" />
+    <Compile Include="ViewModel\SqaleGridVm.cs" />
+    <Compile Include="Menus\IMenuItem.cs" />
+    <Compile Include="ViewModel\CustomRuleSectorViewModel.cs" />
+    <Compile Include="View\ConfigurationHelper.cs" />
+    <Compile Include="View\CustomRuleSelector.xaml.cs">
+      <DependentUpon>CustomRuleSelector.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\CreateRuleWindow.xaml.cs">
+      <DependentUpon>CreateRuleWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ImportLogView.xaml.cs">
+      <DependentUpon>ImportLogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ProjectViewer.xaml.cs">
+      <DependentUpon>ProjectViewer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\PromptUserData.xaml.cs">
+      <DependentUpon>PromptUserData.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ProjectProfileViewer.xaml.cs">
+      <DependentUpon>ProjectProfileViewer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\QualityProfileViewer.xaml.cs">
+      <DependentUpon>QualityProfileViewer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SqaleGridVs.xaml.cs">
+      <DependentUpon>SqaleGridVs.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SqaleGrid.xaml.cs">
+      <DependentUpon>SqaleGrid.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SqaleEditorWindow.xaml.cs">
+      <DependentUpon>SqaleEditorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\SqaleProject.cs" />
+    <Compile Include="helpers\EnumHelper.cs" />
+    <Compile Include="ViewModel\RuleFilter.cs" />
+    <Compile Include="helpers\IFilter.cs" />
+    <Compile Include="helpers\IFilterOption.cs" />
+    <Compile Include="ViewModel\SqaleEditorControlViewModel.cs" />
+    <Compile Include="View\TagEditorView.xaml.cs">
+      <DependentUpon>TagEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="VsHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Resources\Icons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\CustomRuleSelector.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\CreateRuleWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ImportLogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ProjectViewer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\PromptUserData.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ProjectProfileViewer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\QualityProfileViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SqaleGridVs.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\SqaleGrid.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SqaleEditorWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\TagEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Resources\Entypo.ttf" />
+    <None Include="SqaleUi.licenseheader" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SqaleManager\SqaleManager.fsproj">
+      <Project>{d4b15df6-2e17-4e95-b54e-d472fb13eb39}</Project>
+      <Name>SqaleManager</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Fonts\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="FodyWeavers.xml" />
+    <Content Include="Resources\Entypo-license.txt" />
+    <Content Include="Resources\WindowsIcons-license.txt" />
+    <Page Include="Styles\DatagridStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Resource Include="Images\importQualityProfileFromProject.png" />
+    <Resource Include="Images\ToAvailableTags.png" />
+    <Resource Include="Images\ToRule.png" />
+    <Resource Include="Images\importQualityProfile.png" />
+    <Resource Include="Images\exportSqaleModel.png" />
+    <Resource Include="Images\imporSqaleDefinition.png" />
+    <Resource Include="Images\importXmlPriorities.png" />
+    <Resource Include="Images\importXmlProfile.png" />
+    <Resource Include="Images\addtab.png" />
+    <Resource Include="Images\removetab.png" />
+    <Resource Include="Images\ToProject.png" />
+    <Resource Include="Images\ToWorkArea.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <DesignData Include="SampleData\CreateRuleViewModelSampleData.xaml" />
+    <DesignData Include="SampleData\CustomRuleSectorViewModelSampleData.xaml" />
+    <DesignData Include="SampleData\TagEditorViewModelSampleData.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PackageFiles>
+            $(OutputPath)SqaleManager.dll;
+            $(OutputPath)SqaleUi.dll;
+            $(OutputPath)UserCredentialsDialog.dll;
+    </PackageFiles>
+  </PropertyGroup>
+  <Import Project="$(MSBuildFolder)\CreatePlugin.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\AssemblyPatcherTask.1.0.5\build\AssemblyPatcherTask.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AssemblyPatcherTask.1.0.5\build\AssemblyPatcherTask.targets'))" />
+    <Error Condition="!Exists('..\packages\Fody.1.29.4\build\dotnet\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.1.29.4\build\dotnet\Fody.targets'))" />
+  </Target>
+  <Import Project="..\packages\AssemblyPatcherTask.1.0.5\build\AssemblyPatcherTask.targets" Condition="Exists('..\packages\AssemblyPatcherTask.1.0.5\build\AssemblyPatcherTask.targets')" />
+  <Import Project="..\packages\Fody.1.29.4\build\dotnet\Fody.targets" Condition="Exists('..\packages\Fody.1.29.4\build\dotnet\Fody.targets')" />
+</Project>

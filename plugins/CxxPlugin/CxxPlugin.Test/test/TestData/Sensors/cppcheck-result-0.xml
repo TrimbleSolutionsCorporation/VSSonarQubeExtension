@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<results>
+<error file="tool_archive.hpp" line="12" id="missingInclude" severity="style" msg="Include file: &quot;tool_dstring.hpp&quot; not found."/>
+<error file="tool_archive.hpp" line="13" id="missingInclude" severity="style" msg="Include file: &quot;create_common_dll.hpp&quot; not found."/>
+<error file="tool_archive.cpp" line="14" id="missingInclude" severity="style" msg="Include file: &quot;tool_dstring.h&quot; not found."/>
+<error file="tool_archive.cpp" line="16" id="missingInclude" severity="style" msg="Include file: &quot;tool_sys_io.h&quot; not found."/>
+<error file="tool_archive.cpp" line="17" id="missingInclude" severity="style" msg="Include file: &quot;tool_sys_io_util.hpp&quot; not found."/>
+<error file="tool_archive.cpp" line="598" id="variableScope" severity="style" msg="The scope of the variable 'ReadedIndex' can be reduced"/>
+<error file="tool_archive.cpp" line="659" id="variableScope" severity="style" msg="The scope of the variable 'ReadedIndex' can be reduced"/>
+<error file="tool_archive.cpp" line="323" id="invalidscanf" severity="style" msg="scanf without field width limits can crash with huge input data."/>
+<error id="missingInclude" severity="style" msg="Cppcheck cannot find all the include files (use --check-config for details)"/>
+</results>

@@ -1,0 +1,85 @@
+﻿<controls:MetroWindow
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ViewModel="clr-namespace:SqaleUi.ViewModel" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:system="clr-namespace:System;assembly=mscorlib"
+    xmlns:extensionTypes="clr-namespace:VSSonarPlugins.Types;assembly=VSSonarPlugins"
+    xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+    mc:Ignorable="d"
+    x:Class="SqaleUi.CustomRuleSelector"
+    x:Name="CustomRuleSelectorWindow"
+    Title="Template Rule Selector" Height="260" MaxHeight="260" Width="600" MaxWidth="600"
+    d:DataContext="{d:DesignData /SampleData/CustomRuleSectorViewModelSampleData.xaml}">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/SqaleUi;component/Resources/Icons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <ViewModel:CustomRuleSectorViewModel x:Key="CustomRuleSectorViewModelDataSource" d:IsDataSource="True" />
+
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type system:Enum}"
+                                x:Key="GetSeverityEnumValues">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="extensionTypes:Severity" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+        </ResourceDictionary>
+
+    </Window.Resources>
+    <Window.DataContext>
+        <Binding Source="{StaticResource CustomRuleSectorViewModelDataSource}" />
+    </Window.DataContext>
+    <Window.Background>
+        <SolidColorBrush Color="{Binding BackGroundColor}" />
+    </Window.Background>
+
+    <Window.Foreground>
+        <SolidColorBrush Color="{Binding ForeGroundColor}" />
+    </Window.Foreground>
+    <Grid x:Name="LayoutRoot">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="90" />
+            <ColumnDefinition Width="435*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="200" />
+            <RowDefinition Height="25" />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Template Rules" HorizontalAlignment="Right"
+                   VerticalAlignment="Top" />
+        <DataGrid Grid.Column="1" SelectionMode="Single" SelectedItem="{Binding SelectedRule}" IsReadOnly="True"
+                  AutoGenerateColumns="False" ItemsSource="{Binding CustomRules}" DataContext="{Binding}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Key}" Header="Key" />
+                <DataGridTemplateColumn Header="Description" CanUserSort="True" SortMemberPath="Description"
+                                        MinWidth="400" Width="400" MaxWidth="400">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox TextAlignment="Justify" MaxHeight="100" MaxWidth="400" TextWrapping="Wrap"
+                                     VerticalScrollBarVisibility="Auto" Text="{Binding Description}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Binding="{Binding Lang}" Header="Lang" />
+                <DataGridTextColumn Binding="{Binding Name}" Header="Name" />
+                <DataGridTextColumn Binding="{Binding Repo}" Header="Repo" />
+                <DataGridTextColumn Binding="{Binding Severity}" Header="Severity" />
+                <DataGridTextColumn Binding="{Binding Status}" Header="Status" />
+                <DataGridTextColumn Binding="{Binding Category}" Header="Category" />
+                <DataGridTextColumn Binding="{Binding Subcategory}" Header="Subcategory" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button Content="Select Template To Create New Rules" Grid.Row="1" Grid.Column="1"
+                Command="{Binding SelectRuleCommand}"
+                CommandParameter="{Binding ElementName=CustomRuleSelectorWindow}" />
+    </Grid>
+</controls:MetroWindow>

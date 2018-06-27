@@ -28,6 +28,8 @@ namespace VSSonarExtensionUi.Model.Menu
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
     using System.Linq;
+    using System.Threading.Tasks;
+    using System.Threading;
 
     /// <summary>
     /// The issue handler menu.
@@ -184,14 +186,14 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <summary>
         ///     The on associate command.
         /// </summary>
-        private void OnAssociateCommand()
+        private async void OnAssociateCommand()
         {
             try
             {
                 if (this.CommandText.Equals("assign tag"))
                 {
                     string newtag = string.Empty;
-                    var tags = this.rest.GetAvailableTags(AuthtenticationHelper.AuthToken);
+                    var tags = await this.rest.GetAvailableTags(AuthtenticationHelper.AuthToken, new CancellationTokenSource().Token, this.manager);
                     var seletectTag = PromptForTagIssue.Prompt("Choose tag to assign", "Tag selection", tags, out newtag);
                     var tagsToApply = new List<string>();
 
@@ -210,38 +212,30 @@ namespace VSSonarExtensionUi.Model.Menu
                         return;
                     }
 
-                    using (var bw = new BackgroundWorker { WorkerReportsProgress = false })
+                    var issues = this.model.SelectedItems;
+                    var issuesToAssign = new List<Issue>();
+                    foreach (Issue issue in issues)
                     {
-                        bw.RunWorkerCompleted += delegate { Application.Current.Dispatcher.Invoke(delegate { this.manager.EndedWorking(); }); };
+                        var finalTags = new List<string>();
+                        finalTags.AddRange(tagsToApply);
+                        foreach (var tag in issue.Tags)
+                        {
+                            finalTags.Add(tag);
+                        }
 
-                        bw.DoWork += delegate
+                        var answer = await this.rest.SetIssueTags(AuthtenticationHelper.AuthToken, issue as Issue, finalTags, new CancellationTokenSource().Token, this.manager);
+                        this.manager.ReportMessage(new Message { Id = "AssignTagMenu", Data = "Assign tags:" + answer });
+                        foreach (var tag in finalTags)
+                        {
+                            if (!issue.Tags.Contains(tag))
                             {
-                                var issues = this.model.SelectedItems;
-                                var issuesToAssign = new List<Issue>();
-                                foreach (Issue issue in issues)
-                                {
-                                    var finalTags = new List<string>();
-                                    finalTags.AddRange(tagsToApply);
-                                    foreach (var tag in issue.Tags)
-                                    {
-                                        finalTags.Add(tag);
-                                    }
-
-                                    this.manager.ReportMessage(new Message { Id = "AssignTagMenu", Data = "Assign tags:" + this.rest.SetIssueTags(AuthtenticationHelper.AuthToken, issue as Issue, finalTags) });
-                                    foreach (var tag in finalTags)
-                                    {
-                                        if(!issue.Tags.Contains(tag))
-                                        {
-                                            issue.Tags.Add(tag);
-                                        }
-                                    }
-                                }
-
-                                this.model.RefreshView();
-                            };
-
-                        bw.RunWorkerAsync(); 
+                                issue.Tags.Add(tag);
+                            }
+                        }
                     }
+
+                    this.model.RefreshView();
+                    this.manager.EndedWorking();
                 }
 
                 if (this.CommandText.Equals("remove tags"))
@@ -262,7 +256,7 @@ namespace VSSonarExtensionUi.Model.Menu
                     }
 
                     string newtag = string.Empty;
-                    var tags = this.rest.GetAvailableTags(AuthtenticationHelper.AuthToken);
+                    var tags = await this.rest.GetAvailableTags(AuthtenticationHelper.AuthToken, new CancellationTokenSource().Token, this.manager);
                     var seletectTag = PromptForTagIssue.Prompt("Choose tag to remove", "Tag selection", tags, out newtag, uniqueTags.TrimEnd(','));
                     var tagsToRemove = new List<string>();
 
@@ -281,48 +275,39 @@ namespace VSSonarExtensionUi.Model.Menu
                         return;
                     }
 
-                    using (var bw = new BackgroundWorker { WorkerReportsProgress = false })
+                    var issuesToAssign = new List<Issue>();
+                    foreach (Issue issue in issues)
                     {
-                        bw.RunWorkerCompleted += delegate { Application.Current.Dispatcher.Invoke(delegate { this.manager.EndedWorking(); }); };
+                        var finalTags = new List<string>();
 
-                        bw.DoWork += delegate
+                        foreach (var tag in issue.Tags)
                         {
-                            var issuesToAssign = new List<Issue>();
-                            foreach (Issue issue in issues)
+                            bool inList = false;
+                            foreach (var item in tagsToRemove)
                             {
-                                var finalTags = new List<string>();
-
-                                foreach (var tag in issue.Tags)
+                                if (tag.Equals(item))
                                 {
-                                    bool inList = false;
-                                    foreach (var item in tagsToRemove)
-                                    {
-                                        if (tag.Equals(item))
-                                        {
-                                            inList = true;
-                                        }
-                                    }
-
-                                    if (!inList)
-                                    {
-                                        finalTags.Add(tag);
-                                    }
-                                }
-
-                                this.manager.ReportMessage(new Message { Id = "AssignTagMenu", Data = "Assign tags:" + this.rest.SetIssueTags(AuthtenticationHelper.AuthToken, issue as Issue, finalTags) });
-                                issue.Tags.Clear();
-
-                                foreach (var tag in finalTags)
-                                {
-                                    issue.Tags.Add(tag);
+                                    inList = true;
                                 }
                             }
 
-                            this.model.RefreshView();
-                        };
+                            if (!inList)
+                            {
+                                finalTags.Add(tag);
+                            }
+                        }
+                        var message = this.rest.SetIssueTags(AuthtenticationHelper.AuthToken, issue as Issue, finalTags, new CancellationTokenSource().Token, this.manager);
+                        this.manager.ReportMessage(new Message { Id = "AssignTagMenu", Data = "Assign tags: " + message});
+                        issue.Tags.Clear();
 
-                        bw.RunWorkerAsync();
+                        foreach (var tag in finalTags)
+                        {
+                            issue.Tags.Add(tag);
+                        }
                     }
+
+                    this.model.RefreshView();
+                    this.manager.EndedWorking();
                 }
             }
             catch (Exception ex)

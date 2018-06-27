@@ -20,7 +20,7 @@ namespace VSSonarPlugins.Types
     /// <summary>
     /// The user.
     /// </summary>
-    [ImplementPropertyChanged]
+    [AddINotifyPropertyChangedInterface]
     [Serializable]
     public class User
     {

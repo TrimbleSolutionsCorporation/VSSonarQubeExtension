@@ -40,13 +40,13 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     /// <summary>
     ///     The dummy options controller.
     /// </summary>
-    [ImplementPropertyChanged]
+    [AddINotifyPropertyChangedInterface]
     public class AnalysisOptionsViewModel : IOptionsViewModelBase, IOptionsModelBase
     {
         /// <summary>
         /// The minimum version
         /// </summary>
-        public static readonly string MinimumVersion = "1.9.13";
+        public static readonly string MinimumVersion = "1.9.17";
 
         /// <summary>
         ///     The default value sonar sources.
@@ -332,7 +332,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                this.SQMSBuildRunnerVersion = "3.0.2.656";
+                this.SQMSBuildRunnerVersion = "4.1.0.1148";
             }
 
             try

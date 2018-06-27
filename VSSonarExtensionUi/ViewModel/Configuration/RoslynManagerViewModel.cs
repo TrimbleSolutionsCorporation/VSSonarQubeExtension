@@ -28,7 +28,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     /// <summary>
     /// roslyn manager view model
     /// </summary>
-    [ImplementPropertyChanged]
+    [AddINotifyPropertyChangedInterface]
     public class RoslynManagerViewModel : IOptionsViewModelBase
     {
         /// <summary>

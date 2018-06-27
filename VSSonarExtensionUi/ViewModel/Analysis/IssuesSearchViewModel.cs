@@ -21,6 +21,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Input;
     using System.Windows.Media;
@@ -41,7 +42,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     /// <summary>
     /// The issues search view model.
     /// </summary>
-    [ImplementPropertyChanged]
+    [AddINotifyPropertyChangedInterface]
     public class IssuesSearchViewModel : IViewModelBase
     {
         /// <summary>
@@ -713,7 +714,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             try
             {
-                var compoenentsList = SearchComponenetDialog.SearchComponents(AuthtenticationHelper.AuthToken, this.restService, this.AvailableProjects.ToList<Resource>(), this.componentList, this.vshelper);
+                var compoenentsList = SearchComponenetDialog.SearchComponents(
+                    AuthtenticationHelper.AuthToken, this.restService, this.AvailableProjects.ToList<Resource>(), this.componentList, this.vshelper, this.notificationManager);
                 this.componentList.Clear();
                 this.componentList.AddRange(compoenentsList);
             }
@@ -736,127 +738,75 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <summary>
         ///     The get all issues in project.
         /// </summary>
-        private void OnGetAllIssuesInProject()
+        private async void OnGetAllIssuesInProject()
         {
             this.CanQUeryIssues = false;
             this.notificationManager.StartedWorking("Getting All Issues For Project");
-
-            var bw = new BackgroundWorker { WorkerReportsProgress = true };
-
-            bw.RunWorkerCompleted += delegate
-            {
-                Application.Current.Dispatcher.Invoke(
-                    delegate
-                    {
-                        this.OnSelectedViewChanged();
-                        this.CanQUeryIssues = true;
-                        this.notificationManager.EndedWorking();
-                    });
-            };
-
-            bw.DoWork +=
-                delegate { this.IssuesGridView.UpdateIssues(this.searchModel.GetAllIssuesInProject()); };
-
-            bw.RunWorkerAsync();
+            var issues = await this.searchModel.GetAllIssuesInProject();
+            this.IssuesGridView.UpdateIssues(issues);
+            this.OnSelectedViewChanged();
+            this.CanQUeryIssues = true;
+            this.notificationManager.EndedWorking();
         }
 
         /// <summary>
         ///     The on get all issues since last analysis command.
         /// </summary>
-        private void OnGetAllIssuesSinceLastAnalysisCommand()
+        private async void OnGetAllIssuesSinceLastAnalysisCommand()
         {
             this.CanQUeryIssues = false;
             this.notificationManager.StartedWorking("Getting All Issues For Project Since Last Analysis");
-            var bw = new BackgroundWorker { WorkerReportsProgress = true };
-            bw.RunWorkerCompleted += delegate
-                {
-                    this.CanQUeryIssues = true;
-                    this.notificationManager.EndedWorking();
-                    this.OnSelectedViewChanged();
-                };
-
-            bw.DoWork +=
-                delegate
-                    {
-                        this.IssuesGridView.UpdateIssues(this.searchModel.GetIssuesSinceLastProjectDate());
-                    };
-
-            bw.RunWorkerAsync();
+            var issues = await this.searchModel.GetIssuesSinceLastProjectDate();
+            this.IssuesGridView.UpdateIssues(issues);
+            this.CanQUeryIssues = true;
+            this.notificationManager.EndedWorking();
+            this.OnSelectedViewChanged();
         }
 
         /// <summary>
         ///     The on get all my issues command.
         /// </summary>
-        private void OnGetAllMyIssuesCommand()
+        private async void OnGetAllMyIssuesCommand()
         {
             this.CanQUeryIssues = false;
             this.notificationManager.StartedWorking("Getting All My Issues in Project");
-            var bw = new BackgroundWorker { WorkerReportsProgress = true };
-            bw.RunWorkerCompleted += delegate
-                {
-                    this.CanQUeryIssues = true;
-                    this.notificationManager.EndedWorking();
-                    this.OnSelectedViewChanged();
-                };
-
-            bw.DoWork +=
-                delegate
-                    {
-                        this.IssuesGridView.UpdateIssues(this.searchModel.GetCurrentUserIssues());
-                    };
-
-            bw.RunWorkerAsync();
+            this.IssuesGridView.UpdateIssues(await this.searchModel.GetCurrentUserIssues());
+            this.CanQUeryIssues = true;
+            this.notificationManager.EndedWorking();
+            this.OnSelectedViewChanged();
         }
 
         /// <summary>
         ///     The on get issues by filter command.
         /// </summary>
-        private void OnGetIssuesByFilterCommand()
+        private async void OnGetIssuesByFilterCommand()
         {
             this.CanQUeryIssues = false;
             this.notificationManager.StartedWorking("Getting All Issues by filter");
-            var bw = new BackgroundWorker { WorkerReportsProgress = true };
-            bw.RunWorkerCompleted += delegate
-                {
-                    this.CanQUeryIssues = true;
-                    this.notificationManager.EndedWorking();
-                    this.OnSelectedViewChanged();
-                };
-
-            bw.DoWork += delegate { this.RetrieveIssuesUsingCurrentFilter(); };
-
-            bw.RunWorkerAsync();
+            await this.RetrieveIssuesUsingCurrentFilter();
+            this.CanQUeryIssues = true;
+            this.notificationManager.EndedWorking();
+            this.OnSelectedViewChanged();
         }
 
         /// <summary>
         ///     The on get my issues in project command.
         /// </summary>
-        private void OnGetMyIssuesInProjectCommand()
+        private async void OnGetMyIssuesInProjectCommand()
         {
             this.CanQUeryIssues = false;
             this.notificationManager.StartedWorking("Getting My Issues For Project");
-            var bw = new BackgroundWorker { WorkerReportsProgress = true };
-            bw.RunWorkerCompleted += delegate
-                {
-                    this.CanQUeryIssues = true;
-                    this.notificationManager.EndedWorking();
-                    this.OnSelectedViewChanged();
-                };
-
-            bw.DoWork +=
-                delegate
-                    {
-                        this.IssuesGridView.UpdateIssues(
-                            this.searchModel.GetCurrentUserIssuesInProject());
-                    };
-
-            bw.RunWorkerAsync();
+            this.IssuesGridView.UpdateIssues(await 
+                this.searchModel.GetCurrentUserIssuesInProject());
+            this.CanQUeryIssues = true;
+            this.notificationManager.EndedWorking();
+            this.OnSelectedViewChanged();
         }
 
         /// <summary>
         ///     The retrieve issues using current filter.
         /// </summary>
-        private void RetrieveIssuesUsingCurrentFilter()
+        private async Task RetrieveIssuesUsingCurrentFilter()
         {
             string request = string.Empty;
 
@@ -867,7 +817,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             request += this.FilterResolutions();
             request += this.FilterComponentsKeys();
 
-            this.IssuesGridView.UpdateIssues(
+            this.IssuesGridView.UpdateIssues(await 
                 this.searchModel.GetIssuesUsingFilter(request, this.IsFilterBySSCMChecked, this.componentList.Count > 0 && this.IsComponenetChecked));
         }
 
@@ -914,14 +864,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
 
             if (this.IsDateBeforeChecked)
             {
-                request += "&createdBefore=" + Convert.ToString(this.CreatedBeforeDate.Year) + "-" + Convert.ToString(this.CreatedBeforeDate.Month)
-                           + "-" + Convert.ToString(this.CreatedBeforeDate.Day);
+                var stringDate = string.Format("{0:yyyy-MM-dd}", this.CreatedBeforeDate);
+                request += "&createdBefore=" + stringDate;
             }
 
             if (this.IsDateSinceChecked)
             {
-                request += "&createdAfter=" + Convert.ToString(this.CreatedSinceDate.Year) + "-" + Convert.ToString(this.CreatedSinceDate.Month) + "-"
-                           + Convert.ToString(this.CreatedSinceDate.Day);
+                var stringDate = string.Format("{0:yyyy-MM-dd}", this.CreatedSinceDate);
+                request += "&createdAfter=" + stringDate;
             }
 
             return request;

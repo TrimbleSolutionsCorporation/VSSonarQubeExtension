@@ -1,0 +1,790 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<results>
+<error file="Dimensioning\Test\dim_odm_plugin_tests.cpp" line="12" id="missingInclude" severity="style" msg="Include file: &quot;libgrodm_plugin.hpp&quot; not found."/>
+<error file="Dimensioning\Test\dim_odm_plugin_tests.cpp" line="13" id="missingInclude" severity="style" msg="Include file: &quot;dim_plugin_interface.hpp&quot; not found."/>
+<error file="Dimensioning\Test\dim_odm_plugin_tests.cpp" line="14" id="missingInclude" severity="style" msg="Include file: &quot;dim_object_projection_model.hpp&quot; not found."/>
+<error file="Dimensioning\Test\dim_odm_plugin_tests.cpp" line="15" id="missingInclude" severity="style" msg="Include file: &quot;grodm_object_dimensioning_model.hpp&quot; not found."/>
+<error file="Dimensioning\Test\dim_odm_plugin_tests.cpp" line="16" id="missingInclude" severity="style" msg="Include file: &quot;dim_odm_plugin_adapter.hpp&quot; not found."/>
+<error file="Dimensioning\Test\dim_odm_plugin_tests.cpp" line="17" id="missingInclude" severity="style" msg="Include file: &quot;dim_lib_types.h&quot; not found."/>
+<error file="Dimensioning\Test\dim_odm_plugin_tests.cpp" line="18" id="missingInclude" severity="style" msg="Include file: &quot;dim_lib_enum.h&quot; not found."/>
+<error file="Dimensioning\Test\dim_odm_plugin_tests.cpp" line="20" id="missingInclude" severity="style" msg="Include file: &quot;tool_array_template.hpp&quot; not found."/>
+<error file="Dimensioning\Test\dim_odm_plugin_tests.cpp" line="21" id="missingInclude" severity="style" msg="Include file: &quot;tool_dstring.hpp&quot; not found."/>
+<error file="Dimensioning\create_dimensioner.cpp" line="1" id="missingInclude" severity="style" msg="Include file: &quot;dimensioning.hpp&quot; not found."/>
+<error file="Dimensioning\create_dimensioner.cpp" line="2" id="missingInclude" severity="style" msg="Include file: &quot;grodm_dimensioning_plane.hpp&quot; not found."/>
+<error file="Dimensioning\create_dimensioner.cpp" line="3" id="missingInclude" severity="style" msg="Include file: &quot;grodm_object_dimensioning_model.hpp&quot; not found."/>
+<error file="Dimensioning\dim_odm_plugin_adapter.hpp" line="11" id="missingInclude" severity="style" msg="Include file: &quot;grodm_dimensioning.hpp&quot; not found."/>
+<error file="Dimensioning\dim_odm_plugin_adapter.hpp" line="12" id="missingInclude" severity="style" msg="Include file: &quot;grodm_dimension.hpp&quot; not found."/>
+<error file="Dimensioning\dim_odm_plugin_adapter.hpp" line="13" id="missingInclude" severity="style" msg="Include file: &quot;grodm_object_dimensioning_model.hpp&quot; not found."/>
+<error file="Dimensioning\dim_odm_plugin_adapter.hpp" line="14" id="missingInclude" severity="style" msg="Include file: &quot;dim_object_projection_model.hpp&quot; not found."/>
+<error file="Dimensioning\dim_odm_plugin_adapter.hpp" line="15" id="missingInclude" severity="style" msg="Include file: &quot;geo_coordsys.hpp&quot; not found."/>
+<error file="Dimensioning\create_dimensioner.cpp" line="6" id="missingInclude" severity="style" msg="Include file: &quot;grdl_dimensioning_adapter.hpp&quot; not found."/>
+<error file="Dimensioning\dim_odm_plugin_adapter.cpp" line="10" id="missingInclude" severity="style" msg="Include file: &quot;libgrodm_plugin.hpp&quot; not found."/>
+<error file="Dimensioning\dim_odm_plugin_adapter.cpp" line="11" id="missingInclude" severity="style" msg="Include file: &quot;dimensioning.hpp&quot; not found."/>
+<error file="Dimensioning\dim_odm_plugin_adapter.cpp" line="15" id="missingInclude" severity="style" msg="Include file: &quot;tool_hash.h&quot; not found."/>
+<error file="Dimensioning\dim_odm_plugin_adapter.cpp" line="16" id="missingInclude" severity="style" msg="Include file: &quot;tr_plane_t.h&quot; not found."/>
+<error file="Dimensioning\dim_odm_plugin_adapter.cpp" line="17" id="missingInclude" severity="style" msg="Include file: &quot;tool_sys_io_util.hpp&quot; not found."/>
+<error file="Dimensioning\dim_odm_plugin_adapter.cpp" line="18" id="missingInclude" severity="style" msg="Include file: &quot;tool_conversion.h&quot; not found."/>
+<error file="Dimensioning\dim_odm_plugin_adapter.cpp" line="19" id="missingInclude" severity="style" msg="Include file: &quot;log.h&quot; not found."/>
+<error file="Dimensioning\dim_plugin_interface.cpp" line="10" id="missingInclude" severity="style" msg="Include file: &quot;libgrodm_plugin.hpp&quot; not found."/>
+<error file="Dimensioning\dim_plugin_interface.cpp" line="11" id="missingInclude" severity="style" msg="Include file: &quot;dllloader.h&quot; not found."/>
+<error file="Dimensioning\dim_plugin_interface.cpp" line="12" id="missingInclude" severity="style" msg="Include file: &quot;log.h&quot; not found."/>
+<error file="Dimensioning\dim_plugin_interface.cpp" line="13" id="missingInclude" severity="style" msg="Include file: &quot;tool_dstring.hpp&quot; not found."/>
+<error file="Dimensioning\dim_plugin_interface.cpp" line="14" id="missingInclude" severity="style" msg="Include file: &quot;tool_array_template.hpp&quot; not found."/>
+<error file="Dimensioning\dim_plugin_interface.cpp" line="15" id="missingInclude" severity="style" msg="Include file: &quot;tool_time.h&quot; not found."/>
+<error file="Dimensioning\dimensioning.cpp" line="13" id="missingInclude" severity="style" msg="Include file: &quot;dimensioning_interface_hash.h&quot; not found."/>
+<error file="Dimensioning\dimensioning_test.cpp" line="15" id="missingInclude" severity="style" msg="Include file: &quot;UnitTesterEnvironment.hpp&quot; not found."/>
+<error file="Dimensioning\dimensioning_test.cpp" line="16" id="missingInclude" severity="style" msg="Include file: &quot;tool_unicode.hpp&quot; not found."/>
+<error file="libgr_dim_comp\dim_get_views.h" line="5" id="missingInclude" severity="style" msg="Include file: &quot;tool_hash.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_main_pr.hpp" line="7" id="missingInclude" severity="style" msg="Include file: &quot;dim_main_pr_types.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_main_pr.hpp" line="8" id="missingInclude" severity="style" msg="Include file: &quot;dim_lib_types.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_main_pr.hpp" line="9" id="missingInclude" severity="style" msg="Include file: &quot;tool_array_template.hpp&quot; not found."/>
+<error file="libgr_dim_comp\dim_main_pr.hpp" line="10" id="missingInclude" severity="style" msg="Include file: &quot;e3_common_types.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_main_pr.hpp" line="11" id="missingInclude" severity="style" msg="Include file: &quot;grdl_dimensioning_adapter.hpp&quot; not found."/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="3" id="missingInclude" severity="style" msg="Include file: &quot;e3_common.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="5" id="missingInclude" severity="style" msg="Include file: &quot;solid_lib.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="6" id="missingInclude" severity="style" msg="Include file: &quot;dim_planes.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="9" id="missingInclude" severity="style" msg="Include file: &quot;solid.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="10" id="missingInclude" severity="style" msg="Include file: &quot;sys_properties.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="11" id="missingInclude" severity="style" msg="Include file: &quot;log.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="13" id="missingInclude" severity="style" msg="Include file: &quot;dynamic_tables.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="15" id="missingInclude" severity="style" msg="Include file: &quot;co_types.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="16" id="missingInclude" severity="style" msg="Include file: &quot;cgeometry.hpp&quot; not found."/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="18" id="missingInclude" severity="style" msg="Include file: &quot;dim_plane_handler.hpp&quot; not found."/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="19" id="missingInclude" severity="style" msg="Include file: &quot;dim_base.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_prog_fn.h" line="1" id="missingInclude" severity="style" msg="Include file: &quot;grdl_dimensioning_adapter.hpp&quot; not found."/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="21" id="missingInclude" severity="style" msg="Include file: &quot;int_dim_common.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="22" id="missingInclude" severity="style" msg="Include file: &quot;list.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="23" id="missingInclude" severity="style" msg="Include file: &quot;dim_bolt.hpp&quot; not found."/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="24" id="missingInclude" severity="style" msg="Include file: &quot;extrema.hpp&quot; not found."/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="25" id="missingInclude" severity="style" msg="Include file: &quot;profile_types.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="26" id="missingInclude" severity="style" msg="Include file: &quot;solsto_inquire_types.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="27" id="missingInclude" severity="style" msg="Include file: &quot;solsto_type.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="28" id="missingInclude" severity="style" msg="Include file: &quot;geo_plane.hpp&quot; not found."/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="30" id="missingInclude" severity="style" msg="Include file: &quot;classes.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="31" id="missingInclude" severity="style" msg="Include file: &quot;classes_data_types.hpp&quot; not found."/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="32" id="missingInclude" severity="style" msg="Include file: &quot;dim_auto.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="34" id="missingInclude" severity="style" msg="Include file: &quot;tool_string_util.hpp&quot; not found."/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="329" id="variableScope" severity="style" msg="The scope of the variable 'pFace' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="330" id="variableScope" severity="style" msg="The scope of the variable 'pEdge' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="337" id="variableScope" severity="style" msg="The scope of the variable 'MaxLength' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="338" id="variableScope" severity="style" msg="The scope of the variable 'MaxOrthoValue' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="339" id="variableScope" severity="style" msg="The scope of the variable 'OrthoValue' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="616" id="variableScope" severity="style" msg="The scope of the variable 'first' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="618" id="variableScope" severity="style" msg="The scope of the variable 'mask_counter' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="619" id="variableScope" severity="style" msg="The scope of the variable 'factor' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="923" id="variableScope" severity="style" msg="The scope of the variable 'ConcreteBasePart' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="924" id="variableScope" severity="style" msg="The scope of the variable 'base_part_id' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="925" id="variableScope" severity="style" msg="The scope of the variable 'dx' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="925" id="variableScope" severity="style" msg="The scope of the variable 'dy' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="925" id="variableScope" severity="style" msg="The scope of the variable 'dz' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="926" id="variableScope" severity="style" msg="The scope of the variable 'base_dx' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="926" id="variableScope" severity="style" msg="The scope of the variable 'base_dy' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="926" id="variableScope" severity="style" msg="The scope of the variable 'base_dz' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="1180" id="variableScope" severity="style" msg="The scope of the variable 'dot_p' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="1180" id="variableScope" severity="style" msg="The scope of the variable 'dot_emin' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="1180" id="variableScope" severity="style" msg="The scope of the variable 'dot_emax' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="1232" id="variableScope" severity="style" msg="The scope of the variable 'extrema_found' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="1528" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="1529" id="variableScope" severity="style" msg="The scope of the variable 'TempDist' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="1560" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="1616" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="1712" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="1712" id="variableScope" severity="style" msg="The scope of the variable 'j' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="1777" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="1809" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="2004" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="2283" id="variableScope" severity="style" msg="The scope of the variable 'side_dir' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="2284" id="variableScope" severity="style" msg="The scope of the variable 'prefered_dir' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="2285" id="variableScope" severity="style" msg="The scope of the variable 'prefered_view1' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="2286" id="variableScope" severity="style" msg="The scope of the variable 'prefered_view2' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="2461" id="variableScope" severity="style" msg="The scope of the variable 'ZDot' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="2461" id="variableScope" severity="style" msg="The scope of the variable 'XDot' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="2461" id="variableScope" severity="style" msg="The scope of the variable 'YDot' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="2560" id="variableScope" severity="style" msg="The scope of the variable 'use_x' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="2560" id="variableScope" severity="style" msg="The scope of the variable 'use_y' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="2560" id="variableScope" severity="style" msg="The scope of the variable 'use_z' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="2664" id="variableScope" severity="style" msg="The scope of the variable 'AssemblyId' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="2833" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="2833" id="variableScope" severity="style" msg="The scope of the variable 'j' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="2833" id="variableScope" severity="style" msg="The scope of the variable 'k' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="2834" id="variableScope" severity="style" msg="The scope of the variable 'NeighbourId' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="2835" id="variableScope" severity="style" msg="The scope of the variable 'MinDist' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="2901" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="2906" id="variableScope" severity="style" msg="The scope of the variable 'MinDist' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="2907" id="variableScope" severity="style" msg="The scope of the variable 'MaxDist' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="3054" id="variableScope" severity="style" msg="The scope of the variable 'OrthoDirections' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="3100" id="variableScope" severity="style" msg="The scope of the variable 'ortho_directions' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="3101" id="variableScope" severity="style" msg="The scope of the variable 'use_x' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="3101" id="variableScope" severity="style" msg="The scope of the variable 'use_y' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="3734" id="variableScope" severity="style" msg="The scope of the variable 'dir_to_skip_number' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="3737" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="3896" id="variableScope" severity="style" msg="The scope of the variable 'max_dist' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="3897" id="variableScope" severity="style" msg="The scope of the variable 'min_dist' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="3898" id="variableScope" severity="style" msg="The scope of the variable 'dist' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="3900" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="4052" id="variableScope" severity="style" msg="The scope of the variable 'j' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="4054" id="variableScope" severity="style" msg="The scope of the variable 'cut_view' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="4054" id="variableScope" severity="style" msg="The scope of the variable 'ortho_view1' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="4054" id="variableScope" severity="style" msg="The scope of the variable 'ortho_view2' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="4055" id="variableScope" severity="style" msg="The scope of the variable 'side_priority' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="4055" id="variableScope" severity="style" msg="The scope of the variable 'ortho_priority' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="4056" id="variableScope" severity="style" msg="The scope of the variable 'factor_x' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="4056" id="variableScope" severity="style" msg="The scope of the variable 'factor_y' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="4056" id="variableScope" severity="style" msg="The scope of the variable 'factor_z' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="4287" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="4407" id="variableScope" severity="style" msg="The scope of the variable 'ii' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="4710" id="variableScope" severity="style" msg="The scope of the variable 'main_origin_dist' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="4713" id="variableScope" severity="style" msg="The scope of the variable 'error' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="5104" id="variableScope" severity="style" msg="The scope of the variable 'XMoveFactor' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="5104" id="variableScope" severity="style" msg="The scope of the variable 'YMoveFactor' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="5104" id="variableScope" severity="style" msg="The scope of the variable 'ZMoveFactor' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="5262" id="variableScope" severity="style" msg="The scope of the variable 't1' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="5263" id="variableScope" severity="style" msg="The scope of the variable 'MAX_DISTANCE' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="5270" id="variableScope" severity="style" msg="The scope of the variable 'aBoltPositionIds' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="5653" id="variableScope" severity="style" msg="The scope of the variable 'side_dir' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="5931" id="variableScope" severity="style" msg="The scope of the variable 'AngleDimensionsCreated' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="6002" id="variableScope" severity="style" msg="The scope of the variable 'dir_mask' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="6065" id="variableScope" severity="style" msg="The scope of the variable 'directions_done' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="6188" id="variableScope" severity="style" msg="The scope of the variable 'round_types' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="6249" id="variableScope" severity="style" msg="The scope of the variable 'Type' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="6250" id="variableScope" severity="style" msg="The scope of the variable 'MainId' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="6250" id="variableScope" severity="style" msg="The scope of the variable 'PartId' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="6251" id="variableScope" severity="style" msg="The scope of the variable 'DrawingAssemblyHierarchyLevel' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="6252" id="variableScope" severity="style" msg="The scope of the variable 'AssemblyMainPartId' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="6515" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="6541" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="6556" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="6556" id="variableScope" severity="style" msg="The scope of the variable 'PartId' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="6556" id="variableScope" severity="style" msg="The scope of the variable 'nParts' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="6698" id="variableScope" severity="style" msg="The scope of the variable 'pCurrentPoint' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="6994" id="variableScope" severity="style" msg="The scope of the variable 'ii' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="7400" id="variableScope" severity="style" msg="The scope of the variable 'NeighbourId' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="7400" id="variableScope" severity="style" msg="The scope of the variable 'Priority' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="7516" id="variableScope" severity="style" msg="The scope of the variable 'Priority' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="7516" id="variableScope" severity="style" msg="The scope of the variable 'NeighbourId' can be reduced"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="576" id="unreadVariable" severity="style" msg="Variable 'mask_counter' is assigned a value that is never used"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="616" id="unreadVariable" severity="style" msg="Variable 'first' is assigned a value that is never used"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="618" id="unreadVariable" severity="style" msg="Variable 'mask_counter' is assigned a value that is never used"/>
+<error file="libgr_dim_comp\dim_col_pts.cpp" line="926" id="unreadVariable" severity="style" msg="Variable 'base_dx' is assigned a value that is never used"/>
+<error file="libgr_dim_comp\int_complex_main_part.hpp" line="8" id="missingInclude" severity="style" msg="Include file: &quot;tool_array_template.hpp&quot; not found."/>
+<error file="libgr_dim_comp\int_complex_main_part.hpp" line="9" id="missingInclude" severity="style" msg="Include file: &quot;vector.hpp&quot; not found."/>
+<error file="libgr_dim_comp\int_complex_main_part.hpp" line="10" id="missingInclude" severity="style" msg="Include file: &quot;geometry_types.h&quot; not found."/>
+<error file="libgr_dim_comp\int_complex_main_part.hpp" line="11" id="missingInclude" severity="style" msg="Include file: &quot;tr_plane_t.h&quot; not found."/>
+<error file="libgr_dim_comp\int_complex_main_part.hpp" line="12" id="missingInclude" severity="style" msg="Include file: &quot;dim_main_pr_types.h&quot; not found."/>
+<error file="libgr_dim_comp\int_complex_main_part.hpp" line="13" id="missingInclude" severity="style" msg="Include file: &quot;dim_collect.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_complex_main_part.cpp" line="10" id="missingInclude" severity="style" msg="Include file: &quot;solid_lib.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_complex_main_part.cpp" line="12" id="missingInclude" severity="style" msg="Include file: &quot;dim_plane_handler.hpp&quot; not found."/>
+<error file="libgr_dim_comp\dim_complex_main_part.cpp" line="14" id="missingInclude" severity="style" msg="Include file: &quot;dim_lib_pr.hpp&quot; not found."/>
+<error file="libgr_dim_comp\dim_get_views.cpp" line="5" id="missingInclude" severity="style" msg="Include file: &quot;solid_lib.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_get_views.cpp" line="6" id="missingInclude" severity="style" msg="Include file: &quot;log.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_get_views.cpp" line="8" id="missingInclude" severity="style" msg="Include file: &quot;e3_common.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_get_views.cpp" line="10" id="missingInclude" severity="style" msg="Include file: &quot;dim_plane_handler.hpp&quot; not found."/>
+<error file="libgr_dim_comp\dim_get_views.cpp" line="11" id="missingInclude" severity="style" msg="Include file: &quot;dim_base.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_get_views.cpp" line="13" id="missingInclude" severity="style" msg="Include file: &quot;int_dim_common.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_get_views.cpp" line="15" id="missingInclude" severity="style" msg="Include file: &quot;e3_db_const.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_get_views.cpp" line="16" id="missingInclude" severity="style" msg="Include file: &quot;dim_auto.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="7" id="missingInclude" severity="style" msg="Include file: &quot;log.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="587" id="variableScope" severity="style" msg="The scope of the variable 'ptr' can be reduced"/>
+<error file="libgr_dim_comp\dim_prog_fn.cpp" line="7" id="missingInclude" severity="style" msg="Include file: &quot;e3_common.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_prog_fn.cpp" line="8" id="missingInclude" severity="style" msg="Include file: &quot;log.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_prog_fn.cpp" line="9" id="missingInclude" severity="style" msg="Include file: &quot;dim_base.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_prog_fn.cpp" line="10" id="missingInclude" severity="style" msg="Include file: &quot;dim_main_pr_types.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="3" id="missingInclude" severity="style" msg="Include file: &quot;e3_common.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="5" id="missingInclude" severity="style" msg="Include file: &quot;solid_lib.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="7" id="missingInclude" severity="style" msg="Include file: &quot;dynamic_tables.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="8" id="missingInclude" severity="style" msg="Include file: &quot;dim_plane_handler.hpp&quot; not found."/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="10" id="missingInclude" severity="style" msg="Include file: &quot;int_dim_common.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="11" id="missingInclude" severity="style" msg="Include file: &quot;dim_lib_pr.hpp&quot; not found."/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="12" id="missingInclude" severity="style" msg="Include file: &quot;list.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="13" id="missingInclude" severity="style" msg="Include file: &quot;e3_db_const.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="14" id="missingInclude" severity="style" msg="Include file: &quot;hiddenswitch.h&quot; not found."/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="121" id="variableScope" severity="style" msg="The scope of the variable 'dist1' can be reduced"/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="121" id="variableScope" severity="style" msg="The scope of the variable 'dist2' can be reduced"/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="122" id="variableScope" severity="style" msg="The scope of the variable 'min_dist' can be reduced"/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="147" id="variableScope" severity="style" msg="The scope of the variable 'dist1' can be reduced"/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="147" id="variableScope" severity="style" msg="The scope of the variable 'dist2' can be reduced"/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="148" id="variableScope" severity="style" msg="The scope of the variable 'min_dist' can be reduced"/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="173" id="variableScope" severity="style" msg="The scope of the variable 'min_dist' can be reduced"/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="174" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="444" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="620" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="620" id="variableScope" severity="style" msg="The scope of the variable 'j' can be reduced"/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="649" id="variableScope" severity="style" msg="The scope of the variable 'point_similarity' can be reduced"/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="650" id="variableScope" severity="style" msg="The scope of the variable 'tolerance' can be reduced"/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="651" id="variableScope" severity="style" msg="The scope of the variable 'set_1_tol' can be reduced"/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="651" id="variableScope" severity="style" msg="The scope of the variable 'set_2_tol' can be reduced"/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="694" id="variableScope" severity="style" msg="The scope of the variable 'point_similarity' can be reduced"/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="695" id="variableScope" severity="style" msg="The scope of the variable 'offset' can be reduced"/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="696" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="718" id="variableScope" severity="style" msg="The scope of the variable 'tolerance' can be reduced"/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="719" id="variableScope" severity="style" msg="The scope of the variable 'set_1_tol' can be reduced"/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="719" id="variableScope" severity="style" msg="The scope of the variable 'set_2_tol' can be reduced"/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="755" id="variableScope" severity="style" msg="The scope of the variable 'tolerance' can be reduced"/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="756" id="variableScope" severity="style" msg="The scope of the variable 'set_1_tol' can be reduced"/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="756" id="variableScope" severity="style" msg="The scope of the variable 'set_2_tol' can be reduced"/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="802" id="unreadVariable" severity="style" msg="Variable 'rot_x_90' is assigned a value that is never used"/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="802" id="unreadVariable" severity="style" msg="Variable 'rot_y_90' is assigned a value that is never used"/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="802" id="unreadVariable" severity="style" msg="Variable 'rot_z_90' is assigned a value that is never used"/>
+<error file="libgr_dim_comp\dim_symm.cpp" line="1075" id="unreadVariable" severity="style" msg="Variable 'reason' is assigned a value that is never used"/>
+<error file="libgr_dim_comp\int_complex_main_part_generator.cpp" line="9" id="missingInclude" severity="style" msg="Include file: &quot;tool_sort.h&quot; not found."/>
+<error file="libgr_dim_comp\int_complex_main_part_generator.cpp" line="11" id="missingInclude" severity="style" msg="Include file: &quot;dim_plane_handler.hpp&quot; not found."/>
+<error file="libgr_dim_comp\int_complex_main_part_generator.cpp" line="12" id="missingInclude" severity="style" msg="Include file: &quot;dim_options.h&quot; not found."/>
+<error file="libgr_dim_comp\int_complex_part_member.cpp" line="10" id="missingInclude" severity="style" msg="Include file: &quot;vector.h&quot; not found."/>
+<error file="libgr_dim_comp\int_complex_part_member.cpp" line="12" id="missingInclude" severity="style" msg="Include file: &quot;e3_common_enums.hpp&quot; not found."/>
+<error file="libgr_dim_comp\int_complex_part_member.cpp" line="13" id="missingInclude" severity="style" msg="Include file: &quot;dim_plane_handler.hpp&quot; not found."/>
+<error file="libgr_dim_comp\int_complex_part_member.cpp" line="14" id="missingInclude" severity="style" msg="Include file: &quot;solid_lib.h&quot; not found."/>
+<error file="libgr_dim_comp\int_complex_part_member.cpp" line="16" id="missingInclude" severity="style" msg="Include file: &quot;grdl_dimensioning_model_interface.hpp&quot; not found."/>
+<error file="libgr_dim_lib\Test\database_test.cpp" line="13" id="missingInclude" severity="style" msg="Include file: &quot;dim_dbase.h&quot; not found."/>
+<error file="libgr_dim_lib\Test\database_test.cpp" line="15" id="missingInclude" severity="style" msg="Include file: &quot;tool_dstring.h&quot; not found."/>
+<error file="libgr_dim_lib\Test\dml_interface_test.cpp" line="12" id="missingInclude" severity="style" msg="Include file: &quot;grdl_dimensioning_adapter.hpp&quot; not found."/>
+<error file="libgr_dim_lib\Test\dml_interface_test.cpp" line="13" id="missingInclude" severity="style" msg="Include file: &quot;ass_assembly_manager.hpp&quot; not found."/>
+<error file="libgr_dim_lib\Test\grdl_dim_common_test.cpp" line="10" id="missingInclude" severity="style" msg="Include file: &quot;dim_common.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_dbase.h" line="5" id="missingInclude" severity="style" msg="Include file: &quot;dim_common.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_dbase.h" line="6" id="missingInclude" severity="style" msg="Include file: &quot;dim_lib_types.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_dbase.h" line="9" id="missingInclude" severity="style" msg="Include file: &quot;makros.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_dbase.h" line="10" id="missingInclude" severity="style" msg="Include file: &quot;tool_inttable_t.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_kernel.h" line="90" id="missingInclude" severity="style" msg="Include file: &quot;point_t.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_kernel.h" line="91" id="missingInclude" severity="style" msg="Include file: &quot;bool_e.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_kernel.h" line="92" id="missingInclude" severity="style" msg="Include file: &quot;dim_lib_types.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_collect.h" line="13" id="missingInclude" severity="style" msg="Include file: &quot;makros.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_basic.h" line="48" id="missingInclude" severity="style" msg="Include file: &quot;point_t.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_basic.h" line="49" id="missingInclude" severity="style" msg="Include file: &quot;makros.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_basic.h" line="50" id="missingInclude" severity="style" msg="Include file: &quot;bool_e.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_basic.h" line="52" id="missingInclude" severity="style" msg="Include file: &quot;vector.hpp&quot; not found."/>
+<error file="libgr_dim_lib\dim_result.h" line="14" id="missingInclude" severity="style" msg="Include file: &quot;bool_e.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_result.h" line="15" id="missingInclude" severity="style" msg="Include file: &quot;point_t.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_result.h" line="16" id="missingInclude" severity="style" msg="Include file: &quot;makros.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_result.h" line="17" id="missingInclude" severity="style" msg="Include file: &quot;dim_lib_types.h&quot; not found."/>
+<error file="libgr_dim_lib\solid_lib.h" line="31" id="missingInclude" severity="style" msg="Include file: &quot;point_t.h&quot; not found."/>
+<error file="libgr_dim_lib\solid_lib.h" line="32" id="missingInclude" severity="style" msg="Include file: &quot;extrema_t.h&quot; not found."/>
+<error file="libgr_dim_lib\solid_lib.h" line="33" id="missingInclude" severity="style" msg="Include file: &quot;dim_main_pr_types.h&quot; not found."/>
+<error file="libgr_dim_lib\solid_lib.h" line="34" id="missingInclude" severity="style" msg="Include file: &quot;tr_plane_t.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="11" id="missingInclude" severity="style" msg="Include file: &quot;hiddenswitch.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="12" id="missingInclude" severity="style" msg="Include file: &quot;profile_types.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="13" id="missingInclude" severity="style" msg="Include file: &quot;e3_common.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="14" id="missingInclude" severity="style" msg="Include file: &quot;log.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="16" id="missingInclude" severity="style" msg="Include file: &quot;sys_properties.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="17" id="missingInclude" severity="style" msg="Include file: &quot;cgeometry.hpp&quot; not found."/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="18" id="missingInclude" severity="style" msg="Include file: &quot;search_proto.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="19" id="missingInclude" severity="style" msg="Include file: &quot;solsto_type.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="20" id="missingInclude" severity="style" msg="Include file: &quot;e3_db_const.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_plane_handler.hpp" line="1" id="missingInclude" severity="style" msg="Include file: &quot;tr_plane_t.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_plane_handler.hpp" line="2" id="missingInclude" severity="style" msg="Include file: &quot;point_t.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_base.h" line="1" id="missingInclude" severity="style" msg="Include file: &quot;bool_e.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_base.h" line="2" id="missingInclude" severity="style" msg="Include file: &quot;dim_lib_enum.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_base.h" line="3" id="missingInclude" severity="style" msg="Include file: &quot;dimswitch.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_lib_pr.hpp" line="112" id="missingInclude" severity="style" msg="Include file: &quot;point_t.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_lib_pr.hpp" line="113" id="missingInclude" severity="style" msg="Include file: &quot;dim_lib_typedefs.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_lib_pr.hpp" line="114" id="missingInclude" severity="style" msg="Include file: &quot;dim_lib_enum.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_lib_pr.hpp" line="115" id="missingInclude" severity="style" msg="Include file: &quot;makros.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_lib_pr.hpp" line="116" id="missingInclude" severity="style" msg="Include file: &quot;bool_e.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_lib_pr.hpp" line="117" id="missingInclude" severity="style" msg="Include file: &quot;tool_hash.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_lib_pr.hpp" line="118" id="missingInclude" severity="style" msg="Include file: &quot;tool_array_template.hpp&quot; not found."/>
+<error file="libgr_dim_lib\dim_lib_pr.hpp" line="119" id="missingInclude" severity="style" msg="Include file: &quot;grdl_dimensioning_adapter.hpp&quot; not found."/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="23" id="missingInclude" severity="style" msg="Include file: &quot;dim_prog_fn.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="24" id="missingInclude" severity="style" msg="Include file: &quot;db_coordsys_t.h&quot; not found."/>
+<error file="libgr_dim_lib\int_dim_common.h" line="95" id="missingInclude" severity="style" msg="Include file: &quot;grdl_dimensioning_adapter.hpp&quot; not found."/>
+<error file="libgr_dim_lib\int_dim_common.h" line="96" id="missingInclude" severity="style" msg="Include file: &quot;dim_main_pr_types.hpp&quot; not found."/>
+<error file="libgr_dim_lib\int_dim_common.h" line="97" id="missingInclude" severity="style" msg="Include file: &quot;hidden_types.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="26" id="missingInclude" severity="style" msg="Include file: &quot;grodm_tools.hpp&quot; not found."/>
+<error file="libgr_dim_lib\dim_bolt.hpp" line="3" id="missingInclude" severity="style" msg="Include file: &quot;tool_array.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_bolt.hpp" line="4" id="missingInclude" severity="style" msg="Include file: &quot;geometry.hpp&quot; not found."/>
+<error file="libgr_dim_lib\dim_bolt.hpp" line="5" id="missingInclude" severity="style" msg="Include file: &quot;dim_main_pr_types.hpp&quot; not found."/>
+<error file="libgr_dim_lib\dim_bolt.hpp" line="7" id="missingInclude" severity="style" msg="Include file: &quot;gr_combine_objects_types.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="622" id="variableScope" severity="style" msg="The scope of the variable 'pPoint' can be reduced"/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="1062" id="variableScope" severity="style" msg="The scope of the variable 'dir' can be reduced"/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="1063" id="variableScope" severity="style" msg="The scope of the variable 'cut_position' can be reduced"/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="1734" id="variableScope" severity="style" msg="The scope of the variable 'min_dist1' can be reduced"/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="1735" id="variableScope" severity="style" msg="The scope of the variable 'min_dist2' can be reduced"/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="1736" id="variableScope" severity="style" msg="The scope of the variable 'dist1' can be reduced"/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="1737" id="variableScope" severity="style" msg="The scope of the variable 'dist2' can be reduced"/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="1738" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="1738" id="variableScope" severity="style" msg="The scope of the variable 'j' can be reduced"/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="1814" id="variableScope" severity="style" msg="The scope of the variable 'min_dist1' can be reduced"/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="1815" id="variableScope" severity="style" msg="The scope of the variable 'min_dist2' can be reduced"/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="1816" id="variableScope" severity="style" msg="The scope of the variable 'dist1' can be reduced"/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="1817" id="variableScope" severity="style" msg="The scope of the variable 'dist2' can be reduced"/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="1818" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="1818" id="variableScope" severity="style" msg="The scope of the variable 'j' can be reduced"/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="1927" id="variableScope" severity="style" msg="The scope of the variable 'min_dist1' can be reduced"/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="1927" id="variableScope" severity="style" msg="The scope of the variable 'max_dist1' can be reduced"/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="1928" id="variableScope" severity="style" msg="The scope of the variable 'dist1' can be reduced"/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="1929" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="1929" id="variableScope" severity="style" msg="The scope of the variable 'j' can be reduced"/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="2235" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="2236" id="variableScope" severity="style" msg="The scope of the variable 'min_dist' can be reduced"/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="2236" id="variableScope" severity="style" msg="The scope of the variable 'max_dist' can be reduced"/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="2240" id="variableScope" severity="style" msg="The scope of the variable 'dist' can be reduced"/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="1735" id="unreadVariable" severity="style" msg="Variable 'min_dist2' is assigned a value that is never used"/>
+<error file="libgr_dim_lib\dim_auto.cpp" line="1815" id="unreadVariable" severity="style" msg="Variable 'min_dist2' is assigned a value that is never used"/>
+<error file="libgr_dim_lib\dim_planes.h" line="16" id="missingInclude" severity="style" msg="Include file: &quot;dim_lib_enum.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_base.cpp" line="5" id="missingInclude" severity="style" msg="Include file: &quot;log.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_base.cpp" line="6" id="missingInclude" severity="style" msg="Include file: &quot;sys_properties.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_base.cpp" line="8" id="missingInclude" severity="style" msg="Include file: &quot;list.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_base.cpp" line="9" id="missingInclude" severity="style" msg="Include file: &quot;e3_common.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_base.cpp" line="38" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\dim_base.cpp" line="114" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\dim_base.cpp" line="114" id="variableScope" severity="style" msg="The scope of the variable 'min_idx' can be reduced"/>
+<error file="libgr_dim_lib\dim_base.cpp" line="115" id="variableScope" severity="style" msg="The scope of the variable 'value' can be reduced"/>
+<error file="libgr_dim_lib\dim_base.cpp" line="115" id="variableScope" severity="style" msg="The scope of the variable 'min_value' can be reduced"/>
+<error file="libgr_dim_lib\dim_base.cpp" line="224" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\dim_base.cpp" line="224" id="variableScope" severity="style" msg="The scope of the variable 'j' can be reduced"/>
+<error file="libgr_dim_lib\dim_base.cpp" line="224" id="variableScope" severity="style" msg="The scope of the variable 'k' can be reduced"/>
+<error file="libgr_dim_lib\dim_base.cpp" line="400" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\dim_base.cpp" line="406" id="variableScope" severity="style" msg="The scope of the variable 'min_dist' can be reduced"/>
+<error file="libgr_dim_lib\dim_base.cpp" line="406" id="variableScope" severity="style" msg="The scope of the variable 'max_dist' can be reduced"/>
+<error file="libgr_dim_lib\dim_base.cpp" line="406" id="variableScope" severity="style" msg="The scope of the variable 'point_dist' can be reduced"/>
+<error file="libgr_dim_lib\dim_base.cpp" line="476" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\dim_base.cpp" line="634" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\dim_base.cpp" line="634" id="variableScope" severity="style" msg="The scope of the variable 'j' can be reduced"/>
+<error file="libgr_dim_lib\dim_base.cpp" line="635" id="variableScope" severity="style" msg="The scope of the variable 'dist' can be reduced"/>
+<error file="libgr_dim_lib\dim_base.cpp" line="779" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\dim_base.cpp" line="850" id="variableScope" severity="style" msg="The scope of the variable 'state' can be reduced"/>
+<error file="libgr_dim_lib\dim_base.cpp" line="224" id="unreadVariable" severity="style" msg="Variable 'j' is assigned a value that is never used"/>
+<error file="libgr_dim_lib\dim_basic.cpp" line="7" id="missingInclude" severity="style" msg="Include file: &quot;e3_common.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_basic.cpp" line="10" id="missingInclude" severity="style" msg="Include file: &quot;log.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_bolt.cpp" line="4" id="missingInclude" severity="style" msg="Include file: &quot;dynamic_tables.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_bolt.cpp" line="372" id="cstyleCast" severity="style" msg="C-style pointer casting"/>
+<error file="libgr_dim_lib\dim_bolt.cpp" line="427" id="cstyleCast" severity="style" msg="C-style pointer casting"/>
+<error file="libgr_dim_lib\dim_bolt.cpp" line="457" id="cstyleCast" severity="style" msg="C-style pointer casting"/>
+<error file="libgr_dim_lib\dim_bolt.cpp" line="488" id="cstyleCast" severity="style" msg="C-style pointer casting"/>
+<error file="libgr_dim_lib\dim_bolt.cpp" line="607" id="cstyleCast" severity="style" msg="C-style pointer casting"/>
+<error file="libgr_dim_lib\dim_bolt.cpp" line="178" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\dim_bolt.cpp" line="178" id="variableScope" severity="style" msg="The scope of the variable 'AssemblyId' can be reduced"/>
+<error file="libgr_dim_lib\dim_bolt.cpp" line="204" id="variableScope" severity="style" msg="The scope of the variable 'EqualAssemblies' can be reduced"/>
+<error file="libgr_dim_lib\dim_bolt.cpp" line="204" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\dim_bolt.cpp" line="204" id="variableScope" severity="style" msg="The scope of the variable 'j' can be reduced"/>
+<error file="libgr_dim_lib\dim_bolt.cpp" line="260" id="variableScope" severity="style" msg="The scope of the variable 'Tolerance' can be reduced"/>
+<error file="libgr_dim_lib\dim_collect_int.h" line="4" id="missingInclude" severity="style" msg="Include file: &quot;dim_lib_types.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="12" id="missingInclude" severity="style" msg="Include file: &quot;tool_array.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="13" id="missingInclude" severity="style" msg="Include file: &quot;log.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="14" id="missingInclude" severity="style" msg="Include file: &quot;sys_properties.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="15" id="missingInclude" severity="style" msg="Include file: &quot;e3_common.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_auto.h" line="49" id="missingInclude" severity="style" msg="Include file: &quot;bool_e.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_auto.h" line="50" id="missingInclude" severity="style" msg="Include file: &quot;point_t.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_auto.h" line="51" id="missingInclude" severity="style" msg="Include file: &quot;makros.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_auto.h" line="52" id="missingInclude" severity="style" msg="Include file: &quot;dim_lib_types.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_auto.h" line="53" id="missingInclude" severity="style" msg="Include file: &quot;gr_combine_objects_types.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_auto.h" line="54" id="missingInclude" severity="style" msg="Include file: &quot;grodm_dimensioning.hpp&quot; not found."/>
+<error file="libgr_dim_lib\dim_auto.h" line="55" id="missingInclude" severity="style" msg="Include file: &quot;grdl_dimensioning_adapter.hpp&quot; not found."/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="19" id="missingInclude" severity="style" msg="Include file: &quot;dim_main_pr.hpp&quot; not found."/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="1175" id="duplicateExpression" severity="style" msg="Same expression on both sides of '&amp;&amp;'."/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="45" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="63" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="63" id="variableScope" severity="style" msg="The scope of the variable 'MinInd' can be reduced"/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="66" id="variableScope" severity="style" msg="The scope of the variable 'MinDist' can be reduced"/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="105" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="105" id="variableScope" severity="style" msg="The scope of the variable 'MaxInd' can be reduced"/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="108" id="variableScope" severity="style" msg="The scope of the variable 'MaxDist' can be reduced"/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="207" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="966" id="variableScope" severity="style" msg="The scope of the variable 'pDel' can be reduced"/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="1020" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="1053" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="1067" id="variableScope" severity="style" msg="The scope of the variable 'pTmp' can be reduced"/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="1139" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="1140" id="variableScope" severity="style" msg="The scope of the variable 'Sum' can be reduced"/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="1237" id="variableScope" severity="style" msg="The scope of the variable 'Side' can be reduced"/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="1348" id="variableScope" severity="style" msg="The scope of the variable 'ShapePointsInTheMiddle' can be reduced"/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="1973" id="variableScope" severity="style" msg="The scope of the variable 'parts' can be reduced"/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="2273" id="variableScope" severity="style" msg="The scope of the variable 'up_dimension' can be reduced"/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="2274" id="variableScope" severity="style" msg="The scope of the variable 'down_dimension' can be reduced"/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="2301" id="variableScope" severity="style" msg="The scope of the variable 'cursor_part' can be reduced"/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="2305" id="variableScope" severity="style" msg="The scope of the variable 'subgroup_id' can be reduced"/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="2311" id="variableScope" severity="style" msg="The scope of the variable 'steps_number' can be reduced"/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="2312" id="variableScope" severity="style" msg="The scope of the variable 'start_step' can be reduced"/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="2313" id="variableScope" severity="style" msg="The scope of the variable 'step' can be reduced"/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="2314" id="variableScope" severity="style" msg="The scope of the variable 'priority' can be reduced"/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="2452" id="variableScope" severity="style" msg="The scope of the variable 'error' can be reduced"/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="2454" id="variableScope" severity="style" msg="The scope of the variable 'angle_dim_ptr' can be reduced"/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="2497" id="variableScope" severity="style" msg="The scope of the variable 'pRadiusDim' can be reduced"/>
+<error file="libgr_dim_lib\dim_collect.cpp" line="2608" id="variableScope" severity="style" msg="The scope of the variable 'pCursor' can be reduced"/>
+<error file="libgr_dim_lib\dim_common.cpp" line="8" id="missingInclude" severity="style" msg="Include file: &quot;log.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_common.cpp" line="10" id="missingInclude" severity="style" msg="Include file: &quot;e3_common.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_common.cpp" line="14" id="missingInclude" severity="style" msg="Include file: &quot;list.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_common.cpp" line="15" id="missingInclude" severity="style" msg="Include file: &quot;solidkernel_types.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_common.cpp" line="16" id="missingInclude" severity="style" msg="Include file: &quot;e3_db_const.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_common.cpp" line="330" id="variableScope" severity="style" msg="The scope of the variable 'DistDifference' can be reduced"/>
+<error file="libgr_dim_lib\dim_common.cpp" line="331" id="variableScope" severity="style" msg="The scope of the variable 'PlaneDistance1' can be reduced"/>
+<error file="libgr_dim_lib\dim_common.cpp" line="331" id="variableScope" severity="style" msg="The scope of the variable 'PlaneDistance2' can be reduced"/>
+<error file="libgr_dim_lib\dim_common.cpp" line="333" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\dim_common.cpp" line="371" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\dim_common.cpp" line="371" id="variableScope" severity="style" msg="The scope of the variable 'MinIndex' can be reduced"/>
+<error file="libgr_dim_lib\dim_common.cpp" line="401" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\dim_common.cpp" line="401" id="variableScope" severity="style" msg="The scope of the variable 'j' can be reduced"/>
+<error file="libgr_dim_lib\dim_common.cpp" line="426" id="variableScope" severity="style" msg="The scope of the variable 'pAreaList' can be reduced"/>
+<error file="libgr_dim_lib\dim_common.cpp" line="430" id="variableScope" severity="style" msg="The scope of the variable 'ii' can be reduced"/>
+<error file="libgr_dim_lib\dim_common.cpp" line="505" id="variableScope" severity="style" msg="The scope of the variable 'cursor' can be reduced"/>
+<error file="libgr_dim_lib\dim_common.cpp" line="541" id="variableScope" severity="style" msg="The scope of the variable 'cursor' can be reduced"/>
+<error file="libgr_dim_lib\dim_common.cpp" line="797" id="variableScope" severity="style" msg="The scope of the variable 'ii' can be reduced"/>
+<error file="libgr_dim_lib\dim_common.cpp" line="797" id="variableScope" severity="style" msg="The scope of the variable 'AssemblyId' can be reduced"/>
+<error file="libgr_dim_lib\dim_comp_cut.cpp" line="5" id="missingInclude" severity="style" msg="Include file: &quot;vector.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_comp_cut.cpp" line="6" id="missingInclude" severity="style" msg="Include file: &quot;dimswitch.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_comp_cut.cpp" line="7" id="missingInclude" severity="style" msg="Include file: &quot;dim_common.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_comp_cut.cpp" line="10" id="missingInclude" severity="style" msg="Include file: &quot;log.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_comp_cut.cpp" line="11" id="missingInclude" severity="style" msg="Include file: &quot;tool_array.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_comp_cut.cpp" line="13" id="missingInclude" severity="style" msg="Include file: &quot;sys_properties.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_comp_cut.cpp" line="14" id="missingInclude" severity="style" msg="Include file: &quot;tool_dstring.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_comp_cut.cpp" line="15" id="missingInclude" severity="style" msg="Include file: &quot;e3_common.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_comp_cut.cpp" line="16" id="missingInclude" severity="style" msg="Include file: &quot;bool_e.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_comp_cut.cpp" line="18" id="missingInclude" severity="style" msg="Include file: &quot;e3_db_const.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_comp_cut.cpp" line="19" id="missingInclude" severity="style" msg="Include file: &quot;vector.hpp&quot; not found."/>
+<error file="libgr_dim_lib\dim_comp_cut.cpp" line="24" id="missingInclude" severity="style" msg="Include file: &quot;grodm_tools.hpp&quot; not found."/>
+<error file="libgr_dim_lib\dim_comp_cut.cpp" line="25" id="missingInclude" severity="style" msg="Include file: &quot;classes.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_comp_cut.cpp" line="26" id="missingInclude" severity="style" msg="Include file: &quot;classes_data_types.hpp&quot; not found."/>
+<error file="libgr_dim_lib\dim_comp_cut.cpp" line="173" id="variableScope" severity="style" msg="The scope of the variable 'diff' can be reduced"/>
+<error file="libgr_dim_lib\dim_comp_cut.cpp" line="302" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\dim_comp_cut.cpp" line="477" id="variableScope" severity="style" msg="The scope of the variable 'ii' can be reduced"/>
+<error file="libgr_dim_lib\dim_comp_cut.cpp" line="618" id="variableScope" severity="style" msg="The scope of the variable 'ii' can be reduced"/>
+<error file="libgr_dim_lib\dim_comp_cut.cpp" line="640" id="variableScope" severity="style" msg="The scope of the variable 'ii' can be reduced"/>
+<error file="libgr_dim_lib\dim_comp_cut.cpp" line="727" id="variableScope" severity="style" msg="The scope of the variable 'ii' can be reduced"/>
+<error file="libgr_dim_lib\dim_comp_cut.cpp" line="727" id="variableScope" severity="style" msg="The scope of the variable 'jj' can be reduced"/>
+<error file="libgr_dim_lib\dim_comp_cut.cpp" line="777" id="variableScope" severity="style" msg="The scope of the variable 'pCut2' can be reduced"/>
+<error file="libgr_dim_lib\dim_comp_cut.cpp" line="806" id="variableScope" severity="style" msg="The scope of the variable 'ii' can be reduced"/>
+<error file="libgr_dim_lib\dim_dbase.cpp" line="7" id="missingInclude" severity="style" msg="Include file: &quot;newdb.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_dbase.cpp" line="8" id="missingInclude" severity="style" msg="Include file: &quot;log.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_dbase.cpp" line="10" id="missingInclude" severity="style" msg="Include file: &quot;memlib.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_dbase.cpp" line="11" id="missingInclude" severity="style" msg="Include file: &quot;dim_common.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_dbase.cpp" line="14" id="missingInclude" severity="style" msg="Include file: &quot;vector.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_kernel.cpp" line="11" id="missingInclude" severity="style" msg="Include file: &quot;vector.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_kernel.cpp" line="12" id="missingInclude" severity="style" msg="Include file: &quot;dim_common.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_kernel.cpp" line="15" id="missingInclude" severity="style" msg="Include file: &quot;dimswitch.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_kernel.cpp" line="16" id="missingInclude" severity="style" msg="Include file: &quot;hiddenswitch.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_kernel.cpp" line="17" id="missingInclude" severity="style" msg="Include file: &quot;hidden_basic.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_kernel.cpp" line="19" id="missingInclude" severity="style" msg="Include file: &quot;log.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_kernel.cpp" line="20" id="missingInclude" severity="style" msg="Include file: &quot;sys_properties.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_kernel.cpp" line="21" id="missingInclude" severity="style" msg="Include file: &quot;e3_common.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_kernel.cpp" line="22" id="missingInclude" severity="style" msg="Include file: &quot;dim_lib_types.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_kernel.cpp" line="24" id="missingInclude" severity="style" msg="Include file: &quot;memlib.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_kernel.cpp" line="25" id="missingInclude" severity="style" msg="Include file: &quot;e3_db_const.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_kernel.cpp" line="26" id="missingInclude" severity="style" msg="Include file: &quot;vector.hpp&quot; not found."/>
+<error file="libgr_dim_lib\dim_kernel.cpp" line="28" id="missingInclude" severity="style" msg="Include file: &quot;grodm_dimensioning.hpp&quot; not found."/>
+<error file="libgr_dim_lib\dim_kernel.cpp" line="29" id="missingInclude" severity="style" msg="Include file: &quot;grdl_dimensioning_adapter.hpp&quot; not found."/>
+<error file="libgr_dim_lib\dim_kernel.cpp" line="32" id="missingInclude" severity="style" msg="Include file: &quot;grodm_tools.hpp&quot; not found."/>
+<error file="libgr_dim_lib\dim_kernel.cpp" line="33" id="missingInclude" severity="style" msg="Include file: &quot;list.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_kernel.cpp" line="219" id="variableScope" severity="style" msg="The scope of the variable 'error' can be reduced"/>
+<error file="libgr_dim_lib\dim_kernel.cpp" line="282" id="variableScope" severity="style" msg="The scope of the variable 'rec1' can be reduced"/>
+<error file="libgr_dim_lib\dim_kernel.cpp" line="282" id="variableScope" severity="style" msg="The scope of the variable 'rec2' can be reduced"/>
+<error file="libgr_dim_lib\dim_kernel.cpp" line="632" id="variableScope" severity="style" msg="The scope of the variable 'DimensionId' can be reduced"/>
+<error file="libgr_dim_lib\dim_kernel.cpp" line="816" id="variableScope" severity="style" msg="The scope of the variable 'main_part_id' can be reduced"/>
+<error file="libgr_dim_lib\dim_kernel.cpp" line="816" id="variableScope" severity="style" msg="The scope of the variable 'part_id' can be reduced"/>
+<error file="libgr_dim_lib\dim_kernel.cpp" line="816" id="variableScope" severity="style" msg="The scope of the variable 'priority' can be reduced"/>
+<error file="libgr_dim_lib\dim_kernel.cpp" line="1099" id="variableScope" severity="style" msg="The scope of the variable 'cursor' can be reduced"/>
+<error file="libgr_dim_lib\dim_kernel.cpp" line="1953" id="variableScope" severity="style" msg="The scope of the variable 'pCursor' can be reduced"/>
+<error file="libgr_dim_lib\dim_kernel.cpp" line="1990" id="variableScope" severity="style" msg="The scope of the variable 'State' can be reduced"/>
+<error file="libgr_dim_lib\dim_kernel.cpp" line="2018" id="variableScope" severity="style" msg="The scope of the variable 'State' can be reduced"/>
+<error file="libgr_dim_lib\dim_kernel.cpp" line="2019" id="variableScope" severity="style" msg="The scope of the variable 'ViewId' can be reduced"/>
+<error file="libgr_dim_lib\dim_kernel.cpp" line="1785" id="passedByValue" severity="style" msg="Function parameter 'view_1' should be passed by reference."/>
+<error file="libgr_dim_lib\dim_kernel.cpp" line="1785" id="passedByValue" severity="style" msg="Function parameter 'view_2' should be passed by reference."/>
+<error file="libgr_dim_lib\dim_plane_handler.cpp" line="2" id="missingInclude" severity="style" msg="Include file: &quot;makros.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_plane_handler.cpp" line="3" id="missingInclude" severity="style" msg="Include file: &quot;geo_plane.hpp&quot; not found."/>
+<error file="libgr_dim_lib\dim_plane_handler.cpp" line="4" id="missingInclude" severity="style" msg="Include file: &quot;tr_plane_t.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_plane_handler.cpp" line="5" id="missingInclude" severity="style" msg="Include file: &quot;vector.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_plane_handler.cpp" line="6" id="missingInclude" severity="style" msg="Include file: &quot;geometry.hpp&quot; not found."/>
+<error file="libgr_dim_lib\dim_plane_handler.cpp" line="7" id="missingInclude" severity="style" msg="Include file: &quot;transform.hpp&quot; not found."/>
+<error file="libgr_dim_lib\dim_plane_handler.cpp" line="423" id="variableScope" severity="style" msg="The scope of the variable 'dy' can be reduced"/>
+<error file="libgr_dim_lib\dim_plane_handler.cpp" line="423" id="variableScope" severity="style" msg="The scope of the variable 'dz' can be reduced"/>
+<error file="libgr_dim_lib\dim_plane_handler.cpp" line="16" id="unusedStructMember" severity="style" msg="struct or union member 'curved_coord_t::used' is never used"/>
+<error file="libgr_dim_lib\dim_plane_handler.cpp" line="36" id="uninitMemberVar" severity="style" msg="Member variable 'DimPlane_ci::s_curved_coord' is not initialized in the constructor."/>
+<error file="libgr_dim_lib\dim_planes.cpp" line="3" id="missingInclude" severity="style" msg="Include file: &quot;e3_common.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_planes.cpp" line="4" id="missingInclude" severity="style" msg="Include file: &quot;e3commonvalues.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_planes.cpp" line="5" id="missingInclude" severity="style" msg="Include file: &quot;vector.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_planes.cpp" line="7" id="missingInclude" severity="style" msg="Include file: &quot;dimswitch.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_planes.cpp" line="10" id="missingInclude" severity="style" msg="Include file: &quot;geometry.hpp&quot; not found."/>
+<error file="libgr_dim_lib\dim_planes.cpp" line="11" id="missingInclude" severity="style" msg="Include file: &quot;log.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_planes.cpp" line="13" id="missingInclude" severity="style" msg="Include file: &quot;memlib.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_planes.cpp" line="14" id="missingInclude" severity="style" msg="Include file: &quot;classes.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_planes.cpp" line="15" id="missingInclude" severity="style" msg="Include file: &quot;classes_data_types.hpp&quot; not found."/>
+<error file="libgr_dim_lib\dim_planes.cpp" line="16" id="missingInclude" severity="style" msg="Include file: &quot;co_proto.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_planes.cpp" line="17" id="missingInclude" severity="style" msg="Include file: &quot;solid.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_planes.cpp" line="18" id="missingInclude" severity="style" msg="Include file: &quot;e3_db_const.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_planes.cpp" line="19" id="missingInclude" severity="style" msg="Include file: &quot;sys_system_directories.hpp&quot; not found."/>
+<error file="libgr_dim_lib\dim_planes.cpp" line="20" id="missingInclude" severity="style" msg="Include file: &quot;tool_sys_io.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_planes.cpp" line="21" id="missingInclude" severity="style" msg="Include file: &quot;vector.hpp&quot; not found."/>
+<error file="libgr_dim_lib\dim_planes.cpp" line="22" id="missingInclude" severity="style" msg="Include file: &quot;co_surface.hpp&quot; not found."/>
+<error file="libgr_dim_lib\dim_planes.cpp" line="25" id="missingInclude" severity="style" msg="Include file: &quot;dim_options.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_planes.cpp" line="136" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\dim_planes.cpp" line="137" id="variableScope" severity="style" msg="The scope of the variable 'ptr' can be reduced"/>
+<error file="libgr_dim_lib\dim_planes.cpp" line="176" id="variableScope" severity="style" msg="The scope of the variable 'states' can be reduced"/>
+<error file="libgr_dim_lib\dim_planes.cpp" line="178" id="variableScope" severity="style" msg="The scope of the variable 'pfile' can be reduced"/>
+<error file="libgr_dim_lib\dim_planes.cpp" line="374" id="variableScope" severity="style" msg="The scope of the variable 'pattern' can be reduced"/>
+<error file="libgr_dim_lib\dim_planes.cpp" line="377" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\dim_planes.cpp" line="425" id="variableScope" severity="style" msg="The scope of the variable 'min_x' can be reduced"/>
+<error file="libgr_dim_lib\dim_planes.cpp" line="425" id="variableScope" severity="style" msg="The scope of the variable 'max_x' can be reduced"/>
+<error file="libgr_dim_lib\dim_planes.cpp" line="425" id="variableScope" severity="style" msg="The scope of the variable 'min_y' can be reduced"/>
+<error file="libgr_dim_lib\dim_planes.cpp" line="425" id="variableScope" severity="style" msg="The scope of the variable 'max_y' can be reduced"/>
+<error file="libgr_dim_lib\dim_planes.cpp" line="426" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\dim_planes.cpp" line="459" id="variableScope" severity="style" msg="The scope of the variable 'planes_description_len' can be reduced"/>
+<error file="libgr_dim_lib\dim_planes.cpp" line="463" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\dim_planes.cpp" line="463" id="variableScope" severity="style" msg="The scope of the variable 'j' can be reduced"/>
+<error file="libgr_dim_lib\dim_prog_def.cpp" line="6" id="missingInclude" severity="style" msg="Include file: &quot;dim_lib_types.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_prog_def.cpp" line="7" id="missingInclude" severity="style" msg="Include file: &quot;dimswitch.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_prog_def.cpp" line="11" id="missingInclude" severity="style" msg="Include file: &quot;dim_common.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_prog_def.cpp" line="13" id="missingInclude" severity="style" msg="Include file: &quot;log.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_prog_def.cpp" line="14" id="missingInclude" severity="style" msg="Include file: &quot;sys_properties.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_prog_def.cpp" line="301" id="variableScope" severity="style" msg="The scope of the variable 'prefered_side' can be reduced"/>
+<error file="libgr_dim_lib\dim_prog_def.cpp" line="174" id="incorrectStringBooleanError" severity="style" msg="A boolean comparison with the string literal &quot;Array range exceeded&quot; is always true."/>
+<error file="libgr_dim_lib\dim_result.cpp" line="7" id="missingInclude" severity="style" msg="Include file: &quot;vector.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_result.cpp" line="9" id="missingInclude" severity="style" msg="Include file: &quot;dimswitch.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_result.cpp" line="11" id="missingInclude" severity="style" msg="Include file: &quot;dim_common.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_result.cpp" line="14" id="missingInclude" severity="style" msg="Include file: &quot;log.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_result.cpp" line="15" id="missingInclude" severity="style" msg="Include file: &quot;tool_array.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_result.cpp" line="16" id="missingInclude" severity="style" msg="Include file: &quot;sys_properties.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_result.cpp" line="17" id="missingInclude" severity="style" msg="Include file: &quot;e3_common.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_result.cpp" line="19" id="missingInclude" severity="style" msg="Include file: &quot;e3commonvalues.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_result.cpp" line="21" id="missingInclude" severity="style" msg="Include file: &quot;geometry.hpp&quot; not found."/>
+<error file="libgr_dim_lib\dim_result.cpp" line="22" id="missingInclude" severity="style" msg="Include file: &quot;vector.hpp&quot; not found."/>
+<error file="libgr_dim_lib\dim_result.cpp" line="24" id="missingInclude" severity="style" msg="Include file: &quot;grodm_dimension.hpp&quot; not found."/>
+<error file="libgr_dim_lib\dim_result.cpp" line="25" id="missingInclude" severity="style" msg="Include file: &quot;tool_sort.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_result.cpp" line="27" id="missingInclude" severity="style" msg="Include file: &quot;dim_options.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_result.cpp" line="29" id="missingInclude" severity="style" msg="Include file: &quot;grodm_tools.hpp&quot; not found."/>
+<error file="libgr_dim_lib\dim_result.cpp" line="30" id="missingInclude" severity="style" msg="Include file: &quot;e3_db_const.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_result.cpp" line="314" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\dim_result.cpp" line="315" id="variableScope" severity="style" msg="The scope of the variable 'result_dimension' can be reduced"/>
+<error file="libgr_dim_lib\dim_result.cpp" line="818" id="variableScope" severity="style" msg="The scope of the variable 'index' can be reduced"/>
+<error file="libgr_dim_lib\dim_result.cpp" line="907" id="variableScope" severity="style" msg="The scope of the variable 'result_direction1' can be reduced"/>
+<error file="libgr_dim_lib\dim_result.cpp" line="979" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\dim_result.cpp" line="980" id="variableScope" severity="style" msg="The scope of the variable 'result_dimension' can be reduced"/>
+<error file="libgr_dim_lib\dim_result.cpp" line="1222" id="variableScope" severity="style" msg="The scope of the variable 'dist_y' can be reduced"/>
+<error file="libgr_dim_lib\dim_result.cpp" line="1222" id="variableScope" severity="style" msg="The scope of the variable 'dist_z' can be reduced"/>
+<error file="libgr_dim_lib\dim_result.cpp" line="1314" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\dim_result.cpp" line="1315" id="variableScope" severity="style" msg="The scope of the variable 'x_min' can be reduced"/>
+<error file="libgr_dim_lib\dim_result.cpp" line="1315" id="variableScope" severity="style" msg="The scope of the variable 'x_max' can be reduced"/>
+<error file="libgr_dim_lib\dim_result.cpp" line="1315" id="variableScope" severity="style" msg="The scope of the variable 'y_min' can be reduced"/>
+<error file="libgr_dim_lib\dim_result.cpp" line="1315" id="variableScope" severity="style" msg="The scope of the variable 'y_max' can be reduced"/>
+<error file="libgr_dim_lib\dim_result.cpp" line="1443" id="variableScope" severity="style" msg="The scope of the variable 'cursor_view' can be reduced"/>
+<error file="libgr_dim_lib\dim_result.cpp" line="1445" id="variableScope" severity="style" msg="The scope of the variable 'Error' can be reduced"/>
+<error file="libgr_dim_lib\dim_result.cpp" line="1743" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\dim_result.cpp" line="1743" id="variableScope" severity="style" msg="The scope of the variable 'j' can be reduced"/>
+<error file="libgr_dim_lib\dim_result.cpp" line="1744" id="variableScope" severity="style" msg="The scope of the variable 'dimensions' can be reduced"/>
+<error file="libgr_dim_lib\dim_result.cpp" line="1954" id="variableScope" severity="style" msg="The scope of the variable 'Err' can be reduced"/>
+<error file="libgr_dim_lib\dim_result.cpp" line="1955" id="variableScope" severity="style" msg="The scope of the variable 'Tolerance' can be reduced"/>
+<error file="libgr_dim_lib\dim_result.cpp" line="2066" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\dim_result.cpp" line="2153" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\dim_result.cpp" line="2198" id="variableScope" severity="style" msg="The scope of the variable 'ii' can be reduced"/>
+<error file="libgr_dim_lib\dim_result.cpp" line="2198" id="variableScope" severity="style" msg="The scope of the variable 'jj' can be reduced"/>
+<error file="libgr_dim_lib\dim_result.cpp" line="2340" id="variableScope" severity="style" msg="The scope of the variable 'ii' can be reduced"/>
+<error file="libgr_dim_lib\dim_result.cpp" line="2340" id="variableScope" severity="style" msg="The scope of the variable 'jj' can be reduced"/>
+<error file="libgr_dim_lib\dim_result.cpp" line="2394" id="variableScope" severity="style" msg="The scope of the variable 'ii' can be reduced"/>
+<error file="libgr_dim_lib\dim_result.cpp" line="2396" id="variableScope" severity="style" msg="The scope of the variable 'aMarkString' can be reduced"/>
+<error file="libgr_dim_lib\dim_result.cpp" line="2476" id="variableScope" severity="style" msg="The scope of the variable 'DimensionCount' can be reduced"/>
+<error file="libgr_dim_lib\dim_result.cpp" line="2476" id="variableScope" severity="style" msg="The scope of the variable 'ii' can be reduced"/>
+<error file="libgr_dim_lib\dim_sort.cpp" line="8" id="missingInclude" severity="style" msg="Include file: &quot;vector.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_sort.cpp" line="9" id="missingInclude" severity="style" msg="Include file: &quot;dim_common.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_sort.cpp" line="13" id="missingInclude" severity="style" msg="Include file: &quot;log.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_sort.cpp" line="14" id="missingInclude" severity="style" msg="Include file: &quot;e3_common.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_sort.cpp" line="15" id="missingInclude" severity="style" msg="Include file: &quot;vector.hpp&quot; not found."/>
+<error file="libgr_dim_lib\dim_sort.cpp" line="16" id="missingInclude" severity="style" msg="Include file: &quot;tr_plane_t.h&quot; not found."/>
+<error file="libgr_dim_lib\dim_sort.cpp" line="31" id="variableScope" severity="style" msg="The scope of the variable 'density1' can be reduced"/>
+<error file="libgr_dim_lib\dim_sort.cpp" line="31" id="variableScope" severity="style" msg="The scope of the variable 'density2' can be reduced"/>
+<error file="libgr_dim_lib\dim_sort.cpp" line="31" id="variableScope" severity="style" msg="The scope of the variable 'density_divide' can be reduced"/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="5" id="missingInclude" severity="style" msg="Include file: &quot;log.h&quot; not found."/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="6" id="missingInclude" severity="style" msg="Include file: &quot;e3_db_const.h&quot; not found."/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="7" id="missingInclude" severity="style" msg="Include file: &quot;dim_prog_fn.h&quot; not found."/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="11" id="missingInclude" severity="style" msg="Include file: &quot;grdl_dimensioning_adapter.hpp&quot; not found."/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="668" id="variableScope" severity="style" msg="The scope of the variable 'ptr' can be reduced"/>
+<error file="libgr_dim_lib\dml_dbfast_wrapper_typedefs.hpp" line="3" id="missingInclude" severity="style" msg="Include file: &quot;dbfast.h&quot; not found."/>
+<error file="libgr_dim_lib\dml_dbfast_wrapper.cpp" line="14" id="missingInclude" severity="style" msg="Include file: &quot;dbfast.h&quot; not found."/>
+<error file="libgr_dim_lib\gr_combine_objects.cpp" line="2" id="missingInclude" severity="style" msg="Include file: &quot;gr_combine_objects.h&quot; not found."/>
+<error file="libgr_dim_lib\gr_combine_objects.cpp" line="3" id="missingInclude" severity="style" msg="Include file: &quot;tool_array.h&quot; not found."/>
+<error file="libgr_dim_lib\gr_combine_objects.cpp" line="4" id="missingInclude" severity="style" msg="Include file: &quot;vector.h&quot; not found."/>
+<error file="libgr_dim_lib\gr_combine_objects.cpp" line="5" id="missingInclude" severity="style" msg="Include file: &quot;e3_common.h&quot; not found."/>
+<error file="libgr_dim_lib\gr_combine_objects.cpp" line="6" id="missingInclude" severity="style" msg="Include file: &quot;profile_types.h&quot; not found."/>
+<error file="libgr_dim_lib\gr_combine_objects.cpp" line="7" id="missingInclude" severity="style" msg="Include file: &quot;hidden_types.h&quot; not found."/>
+<error file="libgr_dim_lib\gr_combine_objects.cpp" line="10" id="missingInclude" severity="style" msg="Include file: &quot;solid.h&quot; not found."/>
+<error file="libgr_dim_lib\gr_combine_objects.cpp" line="11" id="missingInclude" severity="style" msg="Include file: &quot;tool_dstring.h&quot; not found."/>
+<error file="libgr_dim_lib\gr_combine_objects.cpp" line="12" id="missingInclude" severity="style" msg="Include file: &quot;e3commonvalues.h&quot; not found."/>
+<error file="libgr_dim_lib\gr_combine_objects.cpp" line="13" id="missingInclude" severity="style" msg="Include file: &quot;geometry.hpp&quot; not found."/>
+<error file="libgr_dim_lib\gr_combine_objects.cpp" line="14" id="missingInclude" severity="style" msg="Include file: &quot;dim_lib_types.h&quot; not found."/>
+<error file="libgr_dim_lib\gr_combine_objects.cpp" line="16" id="missingInclude" severity="style" msg="Include file: &quot;e3_common_enums.hpp&quot; not found."/>
+<error file="libgr_dim_lib\gr_combine_objects.cpp" line="19" id="missingInclude" severity="style" msg="Include file: &quot;dim_options.h&quot; not found."/>
+<error file="libgr_dim_lib\gr_combine_objects.cpp" line="96" id="cstyleCast" severity="style" msg="C-style pointer casting"/>
+<error file="libgr_dim_lib\gr_combine_objects.cpp" line="104" id="cstyleCast" severity="style" msg="C-style pointer casting"/>
+<error file="libgr_dim_lib\gr_combine_objects.cpp" line="147" id="cstyleCast" severity="style" msg="C-style pointer casting"/>
+<error file="libgr_dim_lib\gr_combine_objects.cpp" line="174" id="cstyleCast" severity="style" msg="C-style pointer casting"/>
+<error file="libgr_dim_lib\gr_combine_objects.cpp" line="183" id="cstyleCast" severity="style" msg="C-style pointer casting"/>
+<error file="libgr_dim_lib\gr_combine_objects.cpp" line="194" id="cstyleCast" severity="style" msg="C-style pointer casting"/>
+<error file="libgr_dim_lib\gr_combine_objects.cpp" line="204" id="cstyleCast" severity="style" msg="C-style pointer casting"/>
+<error file="libgr_dim_lib\gr_combine_objects.cpp" line="218" id="cstyleCast" severity="style" msg="C-style pointer casting"/>
+<error file="libgr_dim_lib\gr_combine_objects.cpp" line="239" id="cstyleCast" severity="style" msg="C-style pointer casting"/>
+<error file="libgr_dim_lib\gr_combine_objects.cpp" line="249" id="cstyleCast" severity="style" msg="C-style pointer casting"/>
+<error file="libgr_dim_lib\gr_combine_objects.cpp" line="263" id="cstyleCast" severity="style" msg="C-style pointer casting"/>
+<error file="libgr_dim_lib\gr_combine_objects.cpp" line="87" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\gr_combine_objects.cpp" line="87" id="variableScope" severity="style" msg="The scope of the variable 'j' can be reduced"/>
+<error file="libgr_dim_lib\gr_combine_objects.cpp" line="88" id="variableScope" severity="style" msg="The scope of the variable 'pObject1' can be reduced"/>
+<error file="libgr_dim_lib\gr_combine_objects.cpp" line="88" id="variableScope" severity="style" msg="The scope of the variable 'pObject2' can be reduced"/>
+<error file="libgr_dim_lib\grdl_dimensioning_adapter.cpp" line="11" id="missingInclude" severity="style" msg="Include file: &quot;vector.h&quot; not found."/>
+<error file="libgr_dim_lib\grdl_dimensioning_adapter.cpp" line="12" id="missingInclude" severity="style" msg="Include file: &quot;grodm_dimensioning.hpp&quot; not found."/>
+<error file="libgr_dim_lib\grdl_dimensioning_adapter.cpp" line="15" id="missingInclude" severity="style" msg="Include file: &quot;e3_common.h&quot; not found."/>
+<error file="libgr_dim_lib\grdl_dimensioning_adapter.cpp" line="16" id="missingInclude" severity="style" msg="Include file: &quot;e3commonvalues.h&quot; not found."/>
+<error file="libgr_dim_lib\grdl_dimensioning_adapter.cpp" line="18" id="missingInclude" severity="style" msg="Include file: &quot;dim_prog_fn.h&quot; not found."/>
+<error file="libgr_dim_lib\grdl_dimensioning_adapter.cpp" line="21" id="missingInclude" severity="style" msg="Include file: &quot;grdl_dimensioning_adapter.hpp&quot; not found."/>
+<error file="libgr_dim_lib\grdl_dimensioning_adapter.cpp" line="22" id="missingInclude" severity="style" msg="Include file: &quot;grodm_dimension.hpp&quot; not found."/>
+<error file="libgr_dim_lib\grdl_dimensioning_adapter.cpp" line="23" id="missingInclude" severity="style" msg="Include file: &quot;grodm_object_dimensioning_model.hpp&quot; not found."/>
+<error file="libgr_dim_lib\grdl_dimensioning_adapter.cpp" line="24" id="missingInclude" severity="style" msg="Include file: &quot;dim_options.h&quot; not found."/>
+<error file="libgr_dim_lib\grdl_dimensioning_adapter.cpp" line="27" id="missingInclude" severity="style" msg="Include file: &quot;grodm_tools.hpp&quot; not found."/>
+<error file="libgr_dim_lib\grdl_dimensioning_adapter.cpp" line="29" id="missingInclude" severity="style" msg="Include file: &quot;tool_hash.h&quot; not found."/>
+<error file="libgr_dim_lib\grdl_dimensioning_adapter.cpp" line="223" id="nullPointer" severity="error" msg="Possible null pointer dereference: pView - otherwise it is redundant to check it against null."/>
+<error file="libgr_dim_lib\grdl_dimensioning_adapter.cpp" line="38" id="incorrectStringBooleanError" severity="style" msg="A boolean comparison with the string literal &quot;dmlGetCallbackInstance&quot; is always true."/>
+<error file="libgr_dim_lib\grdl_dimensioning_adapter.cpp" line="49" id="incorrectStringBooleanError" severity="style" msg="A boolean comparison with the string literal &quot;dmlGetSteelDimensioningInstance&quot; is always true."/>
+<error file="libgr_dim_lib\grdl_dimensioning_adapter.cpp" line="297" id="incorrectStringBooleanError" severity="style" msg="A boolean comparison with the string literal &quot;Unexpected creation of a second instance of SteelDimensioning_ci&quot; is always true."/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="5" id="missingInclude" severity="style" msg="Include file: &quot;vector.h&quot; not found."/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="6" id="missingInclude" severity="style" msg="Include file: &quot;e3_common.h&quot; not found."/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="7" id="missingInclude" severity="style" msg="Include file: &quot;dim_common.h&quot; not found."/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="8" id="missingInclude" severity="style" msg="Include file: &quot;dimswitch.h&quot; not found."/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="10" id="missingInclude" severity="style" msg="Include file: &quot;geometry.hpp&quot; not found."/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="12" id="missingInclude" severity="style" msg="Include file: &quot;solid_internal.h&quot; not found."/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="13" id="missingInclude" severity="style" msg="Include file: &quot;int_solsto_compressed_solid_types.h&quot; not found."/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="15" id="missingInclude" severity="style" msg="Include file: &quot;tool_array.h&quot; not found."/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="16" id="missingInclude" severity="style" msg="Include file: &quot;log.h&quot; not found."/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="18" id="missingInclude" severity="style" msg="Include file: &quot;memlib.h&quot; not found."/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="19" id="missingInclude" severity="style" msg="Include file: &quot;e3_db_const.h&quot; not found."/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="20" id="missingInclude" severity="style" msg="Include file: &quot;solsto_inquire_types.h&quot; not found."/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="21" id="missingInclude" severity="style" msg="Include file: &quot;tool_map.hpp&quot; not found."/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="23" id="missingInclude" severity="style" msg="Include file: &quot;vector.hpp&quot; not found."/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="26" id="missingInclude" severity="style" msg="Include file: &quot;profile_types.h&quot; not found."/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="345" id="nullPointer" severity="error" msg="Possible null pointer dereference: ppFace - otherwise it is redundant to check it against null."/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="90" id="variableScope" severity="style" msg="The scope of the variable 'error' can be reduced"/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="91" id="variableScope" severity="style" msg="The scope of the variable 'rot_x' can be reduced"/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="91" id="variableScope" severity="style" msg="The scope of the variable 'rot_y' can be reduced"/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="91" id="variableScope" severity="style" msg="The scope of the variable 'rot_z' can be reduced"/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="92" id="variableScope" severity="style" msg="The scope of the variable 'facx' can be reduced"/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="92" id="variableScope" severity="style" msg="The scope of the variable 'facy' can be reduced"/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="92" id="variableScope" severity="style" msg="The scope of the variable 'facz' can be reduced"/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="92" id="variableScope" severity="style" msg="The scope of the variable 'max_fac' can be reduced"/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="216" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="217" id="variableScope" severity="style" msg="The scope of the variable 'pSolid' can be reduced"/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="218" id="variableScope" severity="style" msg="The scope of the variable 'pFace' can be reduced"/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="341" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="482" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="672" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="672" id="variableScope" severity="style" msg="The scope of the variable 'nFaces' can be reduced"/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="681" id="variableScope" severity="style" msg="The scope of the variable 'apDimEdges' can be reduced"/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="790" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="829" id="variableScope" severity="style" msg="The scope of the variable 'Dist' can be reduced"/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="849" id="variableScope" severity="style" msg="The scope of the variable 'i' can be reduced"/>
+<error file="libgr_dim_lib\solid_lib.cpp" line="905" id="incorrectStringBooleanError" severity="style" msg="A boolean comparison with the string literal &quot;dmlModel must be set.&quot; is always true."/>
+<error file="libgr_object_dimensioning_model\dimensioning.cpp" line="1" id="missingInclude" severity="style" msg="Include file: &quot;vector.h&quot; not found."/>
+<error file="libgr_object_dimensioning_model\dimensioning.cpp" line="2" id="missingInclude" severity="style" msg="Include file: &quot;dimensioning.hpp&quot; not found."/>
+<error file="libgr_object_dimensioning_model\grodm_dimensioning_plane.cpp" line="1" id="missingInclude" severity="style" msg="Include file: &quot;grodm_dimensioning_plane.hpp&quot; not found."/>
+<error file="libgr_object_dimensioning_model\grodm_dimensioning_plane.cpp" line="2" id="missingInclude" severity="style" msg="Include file: &quot;geo_plane.hpp&quot; not found."/>
+<error file="libgr_object_dimensioning_model\grodm_object_dimensioning_model.cpp" line="1" id="missingInclude" severity="style" msg="Include file: &quot;grodm_object_dimensioning_model.hpp&quot; not found."/>
+<error file="libgr_object_dimensioning_model\grodm_object_dimensioning_model.cpp" line="2" id="missingInclude" severity="style" msg="Include file: &quot;dim_lib_enum.h&quot; not found."/>
+<error file="libgr_object_dimensioning_model\grodm_tools.cpp" line="10" id="missingInclude" severity="style" msg="Include file: &quot;dim_lib_enum.h&quot; not found."/>
+<error file="libgr_object_dimensioning_model\grodm_tools.cpp" line="11" id="missingInclude" severity="style" msg="Include file: &quot;grodm_tools.hpp&quot; not found."/>
+<error file="libgr_object_dimensioning_model\test\dim_dimensioning_model_test.cpp" line="2" id="missingInclude" severity="style" msg="Include file: &quot;grodm_object_dimensioning_model.hpp&quot; not found."/>
+<error file="libgr_object_dimensioning_model\test\grodm_combine_test.cpp" line="1" id="missingInclude" severity="style" msg="Include file: &quot;grodm_object_dimensioning_model.hpp&quot; not found."/>
+<error file="libgr_object_dimensioning_model\test\grodm_combine_test.cpp" line="2" id="missingInclude" severity="style" msg="Include file: &quot;grodm_dimensioning_plane.hpp&quot; not found."/>
+<error file="libgr_object_dimensioning_model\test\grodm_combine_test.cpp" line="3" id="missingInclude" severity="style" msg="Include file: &quot;grodm_dimension.hpp&quot; not found."/>
+<error file="libgr_object_dimensioning_model\test\grodm_combine_test.cpp" line="4" id="missingInclude" severity="style" msg="Include file: &quot;dim_lib_types.h&quot; not found."/>
+<error file="libgr_object_dimensioning_model\test\grodm_combine_test.cpp" line="6" id="missingInclude" severity="style" msg="Include file: &quot;vector.hpp&quot; not found."/>
+<error file="libgr_object_dimensioning_model\test\grodm_combine_test.cpp" line="7" id="missingInclude" severity="style" msg="Include file: &quot;geo_plane.hpp&quot; not found."/>
+<error file="libgr_object_dimensioning_model\test\grodm_combine_test.cpp" line="8" id="missingInclude" severity="style" msg="Include file: &quot;tool_dstring.hpp&quot; not found."/>
+<error file="libgr_object_dimensioning_model\test\grodm_dimension_link_test.cpp" line="1" id="missingInclude" severity="style" msg="Include file: &quot;grodm_object_dimensioning_model.hpp&quot; not found."/>
+<error file="libgr_object_dimensioning_model\test\grodm_dimension_link_test.cpp" line="2" id="missingInclude" severity="style" msg="Include file: &quot;grodm_dimension.hpp&quot; not found."/>
+<error file="libgr_object_dimensioning_model\test\grodm_dimension_link_test.cpp" line="4" id="missingInclude" severity="style" msg="Include file: &quot;vector.hpp&quot; not found."/>
+<error file="libgr_object_dimensioning_model\test\grodm_dimension_link_test.cpp" line="6" id="missingInclude" severity="style" msg="Include file: &quot;geo_plane.hpp&quot; not found."/>
+<error file="libgr_object_dimensioning_model\test\grodm_points_test.cpp" line="1" id="missingInclude" severity="style" msg="Include file: &quot;grodm_object_dimensioning_model.hpp&quot; not found."/>
+<error file="libgr_object_dimensioning_model\test\grodm_points_test.cpp" line="2" id="missingInclude" severity="style" msg="Include file: &quot;grodm_dimension.hpp&quot; not found."/>
+<error file="libgr_object_dimensioning_model\test\grodm_points_test.cpp" line="4" id="missingInclude" severity="style" msg="Include file: &quot;vector.hpp&quot; not found."/>
+<error file="libgr_object_dimensioning_model\test\grodm_points_test.cpp" line="6" id="missingInclude" severity="style" msg="Include file: &quot;geo_plane.hpp&quot; not found."/>
+<error file="libgr_object_dimensioning_plugin\dim_odm_native_to_managed.cpp" line="12" id="missingInclude" severity="style" msg="Include file: &quot;dim_object_projection_model.hpp&quot; not found."/>
+<error file="libgr_object_dimensioning_plugin\dim_odm_native_to_managed.cpp" line="32" id="passedByValue" severity="style" msg="Function parameter 'NativePlacingType' should be passed by reference."/>
+<error file="libgr_object_dimensioning_plugin\grodm_managed_to_native.cpp" line="5" id="missingInclude" severity="style" msg="Include file: &quot;grodm_object_dimensioning_model.hpp&quot; not found."/>
+<error file="libgr_object_dimensioning_plugin\grodm_managed_to_native.cpp" line="7" id="missingInclude" severity="style" msg="Include file: &quot;tool_sys_io_util.hpp&quot; not found."/>
+<error file="libgr_object_dimensioning_plugin\grodm_managed_to_native.cpp" line="49" id="syntaxError" severity="error" msg="syntax error"/>
+<error file="libgr_object_dimensioning_plugin\grodm_plugin_manager.hpp" line="10" id="missingInclude" severity="style" msg="Include file: &quot;dim_dimensioning_test_plugins.hpp&quot; not found."/>
+<error file="libgr_object_dimensioning_plugin\grodm_plugin_manager.cpp" line="4" id="missingInclude" severity="style" msg="Include file: &quot;log.h&quot; not found."/>
+<error file="libgr_object_dimensioning_plugin\grodm_plugin_manager.cpp" line="50" id="syntaxError" severity="error" msg="syntax error"/>
+<error file="libgr_object_dimensioning_plugin\libgrodm_plugin.hpp" line="10" id="missingInclude" severity="style" msg="Include file: &quot;makros.h&quot; not found."/>
+<error file="libgr_object_dimensioning_plugin\libgr_object_dimensioning_plugin.cpp" line="25" id="missingInclude" severity="style" msg="Include file: &quot;log.h&quot; not found."/>
+<error file="libgr_object_dimensioning_plugin\libgr_object_dimensioning_plugin.cpp" line="101" id="syntaxError" severity="error" msg="syntax error"/>
+<error file="Dimensioning\create_dimensioner.cpp" line="21" id="unusedFunction" severity="style" msg="The function 'CreatePluginDimensioner' is never used"/>
+<error file="Dimensioning\create_dimensioner.cpp" line="13" id="unusedFunction" severity="style" msg="The function 'CreateSteelDimensioner' is never used"/>
+<error file="Dimensioning\dimensioning.cpp" line="15" id="unusedFunction" severity="style" msg="The function 'DllMain' is never used"/>
+<error file="Dimensioning\dimensioning.cpp" line="35" id="unusedFunction" severity="style" msg="The function 'GetInterfaceVersion' is never used"/>
+<error file="libgr_dim_lib\dim_bolt.cpp" line="83" id="unusedFunction" severity="style" msg="The function 'GetWorld' is never used"/>
+<error file="Dimensioning\create_dimensioner.cpp" line="44" id="unusedFunction" severity="style" msg="The function 'LoadObjectDimensioningInterface' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="157" id="unusedFunction" severity="style" msg="The function 'dmcSetCombineBoltsToWorkPoints' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="225" id="unusedFunction" severity="style" msg="The function 'dmcSetCreate3dView' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="238" id="unusedFunction" severity="style" msg="The function 'dmcSetCreateEndViews' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="145" id="unusedFunction" severity="style" msg="The function 'dmcSetCreateExtremeBoltDimension' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="163" id="unusedFunction" severity="style" msg="The function 'dmcSetCreateMainSkewPosition' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="139" id="unusedFunction" severity="style" msg="The function 'dmcSetCreateMainWorkPoints' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="285" id="unusedFunction" severity="style" msg="The function 'dmcSetHandleEmbedsByReferencePoints' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="307" id="unusedFunction" severity="style" msg="The function 'dmcSetKeepDimensionOrder' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="273" id="unusedFunction" severity="style" msg="The function 'dmcSetMainSkewedBoltGroupDim' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="279" id="unusedFunction" severity="style" msg="The function 'dmcSetSecSkewedBoltGroupDim' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="295" id="unusedFunction" severity="style" msg="The function 'dmcSetSubassemblyPosition' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="301" id="unusedFunction" severity="style" msg="The function 'dmcSetSubassemblySecondaryDimension' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="151" id="unusedFunction" severity="style" msg="The function 'dmcSetUnfoldedView' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="215" id="unusedFunction" severity="style" msg="The function 'dmc_set_create_back_view' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="220" id="unusedFunction" severity="style" msg="The function 'dmc_set_create_bottom_view' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="66" id="unusedFunction" severity="style" msg="The function 'dmc_set_create_centric_part_dim' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="71" id="unusedFunction" severity="style" msg="The function 'dmc_set_create_centric_screw_dim' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="233" id="unusedFunction" severity="style" msg="The function 'dmc_set_create_cuts' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="56" id="unusedFunction" severity="style" msg="The function 'dmc_set_create_edge_main_screw_dim' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="61" id="unusedFunction" severity="style" msg="The function 'dmc_set_create_edge_sec_screw_dim' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="114" id="unusedFunction" severity="style" msg="The function 'dmc_set_create_end_angle_dimensions' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="119" id="unusedFunction" severity="style" msg="The function 'dmc_set_create_end_shape_dimensions' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="205" id="unusedFunction" severity="style" msg="The function 'dmc_set_create_front_view' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="247" id="unusedFunction" severity="style" msg="The function 'dmc_set_create_internal_for_part_symmetry' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="253" id="unusedFunction" severity="style" msg="The function 'dmc_set_create_internal_for_screw_symmetry' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="46" id="unusedFunction" severity="style" msg="The function 'dmc_set_create_internal_main_screw_dim' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="40" id="unusedFunction" severity="style" msg="The function 'dmc_set_create_internal_part_dim' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="51" id="unusedFunction" severity="style" msg="The function 'dmc_set_create_internal_sec_screw_dim' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="106" id="unusedFunction" severity="style" msg="The function 'dmc_set_create_main_part_radius_dimensions' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="96" id="unusedFunction" severity="style" msg="The function 'dmc_set_create_part_length' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="124" id="unusedFunction" severity="style" msg="The function 'dmc_set_create_part_pos_angle_dimensions' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="129" id="unusedFunction" severity="style" msg="The function 'dmc_set_create_part_pos_catheter_dimensions' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="195" id="unusedFunction" severity="style" msg="The function 'dmc_set_create_screw_basic_view' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="101" id="unusedFunction" severity="style" msg="The function 'dmc_set_create_shape_dimensions' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="185" id="unusedFunction" severity="style" msg="The function 'dmc_set_create_symmetry_designator_main_screw' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="180" id="unusedFunction" severity="style" msg="The function 'dmc_set_create_symmetry_designator_part' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="190" id="unusedFunction" severity="style" msg="The function 'dmc_set_create_symmetry_designator_sec_screw' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="210" id="unusedFunction" severity="style" msg="The function 'dmc_set_create_top_view' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="134" id="unusedFunction" severity="style" msg="The function 'dmc_set_create_total_length' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="35" id="unusedFunction" severity="style" msg="The function 'dmc_set_dimensioning_type' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="81" id="unusedFunction" severity="style" msg="The function 'dmc_set_main_part_screw_position' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="91" id="unusedFunction" severity="style" msg="The function 'dmc_set_position_for_screw' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="169" id="unusedFunction" severity="style" msg="The function 'dmc_set_prefered_part_side_view' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="175" id="unusedFunction" severity="style" msg="The function 'dmc_set_prefered_screw_side_view' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="200" id="unusedFunction" severity="style" msg="The function 'dmc_set_recognizable_distance' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="268" id="unusedFunction" severity="style" msg="The function 'dmc_set_use_part_classes' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="263" id="unusedFunction" severity="style" msg="The function 'dmc_set_use_screw_classes' is never used"/>
+<error file="libgr_dim_comp\dim_main_sw.cpp" line="258" id="unusedFunction" severity="style" msg="The function 'dmc_set_use_wrap_around_solid' is never used"/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="279" id="unusedFunction" severity="style" msg="The function 'dmlSetBoltMarkContent' is never used"/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="285" id="unusedFunction" severity="style" msg="The function 'dmlSetComponentMarkContent' is never used"/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="291" id="unusedFunction" severity="style" msg="The function 'dmlSetCutsShapesMarkContent' is never used"/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="297" id="unusedFunction" severity="style" msg="The function 'dmlSetDisplayGroupingTags' is never used"/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="303" id="unusedFunction" severity="style" msg="The function 'dmlSetIncludePartCount' is never used"/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="267" id="unusedFunction" severity="style" msg="The function 'dmlSetMainDimensionSide' is never used"/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="273" id="unusedFunction" severity="style" msg="The function 'dmlSetPartMarkContent' is never used"/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="241" id="unusedFunction" severity="style" msg="The function 'dmlSetPartPositionTo' is never used"/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="315" id="unusedFunction" severity="style" msg="The function 'dmlSetRebarDimMarkToFather' is never used"/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="321" id="unusedFunction" severity="style" msg="The function 'dmlSetRebarDimensioningOn' is never used"/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="251" id="unusedFunction" severity="style" msg="The function 'dmlSetReversedDirection' is never used"/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="309" id="unusedFunction" severity="style" msg="The function 'dmlSetUpdateGrouping' is never used"/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="171" id="unusedFunction" severity="style" msg="The function 'dml_set_base_forward_offset' is never used"/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="196" id="unusedFunction" severity="style" msg="The function 'dml_set_coordinate_system_x_rotate' is never used"/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="201" id="unusedFunction" severity="style" msg="The function 'dml_set_coordinate_system_y_rotate' is never used"/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="206" id="unusedFunction" severity="style" msg="The function 'dml_set_coordinate_system_z_rotate' is never used"/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="226" id="unusedFunction" severity="style" msg="The function 'dml_set_create_elevation_dims' is never used"/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="231" id="unusedFunction" severity="style" msg="The function 'dml_set_create_knock_off_dims' is never used"/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="98" id="unusedFunction" severity="style" msg="The function 'dml_set_cuts_creation_allowed' is never used"/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="78" id="unusedFunction" severity="style" msg="The function 'dml_set_distribution_type' is never used"/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="176" id="unusedFunction" severity="style" msg="The function 'dml_set_left_cut_dir' is never used"/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="186" id="unusedFunction" severity="style" msg="The function 'dml_set_middle_cut_dir' is never used"/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="191" id="unusedFunction" severity="style" msg="The function 'dml_set_part_orientation_type' is never used"/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="246" id="unusedFunction" severity="style" msg="The function 'dml_set_position_from' is never used"/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="236" id="unusedFunction" severity="style" msg="The function 'dml_set_position_to' is never used"/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="181" id="unusedFunction" severity="style" msg="The function 'dml_set_right_cut_dir' is never used"/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="257" id="unusedFunction" severity="style" msg="The function 'dml_set_sec_part_dim_dir' is never used"/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="166" id="unusedFunction" severity="style" msg="The function 'dml_set_subgroup_distance' is never used"/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="161" id="unusedFunction" severity="style" msg="The function 'dml_set_subgroup_length' is never used"/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="216" id="unusedFunction" severity="style" msg="The function 'dml_set_use_auto_cut_depth' is never used"/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="262" id="unusedFunction" severity="style" msg="The function 'dml_set_use_vertical_placing' is never used"/>
+<error file="libgr_dim_lib\dimswitch.cpp" line="57" id="unusedFunction" severity="style" msg="The function 'dml_set_view_depth_all' is never used"/>
+<error file="libgr_dim_lib\dim_plane_handler.cpp" line="387" id="unusedFunction" severity="style" msg="The function 'trChangePlane' is never used"/>
+<error file="libgr_dim_lib\dim_plane_handler.cpp" line="421" id="unusedFunction" severity="style" msg="The function 'trTransformPointToCurved' is never used"/>
+<error id="missingInclude" severity="style" msg="Cppcheck cannot find all the include files (use --check-config for details)"/>
+</results>

@@ -282,7 +282,7 @@ namespace VSSonarQubeExtension
                     string solutionName = this.visualStudioInterface.ActiveSolutionName();
                     string solutionPath = this.visualStudioInterface.ActiveSolutionPath();
 
-                    SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Solution Opened: " + solutionName + " : " + solutionPath);
+                    SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessageToLog("Solution Opened: " + solutionName + " : " + solutionPath);
                     SonarQubeViewModelFactory.SQViewModel.OnSolutionOpen(solutionName, solutionPath, string.Empty);
                 }
             };

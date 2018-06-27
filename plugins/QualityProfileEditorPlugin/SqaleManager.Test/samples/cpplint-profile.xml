@@ -1,0 +1,735 @@
+<?xml version="1.0" encoding="ASCII"?>
+<rules>
+    <rule key="cpplint.readability/nolint-0">
+        <name><![CDATA[ Unknown NOLINT error category: %s  % category]]></name>
+        <configKey><![CDATA[cpplint.readability/nolint-0@CPP_LINT]]></configKey>
+        <category name="readability" />
+        <description><![CDATA[  Unknown NOLINT error category: %s  % category ]]></description>
+    </rule>
+    <rule key="cpplint.readability/fn_size-0">
+        <name><![CDATA[ Small and focused functions are preferred:   %s has %d non-comment lines   (error triggered by exceeding %d lines).  % (self.current_function, self.lines_in_function, trigger)]]></name>
+        <configKey><![CDATA[cpplint.readability/fn_size-0@CPP_LINT]]></configKey>
+        <category name="readability" />
+        <description><![CDATA[  Small and focused functions are preferred:   %s has %d non-comment lines   (error triggered by exceeding %d lines).  % (self.current_function, self.lines_in_function, trigger) ]]></description>
+    </rule>
+    <rule key="cpplint.readability/multiline_comment-0">
+        <name><![CDATA[ Could not find end of multi-line comment ]]></name>
+        <configKey><![CDATA[cpplint.readability/multiline_comment-0@CPP_LINT]]></configKey>
+        <category name="readability" />
+        <description><![CDATA[  Could not find end of multi-line comment  ]]></description>
+    </rule>
+    <rule key="cpplint.legal/copyright-0">
+        <name><![CDATA[ No copyright message found.    You should have a line: "Copyright [year] &lt;Copyright Owner&gt;" ]]></name>
+        <configKey><![CDATA[cpplint.legal/copyright-0@CPP_LINT]]></configKey>
+        <category name="legal" />
+        <description><![CDATA[  No copyright message found.    You should have a line: "Copyright [year] &lt;Copyright Owner&gt;"  ]]></description>
+    </rule>
+    <rule key="cpplint.build/header_guard-0">
+        <name><![CDATA[ No #ifndef header guard found, suggested CPP variable is: %s  % cppvar]]></name>
+        <configKey><![CDATA[cpplint.build/header_guard-0@CPP_LINT]]></configKey>
+        <category name="build" />
+        <description><![CDATA[  No #ifndef header guard found, suggested CPP variable is: %s  % cppvar ]]></description>
+    </rule>
+    <rule key="cpplint.build/header_guard-1">
+        <name><![CDATA[ No #define header guard found, suggested CPP variable is: %s  % cppvar]]></name>
+        <configKey><![CDATA[cpplint.build/header_guard-1@CPP_LINT]]></configKey>
+        <category name="build" />
+        <description><![CDATA[  No #define header guard found, suggested CPP variable is: %s  % cppvar ]]></description>
+    </rule>
+    <rule key="cpplint.build/header_guard-2">
+        <name><![CDATA[ #ifndef header guard has wrong style, please use: %s  % cppvar]]></name>
+        <configKey><![CDATA[cpplint.build/header_guard-2@CPP_LINT]]></configKey>
+        <category name="build" />
+        <description><![CDATA[  #ifndef header guard has wrong style, please use: %s  % cppvar ]]></description>
+    </rule>
+    <rule key="cpplint.build/header_guard-3">
+        <name><![CDATA[ #ifndef and #define don\ t match, suggested CPP variable is: %s  % cppvar]]></name>
+        <configKey><![CDATA[cpplint.build/header_guard-3@CPP_LINT]]></configKey>
+        <category name="build" />
+        <description><![CDATA[  #ifndef and #define don\ t match, suggested CPP variable is: %s  % cppvar ]]></description>
+    </rule>
+    <rule key="cpplint.build/header_guard-4">
+        <name><![CDATA[ #endif line should be "#endif  // %s"  % cppvar]]></name>
+        <configKey><![CDATA[cpplint.build/header_guard-4@CPP_LINT]]></configKey>
+        <category name="build" />
+        <description><![CDATA[  #endif line should be "#endif  // %s"  % cppvar ]]></description>
+    </rule>
+    <rule key="cpplint.readability/utf8-0">
+        <name><![CDATA[ Line contains invalid UTF-8 (or Unicode replacement character). ]]></name>
+        <configKey><![CDATA[cpplint.readability/utf8-0@CPP_LINT]]></configKey>
+        <category name="readability" />
+        <description><![CDATA[  Line contains invalid UTF-8 (or Unicode replacement character).  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/ending_newline-0">
+        <name><![CDATA[ Could not find a newline character at the end of the file. ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/ending_newline-0@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Could not find a newline character at the end of the file.  ]]></description>
+    </rule>
+    <rule key="cpplint.readability/multiline_comment-1">
+        <name><![CDATA[ Complex multi-line /*...*/-style comment found.   Lint may give bogus warnings.    Consider replacing these with //-style comments,   with #if 0...#endif,   or with more clearly structured multi-line]]></name>
+        <configKey><![CDATA[cpplint.readability/multiline_comment-1@CPP_LINT]]></configKey>
+        <category name="readability" />
+        <description><![CDATA[  Complex multi-line /*...*/-style comment found.   Lint may give bogus warnings.    Consider replacing these with //-style comments,   with #if 0...#endif,   or with more clearly structured multi-line comments.  ]]></description>
+    </rule>
+    <rule key="cpplint.readability/multiline_string-0">
+        <name><![CDATA[ Multi-line string ("...") found.  This lint script doesn\ t   do well with such strings, and may give bogus warnings.  They\ re   ugly and unnecessary, and you should use concatenation instead". ]]></name>
+        <configKey><![CDATA[cpplint.readability/multiline_string-0@CPP_LINT]]></configKey>
+        <category name="readability" />
+        <description><![CDATA[  Multi-line string ("...") found.  This lint script doesn\ t   do well with such strings, and may give bogus warnings.  They\ re   ugly and unnecessary, and you should use concatenation instead".  ]]></description>
+    </rule>
+    <rule key="cpplint.runtime/threadsafe_fn-0">
+        <name><![CDATA[ Consider using   + multithread_safe_function +  ...) instead of   + single_thread_function +  ...) for improved thread safety. ]]></name>
+        <configKey><![CDATA[cpplint.runtime/threadsafe_fn-0@CPP_LINT]]></configKey>
+        <category name="runtime" />
+        <description><![CDATA[  Consider using   + multithread_safe_function +  ...) instead of   + single_thread_function +  ...) for improved thread safety.  ]]></description>
+    </rule>
+    <rule key="cpplint.runtime/invalid_increment-0">
+        <name><![CDATA[ Changing pointer instead of value (or unused value of operator*). ]]></name>
+        <configKey><![CDATA[cpplint.runtime/invalid_increment-0@CPP_LINT]]></configKey>
+        <category name="runtime" />
+        <description><![CDATA[  Changing pointer instead of value (or unused value of operator*).  ]]></description>
+    </rule>
+    <rule key="cpplint.readability/namespace-0">
+        <name><![CDATA[ Namespace should be terminated with "// namespace %s"  %self.Name]]></name>
+        <configKey><![CDATA[cpplint.readability/namespace-0@CPP_LINT]]></configKey>
+        <category name="readability" />
+        <description><![CDATA[  Namespace should be terminated with "// namespace %s"  %self.Name ]]></description>
+    </rule>
+    <rule key="cpplint.readability/namespace-1">
+        <name><![CDATA[ Namespace should be terminated with "// namespace" ]]></name>
+        <configKey><![CDATA[cpplint.readability/namespace-1@CPP_LINT]]></configKey>
+        <category name="readability" />
+        <description><![CDATA[  Namespace should be terminated with "// namespace"  ]]></description>
+    </rule>
+    <rule key="cpplint.build/class-0">
+        <name><![CDATA[ Failed to find complete declaration of class %s  %obj.Name]]></name>
+        <configKey><![CDATA[cpplint.build/class-0@CPP_LINT]]></configKey>
+        <category name="build" />
+        <description><![CDATA[  Failed to find complete declaration of class %s  %obj.Name ]]></description>
+    </rule>
+    <rule key="cpplint.runtime/printf_format-0">
+        <name><![CDATA[ %q in format strings is deprecated.  Use %ll instead. ]]></name>
+        <configKey><![CDATA[cpplint.runtime/printf_format-0@CPP_LINT]]></configKey>
+        <category name="runtime" />
+        <description><![CDATA[  %q in format strings is deprecated.  Use %ll instead.  ]]></description>
+    </rule>
+    <rule key="cpplint.runtime/printf_format-1">
+        <name><![CDATA[ %N$ formats are unconventional.  Try rewriting to avoid them. ]]></name>
+        <configKey><![CDATA[cpplint.runtime/printf_format-1@CPP_LINT]]></configKey>
+        <category name="runtime" />
+        <description><![CDATA[  %N$ formats are unconventional.  Try rewriting to avoid them.  ]]></description>
+    </rule>
+    <rule key="cpplint.build/printf_format-0">
+        <name><![CDATA[ %, [, (, and { are undefined character escapes.  Unescape them. ]]></name>
+        <configKey><![CDATA[cpplint.build/printf_format-0@CPP_LINT]]></configKey>
+        <category name="build" />
+        <description><![CDATA[  %, [, (, and { are undefined character escapes.  Unescape them.  ]]></description>
+    </rule>
+    <rule key="cpplint.build/storage_class-0">
+        <name><![CDATA[ Storage class (static, extern, typedef, etc) should be first. ]]></name>
+        <configKey><![CDATA[cpplint.build/storage_class-0@CPP_LINT]]></configKey>
+        <category name="build" />
+        <description><![CDATA[  Storage class (static, extern, typedef, etc) should be first.  ]]></description>
+    </rule>
+    <rule key="cpplint.build/endif_comment-0">
+        <name><![CDATA[ Uncommented text after #endif is non-standard.  Use a comment. ]]></name>
+        <configKey><![CDATA[cpplint.build/endif_comment-0@CPP_LINT]]></configKey>
+        <category name="build" />
+        <description><![CDATA[  Uncommented text after #endif is non-standard.  Use a comment.  ]]></description>
+    </rule>
+    <rule key="cpplint.build/forward_decl-0">
+        <name><![CDATA[ Inner-style forward declarations are invalid.  Remove this line. ]]></name>
+        <configKey><![CDATA[cpplint.build/forward_decl-0@CPP_LINT]]></configKey>
+        <category name="build" />
+        <description><![CDATA[  Inner-style forward declarations are invalid.  Remove this line.  ]]></description>
+    </rule>
+    <rule key="cpplint.build/deprecated-0">
+        <name><![CDATA[ &gt;? and &lt;? (max and min) operators are non-standard and deprecated. ]]></name>
+        <configKey><![CDATA[cpplint.build/deprecated-0@CPP_LINT]]></configKey>
+        <category name="build" />
+        <description><![CDATA[  &gt;? and &lt;? (max and min) operators are non-standard and deprecated.  ]]></description>
+    </rule>
+    <rule key="cpplint.runtime/member_string_references-0">
+        <name><![CDATA[ const string&amp; members are dangerous. It is much better to use   alternatives, such as pointers or simple constants. ]]></name>
+        <configKey><![CDATA[cpplint.runtime/member_string_references-0@CPP_LINT]]></configKey>
+        <category name="runtime" />
+        <description><![CDATA[  const string&amp; members are dangerous. It is much better to use   alternatives, such as pointers or simple constants.  ]]></description>
+    </rule>
+    <rule key="cpplint.runtime/explicit-0">
+        <name><![CDATA[ Single-argument constructors should be marked explicit. ]]></name>
+        <configKey><![CDATA[cpplint.runtime/explicit-0@CPP_LINT]]></configKey>
+        <category name="runtime" />
+        <description><![CDATA[  Single-argument constructors should be marked explicit.  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/parens-0">
+        <name><![CDATA[ Extra space after ( in function call ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/parens-0@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Extra space after ( in function call  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/parens-1">
+        <name><![CDATA[ Extra space after ( ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/parens-1@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Extra space after (  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/parens-2">
+        <name><![CDATA[ Extra space before ( in function call ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/parens-2@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Extra space before ( in function call  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/parens-3">
+        <name><![CDATA[ Closing ) should be moved to the previous line ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/parens-3@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Closing ) should be moved to the previous line  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/parens-4">
+        <name><![CDATA[ Extra space before ) ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/parens-4@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Extra space before )  ]]></description>
+    </rule>
+    <rule key="cpplint.tekla_custom/naming_tests-0">
+        <name><![CDATA[ Disabled Tests should include Test Track Reference in Name, Ex: DISABLED_TT50923_TestName ]]></name>
+        <configKey><![CDATA[cpplint.tekla_custom/naming_tests-0@CPP_LINT]]></configKey>
+        <category name="tekla_custom" />
+        <description><![CDATA[  Disabled Tests should include Test Track Reference in Name, Ex: DISABLED_TT50923_TestName  ]]></description>
+    </rule>
+    <rule key="cpplint.readability/fn_size-1">
+        <name><![CDATA[ Lint failed to find start of function body. ]]></name>
+        <configKey><![CDATA[cpplint.readability/fn_size-1@CPP_LINT]]></configKey>
+        <category name="readability" />
+        <description><![CDATA[  Lint failed to find start of function body.  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/todo-0">
+        <name><![CDATA[ Too many spaces before TODO ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/todo-0@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Too many spaces before TODO  ]]></description>
+    </rule>
+    <rule key="cpplint.readability/todo-0">
+        <name><![CDATA[ Missing username in TODO; it should look like   "// TODO(my_username): Stuff." ]]></name>
+        <configKey><![CDATA[cpplint.readability/todo-0@CPP_LINT]]></configKey>
+        <category name="readability" />
+        <description><![CDATA[  Missing username in TODO; it should look like   "// TODO(my_username): Stuff."  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/todo-1">
+        <name><![CDATA[ TODO(my_username) should be followed by a space ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/todo-1@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  TODO(my_username) should be followed by a space  ]]></description>
+    </rule>
+    <rule key="cpplint.readability/constructors-0">
+        <name><![CDATA[ %s must be in the private: section  % matched.group(1)]]></name>
+        <configKey><![CDATA[cpplint.readability/constructors-0@CPP_LINT]]></configKey>
+        <category name="readability" />
+        <description><![CDATA[  %s must be in the private: section  % matched.group(1) ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/blank_line-0">
+        <name><![CDATA[ Blank line at the start of a code block.  Is this needed? ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/blank_line-0@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Blank line at the start of a code block.  Is this needed?  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/blank_line-1">
+        <name><![CDATA[ Blank line at the end of a code block.  Is this needed? ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/blank_line-1@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Blank line at the end of a code block.  Is this needed?  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/blank_line-2">
+        <name><![CDATA[ Do not leave a blank line after "%s:"  % matched.group(1)]]></name>
+        <configKey><![CDATA[cpplint.whitespace/blank_line-2@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Do not leave a blank line after "%s:"  % matched.group(1) ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/comments-0">
+        <name><![CDATA[ At least two spaces is best between code and comments ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/comments-0@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  At least two spaces is best between code and comments  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/comments-1">
+        <name><![CDATA[ Should have a space between // and comment ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/comments-1@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Should have a space between // and comment  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/operators-0">
+        <name><![CDATA[ Missing spaces around = ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/operators-0@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Missing spaces around =  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/operators-1">
+        <name><![CDATA[ Missing spaces around %s  % match.group(1)]]></name>
+        <configKey><![CDATA[cpplint.whitespace/operators-1@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Missing spaces around %s  % match.group(1) ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/operators-2">
+        <name><![CDATA[ Missing spaces around &lt;&lt; ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/operators-2@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Missing spaces around &lt;&lt;  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/operators-3">
+        <name><![CDATA[ Missing spaces around &lt; ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/operators-3@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Missing spaces around &lt;  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/operators-4">
+        <name><![CDATA[ Missing spaces around &gt; ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/operators-4@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Missing spaces around &gt;  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/operators-5">
+        <name><![CDATA[ Missing spaces around %s  % match.group(1)]]></name>
+        <configKey><![CDATA[cpplint.whitespace/operators-5@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Missing spaces around %s  % match.group(1) ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/operators-6">
+        <name><![CDATA[ Extra space for operator %s  % match.group(1)]]></name>
+        <configKey><![CDATA[cpplint.whitespace/operators-6@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Extra space for operator %s  % match.group(1) ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/parens-5">
+        <name><![CDATA[ Missing space before ( in %s  % match.group(1)]]></name>
+        <configKey><![CDATA[cpplint.whitespace/parens-5@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Missing space before ( in %s  % match.group(1) ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/parens-6">
+        <name><![CDATA[ Mismatching spaces inside () in %s  % match.group(1)]]></name>
+        <configKey><![CDATA[cpplint.whitespace/parens-6@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Mismatching spaces inside () in %s  % match.group(1) ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/parens-7">
+        <name><![CDATA[ Should have zero or one spaces inside ( and ) in %s  % match.group(1)]]></name>
+        <configKey><![CDATA[cpplint.whitespace/parens-7@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Should have zero or one spaces inside ( and ) in %s  % match.group(1) ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/comma-0">
+        <name><![CDATA[ Missing space after , ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/comma-0@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Missing space after ,  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/semicolon-0">
+        <name><![CDATA[ Missing space after ; ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/semicolon-0@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Missing space after ;  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/braces-0">
+        <name><![CDATA[ Missing space before { ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/braces-0@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Missing space before {  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/braces-1">
+        <name><![CDATA[ Missing space before else ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/braces-1@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Missing space before else  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/braces-2">
+        <name><![CDATA[ Extra space before [ ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/braces-2@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Extra space before [  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/semicolon-1">
+        <name><![CDATA[ Semicolon defining empty statement. Use { } instead. ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/semicolon-1@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Semicolon defining empty statement. Use { } instead.  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/semicolon-2">
+        <name><![CDATA[ Line contains only semicolon. If this should be an empty statement,   use { } instead. ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/semicolon-2@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Line contains only semicolon. If this should be an empty statement,   use { } instead.  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/semicolon-3">
+        <name><![CDATA[ Extra space before last semicolon. If this should be an empty   statement, use {} instead. ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/semicolon-3@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Extra space before last semicolon. If this should be an empty   statement, use {} instead.  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/forcolon-0">
+        <name><![CDATA[ Missing space around colon in range-based for loop ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/forcolon-0@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Missing space around colon in range-based for loop  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/blank_line-3">
+        <name><![CDATA[ "%s:" should be preceded by a blank line  % matched.group(1)]]></name>
+        <configKey><![CDATA[cpplint.whitespace/blank_line-3@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  "%s:" should be preceded by a blank line  % matched.group(1) ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/braces-3">
+        <name><![CDATA[ { should almost always be at the end of the previous line ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/braces-3@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  { should almost always be at the end of the previous line  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/newline-0">
+        <name><![CDATA[ An else should appear on the same line as the preceding } ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/newline-0@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  An else should appear on the same line as the preceding }  ]]></description>
+    </rule>
+    <rule key="cpplint.readability/braces-0">
+        <name><![CDATA[ If an else has a brace on one side, it should have it on both ]]></name>
+        <configKey><![CDATA[cpplint.readability/braces-0@CPP_LINT]]></configKey>
+        <category name="readability" />
+        <description><![CDATA[  If an else has a brace on one side, it should have it on both  ]]></description>
+    </rule>
+    <rule key="cpplint.readability/braces-1">
+        <name><![CDATA[ If an else has a brace on one side, it should have it on both ]]></name>
+        <configKey><![CDATA[cpplint.readability/braces-1@CPP_LINT]]></configKey>
+        <category name="readability" />
+        <description><![CDATA[  If an else has a brace on one side, it should have it on both  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/newline-1">
+        <name><![CDATA[ Else clause should never be on same line as else (use 2 lines) ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/newline-1@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Else clause should never be on same line as else (use 2 lines)  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/newline-2">
+        <name><![CDATA[ do/while clauses should not be on a single line ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/newline-2@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  do/while clauses should not be on a single line  ]]></description>
+    </rule>
+    <rule key="cpplint.readability/braces-2">
+        <name><![CDATA["You don t need a ; after a }"]]></name>
+        <configKey><![CDATA[cpplint.readability/braces-2@CPP_LINT]]></configKey>
+        <category name="readability" />
+        <description><![CDATA[ "You don t need a ; after a }" ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/empty_loop_body-0">
+        <name><![CDATA[ Empty loop bodies should use {} or continue ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/empty_loop_body-0@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Empty loop bodies should use {} or continue  ]]></description>
+    </rule>
+    <rule key="cpplint.readability/check-0">
+        <name><![CDATA[ Consider using %s instead of %s(a %s b)  % (_CHECK_REPLACEMENT[current_macro][operator], current_macro, operator)]]></name>
+        <configKey><![CDATA[cpplint.readability/check-0@CPP_LINT]]></configKey>
+        <category name="readability" />
+        <description><![CDATA[  Consider using %s instead of %s(a %s b)  % (_CHECK_REPLACEMENT[current_macro][operator], current_macro, operator) ]]></description>
+    </rule>
+    <rule key="cpplint.readability/alt_tokens-0">
+        <name><![CDATA[ Use operator %s instead of %s  % (_ALT_TOKEN_REPLACEMENT[match.group(1)], match.group(1))]]></name>
+        <configKey><![CDATA[cpplint.readability/alt_tokens-0@CPP_LINT]]></configKey>
+        <category name="readability" />
+        <description><![CDATA[  Use operator %s instead of %s  % (_ALT_TOKEN_REPLACEMENT[match.group(1)], match.group(1)) ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/tab-0">
+        <name><![CDATA[ Tab found; better to use spaces ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/tab-0@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Tab found; better to use spaces  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/end_of_line-0">
+        <name><![CDATA[ Line ends in whitespace.  Consider deleting these extra spaces. ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/end_of_line-0@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Line ends in whitespace.  Consider deleting these extra spaces.  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/indent-0">
+        <name><![CDATA[ Weird number of spaces at line-start.    Are you using a 2-space indent? ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/indent-0@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Weird number of spaces at line-start.    Are you using a 2-space indent?  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/labels-0">
+        <name><![CDATA[ Labels should always be indented at least one space.    If this is a member-initializer list in a constructor or   the base class list in a class definition, the colon should   be on the following li]]></name>
+        <configKey><![CDATA[cpplint.whitespace/labels-0@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Labels should always be indented at least one space.    If this is a member-initializer list in a constructor or   the base class list in a class definition, the colon should   be on the following line.  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/line_length-0">
+        <name><![CDATA[ Lines should very rarely be longer than 140 characters ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/line_length-0@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Lines should very rarely be longer than 140 characters  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/line_length-1">
+        <name><![CDATA[ Lines should be &lt;= 120 characters long ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/line_length-1@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  Lines should be &lt;= 120 characters long  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/newline-3">
+        <name><![CDATA[ More than one command on the same line ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/newline-3@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  More than one command on the same line  ]]></description>
+    </rule>
+    <rule key="cpplint.tekla_custom/include_files-0">
+        <name><![CDATA[ Relative paths to parent directories in includes are not allowed - paths should be set in project files ]]></name>
+        <configKey><![CDATA[cpplint.tekla_custom/include_files-0@CPP_LINT]]></configKey>
+        <category name="tekla_custom" />
+        <description><![CDATA[  Relative paths to parent directories in includes are not allowed - paths should be set in project files  ]]></description>
+    </rule>
+    <rule key="cpplint.tekla_custom/include_files-1">
+        <name><![CDATA[ IllegalIncludeDirectories: Include File is illegal in this Project:   + invalidinclude]]></name>
+        <configKey><![CDATA[cpplint.tekla_custom/include_files-1@CPP_LINT]]></configKey>
+        <category name="tekla_custom" />
+        <description><![CDATA[  IllegalIncludeDirectories: Include File is illegal in this Project:   + invalidinclude ]]></description>
+    </rule>
+    <rule key="cpplint.build/include-0">
+        <name><![CDATA[ "%s" already included at %s:%s  % (include, filename, include_state[include])]]></name>
+        <configKey><![CDATA[cpplint.build/include-0@CPP_LINT]]></configKey>
+        <category name="build" />
+        <description><![CDATA[  "%s" already included at %s:%s  % (include, filename, include_state[include]) ]]></description>
+    </rule>
+    <rule key="cpplint.build/include_order-0">
+        <name><![CDATA[ %s. Should be: %s.h, c system, c++ system, other.  % (error_message, fileinfo.BaseName())]]></name>
+        <configKey><![CDATA[cpplint.build/include_order-0@CPP_LINT]]></configKey>
+        <category name="build" />
+        <description><![CDATA[  %s. Should be: %s.h, c system, c++ system, other.  % (error_message, fileinfo.BaseName()) ]]></description>
+    </rule>
+    <rule key="cpplint.build/include_alpha-0">
+        <name><![CDATA[ Include "%s" not in alphabetical order  % include]]></name>
+        <configKey><![CDATA[cpplint.build/include_alpha-0@CPP_LINT]]></configKey>
+        <category name="build" />
+        <description><![CDATA[  Include "%s" not in alphabetical order  % include ]]></description>
+    </rule>
+    <rule key="cpplint.readability/streams-0">
+        <name><![CDATA[ Streams are highly discouraged. ]]></name>
+        <configKey><![CDATA[cpplint.readability/streams-0@CPP_LINT]]></configKey>
+        <category name="readability" />
+        <description><![CDATA[  Streams are highly discouraged.  ]]></description>
+    </rule>
+    <rule key="cpplint.tekla_custom/architecture-0">
+        <name><![CDATA[ SONAR_ARCHITECTURAL_VIOLATION:    + error_msg]]></name>
+        <configKey><![CDATA[cpplint.tekla_custom/architecture-0@CPP_LINT]]></configKey>
+        <category name="tekla_custom" />
+        <description><![CDATA[  SONAR_ARCHITECTURAL_VIOLATION:    + error_msg ]]></description>
+    </rule>
+    <rule key="cpplint.tekla_custom/architecture-1">
+        <name><![CDATA[ SONAR_ARCHITECTURAL_VIOLATION BLOCK:    + error_msg]]></name>
+        <configKey><![CDATA[cpplint.tekla_custom/architecture-1@CPP_LINT]]></configKey>
+        <category name="tekla_custom" />
+        <description><![CDATA[  SONAR_ARCHITECTURAL_VIOLATION BLOCK:    + error_msg ]]></description>
+    </rule>
+    <rule key="cpplint.tekla_custom/unnamed-0">
+        <name><![CDATA[ Usage of unnamed  + type +  ::Usage of unnamed  + type +  .  +  type +   should always have a name by Tekla coding guidelines ]]></name>
+        <configKey><![CDATA[cpplint.tekla_custom/unnamed-0@CPP_LINT]]></configKey>
+        <category name="tekla_custom" />
+        <description><![CDATA[  Usage of unnamed  + type +  ::Usage of unnamed  + type +  .  +  type +   should always have a name by Tekla coding guidelines  ]]></description>
+    </rule>
+    <rule key="cpplint.tekla_custom/encoding-0">
+        <name><![CDATA[ Encoding Problems: Invalid character in range (TT #82382): %s  % errormsg]]></name>
+        <configKey><![CDATA[cpplint.tekla_custom/encoding-0@CPP_LINT]]></configKey>
+        <category name="tekla_custom" />
+        <description><![CDATA[  Encoding Problems: Invalid character in range (TT #82382): %s  % errormsg ]]></description>
+    </rule>
+    <rule key="cpplint.tekla_custom/encoding-1">
+        <name><![CDATA[ Encoding Problems: Invalid character Used (TT #82382): %s  % error_msg]]></name>
+        <configKey><![CDATA[cpplint.tekla_custom/encoding-1@CPP_LINT]]></configKey>
+        <category name="tekla_custom" />
+        <description><![CDATA[  Encoding Problems: Invalid character Used (TT #82382): %s  % error_msg ]]></description>
+    </rule>
+    <rule key="cpplint.runtime/references-0">
+        <name><![CDATA[ Is this a non-const reference?   If so, make const or use a pointer. ]]></name>
+        <configKey><![CDATA[cpplint.runtime/references-0@CPP_LINT]]></configKey>
+        <category name="runtime" />
+        <description><![CDATA[  Is this a non-const reference?   If so, make const or use a pointer.  ]]></description>
+    </rule>
+    <rule key="cpplint.readability/casting-0">
+        <name><![CDATA[ Using deprecated casting style.    Use static_cast&lt;%s&gt;(...) instead  %match.group(2)]]></name>
+        <configKey><![CDATA[cpplint.readability/casting-0@CPP_LINT]]></configKey>
+        <category name="readability" />
+        <description><![CDATA[  Using deprecated casting style.    Use static_cast&lt;%s&gt;(...) instead  %match.group(2) ]]></description>
+    </rule>
+    <rule key="cpplint.runtime/casting-0">
+        <name><![CDATA[( Are you taking an address of a cast?    This is dangerous: could be a temp var.    Take the address before doing the cast, rather than after )]]></name>
+        <configKey><![CDATA[cpplint.runtime/casting-0@CPP_LINT]]></configKey>
+        <category name="runtime" />
+        <description><![CDATA[ ( Are you taking an address of a cast?    This is dangerous: could be a temp var.    Take the address before doing the cast, rather than after ) ]]></description>
+    </rule>
+    <rule key="cpplint.runtime/string-0">
+        <name><![CDATA[ For a static/global string constant, use a C style string instead:   "%schar %s[]".  % (match.group(1), match.group(2))]]></name>
+        <configKey><![CDATA[cpplint.runtime/string-0@CPP_LINT]]></configKey>
+        <category name="runtime" />
+        <description><![CDATA[  For a static/global string constant, use a C style string instead:   "%schar %s[]".  % (match.group(1), match.group(2)) ]]></description>
+    </rule>
+    <rule key="cpplint.runtime/rtti-0">
+        <name><![CDATA[ Do not use dynamic_cast&lt;&gt;.  If you need to cast within a class  "hierarchy, use static_cast&lt;&gt; to upcast.  Google doesn t support " RTTI. ]]></name>
+        <configKey><![CDATA[cpplint.runtime/rtti-0@CPP_LINT]]></configKey>
+        <category name="runtime" />
+        <description><![CDATA[  Do not use dynamic_cast&lt;&gt;.  If you need to cast within a class  "hierarchy, use static_cast&lt;&gt; to upcast.  Google doesn t support " RTTI.  ]]></description>
+    </rule>
+    <rule key="cpplint.runtime/init-0">
+        <name><![CDATA[ You seem to be initializing a member variable with itself. ]]></name>
+        <configKey><![CDATA[cpplint.runtime/init-0@CPP_LINT]]></configKey>
+        <category name="runtime" />
+        <description><![CDATA[  You seem to be initializing a member variable with itself.  ]]></description>
+    </rule>
+    <rule key="cpplint.runtime/int-0">
+        <name><![CDATA[ Use "unsigned short" for ports, not "short" ]]></name>
+        <configKey><![CDATA[cpplint.runtime/int-0@CPP_LINT]]></configKey>
+        <category name="runtime" />
+        <description><![CDATA[  Use "unsigned short" for ports, not "short"  ]]></description>
+    </rule>
+    <rule key="cpplint.runtime/int-1">
+        <name><![CDATA[ Use int16/int64/etc, rather than the C type %s  % match.group(1)]]></name>
+        <configKey><![CDATA[cpplint.runtime/int-1@CPP_LINT]]></configKey>
+        <category name="runtime" />
+        <description><![CDATA[  Use int16/int64/etc, rather than the C type %s  % match.group(1) ]]></description>
+    </rule>
+    <rule key="cpplint.runtime/printf-2">
+        <name><![CDATA[ If you can, use sizeof(%s) instead of %s as the 2nd arg   to snprintf.  % (match.group(1), match.group(2))]]></name>
+        <configKey><![CDATA[cpplint.runtime/printf-2@CPP_LINT]]></configKey>
+        <category name="runtime" />
+        <description><![CDATA[  If you can, use sizeof(%s) instead of %s as the 2nd arg   to snprintf.  % (match.group(1), match.group(2)) ]]></description>
+    </rule>
+    <rule key="cpplint.tekla_custom/deprecated_functions-0">
+        <name><![CDATA[ sprintf from conversion namespace should not be used, windows sprintf_s should be use instead or Cxx11 snprintf when available ]]></name>
+        <configKey><![CDATA[cpplint.tekla_custom/deprecated_functions-0@CPP_LINT]]></configKey>
+        <category name="tekla_custom" />
+        <description><![CDATA[  sprintf from conversion namespace should not be used, windows sprintf_s should be use instead or Cxx11 snprintf when available  ]]></description>
+    </rule>
+    <rule key="cpplint.runtime/printf-3">
+        <name><![CDATA[ Never use sprintf.  Windows sprintf_s should be use instead, or cxx11 snprintf when available ]]></name>
+        <configKey><![CDATA[cpplint.runtime/printf-3@CPP_LINT]]></configKey>
+        <category name="runtime" />
+        <description><![CDATA[  Never use sprintf.  Windows sprintf_s should be use instead, or cxx11 snprintf when available  ]]></description>
+    </rule>
+    <rule key="cpplint.runtime/printf-4">
+        <name><![CDATA[ Almost always, snprintf is better than %s  % match.group(1)]]></name>
+        <configKey><![CDATA[cpplint.runtime/printf-4@CPP_LINT]]></configKey>
+        <category name="runtime" />
+        <description><![CDATA[  Almost always, snprintf is better than %s  % match.group(1) ]]></description>
+    </rule>
+    <rule key="cpplint.tekla_custom/deprecated_functions-1">
+        <name><![CDATA[ sscanf from namespace conversion is deprecated, please find a suitable replacement ]]></name>
+        <configKey><![CDATA[cpplint.tekla_custom/deprecated_functions-1@CPP_LINT]]></configKey>
+        <category name="tekla_custom" />
+        <description><![CDATA[  sscanf from namespace conversion is deprecated, please find a suitable replacement  ]]></description>
+    </rule>
+    <rule key="cpplint.runtime/printf-5">
+        <name><![CDATA[ sscanf can be ok, but is slow and can overflow buffers. ]]></name>
+        <configKey><![CDATA[cpplint.runtime/printf-5@CPP_LINT]]></configKey>
+        <category name="runtime" />
+        <description><![CDATA[  sscanf can be ok, but is slow and can overflow buffers.  ]]></description>
+    </rule>
+    <rule key="cpplint.tekla_custom/deprecated_functions-2">
+        <name><![CDATA[ Function has been marked as deprecated, please find a suitable replacement. (  + deprecated_Function +  ) - Tekla Custom ]]></name>
+        <configKey><![CDATA[cpplint.tekla_custom/deprecated_functions-2@CPP_LINT]]></configKey>
+        <category name="tekla_custom" />
+        <description><![CDATA[  Function has been marked as deprecated, please find a suitable replacement. (  + deprecated_Function +  ) - Tekla Custom  ]]></description>
+    </rule>
+    <rule key="cpplint.runtime/operator-0">
+        <name><![CDATA[ Unary operator&amp; is dangerous.  Do not use it. ]]></name>
+        <configKey><![CDATA[cpplint.runtime/operator-0@CPP_LINT]]></configKey>
+        <category name="runtime" />
+        <description><![CDATA[  Unary operator&amp; is dangerous.  Do not use it.  ]]></description>
+    </rule>
+    <rule key="cpplint.readability/braces-3">
+        <name><![CDATA[ Did you mean "else if"? If not, start a new line for "if". ]]></name>
+        <configKey><![CDATA[cpplint.readability/braces-3@CPP_LINT]]></configKey>
+        <category name="readability" />
+        <description><![CDATA[  Did you mean "else if"? If not, start a new line for "if".  ]]></description>
+    </rule>
+    <rule key="cpplint.runtime/printf-6">
+        <name><![CDATA[ Potential format string bug. Do %s("%%s", %s) instead.  % (function_name, match.group(1))]]></name>
+        <configKey><![CDATA[cpplint.runtime/printf-6@CPP_LINT]]></configKey>
+        <category name="runtime" />
+        <description><![CDATA[  Potential format string bug. Do %s("%%s", %s) instead.  % (function_name, match.group(1)) ]]></description>
+    </rule>
+    <rule key="cpplint.runtime/memset-0">
+        <name><![CDATA[ Did you mean "memset(%s, 0, %s)"?  % (match.group(1), match.group(2))]]></name>
+        <configKey><![CDATA[cpplint.runtime/memset-0@CPP_LINT]]></configKey>
+        <category name="runtime" />
+        <description><![CDATA[  Did you mean "memset(%s, 0, %s)"?  % (match.group(1), match.group(2)) ]]></description>
+    </rule>
+    <rule key="cpplint.build/namespaces-0">
+        <name><![CDATA[ Do not use namespace using-directives.    Use using-declarations instead. ]]></name>
+        <configKey><![CDATA[cpplint.build/namespaces-0@CPP_LINT]]></configKey>
+        <category name="build" />
+        <description><![CDATA[  Do not use namespace using-directives.    Use using-declarations instead.  ]]></description>
+    </rule>
+    <rule key="cpplint.runtime/arrays-0">
+        <name><![CDATA[ Do not use variable-length arrays.  Use an appropriately named  "( k  followed by CamelCase) compile-time constant for the size."]]></name>
+        <configKey><![CDATA[cpplint.runtime/arrays-0@CPP_LINT]]></configKey>
+        <category name="runtime" />
+        <description><![CDATA[  Do not use variable-length arrays.  Use an appropriately named  "( k  followed by CamelCase) compile-time constant for the size." ]]></description>
+    </rule>
+    <rule key="cpplint.readability/constructors-1">
+        <name><![CDATA[match.group(1) +   should be the last thing in the class ]]></name>
+        <configKey><![CDATA[cpplint.readability/constructors-1@CPP_LINT]]></configKey>
+        <category name="readability" />
+        <description><![CDATA[ match.group(1) +   should be the last thing in the class  ]]></description>
+    </rule>
+    <rule key="cpplint.build/namespaces-1">
+        <name><![CDATA[ Do not use unnamed namespaces in header files.  See   http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml#Namespaces   for more information. ]]></name>
+        <configKey><![CDATA[cpplint.build/namespaces-1@CPP_LINT]]></configKey>
+        <category name="build" />
+        <description><![CDATA[  Do not use unnamed namespaces in header files.  See   http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml#Namespaces   for more information.  ]]></description>
+    </rule>
+    <rule key="cpplint.runtime/sizeof-0">
+        <name><![CDATA[ Using sizeof(type).  Use sizeof(varname) instead if possible ]]></name>
+        <configKey><![CDATA[cpplint.runtime/sizeof-0@CPP_LINT]]></configKey>
+        <category name="runtime" />
+        <description><![CDATA[  Using sizeof(type).  Use sizeof(varname) instead if possible  ]]></description>
+    </rule>
+    <rule key="cpplint.readability/function-0">
+        <name><![CDATA[ All parameters should be named in a function ]]></name>
+        <configKey><![CDATA[cpplint.readability/function-0@CPP_LINT]]></configKey>
+        <category name="readability" />
+        <description><![CDATA[  All parameters should be named in a function  ]]></description>
+    </rule>
+    <rule key="cpplint.readability/casting-1">
+        <name><![CDATA[ Using C-style cast. Prefer static_cast&lt;%s&gt; if possible, if not use %s&lt;%s&gt;(...) instead  % (match.group(1), cast_type, match.group(1))]]></name>
+        <configKey><![CDATA[cpplint.readability/casting-1@CPP_LINT]]></configKey>
+        <category name="readability" />
+        <description><![CDATA[  Using C-style cast. Prefer static_cast&lt;%s&gt; if possible, if not use %s&lt;%s&gt;(...) instead  % (match.group(1), cast_type, match.group(1)) ]]></description>
+    </rule>
+    <rule key="cpplint.build/include_what_you_use-0">
+        <name><![CDATA[ Add #include   + required_header_unstripped +   for   + template]]></name>
+        <configKey><![CDATA[cpplint.build/include_what_you_use-0@CPP_LINT]]></configKey>
+        <category name="build" />
+        <description><![CDATA[  Add #include   + required_header_unstripped +   for   + template ]]></description>
+    </rule>
+    <rule key="cpplint.build/explicit_make_pair-0">
+        <name><![CDATA[ Omit template arguments from make_pair OR use pair directly OR   if appropriate, construct a pair directly ]]></name>
+        <configKey><![CDATA[cpplint.build/explicit_make_pair-0@CPP_LINT]]></configKey>
+        <category name="build" />
+        <description><![CDATA[  Omit template arguments from make_pair OR use pair directly OR   if appropriate, construct a pair directly  ]]></description>
+    </rule>
+    <rule key="cpplint.whitespace/newline-3">
+        <name><![CDATA[ One or more unexpected \\r (^M) found;   better to use only a \\n ]]></name>
+        <configKey><![CDATA[cpplint.whitespace/newline-3@CPP_LINT]]></configKey>
+        <category name="Maintainability" />
+        <description><![CDATA[  One or more unexpected \\r (^M) found;   better to use only a \\n  ]]></description>
+    </rule>
+    <rule key="cpplint.tekla_custom/sizeoffiles-0">
+        <name><![CDATA[ Source files are restricted to a maximum of 1500 lines of code ]]></name>
+        <configKey><![CDATA[cpplint.tekla_custom/sizeoffiles-0@CPP_LINT]]></configKey>
+        <category name="tekla_custom" />
+        <description><![CDATA[  Source files are restricted to a maximum of 1500 lines of code  ]]></description>
+    </rule>
+    <rule key="cpplint.tekla_custom/sizeoffiles-1">
+        <name><![CDATA[ Header files are restricted to a maximum of 300 lines of code ]]></name>
+        <configKey><![CDATA[cpplint.tekla_custom/sizeoffiles-1@CPP_LINT]]></configKey>
+        <category name="tekla_custom" />
+        <description><![CDATA[  Header files are restricted to a maximum of 300 lines of code  ]]></description>
+    </rule>
+</rules>

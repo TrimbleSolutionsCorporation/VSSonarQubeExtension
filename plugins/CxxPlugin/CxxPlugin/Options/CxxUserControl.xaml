@@ -1,0 +1,254 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:options="clr-namespace:CxxPlugin.Options"
+    xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+    x:Class="CxxPlugin.Options.CxxUserControl"
+    mc:Ignorable="d" Height="425" Width="600">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+
+            </ResourceDictionary.MergedDictionaries>
+            <options:CxxOptionsController x:Key="CxxOptionsControllerDataSource" d:IsDataSource="True" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <UserControl.DataContext>
+        <Binding Source="{StaticResource CxxOptionsControllerDataSource}" />
+    </UserControl.DataContext>
+
+    <UserControl.Background>
+        <SolidColorBrush Color="{Binding BackGroundColor}" />
+    </UserControl.Background>
+
+    <UserControl.Foreground>
+        <SolidColorBrush Color="{Binding ForeGroundColor}" />
+    </UserControl.Foreground>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="349*" />
+        </Grid.ColumnDefinitions>
+        <ScrollViewer PanningMode="VerticalOnly">
+            <StackPanel>
+                <Expander Header="Cxx Lint (ensure java is available)">
+                    <Grid Height="85">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="349*" />
+                            <ColumnDefinition Width="100" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="25" />
+                            <RowDefinition Height="30" />
+                            <RowDefinition Height="25" />
+                        </Grid.RowDefinitions>
+                        <Label Content="Cxx Lint Jar"
+                               VerticalContentAlignment="Center" />
+                        <TextBox Grid.Row="0" Grid.Column="1"
+                                 TextWrapping="Wrap" Text="{Binding CxxLint}" VerticalContentAlignment="Center" />
+                        <Button x:Name="CxxLintBrowse" Content="..."
+                                Grid.Row="0" Grid.Column="2" Command="{Binding OpenCommand}" CommandParameter="CxxLint"
+                                Style="{DynamicResource SquareButtonStyle}" />
+                        
+                        <Button x:Name="DownloadLintFromSonarQube" Content="Download linter from SonarQube server"
+                                Grid.Row="1" Grid.Column="1" Command="{Binding DownloadCxxLintFromServerCommand}"
+                                Style="{DynamicResource SquareButtonStyle}" />
+                        <Label Content="{Binding ErrorMessage, FallbackValue=asdasdassdfsddfsdfs}" Grid.Row="2" Grid.ColumnSpan="3"
+                               VerticalContentAlignment="Center" />                      
+                    </Grid>
+                </Expander>                
+                <Expander Header="Vera++">
+                    <Grid Height="80">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="349*" />
+                            <ColumnDefinition Width="100" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="25" />
+                            <RowDefinition Height="25" />
+                            <RowDefinition Height="25" />
+                        </Grid.RowDefinitions>
+                        <Label Content="Executable"
+                               VerticalContentAlignment="Center" />
+                        <Label Content="Arguments" Grid.Row="1"
+                               Grid.Column="0"
+                               VerticalContentAlignment="Center" />
+                        <Label Content="Environment" Grid.Row="2"
+                               Grid.Column="0"
+                               VerticalContentAlignment="Center" />
+                        <TextBox Grid.Row="0" Grid.Column="1"
+                                 TextWrapping="Wrap" Text="{Binding VeraExecutable}" VerticalContentAlignment="Center" />
+                        <TextBox Grid.Column="1" TextWrapping="Wrap"
+                                 Text="{Binding VeraArguments}" VerticalContentAlignment="Center" Grid.Row="1" />
+                        <TextBox Grid.Column="1" TextWrapping="Wrap"
+                                 Text="{Binding VeraEnvironment}" VerticalContentAlignment="Center" Grid.Row="2"
+                                 ToolTip="VERA_ROOT needs to be set" />
+                        <Button x:Name="VeraBrowse" Content="..."
+                                Grid.Row="0" Grid.Column="2" Command="{Binding OpenCommand}" CommandParameter="Vera++"
+                                Style="{DynamicResource SquareButtonStyle}" />
+                    </Grid>
+                </Expander>
+                <Expander Header="CppCheck">
+                    <Grid Height="80">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="349*" />
+                            <ColumnDefinition Width="100" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="25" />
+                            <RowDefinition Height="25" />
+                            <RowDefinition Height="25" />
+                        </Grid.RowDefinitions>
+                        <Label Content="Executable"
+                               VerticalContentAlignment="Center" />
+                        <Label Content="Arguments" Grid.Row="1"
+                               Grid.Column="0"
+                               VerticalContentAlignment="Center" />
+                        <Label Content="Environment" Grid.Row="2"
+                               Grid.Column="0"
+                               VerticalContentAlignment="Center" />
+                        <TextBox Grid.Row="0" Grid.Column="1"
+                                 TextWrapping="Wrap" Text="{Binding CppCheckExecutable}"
+                                 VerticalContentAlignment="Center" />
+                        <TextBox Grid.Column="1" TextWrapping="Wrap"
+                                 Text="{Binding CppCheckArguments}" VerticalContentAlignment="Center" Grid.Row="1" />
+                        <TextBox Grid.Column="1" TextWrapping="Wrap"
+                                 Text="{Binding CppCheckEnvironment}" VerticalContentAlignment="Center" Grid.Row="2" />
+                        <Button x:Name="CppCheckBrowse" Content="..."
+                                Grid.Row="0" Grid.Column="2" Command="{Binding OpenCommand}"
+                                CommandParameter="CppCheck" ToolTip="Open CppCheck.exe"
+                                Style="{DynamicResource SquareButtonStyle}" />
+                    </Grid>
+                </Expander>
+                <Expander Header="PcLint">
+                    <Grid Height="80">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="349*" />
+                            <ColumnDefinition Width="100" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="25" />
+                            <RowDefinition Height="25" />
+                            <RowDefinition Height="25" />
+                        </Grid.RowDefinitions>
+                        <Label Content="Executable"
+                               VerticalContentAlignment="Center" />
+                        <Label Content="Arguments" Grid.Row="1"
+                               Grid.Column="0" VerticalContentAlignment="Center" />
+                        <Label Content="Environment" Grid.Row="2"
+                               Grid.Column="0" VerticalContentAlignment="Center" />
+                        <TextBox Grid.Row="0" Grid.Column="1"
+                                 TextWrapping="Wrap" Text="{Binding PcLintExecutable}"
+                                 VerticalContentAlignment="Center" />
+                        <TextBox Grid.Column="1" TextWrapping="Wrap"
+                                 Text="{Binding PcLintArguments}" VerticalContentAlignment="Center" Grid.Row="1" />
+                        <TextBox Grid.Column="1" TextWrapping="Wrap"
+                                 Text="{Binding PcLintEnvironment}" VerticalContentAlignment="Center" Grid.Row="2" />
+                        <Button x:Name="PcLintBrowse" Content="..."
+                                Grid.Row="0" Grid.Column="2" Command="{Binding OpenCommand}" CommandParameter="PcLint"
+                                ToolTip="Open PcLint.exe" Style="{DynamicResource SquareButtonStyle}" />
+                    </Grid>
+                </Expander>
+                <Expander Header="Rats">
+                    <Grid Height="80">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="349*" />
+                            <ColumnDefinition Width="100" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="25" />
+                            <RowDefinition Height="25" />
+                            <RowDefinition Height="25" />
+                        </Grid.RowDefinitions>
+                        <Label Content="Executable"
+                               VerticalContentAlignment="Center" />
+                        <Label Content="Arguments" Grid.Row="1"
+                               Grid.Column="0" VerticalContentAlignment="Center" />
+                        <Label Content="Environment" Grid.Row="2"
+                               Grid.Column="0" VerticalContentAlignment="Center" />
+                        <TextBox Grid.Row="0" Grid.Column="1"
+                                 TextWrapping="Wrap" Text="{Binding RatsExecutable}" VerticalContentAlignment="Center" />
+                        <TextBox Grid.Column="1" TextWrapping="Wrap"
+                                 Text="{Binding RatsArguments}" VerticalContentAlignment="Center" Grid.Row="1" />
+                        <TextBox Grid.Column="1" TextWrapping="Wrap"
+                                 Text="{Binding RatsEnvironment}" VerticalContentAlignment="Center" Grid.Row="2" />
+                        <Button x:Name="RatsBrowse" Content="..."
+                                Grid.Row="0" Grid.Column="2" Command="{Binding OpenCommand}" CommandParameter="Rats"
+                                ToolTip="Open Rats.exe" Style="{DynamicResource SquareButtonStyle}" />
+                    </Grid>
+                </Expander>
+                <Expander Header="Clang-Tidy">
+                    <Grid Height="30">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="349*" />
+                            <ColumnDefinition Width="100" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="25" />
+                        </Grid.RowDefinitions>
+                        <Label Content="Executable"
+                               VerticalContentAlignment="Center" />
+                        <TextBox Grid.Row="0" Grid.Column="1"
+                                 TextWrapping="Wrap" Text="{Binding ClangTidyExecutable}" VerticalContentAlignment="Center" />
+                        <Button x:Name="ClangTidyBrowse" Content="..."
+                                Grid.Row="0" Grid.Column="2" Command="{Binding OpenCommand}" CommandParameter="ClangTidy"
+                                ToolTip="Open Rats.exe" Style="{DynamicResource SquareButtonStyle}" />
+                    </Grid>
+                </Expander>
+
+                <Expander Header="External Sensor">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="349*" />
+                            <ColumnDefinition Width="100" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="25" />
+                            <RowDefinition Height="25" />
+                            <RowDefinition Height="25" />
+                            <RowDefinition Height="25" />
+                        </Grid.RowDefinitions>
+                        <Label Content="Executable"
+                               VerticalContentAlignment="Center" />
+                        <Label Content="Arguments" Grid.Row="1"
+                               Grid.Column="0"
+                               VerticalContentAlignment="Center" />
+                        <Label Content="Key" Grid.Row="2" Grid.Column="0"
+                               VerticalContentAlignment="Center" />
+                        <Label Content="Environment" Grid.Row="3"
+                               Grid.Column="0"
+                               VerticalContentAlignment="Center" />
+                        <TextBox Grid.Row="0" Grid.Column="1"
+                                 TextWrapping="Wrap" Text="{Binding CustomExecutable}"
+                                 VerticalContentAlignment="Center" />
+                        <TextBox Grid.Column="1" TextWrapping="Wrap"
+                                 Text="{Binding CustomArguments}" VerticalContentAlignment="Center" Grid.Row="1" />
+                        <TextBox Grid.Column="1" TextWrapping="Wrap"
+                                 Text="{Binding CustomKey}" VerticalContentAlignment="Center" Grid.Row="2" />
+                        <TextBox Grid.Column="1" TextWrapping="Wrap"
+                                 Text="{Binding CustomEnvironment}" VerticalContentAlignment="Center" Grid.Row="3" />
+                        <Button x:Name="CustomBrowse" Content="..."
+                                Grid.Row="0" Grid.Column="2" Command="{Binding OpenCommand}"
+                                CommandParameter="ExternalSensor" ToolTip="Open *.exe"
+                                Style="{DynamicResource SquareButtonStyle}" />
+                    </Grid>
+                </Expander>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

@@ -35,6 +35,11 @@
         private readonly IEnumerable<Resource> availableProjects;
 
         /// <summary>
+        /// The logger
+        /// </summary>
+        private readonly INotificationManager logger;
+
+        /// <summary>
         /// The selected items
         /// </summary>
         private readonly ObservableCollection<Resource> selectedItems;
@@ -66,8 +71,10 @@
             ISonarRestService rest,
             List<Resource> availableProjectsIn,
             List<Resource> listofSaveComp,
-            IVsEnvironmentHelper vshelper)
+            IVsEnvironmentHelper vshelper,
+            INotificationManager logger)
         {
+            this.logger = logger;
             this.selectedItems = new ObservableCollection<Resource>();
             this.availableProjects = new ObservableCollection<Resource>(availableProjectsIn);
             this.componentList = new ObservableCollection<Resource>();
@@ -150,13 +157,18 @@
         /// <param name="rest">The rest.</param>
         /// <param name="availableProjects">The available projects.</param>
         /// <param name="listofSaveComp">The listof save comp.</param>
-        /// <returns>returns saved component list</returns>
+        /// <param name="helper">The helper.</param>
+        /// <param name="logger">The logger.</param>
+        /// <returns>
+        /// returns saved component list
+        /// </returns>
         public static List<Resource> SearchComponents(
             ISonarConfiguration conf, 
             ISonarRestService rest, 
             List<Resource> availableProjects, 
             List<Resource> listofSaveComp, 
-            IVsEnvironmentHelper helper)
+            IVsEnvironmentHelper helper,
+            INotificationManager logger)
         {
             var savedList = new List<Resource>();
             foreach (var item in listofSaveComp)
@@ -167,7 +179,7 @@
 
             try
             {
-                var searchComponenetDialog = new SearchComponenetDialog(conf, rest, availableProjects, listofSaveComp, helper);
+                var searchComponenetDialog = new SearchComponenetDialog(conf, rest, availableProjects, listofSaveComp, helper, logger);
                 searchComponenetDialog.ShowDialog();
 
                 if (searchComponenetDialog.DialogResult == true)
@@ -493,7 +505,7 @@
             {
                 if (item.Qualifier == "TRK")
                 {
-                    foreach (var rep in this.rest.GetCoverageReportOnNewCodeOnLeak(this.conf, item))
+                    foreach (var rep in this.rest.GetCoverageReportOnNewCodeOnLeak(this.conf, item, this.logger))
                     {
                         completeData.Add(rep.Key, rep.Value);
                     }

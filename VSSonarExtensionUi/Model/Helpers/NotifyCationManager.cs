@@ -166,7 +166,7 @@
         /// <param name="ex">
         /// The ex.
         /// </param>
-        public void WriteException(Exception ex)
+        public void WriteExceptionToLog(Exception ex)
         {
             if (!this.model.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.ExtensionDebugModeEnabled)
             {
@@ -192,7 +192,7 @@
         /// <param name="msg">
         /// The msg.
         /// </param>
-        public void WriteMessage(string msg)
+        public void WriteMessageToLog(string msg)
         {
             if (!this.model.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.ExtensionDebugModeEnabled)
             {

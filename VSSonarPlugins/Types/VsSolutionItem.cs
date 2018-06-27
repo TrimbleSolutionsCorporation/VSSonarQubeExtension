@@ -11,7 +11,7 @@ namespace VSSonarPlugins.Types
     using PropertyChanged;
 
     /// <summary>The vs solution item.</summary>
-    [ImplementPropertyChanged]
+    [AddINotifyPropertyChangedInterface]
     public class VsSolutionItem
     {
         /// <summary>Gets or sets the solution path. Full path includes file name</summary>

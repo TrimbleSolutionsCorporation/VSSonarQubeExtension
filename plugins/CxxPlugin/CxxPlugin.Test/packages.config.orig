@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<packages>
+  <package id="AssemblyPatcherTask" version="1.0.5" targetFramework="net452" />
+  <package id="Moq" version="4.2.1507.0118" targetFramework="net45" />
+  <package id="NUnit" version="3.0.0" targetFramework="net452" />
+  <package id="NunitRunnerTask" version="2.0.9" targetFramework="net452" />
+<<<<<<< b56e1a981ed5e384f453c7dbf40c93995bf77f1a
+  <package id="VSSonarExtensionPlugin3Api" version="5.0.2" targetFramework="net452" />
+  <package id="VSSonarExtensionPlugin4Api" version="5.0.2" targetFramework="net452" />
+=======
+  <package id="VSSonarExtensionPlugin3Api" version="5.1.8" targetFramework="net452" />
+  <package id="VSSonarExtensionPlugin4Api" version="5.1.8" targetFramework="net452" />
+>>>>>>> update 5.1
+</packages>

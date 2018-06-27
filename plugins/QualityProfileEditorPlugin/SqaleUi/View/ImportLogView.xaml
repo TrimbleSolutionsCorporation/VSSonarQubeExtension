@@ -1,0 +1,44 @@
+﻿<Window
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ViewModel="clr-namespace:SqaleUi.ViewModel" x:Class="SqaleUi.View.ImportLogView"
+    mc:Ignorable="d"
+    Title="Import Error Message"
+    d:DesignHeight="300" d:DesignWidth="300">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/SqaleUi;component/Resources/Icons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <ViewModel:ImportLogViewModel x:Key="ImportLogViewModelDataSource" d:IsDataSource="True" />
+        </ResourceDictionary>
+    </Window.Resources>
+    <Window.DataContext>
+        <Binding Source="{StaticResource ImportLogViewModelDataSource}" />
+    </Window.DataContext>
+    <Window.Background>
+        <SolidColorBrush Color="{Binding BackGroundColor}" />
+    </Window.Background>
+
+    <Window.Foreground>
+        <SolidColorBrush Color="{Binding ForeGroundColor}" />
+    </Window.Foreground>
+    <Grid>
+        <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding ImportLog}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding exceptionMessage}" Header="exceptionMessage" />
+                <DataGridTextColumn Binding="{Binding line}" Header="line" />
+                <DataGridTextColumn Binding="{Binding message}" Header="message" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>

@@ -1,0 +1,214 @@
+﻿f58ced6eac62a5c3b36aa99962811baf60aa24ed 1 1 10
+author Jorge Costa
+author-mail <Jorge.Costa@tekla.com>
+author-time 1439210386
+author-tz +0300
+committer Jorge Costa
+committer-mail <Jorge.Costa@tekla.com>
+committer-time 1439210386
+committer-tz +0300
+summary first version
+boundary
+filename CsharpProject/Class1.cs
+	﻿using System;
+f58ced6eac62a5c3b36aa99962811baf60aa24ed 2 2
+	using System.Collections.Generic;
+f58ced6eac62a5c3b36aa99962811baf60aa24ed 3 3
+	using System.Linq;
+f58ced6eac62a5c3b36aa99962811baf60aa24ed 4 4
+	using System.Text;
+f58ced6eac62a5c3b36aa99962811baf60aa24ed 5 5
+	using System.Threading.Tasks;
+f58ced6eac62a5c3b36aa99962811baf60aa24ed 6 6
+	
+f58ced6eac62a5c3b36aa99962811baf60aa24ed 7 7
+	namespace CsharpProject
+f58ced6eac62a5c3b36aa99962811baf60aa24ed 8 8
+	{
+f58ced6eac62a5c3b36aa99962811baf60aa24ed 9 9
+	    public class Class1
+f58ced6eac62a5c3b36aa99962811baf60aa24ed 10 10
+	    {
+65b56dfa4fb1edd6f9e1357fe39fc26b8577ff78 11 11 1
+author Jorge Costa
+author-mail <Jorge.Costa@tekla.com>
+author-time 1439280780
+author-tz +0300
+committer Jorge Costa
+committer-mail <Jorge.Costa@tekla.com>
+committer-time 1439280780
+committer-tz +0300
+summary create duplication
+previous 564f5cbf17e876b592859cb31575161a5d1f1373 CsharpProject/Class1.cs
+filename CsharpProject/Class1.cs
+	        int val = 0;
+be4347f0e81ca6604070202a0ea8b78ff881bfa8 12 12 1
+author Jorge Costa
+author-mail <Jorge.Costa@tekla.com>
+author-time 1439280914
+author-tz +0300
+committer Jorge Costa
+committer-mail <Jorge.Costa@tekla.com>
+committer-time 1439280914
+committer-tz +0300
+summary create anot test
+previous 65b56dfa4fb1edd6f9e1357fe39fc26b8577ff78 CsharpProject/Class1.cs
+filename CsharpProject/Class1.cs
+	        public Class1()
+47163718dd4d646d48b6bdaea73ed4096bd255d5 12 13 1
+author Jorge Costa
+author-mail <Jorge.Costa@tekla.com>
+author-time 1439277272
+author-tz +0300
+committer Jorge Costa
+committer-mail <Jorge.Costa@tekla.com>
+committer-time 1439277272
+committer-tz +0300
+summary create coverage
+previous e08f4ce40e31ea8dd633245796d5b00e25e1b710 CsharpProject/Class1.cs
+filename CsharpProject/Class1.cs
+	        {
+1d20da6e4212b69799dacc3b0c9edbcfdf92d414 14 14 2
+author Jorge Costa
+author-mail <Jorge.Costa@tekla.com>
+author-time 1439281537
+author-tz +0300
+committer Jorge Costa
+committer-mail <Jorge.Costa@tekla.com>
+committer-time 1439281537
+committer-tz +0300
+summary create anot test
+previous 95b6504f6fe1f924828a61038bb375921d627089 CsharpProject/Class1.cs
+filename CsharpProject/Class1.cs
+	            DoSomething();
+1d20da6e4212b69799dacc3b0c9edbcfdf92d414 15 15
+	            DoSomethingAgain();
+47163718dd4d646d48b6bdaea73ed4096bd255d5 13 16 2
+	
+47163718dd4d646d48b6bdaea73ed4096bd255d5 14 17
+	        }
+559afc0fd1e0521eca27686dc48b50fb7a627b2a 15 18 3
+author Jorge Costa
+author-mail <Jorge.Costa@tekla.com>
+author-time 1439279043
+author-tz +0300
+committer Jorge Costa
+committer-mail <Jorge.Costa@tekla.com>
+committer-time 1439279043
+committer-tz +0300
+summary create coverage
+previous 47163718dd4d646d48b6bdaea73ed4096bd255d5 CsharpProject/Class1.cs
+filename CsharpProject/Class1.cs
+	
+559afc0fd1e0521eca27686dc48b50fb7a627b2a 16 19
+	        public int DoSomething()
+559afc0fd1e0521eca27686dc48b50fb7a627b2a 17 20
+	        {
+65b56dfa4fb1edd6f9e1357fe39fc26b8577ff78 19 21 2
+	            if (val == 0)
+65b56dfa4fb1edd6f9e1357fe39fc26b8577ff78 20 22
+	            {
+1d20da6e4212b69799dacc3b0c9edbcfdf92d414 23 23 3
+	                val = 1;
+1d20da6e4212b69799dacc3b0c9edbcfdf92d414 24 24
+	                val = 2;
+1d20da6e4212b69799dacc3b0c9edbcfdf92d414 25 25
+	                val = 3;
+95b6504f6fe1f924828a61038bb375921d627089 21 26 1
+author Jorge Costa
+author-mail <Jorge.Costa@tekla.com>
+author-time 1439281336
+author-tz +0300
+committer Jorge Costa
+committer-mail <Jorge.Costa@tekla.com>
+committer-time 1439281336
+committer-tz +0300
+summary create anot test
+previous be4347f0e81ca6604070202a0ea8b78ff881bfa8 CsharpProject/Class1.cs
+filename CsharpProject/Class1.cs
+	                Function();
+65b56dfa4fb1edd6f9e1357fe39fc26b8577ff78 21 27 4
+	                return 0;
+65b56dfa4fb1edd6f9e1357fe39fc26b8577ff78 22 28
+	            }
+65b56dfa4fb1edd6f9e1357fe39fc26b8577ff78 23 29
+	            else
+65b56dfa4fb1edd6f9e1357fe39fc26b8577ff78 24 30
+	            {
+1d20da6e4212b69799dacc3b0c9edbcfdf92d414 23 31 3
+	                val = 1;
+1d20da6e4212b69799dacc3b0c9edbcfdf92d414 24 32
+	                val = 2;
+1d20da6e4212b69799dacc3b0c9edbcfdf92d414 25 33
+	                val = 3;
+95b6504f6fe1f924828a61038bb375921d627089 21 34 1
+	                Function();
+559afc0fd1e0521eca27686dc48b50fb7a627b2a 18 35 2
+	                return 1;
+559afc0fd1e0521eca27686dc48b50fb7a627b2a 19 36
+	            }
+65b56dfa4fb1edd6f9e1357fe39fc26b8577ff78 27 37 1
+	        }
+2db7d1d92f984826ae63ce3b33d015f8ddd58526 20 38 3
+author Jorge Costa
+author-mail <Jorge.Costa@tekla.com>
+author-time 1439279378
+author-tz +0300
+committer Jorge Costa
+committer-mail <Jorge.Costa@tekla.com>
+committer-time 1439279378
+committer-tz +0300
+summary create coverage
+previous e1086d44dea6e98b0daab2cafaf72b44d5973a45 CsharpProject/Class1.cs
+filename CsharpProject/Class1.cs
+	
+2db7d1d92f984826ae63ce3b33d015f8ddd58526 21 39
+	        public int DoSomethingAgain()
+2db7d1d92f984826ae63ce3b33d015f8ddd58526 22 40
+	        {
+65b56dfa4fb1edd6f9e1357fe39fc26b8577ff78 31 41 2
+	            if (val == 0)
+65b56dfa4fb1edd6f9e1357fe39fc26b8577ff78 32 42
+	            {
+1d20da6e4212b69799dacc3b0c9edbcfdf92d414 39 43 3
+	                val = 1;
+1d20da6e4212b69799dacc3b0c9edbcfdf92d414 40 44
+	                val = 2;
+1d20da6e4212b69799dacc3b0c9edbcfdf92d414 41 45
+	                val = 3;
+95b6504f6fe1f924828a61038bb375921d627089 34 46 1
+	                Function();
+65b56dfa4fb1edd6f9e1357fe39fc26b8577ff78 33 47 4
+	                return 0;
+65b56dfa4fb1edd6f9e1357fe39fc26b8577ff78 34 48
+	            }
+65b56dfa4fb1edd6f9e1357fe39fc26b8577ff78 35 49
+	            else
+65b56dfa4fb1edd6f9e1357fe39fc26b8577ff78 36 50
+	            {
+1d20da6e4212b69799dacc3b0c9edbcfdf92d414 23 51 3
+	                val = 1;
+1d20da6e4212b69799dacc3b0c9edbcfdf92d414 24 52
+	                val = 2;
+1d20da6e4212b69799dacc3b0c9edbcfdf92d414 25 53
+	                val = 3;
+95b6504f6fe1f924828a61038bb375921d627089 21 54 1
+	                Function();
+2db7d1d92f984826ae63ce3b33d015f8ddd58526 23 55 2
+	                return 1;
+2db7d1d92f984826ae63ce3b33d015f8ddd58526 24 56
+	            }
+f58ced6eac62a5c3b36aa99962811baf60aa24ed 11 57 1
+	        }
+95b6504f6fe1f924828a61038bb375921d627089 42 58 4
+	
+95b6504f6fe1f924828a61038bb375921d627089 43 59
+	        public void Function()
+95b6504f6fe1f924828a61038bb375921d627089 44 60
+	        {
+95b6504f6fe1f924828a61038bb375921d627089 45 61
+	        }
+f58ced6eac62a5c3b36aa99962811baf60aa24ed 12 62 1
+	    }
+65b56dfa4fb1edd6f9e1357fe39fc26b8577ff78 41 63 1
+	}

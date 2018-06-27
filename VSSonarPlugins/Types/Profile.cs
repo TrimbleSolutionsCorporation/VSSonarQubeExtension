@@ -24,7 +24,7 @@ namespace VSSonarPlugins.Types
     /// The profile.
     /// </summary>
     [Serializable]
-    [ImplementPropertyChanged]
+    [AddINotifyPropertyChangedInterface]
     public class Profile
     {
         private readonly ISonarRestService service;

@@ -114,7 +114,7 @@ namespace VSSonarQubeExtension
             string solutionName = this.environment.ActiveSolutionName();
             string solutionPath = this.environment.ActiveSolutionPath();
             string fileName = this.environment.ActiveFileFullPath();
-            SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Solution Opened: " + solutionName + " : " + solutionPath);
+            SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessageToLog("Solution Opened: " + solutionName + " : " + solutionPath);
             SonarQubeViewModelFactory.SQViewModel.OnSolutionOpen(solutionName, solutionPath, fileName);
             return VSConstants.S_OK;
         }
@@ -133,7 +133,7 @@ namespace VSSonarQubeExtension
         /// <returns>The <see cref="int"/>.</returns>
         int IVsSolutionEvents.OnBeforeCloseSolution(object pUnkReserved)
         {
-            SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessage("Solution Closed");
+            SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessageToLog("Solution Closed");
             SonarQubeViewModelFactory.SQViewModel.OnSolutionClosed();
             return VSConstants.S_OK;
         }

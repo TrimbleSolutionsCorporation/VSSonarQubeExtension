@@ -1,0 +1,2016 @@
+﻿<ProjectDuplicationTracker:ProjectDuplicationTrackerModel xmlns:ProjectDuplicationTracker="clr-namespace:ProjectDuplicationTracker" xmlns:ExtensionTypes="clr-namespace:ExtensionTypes;assembly=ExtensionTypes" xmlns:System="clr-namespace:System;assembly=mscorlib" IsIdle="False" IsBusy="True" SelectedGroupInView="Mauris sociosqu adipiscing" SelectedSecondProject="Dignissim mauris ante arcu non" SelectedFirstProject="Nam aliquam" SonarLogin="Eget nullam conubia nulla per" StatusMessage="Sit eros nibh" SelectedResourceInView="Vestibulum nisi nisl nunc odio" SonarVersion="145.16" SonarHost="Adipiscing diam" SourceCodeTxt="Est vestibulum dapibus diam" UserIsLoggedIn="True">
+	<ProjectDuplicationTracker:ProjectDuplicationTrackerModel.CrossProjectResources>
+		<ProjectDuplicationTracker:SonarProject>
+			<ProjectDuplicationTracker:SonarProject.Files>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="12" Key="Libero consequat" Lname="Convallis sociosqu adipiscing" Lang="Nulla parturient facilisis" Name="Etiam cras senectus" Qualifier="Morbi elementum sodales" Scope="Fusce dignissim suscipit lorem rhoncus" Version="Viverra torquent aliquam ligula"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="68" Key="Ultrices vehicula proin vestibulum litora" Lname="Vestibulum fermentum" Lang="Integer non fames per sed" Name="Leo augue" Qualifier="Mus fringilla duis habitasse nec" Scope="Dolor luctus" Version="Adipiscing felis parturient volutpat"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="76" Key="Maecenas hendrerit quisque himenaeos" Lname="Praesent vivamus justo vestibulum amet" Lang="Ante parturient mattis" Name="Nunc imperdiet magnis malesuada ipsum" Qualifier="Penatibus porttitor adipiscing sit" Scope="Vestibulum sem" Version="Mauris vestibulum"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="14" Key="Arcu aliquam" Lname="Magna mollis diam tristique" Lang="Vel enim montes nostra" Name="Lacus aliquet lorem tincidunt" Qualifier="Bibendum blandit" Scope="Eget accumsan elit" Version="Massa dictumst eleifend vestibulum"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="31" Key="Ornare nam metus sed platea" Lname="Erat vulputate" Lang="Nibh parturient facilisi rutrum faucibus" Name="Ultricies commodo venenatis primis" Qualifier="Eros neque dis curabitur" Scope="Adipiscing morbi" Version="Netus habitant nisi"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+			</ProjectDuplicationTracker:SonarProject.Files>
+			<ProjectDuplicationTracker:SonarProject.Project>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="86" Key="Odio sem feugiat gravida" Lname="Iaculis inceptos tincidunt vestibulum neque" Lang="Nam lacinia laoreet turpis interdum" Name="Porttitor morbi sit" Qualifier="Vel nulla" Scope="Netus tortor orci tristique" Version="Lobortis porta">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Nascetur quam" FormatedValue="Pede ultricies nullam parturient aptent" Key="Varius aenean mauris adipiscing"/>
+						<ExtensionTypes:Metric Data="Sed velit urna pharetra" FormatedValue="Purus quis risus venenatis adipiscing" Key="Auctor vestibulum vestibulum"/>
+						<ExtensionTypes:Metric Data="Cursus dis" FormatedValue="Natoque congue posuere" Key="Vulputate placerat"/>
+						<ExtensionTypes:Metric Data="Sagittis dictum" FormatedValue="Class curae parturient potenti" Key="Pulvinar vitae curabitur"/>
+						<ExtensionTypes:Metric Data="Phasellus vestibulum lectus hac" FormatedValue="Donec vestibulum" Key="Est pretium"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ProjectDuplicationTracker:SonarProject.Project>
+		</ProjectDuplicationTracker:SonarProject>
+		<ProjectDuplicationTracker:SonarProject>
+			<ProjectDuplicationTracker:SonarProject.Files>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="82" Key="Imperdiet sit sociosqu malesuada lorem" Lname="Morbi quis vel" Lang="Suscipit torquent auctor aliquam sed" Name="Aptent penatibus potenti pretium" Qualifier="Sodales nulla proin viverra vestibulum" Scope="Nam porttitor rhoncus urna vestibulum" Version="Integer ultrices adipiscing"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="70" Key="Congue tincidunt cras duis vehicula" Lname="Amet ante quisque" Lang="Arcu parturient diam ligula maecenas" Name="Dis cursus est nunc dictum" Qualifier="Leo libero" Scope="Lectus hac augue volutpat vivamus" Version="Tristique litora mus dolor praesent"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="25" Key="Fames eget vestibulum aliquam" Lname="Magnis accumsan vulputate mattis adipiscing" Lang="Erat parturient" Name="Ultricies luctus vestibulum venenatis nec" Qualifier="Enim aliquet" Scope="Elit mauris mollis" Version="Blandit montes felis"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="53" Key="Bibendum commodo conubia dictumst cubilia" Lname="Dapibus non vestibulum justo vestibulum" Lang="Inceptos ornare" Name="Curabitur eleifend ipsum phasellus" Qualifier="Nostra habitant" Scope="Facilisi faucibus lacus consequat" Version="Egestas lorem"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="95" Key="Eros magna platea" Lname="Lobortis convallis nascetur adipiscing massa" Lang="Parturient vestibulum" Name="Nibh primis per interdum" Qualifier="Nisi elementum neque sed" Scope="Dignissim metus morbi" Version="Netus nisl"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+			</ProjectDuplicationTracker:SonarProject.Files>
+			<ProjectDuplicationTracker:SonarProject.Project>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="12" Key="Sapien est vestibulum semper" Lname="Nulla conubia cubilia" Lang="Mus consequat" Name="Vestibulum hac" Qualifier="Inceptos adipiscing egestas interdum" Scope="Phasellus dapibus leo" Version="Sociis porta lobortis purus convallis">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Placerat pulvinar euismod vestibulum" FormatedValue="Vestibulum tellus" Key="Parturient taciti nascetur nec pharetra"/>
+						<ExtensionTypes:Metric Data="Gravida tempus sagittis velit elementum" FormatedValue="Tempor non" Key="Adipiscing dignissim feugiat risus"/>
+						<ExtensionTypes:Metric Data="Class varius nunc odio" FormatedValue="Per turpis vestibulum facilisis" Key="Parturient nisl vitae tortor"/>
+						<ExtensionTypes:Metric Data="Aenean fringilla parturient habitasse" FormatedValue="Lacinia orci pede fermentum" Key="Sed vestibulum curae adipiscing iaculis"/>
+						<ExtensionTypes:Metric Data="Posuere nullam himenaeos fusce" FormatedValue="Senectus etiam laoreet natoque quam" Key="Sem hendrerit donec mauris"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ProjectDuplicationTracker:SonarProject.Project>
+		</ProjectDuplicationTracker:SonarProject>
+		<ProjectDuplicationTracker:SonarProject>
+			<ProjectDuplicationTracker:SonarProject.Files>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="28" Key="Donec duis potenti etiam" Lname="Vestibulum pretium porttitor torquent rhoncus" Lang="Vehicula volutpat amet aliquam" Name="Cursus vestibulum" Qualifier="Nunc viverra adipiscing" Scope="Sodales ultrices fusce dictum" Version="Ante tincidunt lectus"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="17" Key="Tristique parturient vestibulum sem" Lname="Nam adipiscing integer parturient" Lang="Vestibulum diam adipiscing vulputate" Name="Ultricies sit vestibulum vel" Qualifier="Arcu vestibulum aliquam venenatis" Scope="Maecenas quisque lorem sed vivamus" Version="Eget elit curabitur aliquet phasellus"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="72" Key="Praesent parturient" Lname="Bibendum vestibulum" Lang="Conubia morbi" Name="Accumsan vestibulum" Qualifier="Dictumst libero" Scope="Adipiscing blandit parturient commodo" Version="Consequat nulla convallis"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="79" Key="Ligula litora eleifend cubilia" Lname="Faucibus vestibulum erat" Lang="Elementum adipiscing dolor" Name="Luctus proin enim facilisi dignissim" Qualifier="Dapibus eros augue egestas nibh" Scope="Habitant vestibulum dis" Version="Est hac nisi fames parturient"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="43" Key="Felis magnis vestibulum nisl" Lname="Justo nunc inceptos feugiat odio" Lang="Parturient magna leo orci pede" Name="Euismod ipsum facilisis mattis fermentum" Qualifier="Interdum gravida" Scope="Vestibulum lacus adipiscing mauris lorem" Version="Vestibulum mollis"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+			</ProjectDuplicationTracker:SonarProject.Files>
+			<ProjectDuplicationTracker:SonarProject.Project>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="23" Key="Rutrum sapien vestibulum facilisis sem" Lname="Porta semper purus sociis taciti" Lang="Sit placerat vel" Name="Nunc fermentum euismod nulla adipiscing" Qualifier="Fringilla risus" Scope="Parturient pharetra" Version="Tellus habitasse nam">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Sed dis" FormatedValue="Pulvinar tempor vestibulum" Key="Feugiat odio hendrerit velit vitae"/>
+						<ExtensionTypes:Metric Data="Tortor iaculis imperdiet hac malesuada" FormatedValue="Gravida vestibulum est senectus" Key="Himenaeos tempus orci sagittis"/>
+						<ExtensionTypes:Metric Data="Lacinia pede laoreet mauris" FormatedValue="Aenean leo" Key="Turpis varius"/>
+						<ExtensionTypes:Metric Data="Class adipiscing quis parturient" FormatedValue="Nullam nec non" Key="Mus quam penatibus"/>
+						<ExtensionTypes:Metric Data="Suscipit cras posuere curae sed" FormatedValue="Aptent sociosqu auctor congue per" Key="Natoque urna"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ProjectDuplicationTracker:SonarProject.Project>
+		</ProjectDuplicationTracker:SonarProject>
+		<ProjectDuplicationTracker:SonarProject>
+			<ProjectDuplicationTracker:SonarProject.Files>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="88" Key="Sociis taciti rhoncus" Lname="Vestibulum vestibulum ante tempor" Lang="Tempus vehicula" Name="Tellus suscipit vel" Qualifier="Ultrices malesuada parturient vestibulum" Scope="Nam torquent adipiscing" Version="Penatibus sodales arcu fusce"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="28" Key="Sed lorem tortor diam turpis" Lname="Tristique vestibulum hac" Lang="Aliquam mus nulla" Name="Dis volutpat porttitor tincidunt est" Qualifier="Varius eget aenean venenatis" Scope="Ultricies adipiscing morbi viverra leo" Version="Mauris parturient vestibulum maecenas praesent"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="51" Key="Nullam integer elit nec quisque" Lname="Vestibulum vivamus aliquam" Lang="Nisi phasellus nisl per consequat" Name="Enim erat vulputate aptent" Qualifier="Curabitur eros adipiscing nibh" Scope="Proin aliquet non accumsan" Version="Augue convallis auctor parturient vestibulum"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="30" Key="Sed dignissim sem nunc" Lname="Dictumst sit dolor elementum" Lang="Facilisi vestibulum congue" Name="Bibendum odio" Qualifier="Blandit commodo" Scope="Orci eleifend" Version="Adipiscing parturient conubia"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="58" Key="Faucibus facilisis vel cubilia" Lname="Quam fames inceptos" Lang="Sed vestibulum habitasse" Name="Dapibus habitant cursus nam pede" Qualifier="Fringilla egestas" Scope="Vestibulum dictum fermentum" Version="Dis hendrerit"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+			</ProjectDuplicationTracker:SonarProject.Files>
+			<ProjectDuplicationTracker:SonarProject.Project>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="45" Key="Mus lobortis iaculis massa" Lname="Neque fringilla habitasse" Lang="Non adipiscing placerat" Name="Nec metus morbi" Qualifier="Quam lacinia pharetra vestibulum" Scope="Nascetur netus" Version="Laoreet per sed quis pulvinar">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Vestibulum nulla porta purus ornare" FormatedValue="Sem hendrerit" Key="Parturient sagittis montes nostra"/>
+						<ExtensionTypes:Metric Data="Posuere platea" FormatedValue="Natoque cras adipiscing" Key="Urna senectus vestibulum"/>
+						<ExtensionTypes:Metric Data="Velit vestibulum vitae" FormatedValue="Vestibulum risus" Key="Sit sociosqu parturient primis"/>
+						<ExtensionTypes:Metric Data="Curae vestibulum himenaeos donec vestibulum" FormatedValue="Sapien adipiscing pretium parturient class" Key="Potenti rutrum"/>
+						<ExtensionTypes:Metric Data="Nunc amet" FormatedValue="Duis semper" Key="Adipiscing etiam parturient imperdiet"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ProjectDuplicationTracker:SonarProject.Project>
+		</ProjectDuplicationTracker:SonarProject>
+		<ProjectDuplicationTracker:SonarProject>
+			<ProjectDuplicationTracker:SonarProject.Files>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="69" Key="Adipiscing parturient morbi ante vestibulum" Lname="Neque adipiscing diam sem" Lang="Porta vestibulum" Name="Arcu vestibulum" Qualifier="Elit enim" Scope="Eget parturient netus nulla" Version="Purus senectus facilisis sociosqu vestibulum"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="19" Key="Suscipit torquent risus erat eros" Lname="Pretium rutrum fringilla ultrices" Lang="Volutpat sapien adipiscing semper maecenas" Name="Fermentum nibh sit" Qualifier="Nisl aliquam vehicula velit" Scope="Nisi rhoncus vel sodales viverra" Version="Sociis vitae"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="51" Key="Nam integer praesent sed class" Lname="Accumsan nunc dis vestibulum est" Lang="Vivamus etiam vestibulum facilisi" Name="Taciti tellus curae parturient" Qualifier="Eleifend odio donec habitasse" Scope="Bibendum tempor quisque dictumst hac" Version="Leo orci"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="36" Key="Fusce faucibus aliquam tempus adipiscing" Lname="Hendrerit mus himenaeos interdum" Lang="Morbi penatibus" Name="Parturient vestibulum habitant inceptos lorem" Qualifier="Tortor malesuada pede nec non" Scope="Imperdiet vestibulum" Version="Aliquet lobortis per"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="29" Key="Nascetur porttitor quam tincidunt turpis" Lname="Blandit adipiscing placerat pulvinar parturient" Lang="Quis sociosqu aenean suscipit" Name="Pharetra varius sed" Qualifier="Senectus vestibulum nulla" Scope="Sem sagittis" Version="Vestibulum commodo tristique sit"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+			</ProjectDuplicationTracker:SonarProject.Files>
+			<ProjectDuplicationTracker:SonarProject.Project>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="58" Key="Himenaeos est adipiscing euismod quis" Lname="Malesuada lectus ipsum" Lang="Ligula litora" Name="Feugiat felis parturient imperdiet" Qualifier="Hac penatibus gravida porttitor urna" Scope="Justo lacus interdum libero lobortis" Version="Tincidunt cras">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Vestibulum mus adipiscing nascetur" FormatedValue="Duis iaculis" Key="Tristique vestibulum luctus magnis leo"/>
+						<ExtensionTypes:Metric Data="Lacinia nunc" FormatedValue="Pharetra lorem magna" Key="Parturient mattis ultricies"/>
+						<ExtensionTypes:Metric Data="Per mollis vestibulum placerat" FormatedValue="Non mauris venenatis" Key="Laoreet amet natoque nec"/>
+						<ExtensionTypes:Metric Data="Phasellus massa" FormatedValue="Sed curabitur nostra potenti ornare" Key="Posuere montes vulputate"/>
+						<ExtensionTypes:Metric Data="Vestibulum elementum primis" FormatedValue="Convallis dignissim pulvinar sagittis" Key="Consequat platea metus"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ProjectDuplicationTracker:SonarProject.Project>
+		</ProjectDuplicationTracker:SonarProject>
+		<ProjectDuplicationTracker:SonarProject>
+			<ProjectDuplicationTracker:SonarProject.Files>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="89" Key="Lacinia facilisis fermentum magna eleifend" Lname="Erat nam sed" Lang="Est facilisi" Name="Elit massa enim" Qualifier="Metus dis eros" Scope="Cursus fringilla" Version="Parturient habitasse faucibus nibh morbi"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="26" Key="Hendrerit habitant neque hac" Lname="Nisl nunc" Lang="Nulla porta natoque odio" Name="Nisi inceptos dictum vestibulum interdum" Qualifier="Vestibulum mus laoreet lectus" Scope="Lobortis leo netus" Version="Himenaeos libero nascetur"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="98" Key="Pharetra posuere placerat ligula" Lname="Nec sagittis purus pede" Lang="Potenti sociosqu parturient imperdiet" Name="Adipiscing pulvinar orci litora luctus" Qualifier="Risus velit" Scope="Non magnis senectus quam" Version="Quis suscipit"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="26" Key="Vitae mattis" Lname="Vestibulum vestibulum" Lang="Ultrices duis nunc" Name="Class malesuada penatibus pretium" Qualifier="Mauris torquent mollis per cras" Scope="Curae rhoncus urna porttitor" Version="Vehicula montes donec"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="32" Key="Tincidunt volutpat nostra" Lname="Sed maecenas praesent sodales" Lang="Platea vulputate" Name="Adipiscing ornare tristique" Qualifier="Venenatis bibendum dictumst" Scope="Ultricies accumsan etiam" Version="Primis curabitur viverra fusce"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+			</ProjectDuplicationTracker:SonarProject.Files>
+			<ProjectDuplicationTracker:SonarProject.Project>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="41" Key="Mauris vel urna" Lname="Torquent vestibulum" Lang="Proin curabitur" Name="Nam adipiscing parturient" Qualifier="Dis cubilia venenatis est vulputate" Scope="Cras sed conubia ultricies vestibulum" Version="Adipiscing duis">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Parturient dapibus mus" FormatedValue="Nullam aptent hac ultrices leo" Key="Augue dolor fames"/>
+						<ExtensionTypes:Metric Data="Non consequat euismod" FormatedValue="Phasellus egestas nec vehicula vestibulum" Key="Felis ipsum auctor"/>
+						<ExtensionTypes:Metric Data="Lacus vestibulum" FormatedValue="Sem volutpat maecenas sit" Key="Per sed justo nunc"/>
+						<ExtensionTypes:Metric Data="Ante arcu diam vel dignissim" FormatedValue="Convallis accumsan congue feugiat gravida" Key="Amet lorem praesent"/>
+						<ExtensionTypes:Metric Data="Iaculis elementum" FormatedValue="Eget adipiscing" Key="Bibendum dictumst"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ProjectDuplicationTracker:SonarProject.Project>
+		</ProjectDuplicationTracker:SonarProject>
+		<ProjectDuplicationTracker:SonarProject>
+			<ProjectDuplicationTracker:SonarProject.Files>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="77" Key="Lacus parturient" Lname="Vestibulum vestibulum dis" Lang="Parturient hac" Name="Himenaeos sed suscipit" Qualifier="Feugiat torquent adipiscing malesuada" Scope="Est imperdiet euismod nibh" Version="Lorem nisi vestibulum aenean"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="96" Key="Penatibus magna nisl gravida" Lname="Vehicula mus" Lang="Accumsan massa laoreet aptent pede" Name="Mauris ultrices nunc leo nullam" Qualifier="Iaculis maecenas praesent vestibulum lacinia" Scope="Odio orci volutpat" Version="Quam bibendum"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="86" Key="Porttitor quis dictumst auctor" Lname="Cursus vestibulum" Lang="Lectus parturient nec libero" Name="Adipiscing congue parturient vestibulum urna" Qualifier="Tincidunt adipiscing" Scope="Cras dictum metus" Version="Ligula morbi neque"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="89" Key="Duis litora luctus natoque" Lname="Magnis eleifend tristique non mattis" Lang="Ultricies mauris mollis diam venenatis" Name="Nunc amet ante vestibulum vestibulum" Qualifier="Posuere arcu netus potenti sed" Scope="Per facilisi" Version="Nulla sem"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="27" Key="Montes sit" Lname="Adipiscing nostra" Lang="Vestibulum phasellus" Name="Faucibus porta pretium" Qualifier="Parturient vulputate curabitur vestibulum ornare" Scope="Vel rhoncus" Version="Consequat sodales convallis"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+			</ProjectDuplicationTracker:SonarProject.Files>
+			<ProjectDuplicationTracker:SonarProject.Project>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="16" Key="Parturient eleifend facilisi phasellus aliquam" Lname="Sem vestibulum sit quisque amet" Lang="Vel diam eget" Name="Rutrum lorem integer vestibulum" Qualifier="Arcu consequat sociis morbi habitant" Scope="Sapien faucibus semper ante" Version="Vivamus adipiscing">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Interdum proin lobortis" FormatedValue="Inceptos aliquet dignissim" Key="Convallis taciti nulla aliquam"/>
+						<ExtensionTypes:Metric Data="Dolor elementum tempor" FormatedValue="Placerat pulvinar erat augue blandit" Key="Elit nascetur tellus enim pharetra"/>
+						<ExtensionTypes:Metric Data="Senectus tempus" FormatedValue="Parturient sagittis nam conubia" Key="Eros commodo facilisis"/>
+						<ExtensionTypes:Metric Data="Felis tortor vestibulum" FormatedValue="Cubilia habitasse" Key="Fermentum fames fringilla"/>
+						<ExtensionTypes:Metric Data="Varius justo egestas adipiscing" FormatedValue="Turpis hendrerit vestibulum dapibus" Key="Ipsum sociosqu"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ProjectDuplicationTracker:SonarProject.Project>
+		</ProjectDuplicationTracker:SonarProject>
+		<ProjectDuplicationTracker:SonarProject>
+			<ProjectDuplicationTracker:SonarProject.Files>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="93" Key="Auctor sagittis senectus sociosqu" Lname="Vestibulum pede non egestas" Lang="Sed iaculis sem penatibus" Name="Dapibus morbi nulla congue" Qualifier="Per gravida malesuada" Scope="Euismod proin feugiat" Version="Augue cursus adipiscing porttitor"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="88" Key="Parturient tincidunt" Lname="Dictum dolor suscipit vestibulum fames" Lang="Lectus ultrices" Name="Sit vestibulum" Qualifier="Laoreet tristique quam quis" Scope="Lacinia adipiscing parturient torquent vel" Version="Ultricies nam vestibulum libero"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="11" Key="Urna sed vehicula volutpat vestibulum" Lname="Venenatis praesent" Lang="Parturient duis dictumst hac vestibulum" Name="Maecenas felis cras" Qualifier="Vulputate accumsan adipiscing bibendum est" Scope="Ligula natoque ipsum dis" Version="Leo nunc posuere amet mus"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="84" Key="Ante nec curabitur" Lname="Facilisi non" Lang="Pretium arcu litora" Name="Vestibulum eleifend phasellus justo" Qualifier="Faucibus per parturient habitant sed" Scope="Adipiscing potenti lacus" Version="Inceptos consequat sem"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="24" Key="Sit vestibulum lorem luctus vestibulum" Lname="Convallis diam eget elit sodales" Lang="Pulvinar mauris" Name="Interdum rhoncus" Qualifier="Magnis vel dignissim placerat mattis" Scope="Lobortis nascetur viverra pharetra enim" Version="Sagittis erat magna nam"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+			</ProjectDuplicationTracker:SonarProject.Files>
+			<ProjectDuplicationTracker:SonarProject.Project>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="49" Key="Viverra platea purus aliquam" Lname="Dignissim elit" Lang="Sapien vitae erat parturient sed" Name="Risus eget" Qualifier="Elementum enim integer facilisis habitant" Scope="Velit adipiscing nam primis rutrum" Version="Eros inceptos semper sociis">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Nibh blandit taciti est" FormatedValue="Aliquam aliquet dis lobortis nascetur" Key="Quisque vivamus fermentum interdum"/>
+						<ExtensionTypes:Metric Data="Vestibulum habitasse vestibulum" FormatedValue="Hac tellus tempor tempus" Key="Fringilla pharetra nisi"/>
+						<ExtensionTypes:Metric Data="Mus adipiscing parturient hendrerit nunc" FormatedValue="Curae commodo placerat tortor" Key="Nisl leo class"/>
+						<ExtensionTypes:Metric Data="Himenaeos etiam odio varius aenean" FormatedValue="Donec turpis" Key="Conubia cubilia"/>
+						<ExtensionTypes:Metric Data="Pulvinar orci nec" FormatedValue="Nullam aptent imperdiet vestibulum" Key="Fusce lorem mauris"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ProjectDuplicationTracker:SonarProject.Project>
+		</ProjectDuplicationTracker:SonarProject>
+		<ProjectDuplicationTracker:SonarProject>
+			<ProjectDuplicationTracker:SonarProject.Files>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="51" Key="Gravida sed tincidunt" Lname="Sit porta lacinia tristique" Lang="Adipiscing odio" Name="Iaculis sem" Qualifier="Ultricies accumsan" Scope="Laoreet praesent" Version="Parturient orci"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="25" Key="Tempor vestibulum" Lname="Natoque quam tempus bibendum posuere" Lang="Pretium turpis phasellus" Name="Vestibulum venenatis pede vulputate curabitur" Qualifier="Purus vel parturient risus velit" Scope="Tortor potenti adipiscing quis dictumst" Version="Eleifend rhoncus nam"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="88" Key="Consequat vestibulum sodales urna" Lname="Facilisi dignissim" Lang="Faucibus dis aenean vestibulum habitant" Name="Vestibulum convallis sed" Qualifier="Vestibulum aliquam" Scope="Viverra varius vitae adipiscing parturient" Version="Integer adipiscing"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="24" Key="Quisque est hac" Lname="Vestibulum vivamus class inceptos" Lang="Blandit aptent" Name="Parturient leo mauris nullam" Qualifier="Aliquam aliquet" Scope="Elementum cras vestibulum" Version="Curae auctor"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="81" Key="Duis adipiscing facilisis parturient" Lname="Fermentum interdum" Lang="Parturient non etiam dictum" Name="Donec congue vestibulum" Qualifier="Mus vestibulum nec adipiscing" Scope="Nunc commodo cursus amet" Version="Conubia fringilla vestibulum ante"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+			</ProjectDuplicationTracker:SonarProject.Files>
+			<ProjectDuplicationTracker:SonarProject.Project>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="52" Key="Senectus massa sociosqu mollis" Lname="Suscipit parturient nostra" Lang="Integer neque" Name="Montes adipiscing" Qualifier="Platea eros morbi sed aliquam" Scope="Ornare metus vestibulum" Version="Dis primis elementum vestibulum est">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Fermentum fringilla sapien aliquam hac" FormatedValue="Vivamus nibh facilisis" Key="Quisque adipiscing rutrum"/>
+						<ExtensionTypes:Metric Data="Himenaeos leo" FormatedValue="Parturient blandit netus" Key="Habitasse aliquet hendrerit nisi torquent"/>
+						<ExtensionTypes:Metric Data="Nec vestibulum nunc ultrices imperdiet" FormatedValue="Commodo mus conubia vestibulum" Key="Nisl semper"/>
+						<ExtensionTypes:Metric Data="Non penatibus vehicula volutpat" FormatedValue="Malesuada taciti dapibus" Key="Sociis cubilia"/>
+						<ExtensionTypes:Metric Data="Maecenas nulla" FormatedValue="Euismod feugiat" Key="Egestas tellus porttitor per"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ProjectDuplicationTracker:SonarProject.Project>
+		</ProjectDuplicationTracker:SonarProject>
+		<ProjectDuplicationTracker:SonarProject>
+			<ProjectDuplicationTracker:SonarProject.Files>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="44" Key="Ultricies massa" Lname="Pretium vestibulum" Lang="Maecenas mauris viverra" Name="Hac leo mus nunc potenti" Qualifier="Odio nec volutpat venenatis parturient" Scope="Rhoncus metus sodales adipiscing morbi" Version="Vulputate mollis curabitur vestibulum"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="82" Key="Neque praesent phasellus accumsan vestibulum" Lname="Adipiscing consequat parturient" Lang="Vestibulum bibendum dictumst" Name="Netus non orci" Qualifier="Convallis montes dignissim aliquam nostra" Scope="Nulla per sed sem" Version="Integer ornare elementum pede"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="20" Key="Vestibulum quam porta" Lname="Facilisis fermentum cras" Lang="Facilisi habitasse aliquet blandit" Name="Quisque eleifend quis urna adipiscing" Qualifier="Purus risus vel platea" Scope="Vivamus sit aliquam fringilla" Version="Duis parturient vestibulum primis"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="28" Key="Nam commodo" Lname="Amet ante arcu" Lang="Eget curae conubia parturient" Name="Vestibulum nunc" Qualifier="Dis adipiscing est class hac" Scope="Diam sed faucibus velit vitae" Version="Leo donec"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="44" Key="Rutrum sapien mus" Lname="Fusce cubilia elit" Lang="Per sociis himenaeos lorem imperdiet" Name="Nec etiam" Qualifier="Semper vestibulum egestas" Scope="Dapibus habitant hendrerit non" Version="Inceptos vestibulum interdum morbi"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+			</ProjectDuplicationTracker:SonarProject.Files>
+			<ProjectDuplicationTracker:SonarProject.Project>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="57" Key="Arcu lobortis nascetur" Lname="Eget hendrerit pharetra lorem" Lang="Euismod elit vestibulum" Name="Diam cubilia habitasse dapibus fusce" Qualifier="Morbi nulla sagittis proin" Scope="Per placerat pulvinar lectus egestas" Version="Libero senectus sociosqu">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Suscipit erat litora" FormatedValue="Himenaeos imperdiet enim malesuada augue" Key="Ligula adipiscing parturient feugiat sed"/>
+						<ExtensionTypes:Metric Data="Fames felis vestibulum" FormatedValue="Vel eros dolor penatibus porttitor" Key="Sem sit"/>
+						<ExtensionTypes:Metric Data="Torquent ultrices tristique" FormatedValue="Gravida justo vestibulum iaculis luctus" Key="Tincidunt ipsum"/>
+						<ExtensionTypes:Metric Data="Mattis adipiscing" FormatedValue="Lacinia magnis magna" Key="Nibh nam lacus nisi lorem"/>
+						<ExtensionTypes:Metric Data="Est vehicula posuere" FormatedValue="Nisl natoque" Key="Sed parturient dis vestibulum laoreet"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ProjectDuplicationTracker:SonarProject.Project>
+		</ProjectDuplicationTracker:SonarProject>
+	</ProjectDuplicationTracker:ProjectDuplicationTrackerModel.CrossProjectResources>
+	<ProjectDuplicationTracker:ProjectDuplicationTrackerModel.CrossProjectResourcesList>
+		<System:String>Lobortis malesuada nulla taciti</System:String>
+		<System:String>Adipiscing nascetur tellus euismod parturient</System:String>
+		<System:String>Enim tempor penatibus sed sem</System:String>
+		<System:String>Vestibulum porttitor tempus</System:String>
+		<System:String>Tortor tincidunt</System:String>
+		<System:String>Pharetra proin tristique</System:String>
+		<System:String>Placerat turpis</System:String>
+		<System:String>Feugiat erat ultricies pulvinar gravida</System:String>
+		<System:String>Augue sagittis varius venenatis senectus</System:String>
+		<System:String>Aenean iaculis</System:String>
+	</ProjectDuplicationTracker:ProjectDuplicationTrackerModel.CrossProjectResourcesList>
+	<ProjectDuplicationTracker:ProjectDuplicationTrackerModel.DuplicatedData>
+		<ExtensionTypes:DuplicationData>
+			<ExtensionTypes:DuplicationData.DuplicatedGroups>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+			</ExtensionTypes:DuplicationData.DuplicatedGroups>
+			<ExtensionTypes:DuplicationData.Resource>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="57" Key="Congue amet blandit ante" Lname="Cursus arcu" Lang="Vestibulum proin dictum" Name="Nulla consequat facilisi" Qualifier="Faucibus nec" Scope="Convallis commodo parturient" Version="Conubia cubilia dignissim lectus habitant">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Elementum diam eget" FormatedValue="Libero non ligula dapibus" Key="Vestibulum augue adipiscing"/>
+						<ExtensionTypes:Metric Data="Feugiat gravida inceptos vestibulum" FormatedValue="Euismod litora parturient enim" Key="Egestas elit"/>
+						<ExtensionTypes:Metric Data="Eros sit mattis" FormatedValue="Facilisis magnis sed sem dolor" Key="Per luctus erat"/>
+						<ExtensionTypes:Metric Data="Fringilla habitasse" FormatedValue="Nisi fames nisl" Key="Nibh iaculis fermentum"/>
+						<ExtensionTypes:Metric Data="Montes nostra lacus nunc" FormatedValue="Lacinia justo mauris mollis" Key="Felis vestibulum ipsum"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ExtensionTypes:DuplicationData.Resource>
+		</ExtensionTypes:DuplicationData>
+		<ExtensionTypes:DuplicationData>
+			<ExtensionTypes:DuplicationData.DuplicatedGroups>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+			</ExtensionTypes:DuplicationData.DuplicatedGroups>
+			<ExtensionTypes:DuplicationData.Resource>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="34" Key="Adipiscing vel" Lname="Interdum ornare odio orci sed" Lang="Himenaeos quis pharetra vestibulum" Name="Nam laoreet" Qualifier="Quam hendrerit magna nascetur" Scope="Parturient lorem pede lobortis" Version="Imperdiet placerat">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Sagittis senectus parturient" FormatedValue="Massa adipiscing" Key="Platea vestibulum pulvinar malesuada penatibus"/>
+						<ExtensionTypes:Metric Data="Sociosqu leo" FormatedValue="Metus est hac urna" Key="Vestibulum dis"/>
+						<ExtensionTypes:Metric Data="Nec tristique ultrices cras" FormatedValue="Vestibulum suscipit torquent primis natoque" Key="Mus porttitor tincidunt"/>
+						<ExtensionTypes:Metric Data="Posuere adipiscing maecenas morbi ultricies" FormatedValue="Rutrum volutpat" Key="Vehicula duis nunc"/>
+						<ExtensionTypes:Metric Data="Bibendum pretium rhoncus parturient" FormatedValue="Accumsan amet sapien nulla potenti" Key="Non neque praesent netus"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ExtensionTypes:DuplicationData.Resource>
+		</ExtensionTypes:DuplicationData>
+		<ExtensionTypes:DuplicationData>
+			<ExtensionTypes:DuplicationData.DuplicatedGroups>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+			</ExtensionTypes:DuplicationData.DuplicatedGroups>
+			<ExtensionTypes:DuplicationData.Resource>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="26" Key="Vestibulum vestibulum" Lname="Purus arcu adipiscing" Lang="Eget sed vulputate elit" Name="Semper ante per sociis porta" Qualifier="Venenatis parturient risus tellus" Scope="Taciti diam dictumst" Version="Eleifend tempor velit tempus vestibulum">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Eros nibh sodales class curae" FormatedValue="Erat sem faucibus sit" Key="Vitae enim facilisi"/>
+						<ExtensionTypes:Metric Data="Sed fusce tortor" FormatedValue="Viverra adipiscing donec etiam nam" Key="Vestibulum nisi vel"/>
+						<ExtensionTypes:Metric Data="Phasellus nisl aenean est" FormatedValue="Turpis varius curabitur" Key="Parturient dis"/>
+						<ExtensionTypes:Metric Data="Habitant leo" FormatedValue="Vestibulum vestibulum" Key="Consequat nunc odio hac aliquam"/>
+						<ExtensionTypes:Metric Data="Adipiscing convallis quisque dignissim" FormatedValue="Orci pede" Key="Mauris integer nullam mus"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ExtensionTypes:DuplicationData.Resource>
+		</ExtensionTypes:DuplicationData>
+		<ExtensionTypes:DuplicationData>
+			<ExtensionTypes:DuplicationData.DuplicatedGroups>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+			</ExtensionTypes:DuplicationData.DuplicatedGroups>
+			<ExtensionTypes:DuplicationData.Resource>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="58" Key="Quam nec lorem" Lname="Vivamus morbi" Lang="Vestibulum sem adipiscing auctor" Name="Parturient vestibulum elementum facilisis non" Qualifier="Urna aliquam fermentum sed" Scope="Nulla aptent per quis" Version="Aliquet parturient blandit fringilla vestibulum">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Duis cursus" FormatedValue="Cras congue parturient" Key="Vestibulum adipiscing"/>
+						<ExtensionTypes:Metric Data="Lectus libero" FormatedValue="Dolor habitasse hendrerit" Key="Nunc sit dictum proin augue"/>
+						<ExtensionTypes:Metric Data="Interdum ligula" FormatedValue="Commodo fames vestibulum" Key="Inceptos vel"/>
+						<ExtensionTypes:Metric Data="Cubilia litora" FormatedValue="Conubia vestibulum lobortis" Key="Himenaeos imperdiet"/>
+						<ExtensionTypes:Metric Data="Dapibus adipiscing" FormatedValue="Amet ipsum porttitor luctus ante" Key="Felis nam malesuada penatibus"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ExtensionTypes:DuplicationData.Resource>
+		</ExtensionTypes:DuplicationData>
+		<ExtensionTypes:DuplicationData>
+			<ExtensionTypes:DuplicationData.DuplicatedGroups>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+			</ExtensionTypes:DuplicationData.DuplicatedGroups>
+			<ExtensionTypes:DuplicationData.Resource>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="16" Key="Sed dis egestas" Lname="Justo est hac leo arcu" Lang="Pharetra gravida iaculis lacinia nec" Name="Tincidunt euismod" Qualifier="Tristique nascetur diam" Scope="Magnis lacus feugiat mus lorem" Version="Parturient eget laoreet">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Mattis venenatis natoque" FormatedValue="Magna ultricies vestibulum" Key="Vestibulum placerat non pulvinar"/>
+						<ExtensionTypes:Metric Data="Posuere erat parturient" FormatedValue="Enim vulputate sagittis" Key="Adipiscing per elit"/>
+						<ExtensionTypes:Metric Data="Nibh nisi pretium sed massa" FormatedValue="Vestibulum potenti" Key="Curabitur eros senectus"/>
+						<ExtensionTypes:Metric Data="Sem mauris mollis adipiscing" FormatedValue="Sociosqu sodales" Key="Rhoncus vestibulum"/>
+						<ExtensionTypes:Metric Data="Phasellus viverra" FormatedValue="Nisl neque torquent" Key="Metus parturient suscipit morbi"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ExtensionTypes:DuplicationData.Resource>
+		</ExtensionTypes:DuplicationData>
+		<ExtensionTypes:DuplicationData>
+			<ExtensionTypes:DuplicationData.DuplicatedGroups>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+			</ExtensionTypes:DuplicationData.DuplicatedGroups>
+			<ExtensionTypes:DuplicationData.Resource>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="21" Key="Vestibulum montes" Lname="Sit vestibulum adipiscing netus nulla" Lang="Odio parturient nam orci" Name="Ultrices consequat" Qualifier="Aliquam vel" Scope="Nunc convallis nostra" Version="Integer porta">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Quisque sed platea quis" FormatedValue="Quam risus velit" Key="Ornare pede dignissim purus vehicula"/>
+						<ExtensionTypes:Metric Data="Est volutpat curae facilisis" FormatedValue="Aliquam aliquet" Key="Elementum vivamus vitae dis class"/>
+						<ExtensionTypes:Metric Data="Conubia mus habitasse maecenas" FormatedValue="Primis rutrum hac leo cras" Key="Urna blandit commodo fermentum fringilla"/>
+						<ExtensionTypes:Metric Data="Bibendum dictumst vestibulum malesuada" FormatedValue="Praesent accumsan himenaeos nunc imperdiet" Key="Donec duis hendrerit"/>
+						<ExtensionTypes:Metric Data="Arcu etiam semper" FormatedValue="Euismod ante sapien facilisi faucibus" Key="Amet cubilia dapibus eleifend egestas"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ExtensionTypes:DuplicationData.Resource>
+		</ExtensionTypes:DuplicationData>
+		<ExtensionTypes:DuplicationData>
+			<ExtensionTypes:DuplicationData.DuplicatedGroups>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+			</ExtensionTypes:DuplicationData.DuplicatedGroups>
+			<ExtensionTypes:DuplicationData.Resource>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="82" Key="Penatibus diam nec sociis vestibulum" Lname="Adipiscing taciti habitant tellus" Lang="Tempus tortor" Name="Eget feugiat gravida fusce" Qualifier="Vestibulum adipiscing parturient elit porttitor" Scope="Parturient iaculis lacinia tempor vestibulum" Version="Inceptos vestibulum vestibulum">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Natoque enim" FormatedValue="Laoreet adipiscing" Key="Turpis non"/>
+						<ExtensionTypes:Metric Data="Lorem eros" FormatedValue="Lobortis aenean" Key="Tincidunt interdum erat varius"/>
+						<ExtensionTypes:Metric Data="Nulla mauris nullam placerat proin" FormatedValue="Nascetur pharetra ultricies morbi venenatis" Key="Tristique posuere nibh parturient per"/>
+						<ExtensionTypes:Metric Data="Aptent nisl nunc" FormatedValue="Pulvinar nisi fames felis" Key="Potenti vestibulum augue dolor"/>
+						<ExtensionTypes:Metric Data="Pretium sagittis congue lacus lorem" FormatedValue="Justo auctor" Key="Sed vestibulum ipsum sem"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ExtensionTypes:DuplicationData.Resource>
+		</ExtensionTypes:DuplicationData>
+		<ExtensionTypes:DuplicationData>
+			<ExtensionTypes:DuplicationData.DuplicatedGroups>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+			</ExtensionTypes:DuplicationData.DuplicatedGroups>
+			<ExtensionTypes:DuplicationData.Resource>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="47" Key="Cursus rhoncus magna odio" Lname="Curabitur senectus sit sociosqu" Lang="Lectus vel torquent" Name="Sodales vulputate" Qualifier="Suscipit dictum" Scope="Orci massa" Version="Nam libero pede ultrices">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Dignissim quis sed urna" FormatedValue="Aliquam quam ligula convallis parturient" Key="Phasellus adipiscing viverra consequat"/>
+						<ExtensionTypes:Metric Data="Cras vivamus" FormatedValue="Litora vehicula quisque luctus volutpat" Key="Integer elementum dis"/>
+						<ExtensionTypes:Metric Data="Praesent vestibulum est" FormatedValue="Aliquet vestibulum metus fermentum" Key="Facilisis aliquam maecenas"/>
+						<ExtensionTypes:Metric Data="Conubia morbi parturient" FormatedValue="Magnis adipiscing" Key="Blandit accumsan commodo bibendum"/>
+						<ExtensionTypes:Metric Data="Mus duis mauris adipiscing" FormatedValue="Neque mattis vestibulum dictumst" Key="Hac vestibulum leo"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ExtensionTypes:DuplicationData.Resource>
+		</ExtensionTypes:DuplicationData>
+		<ExtensionTypes:DuplicationData>
+			<ExtensionTypes:DuplicationData.DuplicatedGroups>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+			</ExtensionTypes:DuplicationData.DuplicatedGroups>
+			<ExtensionTypes:DuplicationData.Resource>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="76" Key="Fringilla nec cubilia mollis" Lname="Dapibus montes non per netus" Lang="Sem egestas himenaeos" Name="Eleifend nunc habitasse facilisi" Qualifier="Vestibulum habitant sed ante inceptos" Scope="Parturient faucibus hendrerit amet nulla" Version="Arcu porta">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Vestibulum velit feugiat" FormatedValue="Risus euismod diam" Key="Interdum purus"/>
+						<ExtensionTypes:Metric Data="Imperdiet malesuada gravida nam penatibus" FormatedValue="Elit enim" Key="Sit eget vel"/>
+						<ExtensionTypes:Metric Data="Nascetur vitae pharetra adipiscing" FormatedValue="Sed iaculis" Key="Lobortis nostra porttitor"/>
+						<ExtensionTypes:Metric Data="Ornare ultricies donec" FormatedValue="Dis natoque est curae hac" Key="Lacinia class laoreet tincidunt tristique"/>
+						<ExtensionTypes:Metric Data="Sagittis posuere" FormatedValue="Parturient erat" Key="Placerat leo pulvinar"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ExtensionTypes:DuplicationData.Resource>
+		</ExtensionTypes:DuplicationData>
+		<ExtensionTypes:DuplicationData>
+			<ExtensionTypes:DuplicationData.DuplicatedGroups>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+				<ExtensionTypes:DuplicatedGroup/>
+			</ExtensionTypes:DuplicationData.DuplicatedGroups>
+			<ExtensionTypes:DuplicationData.Resource>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="90" Key="Eros platea nibh vestibulum senectus" Lname="Potenti pretium sociosqu rhoncus" Lang="Fusce lorem nunc" Name="Nisi venenatis" Qualifier="Suscipit nisl viverra" Scope="Etiam sodales mus" Version="Aliquam vulputate primis rutrum integer">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Quisque vivamus aliquam odio" FormatedValue="Ultrices sapien" Key="Vestibulum morbi torquent"/>
+						<ExtensionTypes:Metric Data="Pede blandit nulla non" FormatedValue="Nec aliquet" Key="Curabitur orci"/>
+						<ExtensionTypes:Metric Data="Proin augue" FormatedValue="Conubia per" Key="Semper commodo"/>
+						<ExtensionTypes:Metric Data="Dolor vestibulum consequat" FormatedValue="Adipiscing dapibus parturient" Key="Sed phasellus quam cubilia"/>
+						<ExtensionTypes:Metric Data="Sit volutpat" FormatedValue="Quis urna" Key="Sociis vehicula convallis sem dignissim"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ExtensionTypes:DuplicationData.Resource>
+		</ExtensionTypes:DuplicationData>
+	</ProjectDuplicationTracker:ProjectDuplicationTrackerModel.DuplicatedData>
+	<ProjectDuplicationTracker:ProjectDuplicationTrackerModel.DuplicatedBlocks>
+		<ExtensionTypes:DuplicatedBlock Lenght="82" Startline="86">
+			<ExtensionTypes:DuplicatedBlock.Resource>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="38" Key="Fames felis taciti cras" Lname="Tellus facilisis fermentum" Lang="Nunc adipiscing" Name="Vestibulum duis maecenas elementum egestas" Qualifier="Euismod fringilla" Scope="Tempor praesent vel" Version="Feugiat nam amet">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Ipsum tortor" FormatedValue="Diam tempus habitasse eget elit" Key="Gravida ante arcu"/>
+						<ExtensionTypes:Metric Data="Enim varius erat dictumst justo" FormatedValue="Sed accumsan bibendum" Key="Iaculis turpis parturient"/>
+						<ExtensionTypes:Metric Data="Adipiscing parturient nibh" FormatedValue="Hendrerit aenean" Key="Vestibulum eros dis vestibulum est"/>
+						<ExtensionTypes:Metric Data="Imperdiet vestibulum" FormatedValue="Hac facilisi nisi vestibulum himenaeos" Key="Mauris eleifend"/>
+						<ExtensionTypes:Metric Data="Lorem mus habitant nec" FormatedValue="Leo lacus" Key="Faucibus nullam"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ExtensionTypes:DuplicatedBlock.Resource>
+		</ExtensionTypes:DuplicatedBlock>
+		<ExtensionTypes:DuplicatedBlock Lenght="56" Startline="70">
+			<ExtensionTypes:DuplicatedBlock.Resource>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="69" Key="Adipiscing nisl parturient lacinia magna" Lname="Odio massa vestibulum interdum" Lang="Penatibus morbi auctor nascetur" Name="Aptent malesuada inceptos non nunc" Qualifier="Pede per lobortis" Scope="Orci metus" Version="Congue laoreet neque">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Pharetra tristique" FormatedValue="Porttitor tincidunt" Key="Sed vestibulum"/>
+						<ExtensionTypes:Metric Data="Nam vulputate potenti cursus" FormatedValue="Posuere sit nulla quam vel" Key="Netus ultricies natoque venenatis sem"/>
+						<ExtensionTypes:Metric Data="Phasellus placerat" FormatedValue="Cras porta" Key="Adipiscing parturient quis curabitur urna"/>
+						<ExtensionTypes:Metric Data="Risus libero ligula vestibulum duis" FormatedValue="Sed dis purus consequat convallis" Key="Dictum lectus pretium"/>
+						<ExtensionTypes:Metric Data="Dignissim hac" FormatedValue="Luctus sodales amet vitae vestibulum" Key="Nunc litora velit rhoncus est"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ExtensionTypes:DuplicatedBlock.Resource>
+		</ExtensionTypes:DuplicatedBlock>
+		<ExtensionTypes:DuplicatedBlock Lenght="35" Startline="29">
+			<ExtensionTypes:DuplicatedBlock.Resource>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="98" Key="Magnis leo elementum mus" Lname="Aliquam nec non" Lang="Mollis class" Name="Pulvinar mattis viverra" Qualifier="Per adipiscing" Scope="Mauris integer quisque" Version="Facilisis curae">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Diam aliquam" FormatedValue="Habitasse nostra vivamus arcu parturient" Key="Ante montes fermentum fringilla"/>
+						<ExtensionTypes:Metric Data="Hendrerit aliquet sem vestibulum platea" FormatedValue="Elit sed" Key="Eget ornare sagittis vestibulum senectus"/>
+						<ExtensionTypes:Metric Data="Erat vestibulum commodo sociosqu suscipit" FormatedValue="Himenaeos vel parturient blandit" Key="Sit enim adipiscing"/>
+						<ExtensionTypes:Metric Data="Dapibus vestibulum adipiscing imperdiet vehicula" FormatedValue="Cubilia eros etiam ultrices fusce" Key="Conubia torquent donec nam"/>
+						<ExtensionTypes:Metric Data="Malesuada praesent" FormatedValue="Nulla proin sed maecenas euismod" Key="Primis volutpat lorem egestas morbi"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ExtensionTypes:DuplicatedBlock.Resource>
+		</ExtensionTypes:DuplicatedBlock>
+		<ExtensionTypes:DuplicatedBlock Lenght="80" Startline="23">
+			<ExtensionTypes:DuplicatedBlock.Resource>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="20" Key="Feugiat nibh augue" Lname="Dolor vestibulum" Lang="Nisl dis" Name="Parturient accumsan bibendum dictumst vestibulum" Qualifier="Rutrum porttitor" Scope="Penatibus adipiscing nisi" Version="Gravida nunc est">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Ipsum sapien justo" FormatedValue="Tincidunt vestibulum felis" Key="Parturient fames iaculis"/>
+						<ExtensionTypes:Metric Data="Lorem orci tristique" FormatedValue="Facilisi hac lacus semper parturient" Key="Lacinia vestibulum eleifend odio adipiscing"/>
+						<ExtensionTypes:Metric Data="Leo vestibulum" FormatedValue="Magna massa venenatis tellus" Key="Sociis taciti ultricies"/>
+						<ExtensionTypes:Metric Data="Mus morbi tempor neque natoque" FormatedValue="Quam habitant laoreet" Key="Pede metus vulputate faucibus"/>
+						<ExtensionTypes:Metric Data="Vestibulum lobortis nascetur adipiscing consequat" FormatedValue="Urna phasellus interdum" Key="Inceptos nec quis curabitur"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ExtensionTypes:DuplicatedBlock.Resource>
+		</ExtensionTypes:DuplicatedBlock>
+		<ExtensionTypes:DuplicatedBlock Lenght="31" Startline="27">
+			<ExtensionTypes:DuplicatedBlock.Resource>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="53" Key="Non convallis cras parturient posuere" Lname="Potenti dignissim nulla tortor porta" Lang="Placerat risus pulvinar" Name="Per tempus vestibulum netus" Qualifier="Pretium vestibulum adipiscing duis" Scope="Turpis varius pharetra purus" Version="Rhoncus nunc sed">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Vitae mauris senectus aliquam amet" FormatedValue="Velit sodales aenean sit viverra" Key="Sagittis sem"/>
+						<ExtensionTypes:Metric Data="Elementum etiam vestibulum nullam fusce" FormatedValue="Curae vel donec" Key="Parturient class"/>
+						<ExtensionTypes:Metric Data="Fermentum dis fringilla ante" FormatedValue="Sed facilisis" Key="Lorem morbi nam"/>
+						<ExtensionTypes:Metric Data="Parturient auctor" FormatedValue="Nulla proin" Key="Vestibulum adipiscing aptent arcu diam"/>
+						<ExtensionTypes:Metric Data="Suscipit leo parturient dolor" FormatedValue="Habitasse augue vestibulum integer adipiscing" Key="Sociosqu est vestibulum hac"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ExtensionTypes:DuplicatedBlock.Resource>
+		</ExtensionTypes:DuplicatedBlock>
+		<ExtensionTypes:DuplicatedBlock Lenght="81" Startline="57">
+			<ExtensionTypes:DuplicatedBlock.Resource>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="33" Key="Eget quisque congue" Lname="Cursus fames" Lang="Dictum vivamus felis" Name="Hendrerit vestibulum" Qualifier="Enim ultrices" Scope="Elit torquent" Version="Aliquam mus nec">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Lectus justo aliquet" FormatedValue="Erat ipsum" Key="Himenaeos vestibulum imperdiet adipiscing"/>
+						<ExtensionTypes:Metric Data="Malesuada penatibus" FormatedValue="Volutpat lacus maecenas praesent" Key="Vehicula eros nibh parturient libero"/>
+						<ExtensionTypes:Metric Data="Blandit nunc non litora" FormatedValue="Nisi vestibulum tincidunt nisl" Key="Ligula lorem porttitor accumsan"/>
+						<ExtensionTypes:Metric Data="Adipiscing massa parturient magnis mattis" FormatedValue="Odio magna" Key="Luctus vestibulum tristique per"/>
+						<ExtensionTypes:Metric Data="Pede adipiscing dictumst eleifend metus" FormatedValue="Vestibulum venenatis bibendum vestibulum" Key="Ultricies orci"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ExtensionTypes:DuplicatedBlock.Resource>
+		</ExtensionTypes:DuplicatedBlock>
+		<ExtensionTypes:DuplicatedBlock Lenght="93" Startline="44">
+			<ExtensionTypes:DuplicatedBlock.Resource>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="24" Key="Commodo mauris quam quis" Lname="Mollis cras faucibus morbi" Lang="Lobortis montes vestibulum vestibulum adipiscing" Name="Facilisi urna" Qualifier="Parturient inceptos interdum sed neque" Scope="Conubia habitant vulputate" Version="Parturient nostra netus">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Risus vestibulum sit pharetra placerat" FormatedValue="Platea nascetur nunc purus" Key="Duis sem nulla ornare porta"/>
+						<ExtensionTypes:Metric Data="Ante primis" FormatedValue="Phasellus amet" Key="Curabitur pulvinar"/>
+						<ExtensionTypes:Metric Data="Dapibus egestas vitae sagittis" FormatedValue="Cubilia vestibulum diam rutrum" Key="Arcu consequat vel velit nam"/>
+						<ExtensionTypes:Metric Data="Vestibulum euismod senectus etiam convallis" FormatedValue="Curae adipiscing donec parturient eget" Key="Class sed"/>
+						<ExtensionTypes:Metric Data="Dignissim suscipit est erat fusce" FormatedValue="Vestibulum sociosqu elit enim" Key="Dis feugiat"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ExtensionTypes:DuplicatedBlock.Resource>
+		</ExtensionTypes:DuplicatedBlock>
+		<ExtensionTypes:DuplicatedBlock Lenght="13" Startline="36">
+			<ExtensionTypes:DuplicatedBlock.Resource>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="52" Key="Hac leo lorem torquent" Lname="Elementum facilisis" Lang="Fringilla sociis eros" Name="Sapien gravida" Qualifier="Lacinia semper" Scope="Fermentum iaculis morbi nulla" Version="Adipiscing taciti laoreet nibh">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Potenti vehicula nisi hendrerit" FormatedValue="Posuere proin augue habitasse" Key="Ultrices natoque parturient mus vestibulum"/>
+						<ExtensionTypes:Metric Data="Tellus volutpat vestibulum" FormatedValue="Nec fames imperdiet" Key="Dolor himenaeos"/>
+						<ExtensionTypes:Metric Data="Maecenas praesent rhoncus sodales non" FormatedValue="Nunc justo penatibus" Key="Pretium nisl malesuada felis ipsum"/>
+						<ExtensionTypes:Metric Data="Tempor per" FormatedValue="Aliquam adipiscing integer" Key="Lacus viverra lorem accumsan"/>
+						<ExtensionTypes:Metric Data="Tincidunt orci vel parturient massa" FormatedValue="Porttitor odio sit magna" Key="Sed bibendum sem"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ExtensionTypes:DuplicatedBlock.Resource>
+		</ExtensionTypes:DuplicatedBlock>
+		<ExtensionTypes:DuplicatedBlock Lenght="81" Startline="94">
+			<ExtensionTypes:DuplicatedBlock.Resource>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="78" Key="Pede metus quam dictumst" Lname="Tristique quis eleifend" Lang="Aliquet dis" Name="Quisque tempus vestibulum vivamus nam" Qualifier="Aliquam urna tortor cras turpis" Scope="Ultricies sed morbi venenatis" Version="Est duis blandit hac neque">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Mus vestibulum adipiscing" FormatedValue="Curabitur leo nunc" Key="Varius vulputate aenean mauris facilisi"/>
+						<ExtensionTypes:Metric Data="Nec non faucibus" FormatedValue="Parturient vestibulum amet cubilia nullam" Key="Commodo conubia"/>
+						<ExtensionTypes:Metric Data="Inceptos ante" FormatedValue="Habitant phasellus" Key="Dapibus netus per egestas"/>
+						<ExtensionTypes:Metric Data="Porta lobortis" FormatedValue="Sed nulla" Key="Arcu euismod vestibulum aptent interdum"/>
+						<ExtensionTypes:Metric Data="Vestibulum feugiat gravida" FormatedValue="Nascetur pharetra eget" Key="Sem adipiscing parturient diam"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ExtensionTypes:DuplicatedBlock.Resource>
+		</ExtensionTypes:DuplicatedBlock>
+		<ExtensionTypes:DuplicatedBlock Lenght="55" Startline="51">
+			<ExtensionTypes:DuplicatedBlock.Resource>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="89" Key="Placerat vestibulum" Lname="Consequat natoque auctor" Lang="Purus parturient elit" Name="Iaculis pulvinar lacinia adipiscing laoreet" Qualifier="Vestibulum adipiscing" Scope="Convallis parturient vestibulum congue" Version="Vestibulum dignissim posuere">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Fermentum potenti fringilla" FormatedValue="Enim dictum" Key="Elementum facilisis cursus sit"/>
+						<ExtensionTypes:Metric Data="Lectus rhoncus nam nibh" FormatedValue="Eros vel risus pretium habitasse" Key="Sagittis erat"/>
+						<ExtensionTypes:Metric Data="Libero velit imperdiet" FormatedValue="Nisi sed" Key="Hendrerit vestibulum himenaeos"/>
+						<ExtensionTypes:Metric Data="Class ligula" FormatedValue="Malesuada dis est suscipit" Key="Vitae nisl senectus sociosqu"/>
+						<ExtensionTypes:Metric Data="Vehicula litora sodales curae viverra" FormatedValue="Ultrices odio penatibus" Key="Torquent nunc adipiscing parturient"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ExtensionTypes:DuplicatedBlock.Resource>
+		</ExtensionTypes:DuplicatedBlock>
+	</ProjectDuplicationTracker:ProjectDuplicationTrackerModel.DuplicatedBlocks>
+	<ProjectDuplicationTracker:ProjectDuplicationTrackerModel.DuplicatedGroups>
+		<ExtensionTypes:DuplicatedGroup>
+			<ExtensionTypes:DuplicatedGroup.DuplicatedBlocks>
+				<ExtensionTypes:DuplicatedBlock Lenght="90" Startline="80">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="30" Key="Mauris ultricies dictumst non" Lname="Mollis per eleifend sed montes" Lang="Nulla aliquet" Name="Venenatis lorem" Qualifier="Sit urna morbi" Scope="Sem adipiscing parturient aliquam" Version="Proin blandit vel commodo vestibulum"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="32" Startline="15">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="16" Key="Vulputate augue curabitur facilisi" Lname="Nostra cubilia dapibus convallis dignissim" Lang="Habitant vestibulum fames primis" Name="Dolor phasellus consequat conubia" Qualifier="Egestas cras sed ornare platea" Scope="Faucibus nam" Version="Duis rutrum dis adipiscing"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="63" Startline="87">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="94" Key="Euismod sapien parturient elementum est" Lname="Semper amet" Lang="Justo adipiscing leo iaculis" Name="Nunc vestibulum hac feugiat felis" Qualifier="Vestibulum ante taciti interdum" Scope="Inceptos sociis gravida ipsum" Version="Lacinia mus arcu facilisis"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="42" Startline="15">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="42" Key="Parturient lacus laoreet vestibulum" Lname="Nec adipiscing nascetur" Lang="Diam hendrerit" Name="Lobortis vestibulum" Qualifier="Non parturient habitasse pulvinar" Scope="Fermentum fringilla pharetra placerat" Version="Eget tellus vestibulum"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="51" Startline="76">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="85" Key="Tempor vestibulum per" Lname="Elit adipiscing" Lang="Turpis varius imperdiet aenean potenti" Name="Tempus natoque posuere tortor lorem" Qualifier="Sem magna himenaeos" Scope="Parturient sed" Version="Pretium enim"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+			</ExtensionTypes:DuplicatedGroup.DuplicatedBlocks>
+		</ExtensionTypes:DuplicatedGroup>
+		<ExtensionTypes:DuplicatedGroup>
+			<ExtensionTypes:DuplicatedGroup.DuplicatedBlocks>
+				<ExtensionTypes:DuplicatedBlock Lenght="98" Startline="80">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="76" Key="Mauris malesuada vestibulum erat" Lname="Massa vel aptent" Lang="Morbi senectus porttitor sociosqu" Name="Sit eros penatibus nullam" Qualifier="Metus rhoncus sodales" Scope="Nam vestibulum sagittis adipiscing nibh" Version="Viverra sed suscipit"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="63" Startline="83">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="36" Key="Dis nisi torquent est ultrices" Lname="Nulla aliquam congue cursus" Lang="Hac quisque purus dictum adipiscing" Name="Parturient neque netus auctor" Qualifier="Vehicula vestibulum volutpat vestibulum porta" Scope="Nisl integer tincidunt" Version="Parturient risus lectus maecenas leo"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="41" Startline="32">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="11" Key="Libero mus ligula nec praesent" Lname="Velit litora bibendum vivamus odio" Lang="Venenatis orci facilisi vulputate" Name="Accumsan nunc" Qualifier="Non vitae ultricies" Scope="Dictumst eleifend tristique" Version="Per class sed faucibus luctus"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="59" Startline="85">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="97" Key="Aliquam curabitur vestibulum sem phasellus" Lname="Curae vel" Lang="Adipiscing blandit habitant elementum" Name="Consequat pede sit" Qualifier="Aliquet quis urna convallis dignissim" Scope="Quam vestibulum nam magnis" Version="Commodo mattis"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="75" Startline="90">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="79" Key="Conubia mauris mollis inceptos parturient" Lname="Interdum montes" Lang="Dis duis vestibulum" Name="Cras sed vestibulum donec" Qualifier="Nostra ornare pharetra dapibus" Scope="Cubilia lobortis nascetur" Version="Facilisis placerat est"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+			</ExtensionTypes:DuplicatedGroup.DuplicatedBlocks>
+		</ExtensionTypes:DuplicatedGroup>
+		<ExtensionTypes:DuplicatedGroup>
+			<ExtensionTypes:DuplicatedGroup.DuplicatedBlocks>
+				<ExtensionTypes:DuplicatedBlock Lenght="77" Startline="19">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="75" Key="Egestas fermentum" Lname="Vestibulum etiam sagittis amet" Lang="Habitasse hendrerit" Name="Platea nunc pulvinar adipiscing parturient" Qualifier="Primis lorem vestibulum hac adipiscing" Scope="Fusce fringilla" Version="Ante senectus euismod leo"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="43" Startline="90">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="79" Key="Rutrum sapien himenaeos mus" Lname="Morbi nec non" Lang="Taciti sed torquent" Name="Imperdiet semper sociis malesuada penatibus" Qualifier="Feugiat diam per" Scope="Sociosqu parturient arcu nulla suscipit" Version="Eget elit enim"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="22" Startline="46">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="90" Key="Sem sit vestibulum vestibulum" Lname="Tellus ultrices augue vel" Lang="Eros nibh nisi" Name="Adipiscing porttitor proin" Qualifier="Gravida iaculis tempus" Scope="Tincidunt nam parturient erat tempor" Version="Vehicula tortor sed lacinia"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="70" Startline="38">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="98" Key="Laoreet natoque" Lname="Potenti ultricies volutpat" Lang="Nisl curabitur" Name="Posuere dolor tristique" Qualifier="Vulputate felis" Scope="Fames turpis venenatis" Version="Ipsum nunc"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="39" Startline="82">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="27" Key="Vestibulum justo phasellus varius odio" Lname="Orci convallis" Lang="Lacus lorem maecenas elementum" Name="Consequat dis aenean" Qualifier="Mauris pretium dignissim" Scope="Est vestibulum adipiscing" Version="Nullam rhoncus aptent parturient"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+			</ExtensionTypes:DuplicatedGroup.DuplicatedBlocks>
+		</ExtensionTypes:DuplicatedGroup>
+		<ExtensionTypes:DuplicatedGroup>
+			<ExtensionTypes:DuplicatedGroup.DuplicatedBlocks>
+				<ExtensionTypes:DuplicatedBlock Lenght="60" Startline="66">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="60" Key="Magna sodales praesent" Lname="Quam massa vestibulum" Lang="Auctor facilisis eleifend" Name="Viverra accumsan pede" Qualifier="Metus urna morbi dictumst" Scope="Vestibulum bibendum quis" Version="Facilisi fermentum"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="23" Startline="11">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="61" Key="Fringilla congue hac neque" Lname="Habitasse dictum hendrerit himenaeos mus" Lang="Interdum vestibulum adipiscing lobortis" Name="Leo adipiscing parturient cras cursus" Qualifier="Vestibulum inceptos" Scope="Faucibus duis aliquam habitant" Version="Netus integer"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="68" Startline="62">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="83" Key="Nunc parturient vestibulum" Lname="Amet vivamus ante" Lang="Eget lectus elit purus" Name="Nulla quisque imperdiet nascetur" Qualifier="Porta diam" Scope="Pharetra arcu placerat" Version="Risus libero"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="57" Startline="29">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="92" Key="Nec pulvinar aliquam" Lname="Sagittis per enim malesuada" Lang="Sit sociosqu blandit magnis" Name="Vestibulum non" Qualifier="Sed erat sem velit aliquet" Scope="Ligula litora adipiscing luctus senectus" Version="Mattis vitae vel suscipit mauris"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="29" Startline="19">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="58" Key="Mollis montes penatibus class" Lname="Nibh nisi nostra" Lang="Commodo orci sed platea vestibulum" Name="Nam eros" Qualifier="Ultrices porttitor nunc donec odio" Scope="Curae ornare nisl torquent parturient" Version="Vehicula pede"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+			</ExtensionTypes:DuplicatedGroup.DuplicatedBlocks>
+		</ExtensionTypes:DuplicatedGroup>
+		<ExtensionTypes:DuplicatedGroup>
+			<ExtensionTypes:DuplicatedGroup.DuplicatedBlocks>
+				<ExtensionTypes:DuplicatedBlock Lenght="96" Startline="24">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="73" Key="Volutpat primis" Lname="Maecenas est hac conubia" Lang="Tristique accumsan bibendum" Name="Etiam dis" Qualifier="Lorem cubilia" Scope="Tincidunt fusce praesent leo vestibulum" Version="Ultricies rutrum sapien venenatis"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="95" Startline="67">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="87" Key="Vulputate dictumst quam mus" Lname="Nulla nec phasellus dapibus" Lang="Augue urna non per sociis" Name="Curabitur quis morbi" Qualifier="Eleifend adipiscing proin facilisi" Scope="Consequat semper" Version="Cras duis dolor convallis"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="85" Startline="15">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="65" Key="Parturient taciti tellus faucibus" Lname="Habitant egestas elementum inceptos felis" Lang="Parturient fermentum justo sem" Name="Sed fames dignissim vestibulum" Qualifier="Nunc facilisis tempor amet adipiscing" Scope="Vestibulum ipsum euismod" Version="Feugiat ante lacus interdum tempus"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="43" Startline="86">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="18" Key="Tortor sit" Lname="Vestibulum turpis habitasse lorem" Lang="Hendrerit lacinia diam" Name="Lobortis vestibulum arcu fringilla" Qualifier="Iaculis parturient nam massa" Scope="Adipiscing gravida vel magna" Version="Varius nascetur sed vestibulum dis"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="54" Startline="38">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="86" Key="Pharetra est laoreet aenean" Lname="Elit enim himenaeos vestibulum metus" Lang="Morbi malesuada" Name="Hac mauris eget" Qualifier="Natoque imperdiet adipiscing erat eros" Scope="Placerat nullam" Version="Aptent penatibus nibh"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+			</ExtensionTypes:DuplicatedGroup.DuplicatedBlocks>
+		</ExtensionTypes:DuplicatedGroup>
+		<ExtensionTypes:DuplicatedGroup>
+			<ExtensionTypes:DuplicatedGroup.DuplicatedBlocks>
+				<ExtensionTypes:DuplicatedBlock Lenght="50" Startline="83">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="93" Key="Posuere parturient potenti" Lname="Vestibulum nec nisi porttitor" Lang="Porta tristique nunc" Name="Leo neque mus netus pulvinar" Qualifier="Nisl pretium" Scope="Tincidunt nulla" Version="Ultricies vestibulum sagittis rhoncus purus"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="28" Startline="46">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="12" Key="Non auctor congue sodales venenatis" Lname="Odio orci cursus adipiscing" Lang="Lectus sociosqu" Name="Senectus risus" Qualifier="Vestibulum sed dictum velit" Scope="Per parturient pede" Version="Quam suscipit vestibulum viverra sem"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="88" Startline="27">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="99" Key="Torquent adipiscing parturient quis" Lname="Cras vel vestibulum" Lang="Consequat nam vehicula" Name="Sit urna vulputate libero" Qualifier="Phasellus vitae" Scope="Ultrices curabitur" Version="Ligula litora sed aliquam duis"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="56" Startline="92">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="62" Key="Vestibulum nunc class integer" Lname="Dignissim magnis" Lang="Elementum eget hac fusce" Name="Curae convallis amet donec luctus" Qualifier="Dis arcu diam est maecenas" Scope="Ante volutpat etiam" Version="Quisque vivamus"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="70" Startline="87">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="18" Key="Leo facilisis" Lname="Nec non" Lang="Mauris fringilla" Name="Elit mus mattis enim" Qualifier="Aliquam aliquet blandit sed accumsan" Scope="Fermentum per adipiscing praesent" Version="Mollis bibendum dictumst"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+			</ExtensionTypes:DuplicatedGroup.DuplicatedBlocks>
+		</ExtensionTypes:DuplicatedGroup>
+		<ExtensionTypes:DuplicatedGroup>
+			<ExtensionTypes:DuplicatedGroup.DuplicatedBlocks>
+				<ExtensionTypes:DuplicatedBlock Lenght="37" Startline="42">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="85" Key="Commodo parturient montes lorem" Lname="Sem vestibulum vestibulum" Lang="Nam conubia ornare sed hendrerit" Name="Morbi nostra habitasse" Qualifier="Adipiscing eros" Scope="Eleifend sit erat vel" Version="Nibh dis platea"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="23" Startline="35">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="92" Key="Cubilia dapibus est facilisi" Lname="Rutrum nisi" Lang="Egestas nisl" Name="Primis faucibus" Qualifier="Nulla proin" Scope="Parturient sapien" Version="Vestibulum euismod nunc himenaeos odio"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="24" Startline="39">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="73" Key="Hac vestibulum feugiat semper gravida" Lname="Adipiscing lacinia" Lang="Orci tellus laoreet" Name="Leo iaculis sociis augue" Qualifier="Malesuada dolor nec inceptos" Scope="Imperdiet taciti parturient mus habitant" Version="Pede interdum lobortis nascetur natoque"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="61" Startline="95">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="43" Key="Penatibus pharetra" Lname="Vestibulum tempor per sed" Lang="Pulvinar adipiscing tortor posuere turpis" Name="Porttitor tincidunt non vestibulum" Qualifier="Quam quis fames felis" Scope="Tempus placerat tristique" Version="Urna ipsum sem sit"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="25" Startline="53">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="74" Key="Parturient sagittis varius" Lname="Vestibulum potenti sociosqu cras venenatis" Lang="Aptent curabitur vel duis" Name="Aenean senectus ultricies mauris" Qualifier="Ultrices vulputate" Scope="Suscipit nullam vestibulum pretium torquent" Version="Nunc phasellus"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+			</ExtensionTypes:DuplicatedGroup.DuplicatedBlocks>
+		</ExtensionTypes:DuplicatedGroup>
+		<ExtensionTypes:DuplicatedGroup>
+			<ExtensionTypes:DuplicatedGroup.DuplicatedBlocks>
+				<ExtensionTypes:DuplicatedBlock Lenght="34" Startline="96">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="80" Key="Nam consequat justo" Lname="Congue rhoncus vehicula" Lang="Convallis volutpat aliquam amet" Name="Adipiscing auctor" Qualifier="Cursus viverra lorem" Scope="Parturient sed lacus vestibulum sodales" Version="Integer vestibulum"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="46" Startline="98">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="24" Key="Quisque dictum adipiscing maecenas" Lname="Libero ante" Lang="Leo dignissim" Name="Vivamus lectus praesent magna parturient" Qualifier="Vestibulum hac arcu blandit" Scope="Aliquam aliquet dis est" Version="Ligula commodo accumsan"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="72" Startline="56">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="17" Key="Mus diam" Lname="Nec metus enim morbi" Lang="Sed fermentum facilisi sem" Name="Eget elit vestibulum massa bibendum" Qualifier="Dictumst facilisis erat per eleifend" Scope="Elementum non" Version="Fringilla conubia eros adipiscing"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="97" Startline="73">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="10" Key="Cubilia neque dapibus egestas" Lname="Euismod nulla nisi" Lang="Litora hendrerit risus vestibulum" Name="Nibh sit parturient netus" Qualifier="Nisl purus" Scope="Feugiat porta gravida habitasse" Version="Velit vitae"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="75" Startline="35">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="17" Key="Luctus vestibulum vel class" Lname="Magnis habitant parturient" Lang="Nunc vestibulum interdum odio lacinia" Name="Faucibus adipiscing nam" Qualifier="Mattis iaculis himenaeos dis" Scope="Sed inceptos" Version="Vestibulum laoreet mauris"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+			</ExtensionTypes:DuplicatedGroup.DuplicatedBlocks>
+		</ExtensionTypes:DuplicatedGroup>
+		<ExtensionTypes:DuplicatedGroup>
+			<ExtensionTypes:DuplicatedGroup.DuplicatedBlocks>
+				<ExtensionTypes:DuplicatedBlock Lenght="28" Startline="56">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="49" Key="Mollis est natoque" Lname="Adipiscing curae parturient hac posuere" Lang="Pretium pede vestibulum donec" Name="Imperdiet montes malesuada penatibus" Qualifier="Nostra potenti vestibulum ornare" Scope="Leo porttitor orci" Version="Rhoncus sodales platea"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="53" Startline="32">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="25" Key="Viverra primis etiam quam" Lname="Tristique nascetur fusce lorem" Lang="Quis parturient" Name="Tincidunt rutrum sapien lobortis" Qualifier="Nec non semper sociis taciti" Scope="Mus adipiscing" Version="Tellus pharetra"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="12" Startline="93">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="16" Key="Urna placerat pulvinar tempor" Lname="Aliquam sagittis vestibulum duis" Lang="Sit integer vel" Name="Per cras" Qualifier="Senectus sem" Scope="Sed nunc tempus" Version="Tortor vestibulum quisque nam"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="53" Startline="29">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="40" Key="Amet ultricies vivamus turpis" Lname="Venenatis ante morbi" Lang="Diam adipiscing mauris aliquet nulla" Name="Sed varius" Qualifier="Dis aliquam" Scope="Aenean arcu sociosqu" Version="Parturient nullam"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="51" Startline="68">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="35" Key="Est hac suscipit torquent" Lname="Blandit cursus elit enim" Lang="Adipiscing commodo mus vehicula conubia" Name="Aptent auctor congue vulputate eget" Qualifier="Erat vestibulum phasellus" Scope="Dictum curabitur vestibulum ultrices leo" Version="Cubilia parturient dapibus volutpat vestibulum"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+			</ExtensionTypes:DuplicatedGroup.DuplicatedBlocks>
+		</ExtensionTypes:DuplicatedGroup>
+		<ExtensionTypes:DuplicatedGroup>
+			<ExtensionTypes:DuplicatedGroup.DuplicatedBlocks>
+				<ExtensionTypes:DuplicatedBlock Lenght="74" Startline="35">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="67" Key="Maecenas praesent accumsan" Lname="Dictumst non lectus proin eros" Lang="Elementum ligula" Name="Nec consequat vestibulum bibendum" Qualifier="Egestas dignissim per libero sed" Scope="Convallis eleifend" Version="Sem adipiscing"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="95" Startline="81">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="73" Key="Euismod nibh" Lname="Facilisis luctus nisi" Lang="Vestibulum adipiscing" Name="Litora feugiat parturient vestibulum" Qualifier="Mattis gravida mauris" Scope="Magnis facilisi fermentum" Version="Parturient mollis nisl montes iaculis"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="88" Startline="94">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="31" Key="Fringilla habitasse" Lname="Laoreet natoque hendrerit nostra posuere" Lang="Odio vestibulum vel interdum nam" Name="Augue nunc faucibus lacinia" Qualifier="Dolor himenaeos inceptos" Scope="Habitant sit vestibulum ornare" Version="Adipiscing sed fames lobortis platea"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="86" Startline="78">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="34" Key="Orci parturient dis" Lname="Pretium pede" Lang="Rutrum sapien" Name="Vestibulum potenti est primis" Qualifier="Pharetra rhoncus ipsum quis imperdiet" Scope="Nascetur quam felis vestibulum" Version="Sodales viverra hac placerat adipiscing"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+				<ExtensionTypes:DuplicatedBlock Lenght="62" Startline="92">
+					<ExtensionTypes:DuplicatedBlock.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="64" Key="Aliquam semper leo pulvinar" Lname="Justo parturient" Lang="Non integer" Name="Sociis mus" Qualifier="Sagittis urna" Scope="Nec lacus vestibulum taciti" Version="Malesuada per"/>
+					</ExtensionTypes:DuplicatedBlock.Resource>
+				</ExtensionTypes:DuplicatedBlock>
+			</ExtensionTypes:DuplicatedGroup.DuplicatedBlocks>
+		</ExtensionTypes:DuplicatedGroup>
+	</ProjectDuplicationTracker:ProjectDuplicationTrackerModel.DuplicatedGroups>
+	<ProjectDuplicationTracker:ProjectDuplicationTrackerModel.DuplicatedGroupsTxt>
+		<System:String>Aliquam volutpat</System:String>
+		<System:String>Porttitor integer maecenas vestibulum</System:String>
+		<System:String>Hac orci leo praesent</System:String>
+		<System:String>Pede mus donec quisque vestibulum</System:String>
+		<System:String>Luctus magnis adipiscing etiam tincidunt</System:String>
+		<System:String>Vivamus parturient tristique</System:String>
+		<System:String>Vestibulum quam vestibulum</System:String>
+		<System:String>Quis accumsan</System:String>
+		<System:String>Mattis fusce</System:String>
+		<System:String>Nec bibendum</System:String>
+	</ProjectDuplicationTracker:ProjectDuplicationTrackerModel.DuplicatedGroupsTxt>
+	<ProjectDuplicationTracker:ProjectDuplicationTrackerModel.DuplicatedResources>
+		<System:String>Vestibulum maecenas integer adipiscing</System:String>
+		<System:String>Class parturient curabitur curae sed</System:String>
+		<System:String>Praesent aenean cras donec</System:String>
+		<System:String>Duis mauris phasellus etiam</System:String>
+		<System:String>Quisque fusce dis accumsan vivamus</System:String>
+		<System:String>Lorem vestibulum nullam</System:String>
+		<System:String>Aptent auctor nunc morbi bibendum</System:String>
+		<System:String>Dictumst est hac vestibulum aliquam</System:String>
+		<System:String>Aliquet eleifend leo</System:String>
+		<System:String>Adipiscing mus</System:String>
+	</ProjectDuplicationTracker:ProjectDuplicationTrackerModel.DuplicatedResources>
+	<ProjectDuplicationTracker:ProjectDuplicationTrackerModel.FirstProject>
+		<ProjectDuplicationTracker:SonarProject>
+			<ProjectDuplicationTracker:SonarProject.Files>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="84" Key="Ultrices quam" Lname="Aliquam vehicula integer quis dictum" Lang="Cras libero" Name="Adipiscing porttitor parturient nec" Qualifier="Quisque velit urna praesent per" Scope="Volutpat non maecenas lectus" Version="Accumsan vitae ligula"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="64" Key="Bibendum vestibulum" Lname="Tincidunt tristique" Lang="Adipiscing arcu luctus ultricies parturient" Name="Sed duis litora nunc" Qualifier="Amet ante vestibulum" Scope="Sem sit" Version="Diam vel eget elit"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="79" Key="Magnis vestibulum" Lname="Mattis dictumst erat" Lang="Mollis montes nibh nam" Name="Vestibulum enim venenatis adipiscing" Qualifier="Class eros" Scope="Vivamus aliquam mauris" Version="Eleifend parturient"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="25" Key="Vestibulum facilisi" Lname="Aliquet faucibus etiam ornare platea" Lang="Sapien vulputate" Name="Curae nostra donec nisi" Qualifier="Rutrum nisl morbi nulla" Scope="Fusce lorem primis" Version="Proin semper curabitur blandit commodo"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="11" Key="Conubia habitant vestibulum" Lname="Augue odio dolor inceptos cubilia" Lang="Fames orci dignissim lobortis felis" Name="Adipiscing sociis phasellus nunc" Qualifier="Convallis tellus interdum sed" Scope="Dapibus consequat egestas taciti" Version="Pede parturient euismod"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="84" Key="Elementum feugiat gravida" Lname="Pharetra placerat vestibulum pulvinar ipsum" Lang="Tempor parturient" Name="Vestibulum nascetur facilisis fermentum iaculis" Qualifier="Lacinia sagittis" Scope="Adipiscing dis quam fringilla" Version="Justo laoreet vestibulum est natoque"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="65" Key="Lacus lorem" Lname="Urna habitasse posuere" Lang="Leo penatibus cras tempus" Name="Vestibulum quis senectus" Qualifier="Hendrerit himenaeos imperdiet malesuada hac" Scope="Potenti sociosqu" Version="Mus porttitor tortor nec pretium"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="11" Key="Adipiscing suscipit rhoncus" Lname="Sodales vestibulum duis viverra aenean" Lang="Magna aptent adipiscing" Name="Turpis torquent varius parturient" Qualifier="Ultrices tincidunt vehicula nullam" Scope="Aliquam mauris vestibulum" Version="Volutpat tristique"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="47" Key="Auctor parturient" Lname="Quisque non ultricies" Lang="Per maecenas cursus" Name="Integer congue" Qualifier="Metus morbi" Scope="Vestibulum massa" Version="Vestibulum sed venenatis nunc adipiscing"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="59" Key="Praesent neque vivamus dictum lectus" Lname="Arcu sem vulputate" Lang="Vestibulum aliquam nam" Name="Amet accumsan ante" Qualifier="Vel curabitur" Scope="Diam parturient sit bibendum" Version="Vestibulum libero dictumst eget netus"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+			</ProjectDuplicationTracker:SonarProject.Files>
+			<ProjectDuplicationTracker:SonarProject.Project>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="51" Key="Pharetra tincidunt eget hac" Lname="Egestas vestibulum" Lang="Feugiat gravida" Name="Montes nostra elit enim tristique" Qualifier="Pulvinar platea" Scope="Ornare placerat euismod leo" Version="Primis ultricies sagittis morbi venenatis">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Sapien curabitur adipiscing neque erat" FormatedValue="Rutrum nec non" Key="Iaculis vulputate mus"/>
+						<ExtensionTypes:Metric Data="Lacinia netus" FormatedValue="Eros phasellus consequat convallis" Key="Per senectus semper"/>
+						<ExtensionTypes:Metric Data="Laoreet elementum nibh" FormatedValue="Vestibulum dignissim" Key="Parturient vestibulum"/>
+						<ExtensionTypes:Metric Data="Tellus tempor posuere tempus" FormatedValue="Sed natoque" Key="Sociis nulla nisi taciti"/>
+						<ExtensionTypes:Metric Data="Varius adipiscing nam" FormatedValue="Vel tortor turpis" Key="Facilisis sem fermentum sit"/>
+						<ExtensionTypes:Metric Data="Est parturient vestibulum pretium" FormatedValue="Potenti dis" Key="Sed porta fringilla"/>
+						<ExtensionTypes:Metric Data="Rhoncus himenaeos imperdiet" FormatedValue="Nunc hendrerit hac" Key="Vestibulum nisl habitasse"/>
+						<ExtensionTypes:Metric Data="Malesuada orci" FormatedValue="Risus leo suscipit" Key="Odio aenean purus adipiscing sociosqu"/>
+						<ExtensionTypes:Metric Data="Sodales penatibus" FormatedValue="Nullam aptent" Key="Parturient mauris"/>
+						<ExtensionTypes:Metric Data="Torquent cursus vestibulum" FormatedValue="Viverra congue vestibulum" Key="Pede mus auctor"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ProjectDuplicationTracker:SonarProject.Project>
+		</ProjectDuplicationTracker:SonarProject>
+	</ProjectDuplicationTracker:ProjectDuplicationTrackerModel.FirstProject>
+	<ProjectDuplicationTracker:ProjectDuplicationTrackerModel.ProjectResources>
+		<ProjectDuplicationTracker:SonarProject>
+			<ProjectDuplicationTracker:SonarProject.Files>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="66" Key="Inceptos mus" Lname="Ultricies non lorem laoreet" Lang="Magnis proin parturient natoque sem" Name="Interdum tincidunt tristique nec luctus" Qualifier="Sed orci lobortis" Scope="Morbi nulla per" Version="Nascetur pede venenatis quam"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="14" Key="Pharetra vulputate" Lname="Vestibulum potenti" Lang="Parturient vestibulum urna mauris" Name="Posuere quis" Qualifier="Vestibulum augue adipiscing pretium phasellus" Scope="Curabitur mattis placerat" Version="Rhoncus consequat"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="49" Key="Vestibulum sit vel" Lname="Dolor fames" Lang="Felis adipiscing ipsum" Name="Cras convallis" Qualifier="Montes dis pulvinar nostra sagittis" Scope="Nam sed sodales mollis" Version="Parturient ornare dignissim"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="94" Key="Platea duis vestibulum senectus" Lname="Viverra parturient nunc sociosqu" Lang="Rutrum torquent amet ultrices sapien" Name="Vestibulum primis adipiscing" Qualifier="Elementum lacus" Scope="Est justo suscipit" Version="Ante semper vestibulum vestibulum adipiscing"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="48" Key="Sociis lorem vehicula arcu diam" Lname="Facilisis massa leo metus parturient" Lang="Vestibulum adipiscing quisque accumsan" Name="Aliquam magna hac volutpat" Qualifier="Elit maecenas vestibulum morbi praesent" Scope="Eget taciti integer" Version="Fermentum fringilla tellus enim habitasse"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+			</ProjectDuplicationTracker:SonarProject.Files>
+			<ProjectDuplicationTracker:SonarProject.Project>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="26" Key="Elit sed porta" Lname="Parturient aptent sem maecenas vestibulum" Lang="Vestibulum gravida fermentum purus" Name="Cubilia elementum dapibus egestas facilisis" Qualifier="Auctor erat feugiat" Scope="Enim euismod" Version="Adipiscing sit">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Accumsan habitasse vestibulum hendrerit vel" FormatedValue="Fringilla congue" Key="Iaculis parturient praesent eros"/>
+						<ExtensionTypes:Metric Data="Dictum curae vestibulum donec imperdiet" FormatedValue="Himenaeos nisi vitae class cursus" Key="Risus velit nam nibh lacinia"/>
+						<ExtensionTypes:Metric Data="Etiam vestibulum" FormatedValue="Nisl malesuada sed" Key="Adipiscing parturient bibendum dictumst"/>
+						<ExtensionTypes:Metric Data="Fusce porttitor" FormatedValue="Adipiscing libero eleifend" Key="Vestibulum penatibus lectus"/>
+						<ExtensionTypes:Metric Data="Litora facilisi faucibus leo habitant" FormatedValue="Odio ligula" Key="Dis est nunc hac"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ProjectDuplicationTracker:SonarProject.Project>
+		</ProjectDuplicationTracker:SonarProject>
+		<ProjectDuplicationTracker:SonarProject>
+			<ProjectDuplicationTracker:SonarProject.Files>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="59" Key="Tincidunt mauris" Lname="Iaculis interdum nullam" Lang="Aptent natoque hac" Name="Tristique sed" Qualifier="Morbi quis est venenatis laoreet" Scope="Vestibulum lorem ultricies lacinia dis" Version="Posuere nulla urna"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="30" Key="Vulputate potenti cras" Lname="Amet auctor" Lang="Proin non adipiscing" Name="Vestibulum pretium leo duis nunc" Qualifier="Nec curabitur cursus" Scope="Mus congue" Version="Augue parturient rhoncus dictum"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="72" Key="Lectus per" Lname="Dolor libero ligula phasellus" Lang="Fames nascetur vestibulum convallis arcu" Name="Sed sodales lobortis" Qualifier="Ante vestibulum litora" Scope="Consequat viverra" Version="Pharetra luctus placerat diam pulvinar"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="73" Key="Sem sit" Lname="Elit enim" Lang="Mattis dignissim senectus sociosqu" Name="Eget vel magnis" Qualifier="Adipiscing parturient" Scope="Felis sagittis ipsum erat eros" Version="Aliquam justo vestibulum"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="13" Key="Elementum facilisis vestibulum adipiscing" Lname="Fringilla nam" Lang="Nibh lorem sed suscipit" Name="Lacus parturient integer fermentum" Qualifier="Mauris mollis quisque" Scope="Habitasse hendrerit" Version="Vivamus nisi aliquam torquent"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+			</ProjectDuplicationTracker:SonarProject.Files>
+			<ProjectDuplicationTracker:SonarProject.Project>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="42" Key="Mus hendrerit" Lname="Bibendum non" Lang="Sed neque" Name="Parturient nec vivamus vestibulum" Qualifier="Per vestibulum" Scope="Erat dictumst eros" Version="Netus nulla">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Faucibus habitant tempus" FormatedValue="Parturient aliquam facilisi porta" Key="Tempor adipiscing eleifend nibh nisi"/>
+						<ExtensionTypes:Metric Data="Varius imperdiet" FormatedValue="Nisl purus turpis vestibulum commodo" Key="Himenaeos aliquet blandit tortor sem"/>
+						<ExtensionTypes:Metric Data="Pede risus" FormatedValue="Sit vestibulum" Key="Nunc conubia odio orci inceptos"/>
+						<ExtensionTypes:Metric Data="Class curae donec vel" FormatedValue="Dapibus egestas malesuada penatibus vitae" Key="Aenean velit cubilia"/>
+						<ExtensionTypes:Metric Data="Porttitor nam parturient fusce" FormatedValue="Feugiat gravida adipiscing" Key="Euismod etiam quam"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ProjectDuplicationTracker:SonarProject.Project>
+		</ProjectDuplicationTracker:SonarProject>
+		<ProjectDuplicationTracker:SonarProject>
+			<ProjectDuplicationTracker:SonarProject.Files>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="84" Key="Vitae feugiat" Lname="Convallis semper sed class interdum" Lang="Lobortis taciti curae lacinia vestibulum" Name="Gravida amet" Qualifier="Iaculis sociis" Scope="Dignissim elementum ante arcu" Version="Vestibulum donec sem"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="79" Key="Nascetur adipiscing" Lname="Eget tellus pharetra tempor elit" Lang="Facilisis parturient natoque lorem tortor" Name="Diam etiam" Qualifier="Tempus fusce" Scope="Enim laoreet sit erat eros" Version="Posuere vel turpis potenti"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="92" Key="Nibh varius" Lname="Sed aenean vestibulum nisi" Lang="Sagittis viverra nisl mauris" Name="Pretium placerat nam rhoncus fermentum" Qualifier="Parturient morbi pulvinar vestibulum" Scope="Sodales dis vestibulum adipiscing" Version="Vestibulum est fringilla adipiscing"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="81" Key="Nullam hac senectus" Lname="Habitasse sociosqu vestibulum vestibulum" Lang="Nec ultrices nulla proin" Name="Leo parturient" Qualifier="Mus suscipit torquent" Scope="Nunc hendrerit" Version="Vehicula volutpat non"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="87" Key="Aliquam augue per adipiscing" Lname="Integer quisque orci vivamus aptent" Lang="Aliquam aliquet felis" Name="Odio maecenas sed sem sit" Qualifier="Fames nam sed accumsan" Scope="Vel himenaeos imperdiet dolor praesent" Version="Dis auctor congue pede"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+			</ProjectDuplicationTracker:SonarProject.Files>
+			<ProjectDuplicationTracker:SonarProject.Project>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="32" Key="Magna dis" Lname="Ultrices est imperdiet" Lang="Aliquet malesuada morbi" Name="Himenaeos vestibulum montes massa vestibulum" Qualifier="Nunc hac odio orci volutpat" Scope="Vehicula nisl metus" Version="Nostra ornare">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Tincidunt netus pede praesent tristique" FormatedValue="Conubia neque maecenas adipiscing porttitor" Key="Blandit commodo penatibus"/>
+						<ExtensionTypes:Metric Data="Bibendum quam porta nec" FormatedValue="Nulla accumsan vestibulum" Key="Cubilia leo mus platea parturient"/>
+						<ExtensionTypes:Metric Data="Vulputate eleifend" FormatedValue="Dapibus venenatis egestas dictumst purus" Key="Quis ultricies"/>
+						<ExtensionTypes:Metric Data="Urna per phasellus" FormatedValue="Euismod non" Key="Risus primis facilisi curabitur"/>
+						<ExtensionTypes:Metric Data="Parturient inceptos sapien consequat" FormatedValue="Faucibus duis habitant nunc adipiscing" Key="Vestibulum cras rutrum velit"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ProjectDuplicationTracker:SonarProject.Project>
+		</ProjectDuplicationTracker:SonarProject>
+		<ProjectDuplicationTracker:SonarProject>
+			<ProjectDuplicationTracker:SonarProject.Files>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="42" Key="Posuere convallis" Lname="Eget dignissim neque vestibulum netus" Lang="Sit pretium facilisis vel" Name="Sem adipiscing parturient" Qualifier="Elementum potenti" Scope="Nulla porta" Version="Mattis purus"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="48" Key="Vestibulum adipiscing" Lname="Dis est vestibulum" Lang="Sodales erat mauris mollis vitae" Name="Nam parturient vestibulum sed elit" Qualifier="Risus suscipit adipiscing velit hac" Scope="Sociosqu rhoncus fermentum enim" Version="Eros montes fringilla"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="32" Key="Parturient class nibh" Lname="Habitasse hendrerit torquent" Lang="Imperdiet ornare volutpat donec" Name="Nisi nostra leo" Qualifier="Vestibulum vehicula curae nec viverra" Scope="Ultrices nisl mus himenaeos" Version="Platea maecenas"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="44" Key="Primis vestibulum adipiscing nunc rutrum" Lname="Odio etiam" Lang="Lorem quisque vestibulum bibendum morbi" Name="Sapien malesuada praesent aliquam" Qualifier="Fusce integer non" Scope="Penatibus parturient accumsan" Version="Nulla vivamus semper"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="53" Key="Orci sociis" Lname="Adipiscing tellus eleifend" Lang="Faucibus conubia vestibulum" Name="Dictumst taciti vestibulum pede aliquam" Qualifier="Tempor quam parturient blandit commodo" Scope="Aliquet per facilisi" Version="Tempus proin augue"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+			</ProjectDuplicationTracker:SonarProject.Files>
+			<ProjectDuplicationTracker:SonarProject.Project>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="31" Key="Bibendum ipsum quam" Lname="Quis penatibus urna" Lang="Est justo" Name="Parturient malesuada dictumst blandit" Qualifier="Commodo cras vestibulum" Scope="Eleifend porttitor vestibulum" Version="Adipiscing parturient cursus vestibulum">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Egestas euismod tristique adipiscing" FormatedValue="Cubilia dapibus lacus tincidunt facilisi" Key="Vestibulum dictum hac conubia"/>
+						<ExtensionTypes:Metric Data="Habitant gravida iaculis" FormatedValue="Lectus lorem" Key="Duis leo faucibus feugiat"/>
+						<ExtensionTypes:Metric Data="Lacinia venenatis lobortis ligula" FormatedValue="Interdum ante ultricies libero" Key="Inceptos nunc mus amet magna"/>
+						<ExtensionTypes:Metric Data="Massa sed nascetur" FormatedValue="Non phasellus parturient laoreet per" Key="Vulputate curabitur arcu nec"/>
+						<ExtensionTypes:Metric Data="Vestibulum luctus magnis diam senectus" FormatedValue="Placerat pulvinar litora morbi sagittis" Key="Vestibulum consequat metus pharetra natoque"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ProjectDuplicationTracker:SonarProject.Project>
+		</ProjectDuplicationTracker:SonarProject>
+		<ProjectDuplicationTracker:SonarProject>
+			<ProjectDuplicationTracker:SonarProject.Files>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="28" Key="Natoque vestibulum pulvinar ligula" Lname="Per eget litora senectus" Lang="Hendrerit magnis torquent potenti mattis" Name="Fermentum diam non sagittis fringilla" Qualifier="Elit sociosqu adipiscing suscipit sed" Scope="Vestibulum habitasse luctus posuere" Version="Enim mauris"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="62" Key="Parturient erat sem ultrices eros" Lname="Sit rhoncus volutpat vel lacus" Lang="Malesuada penatibus viverra" Name="Vehicula pretium" Qualifier="Himenaeos imperdiet" Scope="Nibh sodales vestibulum nam" Version="Aliquam nisi nisl mollis nunc"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="39" Key="Montes sed odio" Lname="Lorem tristique adipiscing pede ultricies" Lang="Vivamus aliquam aliquet" Name="Porttitor orci tincidunt vestibulum" Qualifier="Massa parturient quisque" Scope="Integer magna quam" Version="Blandit vestibulum nostra"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="90" Key="Vestibulum venenatis commodo" Lname="Curabitur quis est" Lang="Hac consequat leo nulla cubilia" Name="Metus vulputate ornare dis" Qualifier="Platea neque netus parturient maecenas" Scope="Morbi conubia adipiscing phasellus" Version="Dapibus porta"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="54" Key="Egestas euismod feugiat convallis" Lname="Dignissim vestibulum primis purus" Lang="Lacinia mus" Name="Gravida vestibulum urna" Qualifier="Risus iaculis" Scope="Praesent rutrum sapien elementum" Version="Accumsan velit cras nec"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+			</ProjectDuplicationTracker:SonarProject.Files>
+			<ProjectDuplicationTracker:SonarProject.Project>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="79" Key="Quis tortor turpis habitant varius" Lname="Dolor interdum" Lang="Tincidunt aenean vel" Name="Vestibulum urna inceptos" Qualifier="Sit porttitor" Scope="Fames sed sem cras cubilia" Version="Tristique mauris nullam adipiscing aptent">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Nascetur duis auctor nunc" FormatedValue="Sed dapibus" Key="Parturient nam ultricies lobortis"/>
+						<ExtensionTypes:Metric Data="Venenatis vulputate vestibulum" FormatedValue="Euismod feugiat" Key="Egestas pharetra vestibulum congue"/>
+						<ExtensionTypes:Metric Data="Phasellus est hac ante" FormatedValue="Cursus adipiscing gravida" Key="Dis amet curabitur"/>
+						<ExtensionTypes:Metric Data="Convallis lectus" FormatedValue="Felis dictum" Key="Iaculis consequat leo lacinia"/>
+						<ExtensionTypes:Metric Data="Nec justo elementum libero facilisis" FormatedValue="Placerat parturient" Key="Mus ipsum arcu laoreet dignissim"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ProjectDuplicationTracker:SonarProject.Project>
+		</ProjectDuplicationTracker:SonarProject>
+		<ProjectDuplicationTracker:SonarProject>
+			<ProjectDuplicationTracker:SonarProject.Files>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="52" Key="Nibh vestibulum imperdiet" Lname="Integer quisque" Lang="Mus nec" Name="Leo malesuada" Qualifier="Placerat pulvinar sagittis vestibulum aliquam" Scope="Nascetur penatibus vivamus proin pharetra" Version="Senectus aliquet nullam nisi blandit"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="11" Key="Nisl sociosqu" Lname="Auctor suscipit congue per dolor" Lang="Porttitor vestibulum" Name="Aptent augue non commodo adipiscing" Qualifier="Sed torquent" Scope="Conubia parturient cursus" Version="Dictum nunc sem"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="50" Key="Tincidunt vestibulum tristique" Lname="Volutpat maecenas praesent" Lang="Quis egestas venenatis vel felis" Name="Cubilia fames sit ultrices vehicula" Qualifier="Quam dapibus" Scope="Odio ultricies orci pede" Version="Accumsan lectus"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="23" Key="Libero euismod bibendum nam sed" Lname="Ligula dis phasellus litora luctus" Lang="Urna cras dignissim magnis" Name="Vulputate feugiat curabitur" Qualifier="Parturient convallis justo dictumst lacus" Scope="Gravida ipsum adipiscing consequat" Version="Lorem eleifend"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="63" Key="Elementum mattis est iaculis magna" Lname="Mollis faucibus" Lang="Lobortis facilisis adipiscing parturient nascetur" Name="Mauris hac facilisi" Qualifier="Inceptos interdum montes" Scope="Habitant vestibulum duis vestibulum" Version="Vestibulum leo nostra ornare fermentum"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+			</ProjectDuplicationTracker:SonarProject.Files>
+			<ProjectDuplicationTracker:SonarProject.Project>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="67" Key="Vitae duis" Lname="Laoreet fermentum semper non" Lang="Curae taciti donec tellus" Name="Bibendum facilisis adipiscing" Qualifier="Sociis class" Scope="Dictumst natoque fringilla" Version="Nunc habitasse per">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Facilisi tortor parturient vestibulum" FormatedValue="Etiam amet posuere tempus" Key="Sed eleifend tempor"/>
+						<ExtensionTypes:Metric Data="Arcu sit adipiscing" FormatedValue="Lorem faucibus vestibulum sem ante" Key="Fusce potenti"/>
+						<ExtensionTypes:Metric Data="Nam eget sed" FormatedValue="Pretium turpis" Key="Diam vel parturient"/>
+						<ExtensionTypes:Metric Data="Sodales inceptos est varius hendrerit" FormatedValue="Erat rhoncus eros" Key="Habitant elit enim morbi dis"/>
+						<ExtensionTypes:Metric Data="Lobortis mauris nulla" FormatedValue="Aenean himenaeos hac" Key="Viverra interdum aliquam"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ProjectDuplicationTracker:SonarProject.Project>
+		</ProjectDuplicationTracker:SonarProject>
+		<ProjectDuplicationTracker:SonarProject>
+			<ProjectDuplicationTracker:SonarProject.Files>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="86" Key="Ultrices adipiscing" Lname="Aliquam parturient vestibulum turpis vestibulum" Lang="Aenean mauris nisl" Name="Vehicula volutpat" Qualifier="Integer quisque varius velit" Scope="Maecenas nisi praesent" Version="Vitae nullam class dis"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="74" Key="Tincidunt nunc curae aptent" Lname="Hac vivamus donec aliquam orci" Lang="Mus vulputate congue bibendum curabitur" Name="Tristique est ultricies odio accumsan" Qualifier="Pede aliquet venenatis" Scope="Adipiscing auctor leo" Version="Nec parturient vestibulum quam"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="12" Key="Non quis" Lname="Fusce dictum urna lectus per" Lang="Sem commodo" Name="Etiam cursus vestibulum adipiscing blandit" Qualifier="Dictumst sed cras parturient" Scope="Libero ligula" Version="Vestibulum duis"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="35" Key="Nunc vestibulum litora" Lname="Conubia facilisi faucibus amet phasellus" Lang="Luctus arcu" Name="Adipiscing parturient eleifend" Qualifier="Cubilia lorem" Scope="Vestibulum habitant consequat ante vestibulum" Version="Dapibus sit vel"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="75" Key="Convallis egestas morbi dignissim euismod" Lname="Magnis eget adipiscing nam mattis" Lang="Mauris nulla elit gravida fringilla" Name="Feugiat diam elementum" Qualifier="Facilisis inceptos fermentum" Scope="Sed parturient vestibulum" Version="Habitasse vestibulum"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+			</ProjectDuplicationTracker:SonarProject.Files>
+			<ProjectDuplicationTracker:SonarProject.Project>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="49" Key="Mus platea primis" Lname="Fringilla vestibulum" Lang="Natoque sapien arcu diam" Name="Nunc lacinia rutrum" Qualifier="Parturient laoreet" Scope="Nec adipiscing amet ante" Version="Vestibulum eget pharetra">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Enim sociis non erat" FormatedValue="Placerat massa hendrerit" Key="Posuere semper habitasse elit"/>
+						<ExtensionTypes:Metric Data="Per taciti sed tellus morbi" FormatedValue="Vestibulum metus" Key="Himenaeos pulvinar"/>
+						<ExtensionTypes:Metric Data="Penatibus pretium nulla sit tempus" FormatedValue="Imperdiet tempor neque netus malesuada" Key="Sem sagittis senectus eros potenti"/>
+						<ExtensionTypes:Metric Data="Vestibulum sociosqu suscipit" FormatedValue="Vel parturient nam" Key="Adipiscing rhoncus"/>
+						<ExtensionTypes:Metric Data="Torquent nibh viverra porttitor" FormatedValue="Purus sodales risus tortor" Key="Vestibulum sed porta"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ProjectDuplicationTracker:SonarProject.Project>
+		</ProjectDuplicationTracker:SonarProject>
+		<ProjectDuplicationTracker:SonarProject>
+			<ProjectDuplicationTracker:SonarProject.Files>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="10" Key="Maecenas vestibulum phasellus consequat convallis" Lname="Tellus elementum orci sodales" Lang="Metus adipiscing sed parturient" Name="Praesent per taciti dignissim" Qualifier="Massa tempor bibendum" Scope="Accumsan magna" Version="Morbi vestibulum sem"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="18" Key="Dictumst eleifend facilisi viverra neque" Lname="Porta sit faucibus vel purus" Lang="Vestibulum pede turpis" Name="Netus vestibulum aliquam nulla adipiscing" Qualifier="Integer habitant tortor" Scope="Tempus facilisis nam parturient sed" Version="Risus quam"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="91" Key="Quis dis" Lname="Interdum urna est" Lang="Velit lobortis hac duis" Name="Inceptos quisque vestibulum" Qualifier="Cras fringilla aliquam" Scope="Varius fermentum vivamus" Version="Nascetur aliquet"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="99" Key="Adipiscing aenean vitae" Lname="Blandit leo nunc pharetra class" Lang="Placerat ante mus vestibulum" Name="Habitasse mauris parturient" Qualifier="Himenaeos curae donec amet" Scope="Hendrerit vestibulum" Version="Etiam nec adipiscing nullam imperdiet"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="20" Key="Arcu parturient fusce malesuada" Lname="Senectus sociosqu" Lang="Penatibus suscipit" Name="Vestibulum non pulvinar sagittis diam" Qualifier="Adipiscing per elit" Scope="Vestibulum eget" Version="Commodo torquent enim parturient lorem"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+			</ProjectDuplicationTracker:SonarProject.Files>
+			<ProjectDuplicationTracker:SonarProject.Project>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="53" Key="Proin augue hendrerit enim himenaeos" Lname="Nascetur adipiscing dis est" Lang="Penatibus sagittis nostra lacinia laoreet" Name="Interdum erat imperdiet lobortis mollis" Qualifier="Placerat pulvinar" Scope="Iaculis dolor montes pharetra malesuada" Version="Senectus sociosqu porttitor natoque">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Fames platea felis vestibulum" FormatedValue="Eros tincidunt hac" Key="Parturient ornare vestibulum suscipit"/>
+						<ExtensionTypes:Metric Data="Ultrices tristique" FormatedValue="Ipsum adipiscing" Key="Torquent primis rutrum"/>
+						<ExtensionTypes:Metric Data="Justo sapien vehicula" FormatedValue="Leo mus" Key="Ultricies parturient venenatis vestibulum"/>
+						<ExtensionTypes:Metric Data="Nec pretium nisi" FormatedValue="Nibh vestibulum potenti adipiscing" Key="Semper posuere"/>
+						<ExtensionTypes:Metric Data="Curabitur vestibulum sociis odio non" FormatedValue="Lorem nisl nunc rhoncus" Key="Parturient lacus vulputate volutpat"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ProjectDuplicationTracker:SonarProject.Project>
+		</ProjectDuplicationTracker:SonarProject>
+		<ProjectDuplicationTracker:SonarProject>
+			<ProjectDuplicationTracker:SonarProject.Files>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="41" Key="Morbi urna venenatis vulputate adipiscing" Lname="Hac magnis cras duis" Lang="Mauris amet" Name="Luctus neque" Qualifier="Pretium netus mattis nunc" Scope="Faucibus leo parturient curabitur mus" Version="Mollis vestibulum"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="96" Key="Habitant phasellus inceptos nec ante" Lname="Non nulla" Lang="Nostra per" Name="Interdum vestibulum rhoncus sodales" Qualifier="Arcu consequat purus" Scope="Porta montes" Version="Lobortis convallis"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="98" Key="Ornare risus velit" Lname="Parturient pharetra sed" Lang="Placerat enim pulvinar sit vel" Name="Adipiscing viverra diam nascetur" Qualifier="Elit sem fermentum vitae fringilla" Scope="Dignissim eget elementum facilisis" Version="Sagittis aliquam integer platea primis"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="42" Key="Erat senectus class rutrum" Lname="Vivamus habitasse aliquam" Lang="Sociis sociosqu adipiscing hendrerit taciti" Name="Quisque sapien curae" Qualifier="Semper donec eros" Scope="Nam sed vestibulum vestibulum" Version="Nibh nisi parturient"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="59" Key="Aliquet himenaeos" Lname="Odio commodo tellus" Lang="Conubia vestibulum suscipit penatibus" Name="Nisl etiam nunc vestibulum blandit" Qualifier="Fusce malesuada" Scope="Tempor tempus imperdiet orci" Version="Torquent pede ultrices vehicula"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+			</ProjectDuplicationTracker:SonarProject.Files>
+			<ProjectDuplicationTracker:SonarProject.Project>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="19" Key="Sed conubia" Lname="Ultrices vehicula" Lang="Augue erat" Name="Morbi sem cubilia" Qualifier="Volutpat egestas maecenas auctor porttitor" Scope="Aptent nulla proin dapibus" Version="Dolor praesent euismod">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Dictum accumsan gravida" FormatedValue="Vestibulum tincidunt cursus felis" Key="Feugiat fames congue eros"/>
+						<ExtensionTypes:Metric Data="Nam lacinia" FormatedValue="Iaculis sit vel" Key="Ipsum bibendum justo nibh"/>
+						<ExtensionTypes:Metric Data="Vestibulum nisi posuere" FormatedValue="Dictumst magna natoque lectus libero" Key="Lacus lorem laoreet"/>
+						<ExtensionTypes:Metric Data="Facilisi ultricies odio sed vestibulum" FormatedValue="Parturient tristique" Key="Adipiscing nisl eleifend ligula nunc"/>
+						<ExtensionTypes:Metric Data="Est metus quis" FormatedValue="Massa orci pede quam" Key="Potenti dis litora vestibulum"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ProjectDuplicationTracker:SonarProject.Project>
+		</ProjectDuplicationTracker:SonarProject>
+		<ProjectDuplicationTracker:SonarProject>
+			<ProjectDuplicationTracker:SonarProject.Files>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="94" Key="Ligula sem litora" Lname="Rhoncus placerat" Lang="Magnis elit nam sagittis" Name="Pretium pharetra vestibulum" Qualifier="Sodales pulvinar adipiscing viverra vel" Scope="Eget sit luctus" Version="Senectus mattis aliquam sociosqu"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="31" Key="Mauris consequat integer mollis" Lname="Vivamus enim" Lang="Eros montes ultrices" Name="Sed quisque dis convallis" Qualifier="Erat elementum torquent est" Scope="Aliquam suscipit dignissim" Version="Facilisis parturient vestibulum hac"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="60" Key="Vestibulum leo vehicula nostra" Lname="Fermentum nisi parturient platea" Lang="Vestibulum conubia" Name="Ornare nibh lacus adipiscing aliquet" Qualifier="Vestibulum commodo" Scope="Mus blandit volutpat" Version="Primis adipiscing lorem magna"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="69" Key="Massa rutrum" Lname="Sapien hendrerit" Lang="Sociis taciti imperdiet praesent per" Name="Maecenas cubilia nec fringilla habitasse" Qualifier="Non himenaeos egestas" Scope="Semper dapibus" Version="Parturient sed"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="76" Key="Malesuada nisl" Lname="Vestibulum tellus dictumst" Lang="Tempus facilisi" Name="Vestibulum euismod accumsan bibendum metus" Qualifier="Tempor nunc parturient" Scope="Adipiscing eleifend" Version="Penatibus faucibus vestibulum habitant"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+			</ProjectDuplicationTracker:SonarProject.Files>
+			<ProjectDuplicationTracker:SonarProject.Project>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="23" Key="Porttitor cubilia dis adipiscing tortor" Lname="Turpis quam varius est praesent" Lang="Nullam hac tincidunt" Name="Volutpat maecenas" Qualifier="Aenean parturient mauris" Scope="Quis urna dapibus egestas" Version="Aptent lorem morbi cras duis">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Accumsan vestibulum" FormatedValue="Proin leo gravida iaculis" Key="Euismod feugiat auctor nulla"/>
+						<ExtensionTypes:Metric Data="Eleifend facilisi fames congue mus" FormatedValue="Augue dolor nunc" Key="Bibendum dictumst vestibulum tristique adipiscing"/>
+						<ExtensionTypes:Metric Data="Parturient nec faucibus habitant justo" FormatedValue="Venenatis ipsum lacinia" Key="Felis ultricies"/>
+						<ExtensionTypes:Metric Data="Natoque lobortis vulputate nascetur curabitur" FormatedValue="Inceptos ante interdum laoreet" Key="Cursus amet vestibulum"/>
+						<ExtensionTypes:Metric Data="Diam potenti libero phasellus sed" FormatedValue="Lectus per" Key="Arcu dictum posuere non"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ProjectDuplicationTracker:SonarProject.Project>
+		</ProjectDuplicationTracker:SonarProject>
+	</ProjectDuplicationTracker:ProjectDuplicationTrackerModel.ProjectResources>
+	<ProjectDuplicationTracker:ProjectDuplicationTrackerModel.ProjectResourcesList>
+		<System:String>Sed quisque vestibulum</System:String>
+		<System:String>Adipiscing tellus sem penatibus porttitor</System:String>
+		<System:String>Lorem parturient</System:String>
+		<System:String>Cras vestibulum</System:String>
+		<System:String>Vivamus tincidunt magna</System:String>
+		<System:String>Sit vel senectus</System:String>
+		<System:String>Massa vestibulum tristique sociosqu</System:String>
+		<System:String>Ultricies metus adipiscing</System:String>
+		<System:String>Morbi suscipit venenatis aliquam aliquet</System:String>
+		<System:String>Tempor parturient</System:String>
+	</ProjectDuplicationTracker:ProjectDuplicationTrackerModel.ProjectResourcesList>
+	<ProjectDuplicationTracker:ProjectDuplicationTrackerModel.SelectedBlockInView>
+		<ExtensionTypes:DuplicatedBlock Lenght="55" Startline="60">
+			<ExtensionTypes:DuplicatedBlock.Resource>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="22" Key="Dolor parturient nullam fames orci" Lname="Vestibulum vestibulum" Lang="Parturient dis aptent suscipit" Name="Pede vel nam vulputate sed" Qualifier="Lacinia laoreet" Scope="Curabitur phasellus consequat adipiscing" Version="Auctor convallis felis ipsum">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Elementum hac leo dictum" FormatedValue="Vestibulum dignissim quam natoque" Key="Vestibulum congue est torquent cursus"/>
+						<ExtensionTypes:Metric Data="Lorem potenti vehicula ligula" FormatedValue="Mus quis lacus nec libero" Key="Justo facilisis ultrices posuere lectus"/>
+						<ExtensionTypes:Metric Data="Magna sodales" FormatedValue="Rhoncus praesent non adipiscing" Key="Volutpat pretium maecenas"/>
+						<ExtensionTypes:Metric Data="Sed bibendum duis" FormatedValue="Viverra cras vestibulum fermentum aliquam" Key="Parturient urna accumsan vestibulum per"/>
+						<ExtensionTypes:Metric Data="Nunc eleifend integer vel" FormatedValue="Sit parturient habitasse vestibulum hendrerit" Key="Dictumst sem adipiscing fringilla"/>
+						<ExtensionTypes:Metric Data="Adipiscing amet" FormatedValue="Massa litora nam quisque" Key="Facilisi vestibulum"/>
+						<ExtensionTypes:Metric Data="Imperdiet vivamus magnis parturient" FormatedValue="Ante habitant" Key="Himenaeos luctus faucibus sed"/>
+						<ExtensionTypes:Metric Data="Commodo penatibus" FormatedValue="Malesuada blandit" Key="Aliquam inceptos aliquet"/>
+						<ExtensionTypes:Metric Data="Dis adipiscing mauris" FormatedValue="Interdum arcu" Key="Vestibulum vestibulum mattis"/>
+						<ExtensionTypes:Metric Data="Cubilia nascetur" FormatedValue="Lobortis mollis conubia" Key="Parturient porttitor metus"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ExtensionTypes:DuplicatedBlock.Resource>
+		</ExtensionTypes:DuplicatedBlock>
+	</ProjectDuplicationTracker:ProjectDuplicationTrackerModel.SelectedBlockInView>
+	<ProjectDuplicationTracker:ProjectDuplicationTrackerModel.SecondProjectResourcesList>
+		<System:String>Vulputate tempus vestibulum duis</System:String>
+		<System:String>Vestibulum blandit nam sed</System:String>
+		<System:String>Curabitur torquent</System:String>
+		<System:String>Ultrices tortor phasellus</System:String>
+		<System:String>Dis consequat</System:String>
+		<System:String>Est hac commodo nunc</System:String>
+		<System:String>Turpis amet convallis</System:String>
+		<System:String>Neque varius vehicula volutpat leo</System:String>
+		<System:String>Mus aenean</System:String>
+		<System:String>Nec netus</System:String>
+	</ProjectDuplicationTracker:ProjectDuplicationTrackerModel.SecondProjectResourcesList>
+	<ProjectDuplicationTracker:ProjectDuplicationTrackerModel.SecondProject>
+		<ProjectDuplicationTracker:SonarProject>
+			<ProjectDuplicationTracker:SonarProject.Files>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="11" Key="Sapien proin vulputate sem" Lname="Fames adipiscing" Lang="Eget posuere potenti vestibulum" Name="Curabitur augue arcu diam dolor" Qualifier="Ipsum vel placerat parturient nam" Scope="Semper sit felis" Version="Sed justo"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="12" Key="Lacus pulvinar dis" Lname="Est phasellus" Lang="Erat adipiscing eros nibh" Name="Sagittis sociis elit vestibulum" Qualifier="Consequat tellus" Scope="Pretium lorem enim hac taciti" Version="Nisi magna"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="36" Key="Senectus nisl leo mus" Lname="Tempor dignissim" Lang="Nunc tempus" Name="Convallis parturient vestibulum" Qualifier="Rhoncus torquent" Scope="Massa sociosqu suscipit" Version="Vestibulum odio"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="70" Key="Adipiscing metus orci ultrices parturient" Lname="Morbi sodales elementum" Lang="Turpis nec quis varius" Name="Vestibulum vehicula tortor pede volutpat" Qualifier="Vestibulum viverra neque" Scope="Vestibulum quam adipiscing parturient" Version="Facilisis non aenean netus vestibulum"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="56" Key="Urna nulla fermentum per sed" Lname="Sem adipiscing" Lang="Aptent habitasse aliquam" Name="Cras fringilla" Qualifier="Nullam maecenas amet ante porta" Scope="Duis nunc mauris" Version="Integer praesent arcu hendrerit quisque"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="84" Key="Accumsan parturient" Lname="Vivamus purus aliquam sit risus" Lang="Vel malesuada cursus" Name="Diam himenaeos vestibulum vestibulum" Qualifier="Velit adipiscing" Scope="Auctor congue imperdiet bibendum" Version="Parturient nam"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="94" Key="Dictum vestibulum eget" Lname="Vitae libero elit vestibulum ligula" Lang="Sed erat commodo eros porttitor" Name="Lectus aliquet blandit penatibus" Qualifier="Dictumst enim" Scope="Class curae" Version="Conubia adipiscing eleifend tincidunt facilisi"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="99" Key="Dis nibh faucibus" Lname="Luctus inceptos interdum magnis" Lang="Nunc dapibus" Name="Habitant litora" Qualifier="Mauris est mollis nisl lobortis" Scope="Nisi cubilia mattis" Version="Hac montes nostra egestas tristique"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="84" Key="Parturient euismod vestibulum nascetur odio" Lname="Ultricies ornare placerat pulvinar" Lang="Phasellus lacinia laoreet" Name="Vestibulum leo feugiat pharetra" Qualifier="Curabitur iaculis" Scope="Venenatis vulputate gravida" Version="Natoque consequat posuere"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+				<ProjectDuplicationTracker:ProjectFile>
+					<ProjectDuplicationTracker:ProjectFile.Resource>
+						<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="13" Key="Sagittis potenti adipiscing senectus" Lname="Parturient suscipit vestibulum platea" Lang="Dignissim viverra" Name="Orci convallis pede sociosqu pretium" Qualifier="Quam nec" Scope="Mus rhoncus sodales" Version="Aliquam elementum integer"/>
+					</ProjectDuplicationTracker:ProjectFile.Resource>
+					<ProjectDuplicationTracker:ProjectFile.SourceCode>
+						<ExtensionTypes:Source/>
+					</ProjectDuplicationTracker:ProjectFile.SourceCode>
+				</ProjectDuplicationTracker:ProjectFile>
+			</ProjectDuplicationTracker:SonarProject.Files>
+			<ProjectDuplicationTracker:SonarProject.Project>
+				<ExtensionTypes:Resource Date="01/10/2014 12:05:06" Id="98" Key="Sed adipiscing parturient ligula eleifend" Lname="Est blandit phasellus commodo" Lang="Vestibulum hac porta" Name="Litora aliquet elit dis" Qualifier="Dignissim luctus eros nulla" Scope="Enim erat consequat convallis conubia" Version="Leo mus nibh nisi nec">
+					<ExtensionTypes:Resource.Metrics>
+						<ExtensionTypes:Metric Data="Faucibus mattis" FormatedValue="Non risus velit elementum" Key="Purus facilisi magnis"/>
+						<ExtensionTypes:Metric Data="Fermentum mauris" FormatedValue="Sed vitae class" Key="Habitant nisl vestibulum facilisis per"/>
+						<ExtensionTypes:Metric Data="Cubilia curae mollis vestibulum vel" FormatedValue="Sit interdum adipiscing parturient odio" Key="Nunc sem fringilla habitasse inceptos"/>
+						<ExtensionTypes:Metric Data="Parturient nam sed orci" FormatedValue="Nostra adipiscing" Key="Hendrerit vestibulum montes"/>
+						<ExtensionTypes:Metric Data="Dis vestibulum himenaeos donec" FormatedValue="Quis dapibus vestibulum" Key="Pede quam"/>
+						<ExtensionTypes:Metric Data="Hac egestas" FormatedValue="Ornare malesuada lobortis" Key="Imperdiet est adipiscing"/>
+						<ExtensionTypes:Metric Data="Mus parturient" FormatedValue="Fusce tincidunt leo tristique urna" Key="Etiam penatibus euismod porttitor"/>
+						<ExtensionTypes:Metric Data="Vestibulum vestibulum nunc" FormatedValue="Gravida iaculis platea parturient duis" Key="Vestibulum vestibulum feugiat cras adipiscing"/>
+						<ExtensionTypes:Metric Data="Primis morbi laoreet amet natoque" FormatedValue="Lorem per nascetur" Key="Ultricies nec lacinia adipiscing non"/>
+						<ExtensionTypes:Metric Data="Vestibulum sed vestibulum" FormatedValue="Venenatis pharetra" Key="Nulla parturient rutrum ante"/>
+					</ExtensionTypes:Resource.Metrics>
+				</ExtensionTypes:Resource>
+			</ProjectDuplicationTracker:SonarProject.Project>
+		</ProjectDuplicationTracker:SonarProject>
+	</ProjectDuplicationTracker:ProjectDuplicationTrackerModel.SecondProject>
+</ProjectDuplicationTracker:ProjectDuplicationTrackerModel>

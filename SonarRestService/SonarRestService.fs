@@ -27,13 +27,13 @@ open System.Text.RegularExpressions
 open System.Linq
 
 open SonarRestService
+open System.Threading
 
 type SonarRestService(httpconnector : IHttpSonarConnector) = 
     let httpconnector = httpconnector
     let mutable cancelRequest = false
 
-    let GetSeverity(value : string) =
-        (EnumHelper.asEnum<Severity>(value)).Value
+
                     
     let (|NotNull|_|) value = 
         if obj.ReferenceEquals(value, null) then None 
@@ -67,305 +67,6 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             userList.Add(newUser)
 
         userList
-
-    let getIssueFromString(responsecontent : string) =
-        let data = JsonIssue.Parse(responsecontent).Issue
-        let issue = new Issue()
-        issue.Message <- data.Message
-        issue.CreationDate <- data.CreationDate
-
-        issue.Component <- data.Component
-        try
-            issue.Line <- data.Line
-        with
-        | ex -> issue.Line <- 0
-
-        issue.Project <- data.Project
-        issue.UpdateDate <- data.UpdateDate
-        issue.Status <- (EnumHelper.asEnum<IssueStatus>(data.Status)).Value
-        issue.Severity <- GetSeverity(data.Severity)
-        issue.Rule <- data.Rule
-        issue.Key <- data.Key.ToString()
-
-        if not(obj.ReferenceEquals(data.JsonValue.TryGetProperty("assignee"), null)) then
-            issue.Assignee <- data.Assignee
-
-        if not(obj.ReferenceEquals(data.JsonValue.TryGetProperty("author"), null)) then
-            issue.Author <- data.Author
-
-        if not(obj.ReferenceEquals(data.JsonValue.TryGetProperty("comments"), null)) then
-            for elemC in data.Comments do issue.Comments.Add(new Comment(elemC.CreatedAt, elemC.HtmlText, elemC.Key, elemC.Login, -1))
-
-        if not(obj.ReferenceEquals(data.JsonValue.TryGetProperty("closeDate"), null)) then
-            issue.CloseDate <- data.CloseDate
-
-        if not(obj.ReferenceEquals(data.JsonValue.TryGetProperty("resolution"), null)) then
-            issue.Resolution <- (EnumHelper.asEnum<Resolution>(data.Resolution.Replace("-","_"))).Value
-
-        if issue.Comments.Count <> 0 then
-            for comment in issue.Comments do
-                if comment.HtmlText.StartsWith("[VSSonarQubeExtension] Attached to issue: ") then
-                    for item in Regex.Matches(comment.HtmlText, "\\d+") do
-                        if issue.IssueTrackerId = null || issue.IssueTrackerId = "" then
-                            issue.IssueTrackerId <- item.Value
-        issue
-
-    let getIssuesFromStringAfter45(responsecontent : string) =
-        let data = JSonIssuesRest.Parse(responsecontent)
-        let issueList = new System.Collections.Generic.List<Issue>()
-        for elem in data.Issues do
-            let issue = new Issue()
-            issue.Message <- elem.Message
-            issue.CreationDate <- elem.CreationDate
-
-            issue.Component <- elem.Component
-            try
-                if not(obj.ReferenceEquals(elem.Line, null)) then
-                    issue.Line <- elem.Line
-                else
-                    issue.Line <- 0
-            with
-            | ex -> ()
-
-            issue.Project <- elem.Project
-            issue.UpdateDate <- elem.UpdateDate
-            issue.Status <- (EnumHelper.asEnum<IssueStatus>(elem.Status)).Value
-            issue.Severity <- GetSeverity(elem.Severity)
-            issue.Rule <- elem.Rule
-            issue.Key <- elem.Key.ToString().Replace("\"", "")
-
-            if not(obj.ReferenceEquals(elem.Assignee, null)) then
-                match elem.Assignee with
-                | None -> ()
-                | Some value -> issue.Assignee <- value
-
-            if not(obj.ReferenceEquals(elem.Author, null)) then
-                match elem.Author with
-                | None -> ()
-                | Some value -> issue.Author <- value
-
-            if not(obj.ReferenceEquals(elem.Comments, null)) then
-                for elemC in elem.Comments do issue.Comments.Add(new Comment(elemC.CreatedAt, elemC.HtmlText, elemC.Key, elemC.Login, -1))
-
-            if not(obj.ReferenceEquals(elem.CloseDate, null)) then
-                match elem.CloseDate with
-                | None -> ()
-                | Some value -> issue.CloseDate <- value
-
-            if not(obj.ReferenceEquals(elem.Resolution, null)) then
-                match elem.Resolution with
-                | None -> ()
-                | Some value -> issue.Resolution <- (EnumHelper.asEnum<Resolution>(value.Replace("-", "_"))).Value
-
-            if not(obj.ReferenceEquals(elem.Effort, null)) then
-                match elem.Effort with
-                | None -> ()
-                | Some value -> issue.Effort <- value
-
-            if not(obj.ReferenceEquals(elem.Tags, null)) then
-                for tag in elem.Tags do
-                    issue.Tags.Add(tag) |> ignore
-
-            if issue.Comments.Count <> 0 then
-                for comment in issue.Comments do
-                    if comment.HtmlText.StartsWith("[VSSonarQubeExtension] Attached to issue: ") then
-                        for item in Regex.Matches(comment.HtmlText, "\\d+") do
-                            if issue.IssueTrackerId = null || issue.IssueTrackerId = "" then
-                                issue.IssueTrackerId <- item.Value
-
-            issueList.Add(issue)
-
-        issueList
-
-    let getIssuesFromString(responsecontent : string) =
-        let data = JsonIssues.Parse(responsecontent)
-        let issueList = new System.Collections.Generic.List<Issue>()
-        for elem in data.Issues do
-            try
-                let issue = new Issue()
-                issue.Message <- elem.Message
-                issue.CreationDate <- elem.CreationDate
-
-                issue.Component <- elem.Component
-                if not(obj.ReferenceEquals(elem.Line, null)) then
-                    issue.Line <- elem.Line.Value
-                else
-                    issue.Line <- 0
-
-                issue.Project <- elem.Project
-                issue.UpdateDate <- elem.UpdateDate
-                issue.Status <- (EnumHelper.asEnum<IssueStatus>(elem.Status)).Value
-                issue.Severity <- GetSeverity(elem.Severity)
-                issue.Rule <- elem.Rule
-                issue.Key <- elem.Key.ToString()
-
-                if not(obj.ReferenceEquals(elem.Assignee, null)) then
-                    issue.Assignee <- elem.Assignee.Value
-
-                if not(obj.ReferenceEquals(elem.Author, null)) then
-                    issue.Author <- elem.Author.Value
-            
-                if not(obj.ReferenceEquals(elem.Comments, null)) then
-                    for elemC in elem.Comments do issue.Comments.Add(new Comment(elemC.CreatedAt, elemC.HtmlText, elemC.Key, elemC.Login, -1))
-
-                if not(obj.ReferenceEquals(elem.CloseDate, null)) then
-                    issue.CloseDate <- elem.CloseDate.Value
-
-                if not(obj.ReferenceEquals(elem.Resolution, null)) then
-                    issue.Resolution <- (EnumHelper.asEnum<Resolution>(elem.Resolution.Value.Replace("-", "_"))).Value
-
-                if issue.Comments.Count <> 0 then
-                    for comment in issue.Comments do
-                        if comment.HtmlText.StartsWith("[VSSonarQubeExtension] Attached to issue: ") then
-                            for item in Regex.Matches(comment.HtmlText, "\\d+") do
-                                if issue.IssueTrackerId = null || issue.IssueTrackerId = "" then
-                                    issue.IssueTrackerId <- item.Value
-
-                issueList.Add(issue)
-            with
-            | ex -> ()
-
-        issueList
-
-    let getViolationsFromString(responsecontent : string, reviewAsIssues : System.Collections.Generic.List<Issue>) =
-        let data = JSonViolation.Parse(responsecontent)
-        let issueList = new System.Collections.Generic.List<Issue>()
-        for elem in data do
-            let issue = new Issue()
-            issue.CreationDate <- elem.CreatedAt
-            issue.Component <- elem.Resource.Key
-            issue.Id <- elem.Id
-            issue.Message <- elem.Message
-            if not(obj.ReferenceEquals(elem.Line, null)) then
-                issue.Line <- elem.Line.Value
-            else
-                issue.Line <- 0
-
-            issue.Severity <- GetSeverity(elem.Priority)
-            issue.Status <- IssueStatus.OPEN
-
-            // convert violation into review if a review is present
-            for review in reviewAsIssues do
-                if review.Message = issue.Message && review.Line = issue.Line then
-                    issue.Id <- review.Id
-                    issue.Assignee <- review.Assignee
-                    issue.Resolution <- review.Resolution
-                    issue.Status <- review.Status
-                    for comment in review.Comments do
-                        issue.Comments.Add(comment)
-                    
-            issueList.Add(issue)
-        issueList
-        
-    let getReviewsFromString(responsecontent : string) =
-        let data = JSonarReview.Parse(responsecontent)
-        let issueList = new System.Collections.Generic.List<Issue>()
-        for elem in data do
-            let issue = new Issue()
-            issue.Message <- elem.Title
-            issue.CreationDate <- elem.CreatedAt
-
-            issue.Component <- elem.Resource
-            try
-                issue.Line <- elem.Line
-            with
-            | ex -> issue.Line <- 0
-
-            let keyelems = elem.Resource.Split(':')
-            issue.Project <-  keyelems.[0] + ":" + keyelems.[1] 
-            issue.UpdateDate <- elem.UpdatedAt
-            issue.Status <- (EnumHelper.asEnum<IssueStatus>(elem.Status)).Value
-            issue.Severity <- GetSeverity(elem.Severity)
-            issue.Id <- elem.Id
-            issue.Rule <- ""
-            let violationId = elem.ViolationId
-            issue.ViolationId <- violationId
-            try
-                issue.Assignee <- elem.Assignee.Value
-            with
-            | ex -> ()            
-
-            match elem.JsonValue.TryGetProperty("comments") with
-            | NotNull ->
-                for elemC in elem.Comments do issue.Comments.Add(new Comment(elemC.UpdatedAt, elemC.Text, "", elemC.Author, elem.Id))
-            | _ -> ()
-
-            issueList.Add(issue)
-
-        issueList
-
-    let getIssuesOldAndNewVersions(userConf, newurl : string, oldurlreviews: string, oldurlviolations) = 
-
-        cancelRequest <- false
-
-        try
-            let allIssues = new System.Collections.Generic.List<Issue>()
-            try
-                let responsecontent = httpconnector.HttpSonarGetRequest(userConf, newurl)
-                let data = JSonIssuesRest.Parse(responsecontent)
-
-                let AddElements(all : System.Collections.Generic.List<Issue>) = 
-                    for issue in all do
-                        allIssues.Add(issue)
-
-                AddElements(getIssuesFromStringAfter45(responsecontent))
-
-                // we need to get all pages
-                let value = int(System.Math.Ceiling(float(data.Paging.Total) / float(data.Paging.PageSize)))
-
-                for i = 2 to value do
-                    if not(cancelRequest) then
-                        try
-                            let url = newurl + "&pageIndex=" + Convert.ToString(i)
-                            let newresponse = httpconnector.HttpSonarGetRequest(userConf, url)
-                            AddElements(getIssuesFromStringAfter45(newresponse))
-                        with | ex -> ()
-            with
-            | ex -> 
-                let responsecontent = httpconnector.HttpSonarGetRequest(userConf, newurl)
-                let data = JsonIssues.Parse(responsecontent)
-
-                let AddElements(all : System.Collections.Generic.List<Issue>) = 
-                    for issue in all do
-                        allIssues.Add(issue)
-
-                AddElements(getIssuesFromString(responsecontent))
-
-                // we need to get all pages
-            
-                for i = 2 to data.Paging.Pages do
-                    if not(cancelRequest) then
-                        let url = newurl + "&pageIndex=" + Convert.ToString(i)
-                        let newresponse = httpconnector.HttpSonarGetRequest(userConf, url)
-                        AddElements(getIssuesFromString(newresponse))
-            allIssues
-        with
-        | ex ->
-            if oldurlviolations = "" then
-                let oldcontent = httpconnector.HttpSonarGetRequest(userConf, oldurlreviews)
-                getReviewsFromString(oldcontent)
-            else
-                let reviewsInResource = getReviewsFromString(httpconnector.HttpSonarGetRequest(userConf, oldurlreviews))
-                let oldcontent = httpconnector.HttpSonarGetRequest(userConf, oldurlviolations)
-                getViolationsFromString(oldcontent, reviewsInResource)
-
-        
-
-    let getViolationsOldAndNewFormat(userConf, resource : string) = 
-        try
-            let url =  "/api/issues/search?components=" + resource + "&statuses=OPEN,CONFIRMED,REOPENED"
-            let responsecontent = httpconnector.HttpSonarGetRequest(userConf, url)
-            try
-                getIssuesFromStringAfter45(responsecontent)
-            with
-            | ex -> getIssuesFromString(responsecontent)
-        with
-        | ex ->          
-            let reviewsurl = "/api/reviews?resources="+ resource
-            let reviewsInResource = getReviewsFromString(httpconnector.HttpSonarGetRequest(userConf, reviewsurl))
-            let violationsurl = "/api/violations?resource=" + resource
-            let oldcontent = httpconnector.HttpSonarGetRequest(userConf, violationsurl)
-            getViolationsFromString(oldcontent, reviewsInResource)
 
     let getProjectResourcesFromResponseContent(responsecontent : string) = 
         let resources = JsonResourceWithMetrics.Parse(responsecontent)
@@ -615,24 +316,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
         request.AddHeader(HttpRequestHeader.Accept.ToString(), "text/xml") |> ignore
         client.Execute(request)
 
-    let PerformWorkFlowTransition(userconf : ISonarConfiguration, issue : Issue, transition : string) =
-        let parameters = Map.empty.Add("issue", issue.Key.ToString()).Add("transition", transition)
-        httpconnector.HttpSonarPostRequest(userconf, "/api/issues/do_transition", parameters)
 
-    let DoStateTransition(userconf : ISonarConfiguration, issue : Issue, finalState : IssueStatus, transition : string) = 
-        let mutable status = Net.HttpStatusCode.OK
-
-        let response = PerformWorkFlowTransition(userconf, issue, transition)
-        status <- response.StatusCode
-        if status = Net.HttpStatusCode.OK then
-            let data = getIssueFromString(response.Content)
-            if data.Status.Equals(finalState) then
-                issue.Status <- data.Status
-                issue.Resolution <- data.Resolution
-            else
-                status <- Net.HttpStatusCode.BadRequest
-
-        status
 
     let CreateRuleInProfile2(parsedDataRule:JsonRule.Rule, profile : Profile)=
         let newRule = new Rule()
@@ -899,8 +583,8 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             else
                 error
 
-        member this.GetCoverageReportOnNewCodeOnLeak(conf: ISonarConfiguration, project: Resource) =
-            DifferencialService.GetCoverageReportOnNewCodeOnLeak(conf, project, httpconnector)
+        member this.GetCoverageReportOnNewCodeOnLeak(conf: ISonarConfiguration, project: Resource, logger:INotificationManager) =
+            DifferencialService.GetCoverageReportOnNewCodeOnLeak(conf, project, httpconnector, logger)
 
         member this.GetCoverageReport(conf: ISonarConfiguration, project: Resource) =
             DifferencialService.GetCoverageReport(conf, project, httpconnector)
@@ -1347,58 +1031,50 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
             projects
 
-        member this.GetIssues(newConf : ISonarConfiguration, query : string, project : string) = 
-            let url =  "/api/issues/search" + query + "&additionalFields=comments&pageSize=200"
-            let oldurlreview = "/api/reviews?projects="+ project
-            let oldurlviolations = "/api/violations?resource="+ project + "&depth=-1"
-            getIssuesOldAndNewVersions(newConf, url, oldurlreview, oldurlviolations)
+        member this.GetIssues(newConf : ISonarConfiguration, query : string, project : string, token:CancellationToken, logger:INotificationManager) = 
+            async {
+                let url =  "/api/issues/search" + query + "&additionalFields=comments&pageSize=200"
+                return IssuesService.SearchForIssues(newConf, url, token, httpconnector, logger)
+            } |> Async.StartAsTask
 
-        member this.GetIssuesByAssigneeInProject(newConf : ISonarConfiguration, project : string, login : string) = 
-            let url =  "/api/issues/search?componentRoots=" + project + "&assignees="+ login+ "&pageSize=200&statuses=OPEN,CONFIRMED,REOPENED"
-            let oldurl = "/api/reviews?projects=" + project + "&assignees="+ login
-            getIssuesOldAndNewVersions(newConf, url, oldurl, "")
+        member this.GetIssuesByAssigneeInProject(newConf : ISonarConfiguration, project : string, login : string, token:CancellationToken, logger:INotificationManager) = 
+            async {
+                let url =  "/api/issues/search?componentRoots=" + project + "&assignees="+ login+ "&pageSize=200&statuses=OPEN,CONFIRMED,REOPENED"
+                return IssuesService.SearchForIssues(newConf, url, token, httpconnector, logger)
+            } |> Async.StartAsTask
    
-        member this.GetAllIssuesByAssignee(newConf : ISonarConfiguration, login : string) = 
-            let url =  "/api/issues/search?assignees="+ login + "&pageSize=200&statuses=OPEN,CONFIRMED,REOPENED"
-            let oldurl = "/api/reviews?assignees="+ login
-            getIssuesOldAndNewVersions(newConf, url, oldurl, "")
+        member this.GetAllIssuesByAssignee(newConf : ISonarConfiguration, login : string, token:CancellationToken, logger:INotificationManager) = 
+            async {
+                let url =  "/api/issues/search?assignees="+ login + "&pageSize=200&statuses=OPEN,CONFIRMED,REOPENED"
+                return IssuesService.SearchForIssues(newConf, url, token, httpconnector, logger)
+            } |> Async.StartAsTask
 
-        member this.GetIssuesForProjectsCreatedAfterDate(newConf : ISonarConfiguration, project : string, date : DateTime) =
-            let url =  "/api/issues/search?componentRoots=" + project + "&pageSize=200&createdAfter=" + Convert.ToString(date.Year) + "-" + Convert.ToString(date.Month) + "-"  + Convert.ToString(date.Day) + "&statuses=OPEN,CONFIRMED,REOPENED"
-            let oldurl = "/api/reviews?projects="+ project
-            getIssuesOldAndNewVersions(newConf, url, oldurl, "")
+        member this.GetIssuesForProjectsCreatedAfterDate(newConf : ISonarConfiguration, project : string, date : DateTime, token:CancellationToken, logger:INotificationManager) =
+            async {
+                let url =  "/api/issues/search?componentRoots=" + project + "&pageSize=200&createdAfter=" + Convert.ToString(date.Year) + "-" + Convert.ToString(date.Month) + "-"  + Convert.ToString(date.Day) + "&statuses=OPEN,CONFIRMED,REOPENED"
+                return IssuesService.SearchForIssues(newConf, url, token, httpconnector, logger)
+            } |> Async.StartAsTask
 
-        member this.GetIssuesForProjects(newConf : ISonarConfiguration, project : string) =
-            let url =  "/api/issues/search?componentRoots=" + project + "&pageSize=200&statuses=OPEN,CONFIRMED,REOPENED"
-            let oldurlreview = "/api/reviews?projects="+ project
-            let oldurlviolations = "/api/violations?resource="+ project + "&depth=-1"
-            getIssuesOldAndNewVersions(newConf, url, oldurlreview, oldurlviolations)
+        member this.GetIssuesForProjects(newConf : ISonarConfiguration, project : string, token:CancellationToken, logger:INotificationManager) =
+            async {
+                let url =  "/api/issues/search?componentRoots=" + project + "&pageSize=200&statuses=OPEN,CONFIRMED,REOPENED"
+                return IssuesService.SearchForIssues(newConf, url, token, httpconnector, logger)
+            } |> Async.StartAsTask
 
-        member this.GetIssuesInResource(conf : ISonarConfiguration, resource : string) =
-            getViolationsOldAndNewFormat(conf, resource)
+        member this.GetIssuesInResource(conf : ISonarConfiguration, resource : string, token:CancellationToken, logger:INotificationManager) =
+            async {
+                return IssuesService.SearchForIssuesInResource(conf, resource, httpconnector, logger)
+            } |> Async.StartAsTask
 
-        member this.SetIssueTags(conf : ISonarConfiguration, issue : Issue, tags : System.Collections.Generic.List<string>) =
-            let url = "/api/issues/set_tags"
-            let tags = List.ofSeq tags |> String.concat ","
-            try
-                let parameters = Map.empty.Add("key", issue.Key).Add("tags", tags)
-                let reply = httpconnector.HttpSonarPostRequest(conf, url, parameters)
-                reply.StatusCode.ToString()
-            with
-            | ex -> "Error : Cannot set tag: " + ex.Message
+        member this.SetIssueTags(conf : ISonarConfiguration, issue : Issue, tags : System.Collections.Generic.List<string>, token:CancellationToken, logger:INotificationManager) =
+            async {
+                return IssuesService.SetIssueTags(conf, issue, tags, httpconnector, token, logger)
+            } |> Async.StartAsTask
 
-        member this.GetAvailableTags(newConf : ISonarConfiguration) =
-            let url = "/api/issues/tags?ps=1000"
-            let listOfTags = new System.Collections.Generic.List<string>();
-            try
-                let responsecontent = httpconnector.HttpSonarGetRequest(newConf, url)
-                let tags = JsonTags.Parse(responsecontent)
-                for tag in tags.Tags do
-                    listOfTags.Add(tag)
-            with
-            | _ -> ()
-
-            listOfTags
+        member this.GetAvailableTags(newConf : ISonarConfiguration, token:CancellationToken, logger:INotificationManager) =
+            async {
+                return IssuesService.GetAvailableTags(newConf, httpconnector, token, logger)
+            } |> Async.StartAsTask
 
         member this.GetUserList(newConf : ISonarConfiguration) =
             let url = "/api/users/search?ps=1000"           
@@ -1626,7 +1302,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                     commentToAdd.Login <- comment.Comment.Login
                     issue.Comments.Add(commentToAdd)
                 with
-                    | ex -> AddCommentFromResponse(getReviewsFromString(response.Content))
+                    | ex -> AddCommentFromResponse(IssuesService.getReviewsFromString(response.Content))
 
                 try
                     if not(responseMap.ContainsKey(idstr)) then
@@ -1647,7 +1323,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 let issue = issueobj :?> Issue
                 if issue.Status <> IssueStatus.RESOLVED then
                     let mutable idstr = issue.Key.ToString()
-                    let mutable status = DoStateTransition(newConf, issue, IssueStatus.RESOLVED, "wontfix")
+                    let mutable status = IssuesService.DoStateTransition(newConf, issue, IssueStatus.RESOLVED, "wontfix", httpconnector)
                     if status = Net.HttpStatusCode.OK then
                         if not(String.IsNullOrEmpty(comment)) then
                             (this :> ISonarRestService).CommentOnIssues(newConf, issues, comment) |> ignore
@@ -1656,7 +1332,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                             idstr <- Convert.ToString(issue.Id)
                             let CheckReponse(response : IRestResponse)= 
                                 if response.StatusCode = Net.HttpStatusCode.OK then
-                                    let reviews = getReviewsFromString(response.Content)
+                                    let reviews = IssuesService.getReviewsFromString(response.Content)
                                     issue.Id <- reviews.[0].Id
                                     issue.Status <- reviews.[0].Status
                                     issue.Resolution <- Resolution.WONTFIX
@@ -1689,7 +1365,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 let issue = issueobj :?> Issue
                 if issue.Status <> IssueStatus.RESOLVED then
                     let mutable idstr = issue.Key.ToString()
-                    let mutable status = DoStateTransition(newConf, issue, IssueStatus.RESOLVED, "falsepositive")
+                    let mutable status = IssuesService.DoStateTransition(newConf, issue, IssueStatus.RESOLVED, "falsepositive", httpconnector)
                     if status = Net.HttpStatusCode.OK then
                         if not(String.IsNullOrEmpty(comment)) then
                             (this :> ISonarRestService).CommentOnIssues(newConf, issues, comment) |> ignore
@@ -1698,7 +1374,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                             idstr <- Convert.ToString(issue.Id)
                             let CheckReponse(response : IRestResponse)= 
                                 if response.StatusCode = Net.HttpStatusCode.OK then
-                                    let reviews = getReviewsFromString(response.Content)
+                                    let reviews = IssuesService.getReviewsFromString(response.Content)
                                     issue.Id <- reviews.[0].Id
                                     issue.Status <- reviews.[0].Status
                                     issue.Resolution <- Resolution.FALSE_POSITIVE
@@ -1752,7 +1428,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 if issue.Status <> IssueStatus.RESOLVED then
                     let mutable idstr = issue.Key.ToString()
                     let mutable status = Net.HttpStatusCode.OK
-                    status <- DoStateTransition(newConf, issue, IssueStatus.RESOLVED, "resolve")
+                    status <- IssuesService.DoStateTransition(newConf, issue, IssueStatus.RESOLVED, "resolve", httpconnector)
 
                     if status = Net.HttpStatusCode.OK then
                         if not(String.IsNullOrEmpty(comment)) then
@@ -1761,7 +1437,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                         idstr <- Convert.ToString(issue.Id)
                         let CheckReponse(response : IRestResponse)= 
                             if response.StatusCode = Net.HttpStatusCode.OK then
-                                let reviews = getReviewsFromString(response.Content)
+                                let reviews = IssuesService.getReviewsFromString(response.Content)
                                 issue.Id <- reviews.[0].Id
                                 issue.Status <- reviews.[0].Status
                                 issue.Resolution <- Resolution.FIXED
@@ -1792,7 +1468,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 if issue.Status <> IssueStatus.REOPENED || issue.Status <> IssueStatus.OPEN then
                     let mutable idstr = issue.Key.ToString()
                     let mutable status = Net.HttpStatusCode.OK
-                    status <- DoStateTransition(newConf, issue, IssueStatus.REOPENED, "reopen")
+                    status <- IssuesService.DoStateTransition(newConf, issue, IssueStatus.REOPENED, "reopen", httpconnector)
                     if status = Net.HttpStatusCode.OK then
                         if not(String.IsNullOrEmpty(comment)) then
                             (this :> ISonarRestService).CommentOnIssues(newConf, issues, comment) |> ignore
@@ -1800,7 +1476,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                         idstr <- Convert.ToString(issue.Id)
                         let CheckReponse(response : IRestResponse)= 
                             if response.StatusCode = Net.HttpStatusCode.OK then
-                                let reviews = getReviewsFromString(response.Content)
+                                let reviews = IssuesService.getReviewsFromString(response.Content)
                                 issue.Id <- reviews.[0].Id
                                 issue.Status <- reviews.[0].Status
                                 let newComment = new Comment()
@@ -1821,7 +1497,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             let responseMap = new System.Collections.Generic.Dictionary<string, Net.HttpStatusCode>()
             for issueobj in issues do
                 let issue = issueobj :?> Issue
-                responseMap.Add(issue.Key.ToString(), DoStateTransition(newConf, issue, IssueStatus.REOPENED, "unconfirm"))
+                responseMap.Add(issue.Key.ToString(), IssuesService.DoStateTransition(newConf, issue, IssueStatus.REOPENED, "unconfirm", httpconnector))
             if not(String.IsNullOrEmpty(comment)) then
                 (this :> ISonarRestService).CommentOnIssues(newConf, issues, comment) |> ignore                                
             responseMap
@@ -1831,9 +1507,9 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             for issueobj in issues do
                 let issue = issueobj :?> Issue
                 if issue.Status.Equals(IssueStatus.RESOLVED) then
-                    DoStateTransition(newConf, issue, IssueStatus.REOPENED, "reopen") |> ignore
+                    IssuesService.DoStateTransition(newConf, issue, IssueStatus.REOPENED, "reopen", httpconnector) |> ignore
 
-                responseMap.Add(issue.Key.ToString(), DoStateTransition(newConf, issue, IssueStatus.CONFIRMED, "confirm"))                
+                responseMap.Add(issue.Key.ToString(), IssuesService.DoStateTransition(newConf, issue, IssueStatus.CONFIRMED, "confirm", httpconnector))                
 
             if not(String.IsNullOrEmpty(comment)) then
                 (this :> ISonarRestService).CommentOnIssues(newConf, issues, comment) |> ignore
@@ -1859,112 +1535,3 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 (this :> ISonarRestService).CommentOnIssues(newConf, issues, comment) |> ignore
 
             responseMap
-
-        member this.ParseReportOfIssuesOld(path : string) =
-
-            let txt = File.ReadAllText(path)
-            let issuesInFile = JSonIssuesOld.Parse(File.ReadAllText(path))
-            let currentListOfIssues = new System.Collections.Generic.List<Issue>()
-
-            let CreateIssue(resource : string, elem : JsonValue) =
-                let issue = new Issue()
-                let message = elem.GetProperty("message")
-                let severity = elem.GetProperty("severity")
-                let rule_repository = elem.GetProperty("rule_repository")
-                let rule_key = elem.GetProperty("rule_key")
-                let rule_name = elem.GetProperty("rule_name")
-
-                issue.Component <- resource
-                issue.Line <- 0
-                issue.Message <- message.AsString()
-                issue.Rule <- rule_key.AsString()
-                issue.Severity <- (EnumHelper.asEnum<Severity>(severity.AsString())).Value
-                currentListOfIssues.Add(issue)
-
-            let ProcessViolation(str : string, elem : JsonValue) =
-                let resource = str
-                let data = elem
-                elem.AsArray() |> Seq.iter (fun elem -> CreateIssue(resource, elem))
-                ()
-
-            let ProcessElem(str : string, elem : JsonValue) =
-                
-                if str.Equals("violations_per_resource") then
-                    elem.Properties |> Seq.iter (fun elem -> ProcessViolation(elem))
-                ()
-
-            issuesInFile.JsonValue.Properties |> Seq.iter (fun elem -> ProcessElem(elem))
-
-            currentListOfIssues                       
-                            
-
-        member this.ParseDryRunReportOfIssues(path : string) =
-
-            let txt = File.ReadAllText(path)
-            let issuesInFile = JSonIssuesDryRun.Parse(File.ReadAllText(path))
-
-            let currentListOfIssues = new System.Collections.Generic.List<Issue>()
-
-            let CreateIssue(resource : string, elem : JsonValue) =                
-                let issue = new Issue()
-                let message = elem.GetProperty("message")
-                let severity = elem.GetProperty("severity")
-                let rule_repository = elem.GetProperty("rule_repository")
-                let rule_key = elem.GetProperty("rule_key")
-                let created_at = elem.GetProperty("created_at")
-                let is_new = elem.GetProperty("is_new")
-
-                issue.Component <- resource
-                issue.Line <- 0
-                issue.Message <- message.AsString()
-                issue.Rule <- rule_key.AsString()
-                issue.Severity <- (EnumHelper.asEnum<Severity>(severity.AsString())).Value
-                issue.CreationDate <- created_at.AsDateTime()
-                currentListOfIssues.Add(issue)
-
-            let ProcessViolation(str : string, elem : JsonValue) =
-                let resource = str
-                let data = elem
-                elem.AsArray() |> Seq.iter (fun elem -> CreateIssue(resource, elem))
-                ()
-
-            let ProcessElem(str : string, elem : JsonValue) =
-                
-                if str.Equals("violations_per_resource") then
-                    elem.Properties |> Seq.iter (fun elem -> ProcessViolation(elem))
-                ()
-
-            issuesInFile.JsonValue.Properties |> Seq.iter (fun elem -> ProcessElem(elem))
-
-            currentListOfIssues 
-
-        member this.ParseReportOfIssues(path : string) =
-            let issuesInFile = JSonIssues.Parse(File.ReadAllText(path))
-            let currentListOfIssues = new System.Collections.Generic.List<Issue>()
-
-            let ConvertIssue(elem : JSonIssues.Issue ) =
-                let issue = new Issue()
-                if not(obj.ReferenceEquals(elem.Component, null)) then
-                    issue.Component <- elem.Component.Value
-                if not(obj.ReferenceEquals(elem.CreationDate, null)) then
-                    issue.CreationDate <- elem.CreationDate.Value
-                if not(obj.ReferenceEquals(elem.Key, null)) && not(obj.ReferenceEquals(elem.Key.Guid, null)) then
-                    issue.Key <- elem.Key.Guid.Value.ToString()
-                if not(obj.ReferenceEquals(elem.Line, null)) then
-                    issue.Line <- elem.Line.Value
-                if not(obj.ReferenceEquals(elem.Message, null)) then
-                    issue.Message <- elem.Message.Value
-                if not(obj.ReferenceEquals(elem.Rule, null)) then
-                    issue.Rule <- elem.Rule
-                if not(obj.ReferenceEquals(elem.Severity, null)) then
-                    issue.Severity <- (EnumHelper.asEnum<Severity>(elem.Severity.Value)).Value
-                if not(obj.ReferenceEquals(elem.UpdateDate, null)) then
-                    issue.UpdateDate <- elem.UpdateDate.Value
-                if not(obj.ReferenceEquals(elem.IsNew, null)) then
-                    issue.IsNew <- elem.IsNew.Value
-
-                issue
-
-            issuesInFile.Issues |> Seq.iter (fun elem -> currentListOfIssues.Add(ConvertIssue(elem)))            
-            currentListOfIssues          
-

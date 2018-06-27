@@ -56,7 +56,7 @@ namespace VSSonarExtensionUi.ViewModel
     /// <summary>
     ///     The sonar qube view viewModel.
     /// </summary>
-    [ImplementPropertyChanged]
+    [AddINotifyPropertyChangedInterface]
     public class SonarQubeViewModel
     {
         /// <summary>
@@ -940,10 +940,10 @@ namespace VSSonarExtensionUi.ViewModel
         public List<Issue> GetIssuesInEditor(Resource fileResource, string fileContent, out bool showfalseandresolved)
         {
             showfalseandresolved = false;
-            this.notificationManager.WriteMessage("Return issues for resource: " + fileResource);
+            this.notificationManager.WriteMessageToLog("Return issues for resource: " + fileResource);
             if (this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.DisableEditorTags)
             {
-                this.notificationManager.WriteMessage("Return issues for resource, tags disabled");
+                this.notificationManager.WriteMessageToLog("Return issues for resource, tags disabled");
                 return new List<Issue>();
             }
 
@@ -1188,13 +1188,13 @@ namespace VSSonarExtensionUi.ViewModel
             {
                 try
                 {
-                    this.notificationManager.WriteMessage("RefreshDataForResource: Doc in View: " + this.DocumentInView);
+                    this.notificationManager.WriteMessageToLog("RefreshDataForResource: Doc in View: " + this.DocumentInView);
                     analyser.RefreshDataForResource(this.ResourceInEditor, this.DocumentInView, File.ReadAllText(this.DocumentInView), false);
                 }
                 catch (Exception ex)
                 {
-                    this.notificationManager.WriteMessage("Cannot find file in server: " + ex.Message);
-                    this.notificationManager.WriteException(ex);
+                    this.notificationManager.WriteMessageToLog("Cannot find file in server: " + ex.Message);
+                    this.notificationManager.WriteExceptionToLog(ex);
                     this.notificationManager.ReportException(ex);
                 }
             }
@@ -1208,7 +1208,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// <param name="fromSave">if set to <c>true</c> [from save].</param>
         public void RefreshDataForResource(string fullName, string contentoffile, bool fromSave)
         {
-            this.notificationManager.WriteMessage("Refresh Data For File: " + fullName);
+            this.notificationManager.WriteMessageToLog("Refresh Data For File: " + fullName);
             if (string.IsNullOrEmpty(fullName) || this.AssociationModule.AssociatedProject == null)
             {
                 return;
@@ -1236,15 +1236,15 @@ namespace VSSonarExtensionUi.ViewModel
             {
                 try
                 {
-                    this.notificationManager.WriteMessage("RefreshDataForResource: Doc in View: " + this.DocumentInView);
+                    this.notificationManager.WriteMessageToLog("RefreshDataForResource: Doc in View: " + this.DocumentInView);
                     analyser.RefreshDataForResource(this.ResourceInEditor, this.DocumentInView, contentoffile, fromSave);
                     this.StatusMessage = this.ResourceInEditor.Key;
                 }
                 catch (Exception ex)
                 {
                     this.StatusMessage = "Cannot find file in server: " + ex.Message;
-                    this.notificationManager.WriteMessage("Cannot find file in server: " + ex.Message);
-                    this.notificationManager.WriteException(ex);
+                    this.notificationManager.WriteMessageToLog("Cannot find file in server: " + ex.Message);
+                    this.notificationManager.WriteExceptionToLog(ex);
                     this.notificationManager.ReportException(ex);
                 }
             }

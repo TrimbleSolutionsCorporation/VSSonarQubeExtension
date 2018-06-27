@@ -8,8 +8,15 @@ open System.IO
 open VSSonarPlugins
 open VSSonarPlugins.Types
 open System.Reflection
+open System.Threading
+
 type IssuesTests() =
     let assemblyRunningPath = Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString()
+    let mockLogger =
+        Mock<INotificationManager>()
+            .Create()
+    let cancelMonitors = new CancellationTokenSource()
+    
     [<Test>]
     member test.``Should Get Corret Number of Issues In Component`` () =
         let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1", 4.5)
@@ -18,8 +25,9 @@ type IssuesTests() =
             Mock<IHttpSonarConnector>()
                 .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/issuessearchbycomponent.txt"))
                 .Create()
+
         let service = SonarRestService(mockHttpReq)
-        let issues = (service :> ISonarRestService).GetIssuesInResource(conf, "groupid:projectid:directory/file.cpp")
+        let issues = (service :> ISonarRestService).GetIssuesInResource(conf, "groupid:projectid:directory/file.cpp", cancelMonitors.Token, mockLogger).GetAwaiter().GetResult()
         Assert.That(issues.Count, Is.EqualTo(59))
 
     [<Test>]
@@ -33,7 +41,7 @@ type IssuesTests() =
                 .Setup(fun x -> <@ x.HttpSonarGetRequest(conf, "/api/issues/search?components=groupid:projectid:directory/file.cpp") @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/NonExistentPage.xml"))
                 .Create()
         let service = SonarRestService(mockHttpReq)
-        let issues = (service :> ISonarRestService).GetIssuesInResource(conf, "groupid:projectid:directory/file.cpp")
+        let issues = (service :> ISonarRestService).GetIssuesInResource(conf, "groupid:projectid:directory/file.cpp", cancelMonitors.Token, mockLogger).GetAwaiter().GetResult()
         Assert.That(issues.Count, Is.EqualTo(30))
   
     [<Test>]
@@ -46,7 +54,7 @@ type IssuesTests() =
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        let issues = (service :> ISonarRestService).GetIssuesByAssigneeInProject(conf, "groupid:projectid:directory/file.cpp", "jocs1")
+        let issues = (service :> ISonarRestService).GetIssuesByAssigneeInProject(conf, "groupid:projectid:directory/file.cpp", "jocs1", cancelMonitors.Token, mockLogger).GetAwaiter().GetResult()
         Assert.That(issues.Count, Is.EqualTo(2))
 
     [<Test>]
@@ -60,7 +68,7 @@ type IssuesTests() =
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        let issues = (service :> ISonarRestService).GetIssuesByAssigneeInProject(conf, "groupid:projectid", "login1")
+        let issues = (service :> ISonarRestService).GetIssuesByAssigneeInProject(conf, "groupid:projectid", "login1", cancelMonitors.Token, mockLogger).GetAwaiter().GetResult()
         Assert.That(issues.Count, Is.EqualTo(5))
 
     [<Test>]
@@ -73,7 +81,7 @@ type IssuesTests() =
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        let issues = (service :> ISonarRestService).GetAllIssuesByAssignee(conf, "jocs1")
+        let issues = (service :> ISonarRestService).GetAllIssuesByAssignee(conf, "jocs1", cancelMonitors.Token, mockLogger).GetAwaiter().GetResult()
         Assert.That(issues.Count, Is.EqualTo(2))
 
     [<Test>]
@@ -87,7 +95,7 @@ type IssuesTests() =
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        let issues = (service :> ISonarRestService).GetAllIssuesByAssignee(conf, "login1")
+        let issues = (service :> ISonarRestService).GetAllIssuesByAssignee(conf, "login1", cancelMonitors.Token, mockLogger).GetAwaiter().GetResult()
         Assert.That(issues.Count, Is.EqualTo(5))
 
     [<Test>]
@@ -100,7 +108,7 @@ type IssuesTests() =
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        let issues = (service :> ISonarRestService).GetIssuesForProjects(conf, "project:id")
+        let issues = (service :> ISonarRestService).GetIssuesForProjects(conf, "project:id", cancelMonitors.Token, mockLogger).GetAwaiter().GetResult()
         Assert.That(issues.Count, Is.EqualTo(59))
 
     [<Test>]
@@ -115,7 +123,7 @@ type IssuesTests() =
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        let issues = (service :> ISonarRestService).GetIssuesForProjects(conf, "project:id")
+        let issues = (service :> ISonarRestService).GetIssuesForProjects(conf, "project:id", cancelMonitors.Token, mockLogger).GetAwaiter().GetResult()
         Assert.That(issues.Count, Is.EqualTo(30))
 
     [<Test>]
@@ -130,46 +138,5 @@ type IssuesTests() =
                 .Create()
 
         let service = SonarRestService(mockHttpReq)
-        let issues = (service :> ISonarRestService).GetIssuesInResource(conf, "filename")
+        let issues = (service :> ISonarRestService).GetIssuesInResource(conf, "filename", cancelMonitors.Token, mockLogger).GetAwaiter().GetResult()
         Assert.That(issues.Count, Is.EqualTo(30))
-
-    [<Test>]
-    member test.``Should Parse Dry Run Reports Before 4.0`` () =
-        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1", 4.5)
-
-        let mockHttpReq =
-            Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/dryRunReport.txt"))
-                .Create()
-
-        let service = SonarRestService(mockHttpReq)
-        let issues = (service :> ISonarRestService).ParseReportOfIssuesOld(assemblyRunningPath + "/testdata/dryRunReport.txt")
-        Assert.That(issues.Count, Is.EqualTo(10))
-
-
-    [<Test>]
-    member test.``Should Parse Dry Run Reports Before 3.7`` () =
-        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1", 4.5)
-
-        let mockHttpReq =
-            Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/dryrunissues.txt"))
-                .Create()
-
-        let service = SonarRestService(mockHttpReq)
-        let issues = (service :> ISonarRestService).ParseDryRunReportOfIssues(assemblyRunningPath + "/testdata/dryrunissues.txt")
-        Assert.That(issues.Count, Is.EqualTo(10))
-
-    [<Test>]
-    member test.``Should Parse issue with sonar 4.2`` () =
-        let conf = ConnectionConfiguration("http://localhost:9000", "jocs1", "jocs1", 4.5)
-
-        let mockHttpReq =
-            Mock<IHttpSonarConnector>()
-                .Setup(fun x -> <@ x.HttpSonarGetRequest(any(), any()) @>).Returns(File.ReadAllText(assemblyRunningPath + "/testdata/incrementalrun.txt"))
-                .Create()
-
-        let service = SonarRestService(mockHttpReq)
-        let issues = (service :> ISonarRestService).ParseReportOfIssues(assemblyRunningPath + "/testdata/incrementalrun.txt")
-        Assert.That(issues.Count, Is.EqualTo(1))
-

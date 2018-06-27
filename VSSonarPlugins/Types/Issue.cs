@@ -23,7 +23,7 @@ namespace VSSonarPlugins.Types
     /// <summary>
     /// The issue.
     /// </summary>
-    [ImplementPropertyChanged]
+    [AddINotifyPropertyChangedInterface]
     [Serializable]
     public class Issue
     {

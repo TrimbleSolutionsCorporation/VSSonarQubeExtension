@@ -23,7 +23,7 @@
     /// <summary>
     /// Generates associations with sonar projects
     /// </summary>
-    [ImplementPropertyChanged]
+    [AddINotifyPropertyChangedInterface]
     public class AssociationModel
     {
         /// <summary>
@@ -308,7 +308,7 @@
             }
             catch (Exception ex)
             {
-                this.logger.WriteMessage("Please report this error: Resource should be always created. " + ex.Message);
+                this.logger.WriteMessageToLog("Please report this error: Resource should be always created. " + ex.Message);
                 return null;
             }
         }

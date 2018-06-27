@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<packages>
+  <package id="AssemblyPatcherTask" version="1.0.5" targetFramework="net45" />
+  <package id="MahApps.Metro" version="1.1.2.0" targetFramework="net45" />
+  <package id="MahApps.Metro.Resources" version="0.4.0.0" targetFramework="net45" />
+<<<<<<< eaaf04506aa4d652014f9691be1a02445b5b4b8d
+  <package id="VSSonarExtensionPlugin3Api" version="5.0.2" targetFramework="net45" />
+  <package id="VSSonarExtensionPlugin4Api" version="5.0.2" targetFramework="net45" />
+=======
+  <package id="VSSonarExtensionPlugin3Api" version="5.0.0" targetFramework="net45" />
+  <package id="VSSonarExtensionPlugin4Api" version="5.0.0" targetFramework="net45" />
+>>>>>>> use nugets
+</packages>

@@ -7,8 +7,8 @@
 
         
         <!-- Version settings -->
-        <MajorVersionNumber           Condition="'$(MajorVersionNumber)'==''">6</MajorVersionNumber>
-        <MinorVersionNumber           Condition="'$(MinorVersionNumber)'==''">3</MinorVersionNumber>
+        <MajorVersionNumber           Condition="'$(MajorVersionNumber)'==''">7</MajorVersionNumber>
+        <MinorVersionNumber           Condition="'$(MinorVersionNumber)'==''">0</MinorVersionNumber>
         <BuildNumber                  Condition="'$(BuildNumber)'==''">0</BuildNumber>
         <RevisionNumber               Condition="'$(RevisionNumber)'==''">0</RevisionNumber>
         <AssemblyPatcherTaskOn        Condition="'$(AssemblyPatcherTaskOn)'==''">false</AssemblyPatcherTaskOn>
@@ -21,12 +21,12 @@
         <TargetFSharpCoreVersion Condition="'$(VSVersion)'=='11.0'">4.3.1.0</TargetFSharpCoreVersion>
         <TargetFSharpCoreVersion Condition="'$(VSVersion)'=='12.0'">4.3.1.0</TargetFSharpCoreVersion>
         <TargetFSharpCoreVersion Condition="'$(VSVersion)'=='14.0'">4.4.0.0</TargetFSharpCoreVersion>
-        <TargetFSharpCoreVersion Condition="'$(VSVersion)'=='15.0'">4.4.1.0</TargetFSharpCoreVersion>
+        <TargetFSharpCoreVersion Condition="'$(VSVersion)'=='15.0'">4.4.3.0</TargetFSharpCoreVersion>
         
         <FSharpFolder Condition="'$(TargetFSharpCoreVersion)'=='4.3.1.0'">FSharp431</FSharpFolder>
         <FSharpFolder Condition="'$(TargetFSharpCoreVersion)'=='4.3.1.0'">FSharp431</FSharpFolder>
         <FSharpFolder Condition="'$(TargetFSharpCoreVersion)'=='4.4.0.0'">FSharp440</FSharpFolder>
-        <FSharpFolder Condition="'$(TargetFSharpCoreVersion)'=='4.4.1.0'">FSharp441</FSharpFolder>
+        <FSharpFolder Condition="'$(TargetFSharpCoreVersion)'=='4.4.3.0'">FSharp441</FSharpFolder>
         <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
         
         
@@ -41,7 +41,7 @@
         <OBJDir>$(MSBuildThisFileDirectory)ObjDrop\$(OutFolder)\$(Configuration)\$(TSPlatform)</OBJDir>
         <IntermediateOutputPath>$(OBJDir)$(MSBuildProjectName)\</IntermediateOutputPath>
 		
-		<AutomationHelperVersion>1.4.7</AutomationHelperVersion>
+		<AutomationHelperVersion>1.4.9</AutomationHelperVersion>
         
         <MsbuildAutomationHelperVersion Condition="'$(VSVersion)'=='11.0'">431.$(AutomationHelperVersion)</MsbuildAutomationHelperVersion>
         <MsbuildAutomationHelperVersion Condition="'$(VSVersion)'=='12.0'">431.$(AutomationHelperVersion)</MsbuildAutomationHelperVersion>        

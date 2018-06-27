@@ -1,0 +1,26 @@
+﻿<ViewModel:TagEditorViewModel xmlns:ViewModel="clr-namespace:SqaleUi.ViewModel" xmlns:System="clr-namespace:System;assembly=mscorlib" CanExecuteRefreshTags="False" CanExecuteAddSelectedTags="True">
+	<ViewModel:TagEditorViewModel.AvailableTags>
+		<System:String>Cras maecenas duis praesent nunc</System:String>
+		<System:String>Curabitur aliquam class</System:String>
+		<System:String>Nam amet accumsan curae</System:String>
+		<System:String>Phasellus bibendum aenean donec consequat</System:String>
+		<System:String>Ante integer mauris etiam quisque</System:String>
+		<System:String>Convallis dignissim arcu elementum vestibulum</System:String>
+		<System:String>Dictumst diam eleifend eget</System:String>
+		<System:String>Elit adipiscing facilisis vivamus fusce</System:String>
+		<System:String>Sed dis parturient aliquam</System:String>
+		<System:String>Est lorem</System:String>
+	</ViewModel:TagEditorViewModel.AvailableTags>
+	<ViewModel:TagEditorViewModel.SelectedTags>
+		<System:String>Aliquet blandit morbi</System:String>
+		<System:String>Nulla facilisi</System:String>
+		<System:String>Commodo proin augue vestibulum</System:String>
+		<System:String>Faucibus enim conubia dolor cubilia</System:String>
+		<System:String>Vestibulum fames nullam aptent adipiscing</System:String>
+		<System:String>Fermentum hac auctor</System:String>
+		<System:String>Leo congue felis mus nec</System:String>
+		<System:String>Non ipsum habitant</System:String>
+		<System:String>Erat parturient cursus vestibulum per</System:String>
+		<System:String>Eros dictum vestibulum nibh justo</System:String>
+	</ViewModel:TagEditorViewModel.SelectedTags>
+</ViewModel:TagEditorViewModel>

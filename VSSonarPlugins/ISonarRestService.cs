@@ -4,6 +4,8 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Net;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Types;
 
     /// <summary>
@@ -17,24 +19,31 @@
         /// <param name="config">The configuration.</param>
         /// <param name="projectKey">The project key.</param>
         /// <param name="userId">The user identifier.</param>
-        /// <returns>returns list of issues</returns>
-        List<Issue> GetIssuesByAssigneeInProject(ISonarConfiguration config, string projectKey, string userId);
+        /// <param name="token">The token.</param>
+        /// <param name="logger">The logger.</param>
+        /// <returns>
+        /// returns list of issues
+        /// </returns>
+        Task<List<Issue>> GetIssuesByAssigneeInProject(ISonarConfiguration config, string projectKey, string userId, CancellationToken token, INotificationManager logger);
 
         /// <summary>
         /// Gets all issues by assignee.
         /// </summary>
         /// <param name="config">The configuration.</param>
         /// <param name="userId">The user identifier.</param>
-        /// <returns></returns>
-        List<Issue> GetAllIssuesByAssignee(ISonarConfiguration config, string userId);
+        /// <param name="token">The token.</param>
+        /// <param name="logger">The logger.</param>
+        /// <returns>task list of issues</returns>
+        Task<List<Issue>> GetAllIssuesByAssignee(ISonarConfiguration config, string userId, CancellationToken token, INotificationManager logger);
 
         /// <summary>
         /// Gets the issues for projects.
         /// </summary>
         /// <param name="config">The configuration.</param>
         /// <param name="projectKey">The project key.</param>
+        /// <param name="token">The token.</param>
         /// <returns></returns>
-        List<Issue> GetIssuesForProjects(ISonarConfiguration config, string projectKey);
+        Task<List<Issue>> GetIssuesForProjects(ISonarConfiguration config, string projectKey, CancellationToken token, INotificationManager logger);
 
         /// <summary>
         /// Gets the issues for projects created after date.
@@ -42,16 +51,18 @@
         /// <param name="config">The configuration.</param>
         /// <param name="projectKey">The project key.</param>
         /// <param name="time">The time.</param>
+        /// <param name="token">The token.</param>
         /// <returns></returns>
-        List<Issue> GetIssuesForProjectsCreatedAfterDate(ISonarConfiguration config, string projectKey, DateTime time);
+        Task<List<Issue>> GetIssuesForProjectsCreatedAfterDate(ISonarConfiguration config, string projectKey, DateTime time, CancellationToken token, INotificationManager logger);
 
         /// <summary>
         /// Gets the issues in resource.
         /// </summary>
         /// <param name="config">The configuration.</param>
         /// <param name="resourceKey">The resource key.</param>
+        /// <param name="token">The token.</param>
         /// <returns></returns>
-        List<Issue> GetIssuesInResource(ISonarConfiguration config, string resourceKey);
+        Task<List<Issue>> GetIssuesInResource(ISonarConfiguration config, string resourceKey, CancellationToken token, INotificationManager logger);
 
         /// <summary>
         /// Gets the issues.
@@ -59,8 +70,9 @@
         /// <param name="config">The configuration.</param>
         /// <param name="query">The query.</param>
         /// <param name="projectId">The project identifier.</param>
+        /// <param name="token">The token.</param>
         /// <returns></returns>
-        List<Issue> GetIssues(ISonarConfiguration config, string query, string projectId);
+        Task<List<Issue>> GetIssues(ISonarConfiguration config, string query, string projectId, CancellationToken token, INotificationManager logger);
 
         /// <summary>
         /// Gets the projects.
@@ -172,15 +184,19 @@
         /// Gets the user list.
         /// </summary>
         /// <param name="conf">The conf.</param>
-        /// <returns></returns>
+        /// <returns>users</returns>
         List<User> GetUserList(ISonarConfiguration conf);
 
         /// <summary>
         /// Gets the available tags.
         /// </summary>
         /// <param name="conf">The conf.</param>
-        /// <returns></returns>
-        List<string> GetAvailableTags(ISonarConfiguration conf);
+        /// <param name="token">The token.</param>
+        /// <param name="logger">The logger.</param>
+        /// <returns>
+        /// tags
+        /// </returns>
+        Task<List<string>> GetAvailableTags(ISonarConfiguration conf, CancellationToken token, INotificationManager logger);
 
         /// <summary>
         /// Sets the issue tags.
@@ -188,14 +204,23 @@
         /// <param name="conf">The conf.</param>
         /// <param name="issue">The issue.</param>
         /// <param name="tags">The tags.</param>
-        /// <returns>status of operation</returns>
-        string SetIssueTags(ISonarConfiguration conf, Issue issue, List<string> tags);
+        /// <param name="token">The token.</param>
+        /// <param name="logger">The logger.</param>
+        /// <returns>
+        /// status of operation
+        /// </returns>
+        Task<string> SetIssueTags(
+            ISonarConfiguration conf,
+            Issue issue,
+            List<string> tags,
+            CancellationToken token,
+            INotificationManager logger);
 
         /// <summary>
         /// Authenticates the user.
         /// </summary>
         /// <param name="conf">The conf.</param>
-        /// <returns></returns>
+        /// <returns>ok for auth</returns>
         bool AuthenticateUser(ISonarConfiguration conf);
 
         /// <summary>
@@ -289,7 +314,7 @@
         /// <param name="props">The props.</param>
         /// <param name="project">The project.</param>
         /// <returns></returns>
-        Dictionary<string, CoverageDifferencial> GetCoverageReportOnNewCodeOnLeak(ISonarConfiguration props, Resource project);
+        Dictionary<string, CoverageDifferencial> GetCoverageReportOnNewCodeOnLeak(ISonarConfiguration props, Resource project, INotificationManager logger);
 
         /// <summary>
         /// Gets the coverage report.
@@ -379,12 +404,6 @@
         void GetRulesForProfileUsingRulesApp(ISonarConfiguration conf, Profile profile, bool active);
 
         Rule GetRuleUsingProfileAppId(ISonarConfiguration conf, string ruleKey);
-
-        List<Issue> ParseReportOfIssues(string path);
-
-        List<Issue> ParseReportOfIssuesOld(string path);
-
-        List<Issue> ParseDryRunReportOfIssues(string path);
 
         List<DuplicationData> GetDuplicationsDataInResource(ISonarConfiguration conf, string resourceKey);
 

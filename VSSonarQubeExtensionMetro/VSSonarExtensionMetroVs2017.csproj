@@ -94,9 +94,17 @@
     <Reference Include="FSharpLint.Core, Version=0.7.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FSharpLint.Core.0.7.6\lib\net45\FSharpLint.Core.dll</HintPath>
     </Reference>
-    <Reference Include="MahApps.Metro, Version=1.2.4.0, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
-      <HintPath>..\packages\MahApps.Metro.1.2.4.0\lib\net45\MahApps.Metro.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="GalaSoft.MvvmLight, Version=5.3.0.19026, Culture=neutral, PublicKeyToken=e7570ab207bcb616, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.5.3.0.0\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Extras, Version=5.3.0.19032, Culture=neutral, PublicKeyToken=669f0b5e8f868abf, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.5.3.0.0\lib\net45\GalaSoft.MvvmLight.Extras.dll</HintPath>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Platform, Version=5.3.0.19032, Culture=neutral, PublicKeyToken=5f873c45e98af8a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.5.3.0.0\lib\net45\GalaSoft.MvvmLight.Platform.dll</HintPath>
+    </Reference>
+    <Reference Include="MahApps.Metro, Version=1.5.0.23, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.1.5.0\lib\net45\MahApps.Metro.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CodeAnalysis, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeAnalysis.Common.1.1.1\lib\net45\Microsoft.CodeAnalysis.dll</HintPath>
@@ -130,6 +138,9 @@
     <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.ComponentModelHost, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
@@ -171,9 +182,16 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.TextTemplating.14.0, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="MsbuildAutomationHelper, Version=1.4.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MsbuildAutomationHelper441.1.4.9\lib\MsbuildAutomationHelper.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="PresentationFramework.Aero" />
+    <Reference Include="StyleCop, Version=4.7.1000.0, Culture=neutral, PublicKeyToken=f904653c63bc2738, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\references\StyleCop.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Collections.Immutable, Version=1.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Collections.Immutable.1.3.1\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
@@ -207,10 +225,6 @@
       <HintPath>..\packages\System.Reflection.Metadata.1.4.2\lib\portable-net45+win8\System.Reflection.Metadata.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="MsbuildAutomationHelper">
-      <HintPath>..\packages\MsbuildAutomationHelper$(MsbuildAutomationHelperVersion)\lib\MsbuildAutomationHelper.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="FSharp.Data, Version=$(TargetFSharpDataVersion), Culture=neutral, PublicKeyToken=2f04dbe497b71114">
       <HintPath>..\References\$(TargetFSharpCoreVersion)\FSharp.Data.dll</HintPath>
       <Private>True</Private>
@@ -221,7 +235,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\MahApps.Metro.1.2.4.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <HintPath>..\packages\MvvmLightLibs.5.3.0.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xaml" />
@@ -287,9 +301,6 @@
     <Content Include="NativeBinaries\x86\git2-4a30c53.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="StyleCop.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
     <Content Include="externalAnalysers\StyleCop\mssp7en.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
@@ -303,7 +314,9 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="app.config" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <Content Include="LICENSE.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
@@ -332,9 +345,86 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\plugins\CxxPlugin\CxxPlugin\CxxPlugin.csproj">
+      <Project>{3755a099-7ee1-4593-9bb0-50da67039c99}</Project>
+      <Name>CxxPlugin</Name>
+      <VSIXSubPath>plugins</VSIXSubPath>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+    </ProjectReference>
+    <ProjectReference Include="..\plugins\DotNetAndFSharpPlugin\src\AnalysisPlugin\AnalysisPlugin.fsproj">
+      <Project>{964F11D4-DB1A-4032-B532-F2351DA730BE}</Project>
+      <Name>AnalysisPlugin</Name>
+      <VSIXSubPath>plugins</VSIXSubPath>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+    </ProjectReference>
+    <ProjectReference Include="..\plugins\DotNetAndFSharpPlugin\src\FSharpLintRunner\FSharpLintRunner.fsproj">
+      <Project>{855e39df-f247-4d3e-a20c-50075656e70b}</Project>
+      <Name>FSharpLintRunner</Name>
+      <VSIXSubPath>plugins</VSIXSubPath>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+    </ProjectReference>
+    <ProjectReference Include="..\plugins\DotNetAndFSharpPlugin\src\FxCopRunner\FxCopRunner.fsproj">
+      <Project>{6cf09ee9-3b4b-483a-ba09-1e4997cc4321}</Project>
+      <Name>FxCopRunner</Name>
+      <VSIXSubPath>plugins</VSIXSubPath>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+    </ProjectReference>
+    <ProjectReference Include="..\plugins\DotNetAndFSharpPlugin\src\NSonarQubeRunner\NSonarQubeRunner.fsproj">
+      <Project>{ab78a0f2-0c05-4822-b0b8-0f9486498774}</Project>
+      <Name>NSonarQubeRunner</Name>
+      <VSIXSubPath>plugins</VSIXSubPath>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+    </ProjectReference>
+    <ProjectReference Include="..\plugins\DotNetAndFSharpPlugin\src\PluginsOptionsController\PluginsOptionsController.csproj">
+      <Project>{7972423c-6bbd-4c1c-b970-5f9afcb44824}</Project>
+      <Name>PluginsOptionsController</Name>
+      <VSIXSubPath>plugins</VSIXSubPath>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+    </ProjectReference>
+    <ProjectReference Include="..\plugins\DotNetAndFSharpPlugin\src\StyleCopRunner\StyleCopRunner.fsproj">
+      <Project>{ea87904c-7234-4f0e-a893-3636e38cc12c}</Project>
+      <Name>StyleCopRunner</Name>
+      <VSIXSubPath>plugins</VSIXSubPath>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+    </ProjectReference>
+    <ProjectReference Include="..\plugins\DuplicationPlugin\ProjectDuplicationTracker\ProjectDuplicationTracker.csproj">
+      <Project>{85e73e45-5f74-4a58-9f07-e19bdcef3c1f}</Project>
+      <Name>ProjectDuplicationTracker</Name>
+      <VSIXSubPath>plugins</VSIXSubPath>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+    </ProjectReference>
+    <ProjectReference Include="..\plugins\GitPlugin\GitPlugin\SQGitPlugin.csproj">
+      <Project>{4e848da2-236e-4030-9c03-5b8fcd138843}</Project>
+      <Name>SQGitPlugin</Name>
+      <VSIXSubPath>plugins</VSIXSubPath>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+    </ProjectReference>
+    <ProjectReference Include="..\plugins\vssqjiraplugin\JiraConnector\JiraConnector.csproj">
+      <Project>{e352d05e-8149-4da2-a7f2-c6dba08350d3}</Project>
+      <Name>JiraConnector</Name>
+      <VSIXSubPath>plugins</VSIXSubPath>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+    </ProjectReference>
+    <ProjectReference Include="..\plugins\vssqjiraplugin\VSSQJiraPlugin\VSSQJiraPlugin.csproj">
+      <Project>{1576C435-186D-4502-B8E2-070E8EB94F60}</Project>
+      <Name>VSSQJiraPlugin</Name>
+      <VSIXSubPath>plugins</VSIXSubPath>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+    </ProjectReference>
     <ProjectReference Include="..\VSSonarQubeCmdExecutor\VSSonarQubeCmdExecutor.fsproj">
       <Project>{9b154406-0af6-45a9-bf32-9c5c23822b6b}</Project>
-      <Name>CommandExecutor</Name>
+      <Name>VSSonarQubeCmdExecutor</Name>
     </ProjectReference>
     <ProjectReference Include="..\DifferenceEngine\DifferenceEngine.csproj">
       <Project>{8AE4897A-EA74-49B1-BA55-D892C27AF9C9}</Project>

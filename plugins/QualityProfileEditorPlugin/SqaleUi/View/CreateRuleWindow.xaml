@@ -1,0 +1,96 @@
+﻿<Controls:MetroWindow
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:viewModel="clr-namespace:SqaleUi.ViewModel" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:system="clr-namespace:System;assembly=mscorlib"
+    xmlns:extensionTypes="clr-namespace:VSSonarPlugins.Types;assembly=VSSonarPlugins"
+    xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+    mc:Ignorable="d"
+    x:Class="SqaleUi.CreateRuleWindow"
+    x:Name="Window"
+    Title="Rule Creator Dialog" BorderThickness="1" Height="540.97" d:DesignWidth="845.612">
+
+    <Window.Resources>
+        <viewModel:CreateRuleViewModel x:Key="CreateRuleViewModelDataSource" d:IsDataSource="True" />
+
+        <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type system:Enum}" x:Key="GetSeverityEnumValues">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="extensionTypes:Severity" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+
+
+    </Window.Resources>
+    <Window.DataContext>
+        <Binding Source="{StaticResource CreateRuleViewModelDataSource}" />
+    </Window.DataContext>
+
+    <Window.Background>
+        <SolidColorBrush Color="{Binding BackGroundColor, FallbackValue=Black}" />
+    </Window.Background>
+
+    <Window.Foreground>
+        <SolidColorBrush Color="{Binding ForeGroundColor, FallbackValue=Red}" />
+    </Window.Foreground>
+    
+    <Window.BorderBrush>
+        <SolidColorBrush Color="{Binding ForeGroundColor, FallbackValue=Red}" />
+    </Window.BorderBrush>
+        
+    <Grid x:Name="LayoutRoot" d:DataContext="{d:DesignData /SampleData/CreateRuleViewModelSampleData.xaml}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="80" />
+            <ColumnDefinition Width="435*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="200" />
+            <RowDefinition Height="25" />
+            <RowDefinition Height="25" />
+            <RowDefinition Height="100" />
+            <RowDefinition Height="100" />
+            <RowDefinition Height="25" />
+            <RowDefinition Height="25" />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Custom Rules" HorizontalAlignment="Right" VerticalAlignment="Top" />
+        <DataGrid Grid.Row="0" Grid.Column="1" SelectionMode="Single" SelectedItem="{Binding SelectedRule}"
+                  IsReadOnly="True" AutoGenerateColumns="False" ItemsSource="{Binding TemplateRules}"
+                  DataContext="{Binding}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Key}" Header="Key" />
+                <DataGridTemplateColumn IsReadOnly="True" Header="Description" CanUserSort="True"
+                                        SortMemberPath="Description" MinWidth="400" Width="400" MaxWidth="400">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox IsReadOnly="True" TextAlignment="Justify" MaxHeight="100" MaxWidth="400"
+                                     TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
+                                     Text="{Binding Description}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Binding="{Binding Lang}" Header="Lang" />
+                <DataGridTextColumn Binding="{Binding Name}" Header="Name" />
+                <DataGridTextColumn Binding="{Binding Repo}" Header="Repo" />
+                <DataGridTextColumn Binding="{Binding Severity}" Header="Severity" />
+                <DataGridTextColumn Binding="{Binding Status}" Header="Status" />
+                <DataGridTextColumn Binding="{Binding Category}" Header="Category" />
+                <DataGridTextColumn Binding="{Binding Subcategory}" Header="Subcategory" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Name" HorizontalAlignment="Right" VerticalAlignment="Top" />
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Name}" />
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Key" HorizontalAlignment="Right" VerticalAlignment="Top" />
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Key}" />
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Html" HorizontalAlignment="Right" VerticalAlignment="Top" />
+        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding HtmlDescription}" TextWrapping="Wrap"
+                 VerticalScrollBarVisibility="Visible" AcceptsReturn="True" />
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="Markdown" HorizontalAlignment="Right" VerticalAlignment="Top" />
+        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding MarkDownDescription}" TextWrapping="Wrap"
+                 VerticalScrollBarVisibility="Visible" AcceptsReturn="True" />        
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="Severity" HorizontalAlignment="Right" VerticalAlignment="Top" />
+        <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{Binding Source={StaticResource GetSeverityEnumValues}}"
+                  Width="Auto" SelectedValue="{Binding SelectedSeverity}" />
+        <Button Content="Create Rule" Grid.Row="6" Grid.Column="1" Command="{Binding CreateCustomRuleCommand}"
+                IsEnabled="{Binding CanExecuteCreateCustomRuleCommand}" />
+    </Grid>
+</Controls:MetroWindow>

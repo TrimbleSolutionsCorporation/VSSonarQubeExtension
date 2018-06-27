@@ -22,7 +22,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Trimble Solutions Corporation")]
 [assembly: AssemblyProduct("VSSonarPlugins")]
-[assembly: AssemblyCopyright("Copyright © 1992-2017 Trimble Solutions Corporation and its licensors. All rights reserved.")]
+[assembly: AssemblyCopyright("Copyright © 1992-2018 Trimble Solutions Corporation and its licensors. All rights reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -44,5 +44,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("6.3.0.0")]
-[assembly: AssemblyFileVersion("6.3.0.0")]
+[assembly: AssemblyVersion("7.0.0.0")]
+[assembly: AssemblyFileVersion("7.0.0.0")]

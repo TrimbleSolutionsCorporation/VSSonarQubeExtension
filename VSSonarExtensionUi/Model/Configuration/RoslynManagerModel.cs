@@ -152,7 +152,7 @@
             {
                 if (!this.AddNewRoslynPack(item.Value, false))
                 {
-                    this.notificationManager.WriteMessage("Failed to add roslyn dll: " + item.Value);
+                    this.notificationManager.WriteMessageToLog("Failed to add roslyn dll: " + item.Value);
                     isOk = false;
                 }
             }
@@ -374,7 +374,7 @@
             rule.Severity = Severity.MAJOR;
             foreach (var error in this.rest.CreateRule(AuthtenticationHelper.AuthToken, rule, templaterule))
             {
-                this.notificationManager.WriteMessage("Failed to create rule: " + error);
+                this.notificationManager.WriteMessageToLog("Failed to create rule: " + error);
             }
         }
 
@@ -496,7 +496,7 @@
                     }
                     catch (Exception ex)
                     {
-                        this.notificationManager.WriteMessage("Failed to load diagnostics from: " + item + " : " + ex.Message);
+                        this.notificationManager.WriteMessageToLog("Failed to load diagnostics from: " + item + " : " + ex.Message);
                     }
                 }                    
             }
@@ -533,7 +533,7 @@
                 }
                 catch (Exception ex)
                 {
-                    this.notificationManager.WriteMessage("Failed to load user diagnostics from: " + diagnostic + " : " + ex.Message);
+                    this.notificationManager.WriteMessageToLog("Failed to load user diagnostics from: " + diagnostic + " : " + ex.Message);
                 }
             }
         }
