@@ -18,20 +18,13 @@
         <VSVersion Condition="'$(VSVersion)'==''">$(VisualStudioVersion)</VSVersion>
         <TargetFSharpDataVersion>3.0.0.0</TargetFSharpDataVersion>
         
-        <TargetFSharpCoreVersion Condition="'$(VSVersion)'=='11.0'">4.3.1.0</TargetFSharpCoreVersion>
-        <TargetFSharpCoreVersion Condition="'$(VSVersion)'=='12.0'">4.3.1.0</TargetFSharpCoreVersion>
         <TargetFSharpCoreVersion Condition="'$(VSVersion)'=='14.0'">4.4.0.0</TargetFSharpCoreVersion>
         <TargetFSharpCoreVersion Condition="'$(VSVersion)'=='15.0'">4.4.3.0</TargetFSharpCoreVersion>
         
-        <FSharpFolder Condition="'$(TargetFSharpCoreVersion)'=='4.3.1.0'">FSharp431</FSharpFolder>
-        <FSharpFolder Condition="'$(TargetFSharpCoreVersion)'=='4.3.1.0'">FSharp431</FSharpFolder>
         <FSharpFolder Condition="'$(TargetFSharpCoreVersion)'=='4.4.0.0'">FSharp440</FSharpFolder>
-        <FSharpFolder Condition="'$(TargetFSharpCoreVersion)'=='4.4.3.0'">FSharp441</FSharpFolder>
+        <FSharpFolder Condition="'$(TargetFSharpCoreVersion)'=='4.4.3.0'">FSharp443</FSharpFolder>
         <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
         
-        
-        <OutFolder Condition="'$(VSVersion)'=='11.0'">vs12</OutFolder>
-        <OutFolder Condition="'$(VSVersion)'=='12.0'">vs13</OutFolder>        
         <OutFolder Condition="'$(VSVersion)'=='14.0'">vs15</OutFolder>
         <OutFolder Condition="'$(VSVersion)'=='15.0'">vs17</OutFolder>
 
@@ -40,19 +33,11 @@
         <ExtensionOutputPathTest     Condition="'$(ExtensionOutputPathTest)'==''">$(MSBuildThisFileDirectory)BuildDrop\Test\$(OutFolder)\</ExtensionOutputPathTest>
         <OBJDir>$(MSBuildThisFileDirectory)ObjDrop\$(OutFolder)\$(Configuration)\$(TSPlatform)</OBJDir>
         <IntermediateOutputPath>$(OBJDir)$(MSBuildProjectName)\</IntermediateOutputPath>
-		
-		<AutomationHelperVersion>1.4.9</AutomationHelperVersion>
-        
-        <MsbuildAutomationHelperVersion Condition="'$(VSVersion)'=='11.0'">431.$(AutomationHelperVersion)</MsbuildAutomationHelperVersion>
-        <MsbuildAutomationHelperVersion Condition="'$(VSVersion)'=='12.0'">431.$(AutomationHelperVersion)</MsbuildAutomationHelperVersion>        
-        <MsbuildAutomationHelperVersion Condition="'$(VSVersion)'=='14.0'">440.$(AutomationHelperVersion)</MsbuildAutomationHelperVersion>
-        <MsbuildAutomationHelperVersion Condition="'$(VSVersion)'=='15.0'">441.$(AutomationHelperVersion)</MsbuildAutomationHelperVersion>
-    </PropertyGroup>
-    
-    <!-- Basic settings -->
-    <PropertyGroup>
-		<MsbuildAutomationHelperVersion                              Condition="'$(VSVersion)'=='14.0'">440.$(AutomationHelperVersion)</MsbuildAutomationHelperVersion>
-    </PropertyGroup>	
 
+        <AutomationHelperVersion>1.5.0</AutomationHelperVersion>
+
+        <MsbuildAutomationHelperVersion Condition="'$(VSVersion)'=='14.0'">440.$(AutomationHelperVersion)</MsbuildAutomationHelperVersion>
+        <MsbuildAutomationHelperVersion Condition="'$(VSVersion)'=='15.0'">443.$(AutomationHelperVersion)</MsbuildAutomationHelperVersion>
+    </PropertyGroup>
       
 </Project>

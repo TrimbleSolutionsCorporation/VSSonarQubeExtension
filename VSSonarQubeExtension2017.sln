@@ -9,8 +9,6 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SonarRestService", "SonarRe
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SonarRestService.Test", "SonarRestService.Test\SonarRestService.Test.fsproj", "{B9A5F92C-0B80-426C-B0D7-F94C26E6B77D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSSonarPlugins", "VSSonarPlugins\VSSonarPlugins.csproj", "{3311C918-B662-436D-8BC8-F38B447B1414}"
-EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SonarLocalAnalyser", "SonarLocalAnalyser\SonarLocalAnalyser.fsproj", "{A7D09C0C-EFC5-4662-83B6-DAE14E68C94C}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SonarLocalAnalyser.Test", "SonarLocalAnalyser.Test\SonarLocalAnalyser.Test.fsproj", "{0356E7DE-C73C-431E-8B7D-7AB2024C4756}"
@@ -57,6 +55,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSSQJiraPlugin", "plugins\v
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libs", "libs", "{D3A004A0-6784-4D1A-BC94-F070C2846400}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSSonarPlugins", "VSSonarPlugins\VSSonarPlugins.csproj", "{3311C918-B662-436D-8BC8-F38B447B1414}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,10 +75,6 @@ Global
 		{B9A5F92C-0B80-426C-B0D7-F94C26E6B77D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9A5F92C-0B80-426C-B0D7-F94C26E6B77D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9A5F92C-0B80-426C-B0D7-F94C26E6B77D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3311C918-B662-436D-8BC8-F38B447B1414}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3311C918-B662-436D-8BC8-F38B447B1414}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3311C918-B662-436D-8BC8-F38B447B1414}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3311C918-B662-436D-8BC8-F38B447B1414}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A7D09C0C-EFC5-4662-83B6-DAE14E68C94C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A7D09C0C-EFC5-4662-83B6-DAE14E68C94C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7D09C0C-EFC5-4662-83B6-DAE14E68C94C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -156,6 +152,10 @@ Global
 		{1576C435-186D-4502-B8E2-070E8EB94F60}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1576C435-186D-4502-B8E2-070E8EB94F60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1576C435-186D-4502-B8E2-070E8EB94F60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3311C918-B662-436D-8BC8-F38B447B1414}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3311C918-B662-436D-8BC8-F38B447B1414}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3311C918-B662-436D-8BC8-F38B447B1414}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3311C918-B662-436D-8BC8-F38B447B1414}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

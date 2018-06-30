@@ -70,14 +70,14 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
-    <Reference Include="FSharp.Data, Version=$(TargetFSharpDataVersion), Culture=neutral, PublicKeyToken=2f04dbe497b71114">
-      <Private>False</Private><HintPath>..\..\..\..\References\$(TargetFSharpCoreVersion)\FSharp.Data.dll</HintPath>
+    <Reference Include="FSharp.Data, Version=$(TargetFSharpDataVersion), Culture=neutral, PublicKeyToken=a72e257822fd31b6">
+      <HintPath>..\..\..\..\References\$(TargetFSharpCoreVersion)\FSharp.Data.dll</HintPath>
       <Private>False</Private>
       <SpecificVersion>True</SpecificVersion>
     </Reference>
-    <Reference Include="FSharp.Data.DesignTime, Version=$(TargetFSharpDataVersion), Culture=neutral, PublicKeyToken=2f04dbe497b71114">
-      <Private>False</Private><HintPath>..\..\..\..\References\$(TargetFSharpCoreVersion)\FSharp.Data.DesignTime.dll</HintPath>
+    <Reference Include="FSharp.Data.DesignTime, Version=$(TargetFSharpDataVersion), Culture=neutral, PublicKeyToken=a72e257822fd31b6">
       <Private>False</Private>
+      <HintPath>..\..\..\..\References\$(TargetFSharpCoreVersion)\FSharp.Data.DesignTime.dll</HintPath>
       <SpecificVersion>True</SpecificVersion>
     </Reference>
   </ItemGroup>

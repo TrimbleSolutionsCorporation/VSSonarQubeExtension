@@ -136,7 +136,12 @@ namespace JiraConnector
                 this.logger.ReportMessage("Failed to create connector: " + ex.Message);
             }
 
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            if (logger == null)
+            {
+                throw new ArgumentNullException(nameof(logger));
+            }
+
+            this.logger = logger;
         }
 
         /// <summary>

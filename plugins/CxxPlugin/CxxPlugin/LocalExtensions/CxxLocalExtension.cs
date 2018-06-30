@@ -75,7 +75,6 @@ namespace CxxPlugin.LocalExtensions
         private bool isLoading;
         private readonly IVsEnvironmentHelper vshelper;
         private readonly ClangTidySensor clangSensor;
-        private bool isRunning;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CxxLocalExtension"/> class.

@@ -28,6 +28,7 @@ open System.Linq
 
 open SonarRestService
 open System.Threading
+open RestSharp.Authenticators
 
 type SonarRestService(httpconnector : IHttpSonarConnector) = 
     let httpconnector = httpconnector
@@ -583,7 +584,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             else
                 error
 
-        member this.GetCoverageReportOnNewCodeOnLeak(conf: ISonarConfiguration, project: Resource, logger:INotificationManager) =
+        member this.GetCoverageReportOnNewCodeOnLeak(conf: ISonarConfiguration, project: Resource, logger:ILogManager) =
             DifferencialService.GetCoverageReportOnNewCodeOnLeak(conf, project, httpconnector, logger)
 
         member this.GetCoverageReport(conf: ISonarConfiguration, project: Resource) =
@@ -1031,47 +1032,47 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
 
             projects
 
-        member this.GetIssues(newConf : ISonarConfiguration, query : string, project : string, token:CancellationToken, logger:INotificationManager) = 
+        member this.GetIssues(newConf : ISonarConfiguration, query : string, project : string, token:CancellationToken, logger:ILogManager) = 
             async {
                 let url =  "/api/issues/search" + query + "&additionalFields=comments&pageSize=200"
                 return IssuesService.SearchForIssues(newConf, url, token, httpconnector, logger)
             } |> Async.StartAsTask
 
-        member this.GetIssuesByAssigneeInProject(newConf : ISonarConfiguration, project : string, login : string, token:CancellationToken, logger:INotificationManager) = 
+        member this.GetIssuesByAssigneeInProject(newConf : ISonarConfiguration, project : string, login : string, token:CancellationToken, logger:ILogManager) = 
             async {
                 let url =  "/api/issues/search?componentRoots=" + project + "&assignees="+ login+ "&pageSize=200&statuses=OPEN,CONFIRMED,REOPENED"
                 return IssuesService.SearchForIssues(newConf, url, token, httpconnector, logger)
             } |> Async.StartAsTask
    
-        member this.GetAllIssuesByAssignee(newConf : ISonarConfiguration, login : string, token:CancellationToken, logger:INotificationManager) = 
+        member this.GetAllIssuesByAssignee(newConf : ISonarConfiguration, login : string, token:CancellationToken, logger:ILogManager) = 
             async {
                 let url =  "/api/issues/search?assignees="+ login + "&pageSize=200&statuses=OPEN,CONFIRMED,REOPENED"
                 return IssuesService.SearchForIssues(newConf, url, token, httpconnector, logger)
             } |> Async.StartAsTask
 
-        member this.GetIssuesForProjectsCreatedAfterDate(newConf : ISonarConfiguration, project : string, date : DateTime, token:CancellationToken, logger:INotificationManager) =
+        member this.GetIssuesForProjectsCreatedAfterDate(newConf : ISonarConfiguration, project : string, date : DateTime, token:CancellationToken, logger:ILogManager) =
             async {
                 let url =  "/api/issues/search?componentRoots=" + project + "&pageSize=200&createdAfter=" + Convert.ToString(date.Year) + "-" + Convert.ToString(date.Month) + "-"  + Convert.ToString(date.Day) + "&statuses=OPEN,CONFIRMED,REOPENED"
                 return IssuesService.SearchForIssues(newConf, url, token, httpconnector, logger)
             } |> Async.StartAsTask
 
-        member this.GetIssuesForProjects(newConf : ISonarConfiguration, project : string, token:CancellationToken, logger:INotificationManager) =
+        member this.GetIssuesForProjects(newConf : ISonarConfiguration, project : string, token:CancellationToken, logger:ILogManager) =
             async {
                 let url =  "/api/issues/search?componentRoots=" + project + "&pageSize=200&statuses=OPEN,CONFIRMED,REOPENED"
                 return IssuesService.SearchForIssues(newConf, url, token, httpconnector, logger)
             } |> Async.StartAsTask
 
-        member this.GetIssuesInResource(conf : ISonarConfiguration, resource : string, token:CancellationToken, logger:INotificationManager) =
+        member this.GetIssuesInResource(conf : ISonarConfiguration, resource : string, token:CancellationToken, logger:ILogManager) =
             async {
                 return IssuesService.SearchForIssuesInResource(conf, resource, httpconnector, logger)
             } |> Async.StartAsTask
 
-        member this.SetIssueTags(conf : ISonarConfiguration, issue : Issue, tags : System.Collections.Generic.List<string>, token:CancellationToken, logger:INotificationManager) =
+        member this.SetIssueTags(conf : ISonarConfiguration, issue : Issue, tags : System.Collections.Generic.List<string>, token:CancellationToken, logger:ILogManager) =
             async {
                 return IssuesService.SetIssueTags(conf, issue, tags, httpconnector, token, logger)
             } |> Async.StartAsTask
 
-        member this.GetAvailableTags(newConf : ISonarConfiguration, token:CancellationToken, logger:INotificationManager) =
+        member this.GetAvailableTags(newConf : ISonarConfiguration, token:CancellationToken, logger:ILogManager) =
             async {
                 return IssuesService.GetAvailableTags(newConf, httpconnector, token, logger)
             } |> Async.StartAsTask

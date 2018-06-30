@@ -275,7 +275,7 @@ let SearchForIssues(userConf:ISonarConfiguration,
                     url : string,
                     token:CancellationToken,
                     httpconnector:IHttpSonarConnector,
-                    logger:INotificationManager) = 
+                    logger:ILogManager) = 
 
     try
         let allIssues = new System.Collections.Generic.List<Issue>()
@@ -328,7 +328,7 @@ let SearchForIssues(userConf:ISonarConfiguration,
 let SearchForIssuesInResource(userConf:ISonarConfiguration,
                               resource : string,
                               httpconnector:IHttpSonarConnector,
-                              logger:INotificationManager) = 
+                              logger:ILogManager) = 
     let url =  "/api/issues/search?components=" + resource + "&statuses=OPEN,CONFIRMED,REOPENED"
     try
         let responsecontent = httpconnector.HttpSonarGetRequest(userConf, url)
@@ -358,7 +358,7 @@ let DoStateTransition(userconf : ISonarConfiguration, issue : Issue, finalState 
 
     status
 
-let SetIssueTags(conf : ISonarConfiguration, issue : Issue, tags : System.Collections.Generic.List<string>, httpconnector:IHttpSonarConnector, token:CancellationToken, logger:INotificationManager) =
+let SetIssueTags(conf : ISonarConfiguration, issue : Issue, tags : System.Collections.Generic.List<string>, httpconnector:IHttpSonarConnector, token:CancellationToken, logger:ILogManager) =
     let url = "/api/issues/set_tags"
     let tags = List.ofSeq tags |> String.concat ","
     try
@@ -370,7 +370,7 @@ let SetIssueTags(conf : ISonarConfiguration, issue : Issue, tags : System.Collec
             logger.ReportMessage(ex.StackTrace)
             "Nok"
 
-let GetAvailableTags(newConf : ISonarConfiguration, httpconnector:IHttpSonarConnector, token:CancellationToken, logger:INotificationManager) =
+let GetAvailableTags(newConf : ISonarConfiguration, httpconnector:IHttpSonarConnector, token:CancellationToken, logger:ILogManager) =
     let url = "/api/issues/tags?ps=100"
     let listOfTags = new System.Collections.Generic.List<string>();
     try

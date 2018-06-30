@@ -16,7 +16,7 @@ let GetLeakPeriodStart(conf : ISonarConfiguration, projectIn : Resource, httpcon
     let data = PeriodsResponse.Parse(responsecontent)
     data.Periods.[0].Date
 
-let GetCoverageReportOnNewCodeOnLeak(conf : ISonarConfiguration, projectIn : Resource, httpconnector : IHttpSonarConnector, logger:INotificationManager) =
+let GetCoverageReportOnNewCodeOnLeak(conf : ISonarConfiguration, projectIn : Resource, httpconnector : IHttpSonarConnector, logger:ILogManager) =
     let coverageLeak = new System.Collections.Generic.Dictionary<string, CoverageDifferencial>()
     let AddComponentToLeak(comp:ComponentTreeSearch.Component, date:DateTime) = 
         let resource = new Resource()

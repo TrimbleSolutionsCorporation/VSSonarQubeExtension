@@ -68,7 +68,7 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="FSharp.Collections.ParallelSeq, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="FSharp.Collections.ParallelSeq, Version=0.0.0.0, Culture=neutral, PublicKeyToken=a72e257822fd31b6">
       <Private>False</Private><HintPath>..\references\$(TargetFSharpCoreVersion)\FSharp.Collections.ParallelSeq.dll</HintPath>
       <SpecificVersion>True</SpecificVersion>
     </Reference>

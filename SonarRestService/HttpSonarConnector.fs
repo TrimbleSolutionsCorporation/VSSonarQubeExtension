@@ -20,6 +20,7 @@ open System.Text
 open System.IO
 open VSSonarPlugins.Types
 open RestSharp
+open RestSharp.Authenticators
 
 type JsonSonarConnector() = 
 

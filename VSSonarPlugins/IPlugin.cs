@@ -23,10 +23,39 @@ namespace VSSonarPlugins
         public string Data { get; set; }
     }
 
+    public interface ILogManager
+    {
+        /// <summary>
+        /// Reports the message.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        void ReportMessage(string message);
+
+        /// <summary>The report exception.</summary>
+        /// <param name="ex">The ex.</param>
+        void ReportException(Exception ex);
+
+        /// <summary>The report message.</summary>
+        /// <param name="messages">The messages.</param>
+        void ReportMessage(Message messages);
+
+        /// <summary>
+        /// Writes the exception.
+        /// </summary>
+        /// <param name="ex">The ex.</param>
+        void WriteExceptionToLog(Exception ex);
+
+        /// <summary>
+        /// Writes the message.
+        /// </summary>
+        /// <param name="msg">The MSG.</param>
+        void WriteMessageToLog(string msg);
+    }
+
     /// <summary>
     /// The NotificationManager interface.
     /// </summary>
-    public interface INotificationManager
+    public interface INotificationManager : ILogManager
     {
         /// <summary>
         /// Gets a value indicating whether [analysis change lines].
@@ -44,20 +73,6 @@ namespace VSSonarPlugins
         /// </value>
         string UserDefinedEditor { get; }
 
-        /// <summary>The report exception.</summary>
-        /// <param name="ex">The ex.</param>
-        void ReportException(Exception ex);
-
-        /// <summary>The report message.</summary>
-        /// <param name="messages">The messages.</param>
-        void ReportMessage(Message messages);
-
-        /// <summary>
-        /// Reports the message.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        void ReportMessage(string message);
-
         /// <summary>
         /// News the issues are ready to be updated in view
         /// </summary>
@@ -67,18 +82,6 @@ namespace VSSonarPlugins
         /// Called when [new issues updated].
         /// </summary>
         void OnNewIssuesUpdated();
-
-        /// <summary>
-        /// Writes the exception.
-        /// </summary>
-        /// <param name="ex">The ex.</param>
-        void WriteExceptionToLog(Exception ex);
-
-        /// <summary>
-        /// Writes the message.
-        /// </summary>
-        /// <param name="msg">The MSG.</param>
-        void WriteMessageToLog(string msg);
 
         /// <summary>
         /// Starteds the working.
