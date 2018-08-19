@@ -909,7 +909,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         /// <param name="analysis">The analysis.</param>
         /// <param name="fromSave">if set to <c>true</c> [from save].</param>
-        /// <exception cref="System.NotImplementedException"></exception>
         private void RunLocalAnalysis(AnalysisTypes analysis, bool fromSave, VsFileItem itemInView)
         {
             if(this.NavigatinExplanation)

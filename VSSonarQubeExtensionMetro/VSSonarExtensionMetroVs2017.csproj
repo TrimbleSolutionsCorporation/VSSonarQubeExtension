@@ -182,8 +182,8 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.TextTemplating.14.0, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="MsbuildAutomationHelper, Version=$(AutomationHelperVersion).0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MsbuildAutomationHelper443.$(AutomationHelperVersion)\lib\MsbuildAutomationHelper.dll</HintPath>
+    <Reference Include="MsbuildAutomationHelper, Version=$(AutomationHelperVersion).0, Culture=neutral, PublicKeyToken=a72e257822fd31b6, processorArchitecture=MSIL">
+      <HintPath>..\packages\MsbuildAutomationHelper$(MsbuildAutomationHelperVersion)\lib\MsbuildAutomationHelper.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />

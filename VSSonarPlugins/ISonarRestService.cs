@@ -389,8 +389,8 @@
         /// <param name="ruleKey">The rule key.</param>
         /// <param name="severity">The severity.</param>
         /// <param name="profilekey">The profile key.</param>
-        /// <returns></returns>
-        List<string> ActivateRule(ISonarConfiguration conf, string ruleKey, string severity, string profilekey);
+        /// <returns>error message or empty if no error</returns>
+        string ActivateRule(ISonarConfiguration conf, string ruleKey, string severity, string profilekey);
 
         List<string> DeleteRule(ISonarConfiguration conf, Rule rule);
 

@@ -739,23 +739,32 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 profileKey
 
         member this.CreateRule(conf:ISonarConfiguration, rule:Rule, ruleTemplate:Rule) =
-            let errorMessages = new System.Collections.Generic.List<string>()
             let url ="/api/rules/create"
+            let severity = if rule.Severity <> Severity.UNDEFINED then rule.Severity else Severity.MINOR
+            let typeofRule = if rule.Type <> "" then rule.Type else "CODE_SMELL"
 
             let optionalProps =
                 if conf.SonarVersion < 5.1 then
                     Map.empty.Add("custom_key", rule.Key.Replace( rule.Repo + ":", ""))
                                              .Add("html_description", rule.HtmlDescription)
                                              .Add("name", rule.Name)
-                                             .Add("severity", rule.Severity.ToString())
+                                             .Add("severity", severity.ToString())
+                                             .Add("template_key", ruleTemplate.Key)
+                elif conf.SonarVersion < 6.7 then
+                    Map.empty.Add("custom_key", rule.Key.Replace( rule.Repo + ":", ""))
+                                             .Add("html_description", rule.HtmlDescription)
+                                             .Add("markdown_description", rule.MarkDownDescription)
+                                             .Add("name", rule.Name)
+                                             .Add("severity", severity.ToString())
                                              .Add("template_key", ruleTemplate.Key)
                 else
                     Map.empty.Add("custom_key", rule.Key.Replace( rule.Repo + ":", ""))
                                              .Add("html_description", rule.HtmlDescription)
-                                             .Add("markdown_description", rule.MarkDownDescription)                                             
+                                             .Add("markdown_description", rule.MarkDownDescription)
                                              .Add("name", rule.Name)
-                                             .Add("severity", rule.Severity.ToString())
+                                             .Add("severity", severity.ToString())
                                              .Add("template_key", ruleTemplate.Key)
+                                             .Add("type", typeofRule)
                                                                  
             let errorMessages = new System.Collections.Generic.List<string>()
             let response = httpconnector.HttpSonarPostRequest(conf, url, optionalProps)
@@ -786,11 +795,9 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
             let errorMessages = new System.Collections.Generic.List<string>()
             let response = httpconnector.HttpSonarPostRequest(conf, url, optionalProps)
             if response.StatusCode <> Net.HttpStatusCode.OK then
-                let errors = JsonErrorMessage.Parse(response.Content)
-                for error in errors.Errors do
-                    errorMessages.Add(error.Msg)
-            
-            errorMessages
+                response.Content
+            else
+                ""
 
         member this.DeleteRule(conf:ISonarConfiguration, rule:Rule) =
             let errorMessages = new System.Collections.Generic.List<string>()
@@ -959,7 +966,7 @@ type SonarRestService(httpconnector : IHttpSonarConnector) =
                 let rules = JsonRuleSearchResponse.Parse(reply)
                 if rules.Total = 1 then
                     let profile = new Profile(this :> ISonarRestService, conf)
-                    CreateRuleInProfile(rules.Rules.[0], profile, false)                
+                    CreateRuleInProfile(rules.Rules.[0], profile, false)
                     profile.GetRule(key)
                 else
                     null

@@ -34,7 +34,7 @@
         <OBJDir>$(MSBuildThisFileDirectory)ObjDrop\$(OutFolder)\$(Configuration)\$(TSPlatform)</OBJDir>
         <IntermediateOutputPath>$(OBJDir)$(MSBuildProjectName)\</IntermediateOutputPath>
 
-        <AutomationHelperVersion>1.5.0</AutomationHelperVersion>
+        <AutomationHelperVersion>1.5.3</AutomationHelperVersion>
 
         <MsbuildAutomationHelperVersion Condition="'$(VSVersion)'=='14.0'">440.$(AutomationHelperVersion)</MsbuildAutomationHelperVersion>
         <MsbuildAutomationHelperVersion Condition="'$(VSVersion)'=='15.0'">443.$(AutomationHelperVersion)</MsbuildAutomationHelperVersion>
