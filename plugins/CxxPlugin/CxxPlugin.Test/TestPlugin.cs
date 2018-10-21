@@ -31,32 +31,6 @@ namespace CxxPlugin.Test
     public class TestPlugin
     {
         /// <summary>
-        ///     The run main window.
-        /// </summary>
-        //[Test]
-        public void RunMainWindow()
-        {
-            var t = new Thread(this.CreateMainIssueWindow);
-            t.SetApartmentState(ApartmentState.STA);
-            t.Start();
-            t.Join();
-        }
-
-        /// <summary>
-        ///     The create main issue window.
-        /// </summary>
-        private void CreateMainIssueWindow()
-        {
-            var win = new Window();
-            IAnalysisPlugin plugin = new CxxPlugin() as IAnalysisPlugin;
-
-            win.Content =
-                plugin.GetPluginControlOptions(null,
-                    new ConnectionConfiguration("http://sonar", "jocs1", "jocs1", 4.5));
-            win.ShowDialog();
-        }
-
-        /// <summary>
         /// The test resource key.
         /// </summary>
         [Test]

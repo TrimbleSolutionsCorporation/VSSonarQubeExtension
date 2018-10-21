@@ -6,7 +6,6 @@ open VSSonarPlugins
 open System.Text
 open System
 open System.Reflection
-open Microsoft.CodeAnalysis
 open System.Threading
 open System.Collections.Generic
 open System.Threading

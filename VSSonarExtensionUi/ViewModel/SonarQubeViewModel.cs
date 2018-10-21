@@ -20,6 +20,7 @@ namespace VSSonarExtensionUi.ViewModel
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
@@ -718,7 +719,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// <param name="solutionPath">The solution path.</param>
         /// <param name="fileInView">The file in view.</param>
         /// <param name="sourceProvider">The source provider.</param>
-        public void OnSolutionOpen(string solutionName, string solutionPath, string fileInView, ISourceControlProvider sourceProvider = null)
+        public async Task OnSolutionOpen(string solutionName, string solutionPath, string fileInView, ISourceControlProvider sourceProvider = null)
         {
             this.ErrorIsFound = false;
             this.IsSolutionOpen = true;
@@ -737,11 +738,11 @@ namespace VSSonarExtensionUi.ViewModel
                 this.sourceControl = sourceProvider;
             }
 
-            this.AssociationModule.AssociateProjectToSolution(solutionName, solutionPath, this.AvailableProjects, this.SourceControl);
+            await this.AssociationModule.AssociateProjectToSolution(solutionName, solutionPath, this.AvailableProjects, this.SourceControl);
 
             if (!string.IsNullOrEmpty(fileInView) && File.Exists(fileInView))
             {
-                this.RefreshDataForResource(fileInView, File.ReadAllText(fileInView), false);
+                await this.RefreshDataForResource(fileInView, File.ReadAllText(fileInView), false);
             }
 
             this.SetupAssociationMessages();
@@ -1206,7 +1207,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// <param name="fullName">The full name.</param>
         /// <param name="contentoffile">The content of file.</param>
         /// <param name="fromSave">if set to <c>true</c> [from save].</param>
-        public void RefreshDataForResource(string fullName, string contentoffile, bool fromSave)
+        public async Task RefreshDataForResource(string fullName, string contentoffile, bool fromSave)
         {
             this.notificationManager.WriteMessageToLog("Refresh Data For File: " + fullName);
             if (string.IsNullOrEmpty(fullName) || this.AssociationModule.AssociatedProject == null)
@@ -1218,7 +1219,7 @@ namespace VSSonarExtensionUi.ViewModel
             this.ResourceInEditor = null;
             this.ResetIssuesInViews();
 
-            this.ResourceInEditor = this.AssociationModule.CreateAValidResourceFromServer(fullName, this.AssociationModule.AssociatedProject);
+            this.ResourceInEditor = await this.AssociationModule.CreateAValidResourceFromServer(fullName, this.AssociationModule.AssociatedProject);
 
             if(!this.ResourceInEditor.Path.ToLower().Contains(this.ResourceInEditor.SolutionRoot.ToLower()))
             {
@@ -1237,7 +1238,11 @@ namespace VSSonarExtensionUi.ViewModel
                 try
                 {
                     this.notificationManager.WriteMessageToLog("RefreshDataForResource: Doc in View: " + this.DocumentInView);
-                    analyser.RefreshDataForResource(this.ResourceInEditor, this.DocumentInView, contentoffile, fromSave);
+                    await Task.Run(() =>
+                    {
+                        analyser.RefreshDataForResource(this.ResourceInEditor, this.DocumentInView, contentoffile, fromSave);
+                    });
+
                     this.StatusMessage = this.ResourceInEditor.Key;
                 }
                 catch (Exception ex)
@@ -1714,7 +1719,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// <summary>
         ///     The on assign project command.
         /// </summary>
-        private void OnAssignProjectCommand()
+        private async void OnAssignProjectCommand()
         {
             this.ErrorIsFound = false;
             if (this.SelectedProjectInView == null)
@@ -1731,7 +1736,8 @@ namespace VSSonarExtensionUi.ViewModel
                 return;
             }
 
-            if (this.AssociationModule.AssignASonarProjectToSolution(this.SelectedProjectInView, this.SelectedBranchProject, this.SourceControl))
+            var isAssociated = await this.AssociationModule.AssignASonarProjectToSolution(this.SelectedProjectInView, this.SelectedBranchProject, this.SourceControl);
+            if (isAssociated)
             {
                 this.StatusMessageAssociation = "Associated : " + this.AssociationModule.AssociatedProject.Name;
                 this.StatusMessage = "Ready";

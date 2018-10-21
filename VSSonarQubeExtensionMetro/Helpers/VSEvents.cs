@@ -29,6 +29,7 @@ namespace VSSonarQubeExtension.Helpers
     using VSSonarPlugins.Helpers;
     using VSSonarPlugins.Types;
     using System.Reflection;
+    using System.Threading.Tasks;
 
 
     /// <summary>
@@ -276,13 +277,13 @@ namespace VSSonarQubeExtension.Helpers
         /// <summary>
         ///     The solution opened.
         /// </summary>
-        private void SolutionOpened()
+        private async void SolutionOpened()
         {
             string solutionName = this.environment.ActiveSolutionName();
             string solutionPath = this.environment.ActiveSolutionPath();
             string fileName = this.environment.ActiveFileFullPath();
             SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessageToLog("Solution Opened: " + solutionName + " : " + solutionPath);
-            SonarQubeViewModelFactory.SQViewModel.OnSolutionOpen(solutionName, solutionPath, fileName);
+            await SonarQubeViewModelFactory.SQViewModel.OnSolutionOpen(solutionName, solutionPath, fileName);
         }
 
         /// <summary>

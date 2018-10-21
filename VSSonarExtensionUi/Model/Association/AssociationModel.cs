@@ -19,6 +19,7 @@
     using VSSonarExtensionUi.Model.Helpers;
     using VSSonarExtensionUi.ViewModel.Configuration;
     using Model.Menu;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Generates associations with sonar projects
@@ -179,7 +180,7 @@
         /// <returns>
         /// Ok if assign.
         /// </returns>
-        public bool AssignASonarProjectToSolution(Resource project, Resource branchProject, ISourceControlProvider sourceControl, bool skipRegisterModels = false)
+        public async Task<bool> AssignASonarProjectToSolution(Resource project, Resource branchProject, ISourceControlProvider sourceControl, bool skipRegisterModels = false)
         {
              if (project == null ||
                 (this.OpenSolutionName == null || this.OpenSolutionPath == null) ||
@@ -205,7 +206,7 @@
             this.configurationHelper.SyncSettings();
             if (!skipRegisterModels)
             {
-                this.InitiateAssociationToSonarProject(sourceControl);
+                await this.InitiateAssociationToSonarProject(sourceControl);
             }
             
             return true;
@@ -295,7 +296,7 @@
         /// <returns>
         /// The <see cref="Resource" />.
         /// </returns>
-        public Resource CreateAValidResourceFromServer(string fullName, Resource project)
+        public async Task<Resource> CreateAValidResourceFromServer(string fullName, Resource project)
         {
             if (this.vshelper == null)
             {
@@ -304,7 +305,10 @@
 
             try
             {
-                return this.keyTranslator.TranslatePath(this.vshelper.VsFileItem(fullName, project, null), this.vshelper, this.sonarService, AuthtenticationHelper.AuthToken);
+                return await Task.Run(() =>
+                {
+                    return this.keyTranslator.TranslatePath(this.vshelper.VsFileItem(fullName, project, null), this.vshelper, this.sonarService, AuthtenticationHelper.AuthToken);
+                });
             }
             catch (Exception ex)
             {
@@ -352,7 +356,7 @@
         /// <param name="availableProjects">The available projects.</param>
         /// <param name="sourceControl">The source control.</param>
         /// <exception cref="System.Exception">Solution not found in server, please be sure its analysed before</exception>
-        public void StartAutoAssociation(
+        public async Task StartAutoAssociation(
             string solutionName,
             string solutionPath,
             ICollection<Resource> availableProjects,
@@ -439,7 +443,7 @@
         /// <param name="solutionName">The solution Name.</param>
         /// <param name="solutionPath">The solution Path.</param>
         /// <param name="availableProjects">The available projects.</param>
-        public void AssociateProjectToSolution(
+        public async Task AssociateProjectToSolution(
             string solutionName,
             string solutionPath,
             ICollection<Resource> availableProjects,
@@ -459,7 +463,7 @@
 
             try
             {
-                this.StartAutoAssociation(solution, solutionPath, availableProjects, sourceControl);
+                await this.StartAutoAssociation(solution, solutionPath, availableProjects, sourceControl);
 
                 if (this.IsAssociated)
                 {
@@ -572,12 +576,14 @@
         /// <summary>
         /// Updates the services.
         /// </summary>
-        private void InitiateAssociationToSonarProject(ISourceControlProvider sourceControl)
+        private async Task InitiateAssociationToSonarProject(ISourceControlProvider sourceControl)
         {
             this.sourcecontrol = sourceControl;
 
-            // start local analysis association, and sync profile
-            this.localAnalyserModule.AssociateWithProject(this.AssociatedProject, AuthtenticationHelper.AuthToken);
+            await Task.Run(() => {
+                // start local analysis association, and sync profile
+                this.localAnalyserModule.AssociateWithProject(this.AssociatedProject, AuthtenticationHelper.AuthToken);
+            });
         }
 
         /// <summary>The update associate command.</summary>

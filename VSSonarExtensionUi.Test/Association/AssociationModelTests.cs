@@ -99,7 +99,7 @@
             AssociationModel associationModel;
             associationModel = new AssociationModel(mockLogger.Object, mockRest.Object, mockObj, mockTranslator.Object, mockPlugin.Object, new SonarQubeViewModel("test", mockObj), mockanalyser.Object, "14.0");
             associationModel.UpdateServicesInModels(mockVsHelper.Object, null, null);
-            Assert.IsFalse(associationModel.AssignASonarProjectToSolution(new Resource() { IsBranch = false }, new Resource() { Default = true }, mockSourceProvider.Object));
+            Assert.IsFalse(associationModel.AssignASonarProjectToSolution(new Resource() { IsBranch = false }, new Resource() { Default = true }, mockSourceProvider.Object).GetAwaiter().GetResult());
         }
     }
 }
