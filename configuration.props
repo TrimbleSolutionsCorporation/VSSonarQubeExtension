@@ -23,7 +23,7 @@
         
         <FSharpFolder Condition="'$(TargetFSharpCoreVersion)'=='4.4.0.0'">FSharp440</FSharpFolder>
         <FSharpFolder Condition="'$(TargetFSharpCoreVersion)'=='4.4.3.0'">FSharp443</FSharpFolder>
-        <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+        <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
         
         <OutFolder Condition="'$(VSVersion)'=='14.0'">vs15</OutFolder>
         <OutFolder Condition="'$(VSVersion)'=='15.0'">vs17</OutFolder>
@@ -39,5 +39,9 @@
         <MsbuildAutomationHelperVersion Condition="'$(VSVersion)'=='14.0'">440.$(AutomationHelperVersion)</MsbuildAutomationHelperVersion>
         <MsbuildAutomationHelperVersion Condition="'$(VSVersion)'=='15.0'">443.$(AutomationHelperVersion)</MsbuildAutomationHelperVersion>
     </PropertyGroup>
+      
+      <Target Name="PrintVsVersion" BeforeTargets="PrepareForBuild">
+        <Message Importance="High" Text="Vs Version: $(VSVersion)" />
+      </Target>
       
 </Project>
