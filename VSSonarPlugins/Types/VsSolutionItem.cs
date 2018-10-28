@@ -8,10 +8,8 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarPlugins.Types
 {
-    using PropertyChanged;
+    using SonarRestService.Types;
 
-    /// <summary>The vs solution item.</summary>
-    [AddINotifyPropertyChangedInterface]
     public class VsSolutionItem
     {
         /// <summary>Gets or sets the solution path. Full path includes file name</summary>

@@ -15,6 +15,9 @@ namespace VSSonarExtensionUi.Model.Analysis
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
 
+    using SonarRestService.Types;
+    using SonarRestService;
+
     /// <summary>
     /// The AnalysisViewModelBase interface.
     /// </summary>

@@ -24,16 +24,13 @@ open VSSonarPlugins
 open VSSonarPlugins.Types
 open VSSonarPlugins.Helpers
 open CommonExtensions
-open System.Diagnostics
-open Microsoft.Build.Utilities
-open SonarRestService
-open FSharp.Collections.ParallelSeq
-open System.Management
 open System.Reflection
 open System.ComponentModel
-open System.Management
-open System.Runtime.InteropServices
 open Microsoft.Win32
+open Microsoft.Build.Utilities
+open System.Management
+open SonarRestService.Types
+open SonarRestService
 
 type LanguageType =
    | SingleLang = 0
@@ -237,7 +234,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
         
     let initializationDone = 
 
-        vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.ExcludedPluginsKey, Value = "devcockpit,pdfreport,report,scmactivity,views,jira,scmstats", Context = Context.AnalysisGeneral, Owner = OwnersId.AnalysisOwnerId), false, true)
+        vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.ExcludedPluginsKey, Value = "devcockpit,pdfreport,report,scmactivity,views,jira,scmstats", Context = Context.AnalysisGeneral.ToString(), Owner = OwnersId.AnalysisOwnerId), false, true)
 
         let java = GetJavaInstallationPath();
 
@@ -248,7 +245,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
             | _ -> false
 
         if not(javaExists) then
-            vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.JavaExecutableKey, Value = Path.Combine(java, "bin", "java.exe"), Context = Context.AnalysisGeneral, Owner = OwnersId.AnalysisOwnerId), false, false)
+            vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.JavaExecutableKey, Value = Path.Combine(java, "bin", "java.exe"), Context = Context.AnalysisGeneral.ToString(), Owner = OwnersId.AnalysisOwnerId), false, false)
 
         let skipIfExists =
             try
@@ -258,11 +255,11 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
 
         vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.RunnerExecutableKey,
                                                      Value = Path.Combine(assemblyRunningPath, "externalAnalysers", "SonarRunner", "bin", "sonar-runner.bat"),
-                                                     Context = Context.AnalysisGeneral,
+                                                     Context = Context.AnalysisGeneral.ToString(),
                                                      Owner = OwnersId.AnalysisOwnerId), false, skipIfExists)
 
-        vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.IsDebugAnalysisOnKey, Value = "false", Context = Context.AnalysisGeneral, Owner = OwnersId.AnalysisOwnerId), false, true)
-        vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.LocalAnalysisTimeoutKey, Value = "10", Context = Context.AnalysisGeneral, Owner = OwnersId.AnalysisOwnerId), false, true)
+        vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.IsDebugAnalysisOnKey, Value = "false", Context = Context.AnalysisGeneral.ToString(), Owner = OwnersId.AnalysisOwnerId), false, true)
+        vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.LocalAnalysisTimeoutKey, Value = "10", Context = Context.AnalysisGeneral.ToString(), Owner = OwnersId.AnalysisOwnerId), false, true)
         true
 
     let triggerException(x, msg : string, ex : Exception) = 
@@ -872,7 +869,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                         let vals = line.Split('=')
                         let key = vals.[0].Trim()
                         let value = vals.[1].Trim()
-                        let prop = new SonarQubeProperties(Key = key, Value = value, Context = Context.AnalysisProject, Owner = project.Key)
+                        let prop = new SonarQubeProperties(Key = key, Value = value, Context = Context.AnalysisProject.ToString(), Owner = project.Key)
                         vsinter.WriteSetting(prop, true)
                     ()
 
@@ -885,7 +882,7 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
                     with
                     | ex -> let projectFile = Path.Combine(project.SolutionRoot, "sonar-project.properties")
                             if File.Exists(projectFile) then
-                                vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.PropertiesFileKey, Value = "sonar-project.properties", Context = Context.AnalysisGeneral, Owner = OwnersId.AnalysisOwnerId))
+                                vsinter.WriteSetting(new SonarQubeProperties(Key = GlobalAnalysisIds.PropertiesFileKey, Value = "sonar-project.properties", Context = Context.AnalysisGeneral.ToString(), Owner = OwnersId.AnalysisOwnerId))
                                 let lines = File.ReadAllLines(projectFile)
                                 lines |> Seq.iter (fun line -> processLine(line))
 

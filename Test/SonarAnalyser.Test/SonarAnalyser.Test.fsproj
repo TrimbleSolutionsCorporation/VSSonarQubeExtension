@@ -1,0 +1,103 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net462</TargetFramework>
+    <OutputPath>..\BuildDrop\Test\LocalAnalyserTests\</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="AnalyserTests.fs" />
+    <Compile Include="KeyTests.fs" />
+    <Compile Include="RunAnalysisTests.fs" />
+    <Compile Include="SupportTests.fs" />
+    <Compile Include="TranslatorTest.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="SonarLocalAnalyser.Test.licenseheader" />
+    <None Include="TestData\SampleProjects\FlatProject\sonar-project.properties">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\SampleProjects\ModulesDefinedAllInOnePropertiesFile\sonar-project.properties">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\SampleProjects\MultiModuleTest\A\1\a\a1a.vcxproj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\SampleProjects\MultiModuleTest\A\1\a\dup.cpp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\SampleProjects\MultiModuleTest\A\1\a\sonar-project.properties">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\SampleProjects\MultiModuleTest\A\1\a\x.cpp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\SampleProjects\MultiModuleTest\A\1\b\a1b.vcxproj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\SampleProjects\MultiModuleTest\A\1\b\dup.cpp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\SampleProjects\MultiModuleTest\A\1\b\sonar-project.properties">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\SampleProjects\MultiModuleTest\A\1\b\y.cpp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\SampleProjects\MultiModuleTest\A\1\sonar-project.properties">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\SampleProjects\MultiModuleTest\A\2\a2.vcxproj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\SampleProjects\MultiModuleTest\A\2\sonar-project.properties">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\SampleProjects\MultiModuleTest\A\2\z.cpp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\SampleProjects\MultiModuleTest\A\sonar-project.properties">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\SampleProjects\MultiModuleTest\B\b.cpp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\SampleProjects\MultiModuleTest\B\b.vcxproj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\SampleProjects\MultiModuleTest\B\sonar-project.properties">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\SampleProjects\MultiModuleTest\multimodule.sln">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\SampleProjects\MultiModuleTest\sonar-project.properties">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\SampleProjects\VisualBootStrapper2\sonar-project.properties">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\SampleProjects\VisualBootStrapper\sonar-project.properties">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Foq" Version="1.8.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+    <PackageReference Include="NUnit" Version="3.11.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SonarLocalAnalyser\SonarLocalAnalyser.fsproj" />
+    <ProjectReference Include="..\VSSonarPlugins\VSSonarPlugins.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.Build.Utilities.v4.0" />
+  </ItemGroup>
+
+</Project>

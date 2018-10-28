@@ -2,6 +2,8 @@
 {
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
+    using SonarRestService.Types;
+    using SonarRestService;
 
     /// <summary>
     /// source control model

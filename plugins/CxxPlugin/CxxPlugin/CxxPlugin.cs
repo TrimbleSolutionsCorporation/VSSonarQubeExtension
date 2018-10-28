@@ -18,6 +18,8 @@ namespace CxxPlugin
     using global::CxxPlugin.LocalExtensions;
     using global::CxxPlugin.Options;
 
+    using SonarRestService;
+    using SonarRestService.Types;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
 

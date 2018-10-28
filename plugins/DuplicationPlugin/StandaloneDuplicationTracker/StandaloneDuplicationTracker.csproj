@@ -126,10 +126,6 @@
       <Project>{3311c918-b662-436d-8bc8-f38b447b1414}</Project>
       <Name>VSSonarPlugins</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ProjectDuplicationTracker\ProjectDuplicationTracker.csproj">
-      <Project>{85e73e45-5f74-4a58-9f07-e19bdcef3c1f}</Project>
-      <Name>ProjectDuplicationTracker</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\WindowsIcons-license.txt" />

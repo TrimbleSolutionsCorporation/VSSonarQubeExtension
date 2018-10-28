@@ -17,17 +17,13 @@
     <Assets>
         <Asset Type="Microsoft.VisualStudio.VsPackage" Path="VSSonarExtensionMetroVs2015.pkgdef" />
         <Asset Type="Microsoft.VisualStudio.MefComponent" Path="VSSonarExtensionMetroVs2017.dll" />
-        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="SQGitPlugin" d:VsixSubPath="plugins" Path="|SQGitPlugin|" AssemblyName="|SQGitPlugin;AssemblyName|" />
         <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="AnalysisPlugin" d:VsixSubPath="plugins" Path="|AnalysisPlugin|" AssemblyName="|AnalysisPlugin;AssemblyName|" />
         <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="VSSQJiraPlugin" d:VsixSubPath="plugins" Path="|VSSQJiraPlugin|" AssemblyName="|VSSQJiraPlugin;AssemblyName|" />
         <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="FSharpLintRunner" d:VsixSubPath="plugins" Path="|FSharpLintRunner|" AssemblyName="|FSharpLintRunner;AssemblyName|" />
         <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="CxxPlugin" d:VsixSubPath="plugins" Path="|CxxPlugin|" AssemblyName="|CxxPlugin;AssemblyName|" />
-        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="FxCopRunner" d:VsixSubPath="plugins" Path="|FxCopRunner|" AssemblyName="|FxCopRunner;AssemblyName|" />
         <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="JiraConnector" d:VsixSubPath="plugins" Path="|JiraConnector|" AssemblyName="|JiraConnector;AssemblyName|" />
         <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="NSonarQubeRunner" d:VsixSubPath="plugins" Path="|NSonarQubeRunner|" AssemblyName="|NSonarQubeRunner;AssemblyName|" />
         <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="PluginsOptionsController" d:VsixSubPath="plugins" Path="|PluginsOptionsController|" AssemblyName="|PluginsOptionsController;AssemblyName|" />
-        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="ProjectDuplicationTracker" d:VsixSubPath="plugins" Path="|ProjectDuplicationTracker|" AssemblyName="|ProjectDuplicationTracker;AssemblyName|" />
-        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="StyleCopRunner" d:VsixSubPath="plugins" Path="|StyleCopRunner|" AssemblyName="|StyleCopRunner;AssemblyName|" />
 
     </Assets>
     <Prerequisites>

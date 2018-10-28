@@ -5,7 +5,8 @@
     using System.Collections.ObjectModel;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-
+    using SonarRestService.Types;
+    using SonarRestService;
     /// <summary>
     /// Model base, register model in SonarQubeViewModel for automatic update of association
     /// </summary>

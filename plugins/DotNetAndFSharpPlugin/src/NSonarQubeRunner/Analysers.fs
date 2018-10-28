@@ -13,6 +13,9 @@ open System.Collections.Immutable
 open System.Threading
 open System.Collections.Generic
 
+open SonarRestService
+open SonarRestService.Types
+
 open Types
 
 let mutable MSbuildOpenSolution : Solution = null

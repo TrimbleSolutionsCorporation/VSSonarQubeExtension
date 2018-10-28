@@ -28,6 +28,9 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
 
+    using SonarRestService;
+    using SonarRestService.Types;
+
     /// <summary>
     ///     The plugins options model.
     /// </summary>

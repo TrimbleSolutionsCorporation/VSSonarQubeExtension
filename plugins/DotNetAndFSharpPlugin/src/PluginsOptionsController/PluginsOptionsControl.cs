@@ -4,14 +4,15 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
-    using System.Windows.Controls;
-    using System.Windows.Input;
-    using System.Windows.Media;
-
     using PropertyChanged;
 
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
+
+    using SonarRestService.Types;
+    using System.Windows.Controls;
+    using System.Windows.Media;
+    using System.Windows.Input;
 
     /// <summary>
     ///     The dummy options controller.
@@ -43,8 +44,8 @@
             this.PluginProperties = new ObservableCollection<SonarQubeProperties>();
 
             this.InitCommanding();
-            this.ForeGroundColor = Colors.Black;
-            this.BackGroundColor = Colors.White;
+            this.ForeGroundColor = System.Windows.Media.Colors.Black;
+            this.BackGroundColor = System.Windows.Media.Colors.White;
         }
 
         /// <summary>

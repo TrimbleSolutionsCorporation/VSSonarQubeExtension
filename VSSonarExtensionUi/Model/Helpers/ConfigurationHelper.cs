@@ -18,6 +18,9 @@ namespace VSSonarExtensionUi.Model.Helpers
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
 
+    using SonarRestService;
+    using SonarRestService.Types;
+
     /// <summary>
     /// The configuration helper.
     /// </summary>
@@ -288,7 +291,7 @@ namespace VSSonarExtensionUi.Model.Helpers
         /// <param name="skipIfExist">The skip if exist.</param>
         public void WriteSetting(Context context, string owner, string key, string value, bool sync = false, bool skipIfExist = false)
         {
-            this.WriteSetting(new SonarQubeProperties { Context = context, Owner = owner, Key = key, Value = value }, sync, skipIfExist);
+            this.WriteSetting(new SonarQubeProperties { Context = context.ToString(), Owner = owner, Key = key, Value = value }, sync, skipIfExist);
         }
     }
 }

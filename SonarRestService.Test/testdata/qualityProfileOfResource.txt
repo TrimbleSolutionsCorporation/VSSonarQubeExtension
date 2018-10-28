@@ -1,1 +1,0 @@
-﻿[{"id":1,"key":"projectid","name":"bla","scope":"PRJ","qualifier":"TRK","date":"2013-07-03T12:50:52+0300","lname":"bla","lang":"c++","version":"work","description":"","msr":[{"key":"profile","val":7.0,"frmt_val":"7.0","data":"DefaultC++"}]}]

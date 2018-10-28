@@ -28,6 +28,7 @@ namespace VSSonarQubeExtension.Coverage
     using VSSonarQubeExtension.Helpers;
     using System.Diagnostics;
     using VSSonarPlugins.Types;
+    using SonarRestService.Types;
 
     /// <summary>
     ///     This tagger will provide tags for every word in the buffer that

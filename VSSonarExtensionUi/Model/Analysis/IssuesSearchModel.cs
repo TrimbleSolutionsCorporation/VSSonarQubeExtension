@@ -22,7 +22,8 @@ namespace VSSonarExtensionUi.Model.Analysis
     using System.Threading.Tasks;
     using Association;
     using Helpers;
-
+    using SonarRestService.Types;
+    using SonarRestService;
     using SonarLocalAnalyser;
     using ViewModel;
     using ViewModel.Analysis;
@@ -59,6 +60,7 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// The notificationmanager
         /// </summary>
         private readonly INotificationManager notificationmanager;
+        private readonly IRestLogger restLogger;
 
         /// <summary>
         /// The key translator
@@ -112,12 +114,14 @@ namespace VSSonarExtensionUi.Model.Analysis
             IConfigurationHelper configurationHelper,
             ISonarRestService restService,
             INotificationManager manager,
+            IRestLogger restLogger,
             ISQKeyTranslator translator,
             ISonarLocalAnalyser analyser,
             IList<IIssueTrackerPlugin> issuetrackerplugins)
         {
             this.keyTranslator = translator;
             this.notificationmanager = manager;
+            this.restLogger = restLogger;
             this.configurationHelper = configurationHelper;
             this.restService = restService;
             this.issuesSearchViewModel = new IssuesSearchViewModel(this, manager, this.configurationHelper, restService, translator, analyser, issuetrackerplugins);
@@ -293,7 +297,7 @@ namespace VSSonarExtensionUi.Model.Analysis
 
             return await Task.Run(() =>
             {
-                return this.restService.GetIssuesForProjects(AuthtenticationHelper.AuthToken, this.associatedProject.Key, this.ct.Token, this.notificationmanager);
+                return this.restService.GetIssuesForProjects(AuthtenticationHelper.AuthToken, this.associatedProject.Key, this.ct.Token, this.restLogger);
             }).ConfigureAwait(false);
         }
 
@@ -316,7 +320,7 @@ namespace VSSonarExtensionUi.Model.Analysis
 
             return await Task.Run(() =>
             {
-                return this.restService.GetIssuesByAssigneeInProject(AuthtenticationHelper.AuthToken, this.associatedProject.Key, userName, this.ct.Token, this.notificationmanager);
+                return this.restService.GetIssuesByAssigneeInProject(AuthtenticationHelper.AuthToken, this.associatedProject.Key, userName, this.ct.Token, this.restLogger);
             }).ConfigureAwait(false);
         }
 
@@ -338,7 +342,7 @@ namespace VSSonarExtensionUi.Model.Analysis
 
             return await Task.Run(() =>
             {
-                return this.restService.GetIssuesByAssigneeInProject(AuthtenticationHelper.AuthToken, this.associatedProject.Key, AuthtenticationHelper.AuthToken.Username, this.ct.Token, this.notificationmanager);
+                return this.restService.GetIssuesByAssigneeInProject(AuthtenticationHelper.AuthToken, this.associatedProject.Key, AuthtenticationHelper.AuthToken.Username, this.ct.Token, this.restLogger);
             }).ConfigureAwait(false);
         }
 
@@ -355,7 +359,7 @@ namespace VSSonarExtensionUi.Model.Analysis
 
             return await Task.Run(() =>
             {
-                return this.restService.GetAllIssuesByAssignee(AuthtenticationHelper.AuthToken, userName, this.ct.Token, this.notificationmanager);
+                return this.restService.GetAllIssuesByAssignee(AuthtenticationHelper.AuthToken, userName, this.ct.Token, this.restLogger);
             }).ConfigureAwait(false);
         }
 
@@ -368,7 +372,7 @@ namespace VSSonarExtensionUi.Model.Analysis
             this.CreateNewTokenOrUseOldOne();
             return await Task.Run(() =>
             {
-                return this.restService.GetAllIssuesByAssignee(AuthtenticationHelper.AuthToken, AuthtenticationHelper.AuthToken.Username, this.ct.Token, this.notificationmanager);
+                return this.restService.GetAllIssuesByAssignee(AuthtenticationHelper.AuthToken, AuthtenticationHelper.AuthToken.Username, this.ct.Token, this.restLogger);
             }).ConfigureAwait(false);
         }
 
@@ -403,7 +407,7 @@ namespace VSSonarExtensionUi.Model.Analysis
             this.CreateNewTokenOrUseOldOne();
             return await Task.Run(() =>
             {
-                return this.restService.GetIssuesForProjectsCreatedAfterDate(AuthtenticationHelper.AuthToken, this.associatedProject.Key, date, this.ct.Token, this.notificationmanager);
+                return this.restService.GetIssuesForProjectsCreatedAfterDate(AuthtenticationHelper.AuthToken, this.associatedProject.Key, date, this.ct.Token, this.restLogger);
             }).ConfigureAwait(false);
         }
 
@@ -416,7 +420,7 @@ namespace VSSonarExtensionUi.Model.Analysis
             this.CreateNewTokenOrUseOldOne();
             return await Task.Run(() =>
             {
-                return this.restService.GetIssuesForProjectsCreatedAfterDate(AuthtenticationHelper.AuthToken, this.associatedProject.Key, this.associatedProject.Date, this.ct.Token, this.notificationmanager);
+                return this.restService.GetIssuesForProjectsCreatedAfterDate(AuthtenticationHelper.AuthToken, this.associatedProject.Key, this.associatedProject.Date, this.ct.Token, this.restLogger);
             }).ConfigureAwait(false);
         }
 
@@ -443,7 +447,7 @@ namespace VSSonarExtensionUi.Model.Analysis
             this.CreateNewTokenOrUseOldOne();
             var issues = await Task.Run(() =>
             {
-                return this.restService.GetIssues(AuthtenticationHelper.AuthToken, request, key, this.ct.Token, this.notificationmanager);
+                return this.restService.GetIssues(AuthtenticationHelper.AuthToken, request, key, this.ct.Token, this.restLogger);
             }).ConfigureAwait(false);
 
             if (!filterSSCM)

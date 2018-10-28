@@ -16,6 +16,8 @@ namespace VSSonarExtensionUi.Model.Helpers
 {
     using System.ComponentModel;
 
+    using SonarRestService.Types;
+    using SonarRestService;
 
     /// <summary>
     /// The DataModel interface.

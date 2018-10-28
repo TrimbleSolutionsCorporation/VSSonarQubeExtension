@@ -36,8 +36,9 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using VSSonarPlugins;
     using VSSonarPlugins.Helpers;
     using VSSonarPlugins.Types;
-    
-    
+
+    using SonarRestService.Types;
+    using SonarRestService;
 
     /// <summary>
     ///     The server view model.
@@ -89,6 +90,11 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// The associated project
         /// </summary>
         private Resource associatedProject;
+
+        /// <summary>
+        /// The available projects
+        /// </summary>
+        private IEnumerable<Resource> availableProjects;
 
         /// <summary>
         /// The analyser
@@ -238,6 +244,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <param name="configuration">sonar configuration</param>
         public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IList<IIssueTrackerPlugin> issuePlugin)
         {
+            this.availableProjects = availableProjects;
             // does nothing
         }
 
@@ -486,7 +493,11 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 this.CreateNewTokenOrUseOldOne();
                 var newIssues = await Task.Run(() =>
                 {
-                    return this.restservice.GetIssuesInResource(AuthtenticationHelper.AuthToken, this.ResourceInEditor.Key, this.ct.Token, this.notificationMan);
+                    return this.restservice.GetIssuesInResource(
+                        AuthtenticationHelper.AuthToken,
+                        this.ResourceInEditor.Key,
+                        this.ct.Token,
+                        this.notificationMan as IRestLogger);
                 }).ConfigureAwait(false);
 
                 this.IssuesGridView.UpdateIssues(newIssues);
@@ -647,8 +658,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                                SourceControlMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan, translator),
                                IssueTrackerMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan, translator, issuetracketplugins),
                                AssignMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan),
-                               AssignTagMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan),
-                               SetExclusionsMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan, translator, this.analyser),
+                               AssignTagMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan as IRestLogger),
+                               SetExclusionsMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan, translator, this.analyser, this.availableProjects),
                                SetSqaleMenu.MakeMenu(service, this.IssuesGridView, this.notificationMan, translator, this.analyser)
                            };
 

@@ -15,6 +15,9 @@ open System.Collections.Generic
 open System.Threading
 open System.Diagnostics
 
+open SonarRestService
+open SonarRestService.Types
+
 type ProxyDomain() =
     let mutable checksRoslyn = List.Empty
     let mutable currentKey : string = ""

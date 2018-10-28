@@ -20,10 +20,12 @@ namespace VSSonarExtensionUi.Model.PluginManager
     using System.Globalization;
     using System.Reflection;
 
-    
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
+    using SonarRestService.Types;
     using SonarRestService;
+    using SonarRestServiceImpl;
+    using SonarLocalAnalyser;
 
     /// <summary>
     ///     The assembly sand box loader.
@@ -175,7 +177,7 @@ namespace VSSonarExtensionUi.Model.PluginManager
                             var obj = type.GetConstructor(new[] { typeof(INotificationManager), typeof(IConfigurationHelper), typeof(ISonarRestService), typeof(IVsEnvironmentHelper), typeof(IVSSonarQubeCmdExecutor) });
                             if (obj != null)
                             {
-                                object[] lobject = { manager, helper, new SonarRestService(new JsonSonarConnector()), vshelper, new VSSonarQubeCmdExecutor.VSSonarQubeCmdExecutor(60000) };
+                                object[] lobject = { manager, helper, new SonarService(new JsonSonarConnector()), vshelper, new VSSonarQubeCmdExecutor(60000) };
                                 return (IPlugin)obj.Invoke(lobject);
                             }
 
@@ -189,7 +191,7 @@ namespace VSSonarExtensionUi.Model.PluginManager
                             var obj = type.GetConstructor(new[] { typeof(ISonarRestService) });
                             if (obj != null)
                             {
-                                object[] lobject = { new SonarRestService(new JsonSonarConnector()) };
+                                object[] lobject = { new SonarService(new JsonSonarConnector()) };
                                 return (IPlugin)obj.Invoke(lobject);
                             }
                         }

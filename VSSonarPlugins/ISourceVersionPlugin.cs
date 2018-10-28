@@ -1,5 +1,6 @@
 namespace VSSonarPlugins
 {
+    using SonarRestService.Types;
     using Types;
 
     /// <summary>

@@ -11,6 +11,9 @@ open Microsoft.CodeAnalysis
 open VSSonarPlugins
 open VSSonarPlugins.Types
 
+open SonarRestService
+open SonarRestService.Types
+
 open Types
 
 let GetSonarLintDiagnostics(externlProfileIn : System.Collections.Generic.Dictionary<string, Profile>, notificationManager : INotificationManager, checksRoslyn : System.Collections.Generic.List<DiagnosticAnalyzerType>) =

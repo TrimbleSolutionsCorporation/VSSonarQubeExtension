@@ -26,7 +26,11 @@ namespace CxxPlugin.LocalExtensions
 
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-    
+
+    using SonarRestService;
+    using SonarRestService.Types;
+    using SonarLocalAnalyser;
+
     /// <summary>
     ///     The cxx server extension.
     /// </summary>
@@ -114,10 +118,8 @@ namespace CxxPlugin.LocalExtensions
                                };
         }
 
-        public event CommandCompleEventHandler Complete;
-
         /// <summary>
-        ///     The std out event.
+        ///     The std outevent.
         /// </summary>
         public event EventHandler StdOutEvent;
 
@@ -150,7 +152,7 @@ namespace CxxPlugin.LocalExtensions
                         sensor,
                         this.profile["c++"], 
                         allIssues,
-                        new VSSonarQubeCmdExecutor.VSSonarQubeCmdExecutor(60000)));
+                        new VSSonarQubeCmdExecutor(60000)));
             }
 
             foreach (Thread thread in threads)
@@ -442,7 +444,7 @@ namespace CxxPlugin.LocalExtensions
             }
 
             this.isRunning = true;
-            var issues = this.sensor.ExecuteClangTidy(resource, new VSSonarQubeCmdExecutor.VSSonarQubeCmdExecutor(60000), this.additionalArgs);
+            var issues = this.sensor.ExecuteClangTidy(resource, new VSSonarQubeCmdExecutor(60000), this.additionalArgs);
             this.isRunning = false;
             return issues;
         }

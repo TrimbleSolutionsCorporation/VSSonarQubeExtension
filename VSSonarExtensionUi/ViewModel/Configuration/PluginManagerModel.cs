@@ -29,6 +29,9 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using VSSonarPlugins.Types;
     using UserControl = System.Windows.Controls.UserControl;
 
+    using SonarRestService.Types;
+    using SonarRestService;
+
     /// <summary>
     /// The dummy options controller.
     /// </summary>

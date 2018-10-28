@@ -25,6 +25,10 @@ namespace CxxPlugin.Options
     using System.Collections.Generic;
     using System.Reflection;
     using System.Windows.Input;
+
+    using SonarRestService;
+    using SonarRestService.Types;
+
     /// <summary>
     /// The dummy options controller.
     /// </summary>
@@ -413,7 +417,7 @@ namespace CxxPlugin.Options
                 this.SaveOption(CxxLintSensor.LinterProp, this.CxxLint);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 this.ErrorMessage = "C++ (Community) is installed but older than 0.9.5. Please install version 0.9.5 or above.";
                 return false;

@@ -14,10 +14,7 @@
 
 namespace VSSonarExtensionUi.Model.Helpers
 {
-    using System;
-
-    using VSSonarPlugins;
-    using VSSonarPlugins.Types;
+    using SonarRestService.Types;
 
     /// <summary>
     /// The OptionsViewModelBase interface.

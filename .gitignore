@@ -11,6 +11,7 @@ BuildDrop
 *.suo
 *.user
 *.sln.docstates
+SDK
 
 # Build results
 [Dd]ebug/

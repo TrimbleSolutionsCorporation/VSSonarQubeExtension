@@ -25,6 +25,9 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using VSSonarExtensionUi.Association;
     using System.Collections.Generic;
 
+    using SonarRestService.Types;
+    using SonarRestService;
+
     /// <summary>
     /// The sonar configuration view viewModel.
     /// </summary>
@@ -237,7 +240,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             this.configurationHelper.WriteSetting(
                 new SonarQubeProperties
                 {
-                    Context = Context.GlobalPropsId,
+                    Context = Context.GlobalPropsId.ToString(),
                     Key = "AutoConnectAtStart",
                     Owner = OwnersId.ApplicationOwnerId,
                     Value = this.IsConnectAtStartOn ? "true" : "false"
@@ -262,7 +265,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 this.notificationManager.ReportException(ex);
                 this.IsConnectAtStartOn = true;
                 this.configurationHelper.WriteSetting(
-                    new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.IsConnectAtStartOn, this.IsConnectAtStartOn ? "true" : "false"));
+                    new SonarQubeProperties(Context.GlobalPropsId.ToString(), OwnersId.ApplicationOwnerId, GlobalIds.IsConnectAtStartOn, this.IsConnectAtStartOn ? "true" : "false"));
             }
 
             try
@@ -276,7 +279,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                     new Message { Id = "GeneralConfigurationViewModel", Data = "ReloadDataFromDisk Failed Read : " + GlobalIds.UserDefinedEditor + " : " + ex.Message });
                 this.notificationManager.ReportException(ex);
                 this.UserDefinedEditor = "notepad";
-                this.configurationHelper.WriteSetting(new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.UserDefinedEditor, "notepad"));
+                this.configurationHelper.WriteSetting(new SonarQubeProperties(Context.GlobalPropsId.ToString(), OwnersId.ApplicationOwnerId, GlobalIds.UserDefinedEditor, "notepad"));
             }
 
             try
@@ -290,7 +293,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                     new Message { Id = "GeneralConfigurationViewModel", Data = "ReloadDataFromDisk Failed Read : " + GlobalIds.DisableEditorTags + " : " + ex.Message });
                 this.notificationManager.ReportException(ex);
                 this.DisableEditorTags = false;
-                this.configurationHelper.WriteSetting(new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.DisableEditorTags, "false"));
+                this.configurationHelper.WriteSetting(new SonarQubeProperties(Context.GlobalPropsId.ToString(), OwnersId.ApplicationOwnerId, GlobalIds.DisableEditorTags, "false"));
             }
 
             try
@@ -310,7 +313,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 this.ExtensionDebugModeEnabled = false;
                 this.configurationHelper.WriteSetting(
                     new SonarQubeProperties(
-                        Context.GlobalPropsId,
+                        Context.GlobalPropsId.ToString(),
                         OwnersId.ApplicationOwnerId,
                         GlobalIds.ExtensionDebugModeEnabled,
                         "false"));
@@ -324,7 +327,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         {
             var prp = new SonarQubeProperties
             {
-                Context = Context.GlobalPropsId,
+                Context = Context.GlobalPropsId.ToString(),
                 Owner = OwnersId.ApplicationOwnerId,
                 Key = "ExtensionDebugModeEnabled",
                 Value = this.ExtensionDebugModeEnabled ? "TRUE" : "FALSE"
@@ -431,15 +434,15 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public void SaveData()
         {
             this.configurationHelper.WriteSetting(
-                new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, "ServerAddress", this.ServerAddress));
+                new SonarQubeProperties(Context.GlobalPropsId.ToString(), OwnersId.ApplicationOwnerId, "ServerAddress", this.ServerAddress));
             this.configurationHelper.WriteSetting(
-                new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.IsConnectAtStartOn, this.IsConnectAtStartOn ? "true" : "false"));
+                new SonarQubeProperties(Context.GlobalPropsId.ToString(), OwnersId.ApplicationOwnerId, GlobalIds.IsConnectAtStartOn, this.IsConnectAtStartOn ? "true" : "false"));
             this.configurationHelper.WriteSetting(
-                new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.UserDefinedEditor, this.UserDefinedEditor));
+                new SonarQubeProperties(Context.GlobalPropsId.ToString(), OwnersId.ApplicationOwnerId, GlobalIds.UserDefinedEditor, this.UserDefinedEditor));
             this.configurationHelper.WriteSetting(
-                new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.ExtensionDebugModeEnabled, this.ExtensionDebugModeEnabled ? "true" : "false"));
+                new SonarQubeProperties(Context.GlobalPropsId.ToString(), OwnersId.ApplicationOwnerId, GlobalIds.ExtensionDebugModeEnabled, this.ExtensionDebugModeEnabled ? "true" : "false"));
             this.configurationHelper.WriteSetting(
-                new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.DisableEditorTags, this.DisableEditorTags ? "true" : "false"));
+                new SonarQubeProperties(Context.GlobalPropsId.ToString(), OwnersId.ApplicationOwnerId, GlobalIds.DisableEditorTags, this.DisableEditorTags ? "true" : "false"));
         }
 
 
@@ -625,7 +628,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </param>
         private void SetCredentials(string userName, string password)
         {
-            this.configurationHelper.WriteSetting(new SonarQubeProperties(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, "ServerAddress", this.ServerAddress));
+            this.configurationHelper.WriteSetting(new SonarQubeProperties(Context.GlobalPropsId.ToString(), OwnersId.ApplicationOwnerId, "ServerAddress", this.ServerAddress));
             using (var cm = new Credential
             {
                 Target = "VSSonarQubeExtension",

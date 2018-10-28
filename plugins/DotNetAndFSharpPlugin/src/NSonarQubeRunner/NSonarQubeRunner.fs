@@ -28,6 +28,8 @@ open Types
 open LocalHelpers
 open ServerHelpers
 open Analysers
+open SonarRestService
+open SonarRestService.Types
 
 type NSonarQubeRunner(helper : IConfigurationHelper, notificationManager : INotificationManager, service : ISonarRestService, vshelper : IVsEnvironmentHelper) =
     let CurrentRunDir = Environment.CurrentDirectory

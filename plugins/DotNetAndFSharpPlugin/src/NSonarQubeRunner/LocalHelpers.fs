@@ -23,6 +23,8 @@ open Microsoft.Build.Evaluation
 open MSBuildHelper
 open FSharp.Data
 
+open SonarRestService
+open SonarRestService.Types
 open Types
 
 let GetRoslynDiagnostics(externlProfileIn : System.Collections.Generic.Dictionary<string, Profile>, notificationManager : INotificationManager, checksRoslyn : DiagnosticAnalyzerType list) =

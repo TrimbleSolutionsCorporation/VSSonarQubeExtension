@@ -14,6 +14,7 @@
 
 namespace VSSonarExtensionUi.View.Helpers
 {
+    using SonarRestService.Types;
     using System.Collections.Generic;
     using System.Windows;
     using VSSonarPlugins.Types;

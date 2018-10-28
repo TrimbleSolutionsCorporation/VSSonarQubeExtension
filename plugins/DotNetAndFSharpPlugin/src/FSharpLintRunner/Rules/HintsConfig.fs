@@ -6,7 +6,7 @@ open FSharpLint.Framework.HintParser
 open FSharpLint.Rules.HintMatcher
 open FSharpLint.Framework.Configuration
 
-open VSSonarPlugins.Types
+open SonarRestService.Types
 
 let parseHints hints =
     let parseHint hint =

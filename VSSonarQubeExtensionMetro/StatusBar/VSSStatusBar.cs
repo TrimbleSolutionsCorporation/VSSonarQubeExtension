@@ -120,20 +120,6 @@ namespace VSSonarQubeExtension.StatusBar
 
             this.Bar.Animation(0, ref hdcObject);
             DeleteObject(hdc);
-
-            return;
-
-            object icon = Constants.SBAI_Build;
-            this.dte.StatusBar.Animate(true, icon);
-
-            // this.Bar.Animation(1, ref icon);
-            this.dte.StatusBar.Text = message;
-
-            // this.Bar.SetText(message);
-            this.dte.StatusBar.Animate(false, icon);
-
-            // this.Bar.Animation(0, ref icon);
-            this.dte.StatusBar.Text = "Build Succeeded";
         }
 
         /// <summary>
@@ -197,10 +183,6 @@ namespace VSSonarQubeExtension.StatusBar
             Property propertyAnimations = properties.Cast<Property>().FirstOrDefault(p => p.Name == "Animations");
 
             propertyAnimations.Value = "False";
-            foreach (object property in properties)
-            {
-                Debug.WriteLine(((Property)property).Name + " : " + ((Property)property).Value);
-            }
 
             var b =
                 new Bitmap(

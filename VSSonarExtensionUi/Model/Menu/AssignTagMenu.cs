@@ -16,8 +16,6 @@ namespace VSSonarExtensionUi.Model.Menu
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.ComponentModel;
-    using System.Windows;
     using System.Windows.Input;
 
     using Association;
@@ -26,10 +24,10 @@ namespace VSSonarExtensionUi.Model.Menu
     using View.Helpers;
     using ViewModel.Helpers;
     using VSSonarPlugins;
-    using VSSonarPlugins.Types;
     using System.Linq;
-    using System.Threading.Tasks;
     using System.Threading;
+    using SonarRestService;
+    using SonarRestService.Types;
 
     /// <summary>
     /// The issue handler menu.
@@ -49,7 +47,7 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <summary>
         /// The manager
         /// </summary>
-        private readonly INotificationManager manager;
+        private readonly IRestLogger manager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AssignTagMenu" /> class.
@@ -57,7 +55,7 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <param name="rest">The rest.</param>
         /// <param name="model">The model.</param>
         /// <param name="notmanager">The notmanager.</param>
-        private AssignTagMenu(ISonarRestService rest, IssueGridViewModel model, INotificationManager notmanager)
+        private AssignTagMenu(ISonarRestService rest, IssueGridViewModel model, IRestLogger notmanager)
         {
             this.model = model;
             this.rest = rest;
@@ -105,7 +103,7 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <param name="model">The model.</param>
         /// <param name="notmanager">The notmanager.</param>
         /// <returns>returns menu.</returns>
-        public static IMenuItem MakeMenu(ISonarRestService rest, IssueGridViewModel model, INotificationManager notmanager)
+        public static IMenuItem MakeMenu(ISonarRestService rest, IssueGridViewModel model, IRestLogger notmanager)
         {
             var topLel = new AssignTagMenu(rest, model, notmanager) { CommandText = "Tags", IsEnabled = false };
             topLel.SubItems.Add(new AssignTagMenu(rest, model, notmanager) { CommandText = "assign tag", IsEnabled = true });
@@ -224,7 +222,7 @@ namespace VSSonarExtensionUi.Model.Menu
                         }
 
                         var answer = await this.rest.SetIssueTags(AuthtenticationHelper.AuthToken, issue as Issue, finalTags, new CancellationTokenSource().Token, this.manager);
-                        this.manager.ReportMessage(new Message { Id = "AssignTagMenu", Data = "Assign tags:" + answer });
+                        this.manager.ReportMessage("AssignTagMenu: Assign tags:" + answer);
                         foreach (var tag in finalTags)
                         {
                             if (!issue.Tags.Contains(tag))
@@ -235,7 +233,7 @@ namespace VSSonarExtensionUi.Model.Menu
                     }
 
                     this.model.RefreshView();
-                    this.manager.EndedWorking();
+                    this.model.ExtensionIsBusy = false;
                 }
 
                 if (this.CommandText.Equals("remove tags"))
@@ -297,7 +295,7 @@ namespace VSSonarExtensionUi.Model.Menu
                             }
                         }
                         var message = this.rest.SetIssueTags(AuthtenticationHelper.AuthToken, issue as Issue, finalTags, new CancellationTokenSource().Token, this.manager);
-                        this.manager.ReportMessage(new Message { Id = "AssignTagMenu", Data = "Assign tags: " + message});
+                        this.manager.ReportMessage("AssignTagMenu Assign tags: " + message);
                         issue.Tags.Clear();
 
                         foreach (var tag in finalTags)
@@ -307,7 +305,7 @@ namespace VSSonarExtensionUi.Model.Menu
                     }
 
                     this.model.RefreshView();
-                    this.manager.EndedWorking();
+                    this.model.ExtensionIsBusy = false;
                 }
             }
             catch (Exception ex)

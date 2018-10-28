@@ -14,6 +14,9 @@
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
 
+    using SonarRestService.Types;
+    using SonarRestService;
+
     /// <summary>
     /// Interaction logic for SearchComponenetDialog.xaml
     /// </summary>
@@ -37,7 +40,7 @@
         /// <summary>
         /// The logger
         /// </summary>
-        private readonly INotificationManager logger;
+        private readonly IRestLogger logger;
 
         /// <summary>
         /// The selected items
@@ -72,7 +75,7 @@
             List<Resource> availableProjectsIn,
             List<Resource> listofSaveComp,
             IVsEnvironmentHelper vshelper,
-            INotificationManager logger)
+            IRestLogger logger)
         {
             this.logger = logger;
             this.selectedItems = new ObservableCollection<Resource>();
@@ -168,7 +171,7 @@
             List<Resource> availableProjects, 
             List<Resource> listofSaveComp, 
             IVsEnvironmentHelper helper,
-            INotificationManager logger)
+            IRestLogger logger)
         {
             var savedList = new List<Resource>();
             foreach (var item in listofSaveComp)

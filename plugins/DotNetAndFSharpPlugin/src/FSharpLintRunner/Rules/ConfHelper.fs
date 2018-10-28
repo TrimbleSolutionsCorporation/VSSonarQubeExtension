@@ -2,7 +2,7 @@
 
 open System
 
-open VSSonarPlugins.Types
+open SonarRestService.Types
 
 open FParsec
 open FSharpLint.Framework.HintParser

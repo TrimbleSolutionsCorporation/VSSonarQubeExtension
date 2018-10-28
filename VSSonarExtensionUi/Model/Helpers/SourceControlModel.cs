@@ -5,6 +5,8 @@
     using System.Linq;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
+    using SonarRestService.Types;
+    using SonarRestService;
 
     /// <summary>
     /// Source control interface

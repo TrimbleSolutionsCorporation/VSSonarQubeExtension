@@ -28,6 +28,8 @@ namespace VSSonarExtensionUi.Model.Menu
     using SonarLocalAnalyser;
     using View.Helpers;
     using System.Linq;
+    using SonarRestService;
+    using SonarRestService.Types;
 
     /// <summary>
     /// Source Control Related Actions

@@ -25,6 +25,9 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using PropertyChanged;
     using View.Helpers;
 
+    using SonarRestService.Types;
+    using SonarRestService;
+
     /// <summary>
     /// roslyn manager view model
     /// </summary>

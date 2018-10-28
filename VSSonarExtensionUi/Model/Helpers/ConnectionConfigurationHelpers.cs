@@ -16,6 +16,9 @@ namespace VSSonarExtensionUi.Model.Helpers
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
 
+    using SonarRestService.Types;
+    using SonarRestService;
+
     /// <summary>
     /// The connection configuration helpers.
     /// </summary>

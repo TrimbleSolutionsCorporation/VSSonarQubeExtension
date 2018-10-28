@@ -28,6 +28,7 @@ namespace VSSonarQubeExtension.Squiggle
 
     using VSSonarQubeExtension.Helpers;
     using VSSonarPlugins.Types;
+    using SonarRestService.Types;
 
     /// <summary>
     ///     The sonar tagger.

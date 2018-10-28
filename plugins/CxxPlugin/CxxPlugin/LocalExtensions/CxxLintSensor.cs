@@ -21,6 +21,9 @@ namespace CxxPlugin.LocalExtensions
     using System.Runtime.InteropServices;
     using System.Linq;
 
+    using SonarRestService;
+    using SonarRestService.Types;
+
     /// <summary>
     ///     The CxxLintSensor sensor.
     /// </summary>

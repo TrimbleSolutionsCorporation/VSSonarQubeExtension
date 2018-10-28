@@ -4,9 +4,6 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-    using System.Linq;
-    using System.Threading;
-    using System.Windows;
 
     using PropertyChanged;
     using SonarLocalAnalyser;
@@ -15,11 +12,12 @@
     using VSSonarPlugins;
     using VSSonarPlugins.Helpers;
     using VSSonarPlugins.Types;
-    using System.Collections.ObjectModel;
     using VSSonarExtensionUi.Model.Helpers;
     using VSSonarExtensionUi.ViewModel.Configuration;
     using Model.Menu;
     using System.Threading.Tasks;
+    using SonarRestService.Types;
+    using SonarRestService;
 
     /// <summary>
     /// Generates associations with sonar projects
@@ -222,7 +220,7 @@
                         Owner = Path.Combine(this.OpenSolutionPath, this.OpenSolutionName),
                         Key = "PROJECTKEY",
                         Value = project.Key,
-                        Context = Context.GlobalPropsId
+                        Context = Context.GlobalPropsId.ToString()
                     });
 
                 this.configurationHelper.WriteSetting(
@@ -231,7 +229,7 @@
                         Owner = Path.Combine(this.OpenSolutionPath, this.OpenSolutionName),
                         Key = "PROJECTNAME",
                         Value = this.OpenSolutionName,
-                        Context = Context.GlobalPropsId
+                        Context = Context.GlobalPropsId.ToString()
                     });
 
                 this.configurationHelper.WriteSetting(
@@ -240,7 +238,7 @@
                         Owner = Path.Combine(this.OpenSolutionPath, this.OpenSolutionName),
                         Key = "PROJECTLOCATION",
                         Value = this.OpenSolutionPath,
-                        Context = Context.GlobalPropsId
+                        Context = Context.GlobalPropsId.ToString()
                     });
             }
             catch (Exception ex)
@@ -376,7 +374,7 @@
 
             if (resource != null)
             {
-                this.AssignASonarProjectToSolution(resource, resource, sourceControl, true);
+                await this.AssignASonarProjectToSolution(resource, resource, sourceControl, true);
             }
         }
 
@@ -468,7 +466,7 @@
                 if (this.IsAssociated)
                 {
                     this.CreateConfiguration(Path.Combine(solutionPath, "sonar-project.properties"));
-                    this.InitiateAssociationToSonarProject(sourceControl);
+                    await this.InitiateAssociationToSonarProject(sourceControl);
                     var mainProject = SetExclusionsMenu.GetMainProject(this.AssociatedProject, this.model.AvailableProjects);
                     var exclusions = this.sonarService.GetExclusions(AuthtenticationHelper.AuthToken, mainProject);
                     this.model.LocaAnalyser.UpdateExclusions(exclusions);

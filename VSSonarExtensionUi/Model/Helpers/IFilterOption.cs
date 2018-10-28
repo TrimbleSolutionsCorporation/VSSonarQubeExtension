@@ -15,6 +15,9 @@ namespace VSSonarExtensionUi.Model.Helpers
 {
     using VSSonarPlugins.Types;
 
+    using SonarRestService.Types;
+    using SonarRestService;
+
     /// <summary>
     /// The FilterOption interface.
     /// </summary>

@@ -37,7 +37,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using View.Helpers;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-    
+    using SonarRestService.Types;
+    using SonarRestService;
 
     /// <summary>
     /// The issues search view model.
@@ -715,7 +716,12 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             try
             {
                 var compoenentsList = SearchComponenetDialog.SearchComponents(
-                    AuthtenticationHelper.AuthToken, this.restService, this.AvailableProjects.ToList<Resource>(), this.componentList, this.vshelper, this.notificationManager);
+                    AuthtenticationHelper.AuthToken,
+                    this.restService,
+                    this.AvailableProjects.ToList(),
+                    this.componentList,
+                    this.vshelper,
+                    this.notificationManager as IRestLogger);
                 this.componentList.Clear();
                 this.componentList.AddRange(compoenentsList);
             }
@@ -913,7 +919,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                                SourceControlMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager, translator),
                                IssueTrackerMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager, translator, plugins),
                                AssignMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager),
-                               AssignTagMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager),
+                               AssignTagMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager as IRestLogger),
                                SetSqaleMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager, translator, analyser)
                            };
 

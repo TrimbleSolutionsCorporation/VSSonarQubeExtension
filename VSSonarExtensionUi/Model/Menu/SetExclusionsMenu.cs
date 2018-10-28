@@ -14,7 +14,8 @@
     using Association;
     using SonarLocalAnalyser;
     using View.Helpers;
-
+    using SonarRestService;
+    using SonarRestService.Types;
 
     /// <summary>
     /// Source Control Related Actions
@@ -64,7 +65,7 @@
         /// <summary>
         /// The available projects
         /// </summary>
-        private IList<Resource> availableProjects;
+        private IEnumerable<Resource> availableProjects;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SourceControlMenu" /> class.
@@ -73,8 +74,15 @@
         /// <param name="model">The model.</param>
         /// <param name="manager">The manager.</param>
         /// <param name="translator">The translator.</param>
-        public SetExclusionsMenu(ISonarRestService rest, IssueGridViewModel model, INotificationManager manager, ISQKeyTranslator translator, ISonarLocalAnalyser analyser)
+        public SetExclusionsMenu(
+            ISonarRestService rest,
+            IssueGridViewModel model,
+            INotificationManager manager,
+            ISQKeyTranslator translator,
+            ISonarLocalAnalyser analyser,
+            IEnumerable<Resource> availableProjects)
         {
+            this.availableProjects = availableProjects;
             this.analyser = analyser;
             this.rest = rest;
             this.model = model;
@@ -118,12 +126,18 @@
         /// <returns>
         /// The <see cref="IMenuItem" />.
         /// </returns>
-        public static IMenuItem MakeMenu(ISonarRestService rest, IssueGridViewModel model, INotificationManager manager, ISQKeyTranslator translator, ISonarLocalAnalyser analyser)
+        public static IMenuItem MakeMenu(
+            ISonarRestService rest,
+            IssueGridViewModel model,
+            INotificationManager manager,
+            ISQKeyTranslator translator,
+            ISonarLocalAnalyser analyser,
+            IEnumerable<Resource> projects)
         {
-            var topLel = new SetExclusionsMenu(rest, model, manager, translator, analyser) { CommandText = "Exclusions", IsEnabled = false };
+            var topLel = new SetExclusionsMenu(rest, model, manager, translator, analyser, projects) { CommandText = "Exclusions", IsEnabled = false };
             
-            topLel.SubItems.Add(new SetExclusionsMenu(rest, model, manager, translator, analyser) { CommandText = "file", IsEnabled = true });
-            topLel.SubItems.Add(new SetExclusionsMenu(rest, model, manager, translator, analyser) { CommandText = "rule in file", IsEnabled = true });
+            topLel.SubItems.Add(new SetExclusionsMenu(rest, model, manager, translator, analyser, projects) { CommandText = "file", IsEnabled = true });
+            topLel.SubItems.Add(new SetExclusionsMenu(rest, model, manager, translator, analyser, projects) { CommandText = "rule in file", IsEnabled = true });
             return topLel;
         }
 
@@ -268,7 +282,7 @@
         /// <param name="projectIn">The project in.</param>
         /// <param name="projects">The projects.</param>
         /// <returns></returns>
-        public static Resource GetMainProject(Resource projectIn, IList<Resource> projects)
+        public static Resource GetMainProject(Resource projectIn, IEnumerable<Resource> projects)
         {
             var projectToUse = projectIn;
             foreach (var project in projects)

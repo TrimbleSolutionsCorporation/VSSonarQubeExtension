@@ -18,6 +18,7 @@ namespace VSSonarPlugins.Helpers
     using System.Linq;
 
     using DifferenceEngine;
+    using SonarRestService.Types;
     using VSSonarPlugins.Types;
     
 

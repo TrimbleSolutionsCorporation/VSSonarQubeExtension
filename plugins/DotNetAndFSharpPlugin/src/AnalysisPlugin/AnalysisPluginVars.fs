@@ -3,6 +3,9 @@
 open VSSonarPlugins.Types
 open VSSonarPlugins
 open System.IO
+open SonarRestService
+open SonarRestService.Types
+
 
 type AnalysisPluginVars = 
     static member Key : string = "AnalysisPlugin"

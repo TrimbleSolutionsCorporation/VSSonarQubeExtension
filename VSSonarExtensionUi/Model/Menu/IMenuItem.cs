@@ -18,6 +18,8 @@ namespace VSSonarExtensionUi.Model.Menu
     using System.Windows.Input;
     using Helpers;
     using VSSonarPlugins.Types;
+    using SonarRestService.Types;
+    using SonarRestService;
 
     /// <summary>
     ///     The MenuItem interface.

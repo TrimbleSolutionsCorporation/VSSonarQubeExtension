@@ -32,6 +32,8 @@ namespace VSSonarExtensionUi.Model.Menu
     using Helpers;
     using Association;
     using System.Collections.Generic;
+    using SonarRestService.Types;
+    using SonarRestService;
 
     /// <summary>
     ///     The issue handler menu.

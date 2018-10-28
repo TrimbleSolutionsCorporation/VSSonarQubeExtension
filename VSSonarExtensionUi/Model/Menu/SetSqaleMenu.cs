@@ -16,6 +16,9 @@
     using View.Helpers;
     using System.Linq;
 
+    using SonarRestService;
+    using SonarRestService.Types;
+
     /// <summary>
     /// Source Control Related Actions
     /// </summary>

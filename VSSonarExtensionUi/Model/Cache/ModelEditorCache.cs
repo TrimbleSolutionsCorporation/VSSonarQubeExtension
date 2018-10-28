@@ -23,7 +23,8 @@ namespace VSSonarExtensionUi.Model.Cache
     using VSSonarPlugins.Types;
     using VSSonarPlugins.Helpers;
 
-    
+    using SonarRestService;
+    using SonarRestService.Types;
 
     /// <summary>
     ///     The coverage element.

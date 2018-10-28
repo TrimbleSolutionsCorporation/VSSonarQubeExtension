@@ -14,6 +14,7 @@
 namespace VSSonarQubeExtension.Helpers
 {
     using Microsoft.Win32;
+    using SonarRestService.Types;
     using System;
     using System.IO;
     using System.Runtime.Serialization.Formatters.Binary;
@@ -88,7 +89,7 @@ namespace VSSonarQubeExtension.Helpers
         public SonarQubeProperties ReadSetting(Context context, string owner, string key)
         {
             var baseKey = this.GetBaseRegistry(false);
-            var data = baseKey.GetValue(this.GetRegistryKey(new SonarQubeProperties { Context = context, Key = key, Owner = owner }));
+            var data = baseKey.GetValue(this.GetRegistryKey(new SonarQubeProperties { Context = context.ToString(), Key = key, Owner = owner }));
 
             if (data == null)
             {
@@ -143,7 +144,7 @@ namespace VSSonarQubeExtension.Helpers
         /// <param name="skipIfExist">The skip if exist.</param>
         public void WriteOptionInApplicationData(Context context, string owner, string key, string value, bool sync = false, bool skipIfExist = false)
         {
-            this.WriteSetting(new SonarQubeProperties(context, owner, key, value), sync, skipIfExist);
+            this.WriteSetting(new SonarQubeProperties(context.ToString(), owner, key, value), sync, skipIfExist);
         }
 
         /// <summary>
@@ -191,7 +192,7 @@ namespace VSSonarQubeExtension.Helpers
 
         public void WriteSetting(Context context, string owner, string key, string value, bool sync = false, bool skipIfExist = false)
         {
-            this.WriteSetting(new SonarQubeProperties { Context = context, Owner = owner, Key = key, Value = value }, sync, skipIfExist);
+            this.WriteSetting(new SonarQubeProperties { Context = context.ToString(), Owner = owner, Key = key, Value = value }, sync, skipIfExist);
         }
     }
 }

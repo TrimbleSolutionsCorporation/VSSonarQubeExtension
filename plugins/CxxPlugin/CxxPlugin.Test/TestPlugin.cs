@@ -16,9 +16,7 @@ namespace CxxPlugin.Test
 {
     using System.Threading;
     using System.Windows;
-
-    
-
+    using SonarRestService.Types;
     using NUnit.Framework;
 
     using VSSonarPlugins;

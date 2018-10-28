@@ -10,9 +10,13 @@
     using Association;
     using System.Windows.Media;
     using System.Collections.Generic;
+    using SonarRestService.Types;
+    using SonarRestService;
+    using System.Threading.Tasks;
+
 
     /// <summary>The notify cation manager.</summary>
-    public class NotifyCationManager : INotificationManager, IModelBase
+    public class NotifyCationManager : INotificationManager, IModelBase, IRestLogger
     {
         /// <summary>The model.</summary>
         private readonly SonarQubeViewModel model;
@@ -245,9 +249,9 @@
         /// </summary>
         /// <param name="v1">The v1.</param>
         /// <param name="v2">The v2.</param>
-        public void AssociateProjectToSolution(string v1, string v2)
+        public async void AssociateProjectToSolution(string v1, string v2)
         {
-            this.model.AssociationModule.AssociateProjectToSolution(v1, v2, this.model.AvailableProjects, this.model.SourceControl);
+            await this.model.AssociationModule.AssociateProjectToSolution(v1, v2, this.model.AvailableProjects, this.model.SourceControl);
         }
 
         /// <summary>

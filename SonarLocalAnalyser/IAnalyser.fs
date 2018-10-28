@@ -13,19 +13,9 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace SonarLocalAnalyser
 
-open System
-open System.Runtime.InteropServices
-open System.Security.Permissions
-open System.Threading
-open System.IO
-open System.Diagnostics
 open VSSonarPlugins
 open VSSonarPlugins.Types
-open CommonExtensions
-open System.Diagnostics
-open Microsoft.Build.Utilities
-open VSSonarPlugins.Types
-open System.ComponentModel
+open SonarRestService.Types
 
 type ISonarLocalAnalyser = 
   abstract member StopAllExecution : unit -> unit

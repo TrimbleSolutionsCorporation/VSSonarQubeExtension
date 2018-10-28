@@ -4,7 +4,7 @@ open FSharpLint.Framework.Configuration
 
 open FSharpLint.Rules.NameConventions
 
-open VSSonarPlugins.Types
+open SonarRestService.Types
 
 let SonarConfiguration(config : Profile) = 
     let configdata =

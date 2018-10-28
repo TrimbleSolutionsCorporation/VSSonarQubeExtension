@@ -9,15 +9,10 @@ open System.IO
 open System.Diagnostics
 open VSSonarPlugins
 open VSSonarPlugins.Types
-open CommonExtensions
-open System.Diagnostics
-open PluginsOptionsController
-open Microsoft.Build.Utilities
 open NSonarQubeRunner
-open StyleCopRunner
-open FxCopRunner
-open Microsoft.CodeAnalysis.Diagnostics
 open FSharpLintRunner
+open SonarRestService
+open SonarRestService.Types
 
 type AnalysisMode =
    | File = 0
@@ -28,16 +23,18 @@ type AnalysisMode =
 [<ComVisible(false)>]
 [<HostProtection(SecurityAction.LinkDemand, Synchronization = true, ExternalThreading = true)>]
 [<AllowNullLiteral>]
-type LocalExtension(helper : IConfigurationHelper, notificationManager : INotificationManager, service : ISonarRestService, vshelper : IVsEnvironmentHelper, executor : IVSSonarQubeCmdExecutor) =
+type LocalExtension(helper : IConfigurationHelper, 
+                    notificationManager : INotificationManager,
+                    service : ISonarRestService,
+                    vshelper : IVsEnvironmentHelper) =
+
     let completionEvent = new DelegateEvent<System.EventHandler>()
     let stdOutEvent = new DelegateEvent<System.EventHandler>()
     let stdErrEvent = new DelegateEvent<System.EventHandler>()
     let monitor = new Object()
     let jsonReports : System.Collections.Generic.List<String> = new System.Collections.Generic.List<String>()
     let mutable allOutData : string list = []
-    let fxCopRunner = new FxCopRunner(executor, helper, vshelper, notificationManager)
     let mutable nsqanalyser = new NSonarQubeRunner(helper, notificationManager, service, vshelper)
-    let mutable stylecopanalyser = new StyleCopRunner(helper, notificationManager)
     let mutable fsharpAnalyser = new FSharpLintAnalyser(notificationManager)
     let mutable nmbofAnalisedFiles = 0
     let mutable prevFromSave = false
@@ -110,28 +107,15 @@ type LocalExtension(helper : IConfigurationHelper, notificationManager : INotifi
             notificationManager.ReportException(exOu)
 
         try
-            stylecopanalyser.UpdateSettings(externlProfile)
-        with
-        | ex -> notificationManager.ReportMessage(new Message(Id = "AnalysisPlugin", Data = "Failed to Refresh StyleCop Workspace: " + ex.Message ))
-                notificationManager.ReportException(ex)
-
-        try
-            fxCopRunner.UpdateProfile(externlProfile)
-        with
-        | ex -> notificationManager.ReportMessage(new Message(Id = "AnalysisPlugin", Data = "Failed to Refresh FxCop Workspace: " + ex.Message ))
-                notificationManager.ReportException(ex)
-
-        try
             fsharpAnalyser.UpdateProfile(externlProfile)
         with
         | ex -> notificationManager.ReportMessage(new Message(Id = "AnalysisPlugin", Data = "Failed to Refresh FSharpLint Workspace: " + ex.Message ))
                 notificationManager.ReportException(ex)
 
     member x.RunProjectAnalysis(project : VsProjectItem, conf : ISonarConfiguration, plugin : IAnalysisPlugin) =
-        fxCopRunner.RunAnalysisOnProject(project, plugin)
+        ()
 
-    member x.UnloadDomains() =
-        stylecopanalyser.UnloadDomain()
+    member x.UnloadDomains() = ()
 
     interface IFileAnalyser with
 
@@ -150,14 +134,11 @@ type LocalExtension(helper : IConfigurationHelper, notificationManager : INotifi
                 notificationManager.ReportMessage(new Message(Id = "AnalysisPlugin", Data = "Start Analysis On File: " + itemInView.FileName ))
                 let issues = nsqanalyser.RunAnalysis(itemInView, helper, notificationManager, fromSave, guid)
                 notificationManager.ReportMessage(new Message(Id = "AnalysisPlugin", Data = "Current  issue count [roslyn] : " + issues.Count.ToString() + " : in " + stopWatch.Elapsed.TotalMilliseconds.ToString()))
-                issues.AddRange(stylecopanalyser.RunAnalysis(itemInView, helper))
                 notificationManager.ReportMessage(new Message(Id = "AnalysisPlugin", Data = "Current  issue count [stylecop] : " + issues.Count.ToString() + " : in " + stopWatch.Elapsed.TotalMilliseconds.ToString() ))
                 notificationManager.ReportMessage(new Message(Id = "AnalysisPlugin", Data = "Start [fsharplint] : " + stopWatch.Elapsed.TotalMilliseconds.ToString()))
                 issues.AddRange(fsharpAnalyser.RunLint(itemInView))
                 notificationManager.ReportMessage(new Message(Id = "AnalysisPlugin", Data = "Current  issue count [fsharplint] : " + issues.Count.ToString() + " : in " + stopWatch.Elapsed.TotalMilliseconds.ToString() ))
                 // get available project issues
-                issues.AddRange(fxCopRunner.GetIssuesForFile(itemInView))
-                notificationManager.ReportMessage(new Message(Id = "AnalysisPlugin", Data = "Current  issue count [fxcop] : " + issues.Count.ToString() + " : in " + stopWatch.Elapsed.TotalMilliseconds.ToString() ))
                 stopWatch.Stop()
                 notificationManager.ReportMessage(new Message(Id = "AnalysisPlugin", Data = "Done in : " + stopWatch.Elapsed.TotalMilliseconds.ToString() + " ms" ))
                 issues

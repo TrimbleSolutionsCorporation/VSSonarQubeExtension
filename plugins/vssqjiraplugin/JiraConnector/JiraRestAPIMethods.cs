@@ -20,8 +20,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace JiraConnector
 {
@@ -212,7 +210,6 @@ namespace JiraConnector
             }
             catch (Exception exception)
             {
-                MessageBox.Show("Exception occured while fetching metadata " + Convert.ToString(exception));
                 resultmessage = "Exception: " + Convert.ToString(exception);
             }
             return resultmessage;

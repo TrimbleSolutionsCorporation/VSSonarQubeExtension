@@ -37,6 +37,8 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
     using View.Helpers;
     using VSSonarExtensionUi.Association;
     using VSSonarExtensionUi.ViewModel.Analysis;
+    using SonarRestService.Types;
+    using SonarRestService;
 
     /// <summary>
     /// The issue grid view viewModel.
@@ -181,16 +183,6 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// </summary>
         public event ChangedEventHandler ShowLeftFlyoutEvent;
 
-        /// <summary>
-        ///     The analysis mode has change.
-        /// </summary>
-        public event ChangedEventHandler NavigateDownEvent;
-
-        /// <summary>
-        ///     The analysis mode has change.
-        /// </summary>
-        public event ChangedEventHandler NavigateUpEvent;
-        
         /// <summary>
         /// Gets or sets the all issues.
         /// </summary>

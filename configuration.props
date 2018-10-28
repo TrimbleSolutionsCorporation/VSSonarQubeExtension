@@ -5,7 +5,6 @@
         <ReferencesFolder        Condition="'$(ReferencesFolder)'==''">$(MSBuildThisFileDirectory)references</ReferencesFolder>
         <MSBuildFolder        Condition="'$(MSBuildFolder)'==''">$(MSBuildThisFileDirectory)msbuild</MSBuildFolder>
 
-        
         <!-- Version settings -->
         <MajorVersionNumber           Condition="'$(MajorVersionNumber)'==''">7</MajorVersionNumber>
         <MinorVersionNumber           Condition="'$(MinorVersionNumber)'==''">0</MinorVersionNumber>
@@ -16,28 +15,15 @@
 		<ProduceCoverage       Condition="'$(ProduceCoverage)'==''">false</ProduceCoverage>
 
         <VSVersion Condition="'$(VSVersion)'==''">$(VisualStudioVersion)</VSVersion>
-        <TargetFSharpDataVersion>3.0.0.0</TargetFSharpDataVersion>
-        
-        <TargetFSharpCoreVersion Condition="'$(VSVersion)'=='14.0'">4.4.0.0</TargetFSharpCoreVersion>
-        <TargetFSharpCoreVersion Condition="'$(VSVersion)'=='15.0'">4.4.3.0</TargetFSharpCoreVersion>
-        
-        <FSharpFolder Condition="'$(TargetFSharpCoreVersion)'=='4.4.0.0'">FSharp440</FSharpFolder>
-        <FSharpFolder Condition="'$(TargetFSharpCoreVersion)'=='4.4.3.0'">FSharp443</FSharpFolder>
-        <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+        <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
         
         <OutFolder Condition="'$(VSVersion)'=='14.0'">vs15</OutFolder>
         <OutFolder Condition="'$(VSVersion)'=='15.0'">vs17</OutFolder>
 
-        
         <ExtensionOutputPath     Condition="'$(ExtensionOutputPath)'==''">$(MSBuildThisFileDirectory)BuildDrop\$(OutFolder)\</ExtensionOutputPath>
         <ExtensionOutputPathTest     Condition="'$(ExtensionOutputPathTest)'==''">$(MSBuildThisFileDirectory)BuildDrop\Test\$(OutFolder)\</ExtensionOutputPathTest>
         <OBJDir>$(MSBuildThisFileDirectory)ObjDrop\$(OutFolder)\$(Configuration)\$(TSPlatform)</OBJDir>
         <IntermediateOutputPath>$(OBJDir)$(MSBuildProjectName)\</IntermediateOutputPath>
-
-        <AutomationHelperVersion>1.5.3</AutomationHelperVersion>
-
-        <MsbuildAutomationHelperVersion Condition="'$(VSVersion)'=='14.0'">440.$(AutomationHelperVersion)</MsbuildAutomationHelperVersion>
-        <MsbuildAutomationHelperVersion Condition="'$(VSVersion)'=='15.0'">443.$(AutomationHelperVersion)</MsbuildAutomationHelperVersion>
     </PropertyGroup>
       
       <Target Name="PrintVsVersion" BeforeTargets="PrepareForBuild">

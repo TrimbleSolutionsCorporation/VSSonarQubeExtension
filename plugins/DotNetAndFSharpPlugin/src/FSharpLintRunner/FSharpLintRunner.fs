@@ -9,8 +9,9 @@ open System.IO
 open System.Text.RegularExpressions
 open System.Text
 
-open VSSonarPlugins.Types
+open SonarRestService.Types
 open VSSonarPlugins
+open VSSonarPlugins.Types
 
 open FSharpLint.Framework
 open FSharpLint.Framework.Ast

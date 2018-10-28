@@ -14,6 +14,7 @@
 
 namespace VSSonarExtensionUi.Model.Cache
 {
+    using SonarRestService.Types;
     using System.Collections.Generic;
     using VSSonarPlugins.Types;
 

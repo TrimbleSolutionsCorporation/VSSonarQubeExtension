@@ -2,14 +2,16 @@
 
 open System.Collections.Generic
 open System.ComponentModel.Composition
-open System.Globalization
 open System.IO
 open PluginsOptionsController
 open System
 open System.Reflection
 open VSSonarPlugins
 open VSSonarPlugins.Types
-open Microsoft.CodeAnalysis.Diagnostics
+open SonarRestService
+open SonarLocalAnalyser
+open SonarRestService.Types
+
 [<Export(typeof<IPlugin>)>]
 type public AnalysisPlugin(notificationManager : INotificationManager, configurationHelper : IConfigurationHelper, service : ISonarRestService, vshelper : IVsEnvironmentHelper) = 
     let mutable isAssociating = false
@@ -21,11 +23,11 @@ type public AnalysisPlugin(notificationManager : INotificationManager, configura
                                     AssemblyPath = Assembly.GetExecutingAssembly().Location,
                                     Version = Assembly.GetExecutingAssembly().GetName().Version.ToString())
 
-    let pluginData = new LocalExtension(configurationHelper, notificationManager, service, vshelper, new VSSonarQubeCmdExecutor.VSSonarQubeCmdExecutor(int64(60000)))
+    let pluginData = new LocalExtension(configurationHelper, notificationManager, service, vshelper)
     let pluginCon = new PluginsOptionsControl()
     let mutable dllLocations = List.Empty
 
-    new () = AnalysisPlugin(null, null, null, null)
+    new () = new AnalysisPlugin(null, null, null, null)
 
     interface IDisposable with
         member this.Dispose() = pluginData.UnloadDomains()

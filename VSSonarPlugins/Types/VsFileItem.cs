@@ -9,12 +9,11 @@
 
 namespace VSSonarPlugins.Types
 {
-    using PropertyChanged;
-
+    using SonarRestService.Types;
+    
     /// <summary>
     /// The vs project item.
     /// </summary>
-    [AddINotifyPropertyChangedInterface]
     public class VsFileItem
     {
         /// <summary>Initializes a new instance of the <see cref="VsFileItem"/> class.</summary>

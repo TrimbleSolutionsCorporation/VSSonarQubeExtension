@@ -1,9 +1,5 @@
 namespace VSSonarPlugins.Types
 {
-    using PropertyChanged;
-
-    /// <summary>The vs project item.</summary>
-    [AddINotifyPropertyChangedInterface]
     public class VsProjectItem
     {
         /// <summary>Gets or sets the project name.</summary>

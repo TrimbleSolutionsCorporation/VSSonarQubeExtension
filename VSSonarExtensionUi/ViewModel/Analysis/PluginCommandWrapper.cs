@@ -1,15 +1,17 @@
-﻿using GalaSoft.MvvmLight.Command;
-using System.Windows.Input;
-using VSSonarPlugins.Types;
-using System;
-using VSSonarPlugins;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Windows;
+﻿
 
 namespace VSSonarExtensionUi.ViewModel.Analysis
 {
+    using GalaSoft.MvvmLight.Command;
+    using System.Windows.Input;
+    using VSSonarPlugins.Types;
+    using System;
+    using VSSonarPlugins;
+    using System.Threading.Tasks;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Windows;
+
     public class PluginCommandWrapper
     {
         private readonly LocalViewModel model;

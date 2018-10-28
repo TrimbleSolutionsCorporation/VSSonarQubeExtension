@@ -14,6 +14,8 @@
     using Association;
     using SonarLocalAnalyser;
     using View.Helpers;
+    using SonarRestService.Types;
+    using SonarRestService;
 
 
     /// <summary>

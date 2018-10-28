@@ -1,9 +1,8 @@
 ﻿namespace VSSonarPlugins
 {
+    using SonarRestService.Types;
     using System.Windows.Controls;
     using System.Windows.Media;
-
-    using VSSonarPlugins.Types;
 
     /// <summary>
     ///     The PluginControlOption interface.

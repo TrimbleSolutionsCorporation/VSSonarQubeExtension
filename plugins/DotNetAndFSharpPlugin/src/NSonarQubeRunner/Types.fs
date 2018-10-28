@@ -23,6 +23,9 @@ open Microsoft.Build.Evaluation
 open MSBuildHelper
 open FSharp.Data
 
+open SonarRestService
+open SonarRestService.Types
+
 type AnalyzerAdditionalFile(path : string) =
     inherit AdditionalText()
 

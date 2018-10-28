@@ -3,7 +3,7 @@
 open FSharpLint.Rules.RedundantNewKeyword
 open FSharpLint.Framework.Configuration
 
-open VSSonarPlugins.Types
+open SonarRestService.Types
 
 let SonarConfiguration(config : Profile) =
     Map.ofList 

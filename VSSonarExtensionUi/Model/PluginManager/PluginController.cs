@@ -21,11 +21,14 @@ namespace VSSonarExtensionUi.Model.PluginManager
     using System.IO.Compression;
     using System.Linq;
     using System.Reflection;
-
+    using SonarRestService.Types;
     using SonarRestService;
+
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
     using Helpers;
+    using SonarRestServiceImpl;
+
     /// <summary>
     ///     The local analyser.
     /// </summary>    
@@ -65,7 +68,7 @@ namespace VSSonarExtensionUi.Model.PluginManager
         /// <summary>The load all assemblies from extension folder.</summary>
         private void LoadAllAssembliesFromExtensionFolder()
         {
-            return;
+#if ENABLEDLOAD 
             var assemblyRunningPath = Directory.GetParent(Assembly.GetExecutingAssembly().Location).ToString();
 
             foreach (var dll in Directory.GetFiles(assemblyRunningPath, "*.dll"))
@@ -79,11 +82,12 @@ namespace VSSonarExtensionUi.Model.PluginManager
                     Debug.WriteLine(ex.Message);
                 }
             }
+#endif
         }
 
-        #endregion
+#endregion
 
-        #region Public Properties
+#region Public Properties
 
         /// <summary>
         ///     Gets or sets the error message.
@@ -105,9 +109,9 @@ namespace VSSonarExtensionUi.Model.PluginManager
         /// </summary>
         public string TempInstallPathFolder { get; set; }
 
-        #endregion
+#endregion
 
-        #region Public Methods and Operators
+#region Public Methods and Operators
 
         /// <summary>
         /// The current domain_ assembly resolve.
@@ -374,7 +378,7 @@ namespace VSSonarExtensionUi.Model.PluginManager
                         var obj = type.GetConstructor(new[] { typeof(INotificationManager), typeof(IConfigurationHelper), typeof(ISonarRestService), typeof(IVsEnvironmentHelper) });
                         if (obj != null)
                         {
-                            object[] lobject = new object[] { manager, helper, new SonarRestService(new JsonSonarConnector()), vshelper };
+                            object[] lobject = new object[] { manager, helper, new SonarService(new JsonSonarConnector()), vshelper };
                             return (IPlugin)obj.Invoke(lobject);
                         }
                         else
@@ -389,7 +393,7 @@ namespace VSSonarExtensionUi.Model.PluginManager
                         var obj = type.GetConstructor(new[] { typeof(ISonarRestService) });
                         if (obj != null)
                         {
-                            object[] lobject = { new SonarRestService(new JsonSonarConnector()) };
+                            object[] lobject = { new SonarService(new JsonSonarConnector()) };
                             return (IPlugin)obj.Invoke(lobject);
                         }
                     }
@@ -469,7 +473,7 @@ namespace VSSonarExtensionUi.Model.PluginManager
                     {
                         File.Delete(path);
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         removedOk = false;
                     }
@@ -500,9 +504,9 @@ namespace VSSonarExtensionUi.Model.PluginManager
             return true;
         }
 
-        #endregion
+#endregion
 
-        #region Methods
+#region Methods
 
         /// <summary>
         ///     The get assemblies in temp folder.
@@ -560,6 +564,6 @@ namespace VSSonarExtensionUi.Model.PluginManager
             return files;
         }
 
-        #endregion
+#endregion
     }
 }

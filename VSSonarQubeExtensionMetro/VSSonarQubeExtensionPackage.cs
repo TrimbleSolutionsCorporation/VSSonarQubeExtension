@@ -56,10 +56,15 @@ namespace VSSonarQubeExtension
     [Guid(GuidList.GuidVSSonarExtensionPkgString)]
     public sealed partial class VsSonarExtensionPackage : Package
     {
-        /// <summary>
-        /// The listener
-        /// </summary>
         private SolutionEventsListener listener;
+        private DTE2 dte2;
+        private OleMenuCommand sonarReviewsCommandBar;
+        private OleMenuCommand runAnalysisCmd;
+        private OleMenuCommand runAnalysisInProjectCmd;
+        private OleMenuCommand sonarReviewsCommand;
+        private OleMenuCommand sonarShowOutputCommand;
+        private OleMenuCommand sonarShowOptionsCommand;
+        private IVsEnvironmentHelper visualStudioInterface;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="VsSonarExtensionPackage" /> class.
@@ -73,6 +78,14 @@ namespace VSSonarQubeExtension
         /// Gets or sets the status bar.
         /// </summary>
         public VSSStatusBar StatusBar { get; set; }
+
+        /// <summary>
+        /// Gets or sets the vs events.
+        /// </summary>
+        /// <value>
+        /// The vs events.
+        /// </value>
+        public VsEvents VsEvents { get; set; }
 
         /// <summary>
         /// Gets the assembly directory.
@@ -176,7 +189,7 @@ namespace VSSonarQubeExtension
         /// <summary>
         ///     The initialize.
         /// </summary>
-        protected override void Initialize()
+        protected override async void Initialize()
         {
             try
             {
@@ -209,7 +222,7 @@ namespace VSSonarQubeExtension
                         uniqueId += "Exp";
                     }
 
-                    SonarQubeViewModelFactory.StartupModelWithVsVersion(uniqueId, this).InitModelFromPackageInitialization(
+                    await SonarQubeViewModelFactory.StartupModelWithVsVersion(uniqueId, this).InitModelFromPackageInitialization(
                         this.visualStudioInterface,
                         this.StatusBar,
                         this,
@@ -283,7 +296,11 @@ namespace VSSonarQubeExtension
                     string solutionPath = this.visualStudioInterface.ActiveSolutionPath();
 
                     SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessageToLog("Solution Opened: " + solutionName + " : " + solutionPath);
-                    SonarQubeViewModelFactory.SQViewModel.OnSolutionOpen(solutionName, solutionPath, string.Empty);
+
+                    System.Threading.Tasks.Task.Run(async () =>
+                    {
+                        await SonarQubeViewModelFactory.SQViewModel.OnSolutionOpen(solutionName, solutionPath, string.Empty);
+                    });
                 }
             };
         }

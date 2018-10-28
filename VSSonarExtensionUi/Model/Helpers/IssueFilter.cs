@@ -17,6 +17,8 @@ namespace VSSonarExtensionUi.Model.Helpers
     using System;
     using System.Diagnostics;
     using VSSonarPlugins.Types;
+    using SonarRestService.Types;
+    using SonarRestService;
 
     /// <summary>
     ///     The rule filter.

@@ -7,9 +7,9 @@
     using System.IO.Compression;
     using System.Linq;
     using System.Net;
-    using System.Reflection;
     using VSSonarPlugins;
-    using VSSonarPlugins.Types;
+    using SonarRestService;
+    using SonarRestService.Types;
 
     /// <summary>
     /// controls the available versions in server
@@ -108,7 +108,7 @@
             version = new VersionData();
             version.InstallPath = Path.Combine(this.roslynHomeDiagPath, "csharp", "analyser");
 
-            var result = settings.Where(x => x.key == "sonaranalyzer-cs.staticResourceName").FirstOrDefault();
+            var result = settings.FirstOrDefault(x => x.key == "sonaranalyzer-cs.staticResourceName");
 
             if (result != null)
             {

@@ -56,7 +56,7 @@ namespace VSSonarQubeStandalone.ViewModel
                         dialog.ConfirmCredentials(true);
                     }
 
-                    AuthtenticationHelper.EstablishAConnection(new SonarRestService(new JsonSonarConnector()), address, dialog.User, dialog.PasswordToString());
+                    AuthtenticationHelper.EstablishAConnection(new SonarService(new JsonSonarConnector()), address, dialog.User, dialog.PasswordToString());
                 }
                 else
                 {

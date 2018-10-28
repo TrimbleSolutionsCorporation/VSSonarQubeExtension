@@ -13,6 +13,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarPlugins
 {
+    using SonarRestService.Types;
     using System;
     using System.Collections.Generic;
 

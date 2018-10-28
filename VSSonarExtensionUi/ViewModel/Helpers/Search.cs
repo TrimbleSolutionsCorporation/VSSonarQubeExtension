@@ -4,6 +4,9 @@
     using System.Collections.Generic;
     using VSSonarPlugins.Types;
 
+    using SonarRestService.Types;
+    using SonarRestService;
+
     /// <summary>
     /// search class
     /// </summary>

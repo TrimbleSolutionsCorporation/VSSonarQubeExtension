@@ -24,6 +24,9 @@ namespace CxxPlugin.LocalExtensions
     using VSSonarPlugins.Helpers;
     using VSSonarPlugins.Types;
 
+    using SonarRestService;
+    using SonarRestService.Types;
+
     /// <summary>
     /// The cpp check sensor.
     /// </summary>

@@ -1,5 +1,6 @@
 namespace VSSonarPlugins
 {
+    using SonarRestService.Types;
     using System.Collections.Generic;
     using Types;
 
@@ -11,7 +12,7 @@ namespace VSSonarPlugins
         /// <param name="owner">The owner.</param>
         /// <param name="key">The key.</param>
         /// <returns>The <see cref="SonarQubeProperties"/>.</returns>
-        SonarQubeProperties ReadSetting(Context context, string owner, string key);
+        SonarQubeProperties ReadSetting(Types.Context context, string owner, string key);
 
         /// <summary>
         /// The write setting.
@@ -22,7 +23,7 @@ namespace VSSonarPlugins
         /// <param name="value">The value.</param>
         /// <param name="sync">The sync.</param>
         /// <param name="skipIfExist">The skip if exist.</param>
-        void WriteSetting(Context context, string owner, string key, string value, bool sync = false, bool skipIfExist = false);
+        void WriteSetting(Types.Context context, string owner, string key, string value, bool sync = false, bool skipIfExist = false);
 
         void WriteSetting(SonarQubeProperties prop, bool sync = false, bool skipIfExist = false);
 

@@ -12,7 +12,7 @@ namespace VSSonarPlugins.Helpers
     using System.IO;
     using System.Linq;
     using System.Xml.Linq;
-
+    using SonarRestService.Types;
     using RestSharp;
     using RestSharp.Deserializers;
 

@@ -3,7 +3,7 @@
 open FSharpLint.Rules.SourceLength
 open FSharpLint.Framework.Configuration
 
-open VSSonarPlugins.Types
+open SonarRestService.Types
 
 [<Literal>]
 let FunctionLength = 100

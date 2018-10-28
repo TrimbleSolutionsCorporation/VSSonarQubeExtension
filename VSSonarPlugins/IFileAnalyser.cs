@@ -9,8 +9,8 @@
 
 namespace VSSonarPlugins
 {
+    using SonarRestService.Types;
     using System.Collections.Generic;
-    using System.Windows.Documents;
 
     using VSSonarPlugins.Types;
 

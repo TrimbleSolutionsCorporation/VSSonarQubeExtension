@@ -41,6 +41,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using VSSonarPlugins;
     using VSSonarPlugins.Helpers;
     using VSSonarPlugins.Types;
+    using SonarRestService.Types;
+    using SonarRestService;
 
     /// <summary>
     /// The analysis types.
@@ -74,120 +76,32 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     [AddINotifyPropertyChangedInterface]
     public class LocalViewModel : IAnalysisModelBase, IViewModelBase, IModelBase, ILocalAnalyserViewModel
     {
-        /// <summary>
-        /// The model identifier
-        /// </summary>
         private readonly string LocalViewModelIdentifier = "LocalViewModel";
-
-        /// <summary>
-        /// The modifiend lines on key
-        /// </summary>
         private readonly string ShowIssuesInModifiedLinesKey = "ModifiendLinesOn";
-
-        /// <summary>
-        /// The hide false positives key
-        /// </summary>
         private readonly string HideFalsePositivesKey = "HideFalsePositives";
-
-        /// <summary>
-        /// The plugin list
-        /// </summary>
         private readonly IList<IAnalysisPlugin> plugins = new List<IAnalysisPlugin>();
-
-        /// <summary>
-        /// The rest service
-        /// </summary>
         private readonly ISonarRestService restService;
-
-        /// <summary>
-        /// The configuration helper
-        /// </summary>
+        private readonly IRestLogger restLogger;
         private readonly IConfigurationHelper configurationHelper;
-
-        /// <summary>
-        /// The local analyzer module
-        /// </summary>
         private readonly ISonarLocalAnalyser localAnalyserModule;
-
-        /// <summary>
-        /// The notification manager
-        /// </summary>
         private readonly INotificationManager notificationManager;
-
-        /// <summary>
-        /// The key translator
-        /// </summary>
         private readonly ISQKeyTranslator keyTranslator;
-
-        /// <summary>
-        /// The project build cache
-        /// </summary>
         private readonly Dictionary<string, DateTime> projectBuildCache = new Dictionary<string, DateTime>();
-
-        /// <summary>
-        /// The source in server
-        /// </summary>
         private readonly Dictionary<string, string> sourceInServerCache = new Dictionary<string, string>();
-
-        /// <summary>
-        /// The false positives per resource
-        /// </summary>
         private readonly Dictionary<string, List<Issue>> falseandwontfixissues = new Dictionary<string, List<Issue>>();
-
-        /// <summary>
-        /// The cached local issues
-        /// </summary>
         private readonly Dictionary<string, List<Issue>> cachedLocalIssues = new Dictionary<string, List<Issue>>();
-
-        /// <summary>
-        /// The cached command issues
-        /// </summary>
         private readonly Dictionary<string, List<Issue>> cachedCommandIssues = new Dictionary<string, List<Issue>>();
-
-        /// <summary>
-        /// The new added issues
-        /// </summary>
         private readonly Dictionary<string, List<Issue>> newAddedIssues;
 
-        /// <summary>
-        /// The ct
-        /// </summary>
         private CancellationTokenSource ct;
-
-        /// <summary>
-        ///     The show fly outs.
-        /// </summary>
         private bool showFlyouts;
-
-        /// <summary>
-        /// The vs environment helper
-        /// </summary>
         private IVsEnvironmentHelper vsenvironmenthelper;
-
-        /// <summary>
-        /// The status bar
-        /// </summary>
         private IVSSStatusBar statusBar;
-
-        /// <summary>
-        /// The service provider
-        /// </summary>
         private IServiceProvider serviceProvier;
-
-        /// <summary>
-        /// The resource path in view
-        /// </summary>
         private string resourceNameInView;
-
-        /// <summary>
-        /// The associated project
-        /// </summary>
         private Resource associatedProject;
-
-        /// <summary>
-        /// The content in view
-        /// </summary>
         private string contentInView;
+        private IEnumerable<Resource> availableProjects;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalViewModel" /> class.
@@ -204,6 +118,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             ISonarRestService service, 
             IConfigurationHelper configurationHelper,
             INotificationManager notificationManager,
+            IRestLogger restLogger,
             ISQKeyTranslator translator,
             ISonarLocalAnalyser analyser,
             Dictionary<string, List<Issue>> newIssuesList)
@@ -212,12 +127,13 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.keyTranslator = translator;
             this.notificationManager = notificationManager;
             this.restService = service;
+            this.restLogger = restLogger;
             this.configurationHelper = configurationHelper;
 
             this.plugins = pluginsIn;
             this.Header = "Local Analysis";
             this.IssuesGridView = new IssueGridViewModel("LocalView", false, this.configurationHelper, service, notificationManager, translator, this);
-            this.IssuesGridView.ContextMenuItems = this.CreateRowContextMenu(service, translator, analyser);
+            this.IssuesGridView.ContextMenuItems = this.CreateRowContextMenu(service, translator, analyser, this.availableProjects);
             this.IssuesGridView.ShowContextMenu = true;
             this.IssuesGridView.ShowLeftFlyoutEvent += this.ShowHideLeftFlyout;
             this.AllLog = new List<string>();
@@ -575,7 +491,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <param name="issuePlugin">The issue plugin.</param>
         public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IList<IIssueTrackerPlugin> issuePlugin)
         {
-            // does nothing
+            this.availableProjects = availableProjects;
         }
 
         /// <summary>
@@ -1026,7 +942,12 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 this.CreateNewTokenOrUseOldOne();
                 var issues = await Task.Run(() =>
                 {
-                    return this.restService.GetIssues(AuthtenticationHelper.AuthToken, filter, this.associatedProject.Key, this.ct.Token, this.notificationManager);
+                    return this.restService.GetIssues(
+                        AuthtenticationHelper.AuthToken,
+                        filter,
+                        this.associatedProject.Key,
+                        this.ct.Token,
+                        this.restLogger);
                 }).ConfigureAwait(false);
 
                 this.falseandwontfixissues.Add(itemInView.SonarResource.Key, issues);
@@ -1474,11 +1395,15 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <see><cref>ObservableCollection</cref></see>
         /// .
         /// </returns>
-        private ObservableCollection<IMenuItem> CreateRowContextMenu(ISonarRestService service, ISQKeyTranslator translator, ISonarLocalAnalyser analyser)
+        private ObservableCollection<IMenuItem> CreateRowContextMenu(
+            ISonarRestService service,
+            ISQKeyTranslator translator,
+            ISonarLocalAnalyser analyser,
+            IEnumerable<Resource> projects)
         {
             var menu = new ObservableCollection<IMenuItem>
                            {
-                               SetExclusionsMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager, translator, analyser),
+                               SetExclusionsMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager, translator, analyser, projects),
                                SetSqaleMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager, translator, analyser),
                                MoreInfoMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager, translator, analyser)
                            };

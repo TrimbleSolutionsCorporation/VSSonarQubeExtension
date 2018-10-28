@@ -15,6 +15,8 @@
     using Microsoft.CodeAnalysis.MSBuild;
     using System.Net;
     using System.IO.Compression;
+    using SonarRestService;
+    using SonarRestService.Types;
 
     /// <summary>
     /// Roslyn manager model
@@ -473,10 +475,12 @@
                 bool hasRoslynPlugin = VerifyExistenceOfRoslynPlugin();
 
                 // load defined props in server and load up
-                var props = this.rest.GetProperties(authentication);
-                if (props.ContainsKey("sonar.roslyn.diagnostic.path"))
+                var props = this.rest.GetSettings(authentication);
+                var isRoslynPath = props.FirstOrDefault(x => x.key.Equals("sonar.roslyn.diagnostic.path"));
+
+                if (isRoslynPath != null)
                 {
-                    var folders = props["sonar.roslyn.diagnostic.path"].Split(';');
+                    var folders = isRoslynPath.Value.Split(';');
                     foreach (var folder in folders)
                     {
                         if (Directory.Exists(folder) && !this.roslynExternalUserDiagPath.ToLower().Equals(folder.ToLower()))

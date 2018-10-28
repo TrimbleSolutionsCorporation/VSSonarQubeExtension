@@ -31,6 +31,8 @@ namespace VSSonarExtensionUi.Model.Menu
     using ViewModel.Helpers;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
+    using SonarRestService.Types;
+    using SonarRestService;
 
     /// <summary>
     /// Issue tracker menus.

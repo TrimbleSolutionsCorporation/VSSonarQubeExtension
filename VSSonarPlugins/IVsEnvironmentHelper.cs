@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarPlugins
 {
+    using SonarRestService.Types;
     using Microsoft.CodeAnalysis;
     using Types;
 

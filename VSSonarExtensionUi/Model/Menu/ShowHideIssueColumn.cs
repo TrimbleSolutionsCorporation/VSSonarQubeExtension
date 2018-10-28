@@ -19,6 +19,8 @@ namespace VSSonarExtensionUi.Model.Menu
     using ViewModel.Helpers;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
+    using SonarRestService.Types;
+    using SonarRestService;
 
     /// <summary>
     ///     The show hide issue column.
@@ -261,7 +263,7 @@ namespace VSSonarExtensionUi.Model.Menu
                 prop.Owner = this.gridKey;
                 prop.Value = "true";
                 prop.Key = this.name + "Visible";
-                prop.Context = Context.UIProperties;
+                prop.Context = Context.UIProperties.ToString();
                 this.helper.WriteSetting(prop, true);
                 this.model.RestoreUserSettingsInIssuesDataGrid();
                 return;
@@ -274,7 +276,7 @@ namespace VSSonarExtensionUi.Model.Menu
                 prop.Owner = this.gridKey;
                 prop.Value = "false";
                 prop.Key = this.name + "Visible";
-                prop.Context = Context.UIProperties;
+                prop.Context = Context.UIProperties.ToString();
                 this.helper.WriteSetting(prop, false);
                 this.model.RestoreUserSettingsInIssuesDataGrid();
                 return;

@@ -34,6 +34,8 @@ namespace VSSonarQubeExtension.Helpers
     using Process = System.Diagnostics.Process;
     using Thread = System.Threading.Thread;
     using System.ComponentModel;
+    using SonarRestService.Types;
+
     /// <summary>
     ///     The vs properties helper.
     /// </summary>

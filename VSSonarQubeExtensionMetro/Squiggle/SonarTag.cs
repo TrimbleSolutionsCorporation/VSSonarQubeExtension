@@ -20,6 +20,7 @@ namespace VSSonarQubeExtension.Squiggle
 
     using Microsoft.VisualStudio.Text;
     using Microsoft.VisualStudio.Text.Tagging;
+    using SonarRestService.Types;
     using VSSonarPlugins.Types;
 
     /// <summary>

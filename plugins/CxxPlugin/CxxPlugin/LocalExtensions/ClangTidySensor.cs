@@ -9,6 +9,9 @@
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
 
+    using SonarRestService;
+    using SonarRestService.Types;
+
     /// <summary>
     /// sensor clang tidy
     /// </summary>

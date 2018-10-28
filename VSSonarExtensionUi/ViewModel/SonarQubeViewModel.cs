@@ -37,11 +37,13 @@ namespace VSSonarExtensionUi.ViewModel
     using PropertyChanged;
     using SonarLocalAnalyser;
     using SonarRestService;
+    using SonarRestService.Types;
     using View.Configuration;
     using View.Helpers;
     using VSSonarExtensionUi.Association;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
+    using SonarRestServiceImpl;
 
     /// <summary>
     ///     The changed event handler.
@@ -156,7 +158,7 @@ namespace VSSonarExtensionUi.ViewModel
             }
             
             this.sonarKeyTranslator = new SQKeyTranslator(this.notificationManager);
-            this.sonarRestConnector = new SonarRestService(new JsonSonarConnector());
+            this.sonarRestConnector = new SonarService(new JsonSonarConnector());
             this.VSonarQubeOptionsViewData = new VSonarQubeOptionsViewModel(this.sonarRestConnector, this.configurationHelper, this.notificationManager);
             this.VSonarQubeOptionsViewData.ResetUserData();
 
@@ -889,7 +891,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// <param name="statusBar">The status bar.</param>
         /// <param name="provider">The provider.</param>
         /// <param name="extensionFolder">The extension Folder.</param>
-        public void InitModelFromPackageInitialization(
+        public async Task InitModelFromPackageInitialization(
             IVsEnvironmentHelper vsenvironmenthelperIn, 
             IVSSStatusBar statusBar, 
             IServiceProvider provider, 
@@ -924,7 +926,7 @@ namespace VSSonarExtensionUi.ViewModel
             // try to connect to start to sonar if on start is on
             if (this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.IsConnectAtStartOn)
             {
-                this.OnConnectToSonar(false);
+                await this.OnConnectToSonar(false);
             }
         }
 
@@ -972,9 +974,9 @@ namespace VSSonarExtensionUi.ViewModel
         /// <summary>
         /// Called when [connect to sonar command].
         /// </summary>
-        public void OnConnectToSonarCommand()
+        public async void OnConnectToSonarCommand()
         {
-            this.OnConnectToSonar(true);
+            await this.OnConnectToSonar(true);
         }
 
         /// <summary>
@@ -1025,17 +1027,17 @@ namespace VSSonarExtensionUi.ViewModel
         /// <summary>
         /// Resets the and establish a new connection to server.
         /// </summary>
-        public void ResetAndEstablishANewConnectionToServer()
+        public async void ResetAndEstablishANewConnectionToServer()
         {
             this.OnDisconnectToSonar();
-            this.OnConnectToSonar(true);
+            await this.OnConnectToSonar(true);
         }
 
         /// <summary>
         /// The connect to sonar.
         /// </summary>
         /// <param name="useDispatcher">if set to <c>true</c> [use dispatcher].</param>
-        public void OnConnectToSonar(bool useDispatcher)
+        public async Task OnConnectToSonar(bool useDispatcher)
         {
             this.ErrorIsFound = false;
 
@@ -1058,73 +1060,61 @@ namespace VSSonarExtensionUi.ViewModel
             this.CanConnectEnabled = false;
             this.IsExtensionBusy = true;
 
-            using (var bw = new BackgroundWorker { WorkerReportsProgress = true })
+            try
             {
-                bw.RunWorkerCompleted += delegate
+                this.RefreshProjectList(useDispatcher);
+                this.AssociationModule.OnConnectToSonar();
+                this.VSonarQubeOptionsViewData.OnConnectToSonar(AuthtenticationHelper.AuthToken, this.AvailableProjects, this.pluginManager.IssueTrackerPlugins);
+                this.ConnectionTooltip = "Authenticated, but not associated";
+                this.StatusMessage = string.Empty;
+                this.IsConnected = true;
+                this.AssociationModule.IsAssociated = false;
+            }
+            catch (Exception ex)
+            {
+                this.notificationManager.ReportMessage(new Message { Id = "SonarQubeViewModel", Data = "Fail To Connect To SonarQube: " + ex.Message });
+                this.notificationManager.ReportException(ex);
+                this.ConnectionTooltip = "No Connection";
+                this.AssociationModule.Disconnect();
+                this.StatusMessage = "Failed to Connect to Sonar, check output log for details";
+                this.IsConnected = false;
+                return;
+            }
+
+            // try to associate with open solution
+            if (!this.IsSolutionOpen)
+            {
+                return;
+            }
+
+            try
+            {
+                await this.AssociationModule.AssociateProjectToSolution(this.VsHelper.ActiveSolutionName(), this.VsHelper.ActiveSolutionPath(), this.AvailableProjects, this.SourceControl);
+
+                if (this.AssociationModule.IsAssociated)
                 {
-                    this.CanConnectEnabled = true;
-                    this.IsExtensionBusy = false;
-                };
+                    this.CanProvision = false;
 
-                bw.DoWork += delegate
+                    if (this.LocalViewModel != null && this.SelectedViewModel == this.LocalViewModel)
+                    {
+                        this.LocalViewModel.FileAnalysisIsEnabled = true;
+                    }
+                }
+                else
                 {
-                    try
-                    {
-                        this.RefreshProjectList(useDispatcher);
-                        this.AssociationModule.OnConnectToSonar();
-                        this.VSonarQubeOptionsViewData.OnConnectToSonar(AuthtenticationHelper.AuthToken, this.AvailableProjects, this.pluginManager.IssueTrackerPlugins);
-                        this.ConnectionTooltip = "Authenticated, but not associated";
-                        this.StatusMessage = string.Empty;
-                        this.IsConnected = true;
-                        this.AssociationModule.IsAssociated = false;
-                    }
-                    catch (Exception ex)
-                    {
-                        this.notificationManager.ReportMessage(new Message { Id = "SonarQubeViewModel", Data = "Fail To Connect To SonarQube: " + ex.Message });
-                        this.notificationManager.ReportException(ex);
-                        this.ConnectionTooltip = "No Connection";
-                        this.AssociationModule.Disconnect();
-                        this.StatusMessage = "Failed to Connect to Sonar, check output log for details";
-                        this.IsConnected = false;
-                        return;
-                    }
+                    this.CanProvision = true;
+                }
 
-                // try to associate with open solution
-                if (this.IsSolutionOpen)
-                    {
-                        try
-                        {
-                            this.AssociationModule.AssociateProjectToSolution(this.VsHelper.ActiveSolutionName(), this.VsHelper.ActiveSolutionPath(), this.AvailableProjects, this.SourceControl);
-
-                            if (this.AssociationModule.IsAssociated)
-                            {
-                                this.CanProvision = false;
-
-                                if (this.LocalViewModel != null && this.SelectedViewModel == this.LocalViewModel)
-                                {
-                                    this.LocalViewModel.FileAnalysisIsEnabled = true;
-                                }
-                            }
-                            else
-                            {
-                                this.CanProvision = true;
-                            }
-
-                            this.SetupAssociationMessages();
-                        }
-                        catch (Exception ex)
-                        {
-                            this.CanProvision = true;
-                            this.ErrorIsFound = true;
-                            this.ErrorMessageTooltip = ex.Message + "\r\n" + ex.StackTrace;
-                            this.StatusMessage = "Failed to Associate with Solution : " + this.VsHelper.ActiveSolutionName() + " " + ex.Message;
-                            this.notificationManager.ReportMessage(new Message { Id = "SonarQubeViewModel", Data = "Failed to Associate with Solution : " + ex.Message });
-                            this.notificationManager.ReportException(ex);
-                        }
-                    }
-                };
-
-                bw.RunWorkerAsync(); 
+                this.SetupAssociationMessages();
+            }
+            catch (Exception ex)
+            {
+                this.CanProvision = true;
+                this.ErrorIsFound = true;
+                this.ErrorMessageTooltip = ex.Message + "\r\n" + ex.StackTrace;
+                this.StatusMessage = "Failed to Associate with Solution : " + this.VsHelper.ActiveSolutionName() + " " + ex.Message;
+                this.notificationManager.ReportMessage(new Message { Id = "SonarQubeViewModel", Data = "Failed to Associate with Solution : " + ex.Message });
+                this.notificationManager.ReportException(ex);
             }
         }
 
@@ -1144,7 +1134,7 @@ namespace VSSonarExtensionUi.ViewModel
             this.configurationHelper.WriteSetting(
                 new SonarQubeProperties
                     {
-                        Context = Context.UIProperties, 
+                        Context = Context.UIProperties.ToString(), 
                         Key = "SelectedView", 
                         Owner = OwnersId.ApplicationOwnerId, 
                         Value = this.SelectedViewModel.Header
@@ -1650,6 +1640,7 @@ namespace VSSonarExtensionUi.ViewModel
                 this.sonarRestConnector,
                 this.configurationHelper,
                 this.notificationManager,
+                this.notificationManager as IRestLogger,
                 this.sonarKeyTranslator,
                 this.LocaAnalyser,
                 this.newAddedIssues);
@@ -1657,7 +1648,8 @@ namespace VSSonarExtensionUi.ViewModel
             this.IssuesSearchModel = new IssuesSearchModel(
                 this.configurationHelper,
                 this.sonarRestConnector, 
-                this.notificationManager, 
+                this.notificationManager,
+                this.notificationManager as IRestLogger,
                 this.sonarKeyTranslator,
                 this.LocaAnalyser,
                 this.pluginManager.IssueTrackerPlugins);
@@ -1704,11 +1696,11 @@ namespace VSSonarExtensionUi.ViewModel
         /// <summary>
         ///     The on connect command.
         /// </summary>
-        private void OnConnectCommand()
+        private async void OnConnectCommand()
         {
             if (this.IsConnected)
             {
-                this.OnConnectToSonar(true);
+                await this.OnConnectToSonar(true);
             }
             else
             {

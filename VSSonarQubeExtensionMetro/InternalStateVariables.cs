@@ -22,57 +22,6 @@ namespace VSSonarQubeExtension
     using VSSonarQubeExtension.Helpers;
 
     /// <summary>
-    /// The vs sonar extension package.
-    /// </summary>
-    public sealed partial class VsSonarExtensionPackage
-    {
-        /// <summary>
-        /// The application object.
-        /// </summary>
-        private DTE2 dte2;
-
-        /// <summary>
-        /// The sonar reviews command bar.
-        /// </summary>
-        private OleMenuCommand sonarReviewsCommandBar;
-
-        /// <summary>
-        /// The run analysis cmd.
-        /// </summary>
-        private OleMenuCommand runAnalysisCmd;
-
-        /// <summary>
-        /// The run analysis in project cmd.
-        /// </summary>
-        private OleMenuCommand runAnalysisInProjectCmd;
-
-        /// <summary>
-        /// The sonar reviews command.
-        /// </summary>
-        private OleMenuCommand sonarReviewsCommand;
-
-        /// <summary>
-        /// The sonar show output command
-        /// </summary>
-        private OleMenuCommand sonarShowOutputCommand;
-
-        /// <summary>
-        /// The sonar show options command
-        /// </summary>
-        private OleMenuCommand sonarShowOptionsCommand;
-        
-        /// <summary>
-        /// The visual studio interface.
-        /// </summary>
-        private IVsEnvironmentHelper visualStudioInterface;
-
-        /// <summary>
-        /// Gets or sets the vs events.
-        /// </summary>
-        public VsEvents VsEvents { get; set; }
-    }
-
-    /// <summary>
     /// model factory
     /// </summary>
     internal class SonarQubeViewModelFactory

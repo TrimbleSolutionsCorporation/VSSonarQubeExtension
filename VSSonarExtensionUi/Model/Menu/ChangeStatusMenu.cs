@@ -27,6 +27,8 @@ namespace VSSonarExtensionUi.Model.Menu
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
     using System.Collections.Generic;
+    using SonarRestService.Types;
+    using SonarRestService;
 
 
     /// <summary>
