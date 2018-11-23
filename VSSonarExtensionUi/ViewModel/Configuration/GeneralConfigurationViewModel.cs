@@ -490,25 +490,18 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 cm.Load();
                 string address = "http://localhost:9000";
 
-                try
+                var serverValue = this.configurationHelper.ReadSetting(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, "ServerAddress");
+
+                if (serverValue != null)
                 {
-                    address = this.configurationHelper.ReadSetting(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, "ServerAddress").Value;
-                }
-                catch (Exception ex)
-                {
-                    this.notificationManager.ReportMessage(new Message { Id = "GeneralConfigurationViewModel", Data = "Failed To Connect To Server: " + ex.Message });
-                    this.notificationManager.ReportException(ex);
+                    address = serverValue.Value;
                 }
 
                 string bootatstart = "false";
-
-                try
+                var bootatstartValue = this.configurationHelper.ReadSetting(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.IsConnectAtStartOn);
+                if (bootatstartValue != null)
                 {
-                    bootatstart = this.configurationHelper.ReadSetting(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.IsConnectAtStartOn).Value;
-                }
-                catch (Exception ex)
-                {
-                    this.notificationManager.ReportMessage(new Message { Id = "GeneralConfigurationViewModel", Data = "Failed To Get Connect at Start: " + ex.Message });
+                    bootatstart = bootatstartValue.Value;
                 }
 
                 this.UserName = cm.Username;

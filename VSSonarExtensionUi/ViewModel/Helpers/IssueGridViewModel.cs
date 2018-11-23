@@ -1253,14 +1253,14 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// <returns>return value for option</returns>
         private static string GetValueForOption(IConfigurationHelper helper, string key, string defaultvalue, string owner)
         {
-            try
+            var valueData = helper.ReadSetting(Context.UIProperties, owner, key);
+
+            if (valueData != null)
             {
-                return helper.ReadSetting(Context.UIProperties, owner, key).Value;
+                return valueData.Value;
             }
-            catch (Exception)
-            {
-                return defaultvalue;
-            }
+
+            return defaultvalue;
         }
 
         /// <summary>

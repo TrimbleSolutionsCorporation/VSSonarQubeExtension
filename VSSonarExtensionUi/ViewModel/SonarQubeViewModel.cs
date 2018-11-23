@@ -619,7 +619,7 @@ namespace VSSonarExtensionUi.ViewModel
             {
                 this.canProvision = value;
 
-                if (AuthtenticationHelper.AuthToken.SonarVersion < 5.2)
+                if (AuthtenticationHelper.AuthToken != null && AuthtenticationHelper.AuthToken.SonarVersion < 5.2)
                 {
                     this.canProvision = false;
                 }
@@ -1668,20 +1668,17 @@ namespace VSSonarExtensionUi.ViewModel
                                           this.IssuesSearchModel.GetViewModel() as IViewModelBase
                                       };
 
-            try
+            var viewValue = this.configurationHelper.ReadSetting(Context.UIProperties, OwnersId.ApplicationOwnerId, "SelectedView");
+            if (viewValue == null)
             {
-                string view = this.configurationHelper.ReadSetting(Context.UIProperties, OwnersId.ApplicationOwnerId, "SelectedView").Value;
-
-                foreach (IViewModelBase analysisViewModelBase in
-                    this.SonarQubeViews.Where(analysisViewModelBase => analysisViewModelBase.Header.Equals(view)))
-                {
-                    this.SelectedModel = analysisViewModelBase.GetAvailableModel() as IAnalysisModelBase;
-                    this.SelectedViewModel = analysisViewModelBase;
-                }
+                return;
             }
-            catch (Exception ex)
+
+            foreach (IViewModelBase analysisViewModelBase in
+                this.SonarQubeViews.Where(analysisViewModelBase => analysisViewModelBase.Header.Equals(viewValue.Value)))
             {
-                Debug.WriteLine(ex.Message);
+                this.SelectedModel = analysisViewModelBase.GetAvailableModel() as IAnalysisModelBase;
+                this.SelectedViewModel = analysisViewModelBase;
             }
         }
 

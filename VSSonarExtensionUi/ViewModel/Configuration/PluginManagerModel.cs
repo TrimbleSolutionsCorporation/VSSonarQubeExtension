@@ -490,10 +490,11 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             foreach (var plugin in this.plugins)
             {
                 var plugDesc = plugin.GetPluginDescription();
-                try
+
+                var isEnabledValue = this.configurationHelper.ReadSetting(Context.IssueTrackerProps, project.Name, plugDesc.Name);
+                if (isEnabledValue != null)
                 {
-                    string isEnabled = this.configurationHelper.ReadSetting(Context.IssueTrackerProps, project.Name, plugDesc.Name).Value;
-                    if (isEnabled.Equals("true", StringComparison.CurrentCultureIgnoreCase))
+                    if (isEnabledValue.Value.Equals("true", StringComparison.CurrentCultureIgnoreCase))
                     {
                         plugDesc.Enabled = true;
                     }
@@ -501,11 +502,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                     {
                         plugDesc.Enabled = false;
                     }
-                }
-                catch (Exception)
-                {
-                    this.configurationHelper.WriteSetting(Context.IssueTrackerProps, project.Name, plugDesc.Name, "true");
-                    plugDesc.Enabled = true;
                 }
 
                 try

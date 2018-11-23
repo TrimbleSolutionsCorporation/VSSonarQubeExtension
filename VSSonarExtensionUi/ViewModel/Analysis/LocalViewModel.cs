@@ -436,7 +436,10 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             this.cachedLocalIssues.Clear();
             this.configurationHelper.WriteSetting(Context.FileAnalysisProperties, this.LocalViewModelIdentifier, this.HideFalsePositivesKey, this.ShowFalsePositivesAndResolvedIssues.ToString().ToLowerInvariant());
-            this.RunLocalAnalysis(AnalysisTypes.FILE, true, this.VsFileItemInView);
+            if (this.VsFileItemInView != null)
+            {
+                this.RunLocalAnalysis(AnalysisTypes.FILE, true, this.VsFileItemInView);
+            }
         }
 
         /// <summary>

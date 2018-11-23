@@ -140,21 +140,21 @@ namespace VSSonarExtensionUi.Model.Menu
                 }
 
                 var subItem = new ShowHideIssueColumn(model, helper, column, gridKey) { IsEnabled = true, CommandText = "Hide " + column };
-                try
-                {
-                    var value = helper.ReadSetting(Context.UIProperties, gridKey, column + "Visible").Value.ToLower();
-                    if (value.Equals("true"))
-                    {
-                        subItem.CommandText = "Hide " + column;
-                    }
-                    else
-                    {
-                        subItem.CommandText = "Show " + column;
-                    }
-                }
-                catch (Exception)
+                var value = helper.ReadSetting(Context.UIProperties, gridKey, column + "Visible");
+                if (value == null)
                 {
                     subItem.CommandText = "Hide " + column;
+                    menu.SubItems.Add(subItem);
+                    continue;
+                }
+
+                if (value.Value.ToLower().Equals("true"))
+                {
+                    subItem.CommandText = "Hide " + column;
+                }
+                else
+                {
+                    subItem.CommandText = "Show " + column;
                 }
 
                 menu.SubItems.Add(subItem);

@@ -96,11 +96,18 @@ namespace VSSonarQubeExtension.Helpers
                 return null;
             }
 
-            var bformatter = new BinaryFormatter();
-            using (var ms = new MemoryStream((byte [])data))
+            try
             {
-                return (SonarQubeProperties)bformatter.Deserialize(ms);
-            }           
+                var bformatter = new BinaryFormatter();
+                using (var ms = new MemoryStream((byte[])data))
+                {
+                    return (SonarQubeProperties)bformatter.Deserialize(ms);
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         /// <summary>

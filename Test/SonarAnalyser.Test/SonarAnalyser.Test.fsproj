@@ -88,12 +88,11 @@
     <PackageReference Include="Foq" Version="1.8.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
     <PackageReference Include="NUnit" Version="3.11.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SonarLocalAnalyser\SonarLocalAnalyser.fsproj" />
-    <ProjectReference Include="..\VSSonarPlugins\VSSonarPlugins.csproj" />
+    <ProjectReference Include="..\..\SonarLocalAnalyser\SonarLocalAnalyser.fsproj" />
+    <ProjectReference Include="..\..\VSSonarPlugins\VSSonarPlugins.csproj" />
   </ItemGroup>
 
   <ItemGroup>

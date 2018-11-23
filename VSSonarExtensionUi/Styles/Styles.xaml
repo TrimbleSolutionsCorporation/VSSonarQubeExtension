@@ -4,6 +4,7 @@
 	xmlns:helpers="clr-namespace:VSSonarExtensionUi.Model.Helpers"
     xmlns:system="clr-namespace:System;assembly=mscorlib"
 	xmlns:extensionTypes="clr-namespace:VSSonarPlugins.Types;assembly=VSSonarPlugins"
+    xmlns:restTypes="clr-namespace:SonarRestService.Types;assembly=SonarRestService"
 	xmlns:themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
     xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
@@ -30,44 +31,44 @@
 
     <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type system:Enum}" x:Key="GetStatusEnumValues">
         <ObjectDataProvider.MethodParameters>
-            <x:Type TypeName="extensionTypes:IssueStatus"/>
+            <x:Type TypeName="restTypes:IssueStatus"/>
         </ObjectDataProvider.MethodParameters>
     </ObjectDataProvider>
     
     <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type system:Enum}" x:Key="GetCategoryEnumValues">
         <ObjectDataProvider.MethodParameters>
-            <x:Type TypeName="extensionTypes:Category"/>
+            <x:Type TypeName="restTypes:Category"/>
         </ObjectDataProvider.MethodParameters>
     </ObjectDataProvider>
 
     <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type system:Enum}" x:Key="GetSeverityEnumValues">
         <ObjectDataProvider.MethodParameters>
-            <x:Type TypeName="extensionTypes:Severity"/>
+            <x:Type TypeName="restTypes:Severity"/>
         </ObjectDataProvider.MethodParameters>
     </ObjectDataProvider>
 
 
     <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type system:Enum}" x:Key="GetSubCategoryEnumValues">
         <ObjectDataProvider.MethodParameters>
-            <x:Type TypeName="extensionTypes:SubCategory"/>
+            <x:Type TypeName="restTypes:SubCategory"/>
         </ObjectDataProvider.MethodParameters>
     </ObjectDataProvider>
 
     <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type system:Enum}" x:Key="GetRemediationUnitEnumValues">
         <ObjectDataProvider.MethodParameters>
-            <x:Type TypeName="extensionTypes:RemediationUnit"/>
+            <x:Type TypeName="restTypes:RemediationUnit"/>
         </ObjectDataProvider.MethodParameters>
     </ObjectDataProvider>
 
     <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type system:Enum}" x:Key="GetRemediationFunctionEnumValues">
         <ObjectDataProvider.MethodParameters>
-            <x:Type TypeName="extensionTypes:RemediationFunction"/>
+            <x:Type TypeName="restTypes:RemediationFunction"/>
         </ObjectDataProvider.MethodParameters>
     </ObjectDataProvider>
 
     <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type system:Enum}" x:Key="GetResolutionEnumValues">
         <ObjectDataProvider.MethodParameters>
-            <x:Type TypeName="extensionTypes:Resolution"/>
+            <x:Type TypeName="restTypes:Resolution"/>
         </ObjectDataProvider.MethodParameters>
     </ObjectDataProvider>
     

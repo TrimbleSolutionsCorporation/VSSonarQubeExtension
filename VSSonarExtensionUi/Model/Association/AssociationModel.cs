@@ -18,6 +18,7 @@
     using System.Threading.Tasks;
     using SonarRestService.Types;
     using SonarRestService;
+    using System.Linq;
 
     /// <summary>
     /// Generates associations with sonar projects
@@ -511,19 +512,22 @@
             ICollection<Resource> availableProjects,
             ISourceControlProvider sourceControl)
         {
-            try
+            if (AuthtenticationHelper.AuthToken == null)
             {
-                var prop = this.configurationHelper.ReadSetting(
-                    Context.GlobalPropsId,
-                    Path.Combine(solutionPath, solutionName),
-                    "PROJECTKEY");
+                return null;
+            }
 
-                foreach (var project in availableProjects)
+            var prop = this.configurationHelper.ReadSetting(
+                Context.GlobalPropsId,
+                Path.Combine(solutionPath, solutionName),
+                "PROJECTKEY");
+
+            if (prop != null)
+            {
+                var project = availableProjects.FirstOrDefault(x => x.Key.Equals(prop.Value));
+                if (project != null)
                 {
-                    if (project.Key.Equals(prop.Value))
-                    {
-                        return project;
-                    }
+                    return project;
                 }
 
                 try
@@ -535,10 +539,6 @@
                     this.model.StatusMessageAssociation = "Associated Project does not exist in server, please configure association: " + ex.Message;
                     return null;
                 }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
             }
 
             var sourceKey = VsSonarUtils.GetProjectKey(solutionPath);
