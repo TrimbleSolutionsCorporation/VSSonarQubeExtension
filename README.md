@@ -2,7 +2,7 @@ VSSonarQubeExtension
 ====================
 [![Issue Stats](http://issuestats.com/github/TrimbleSolutionsCorporation/VSSonarQubeExtension/badge/issue)](http://issuestats.com/github/TrimbleSolutionsCorporation/VSSonarQubeExtension)
 [![Issue Stats](http://issuestats.com/github/TrimbleSolutionsCorporation/VSSonarQubeExtension/badge/pr)](http://issuestats.com/github/TrimbleSolutionsCorporation/VSSonarQubeExtension)
-
+[![DepShield Badge](https://depshield.sonatype.org/badges/TrimbleSolutionsCorporation/SonarRestService/depshield.svg)](https://depshield.github.io)
 [![Build status](https://ci.appveyor.com/api/projects/status/w03onktfvppbimow/branch/master?svg=true)](https://ci.appveyor.com/project/TrimbleSolutionsCorporation/vssonarqubeextension/branch/master)
 
 This is a Extension for Visual Studio to interact wiht SonarQube (TM).
