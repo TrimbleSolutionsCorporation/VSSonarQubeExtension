@@ -10,7 +10,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>ScaleManager.Test</RootNamespace>
     <AssemblyName>ScaleManager.Test</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <Name>ScaleManager.Test</Name>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <TargetFrameworkProfile />

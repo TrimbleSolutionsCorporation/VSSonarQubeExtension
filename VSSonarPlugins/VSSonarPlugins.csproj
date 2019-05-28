@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Version>8.0.0-alpha008</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <TargetFrameworks>net462</TargetFrameworks>
+    <TargetFrameworks>net472</TargetFrameworks>
     <OutputPath>..\BuildDrop</OutputPath>
     <AssemblyVersion>8.0.0.0</AssemblyVersion>
     <FileVersion>8.0.0.0</FileVersion>

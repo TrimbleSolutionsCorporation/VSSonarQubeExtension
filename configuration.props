@@ -15,10 +15,11 @@
 		<ProduceCoverage       Condition="'$(ProduceCoverage)'==''">false</ProduceCoverage>
 
         <VSVersion Condition="'$(VSVersion)'==''">$(VisualStudioVersion)</VSVersion>
-        <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+        <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
         
         <OutFolder Condition="'$(VSVersion)'=='14.0'">vs15</OutFolder>
         <OutFolder Condition="'$(VSVersion)'=='15.0'">vs17</OutFolder>
+        <OutFolder Condition="'$(VSVersion)'=='16.0'">vs19</OutFolder>
 
         <ExtensionOutputPath     Condition="'$(ExtensionOutputPath)'==''">$(MSBuildThisFileDirectory)BuildDrop\$(OutFolder)\</ExtensionOutputPath>
         <ExtensionOutputPathTest     Condition="'$(ExtensionOutputPathTest)'==''">$(MSBuildThisFileDirectory)BuildDrop\Test\$(OutFolder)\</ExtensionOutputPathTest>
