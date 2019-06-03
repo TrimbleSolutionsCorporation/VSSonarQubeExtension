@@ -64,8 +64,8 @@
     <Reference Include="RestSharp">
       <HintPath>..\packages\VSSonarExtensionPlugin$(VSSonarExtensionVersion)\lib\RestSharp.dll</HintPath>
     </Reference>
-    <Reference Include="SonarRestService">
-      <HintPath>..\packages\VSSonarExtensionPlugin$(VSSonarExtensionVersion)\lib\SonarRestService.dll</HintPath>
+    <Reference Include="SonarRestApi">
+      <HintPath>..\packages\VSSonarExtensionPlugin$(VSSonarExtensionVersion)\lib\SonarRestApi.dll</HintPath>
     </Reference>
     <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <SpecificVersion>True</SpecificVersion>
@@ -171,7 +171,7 @@
             $(OutputPath)GalaSoft.MvvmLight.dll;
             $(OutputPath)Microsoft.Practices.ServiceLocation.dll;
             $(OutputPath)RestSharp.dll;
-            $(OutputPath)SonarRestService.dll;
+            $(OutputPath)SonarRestApi.dll;
             $(OutputPath)SqaleEditor.exe;
             $(OutputPath)SqaleManager.dll;
             $(OutputPath)SqaleUi.dll;

@@ -4,7 +4,7 @@
 	xmlns:helpers="clr-namespace:VSSonarExtensionUi.Model.Helpers"
     xmlns:system="clr-namespace:System;assembly=mscorlib"
 	xmlns:extensionTypes="clr-namespace:VSSonarPlugins.Types;assembly=VSSonarPlugins"
-    xmlns:restTypes="clr-namespace:SonarRestService.Types;assembly=SonarRestService"
+    xmlns:restTypes="clr-namespace:SonarRestService.Types;assembly=SonarRestApi"
 	xmlns:themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
     xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"

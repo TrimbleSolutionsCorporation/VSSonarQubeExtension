@@ -17,6 +17,7 @@ namespace VSSonarQubeExtension
     using Microsoft.VisualStudio.Shell;
     using SonarRestService;
     using System;
+    using System.Threading.Tasks;
     using VSSonarExtensionUi.ViewModel;
     using VSSonarPlugins;
     using VSSonarQubeExtension.Helpers;
@@ -57,20 +58,19 @@ namespace VSSonarQubeExtension
             }
         }
 
-
         /// <summary>
         /// Startups the model with vs version.
         /// </summary>
         /// <param name="version">The version.</param>
         /// <returns>returns model</returns>
-        public static SonarQubeViewModel StartupModelWithVsVersion(string version, IServiceProvider provider)
+        public static async Task<SonarQubeViewModel> StartupModelWithVsVersion(string version, IServiceProvider provider)
         {
             if (model == null)
             {
-                model = new SonarQubeViewModel(version, new VsConfigurationHelper(version));
+				await System.Threading.Tasks.Task.Run(() => { model = new SonarQubeViewModel(version, new VsConfigurationHelper(version)); });
             }
 
-            return model;
+			return model;
         }
     }
 }

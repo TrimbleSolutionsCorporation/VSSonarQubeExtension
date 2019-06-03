@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
     <OutputPath>..\BuildDrop</OutputPath>
     <AssemblyVersion>8.0.0.0</AssemblyVersion>
     <FileVersion>8.0.0.0</FileVersion>
@@ -14,9 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FSharp.Data" Version="3.0.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="2.9.0" />
-    <PackageReference Include="MsbuildAutomationHelper" Version="2.0.0-alpha004" />
+    <PackageReference Include="MsbuildAutomationHelper" Version="2.0.5" />
   </ItemGroup>
 
   <ItemGroup>

@@ -83,8 +83,8 @@
       <HintPath>..\..\..\..\packages\VSSonarExtensionPlugin$(VSSonarExtensionVersion)\lib\RestSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SonarRestService">
-      <HintPath>..\..\..\..\packages\VSSonarExtensionPlugin$(VSSonarExtensionVersion)\lib\SonarRestService.dll</HintPath>
+    <Reference Include="SonarRestApi">
+      <HintPath>..\..\..\..\packages\VSSonarExtensionPlugin$(VSSonarExtensionVersion)\lib\SonarRestApi.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />

@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.25914.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28922.388
 MinimumVisualStudioVersion = 15.0.23107.0
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSSonarExtensionUi", "VSSonarExtensionUi\VSSonarExtensionUi.csproj", "{BC583A5D-931B-4ED9-AC2C-5667A37B3043}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSSonarQubeStandalone", "VSSonarQubeStandalone\VSSonarQubeStandalone.csproj", "{B9B03BEF-2B09-43C3-A14E-E297E2100FE1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSSonarExtensionMetroVs2017", "VSSonarQubeExtensionMetro\VSSonarExtensionMetroVs2017.csproj", "{00245123-FEBB-4AF3-99E5-223142A598C8}"
 EndProject
@@ -49,8 +47,6 @@ Global
 		{BC583A5D-931B-4ED9-AC2C-5667A37B3043}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC583A5D-931B-4ED9-AC2C-5667A37B3043}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC583A5D-931B-4ED9-AC2C-5667A37B3043}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B9B03BEF-2B09-43C3-A14E-E297E2100FE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B9B03BEF-2B09-43C3-A14E-E297E2100FE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00245123-FEBB-4AF3-99E5-223142A598C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{00245123-FEBB-4AF3-99E5-223142A598C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00245123-FEBB-4AF3-99E5-223142A598C8}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -439,9 +439,9 @@
       <Project>{a7d09c0c-efc5-4662-83b6-dae14e68c94c}</Project>
       <Name>SonarLocalAnalyser</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SonarRestService\SonarRestService.fsproj">
+    <ProjectReference Include="..\SonarRestApi\SonarRestApi.fsproj">
       <Project>{64728a55-1166-4ec6-b066-22c4e01fc1c7}</Project>
-      <Name>SonarRestService</Name>
+      <Name>SonarRestApi</Name>
     </ProjectReference>
     <ProjectReference Include="..\VSSonarExtensionUi\VSSonarExtensionUi.csproj">
       <Project>{bc583a5d-931b-4ed9-ac2c-5667a37b3043}</Project>
