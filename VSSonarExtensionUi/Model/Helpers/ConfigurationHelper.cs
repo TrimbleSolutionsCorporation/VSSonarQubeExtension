@@ -117,7 +117,7 @@ namespace VSSonarExtensionUi.Model.Helpers
                     }
                 }
 
-                throw new Exception("Property not found: " + key);
+                return null;
             }
 
             foreach (var property in this.properties)
@@ -128,7 +128,7 @@ namespace VSSonarExtensionUi.Model.Helpers
                 }
             }
 
-            throw new Exception("Property not found: " + key);
+			return null;
         }
 
         /// <summary>

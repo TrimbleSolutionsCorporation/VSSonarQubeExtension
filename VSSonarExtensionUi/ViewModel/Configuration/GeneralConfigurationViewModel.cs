@@ -34,8 +34,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     [AddINotifyPropertyChangedInterface]
     public class GeneralConfigurationViewModel : IOptionsViewModelBase, IOptionsModelBase
     {
-        #region Fields
-
         /// <summary>
         ///     The viewModel.
         /// </summary>
@@ -70,10 +68,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// The source dir
         /// </summary>
         private string sourceDir;
-
-        #endregion Fields
-
-        #region Constructors and Destructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GeneralConfigurationViewModel" /> class.
@@ -117,18 +111,10 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             SonarQubeViewModel.RegisterNewViewModelInPool(this);
         }
 
-        #endregion Constructors and Destructors
-
-        #region Public Events
-
         /// <summary>
         ///     The analysis mode has change.
         /// </summary>
         public event ChangedEventHandler ConfigurationHasChanged;
-
-        #endregion Public Events
-
-        #region Public Properties
 
         /// <summary>
         ///     Gets or sets the back ground color.
@@ -219,15 +205,16 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </value>
         public string UserName { get; set; }
 
-        #endregion Public Properties
+		/// <summary>
+		/// User Login
+		/// </summary>
+		public string UserLogin { get; set; }
 
-        #region Public Methods and Operators
-
-        /// <summary>
-        /// Called when [connect to sonar].
-        /// </summary>
-        /// <param name="configuration">sonar configuration</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IList<IIssueTrackerPlugin> plugin)
+		/// <summary>
+		/// Called when [connect to sonar].
+		/// </summary>
+		/// <param name="configuration">sonar configuration</param>
+		public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IList<IIssueTrackerPlugin> plugin)
         {
             // does nothing
         }
@@ -434,7 +421,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public void SaveData()
         {
             this.configurationHelper.WriteSetting(
-                new SonarQubeProperties(Context.GlobalPropsId.ToString(), OwnersId.ApplicationOwnerId, "ServerAddress", this.ServerAddress));
+                new SonarQubeProperties(Context.GlobalPropsId.ToString(), OwnersId.ApplicationOwnerId, GlobalIds.ServerAdress, this.ServerAddress));
             this.configurationHelper.WriteSetting(
                 new SonarQubeProperties(Context.GlobalPropsId.ToString(), OwnersId.ApplicationOwnerId, GlobalIds.IsConnectAtStartOn, this.IsConnectAtStartOn ? "true" : "false"));
             this.configurationHelper.WriteSetting(
@@ -456,10 +443,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 this.ServerAddress = this.ServerAddress.Trim('/');
             }
         }
-
-        #endregion Public Methods and Operators
-
-        #region Methods
 
         /// <summary>
         /// The on changed.
@@ -490,14 +473,21 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 cm.Load();
                 string address = "http://localhost:9000";
 
-                var serverValue = this.configurationHelper.ReadSetting(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, "ServerAddress");
+                var serverValue = this.configurationHelper.ReadSetting(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.ServerAdress);
 
                 if (serverValue != null)
                 {
                     address = serverValue.Value;
                 }
 
-                string bootatstart = "false";
+				var userLoginValue = this.configurationHelper.ReadSetting(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.UserLogin);
+				this.UserLogin = string.Empty;
+				if (userLoginValue != null)
+				{
+					this.UserLogin = userLoginValue.Value;
+				}
+
+				string bootatstart = "false";
                 var bootatstartValue = this.configurationHelper.ReadSetting(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.IsConnectAtStartOn);
                 if (bootatstartValue != null)
                 {
@@ -506,6 +496,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
                 this.UserName = cm.Username;
                 this.Password = ConnectionConfiguration.ConvertToUnsecureString(cm.SecurePassword);
+
                 this.ServerAddress = address;
 
                 if (address != null)
@@ -596,7 +587,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                     if (AuthtenticationHelper.EstablishAConnection(this.restService, this.ServerAddress.TrimEnd('/'), this.UserName, password))
                     {
                         this.StatusMessage = "Authenticated";
-                        this.SetCredentials(this.UserName, password);
+                        this.SaveUserConfigurationData(this.UserName, password);
                     }
                     else
                     {
@@ -619,10 +610,11 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="password">
         /// The password.
         /// </param>
-        private void SetCredentials(string userName, string password)
+        private void SaveUserConfigurationData(string userName, string password)
         {
-            this.configurationHelper.WriteSetting(new SonarQubeProperties(Context.GlobalPropsId.ToString(), OwnersId.ApplicationOwnerId, "ServerAddress", this.ServerAddress));
-            using (var cm = new Credential
+            this.configurationHelper.WriteSetting(new SonarQubeProperties(Context.GlobalPropsId.ToString(), OwnersId.ApplicationOwnerId, GlobalIds.ServerAdress, this.ServerAddress));
+			this.configurationHelper.WriteSetting(new SonarQubeProperties(Context.GlobalPropsId.ToString(), OwnersId.ApplicationOwnerId, GlobalIds.UserLogin, this.UserLogin));
+			using (var cm = new Credential
             {
                 Target = "VSSonarQubeExtension",
                 PersistanceType = PersistanceType.Enterprise,
@@ -633,7 +625,5 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 cm.Save();
             }
         }
-
-        #endregion Methods
     }
 }

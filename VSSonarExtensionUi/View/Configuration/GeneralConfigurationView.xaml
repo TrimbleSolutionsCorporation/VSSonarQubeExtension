@@ -35,6 +35,7 @@
             <RowDefinition Height="30"></RowDefinition>
             <RowDefinition Height="30"></RowDefinition>
             <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition Height="30"></RowDefinition>
             <RowDefinition Height="10"></RowDefinition>
             <RowDefinition Height="30"></RowDefinition>
             <RowDefinition Height="10"></RowDefinition>
@@ -50,14 +51,18 @@
                 Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"  Grid.Row="0" Content="Server Address"></Label>
         <Label                 Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
                 Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"  Grid.Row="1" Grid.Column="0"
-               Content="Login or Token"></Label>
+               Content="Username"></Label>
         <Label                 Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
-                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"  Grid.Row="2" Grid.Column="0" Content="Password"></Label>
+                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"  Grid.Row="2" Grid.Column="0"
+               Content="Login or Token"></Label>        
+        <Label                 Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
+                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"  Grid.Row="3" Grid.Column="0" Content="Password"></Label>
         <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding ServerAddress}"></TextBox>
-        <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding UserName}"></TextBox>
-        <PasswordBox helpers:PasswordHelper.Attach="True" helpers:PasswordHelper.Password="{Binding Password, Mode=TwoWay}" x:Name="PasswordBox" Grid.Column="1" Grid.Row="2"></PasswordBox>
+        <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding UserLogin}"></TextBox>
+        <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding UserName}"></TextBox>
+        <PasswordBox helpers:PasswordHelper.Attach="True" helpers:PasswordHelper.Password="{Binding Password, Mode=TwoWay}" x:Name="PasswordBox" Grid.Column="1" Grid.Row="3"></PasswordBox>
 
-        <DockPanel  Grid.Column="1" Grid.Row="3" >
+        <DockPanel  Grid.Column="1" Grid.Row="4" >
 
             <Button Width="100"
                 Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
@@ -95,7 +100,7 @@
                    Content="{Binding StatusMessage, FallbackValue=Autheticated}" HorizontalAlignment="Center"></Label>
         </DockPanel>
 
-        <Button Grid.Column="1" Grid.Row="5"
+        <Button Grid.Column="1" Grid.Row="6"
                 Style="{StaticResource MyMetroButton}"
                 Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"
                 Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}" 
@@ -105,9 +110,9 @@
         <Label 
             Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}" 
             Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}" 
-            Grid.Row="5" Grid.Column="0" Content="Server Cache"/>
+            Grid.Row="6" Grid.Column="0" Content="Server Cache"/>
         
-        <CheckBox IsChecked="{Binding IsConnectAtStartOn}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}" Grid.Column="0" Grid.Row="3" Content="Connect at start"></CheckBox>
+        <CheckBox IsChecked="{Binding IsConnectAtStartOn}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}" Grid.Column="0" Grid.Row="4" Content="Connect at start"></CheckBox>
        
         <StackPanel Grid.Row="7" Grid.ColumnSpan="2" Grid.Column="0">
             <GroupBox Header="Editor Options">
@@ -136,7 +141,7 @@
 
 
             </GroupBox>
-            <GroupBox Header="Other Options"  Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2">
+            <GroupBox Header="Other Options"  Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="30"></RowDefinition>

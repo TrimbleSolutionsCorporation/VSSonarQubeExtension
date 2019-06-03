@@ -369,11 +369,14 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// <returns>gets current logged user issues</returns>
         public async Task<IEnumerable<Issue>> GetCurrentUserIssues()
         {
-            this.CreateNewTokenOrUseOldOne();
-            return await Task.Run(() =>
-            {
-                return this.restService.GetAllIssuesByAssignee(AuthtenticationHelper.AuthToken, AuthtenticationHelper.AuthToken.Username, this.ct.Token, this.restLogger);
-            }).ConfigureAwait(false);
+			var userLoginValue = this.configurationHelper.ReadSetting(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.UserLogin);
+			if (userLoginValue == null)
+			{
+				this.restLogger.ReportMessage("username not configured in settings");
+				return new List<Issue>();
+			}
+
+			return await GetUserIssues(userLoginValue.Value);
         }
 
         /// <summary>

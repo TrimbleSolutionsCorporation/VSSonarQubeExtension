@@ -71,7 +71,13 @@ namespace VSSonarPlugins.Types
 
         /// <summary>The disable editor tags.</summary>
         public static readonly string DisableEditorTags = "DisableEditorTags";
-    }
+
+		/// <summary> server address string </summary>
+		public static readonly string ServerAdress = "ServerAddress";
+
+		/// <summary> user login string </summary>
+		public static readonly string UserLogin = "UserLogin";
+	}
 
     /// <summary>
     /// The owners id.
