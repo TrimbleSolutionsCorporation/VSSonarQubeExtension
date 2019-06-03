@@ -185,25 +185,16 @@ namespace VSSonarQubeExtension
             ErrorHandler.ThrowOnFailure(windowFrame.Show());
         }
 
-		protected override System.Threading.Tasks.Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
+		protected override async System.Threading.Tasks.Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
 		{
-			return System.Threading.Tasks.Task.Run(() => { InitializeData(); });
-		}
-
-		/// <summary>
-		///     The initialize.
-		/// </summary>
-		private async void InitializeData()
-        {
-            try
+			try
             {
                 Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this));
-                base.Initialize();
-
-                this.SetupMenuCommands();
+                await base.InitializeAsync(new CancellationToken(), null);
                 this.dte2 = (DTE2)GetGlobalService(typeof(DTE));
+				await this.SetupMenuCommands(this);
 
-                if (this.dte2 == null)
+				if (this.dte2 == null)
                 {
                     return;
                 }
@@ -327,9 +318,9 @@ namespace VSSonarQubeExtension
         /// <summary>
         ///     The setup menu commands.
         /// </summary>
-        private async void SetupMenuCommands()
+        private async System.Threading.Tasks.Task SetupMenuCommands(AsyncPackage package)
         {
-            var mcs = await this.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
+            var mcs = (IMenuCommandService)await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
 
             if (null == mcs)
             {
