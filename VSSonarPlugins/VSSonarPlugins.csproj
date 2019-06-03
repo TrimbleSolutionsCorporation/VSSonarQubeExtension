@@ -11,7 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis" Version="2.9.0" />
-    <PackageReference Include="SonarRestApi" Version="1.0.0" />
+    <PackageReference Include="SonarRestApi" Version="1.0.1" />
   </ItemGroup>
 
   <ItemGroup>

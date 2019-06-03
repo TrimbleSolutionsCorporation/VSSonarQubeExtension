@@ -63,7 +63,7 @@ namespace VSSonarQubeExtension
         /// </summary>
         /// <param name="version">The version.</param>
         /// <returns>returns model</returns>
-        public static async Task<SonarQubeViewModel> StartupModelWithVsVersion(string version, IServiceProvider provider)
+        public static async Task<SonarQubeViewModel> AsyncStartupModelWithVsVersion(string version, IServiceProvider provider)
         {
             if (model == null)
             {
@@ -72,5 +72,20 @@ namespace VSSonarQubeExtension
 
 			return model;
         }
-    }
+
+		/// <summary>
+		/// Startups the model with vs version.
+		/// </summary>
+		/// <param name="version">The version.</param>
+		/// <returns>returns model</returns>
+		public static SonarQubeViewModel StartupModelWithVsVersion(string version, IServiceProvider provider)
+		{
+			if (model == null)
+			{
+				model = new SonarQubeViewModel(version, new VsConfigurationHelper(version));
+			}
+
+			return model;
+		}
+	}
 }

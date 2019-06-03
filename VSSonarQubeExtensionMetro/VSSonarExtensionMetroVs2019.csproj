@@ -91,8 +91,8 @@
     <Reference Include="FSharp.Compiler.Service.ProjectCracker, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FSharp.Compiler.Service.ProjectCracker.13.0.0\lib\net45\FSharp.Compiler.Service.ProjectCracker.dll</HintPath>
     </Reference>
-    <Reference Include="FSharp.Core, Version=4.6.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\Packages\FSharp.Core.4.6.2\lib\net45\FSharp.Core.dll</HintPath>
+    <Reference Include="FSharp.Core, Version=4.5.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\Packages\FSharp.Core.4.5.2\lib\net45\FSharp.Core.dll</HintPath>
     </Reference>
     <Reference Include="FSharpLint.Core, Version=0.7.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FSharpLint.Core.0.7.6\lib\net45\FSharpLint.Core.dll</HintPath>

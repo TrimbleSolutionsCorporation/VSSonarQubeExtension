@@ -129,3 +129,4 @@ buildlog2017.txt
 /.clang-tidy
 /compile_commands.json
 /UpgradeLog.htm
+/plugins/CxxPlugin/CxxPlugin.Test/test/

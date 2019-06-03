@@ -21,8 +21,6 @@ namespace VSSonarQubeExtension
     using System.IO;
     using System.Reflection;
     using System.Runtime.InteropServices;
-    using System.Threading;
-    using System.Threading.Tasks;
     using System.Windows.Controls;
 
     using EnvDTE;
@@ -34,6 +32,7 @@ namespace VSSonarQubeExtension
     using Microsoft.VisualStudio.PlatformUI;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
+
     using StatusBar;
     using VSControls;
     using VSSonarExtensionUi.View.Helpers;
@@ -46,21 +45,23 @@ namespace VSSonarQubeExtension
     /// <summary>
     ///     The vs sonar extension package.
     /// </summary>
-    [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
-	[InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
+    [PackageRegistration(UseManagedResourcesOnly = true)]
+    [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    [ProvideAutoLoad("{05ca2046-1eb1-4813-a91f-a69df9b27698}", PackageAutoLoadFlags.BackgroundLoad)]
-    [ProvideAutoLoad(UIContextGuids80.SolutionExists, PackageAutoLoadFlags.BackgroundLoad)]
-    [ProvideAutoLoad(UIContextGuids80.NoSolution, PackageAutoLoadFlags.BackgroundLoad)]
+    [ProvideAutoLoad("{05ca2046-1eb1-4813-a91f-a69df9b27698}")]
+    [ProvideAutoLoad(UIContextGuids80.SolutionExists)]
+    [ProvideAutoLoad(UIContextGuids80.NoSolution)]
     [ProvideToolWindow(typeof(IssuesToolWindow), Style = VsDockStyle.Tabbed, Window = "ac305e7a-a44b-4541-8ece-3c88d5425338")]
     [ProvideToolWindow(typeof(PluginToolWindow), Style = VsDockStyle.Tabbed, MultiInstances = true)]
     [Guid(GuidList.GuidVSSonarExtensionPkgString)]
-    public sealed partial class VsSonarExtensionPackage : AsyncPackage
+    public sealed partial class VsSonarExtensionPackage : Package
     {
         private SolutionEventsListener listener;
         private DTE2 dte2;
-		private OleMenuCommand runAnalysisCmd;
-		private OleMenuCommand sonarReviewsCommand;
+        private OleMenuCommand sonarReviewsCommandBar;
+        private OleMenuCommand runAnalysisCmd;
+        private OleMenuCommand runAnalysisInProjectCmd;
+        private OleMenuCommand sonarReviewsCommand;
         private OleMenuCommand sonarShowOutputCommand;
         private OleMenuCommand sonarShowOptionsCommand;
         private IVsEnvironmentHelper visualStudioInterface;
@@ -185,16 +186,20 @@ namespace VSSonarQubeExtension
             ErrorHandler.ThrowOnFailure(windowFrame.Show());
         }
 
-		protected override async System.Threading.Tasks.Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
-		{
-			try
+        /// <summary>
+        ///     The initialize.
+        /// </summary>
+        protected override async void Initialize()
+        {
+            try
             {
                 Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this));
-                await base.InitializeAsync(new CancellationToken(), null);
-                this.dte2 = (DTE2)GetGlobalService(typeof(DTE));
-				await this.SetupMenuCommands(this);
+                base.Initialize();
 
-				if (this.dte2 == null)
+                this.SetupMenuCommands();
+                this.dte2 = (DTE2)GetGlobalService(typeof(DTE));
+
+                if (this.dte2 == null)
                 {
                     return;
                 }
@@ -206,7 +211,7 @@ namespace VSSonarQubeExtension
                     this.visualStudioInterface.WriteToVisualStudioOutput(DateTime.Now + " : VsSonarExtensionPackage Initialize");
 
                     this.VsEvents = new VsEvents(this.visualStudioInterface, this.dte2, this);
-                    var bar = await this.GetServiceAsync(typeof(SVsStatusbar)) as IVsStatusbar;
+                    var bar = this.GetService(typeof(SVsStatusbar)) as IVsStatusbar;
                     this.StatusBar = new VSSStatusBar(bar, this.dte2);
                     var extensionRunningPath = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty).ToString();
 
@@ -217,7 +222,7 @@ namespace VSSonarQubeExtension
                         uniqueId += "Exp";
                     }
 
-					var model = await SonarQubeViewModelFactory.AsyncStartupModelWithVsVersion(uniqueId, this);
+					var model = SonarQubeViewModelFactory.StartupModelWithVsVersion(uniqueId, this);
 					await model.InitModelFromPackageInitialization(
                         this.visualStudioInterface,
                         this.StatusBar,
@@ -318,9 +323,9 @@ namespace VSSonarQubeExtension
         /// <summary>
         ///     The setup menu commands.
         /// </summary>
-        private async System.Threading.Tasks.Task SetupMenuCommands(AsyncPackage package)
+        private void SetupMenuCommands()
         {
-            var mcs = (IMenuCommandService)await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
+            var mcs = this.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
 
             if (null == mcs)
             {

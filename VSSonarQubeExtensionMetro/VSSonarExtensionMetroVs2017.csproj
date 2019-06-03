@@ -92,6 +92,9 @@
     <Reference Include="FSharp.Compiler.Service.ProjectCracker, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FSharp.Compiler.Service.ProjectCracker.13.0.0\lib\net45\FSharp.Compiler.Service.ProjectCracker.dll</HintPath>
     </Reference>
+    <Reference Include="FSharp.Core, Version=4.5.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\Packages\FSharp.Core.4.5.2\lib\net45\FSharp.Core.dll</HintPath>
+    </Reference>
     <Reference Include="FSharpLint.Core, Version=0.7.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FSharpLint.Core.0.7.6\lib\net45\FSharpLint.Core.dll</HintPath>
     </Reference>
@@ -196,8 +199,8 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="PresentationFramework.Aero" />
-    <Reference Include="SonarRestApi, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\Packages\SonarRestApi.1.0.0\lib\net472\SonarRestApi.dll</HintPath>
+    <Reference Include="SonarRestApi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=a72e257822fd31b6, processorArchitecture=MSIL">
+      <HintPath>..\Packages\SonarRestApi.1.0.1\lib\net472\SonarRestApi.dll</HintPath>
     </Reference>
     <Reference Include="SQLitePCLRaw.batteries_green, Version=1.0.0.0, Culture=neutral, PublicKeyToken=a84b7dcfb1391f7f, processorArchitecture=MSIL">
       <HintPath>..\packages\SQLitePCLRaw.bundle_green.1.1.2\lib\net45\SQLitePCLRaw.batteries_green.dll</HintPath>
@@ -349,7 +352,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="VSSonarQubeExtensionPackage.cs" />
+    <Compile Include="VSSonarQubeExtensionPackageSync.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VSControls\IssuesToolWindow.cs" />
@@ -372,7 +375,9 @@
     <None Include="vs2017\source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
