@@ -30,12 +30,12 @@ namespace VSSonarQubeExtension.Helpers
     using VSSonarPlugins.Types;
     using System.Reflection;
     using System.Threading.Tasks;
+	using Task = System.Threading.Tasks.Task;
 
-
-    /// <summary>
-    ///     The vs events.
-    /// </summary>
-    public class VsEvents
+	/// <summary>
+	///     The vs events.
+	/// </summary>
+	public class VsEvents
     {
         #region Fields
 
@@ -110,7 +110,9 @@ namespace VSSonarQubeExtension.Helpers
                 this.AnalysisModeHasChange;
         }
 
-        private void ProjectHasBuild(string project, string projectconfig, string platform, string solutionconfig, bool success)
+
+
+		private void ProjectHasBuild(string project, string projectconfig, string platform, string solutionconfig, bool success)
         {
             if (!success || SonarQubeViewModelFactory.SQViewModel.AssociationModule.AssociatedProject == null)
             {

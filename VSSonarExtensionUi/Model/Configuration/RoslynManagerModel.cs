@@ -17,6 +17,7 @@
     using System.IO.Compression;
     using SonarRestService;
     using SonarRestService.Types;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Roslyn manager model
@@ -207,9 +208,10 @@
         /// Reloads the data from disk.
         /// </summary>
         /// <param name="associatedProjectIn">The associated project in.</param>
-        public void ReloadDataFromDisk(Resource associatedProjectIn)
+        public async Task ReloadDataFromDisk(Resource associatedProjectIn)
         {
-            // does not save data to disk
+			// does not save data to disk
+			await Task.Delay(1);
         }
 
         /// <summary>

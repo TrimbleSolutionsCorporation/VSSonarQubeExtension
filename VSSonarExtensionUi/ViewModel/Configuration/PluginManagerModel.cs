@@ -31,6 +31,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
     using SonarRestService.Types;
     using SonarRestService;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// The dummy options controller.
@@ -294,8 +295,9 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// The init data association.
         /// </summary>
         /// <param name="associatedProjectIn">The associated project in.</param>
-        public void ReloadDataFromDisk(Resource associatedProjectIn)
+        public async Task ReloadDataFromDisk(Resource associatedProjectIn)
         {
+			await Task.Delay(1);
             this.Project = associatedProjectIn;
         }
 

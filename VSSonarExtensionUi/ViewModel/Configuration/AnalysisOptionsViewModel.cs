@@ -39,6 +39,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
     using SonarRestService.Types;
     using SonarRestService;
+    using System.Threading.Tasks;
 
     /// <summary>
     ///     The dummy options controller.
@@ -97,15 +98,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
             SonarQubeViewModel.RegisterNewViewModelInPool(this);
             AssociationModel.RegisterNewModelInPool(this);
-
-            try
-            {
-                this.ReloadDataFromDisk(null);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Failed to reload from disk : " + ex.Message);
-            }
+			Task.Run(() => this.ReloadDataFromDisk(null));
         }
 
         /// <summary>
@@ -304,102 +297,43 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// The refresh properties in view.
         /// </summary>
         /// <param name="associatedProjectIn">The associated project in.</param>
-        public void ReloadDataFromDisk(Resource associatedProjectIn)
+        public async Task ReloadDataFromDisk(Resource associatedProjectIn)
         {
-            try
-            {
-                this.CxxWrapperVersion = this.configurationHelper.ReadSetting(
-                    Context.AnalysisGeneral,
-                    OwnersId.AnalysisOwnerId,
-                    GlobalAnalysisIds.CxxWrapperVersionKey).Value;
+			this.IsProjectAnalysisChecked = true;
 
-                var currentVersion = new Version(this.CxxWrapperVersion.Split('-')[0]);
-                if (currentVersion.CompareTo(new Version(MinimumVersion)) < 0)
-                {
-                    this.CxxWrapperVersion = MinimumVersion;
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-                this.CxxWrapperVersion = MinimumVersion;
-            }
+			var dataSet = string.Empty;
+			this.configurationHelper.ReadInSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.CxxWrapperVersionKey, out dataSet, MinimumVersion);
+			this.CxxWrapperVersion = dataSet;
+			var currentVersion = new Version(this.CxxWrapperVersion.Split('-')[0]);
+			if (currentVersion.CompareTo(new Version(MinimumVersion)) < 0)
+			{
+				this.CxxWrapperVersion = MinimumVersion;
+			}
 
-            try
-            {
-                this.SQMSBuildRunnerVersion = this.configurationHelper.ReadSetting(
-                        Context.AnalysisGeneral,
-                        OwnersId.AnalysisOwnerId,
-                        GlobalAnalysisIds.SonarQubeMsbuildVersionKey).Value;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-                this.SQMSBuildRunnerVersion = "4.1.0.1148";
-            }
+			this.configurationHelper.ReadInSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.SonarQubeMsbuildVersionKey, out dataSet, MinimumVersion);
+			this.CxxWrapperVersion = dataSet;
 
-            try
-            {
-                this.WrapperPath = this.configurationHelper.ReadSetting(
-                    Context.AnalysisGeneral,
-                    OwnersId.AnalysisOwnerId,
-                    GlobalAnalysisIds.CxxWrapperPathKey).Value;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-                this.WrapperPath = Path.Combine(Path.Combine(this.configurationHelper.ApplicationPath, "Wrapper", this.CxxWrapperVersion), "CxxSonarQubeMsbuidRunner.exe");
-            }
+			this.configurationHelper.ReadInSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.CxxWrapperPathKey, out dataSet, Path.Combine(Path.Combine(this.configurationHelper.ApplicationPath, "Wrapper", this.CxxWrapperVersion), "CxxSonarQubeMsbuidRunner.exe"));
+			this.WrapperPath = dataSet;
 
-            try
-            {
-                this.ExcludedPlugins = this.configurationHelper.ReadSetting(
-                    Context.AnalysisGeneral,
-                    OwnersId.AnalysisOwnerId,
-                    GlobalAnalysisIds.ExcludedPluginsKey).Value;
-            }
-            catch (Exception)
-            {
-                this.ExcludedPlugins = "devcockpit,pdfreport,report,scmactivity,views,jira,scmstats";
-            }
+			this.configurationHelper.ReadInSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.ExcludedPluginsKey, out dataSet, "devcockpit,pdfreport,report,scmactivity,views,jira,scmstats");
+			this.ExcludedPlugins = dataSet;
 
-            try
-            {
-                this.IsProjectAnalysisChecked = bool.Parse(
-                    this.configurationHelper.ReadSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.LocalAnalysisProjectAnalysisEnabledKey).Value);
-            }
-            catch (Exception)
-            {
-                this.IsProjectAnalysisChecked = true;
-            }
+			this.configurationHelper.ReadInSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.LocalAnalysisProjectAnalysisEnabledKey, out dataSet, "true");
+			this.IsProjectAnalysisChecked = bool.Parse(dataSet);
 
-            try
-            {
-                this.IsSolutionAnalysisChecked = bool.Parse(
-                    this.configurationHelper.ReadSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.LocalAnalysisSolutionAnalysisEnabledKey).Value);
-            }
-            catch (Exception)
-            {
-                this.IsSolutionAnalysisChecked = true;
-            }
+			this.configurationHelper.ReadInSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.LocalAnalysisSolutionAnalysisEnabledKey, out dataSet, "true");
+			this.IsSolutionAnalysisChecked = bool.Parse(dataSet);
 
             // ensure wrapper is available
-            try
-            {
-                this.OnDownloadWrapperStartup();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-            }
-            
+			await this.OnDownloadWrapperStartup();            
             this.SaveData();
         }
 
-        /// <summary>
-        /// Called when [disconnect].
-        /// </summary>
-        public void OnDisconnect()
+		/// <summary>
+		/// Called when [disconnect].
+		/// </summary>
+		public void OnDisconnect()
         {
             // does nothing
         }
@@ -586,7 +520,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         /// Called when [download wrapper command].
         /// </summary>
-        private void OnDownloadWrapperStartup()
+        private async Task OnDownloadWrapperStartup()
         {
             var installPath = Path.Combine(this.configurationHelper.ApplicationPath, "Wrapper", this.CxxWrapperVersion);
 
@@ -596,28 +530,23 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 return;
             }
 
-            try
-            {
-                var urldownload = "https://github.com/jmecsoftware/sonar-cxx-msbuild-tasks/releases/download/" + this.CxxWrapperVersion + "/CxxSonarQubeMsbuidRunner.zip";
-                var tmpFile = Path.Combine(this.configurationHelper.ApplicationPath, "CxxSonarQubeMsbuidRunner.zip");
+			await Task.Run(() =>
+			{
+				var urldownload = "https://github.com/jmecsoftware/sonar-cxx-msbuild-tasks/releases/download/" + this.CxxWrapperVersion + "/CxxSonarQubeMsbuidRunner.zip";
+				var tmpFile = Path.Combine(this.configurationHelper.ApplicationPath, "CxxSonarQubeMsbuidRunner.zip");
 
-                using (var client = new WebClient())
-                {
-                    if (File.Exists(tmpFile))
-                    {
-                        File.Delete(tmpFile);
-                    }
+				using (var client = new WebClient())
+				{
+					if (File.Exists(tmpFile))
+					{
+						File.Delete(tmpFile);
+					}
 
-                    client.DownloadFile(urldownload, tmpFile);
-
-                    ZipFile.ExtractToDirectory(tmpFile, installPath);
-                    this.WrapperPath = Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe");
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-            }
+					client.DownloadFile(urldownload, tmpFile);
+					ZipFile.ExtractToDirectory(tmpFile, installPath);
+					this.WrapperPath = Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe");
+				}
+			});
         }
     }
 }

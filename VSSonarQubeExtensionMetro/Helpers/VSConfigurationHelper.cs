@@ -110,10 +110,27 @@ namespace VSSonarQubeExtension.Helpers
             }
         }
 
-        /// <summary>
-        /// The sync settings.
-        /// </summary>
-        public void SyncSettings()
+		public void ReadInSetting(Context context, string id, string key, out string elementToSet, string defaultValue)
+		{
+			var elementData = this.ReadSetting(
+				context,
+				id,
+				key);
+
+			if (elementData != null)
+			{
+				elementToSet = elementData.Value;
+			}
+			else
+			{
+				elementToSet = defaultValue;
+			}
+		}
+
+		/// <summary>
+		/// The sync settings.
+		/// </summary>
+		public void SyncSettings()
         {
         }
 

@@ -94,16 +94,20 @@ namespace VSSonarQubeExtension.Squiggle
                 Debug.WriteLine("Problems schedulling update: " + ex.Message + "::" + ex.StackTrace);
             }
 
-            try
-            {
-                SonarQubeViewModelFactory.SQViewModel.ServerViewModel.IssuesReadyForCollecting += this.IssuesListChanged;
-                SonarQubeViewModelFactory.SQViewModel.LocalViewModel.IssuesReadyForCollecting += this.IssuesListChanged;
-                SonarQubeViewModelFactory.SQViewModel.IssuesSearchModel.IssuesReadyForCollecting += this.IssuesListChanged;
-            }
-            catch (Exception ex)
-            {
-                throw new ArgumentNullException(ex.Message);
-            }
+			if (SonarQubeViewModelFactory.SQViewModel.ServerViewModel != null)
+			{
+				SonarQubeViewModelFactory.SQViewModel.ServerViewModel.IssuesReadyForCollecting += this.IssuesListChanged;
+			}
+
+			if (SonarQubeViewModelFactory.SQViewModel.LocalViewModel != null)
+			{
+				SonarQubeViewModelFactory.SQViewModel.LocalViewModel.IssuesReadyForCollecting += this.IssuesListChanged;
+			}
+
+			if (SonarQubeViewModelFactory.SQViewModel.IssuesSearchModel != null)
+			{
+				SonarQubeViewModelFactory.SQViewModel.IssuesSearchModel.IssuesReadyForCollecting += this.IssuesListChanged;
+			}
         }
 
         #endregion

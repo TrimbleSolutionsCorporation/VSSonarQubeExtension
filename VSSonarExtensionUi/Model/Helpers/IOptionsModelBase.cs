@@ -15,6 +15,7 @@
 namespace VSSonarExtensionUi.Model.Helpers
 {
     using SonarRestService.Types;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// The OptionsViewModelBase interface.
@@ -25,7 +26,7 @@ namespace VSSonarExtensionUi.Model.Helpers
         /// Reloads the data from disk.
         /// </summary>
         /// <param name="associatedProject">The associated project.</param>
-        void ReloadDataFromDisk(Resource associatedProject);
+        Task ReloadDataFromDisk(Resource associatedProject);
 
         /// <summary>
         /// Saves the data.

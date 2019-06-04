@@ -14,16 +14,26 @@ namespace VSSonarPlugins
         /// <returns>The <see cref="SonarQubeProperties"/>.</returns>
         SonarQubeProperties ReadSetting(Types.Context context, string owner, string key);
 
-        /// <summary>
-        /// The write setting.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="owner">The owner.</param>
-        /// <param name="key">The key.</param>
-        /// <param name="value">The value.</param>
-        /// <param name="sync">The sync.</param>
-        /// <param name="skipIfExist">The skip if exist.</param>
-        void WriteSetting(Types.Context context, string owner, string key, string value, bool sync = false, bool skipIfExist = false);
+		/// <summary>
+		/// helper function to get string element, with default value
+		/// </summary>
+		/// <param name="context"></param>
+		/// <param name="id"></param>
+		/// <param name="key"></param>
+		/// <param name="elementToSet"></param>
+		/// <param name="defaultValue"></param>
+		void ReadInSetting(Context context, string id, string key, out string elementToSet, string defaultValue);
+		
+		/// <summary>
+		/// The write setting.
+		/// </summary>
+		/// <param name="context">The context.</param>
+		/// <param name="owner">The owner.</param>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value.</param>
+		/// <param name="sync">The sync.</param>
+		/// <param name="skipIfExist">The skip if exist.</param>
+		void WriteSetting(Types.Context context, string owner, string key, string value, bool sync = false, bool skipIfExist = false);
 
         void WriteSetting(SonarQubeProperties prop, bool sync = false, bool skipIfExist = false);
 

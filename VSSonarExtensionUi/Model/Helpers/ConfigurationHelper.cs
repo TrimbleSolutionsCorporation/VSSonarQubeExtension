@@ -122,7 +122,7 @@ namespace VSSonarExtensionUi.Model.Helpers
 
             foreach (var property in this.properties)
             {
-                if (property.Context.Equals(context) && property.Owner.Equals(owner) && property.Key.Equals(key))
+                if (property.Context.Equals(context.ToString()) && property.Owner.Equals(owner) && property.Key.Equals(key))
                 {
                     return property;
                 }
@@ -131,21 +131,46 @@ namespace VSSonarExtensionUi.Model.Helpers
 			return null;
         }
 
-        /// <summary>
-        /// Reads the settings.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="owner">The owner.</param>
-        /// <returns>Returns all properties.</returns>
-        public IEnumerable<SonarQubeProperties> ReadSettings(Context context, string owner)
-        {
-            if (context.Equals(Context.AnalysisProject))
-            {
-                return this.tempproperties.Where(property => property.Context.Equals(context) && property.Owner.Equals(owner));
-            }
+		/// <summary>
+		/// read in setting no null reference
+		/// </summary>
+		/// <param name="context"></param>
+		/// <param name="id"></param>
+		/// <param name="key"></param>
+		/// <param name="elementToSet"></param>
+		/// <param name="defaultValue"></param>
+		public void ReadInSetting(Context context, string id, string key, out string elementToSet, string defaultValue)
+		{
+			var elementData = this.ReadSetting(
+				context,
+				id,
+				key);
 
-            return this.properties.Where(property => property.Context.Equals(context) && property.Owner.Equals(owner));
-        }
+			if (elementData != null)
+			{
+				elementToSet = elementData.Value;
+			}
+			else
+			{
+				elementToSet = defaultValue;
+			}
+		}
+
+		/// <summary>
+		/// Reads the settings.
+		/// </summary>
+		/// <param name="context">The context.</param>
+		/// <param name="owner">The owner.</param>
+		/// <returns>Returns all properties.</returns>
+		public IEnumerable<SonarQubeProperties> ReadSettings(Context context, string owner)
+		{
+			if (context.Equals(Context.AnalysisProject))
+			{
+				return this.tempproperties.Where(property => property.Context.Equals(context) && property.Owner.Equals(owner));
+			}
+
+			return this.properties.Where(property => property.Context.Equals(context) && property.Owner.Equals(owner));
+		}
 
         /// <summary>
         /// Writes the setting.

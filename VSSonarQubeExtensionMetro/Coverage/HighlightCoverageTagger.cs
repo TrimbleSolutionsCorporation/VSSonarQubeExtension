@@ -60,17 +60,13 @@ namespace VSSonarQubeExtension.Coverage
         /// </param>
         public HighlightCoverageTagger(ITextBuffer sourceBuffer)
         {
-            try
-            {
-                this.SourceBuffer = sourceBuffer;
-                SonarQubeViewModelFactory.SQViewModel.AnalysisModeHasChange += this.CoverageDataChanged;
-                SonarQubeViewModelFactory.SQViewModel.ServerViewModel.CoverageWasModified += this.CoverageDataChanged;
-                ThreadPool.QueueUserWorkItem(this.ScheduleUpdate, null);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-            }
+            this.SourceBuffer = sourceBuffer;
+            if (SonarQubeViewModelFactory.SQViewModel.ServerViewModel != null)
+			{
+				SonarQubeViewModelFactory.SQViewModel.AnalysisModeHasChange += this.CoverageDataChanged;
+				SonarQubeViewModelFactory.SQViewModel.ServerViewModel.CoverageWasModified += this.CoverageDataChanged;
+				ThreadPool.QueueUserWorkItem(this.ScheduleUpdate, null);
+			}            
         }
 
         #endregion
@@ -117,27 +113,23 @@ namespace VSSonarQubeExtension.Coverage
         /// </returns>
         public IEnumerable<ITagSpan<CoverageTag>> GetTags(NormalizedSnapshotSpanCollection spans)
         {
-            try
+			if (SonarQubeViewModelFactory.SQViewModel.ServerViewModel == null)
+			{
+				yield break;
+			}
+
+            if (spans.Count == 0)
             {
-                if (spans.Count == 0)
-                {
-                    yield break;
-                }
-
-                if (!SonarQubeViewModelFactory.SQViewModel.ServerViewModel.CoverageInEditorEnabled)
-                {
-                    yield break;
-                }
-
-                if (this.coverageTags.Count == 0)
-                {
-                    yield break;
-                }
+                yield break;
             }
-            catch (Exception ex)
+
+            if (!SonarQubeViewModelFactory.SQViewModel.ServerViewModel.CoverageInEditorEnabled)
             {
-                Debug.WriteLine(ex.Message);
-                Debug.WriteLine(ex.StackTrace);
+                yield break;
+            }
+
+            if (this.coverageTags.Count == 0)
+            {
                 yield break;
             }
 
