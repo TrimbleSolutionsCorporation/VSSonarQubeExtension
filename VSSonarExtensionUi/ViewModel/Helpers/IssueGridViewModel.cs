@@ -139,7 +139,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
 
             this.CloseFlyoutCommand = new RelayCommand(() => this.IsCommentEnabled = false);
 
-            this.SelectionChangedCommand = new RelayCommand<IList<Issue>>(
+            this.SelectionChangedCommand = new RelayCommand<IList>(
                 items =>
                     {
                         this.SelectedItems = items;
@@ -176,7 +176,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// <summary>
         /// Gets or sets the all issues.
         /// </summary>
-        public AsyncObservableCollection<Issue> AllIssues { get; set; }
+        public ObservableCollection<Issue> AllIssues { get; set; }
 
         /// <summary>Gets or sets the go to prev issue command.</summary>
         public ICommand GoToPrevIssueCommand { get; set; }
@@ -516,7 +516,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         ///     Gets or sets the issues.
         /// </summary>
         [AlsoNotifyFor("IssuesCounter")]
-        public AsyncObservableCollection<Issue> Issues { get; set; }
+        public ObservableCollection<Issue> Issues { get; set; }
 
         /// <summary>
         ///     Gets or sets the issues counter.
@@ -614,7 +614,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// <summary>
         ///     Gets or sets the selected items.
         /// </summary>
-        public IList<Issue> SelectedItems { get; set; }
+        public IList SelectedItems { get; set; }
 
         /// <summary>
         ///     Gets or sets the selection changed command.

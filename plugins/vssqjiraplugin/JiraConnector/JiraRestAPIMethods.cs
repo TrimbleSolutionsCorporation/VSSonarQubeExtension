@@ -20,6 +20,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace JiraConnector
 {
@@ -43,7 +44,7 @@ namespace JiraConnector
     }
     public class JiraRestAPIMethods
     {
-        public string GetAuthenticationCookie(string username, string password, string url)
+        public async Task<string> GetAuthenticationCookie(string username, string password, string url)
         {
             string result = string.Empty;
             string cookie = string.Empty;
@@ -55,7 +56,7 @@ namespace JiraConnector
                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
                 string jsondata = "{\"username\":\"" + username + "\",\"password\":\"" + password + "\"}";
                 var content = new StringContent(jsondata, Encoding.UTF8, "application/json");
-                HttpResponseMessage response = client.PostAsync("session", content).Result;
+                HttpResponseMessage response = await client.PostAsync("session", content);
                 if (response.IsSuccessStatusCode)
                 {
                     result = response.StatusCode.ToString();
@@ -187,7 +188,7 @@ namespace JiraConnector
         /// <returns>
         /// The <see cref="ObservableCollection<ResultData>"/>.
         /// </returns>
-        public string GetIssue(string _cookie, string url)
+        public async Task<string> GetIssue(string _cookie, string url)
         {
             Uri uri = new Uri(url);
             HttpClientHandler handler = new HttpClientHandler();
@@ -197,8 +198,8 @@ namespace JiraConnector
             HttpClient cclient = new HttpClient(handler);
             try
             {
-                HttpResponseMessage response = cclient.GetAsync(uri).Result;
-                resultmessage = response.Content.ReadAsStringAsync().Result;
+                HttpResponseMessage response = await cclient.GetAsync(uri);
+                resultmessage = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode.ToString() == "Unauthorized")
                 {
                     resultmessage = response.StatusCode.ToString();

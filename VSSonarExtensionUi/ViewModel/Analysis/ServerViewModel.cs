@@ -241,12 +241,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
 					Context.GlobalPropsId,
 					OwnersId.ApplicationOwnerId,
 					GlobalIds.TeamsFile);
-				if (userTeamsFile == null)
+				var userTeamsFilPath = string.Empty;
+				if (userTeamsFile != null)
 				{
-					this.notificationMan.ReportMessage("teams file not configured");
+					userTeamsFilPath = userTeamsFile.Value;
+					this.notificationMan.ReportMessage("teams file configured");
 				}
 
-				this.usortedListTeams = await this.restservice.GetTeams(this.usortedList, userTeamsFile.Value);
+				this.usortedListTeams = await this.restservice.GetTeams(this.usortedList, userTeamsFilPath);			
 			}
 		}
 

@@ -31,6 +31,7 @@ namespace VSSonarExtensionUi.Model.Menu
     using SonarRestService;
     using System.Threading.Tasks;
     using System.Threading;
+    using System.Linq;
 
     /// <summary>
     /// The issue handler menu.
@@ -218,7 +219,7 @@ namespace VSSonarExtensionUi.Model.Menu
                         this.logger.StartedWorking("Marking Issues as False Posiive");
                         var replies = await this.rest.MarkIssuesAsFalsePositive(
 							AuthtenticationHelper.AuthToken,
-							this.model.SelectedItems,
+							this.model.SelectedItems.Cast<Issue>().ToList(),
 							string.Empty,
 							this.logger,
 							new CancellationTokenSource().Token);
@@ -231,7 +232,7 @@ namespace VSSonarExtensionUi.Model.Menu
                     this.logger.StartedWorking("Confirming Issues");
                     var replies = await this.rest.ConfirmIssues(
 						AuthtenticationHelper.AuthToken,
-						this.model.SelectedItems,
+						this.model.SelectedItems.Cast<Issue>().ToList(),
 						string.Empty,
 						this.logger,
 						new CancellationTokenSource().Token);
@@ -244,7 +245,7 @@ namespace VSSonarExtensionUi.Model.Menu
 					this.logger.StartedWorking("Marking issues as fixed");
 					var replies = await this.rest.ResolveIssues(
 						AuthtenticationHelper.AuthToken,
-						this.model.SelectedItems,
+						this.model.SelectedItems.Cast<Issue>().ToList(),
 						string.Empty,
 						this.logger,
 						new CancellationTokenSource().Token);

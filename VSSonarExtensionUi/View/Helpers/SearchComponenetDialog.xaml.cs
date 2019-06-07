@@ -216,79 +216,111 @@
 			return new List<Resource>();
 		}
 
-		/// <summary>
-		/// Handles the KeyDown event of the tb control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="KeyEventArgs" /> instance containing the event data.</param>
-		private async void KeyboardKeyDown(object sender, KeyEventArgs e)
-		{
-			if (e.Key == Key.Enter)
-			{
-				this.SearchData.IsEnabled = false;
-				this.ProgressBar.IsIndeterminate = true;
+        /// <summary>
+        /// Handles the KeyDown event of the tb control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="KeyEventArgs" /> instance containing the event data.</param>
+        private void KeyboardKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                this.SearchData.IsEnabled = false;
+                this.ProgressBar.IsIndeterminate = true;
 
-				var projects = new List<Resource>();
-				var searchData = this.SearchData.Text;
-				projects.AddRange(this.availableProjects);
-				var selectedProject = this.Projects.SelectedItem;
+                using (var bw = new BackgroundWorker { WorkerReportsProgress = true })
+                {
+                    var projects = new List<Resource>();
+                    var searchData = this.SearchData.Text;
+                    projects.AddRange(this.availableProjects);
+                    var selectedProject = this.Projects.SelectedItem;
 
-				var list = new List<Resource>();
-				if (selectedProject != null)
-				{
-					await this.SearchInProject(list, selectedProject as Resource, searchData);
-				}
-				else
-				{
-					var tasks = new Task[projects.Count];
-					var i = 0;
-					foreach (var project in projects)
-					{
-						tasks[i] = Task.Run(async () =>
-						{
-							try
-							{
-								await this.SearchInProject(list, project, searchData);
-							}
-							catch (Exception)
-							{
-								// ignore data
-							}
+                    bw.RunWorkerCompleted += delegate
+                    {
+                        this.SearchData.IsEnabled = true;
+                        this.ProgressBar.IsIndeterminate = false;
 
-							Application.Current.Dispatcher.Invoke(delegate { this.StatusLabel.Content = "Searching : " + project.Name + " : Done"; });
-						});
-						i++;
-					}
+                        Application.Current.Dispatcher.Invoke(
+                            delegate
+                            {
+                                this.SearchDataGrid.Items.Refresh();
+                                this.StatusLabel.Content = "Search Completed.";
+                            });
+                    };
 
-					foreach (var task in tasks)
-					{
-						task.Wait();
-					}
-				}
+                    bw.DoWork += delegate
+                    {
+                        var list = new List<Resource>();
+                        if (selectedProject != null)
+                        {
+                            this.SearchInProject(list, selectedProject as Resource, searchData).GetAwaiter().GetResult();
+                        }
+                        else
+                        {
+                            var tasks = new Task[projects.Count];
+                            var i = 0;
+                            foreach (var project in projects)
+                            {
+                                tasks[i] = Task.Run(async () =>
+                                {
+                                    try
+                                    {
+                                        await this.SearchInProject(list, project, searchData);
+                                    }
+                                    catch (Exception)
+                                    {
+                                        // ignore data
+                                    }
 
-				this.componentList.Clear();
-				foreach (var item in list)
-				{
-					this.componentList.Add(item);
-				}
+                                    bw.ReportProgress(0, "Searching : " + project.Name + " : Done");
+                                });
+                                i++;
+                            }
 
-				this.SearchData.IsEnabled = true;
-				this.ProgressBar.IsIndeterminate = false;
-				this.SearchDataGrid.Items.Refresh();
-				this.StatusLabel.Content = "Search Completed.";
-			}
-		}
+                            foreach (var task in tasks)
+                            {
+                                task.Wait();
+                            }
+                        }
 
-		/// <summary>
-		/// The btn cancel_ click.
-		/// </summary>
-		/// <param name="sender">
-		/// The sender.
-		/// </param>
-		/// <param name="e">
-		/// The e.
-		/// </param>
-		private void BtnCancelClick(object sender, RoutedEventArgs e)
+                        Application.Current.Dispatcher.Invoke(
+                            delegate
+                            {
+                                this.componentList.Clear();
+                                foreach (var item in list)
+                                {
+                                    this.componentList.Add(item);
+                                }
+                            });
+                    };
+
+                    bw.ProgressChanged += this.ReportStatus;
+
+                    bw.RunWorkerAsync();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Reports the status.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="ProgressChangedEventArgs"/> instance containing the event data.</param>
+        private void ReportStatus(object sender, ProgressChangedEventArgs e)
+        {
+            this.StatusLabel.Content = e.UserState;
+        }
+
+        /// <summary>
+        /// The btn cancel_ click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void BtnCancelClick(object sender, RoutedEventArgs e)
 		{
 			this.DialogResult = false;
 

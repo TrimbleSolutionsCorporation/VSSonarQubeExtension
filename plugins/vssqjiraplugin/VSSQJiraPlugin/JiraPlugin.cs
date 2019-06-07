@@ -19,7 +19,7 @@ namespace VSSQTestTrackPlugin
     using System.Diagnostics;
     using System.Reflection;
     using System.Text;
-
+    using System.Threading.Tasks;
     using JiraConnector;
     using Newtonsoft.Json;
     using SonarRestService.Types;
@@ -181,7 +181,7 @@ namespace VSSQTestTrackPlugin
         /// <returns>
         /// url for link in tt.
         /// </returns>
-        public string AttachToExistentDefect(IList<Issue> issues, string defectId)
+        public async Task<string> AttachToExistentDefect(IList<Issue> issues, string defectId)
         {
             if (issues == null || issues.Count == 0)
             {
@@ -189,7 +189,7 @@ namespace VSSQTestTrackPlugin
             }
 
             var notes = this.GatherNotesInPlainText(issues, this.associatedProject);
-            string result = this.jiraIntegration.UpdateIssue(defectId, notes.ToString());
+            string result = await this.jiraIntegration.UpdateIssue(defectId, notes.ToString());
             if (result != "Created")
                 {
                     Debug.WriteLine("Could not update the issue:" + result);
@@ -229,11 +229,10 @@ namespace VSSQTestTrackPlugin
         /// <param name="issues">The issues.</param>
         /// <param name="id">The identifier.</param>
         /// <returns>defect number</returns>
-        public string AttachToNewDefect(IList<Issue> issues, out string id)
+        public async Task<string> AttachToNewDefect(IList<Issue> issues)
         {
             if (issues == null || issues.Count == 0)
             {
-                id = string.Empty;
                 return string.Empty;
             }
 
@@ -244,10 +243,9 @@ namespace VSSQTestTrackPlugin
             {
                 // create defect
                 // "SonarQube: Issues Pending Resolution [from VSSonarExtension] " + summary, notes.ToString()
-                var defect = this.jiraIntegration.CreateIssue("SonarQube: Issues Pending Resolution [from VSSonarExtension] " + summary, notes.ToString());
+                var defect = await this.jiraIntegration.CreateIssue("SonarQube: Issues Pending Resolution [from VSSonarExtension] " + summary, notes.ToString());
                 if (defect != string.Empty)
                 {
-                    id = defect.ToString();
                     return this.jiraIntegration.GetUrlForDefect(defect);
                 }
             }
@@ -257,7 +255,6 @@ namespace VSSQTestTrackPlugin
                 this.notificationManager.ReportException(ex);
             }
 
-            id = string.Empty;
             return string.Empty;
         }
 
@@ -285,13 +282,13 @@ namespace VSSQTestTrackPlugin
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns>defect</returns>
-        public Defect GetDefect(string id)
+        public async Task<Defect> GetDefect(string id)
         {
             var defect = new Defect();
             defect.Id = id;
             try
             {
-                string issuedata = this.jiraIntegration.GetIssue(id);
+                string issuedata = await this.jiraIntegration.GetIssue(id);
                 if (issuedata != string.Empty || issuedata != "Unauthorized")
                 {
                     dynamic dynobj = JsonConvert.DeserializeObject(issuedata);
@@ -312,7 +309,7 @@ namespace VSSQTestTrackPlugin
         /// </summary>
         /// <param name="commitMessage">The commit message.</param>
         /// <returns>defect</returns>
-        public Defect GetDefectFromCommitMessage(string commitMessage)
+        public Task<Defect> GetDefectFromCommitMessage(string commitMessage)
         {
             return null;
         }

@@ -137,37 +137,7 @@
                                     <ColumnDefinition Width="20*" />
                                     <ColumnDefinition Width="25" />
                                 </Grid.ColumnDefinitions>
-                                <Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Content="Search" />
-                                <ComboBox Grid.Row="0" Grid.Column="1" IsTextSearchEnabled="True"
-                                              controls:TextBoxHelper.Watermark="Type to search for a saved search"
-                                              IsEditable="True"
-                                              SelectedItem="{Binding SelectedSearch, Mode=TwoWay}"
-                                              ItemsSource="{Binding AvailableSearches}"
-                                              MaxDropDownHeight="101"
-                                              Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                              Grid.ColumnSpan="3" />
-                                <WrapPanel Grid.Row="1" Grid.ColumnSpan="3" Orientation="Horizontal">
-                                    <Button Grid.Row="1" Grid.ColumnSpan="3" Margin="70 3 0 0"
-                                        Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                        Style="{DynamicResource MyMetroButton}"
-                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                        Content="Load selected" Command="{Binding LoadSavedSearchCommand}" />
-                                    <Button Grid.Row="1" Grid.ColumnSpan="3" Margin="1 3 0 0"
-                                        Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                        Style="{DynamicResource MyMetroButton}"
-                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                        Content="Delete selected" Command="{Binding DeleteSavedSearchCommand}" />
-                                    <Button Grid.Row="1" Grid.ColumnSpan="3" Margin="20 3 0 0"
-                                        Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                        Style="{DynamicResource MyMetroButton}"
-                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                        Content="Save" Command="{Binding SaveSearchCommand}" />
-                                    <Button Grid.Row="1" Grid.ColumnSpan="3" Margin="1 3 0 0"
-                                        Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                        Style="{DynamicResource MyMetroButton}"
-                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                        Content="Save As" Command="{Binding SaveAsSearchCommand}" />
-                                </WrapPanel>
+                                
 
                             </Grid>
                         </Expander>
@@ -201,8 +171,10 @@
                         <Expander Header="Components" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
                             <Grid
                                     Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                    Height="30">
+                                    Height="80">
                                 <Grid.RowDefinitions>
+                                    <RowDefinition Height="25" />
+                                    <RowDefinition Height="30" />
                                     <RowDefinition Height="25" />
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
@@ -212,9 +184,9 @@
                                 </Grid.ColumnDefinitions>
                                 <Label
                                         Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                        Grid.Row="0" Grid.Column="0"
+                                        Grid.Row="2" Grid.Column="0"
                                         Content="Component Search" />
-                                <Button Style="{DynamicResource MyMetroButton}" Grid.Column="1"
+                                <Button Style="{DynamicResource MyMetroButton}" Grid.Column="1" Grid.Row="2"
                                 Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
                                 Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
                                 x:Name="LaunchCompSearch"
@@ -225,6 +197,38 @@
 
                                 <CheckBox Grid.Row="0" Grid.Column="2" Margin="4,0,-4,0"
                                               IsChecked="{Binding IsComponenetChecked}" ToolTip="Check to include components" />
+
+                                <Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Content="Search" />
+                                <ComboBox Grid.Row="0" Grid.Column="1" IsTextSearchEnabled="True"
+                                              controls:TextBoxHelper.Watermark="Type to search for a saved search"
+                                              IsEditable="True"
+                                              SelectedItem="{Binding SelectedSearch, Mode=TwoWay}"
+                                              ItemsSource="{Binding AvailableSearches}"
+                                              MaxDropDownHeight="101"
+                                              Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                              Grid.ColumnSpan="3" />
+                                <WrapPanel Grid.Row="1" Grid.ColumnSpan="3" Orientation="Horizontal">
+                                    <Button Grid.Row="1" Grid.ColumnSpan="3" Margin="70 3 0 0"
+                                        Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Style="{DynamicResource MyMetroButton}"
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Content="Load selected" Command="{Binding LoadSavedSearchCommand}" />
+                                    <Button Grid.Row="1" Grid.ColumnSpan="3" Margin="1 3 0 0"
+                                        Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Style="{DynamicResource MyMetroButton}"
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Content="Delete selected" Command="{Binding DeleteSavedSearchCommand}" />
+                                    <Button Grid.Row="1" Grid.ColumnSpan="3" Margin="20 3 0 0"
+                                        Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Style="{DynamicResource MyMetroButton}"
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Content="Save" Command="{Binding SaveSearchCommand}" />
+                                    <Button Grid.Row="1" Grid.ColumnSpan="3" Margin="1 3 0 0"
+                                        Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Style="{DynamicResource MyMetroButton}"
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Content="Save As" Command="{Binding SaveAsSearchCommand}" />
+                                </WrapPanel>
                             </Grid>
                         </Expander>
 

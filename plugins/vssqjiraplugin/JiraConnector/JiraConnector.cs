@@ -18,7 +18,7 @@ namespace JiraConnector
     using System.Diagnostics;
     using System.IO;
     using System.Reflection;
-
+    using System.Threading.Tasks;
     using Newtonsoft.Json;
     using VSSonarPlugins;
 
@@ -128,18 +128,10 @@ namespace JiraConnector
 
 			this.logger = logger;
 
-			try
+            if (File.Exists(this.configFile))
             {
-                if (File.Exists(this.configFile))
-                {
-                    this.GetServerAndProject();
-                }
-
-                this.jcookie = this.GetCookie(false);
-            }
-            catch (Exception ex)
-            {
-                this.logger.ReportMessage("Failed to create connector: " + ex.Message);
+				this.logger.ReportMessage("Loading Jira Configuration File: " + this.configFile);
+				this.GetServerAndProject();
             }
         }
 
@@ -154,7 +146,7 @@ namespace JiraConnector
         /// </returns>
         public string GetUrlForDefect(string defect)
         {
-           return this.jiraurl + "projects/" + this.project + "/issues/" + defect + "?filter=allissues";
+           return string.Format("{0}projects/{1}/issues/{2}?filter=allissues", this.jiraurl, this.project, defect);
         }
 
         /// <summary>
@@ -165,7 +157,7 @@ namespace JiraConnector
         /// The <see cref="string" />.
         /// </returns>
         /// <exception cref="ArgumentNullException">logger</exception>
-        public string GetCookie(bool force)
+        public async Task<string> GetCookie(bool force)
         {
             string cookie = string.Empty;
             if (File.Exists(this.cookieinfoFile))
@@ -177,7 +169,7 @@ namespace JiraConnector
             {
                 if (force || cookie == string.Empty)
                 {
-                    cookie = this.jiraRestAPIMethods.GetAuthenticationCookie(this.userName, this.password, this.jiraurl + "rest/auth/1/");
+                    cookie = await this.jiraRestAPIMethods.GetAuthenticationCookie(this.userName, this.password, this.jiraurl + "rest/auth/1/");
                     if (cookie == string.Empty)
                     {
                         this.logger.ReportMessage("Cannot get authentication cookie for Jira. Check the username and password in config file.");
@@ -208,18 +200,18 @@ namespace JiraConnector
         /// <returns>
         /// The <see cref="string" />.
         /// </returns>
-        public string CreateIssue(string summary, string notes)
+        public async Task<string> CreateIssue(string summary, string notes)
         {
             if(this.jcookie == string.Empty)
             {
-                this.GetCookie(true);
+                await this.GetCookie(true);
             }
 
             var jsondata = this.CreateJsondata(summary, notes);
             var result = this.jiraRestAPIMethods.CreateIssue(this.jiraurl + "rest/api/2/", this.jcookie, jsondata);
             if (result[0].Result == "Unauthorized" || result[0].Result.Contains("Exception"))
             {
-                this.jcookie = this.GetCookie(true);
+                this.jcookie = await this.GetCookie(true);
                 result = this.jiraRestAPIMethods.CreateIssue(this.jiraurl + "rest/api/2/", this.jcookie, jsondata);
             }
 
@@ -271,22 +263,22 @@ namespace JiraConnector
         /// <returns>
         /// The <see cref="string" />.
         /// </returns>
-        public string GetIssue(string defectId)
+        public async Task<string> GetIssue(string defectId)
         {
             string issue = string.Empty;
             try
             {
                 if (this.jcookie == string.Empty)
                 {
-                    this.GetCookie(true);
+                    await this.GetCookie(true);
                 }
 
-                issue = this.jiraRestAPIMethods.GetIssue(this.jcookie, this.jiraurl + "rest/api/2/issue/" + defectId);
+                issue = await this.jiraRestAPIMethods.GetIssue(this.jcookie, this.jiraurl + "rest/api/2/issue/" + defectId);
 
                 if (issue.Contains("Unauthorized"))
                 {
-                    this.jcookie = this.GetCookie(true);
-                    issue = this.jiraRestAPIMethods.GetIssue(this.jcookie, this.jiraurl + "rest/api/2/issue/" + defectId);
+                    this.jcookie = await this.GetCookie(true);
+                    issue = await this.jiraRestAPIMethods.GetIssue(this.jcookie, this.jiraurl + "rest/api/2/issue/" + defectId);
                 }
             }
             catch(Exception e)
@@ -305,7 +297,7 @@ namespace JiraConnector
         /// <returns>
         /// The <see cref="string" />.
         /// </returns>
-        public string UpdateIssueDescription(string defectId, string notes)
+        public async Task<string> UpdateIssueDescription(string defectId, string notes)
         {
             var update = new Update();
             update.update.description.Add(new Description { set = notes });
@@ -320,13 +312,13 @@ namespace JiraConnector
             {
                 if (this.jcookie == string.Empty)
                 {
-                    this.GetCookie(true);
+					this.jcookie = await this.GetCookie(true);
                 }
 
                 result = this.jiraRestAPIMethods.UpdateIssue(this.jiraurl + "rest/api/2/issue/" + defectId, this.jcookie, jsondata, defectId);
                 if (result.Contains("Unauthorized"))
                 {
-                    this.jcookie = this.GetCookie(true);
+                    this.jcookie = await this.GetCookie(true);
                     result = this.jiraRestAPIMethods.UpdateIssue(this.jiraurl + "rest/api/2/issue/" + defectId, this.jcookie, jsondata, defectId);
                 }
 
@@ -349,7 +341,7 @@ namespace JiraConnector
         /// The <see cref="string" />.
         /// </returns>
         /// <exception cref="ArgumentNullException">logger</exception>
-        public string UpdateIssue(string defectId, string notes)
+        public async Task<string> UpdateIssue(string defectId, string notes)
         {
             string result = string.Empty;
             var comment = new Comment
@@ -366,7 +358,7 @@ namespace JiraConnector
                 result = this.jiraRestAPIMethods.AddComment(this.jiraurl + "rest/api/2/issue/" + defectId + "/", this.jcookie, jsondata, defectId);
                 if (result.Contains("Unauthorized"))
                 {
-                    this.jcookie = this.GetCookie(true);
+                    this.jcookie = await this.GetCookie(true);
                     result = this.jiraRestAPIMethods.AddComment(this.jiraurl + "rest/api/2/issue/", this.jcookie, notes, defectId);
                 }
 

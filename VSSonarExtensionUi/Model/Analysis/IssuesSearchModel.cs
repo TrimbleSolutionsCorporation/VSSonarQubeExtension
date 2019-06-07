@@ -177,10 +177,23 @@ namespace VSSonarExtensionUi.Model.Analysis
 			if (userTeamsFile == null)
 			{
 				this.restLogger.ReportMessage("username not configured in settings");
+                return;
 			}
 
-			List<Team> usortedListTeams = await this.restService.GetTeams(assigneeList, userTeamsFile.Value);
-			this.issuesSearchViewModel.Teams = new ObservableCollection<Team>(usortedListTeams.OrderBy(i => i.Name));
+
+            try
+            {
+                List<Team> usortedListTeams = await this.restService.GetTeams(assigneeList, userTeamsFile.Value);
+                this.issuesSearchViewModel.Teams.Clear();
+                foreach (var team in usortedListTeams.OrderBy(i => i.Name))
+                {
+                    this.issuesSearchViewModel.Teams.Add(team);
+                }
+            }
+            catch (Exception ex)
+            {
+                this.restLogger.ReportMessage("Failed to update teams: " + ex.Message);
+            }
 		}
 
 		/// <summary>

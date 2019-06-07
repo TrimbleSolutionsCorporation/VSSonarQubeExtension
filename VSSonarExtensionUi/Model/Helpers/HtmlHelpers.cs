@@ -93,7 +93,7 @@
 			return "UnknowLanguage";
 		}
 
-		public static string GenerateIssuesReportPerTeam(AsyncObservableCollection<Issue> allIssues)
+		public static string GenerateIssuesReportPerTeam(IEnumerable<Issue> allIssues)
 		{
 			StringBuilder reportdata = new StringBuilder();
 			reportdata.Append(GenerateTeamsIssuesReportHeaderString());

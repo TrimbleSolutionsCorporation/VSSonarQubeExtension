@@ -293,13 +293,12 @@ namespace VSSonarExtensionUi.Model.Menu
                 if (this.CommandText.Equals("new issue and attach"))
                 {
                     var issues = this.model.SelectedItems.Cast<Issue>().ToList();
-                    string id = string.Empty;
-                    var replydata = this.issueTrackerPlugin.AttachToNewDefect(issues, out id);
+                    var replydata = await this.issueTrackerPlugin.AttachToNewDefect(issues);
 
                     // update issues
                     foreach (var issue in issues)
                     {
-                        issue.IssueTrackerId = id;
+                        issue.IssueTrackerId = replydata;
                     }
 
                     if (string.IsNullOrEmpty(replydata))
@@ -309,7 +308,7 @@ namespace VSSonarExtensionUi.Model.Menu
                     }
 
                     var builder = new StringBuilder();
-                    builder.AppendLine(CommentMessageForIssue + id);
+                    builder.AppendLine(CommentMessageForIssue + replydata);
                     builder.AppendLine(replydata);
                     try
                     {
@@ -334,7 +333,7 @@ namespace VSSonarExtensionUi.Model.Menu
                     try
                     {
                         var issues = this.model.SelectedItems.Cast<Issue>().ToList();
-                        var replydata = this.issueTrackerPlugin.AttachToExistentDefect(issues, id);
+                        var replydata = await this.issueTrackerPlugin.AttachToExistentDefect(issues, id);
 
                         if (string.IsNullOrEmpty(replydata))
                         {
@@ -368,7 +367,7 @@ namespace VSSonarExtensionUi.Model.Menu
                     {
                         try
                         {
-                            var defect = this.issueTrackerPlugin.GetDefect(id);
+                            var defect = await this.issueTrackerPlugin.GetDefect(id);
                             this.parent.parent.defectCache.Add(id, defect);
                         }
                         catch (Exception ex)
