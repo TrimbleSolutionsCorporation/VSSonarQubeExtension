@@ -16,6 +16,8 @@
     using View.Helpers;
     using SonarRestService.Types;
     using SonarRestService;
+    using System.Threading;
+    using System.Threading.Tasks;
 
 
     /// <summary>
@@ -36,7 +38,7 @@
         /// <summary>
         /// The manager
         /// </summary>
-        private readonly INotificationManager manager;
+        private readonly INotificationManager logger;
 
         /// <summary>
         /// The tranlator
@@ -69,7 +71,7 @@
         {
             this.rest = rest;
             this.model = model;
-            this.manager = manager;
+            this.logger = manager;
             this.tranlator = translator;
 
             this.ExecuteCommand = new RelayCommand(this.OnSourceControlCommand);
@@ -141,26 +143,28 @@
         /// Refreshes the menu data for menu that have options that
         /// are context dependent on the selected issues.
         /// </summary>
-        public void RefreshMenuData()
+        public async Task RefreshMenuData()
         {
-            // not necessary
-        }
+			// not necessary
+			await Task.Delay(0);
+		}
 
         /// <summary>
         /// Cancels the refresh data.
         /// </summary>
-        public void CancelRefreshData()
+        public async Task CancelRefreshData()
         {
-            // not necessary
-        }
+			// not necessary
+			await Task.Delay(0);
+		}
 
         /// <summary>
         /// The end data association.
         /// </summary>
         public void OnSolutionClosed()
         {
-            // not needed
-        }
+			// not needed
+		}
 
         /// <summary>
         /// Called when [connect to sonar].
@@ -203,7 +207,7 @@
         /// <summary>
         /// Called when [source control command].
         /// </summary>
-        private void OnSourceControlCommand()
+        private async void OnSourceControlCommand()
         {
             if (this.assignProject == null)
             {
@@ -220,7 +224,7 @@
             {
                 if (this.CommandText.Equals("assign to committer"))
                 {
-                    var users = this.rest.GetUserList(AuthtenticationHelper.AuthToken);
+                    var users = await this.rest.GetUserList(AuthtenticationHelper.AuthToken);
                     var issues = this.model.SelectedItems;
 
                     foreach (var issue in issues)
@@ -237,7 +241,7 @@
 
                     var translatedPath = this.tranlator.TranslateKey(issue.Component, this.vshelper, this.assignProject.BranchName);
 
-                    var blameLine = this.sourceControl.GetBlameByLine(translatedPath, issue.Line);
+                    var blameLine = await this.sourceControl.GetBlameByLine(translatedPath, issue.Line);
 
                     if (blameLine != null)
                     {
@@ -250,8 +254,8 @@
             }
             catch (Exception ex)
             {
-                this.manager.ReportMessage(new Message { Id = "SourceControlMenu", Data = "Failed to perform operation: " + ex.Message });
-                this.manager.ReportException(ex);
+                this.logger.ReportMessage(new Message { Id = "SourceControlMenu", Data = "Failed to perform operation: " + ex.Message });
+                this.logger.ReportException(ex);
             }
         }
 
@@ -260,7 +264,7 @@
         /// </summary>
         /// <param name="users">The users.</param>
         /// <param name="issue">The issue.</param>
-        private void AssignIssueToUser(List<User> users, Issue issue)
+        private async void AssignIssueToUser(List<User> users, Issue issue)
         {
             if (this.assignProject == null)
             {
@@ -271,7 +275,7 @@
             {
                 var translatedPath = this.tranlator.TranslateKey(issue.Component, this.vshelper, this.assignProject.BranchName);
 
-                var blameLine = this.sourceControl.GetBlameByLine(translatedPath, issue.Line);
+                var blameLine = await this.sourceControl.GetBlameByLine(translatedPath, issue.Line);
 
                 if (blameLine != null)
                 {
@@ -284,21 +288,27 @@
                             var issues = new List<Issue>();
                             issues.Add(issue);
 
-                            this.rest.AssignIssuesToUser(AuthtenticationHelper.AuthToken, issues, user, "VSSonarQube Extension Auto Assign");
-                            this.manager.ReportMessage(new Message { Id = "SourceControlMenu : ", Data = "assign issue to: " + blameLine.Author + " ok" });
+                            await this.rest.AssignIssuesToUser(
+								AuthtenticationHelper.AuthToken,
+								issues,
+								user,
+								"VSSonarQube Extension Auto Assign",
+								this.logger,
+								new CancellationTokenSource().Token);
+                            this.logger.ReportMessage(new Message { Id = "SourceControlMenu : ", Data = "assign issue to: " + blameLine.Author + " ok" });
                             return;
                         }
                     }
                 }
                 else
                 {
-                    this.manager.ReportMessage(new Message { Id = "SourceControlMenu : ", Data = "Cannot assign issue: source control information not available" });
+                    this.logger.ReportMessage(new Message { Id = "SourceControlMenu : ", Data = "Cannot assign issue: source control information not available" });
                 }                
             }
             catch (Exception ex)
             {
-                this.manager.ReportMessage(new Message { Id = "SourceControlMenu", Data = "Failed to assign issue" + issue.Message });
-                this.manager.ReportException(ex);
+                this.logger.ReportMessage(new Message { Id = "SourceControlMenu", Data = "Failed to assign issue" + issue.Message });
+                this.logger.ReportException(ex);
                 throw;
             }
         }

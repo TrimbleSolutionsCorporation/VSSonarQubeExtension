@@ -30,13 +30,18 @@ namespace VSSonarExtensionUi.Model.Helpers
         /// </summary>
         string FilterTermAssignee { get; set; }
 
-        /// <summary>
-        /// Gets or sets the filter term author.
-        /// </summary>
-        /// <value>
-        /// The filter term author.
-        /// </value>
-        string FilterTermAuthor { get; set; }
+		/// <summary>
+		/// filter for team
+		/// </summary>
+		string FilterTermTeam { get; set; }
+
+		/// <summary>
+		/// Gets or sets the filter term author.
+		/// </summary>
+		/// <value>
+		/// The filter term author.
+		/// </value>
+		string FilterTermAuthor { get; set; }
 
         /// <summary>
         /// Gets or sets the filter term component.

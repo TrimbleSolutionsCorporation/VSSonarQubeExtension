@@ -21,6 +21,7 @@ namespace VSSonarExtensionUi.Model.Menu
     using VSSonarPlugins.Types;
     using SonarRestService.Types;
     using SonarRestService;
+    using System.Threading.Tasks;
 
     /// <summary>
     ///     The show hide issue column.
@@ -234,18 +235,20 @@ namespace VSSonarExtensionUi.Model.Menu
         /// Refreshes the menu data for menu that have options that
         /// are context dependent on the selected issues.
         /// </summary>
-        public void RefreshMenuData()
+        public async Task RefreshMenuData()
         {
-            // not necessary
-        }
+			// not necessary
+			await Task.Delay(0);
+		}
 
         /// <summary>
         /// Cancels the refresh data.
         /// </summary>
-        public void CancelRefreshData()
+        public async Task CancelRefreshData()
         {
-            // not necessay
-        }
+			// not necessay
+			await Task.Delay(0);
+		}
 
         #endregion
 

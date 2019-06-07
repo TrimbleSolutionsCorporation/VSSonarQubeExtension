@@ -37,8 +37,6 @@ namespace VSSonarQubeExtension.Helpers
 	/// </summary>
 	public class VsEvents
     {
-        #region Fields
-
         /// <summary>
         ///     The documents events.
         /// </summary>
@@ -60,11 +58,10 @@ namespace VSSonarQubeExtension.Helpers
         /// <summary>The build events.</summary>
         private BuildEvents buildEvents;
 
+		/// <summary>
+		/// dte service
+		/// </summary>
         private readonly DTE2 dte2;
-
-        #endregion
-
-        #region Constructors and Destructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VsEvents"/> class.
@@ -76,7 +73,7 @@ namespace VSSonarQubeExtension.Helpers
         ///     The dte 2.
         /// </param>
         /// <param name="vsSonarExtensionPackage"></param>
-        public VsEvents(IVsEnvironmentHelper environment, DTE2 dte2, VsSonarExtensionPackage vsSonarExtensionPackage)
+        public VsEvents(IVsEnvironmentHelper environment, DTE2 dte2, VsSonarExtensionPackage vsSonarExtensionPackage, bool isSolutionLoaded)
         {
             this.dte2 = dte2;
             this.package = vsSonarExtensionPackage;
@@ -108,9 +105,12 @@ namespace VSSonarQubeExtension.Helpers
             SonarQubeViewModelFactory.StartupModelWithVsVersion(uniqueId, this.package).AnalysisModeHasChange += this.AnalysisModeHasChange;
             SonarQubeViewModelFactory.SQViewModel.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.ConfigurationHasChanged +=
                 this.AnalysisModeHasChange;
+
+			if (isSolutionLoaded)
+			{
+				this.SolutionOpened();
+			}
         }
-
-
 
 		private void ProjectHasBuild(string project, string projectconfig, string platform, string solutionconfig, bool success)
         {
@@ -176,18 +176,10 @@ namespace VSSonarQubeExtension.Helpers
 
         private DTEEvents visualStudioEvents { get; set; }
 
-        #endregion
-
-        #region Public Properties
-
         /// <summary>
         ///     Gets or sets the last document window with focus.
         /// </summary>
         public Window LastDocumentWindowWithFocus { get; set; }
-
-        #endregion
-
-        #region Public Methods and Operators
 
         /// <summary>
         /// The get property from buffer.
@@ -220,10 +212,6 @@ namespace VSSonarQubeExtension.Helpers
 
             return default(T);
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         /// The analysis mode has change.
@@ -362,7 +350,5 @@ namespace VSSonarQubeExtension.Helpers
                 SonarQubeViewModelFactory.SQViewModel.Logger.ReportException(ex);
             }
         }
-
-        #endregion
     }
 }

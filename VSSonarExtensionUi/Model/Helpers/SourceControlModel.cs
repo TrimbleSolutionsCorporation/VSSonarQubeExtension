@@ -7,6 +7,8 @@
     using VSSonarPlugins.Types;
     using SonarRestService.Types;
     using SonarRestService;
+    using System.Threading.Tasks;
+    using System.Threading;
 
     /// <summary>
     /// Source control interface
@@ -19,7 +21,7 @@
         /// <param name="filePath">The file path.</param>
         /// <param name="line">The line.</param>
         /// <returns>Returns Blame by line</returns>
-        BlameLine GetBlameByLine(string filePath, int line);
+        Task<BlameLine> GetBlameByLine(string filePath, int line);
 
         /// <summary>
         /// Gets the blame by line.
@@ -27,7 +29,7 @@
         /// <param name="resource">The resource.</param>
         /// <param name="line">The line.</param>
         /// <returns></returns>
-        BlameLine GetBlameByLine(Resource resource, int line);
+        Task<BlameLine> GetBlameByLine(Resource resource, int line);
 
         /// <summary>
         /// Gets the branch.
@@ -110,11 +112,11 @@
         /// <param name="filePath">The file path.</param>
         /// <param name="line">The line.</param>
         /// <returns>Return blame by line</returns>
-        public BlameLine GetBlameByLine(string filePath, int line)
+        public async Task<BlameLine> GetBlameByLine(string filePath, int line)
         {
             if (this.supportedPlugin != null)
             {
-                return this.supportedPlugin.GetBlameByLine(filePath, line);
+                return await this.supportedPlugin.GetBlameByLine(filePath, line);
             }
             else
             {
@@ -127,9 +129,9 @@
             return null;
         }
 
-        public BlameLine GetBlameByLine(Resource resource, int line)
+        public async Task<BlameLine> GetBlameByLine(Resource resource, int line)
         {
-            return this.service.GetBlameLine(AuthtenticationHelper.AuthToken, resource.Key, line);
+            return await this.service.GetBlameLine(AuthtenticationHelper.AuthToken, resource.Key, line, new CancellationTokenSource().Token, this.manager);
         }
 
         /// <summary>

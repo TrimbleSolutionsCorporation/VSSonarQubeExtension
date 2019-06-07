@@ -95,13 +95,13 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// The available projects
         /// </summary>
         private IEnumerable<Resource> availableProjects;
+		private List<User> usortedList;
+		private List<Team> usortedListTeams;
 
-        /// <summary>
-        /// The analyser
-        /// </summary>
-        private readonly ISonarLocalAnalyser analyser;
-
-        #region Constructors and Destructors
+		/// <summary>
+		/// The analyser
+		/// </summary>
+		private readonly ISonarLocalAnalyser analyser;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ServerViewModel" /> class.
@@ -142,10 +142,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             AssociationModel.RegisterNewModelInPool(this);
         }
 
-        #endregion
-
-        #region Public Events
-
         /// <summary>
         ///     The coverage was modified.
         /// </summary>
@@ -155,10 +151,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         ///     The analysis mode has change.
         /// </summary>
         public event ChangedEventHandler IssuesReadyForCollecting;
-
-        #endregion
-
-        #region Public Properties
 
         /// <summary>
         ///     Gets or sets the back ground color.
@@ -234,19 +226,29 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </value>
         public int SizeOfFlyout { get; set; }
 
-        #endregion
-
-        #region Public Methods and Operators
-
         /// <summary>
         /// Called when [connect to sonar].
         /// </summary>
         /// <param name="configuration">sonar configuration</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IList<IIssueTrackerPlugin> issuePlugin)
+        public async void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IList<IIssueTrackerPlugin> issuePlugin)
         {
             this.availableProjects = availableProjects;
-            // does nothing
-        }
+			// does nothing
+			this.usortedList = await this.restservice.GetUserList(AuthtenticationHelper.AuthToken);
+			if (usortedList != null && usortedList.Count > 0)
+			{
+				var userTeamsFile = this.configurationHelper.ReadSetting(
+					Context.GlobalPropsId,
+					OwnersId.ApplicationOwnerId,
+					GlobalIds.TeamsFile);
+				if (userTeamsFile == null)
+				{
+					this.notificationMan.ReportMessage("teams file not configured");
+				}
+
+				this.usortedListTeams = await this.restservice.GetTeams(this.usortedList, userTeamsFile.Value);
+			}
+		}
 
         /// <summary>
         /// Updates the open difference window list.
@@ -382,18 +384,18 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <see><cref>List</cref></see>
         /// .
         /// </returns>
-        public List<Issue> GetIssuesForResource(Resource file, string fileContent, out bool shownfalseandresolved)
+        public async Task<Tuple<List<Issue>, bool>> GetIssuesForResource(Resource file, string fileContent)
         {
-            shownfalseandresolved = false;
-
             if (this.DocumentInView == null || this.ResourceInEditor == null)
             {
-                return new List<Issue>();
+                return new Tuple<List<Issue>, bool>(new List<Issue>(), false);
             }
 
-            this.IssuesGridView.RefreshStatistics();
+            await this.IssuesGridView.RefreshStatistics();
             var issuesWithModifiedData = this.localEditorCache.GetIssuesForResource(this.ResourceInEditor, fileContent);
-            return issuesWithModifiedData.Where(issue => this.IssuesGridView.IsNotFiltered(issue)).ToList();
+			var listIssues = issuesWithModifiedData.Where(issue => this.IssuesGridView.IsNotFiltered(issue)).ToList();
+
+			return new Tuple<List<Issue>, bool>(listIssues, false);
         }
 
         /// <summary>
@@ -465,16 +467,16 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.notificationMan.WriteMessageToLog("OnSelectedViewChanged Changed");
         }
 
-        /// <summary>
-        ///     The refresh data for resource.
-        /// </summary>
-        /// <param name="res">
-        ///     The res.
-        /// </param>
-        /// <param name="documentInView">
-        ///     The document in view.
-        /// </param>
-        public async void RefreshDataForResource(Resource res, string documentInView, string content, bool fromSource)
+		/// <summary>
+		///     The refresh data for resource.
+		/// </summary>
+		/// <param name="res">
+		///     The res.
+		/// </param>
+		/// <param name="documentInView">
+		///     The document in view.
+		/// </param>
+		public async void RefreshDataForResource(Resource res, string documentInView, string content, bool fromSource)
         {
             try
             {
@@ -491,16 +493,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 }).ConfigureAwait(false);
 
                 this.CreateNewTokenOrUseOldOne();
-                var newIssues = await Task.Run(() =>
-                {
-                    return this.restservice.GetIssuesInResource(
+                var newIssues = await 
+                    this.restservice.GetIssuesInResource(
                         AuthtenticationHelper.AuthToken,
                         this.ResourceInEditor.Key,
                         this.ct.Token,
                         this.notificationMan as IRestLogger);
-                }).ConfigureAwait(false);
 
-                this.IssuesGridView.UpdateIssues(newIssues);
+                await this.IssuesGridView.UpdateIssues(newIssues, this.usortedListTeams);
                 this.localEditorCache.UpdateResourceData(this.ResourceInEditor, newCoverage, newIssues, newSource);
                 this.OnSelectedViewChanged();
             }
@@ -564,10 +564,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.SizeOfFlyout = this.ShowLeftFlyOut ? 250 : 0;
         }
 
-        #endregion
-
-        #region Methods
-        
         /// <summary>
         /// Creates the new token or use old one.
         /// </summary>
@@ -665,8 +661,5 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
 
             return menu;
         }
-
-
-        #endregion
     }
 }

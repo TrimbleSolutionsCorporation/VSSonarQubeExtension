@@ -18,6 +18,7 @@ namespace VSSonarExtensionUi.Model.Helpers
 
     using SonarRestService.Types;
     using SonarRestService;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// The connection configuration helpers.
@@ -55,7 +56,7 @@ namespace VSSonarExtensionUi.Model.Helpers
         /// <returns>
         /// The <see cref="ConnectionConfiguration" />.
         /// </returns>
-        public static bool EstablishAConnection(ISonarRestService service, string address, string userName, string password)
+        public static async Task<bool> EstablishAConnection(ISonarRestService service, string address, string userName, string password)
         {
             if (AuthToken != null)
             {
@@ -65,7 +66,7 @@ namespace VSSonarExtensionUi.Model.Helpers
             ErrorMessage = string.Empty;
 
             var token = new ConnectionConfiguration(address, userName, password, 4.5);
-            if (!service.AuthenticateUser(token))
+            if (!await service.AuthenticateUser(token))
             {
                 ErrorMessage = "Authentication Failed, Check User, Password and Hostname";
                 return false;

@@ -77,6 +77,11 @@ namespace VSSonarPlugins.Types
 
 		/// <summary> user login string </summary>
 		public static readonly string UserLogin = "UserLogin";
+		
+		/// <summary>
+		/// Teams file
+		/// </summary>
+		public static readonly string TeamsFile = "TeamsFile";
 	}
 
     /// <summary>

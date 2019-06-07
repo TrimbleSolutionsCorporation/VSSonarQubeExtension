@@ -124,17 +124,13 @@ namespace VSSonarQubeExtension
 				{
 					return;
 				}
+				this.visualStudioInterface = new VsPropertiesHelper(this.dte2, this);
 				this.visualStudioInterface.WriteToVisualStudioOutput(DateTime.Now + " : VsSonarExtensionPackage Initialize");
-
-				this.VsEvents = new VsEvents(this.visualStudioInterface, this.dte2, this);
 				await this.SetupMenuCommands(this);
 
 				try
 				{
-					this.visualStudioInterface = new VsPropertiesHelper(this.dte2, this);
-					
-
-					
+												
 					var bar = await this.GetServiceAsync(typeof(SVsStatusbar)) as IVsStatusbar;
 					this.StatusBar = new VSSStatusBar(bar, this.dte2);
 					var extensionRunningPath = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty).ToString();
@@ -152,6 +148,7 @@ namespace VSSonarQubeExtension
 						this.StatusBar,
 						this,
 						this.AssemblyDirectory);
+					this.VsEvents = new VsEvents(this.visualStudioInterface, this.dte2, this, await this.IsSolutionLoadedAsync());
 
 					this.CloseToolsWindows();
 					this.OutputGuid = "CDA8E85D-C469-4855-878B-0E778CD0DD" + int.Parse(uniqueId.Split('.')[0]).ToString(CultureInfo.InvariantCulture);

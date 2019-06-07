@@ -18,6 +18,7 @@
 
     using SonarRestService;
     using SonarRestService.Types;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Source Control Related Actions
@@ -152,18 +153,20 @@
         /// Refreshes the menu data for menu that have options that
         /// are context dependent on the selected issues.
         /// </summary>
-        public void RefreshMenuData()
+        public async Task RefreshMenuData()
         {
-            // not necessary
-        }
+			// not necessary
+			await Task.Delay(0);
+		}
 
         /// <summary>
         /// Cancels the refresh data.
         /// </summary>
-        public void CancelRefreshData()
+        public async Task CancelRefreshData()
         {
-            // not necessary
-        }
+			// not necessary
+			await Task.Delay(0);
+		}
 
         /// <summary>
         /// Called when [connect to sonar].

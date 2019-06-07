@@ -378,7 +378,7 @@
             rule.Severity = Severity.MAJOR;
             foreach (var error in this.rest.CreateRule(AuthtenticationHelper.AuthToken, rule, templaterule))
             {
-                this.notificationManager.WriteMessageToLog("Failed to create rule: " + error);
+                this.notificationManager.ReportMessage("Failed to create rule: " + error);
             }
         }
 
@@ -478,7 +478,7 @@
 
                 // load defined props in server and load up
                 var props = this.rest.GetSettings(authentication);
-                var isRoslynPath = props.FirstOrDefault(x => x.key.Equals("sonar.roslyn.diagnostic.path"));
+                var isRoslynPath = props.FirstOrDefault(x => x.Key.Equals("sonar.roslyn.diagnostic.path"));
 
                 if (isRoslynPath != null)
                 {

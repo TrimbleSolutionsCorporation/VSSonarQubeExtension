@@ -6,8 +6,6 @@
              xmlns:command="http://www.galasoft.ch/mvvmlight"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
-             xmlns:extensionTypes="clr-namespace:ExtensionTypes;assembly=ExtensionTypes"
-             xmlns:helpers="clr-namespace:VSSonarExtensionUi.Helpers"
              xmlns:themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
              x:Class="VSSonarExtensionUi.MenuEditorTempl"
              mc:Ignorable="d" 
@@ -15,9 +13,8 @@
 	    <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Styles.xaml"/>
+                <ResourceDictionary Source="../Styles/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-
 
 			<Style TargetType="ContextMenu">
 			  <Setter Property="SnapsToDevicePixels" Value="True"/>
@@ -29,8 +26,6 @@
 				  <ControlTemplate TargetType="ContextMenu">
 					<Border 
 					  Name="Border"
-					  Background="{helpers:FallbackBackgroundBrush FallBackBrush=LightBlue}"
-					  BorderBrush="{helpers:FallbackForegroundBrush FallBackBrush=Black}"
 					  BorderThickness="1" >
 					  <StackPanel IsItemsHost="True"
 								  KeyboardNavigation.DirectionalNavigation="Cycle"/>

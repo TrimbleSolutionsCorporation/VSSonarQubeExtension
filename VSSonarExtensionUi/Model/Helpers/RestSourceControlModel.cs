@@ -4,6 +4,8 @@
     using VSSonarPlugins.Types;
     using SonarRestService.Types;
     using SonarRestService;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// source control model
@@ -33,14 +35,15 @@
             this.manager = manager;
         }
 
-        public BlameLine GetBlameByLine(string filePath, int line)
+        public async Task<BlameLine> GetBlameByLine(string filePath, int line)
         {
+			await Task.Delay(0);
             return null;
         }
 
-        public BlameLine GetBlameByLine(Resource resource, int line)
+        public async Task<BlameLine> GetBlameByLine(Resource resource, int line)
         {
-            return this.service.GetBlameLine(AuthtenticationHelper.AuthToken, resource.Key, line);
+            return await this.service.GetBlameLine(AuthtenticationHelper.AuthToken, resource.Key, line, new CancellationTokenSource().Token, this.manager);
         }
 
         public string GetBranch()

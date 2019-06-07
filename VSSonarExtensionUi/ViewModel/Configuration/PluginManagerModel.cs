@@ -83,6 +83,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// The source dir
         /// </summary>
         private string sourceDir;
+
         private readonly string userPluginInstallPath;
 
         #endregion
@@ -269,7 +270,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         {
             foreach (var plugin in this.plugins)
             {
-                plugin.OnConnectToSonar(configuration);
+				Task.Run(() => plugin.OnConnectToSonar(configuration));
             }
         }
 

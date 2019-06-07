@@ -17,6 +17,7 @@ namespace VSSonarExtensionUi.Model.Analysis
 
     using SonarRestService.Types;
     using SonarRestService;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// The AnalysisViewModelBase interface.
@@ -35,9 +36,9 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// <param name="shownfalseandresolved">The shown false and resolved.</param>
         /// <returns>
         /// The <see><cref>List</cref></see>
-        /// .
+        /// issues and if show false and resolve are set
         /// </returns>
-        List<Issue> GetIssuesForResource(Resource file, string fileContent, out bool shownfalseandresolved);
+        Task<Tuple<List<Issue>,bool>> GetIssuesForResource(Resource file, string fileContent);
         
         /// <summary>The on analysis mode has change.</summary>
         /// <param name="e">The e.</param>

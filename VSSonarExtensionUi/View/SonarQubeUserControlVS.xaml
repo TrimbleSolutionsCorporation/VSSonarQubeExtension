@@ -167,7 +167,7 @@
                                 <ToggleButton Width="30"
                                       Height="30"
                                       Margin="0, -6, 0, 0"
-                                      Style="{DynamicResource MetroCircleToggleButtonStyle}"  Command="{Binding ConnectCommand}" IsChecked="{Binding IsConnected}" IsEnabled="{Binding CanConnectEnabled}">
+                                      Style="{DynamicResource MetroCircleToggleButtonStyle}"  Command="{Binding ConnectCommand}" IsChecked="{Binding IsConnected}">
                                     <ToggleButton.ContextMenu>
                                         <ContextMenu>
                                             <MenuItem Header="Connect" Command="{Binding ConnectedToServerCommand}" IsEnabled="{Binding IsConnected, Converter={StaticResource BooleanInverter}}"/>

@@ -48,11 +48,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     public class AnalysisOptionsViewModel : IOptionsViewModelBase, IOptionsModelBase
     {
         /// <summary>
-        /// The minimum version
-        /// </summary>
-        public static readonly string MinimumVersion = "1.9.17";
-
-        /// <summary>
         ///     The default value sonar sources.
         /// </summary>
         public static readonly string DefautValueSonarSources = ".";
@@ -148,14 +143,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// The wrapper path.
         /// </value>
         public string WrapperPath { get; set; }
-
-        /// <summary>
-        /// Gets or sets the CXX wrapper version.
-        /// </summary>
-        /// <value>
-        /// The CXX wrapper version.
-        /// </value>
-        public string CxxWrapperVersion { get; set; }
 
         /// <summary>
         ///     Gets or sets the fore ground color.
@@ -275,7 +262,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public void SaveData()
         {
             // general props
-            this.configurationHelper.WriteSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.CxxWrapperVersionKey, this.CxxWrapperVersion);
             this.configurationHelper.WriteSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.SonarQubeMsbuildVersionKey, this.SQMSBuildRunnerVersion);
             this.configurationHelper.WriteSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.CxxWrapperPathKey, this.WrapperPath);
             this.configurationHelper.WriteSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.ExcludedPluginsKey, this.ExcludedPlugins);
@@ -302,20 +288,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 			this.IsProjectAnalysisChecked = true;
 
 			var dataSet = string.Empty;
-			this.configurationHelper.ReadInSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.CxxWrapperVersionKey, out dataSet, MinimumVersion);
-			this.CxxWrapperVersion = dataSet;
-			var currentVersion = new Version(this.CxxWrapperVersion.Split('-')[0]);
-			if (currentVersion.CompareTo(new Version(MinimumVersion)) < 0)
-			{
-				this.CxxWrapperVersion = MinimumVersion;
-			}
-
-			this.configurationHelper.ReadInSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.SonarQubeMsbuildVersionKey, out dataSet, MinimumVersion);
-			this.CxxWrapperVersion = dataSet;
-
-			this.configurationHelper.ReadInSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.CxxWrapperPathKey, out dataSet, Path.Combine(Path.Combine(this.configurationHelper.ApplicationPath, "Wrapper", this.CxxWrapperVersion), "CxxSonarQubeMsbuidRunner.exe"));
-			this.WrapperPath = dataSet;
-
 			this.configurationHelper.ReadInSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.ExcludedPluginsKey, out dataSet, "devcockpit,pdfreport,report,scmactivity,views,jira,scmstats");
 			this.ExcludedPlugins = dataSet;
 
@@ -438,19 +410,11 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         private void OnDownloadWrapperCommand()
         {
-            if (string.IsNullOrEmpty(this.CxxWrapperVersion))
-            {
-                MessageDisplayBox.DisplayMessage(
-                    "Version cannot be empty, be sure to use tab in release page of the wrapper.",
-                    helpurl: "https://github.com/jmecsoftware/sonar-cxx-msbuild-tasks/releases");
-                return;
-            }
-
-            var installPath = Path.Combine(this.configurationHelper.ApplicationPath, "Wrapper", this.CxxWrapperVersion);
+            var installPath = Path.Combine(this.configurationHelper.ApplicationPath, "Wrapper");
 
             if (!File.Exists(Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe")))
             {
-                var urldownload = "https://github.com/jmecsoftware/sonar-cxx-msbuild-tasks/releases/download/" + this.CxxWrapperVersion + "/CxxSonarQubeMsbuidRunner.zip";
+                var urldownload = "https://github.com/jmecsoftware/sonar-cxx-msbuild-tasks/releases/download/3.0.1/CxxSonarQubeMsbuidRunner.zip";
                 var tmpFile = Path.Combine(this.configurationHelper.ApplicationPath, "CxxSonarQubeMsbuidRunner.zip");
                 try
                 {
@@ -522,18 +486,18 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </summary>
         private async Task OnDownloadWrapperStartup()
         {
-            var installPath = Path.Combine(this.configurationHelper.ApplicationPath, "Wrapper", this.CxxWrapperVersion);
+            var installPath = Path.Combine(this.configurationHelper.ApplicationPath, "Wrapper", "3.0.1");
 
-            if (File.Exists(Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe")))
+            if (File.Exists(Path.Combine(installPath, "CxxSonarQubeRunnerWin.bat")))
             {
-                this.WrapperPath = Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe");
+                this.WrapperPath = Path.Combine(installPath, "CxxSonarQubeRunnerWin.bat");
                 return;
             }
 
 			await Task.Run(() =>
 			{
-				var urldownload = "https://github.com/jmecsoftware/sonar-cxx-msbuild-tasks/releases/download/" + this.CxxWrapperVersion + "/CxxSonarQubeMsbuidRunner.zip";
-				var tmpFile = Path.Combine(this.configurationHelper.ApplicationPath, "CxxSonarQubeMsbuidRunner.zip");
+				var urldownload = "https://github.com/jmecsoftware/CxxSonarQubeRunner/releases/download/3.0.1/CxxSonarQubeRunnerWin.zip";
+				var tmpFile = Path.Combine(this.configurationHelper.ApplicationPath, "CxxSonarQubeRunnerWin.zip");
 
 				using (var client = new WebClient())
 				{
@@ -544,7 +508,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
 					client.DownloadFile(urldownload, tmpFile);
 					ZipFile.ExtractToDirectory(tmpFile, installPath);
-					this.WrapperPath = Path.Combine(installPath, "CxxSonarQubeMsbuidRunner.exe");
+					this.WrapperPath = Path.Combine(installPath, "CxxSonarQubeRunnerWin.bat");
 				}
 			});
         }

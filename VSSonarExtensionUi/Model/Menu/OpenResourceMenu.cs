@@ -34,6 +34,7 @@ namespace VSSonarExtensionUi.Model.Menu
     using System.Collections.Generic;
     using SonarRestService.Types;
     using SonarRestService;
+    using System.Threading.Tasks;
 
     /// <summary>
     ///     The issue handler menu.
@@ -172,15 +173,15 @@ namespace VSSonarExtensionUi.Model.Menu
             this.sourceDir = workingDir;
         }
 
-
         /// <summary>
         /// Refreshes the menu data for menu that have options that
         /// are context dependent on the selected issues.
         /// </summary>
-        public void RefreshMenuData()
+        public async Task RefreshMenuData()
         {
-            // not necessary
-        }
+			// not necessary
+			await Task.Delay(0);
+		}
 
         /// <summary>
         /// Called when [disconnect].
@@ -192,10 +193,11 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <summary>
         /// Cancels the refresh data.
         /// </summary>
-        public void CancelRefreshData()
+        public async Task CancelRefreshData()
         {
-            // not necessay
-        }
+			// not necessay
+			await Task.Delay(0);
+		}
 
         /// <summary>
         /// The end data association.

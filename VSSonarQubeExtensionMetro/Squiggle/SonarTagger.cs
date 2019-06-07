@@ -307,7 +307,7 @@ namespace VSSonarQubeExtension.Squiggle
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The e.</param>
-        private void IssuesListChanged(object sender, EventArgs e)
+        private async void IssuesListChanged(object sender, EventArgs e)
         {
             try
             {                
@@ -335,13 +335,14 @@ namespace VSSonarQubeExtension.Squiggle
                     return;
                 }
 
-                this.sonarTags.Clear();
-                bool showFalseAndResolved = false;
-                List<Issue> issuesInEditor = SonarQubeViewModelFactory.SQViewModel.GetIssuesInEditor(
+                this.sonarTags.Clear();                
+                var data = await SonarQubeViewModelFactory.SQViewModel.GetIssuesInEditor(
                     resource, 
-                    this.SourceBuffer.CurrentSnapshot.GetText(), out showFalseAndResolved);
+                    this.SourceBuffer.CurrentSnapshot.GetText());
 
-                if (issuesInEditor == null || issuesInEditor.Count == 0)
+				List<Issue> issuesInEditor = data.Item1;
+				bool showFalseAndResolved = data.Item2;
+				if (issuesInEditor == null || issuesInEditor.Count == 0)
                 {
                     this.RefreshTags();
                     return;

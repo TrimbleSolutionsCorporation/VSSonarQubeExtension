@@ -162,7 +162,6 @@ namespace VSSonarExtensionUi.ViewModel
             this.VSonarQubeOptionsViewData = new VSonarQubeOptionsViewModel(this.sonarRestConnector, this.configurationHelper, this.notificationManager);
             this.VSonarQubeOptionsViewData.ResetUserData();
 
-            this.CanConnectEnabled = true;
             this.ConnectionTooltip = "Not Connected";
             this.BackGroundColor = Colors.White;
             this.ForeGroundColor = Colors.Black;
@@ -224,7 +223,6 @@ namespace VSSonarExtensionUi.ViewModel
                 this.LocaAnalyser,
                 this.vsversion);
 
-            this.CanConnectEnabled = true;
             this.ConnectionTooltip = "Not Connected";
             this.BackGroundColor = Colors.White;
             this.ForeGroundColor = Colors.Black;
@@ -394,11 +392,6 @@ namespace VSSonarExtensionUi.ViewModel
         ///     Gets or sets the busy tool tip.
         /// </summary>
         public string BusyToolTip { get; set; }
-
-        /// <summary>
-        ///     Gets or sets a value indicating whether can connect enabled.
-        /// </summary>
-        public bool CanConnectEnabled { get; set; }
 
         /// <summary>
         ///     Gets or sets a value indicating whether is connected.
@@ -940,14 +933,13 @@ namespace VSSonarExtensionUi.ViewModel
         /// The<see><cref>List</cref></see>
         /// .
         /// </returns>
-        public List<Issue> GetIssuesInEditor(Resource fileResource, string fileContent, out bool showfalseandresolved)
+        public async Task<Tuple<List<Issue>, bool>> GetIssuesInEditor(Resource fileResource, string fileContent)
         {
-            showfalseandresolved = false;
             this.notificationManager.WriteMessageToLog("Return issues for resource: " + fileResource);
             if (this.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.DisableEditorTags)
             {
                 this.notificationManager.WriteMessageToLog("Return issues for resource, tags disabled");
-                return new List<Issue>();
+                return new Tuple<List<Issue>, bool>(new List<Issue>(), false);
             }
 
             IAnalysisModelBase view = this.SelectedModel;
@@ -957,7 +949,8 @@ namespace VSSonarExtensionUi.ViewModel
                 return null;
             }
 
-            return view.GetIssuesForResource(fileResource, fileContent, out showfalseandresolved);
+			var issuesData = await view.GetIssuesForResource(fileResource, fileContent);
+			return new Tuple<List<Issue>, bool>(issuesData.Item1, issuesData.Item2);
         }
 
         /// <summary>
@@ -1057,7 +1050,6 @@ namespace VSSonarExtensionUi.ViewModel
                 return;
             }
 
-            this.CanConnectEnabled = false;
             this.IsExtensionBusy = true;
 
             try

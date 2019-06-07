@@ -413,7 +413,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 		/// <summary>
 		///     The get credentials.
 		/// </summary>
-		private void GetCredentials()
+		private async void GetCredentials()
 		{
 			using (var cm = new Credential { Target = "VSSonarQubeExtension" })
 			{
@@ -453,7 +453,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
 				if (address != null)
 				{
-					AuthtenticationHelper.EstablishAConnection(this.restService, address, cm.Username, ConnectionConfiguration.ConvertToUnsecureString(cm.SecurePassword));
+					await AuthtenticationHelper.EstablishAConnection(this.restService, address, cm.Username, ConnectionConfiguration.ConvertToUnsecureString(cm.SecurePassword));
 				}
 			}
 		}
@@ -514,7 +514,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 		/// <param name="obj">
 		/// The obj.
 		/// </param>
-		private void OnTestAndSavePassword(object obj)
+		private async void OnTestAndSavePassword(object obj)
 		{
 			if (string.IsNullOrEmpty(this.ServerAddress))
 			{
@@ -536,7 +536,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 					string password = passwordBox.Password;
 					AuthtenticationHelper.ResetConnection();
 
-					if (AuthtenticationHelper.EstablishAConnection(this.restService, this.ServerAddress.TrimEnd('/'), this.UserName, password))
+					if (await AuthtenticationHelper.EstablishAConnection(this.restService, this.ServerAddress.TrimEnd('/'), this.UserName, password))
 					{
 						this.StatusMessage = "Authenticated";
 						this.SaveUserConfigurationData(this.UserName, password);

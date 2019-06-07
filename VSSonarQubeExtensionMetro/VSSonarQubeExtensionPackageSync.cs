@@ -210,7 +210,7 @@ namespace VSSonarQubeExtension
 
                     this.visualStudioInterface.WriteToVisualStudioOutput(DateTime.Now + " : VsSonarExtensionPackage Initialize");
 
-                    this.VsEvents = new VsEvents(this.visualStudioInterface, this.dte2, this);
+                    this.VsEvents = new VsEvents(this.visualStudioInterface, this.dte2, this, false);
                     var bar = this.GetService(typeof(SVsStatusbar)) as IVsStatusbar;
                     this.StatusBar = new VSSStatusBar(bar, this.dte2);
                     var extensionRunningPath = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty).ToString();

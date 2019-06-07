@@ -62,5 +62,5 @@ namespace VSSonarPlugins
         /// The application path.
         /// </value>
         string ApplicationPath { get; set; }
-    }
+	}
 }

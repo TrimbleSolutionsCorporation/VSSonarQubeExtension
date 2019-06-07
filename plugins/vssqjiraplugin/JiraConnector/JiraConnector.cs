@@ -50,7 +50,7 @@ namespace JiraConnector
         /// <summary>
         /// The jira url
         /// </summary>
-        private readonly JiraRestAPIMethods jiraRestAPIMethods;
+        private readonly JiraRestAPIMethods jiraRestAPIMethods =  new JiraRestAPIMethods();
 
         /// <summary>
         /// The found in version
@@ -121,7 +121,14 @@ namespace JiraConnector
         /// <exception cref="ArgumentNullException">logger</exception>
         public JiraConnector(INotificationManager logger)
         {
-            try
+			if (logger == null)
+			{
+				throw new ArgumentNullException(nameof(logger));
+			}
+
+			this.logger = logger;
+
+			try
             {
                 if (File.Exists(this.configFile))
                 {
@@ -129,19 +136,11 @@ namespace JiraConnector
                 }
 
                 this.jcookie = this.GetCookie(false);
-                this.jiraRestAPIMethods = new JiraRestAPIMethods();
             }
             catch (Exception ex)
             {
                 this.logger.ReportMessage("Failed to create connector: " + ex.Message);
             }
-
-            if (logger == null)
-            {
-                throw new ArgumentNullException(nameof(logger));
-            }
-
-            this.logger = logger;
         }
 
         /// <summary>

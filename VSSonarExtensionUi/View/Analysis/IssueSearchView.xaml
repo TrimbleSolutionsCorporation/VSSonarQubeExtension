@@ -112,14 +112,20 @@
                                 Content="Get Issues By Filter"
                                 Command="{Binding GetIssuesByFilterCommand}"
                                 IsEnabled="{Binding CanQUeryIssues, FallbackValue=false}" />
-
+                        
                         <Button Style="{DynamicResource MyMetroButton}"
                                 Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
                                 Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
                                 x:Name="CancelQuery"
                                 Content="Cancel query"
                                 Command="{Binding CancelQueryCommand}"/>
-
+                        
+                        <Button Style="{DynamicResource MyMetroButton}"
+                                Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                x:Name="RefreshTeamsData"
+                                Content="Refresh Team and User Data"
+                                Command="{Binding RefreshUsersDataCommand}" />
                         <Expander Header="Saved Search" Grid.Row="5" Grid.ColumnSpan="2" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
                             <Grid Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" Height="60">
                                 <Grid.RowDefinitions>
@@ -222,12 +228,14 @@
                             </Grid>
                         </Expander>
 
-                        <Expander Header="Users" Grid.Row="5" Grid.ColumnSpan="2"
+                        <Expander Header="Teams" Grid.Row="5" Grid.ColumnSpan="2"
                                       Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}">
                             <Grid
                                     Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                    Height="55">
+                                    Height="105">
                                 <Grid.RowDefinitions>
+                                    <RowDefinition Height="25" />
+                                    <RowDefinition Height="25" />
                                     <RowDefinition Height="25" />
                                     <RowDefinition Height="25" />
                                 </Grid.RowDefinitions>
@@ -245,6 +253,8 @@
                                         Grid.Row="1" Grid.Column="0"
                                         Content="Author" />
 
+
+
                                 <ComboBox Grid.Row="0" Grid.Column="1" 
                                           Style="{DynamicResource VirtualisedMetroComboBox}"
                                           TextSearch.TextPath="Name"
@@ -253,7 +263,7 @@
                                           ItemsSource="{Binding AssigneeList}"
                                           MaxDropDownHeight="125"
                                           ItemTemplate="{DynamicResource UserSelectionComboBoxDataTemplateMultiSelection}">
-                                </ComboBox>
+                                </ComboBox>                                
                                 <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding AuthorSearchQuery}" ToolTip="Comma separated list for author emails.">
                                 </TextBox>
                                 
@@ -261,6 +271,25 @@
                                               IsChecked="{Binding IsAssigneeChecked}" ToolTip="Once unchecked it will clear all selection" />
                                 <CheckBox Grid.Row="1" Grid.Column="2" Margin="4,0,-4,0"
                                               IsChecked="{Binding IsAuthorEnabled}" ToolTip="Search by author email" />
+                                <ComboBox Grid.Row="2" Grid.Column="1" 
+                                          Style="{DynamicResource VirtualisedMetroComboBox}"
+                                          TextSearch.TextPath="Name"
+                                          controls:TextBoxHelper.Watermark="Search and select from drop down"
+                                          IsEditable="True"
+                                          ItemsSource="{Binding Teams}"
+                                          MaxDropDownHeight="125"
+                                          ItemTemplate="{DynamicResource UserSelectionComboBoxDataTemplateMultiSelection}">
+                                </ComboBox>
+                                <Label
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Grid.Row="2" Grid.Column="0"
+                                        Content="Teams" />
+                                <Button Style="{DynamicResource MyMetroButton}" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Content="Load Teams File"                                    
+                                        Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                        Command="{Binding LoadTeamsFileCommand}" />
+                                <CheckBox Grid.Row="2" Grid.Column="2" Margin="4,0,-4,0"
+                                              IsChecked="{Binding IsTeamsSearchEnabled}" ToolTip="Search by Team" />
                             </Grid>
                         </Expander>
 

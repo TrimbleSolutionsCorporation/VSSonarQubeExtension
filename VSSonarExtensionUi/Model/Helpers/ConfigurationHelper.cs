@@ -318,5 +318,5 @@ namespace VSSonarExtensionUi.Model.Helpers
         {
             this.WriteSetting(new SonarQubeProperties { Context = context.ToString(), Owner = owner, Key = key, Value = value }, sync, skipIfExist);
         }
-    }
+	}
 }

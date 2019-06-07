@@ -79,7 +79,7 @@
         {
             mockConfiguration.Setup(x => x.ReadSetting(It.IsAny<Context>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new SonarQubeProperties { Value = "dummy" });
             mockRest.Setup(x => x.GetProjectsList(It.IsAny<ISonarConfiguration>())).Returns(this.CreatProjects());
-            mockRest.Setup(x => x.AuthenticateUser(It.IsAny<ISonarConfiguration>())).Returns(true);
+            mockRest.Setup(x => x.AuthenticateUser(It.IsAny<ISonarConfiguration>()).Result).Returns(true);
 
             AuthtenticationHelper.EstablishAConnection(mockRest.Object, "as", "asda", "asd");
 
@@ -104,7 +104,7 @@
         {
             mockConfiguration.Setup(x => x.ReadSetting(It.IsAny<Context>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new SonarQubeProperties { Value = "project_Main" });
             mockRest.Setup(x => x.GetProjectsList(It.IsAny<ISonarConfiguration>())).Returns(this.CreatProjects());
-            mockRest.Setup(x => x.AuthenticateUser(It.IsAny<ISonarConfiguration>())).Returns(true);
+            mockRest.Setup(x => x.AuthenticateUser(It.IsAny<ISonarConfiguration>()).Result).Returns(true);
             mockVsHelper.Setup(x => x.ActiveSolutionName()).Returns("solutionaname");
             mockVsHelper.Setup(x => x.ActiveSolutionPath()).Returns("solutionapath");
 
@@ -127,7 +127,7 @@
         {
             mockConfiguration.Setup(x => x.ReadSetting(It.IsAny<Context>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new SonarQubeProperties { Value = "project_Main" });
             mockRest.Setup(x => x.GetProjectsList(It.IsAny<ISonarConfiguration>())).Returns(this.CreatProjects());
-            mockRest.Setup(x => x.AuthenticateUser(It.IsAny<ISonarConfiguration>())).Returns(true);
+            mockRest.Setup(x => x.AuthenticateUser(It.IsAny<ISonarConfiguration>()).Result).Returns(true);
             mockVsHelper.Setup(x => x.ActiveSolutionName()).Returns("solutionaname");
             mockVsHelper.Setup(x => x.ActiveSolutionPath()).Returns("solutionapath");
             mockSourceProvider.Setup(x => x.GetBranch()).Returns("feature/1234-asdas");
@@ -151,7 +151,7 @@
         {
             mockConfiguration.Setup(x => x.ReadSetting(It.IsAny<Context>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new SonarQubeProperties { Value = "project_Main" });
             mockRest.Setup(x => x.GetProjectsList(It.IsAny<ISonarConfiguration>())).Returns(this.CreatProjects());
-            mockRest.Setup(x => x.AuthenticateUser(It.IsAny<ISonarConfiguration>())).Returns(true);
+            mockRest.Setup(x => x.AuthenticateUser(It.IsAny<ISonarConfiguration>()).Result).Returns(true);
             mockVsHelper.Setup(x => x.ActiveSolutionName()).Returns("solutionaname");
             mockVsHelper.Setup(x => x.ActiveSolutionPath()).Returns("solutionapath");
             mockSourceProvider.Setup(x => x.GetBranch()).Returns("feature_A");
@@ -175,7 +175,7 @@
         {
             mockConfiguration.Setup(x => x.ReadSetting(It.IsAny<Context>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new SonarQubeProperties { Value = "tekla.utilities:project" });
             mockRest.Setup(x => x.GetProjectsList(It.IsAny<ISonarConfiguration>())).Returns(this.CreatProjects());
-            mockRest.Setup(x => x.AuthenticateUser(It.IsAny<ISonarConfiguration>())).Returns(true);
+            mockRest.Setup(x => x.AuthenticateUser(It.IsAny<ISonarConfiguration>()).Result).Returns(true);
             mockVsHelper.Setup(x => x.ActiveSolutionName()).Returns("solutionaname");
             mockVsHelper.Setup(x => x.ActiveSolutionPath()).Returns("solutionapath");
 
@@ -200,7 +200,7 @@
         public void OnConnectWithSolutionOpenButNoFormerAssociationItShouldNotAssociate()
         {
             mockRest.Setup(x => x.GetProjectsList(It.IsAny<ISonarConfiguration>())).Returns(this.CreatProjects());
-            mockRest.Setup(x => x.AuthenticateUser(It.IsAny<ISonarConfiguration>())).Returns(true);
+            mockRest.Setup(x => x.AuthenticateUser(It.IsAny<ISonarConfiguration>()).Result).Returns(true);
             mockVsHelper.Setup(x => x.ActiveSolutionName()).Returns("solutionaname");
             mockVsHelper.Setup(x => x.ActiveSolutionPath()).Returns("solutionapath");
             mockPlugin.Setup(x => x.SourceCodePlugins).Returns(new List<ISourceVersionPlugin>());
@@ -235,7 +235,7 @@
         public void OnSolutionOpenButProjectNotFoundItShouldNotAssociate()
         {
             mockRest.Setup(x => x.GetProjectsList(It.IsAny<ISonarConfiguration>())).Returns(this.CreatProjects());
-            mockRest.Setup(x => x.AuthenticateUser(It.IsAny<ISonarConfiguration>())).Returns(true);
+            mockRest.Setup(x => x.AuthenticateUser(It.IsAny<ISonarConfiguration>()).Result).Returns(true);
             mockVsHelper.Setup(x => x.ActiveSolutionName()).Returns("solutionaname");
             mockVsHelper.Setup(x => x.ActiveSolutionPath()).Returns("solutionapath");
             mockPlugin.Setup(x => x.SourceCodePlugins).Returns(new List<ISourceVersionPlugin>());
@@ -268,7 +268,7 @@
         public void OnConnectToSonarIfAssociationIsMadeItShouldResetItIfProjectNotFound()
         {
             mockRest.Setup(x => x.GetProjectsList(It.IsAny<ISonarConfiguration>())).Returns(this.CreatProjects());
-            mockRest.Setup(x => x.AuthenticateUser(It.IsAny<ISonarConfiguration>())).Returns(true);
+            mockRest.Setup(x => x.AuthenticateUser(It.IsAny<ISonarConfiguration>()).Result).Returns(true);
             mockVsHelper.Setup(x => x.ActiveSolutionName()).Returns("solutionaname");
             mockVsHelper.Setup(x => x.ActiveSolutionPath()).Returns("solutionapath");
 

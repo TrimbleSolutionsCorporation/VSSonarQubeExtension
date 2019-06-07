@@ -1,6 +1,7 @@
 namespace VSSonarPlugins
 {
     using SonarRestService.Types;
+    using System.Threading.Tasks;
     using Types;
 
     /// <summary>
@@ -16,7 +17,7 @@ namespace VSSonarPlugins
         /// <returns>
         /// Returns Blame data for line
         /// </returns>
-        BlameLine GetBlameByLine(string filePath, int line);
+        Task<BlameLine> GetBlameByLine(string filePath, int line);
 
         /// <summary>
         /// get current branch

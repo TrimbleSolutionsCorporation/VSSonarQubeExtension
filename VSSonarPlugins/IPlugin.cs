@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarPlugins
 {
+    using SonarRestService;
     using SonarRestService.Types;
     using System;
     using System.Collections.Generic;
@@ -26,12 +27,6 @@ namespace VSSonarPlugins
 
     public interface ILogManager
     {
-        /// <summary>
-        /// Reports the message.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        void ReportMessage(string message);
-
         /// <summary>The report exception.</summary>
         /// <param name="ex">The ex.</param>
         void ReportException(Exception ex);
@@ -53,10 +48,10 @@ namespace VSSonarPlugins
         void WriteMessageToLog(string msg);
     }
 
-    /// <summary>
-    /// The NotificationManager interface.
-    /// </summary>
-    public interface INotificationManager : ILogManager
+	/// <summary>
+	/// The NotificationManager interface.
+	/// </summary>
+	public interface INotificationManager : ILogManager, IRestLogger
     {
         /// <summary>
         /// Gets a value indicating whether [analysis change lines].

@@ -33,6 +33,8 @@ namespace VSSonarExtensionUi.Model.Menu
     using VSSonarPlugins.Types;
     using SonarRestService.Types;
     using SonarRestService;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Issue tracker menus.
@@ -243,19 +245,21 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <summary>
         /// Cancels the refresh data.
         /// </summary>
-        public void CancelRefreshData()
+        public async Task CancelRefreshData()
         {
-            // not used
-        }
+			// not used
+			await Task.Delay(0);
+		}
 
         /// <summary>
         /// Refreshes the menu data for menu that have options that
         /// are context dependent on the selected issues.
         /// </summary>
-        public void RefreshMenuData()
+        public async Task RefreshMenuData()
         {
-            // not used
-        }
+			// not used
+			await Task.Delay(0);
+		}
 
         /// <summary>
         /// Updates the services.
@@ -271,7 +275,7 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <summary>
         /// Called when [attache to issue tracker].
         /// </summary>
-        private void OnAttachToIssueTracker()
+        private async void OnAttachToIssueTracker()
         {
             if (this.issueTrackerPlugin == null)
             {
@@ -309,7 +313,7 @@ namespace VSSonarExtensionUi.Model.Menu
                     builder.AppendLine(replydata);
                     try
                     {
-                        this.rest.CommentOnIssues(this.config, issues, builder.ToString());
+                        await this.rest.CommentOnIssues(this.config, issues, builder.ToString(), this.manager, new CancellationTokenSource().Token);
                     }
                     catch (Exception ex)
                     {
@@ -347,7 +351,7 @@ namespace VSSonarExtensionUi.Model.Menu
                         var builder = new StringBuilder();
                         builder.AppendLine(CommentMessageForIssue + id);
                         builder.AppendLine(replydata);
-                        this.rest.CommentOnIssues(this.config, issues, builder.ToString());
+                        await this.rest.CommentOnIssues(this.config, issues, builder.ToString(), this.manager, new CancellationTokenSource().Token);
                     }
                     catch (Exception ex)
                     {

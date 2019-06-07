@@ -74,7 +74,7 @@ let GetRoslynPluginProps(configuration : ISonarConfiguration,
     let mutable diagnostics = list.Empty
     let mutable additionalDocs = list.Empty
 
-    let properties = service.GetProperties(configuration, resource)
+    let properties = service.GetSettings(configuration, resource)
     let mutable additionalFiles : Map<string, string> = Map.empty
             
     for prop in properties do

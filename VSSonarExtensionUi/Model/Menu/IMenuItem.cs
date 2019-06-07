@@ -20,6 +20,7 @@ namespace VSSonarExtensionUi.Model.Menu
     using VSSonarPlugins.Types;
     using SonarRestService.Types;
     using SonarRestService;
+    using System.Threading.Tasks;
 
     /// <summary>
     ///     The MenuItem interface.
@@ -52,12 +53,12 @@ namespace VSSonarExtensionUi.Model.Menu
         /// Refreshes the menu data for menu that have options that
         /// are context dependent on the selected issues.
         /// </summary>
-        void RefreshMenuData();
+        Task RefreshMenuData();
 
         /// <summary>
         /// Cancels the refresh data.
         /// </summary>
-        void CancelRefreshData();
+        Task CancelRefreshData();
 
         #endregion
     }

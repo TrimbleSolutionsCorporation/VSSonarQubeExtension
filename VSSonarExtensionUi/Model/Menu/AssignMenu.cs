@@ -11,6 +11,9 @@
 // You should have received a copy of the GNU Lesser General Public License along with this program; if not, write to the Free
 // Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 // --------------------------------------------------------------------------------------------------------------------
+using SonarRestService.Types;
+using System.Collections.Generic;
+
 namespace VSSonarExtensionUi.Model.Menu
 {
     using System;
@@ -29,8 +32,8 @@ namespace VSSonarExtensionUi.Model.Menu
     using VSSonarPlugins.Types;
     using SonarRestService.Types;
     using SonarRestService;
-
-
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// The issue handler menu.
@@ -50,7 +53,7 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <summary>
         /// The manager
         /// </summary>
-        private readonly INotificationManager manager;
+        private readonly INotificationManager logger;
 
         #region Constructors and Destructors
 
@@ -64,8 +67,8 @@ namespace VSSonarExtensionUi.Model.Menu
         {
             this.model = model;
             this.rest = rest;
-            this.manager = notmanager;
-            this.ExecuteCommand = new RelayCommand(this.OnAssociateCommand);
+            this.logger = notmanager;
+            this.ExecuteCommand = new RelayCommand(this.OnAssingCommand);
             this.SubItems = new ObservableCollection<IMenuItem>();
 
             // register menu for data sync
@@ -182,18 +185,20 @@ namespace VSSonarExtensionUi.Model.Menu
         /// Refreshes the menu data for menu that have options that
         /// are context dependent on the selected issues.
         /// </summary>
-        public void RefreshMenuData()
+        public async Task RefreshMenuData()
         {
-            // not necessary
-        }
+			// not necessary
+			await Task.Delay(0);
+		}
 
         /// <summary>
         /// Cancels the refresh data.
         /// </summary>
-        public void CancelRefreshData()
+        public async Task CancelRefreshData()
         {
-            // not necessary
-        }
+			// not necessary
+			await Task.Delay(0);
+		}
 
         #endregion
 
@@ -202,14 +207,14 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <summary>
         ///     The on associate command.
         /// </summary>
-        private void OnAssociateCommand()
+        private async void OnAssingCommand()
         {
             try
             {
                 if (this.CommandText.Equals("to user"))
                 {
                     string comment = string.Empty;
-                    var users = this.rest.GetUserList(AuthtenticationHelper.AuthToken);
+                    var users = await this.rest.GetUserList(AuthtenticationHelper.AuthToken);
                     var user = PromptForAssignUser.Prompt("Choose user to assign", "User selection", users, out comment);
 
                     if (user == null)
@@ -217,73 +222,57 @@ namespace VSSonarExtensionUi.Model.Menu
                         return;
                     }
 
-                    using (var bw = new BackgroundWorker { WorkerReportsProgress = false })
-                    {
-                        bw.RunWorkerCompleted += delegate { Application.Current.Dispatcher.Invoke(delegate { this.manager.EndedWorking(); }); };
+					var issues = this.model.SelectedItems;
+					var issuesToAssign = new List<Issue>();
+					foreach (var issue in issues)
+					{                                    
+						issuesToAssign.Add(issue as Issue);
+					}
 
-                        bw.DoWork += delegate
-                            {
-                                var issues = this.model.SelectedItems;
-                                var issuesToAssign = new List<Issue>();
-                                foreach (var issue in issues)
-                                {                                    
-                                    issuesToAssign.Add(issue as Issue);
-                                }
-
-                                this.rest.AssignIssuesToUser(AuthtenticationHelper.AuthToken, issuesToAssign, user, "Assigned in VSSonarExtension: " + comment);
-                                this.model.RefreshView();
-                            };
-
-                        bw.RunWorkerAsync(); 
-                    }
+					await this.rest.AssignIssuesToUser(
+						AuthtenticationHelper.AuthToken,
+						issuesToAssign,
+						user,
+						"Assigned in VSSonarExtension: " + comment,
+						this.logger, new CancellationTokenSource().Token);
+					this.model.RefreshView();
+					this.logger.EndedWorking();
                 }
 
                 if (this.CommandText.Equals("to me"))
                 {
-                    using (var bw = new BackgroundWorker { WorkerReportsProgress = false })
+                    var users = await this.rest.GetUserList(AuthtenticationHelper.AuthToken);
+                    var issues = this.model.SelectedItems;
+
+                    var issuesToAssign = new List<Issue>();
+                    foreach (var issue in issues)
                     {
-                        bw.RunWorkerCompleted += delegate { Application.Current.Dispatcher.Invoke(delegate { this.manager.EndedWorking(); }); };
-
-                        bw.DoWork += delegate
-                        {
-                            var users = this.rest.GetUserList(AuthtenticationHelper.AuthToken);
-                            var issues = this.model.SelectedItems;
-
-                            var issuesToAssign = new List<Issue>();
-                            foreach (var issue in issues)
-                            {
-                                issuesToAssign.Add(issue as Issue);
-                            }
-
-                            this.AssignIssueToLogin(users, AuthtenticationHelper.AuthToken.Username, issuesToAssign);
-                            this.model.RefreshView();                            
-                        };
-
-                        bw.RunWorkerAsync();
+                        issuesToAssign.Add(issue as Issue);
                     }
+
+                    await this.AssignIssueToLogin(
+						users,
+						AuthtenticationHelper.AuthToken.Username,
+						issuesToAssign);
+                    this.model.RefreshView();
+					this.logger.EndedWorking();
                 }
 
                 if (this.CommandText.Equals("assign to author"))
                 {
                     using (var bw = new BackgroundWorker { WorkerReportsProgress = false })
                     {
-                        bw.RunWorkerCompleted += delegate { Application.Current.Dispatcher.Invoke(delegate { this.manager.EndedWorking(); }); };
+                        var users = await this.rest.GetUserList(AuthtenticationHelper.AuthToken);
+                        var issues = this.model.SelectedItems;
 
-                        bw.DoWork += delegate
+                        foreach (var issue in issues)
                         {
-                            var users = this.rest.GetUserList(AuthtenticationHelper.AuthToken);
-                            var issues = this.model.SelectedItems;
+                            this.AssignIssueToAuthor(users, issue as Issue);
+                        }
 
-                            foreach (var issue in issues)
-                            {
-                                this.AssignIssueToAuthor(users, issue as Issue);
-                            }
-
-                            this.model.RefreshView();
-                        };
-
-                        bw.RunWorkerAsync();
-                    }
+                        this.model.RefreshView();
+						this.logger.EndedWorking();
+					}
                 }
             }
             catch (Exception ex)
@@ -302,7 +291,7 @@ namespace VSSonarExtensionUi.Model.Menu
             bool operationOk = true;
             foreach (var reply in replies)
             {
-                this.manager.ReportMessage(new Message { Id = "ChangeStatusMenu", Data = message + " : " + reply.Key + " : " + reply.Value });
+                this.logger.ReportMessage(new Message { Id = "ChangeStatusMenu", Data = message + " : " + reply.Key + " : " + reply.Value });
                 if (reply.Value != System.Net.HttpStatusCode.OK)
                 {
                     operationOk = false;
@@ -332,18 +321,23 @@ namespace VSSonarExtensionUi.Model.Menu
                     {
                         var issues = new List<Issue>();
                         issues.Add(issue);
-                        this.rest.AssignIssuesToUser(AuthtenticationHelper.AuthToken, issues, user, "VSSonarQube Extension Auto Assign");
-                        this.manager.ReportMessage(new Message { Id = "SourceControlMenu : ", Data = "assign issue to: " + user.Name + " ok" });
+                        this.rest.AssignIssuesToUser(
+							AuthtenticationHelper.AuthToken,
+							issues,
+							user,
+							"VSSonarQube Extension Auto Assign",
+							this.logger, new CancellationTokenSource().Token);
+                        this.logger.ReportMessage(new Message { Id = "SourceControlMenu : ", Data = "assign issue to: " + user.Name + " ok" });
                         return;
                     }
                 }
 
-                this.manager.ReportMessage(new Message { Id = "SourceControlMenu : ", Data = "assign issue to: " + issue.Author + " failed, unable to find user by this email" });
+                this.logger.ReportMessage(new Message { Id = "SourceControlMenu : ", Data = "assign issue to: " + issue.Author + " failed, unable to find user by this email" });
             }
             catch (Exception ex)
             {
-                this.manager.ReportMessage(new Message { Id = "SourceControlMenu", Data = "Failed to assign issue" + issue.Message });
-                this.manager.ReportException(ex);
+                this.logger.ReportMessage(new Message { Id = "SourceControlMenu", Data = "Failed to assign issue" + issue.Message });
+                this.logger.ReportException(ex);
                 throw;
             }
         }
@@ -355,7 +349,7 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <param name="users">The users.</param>
         /// <param name="login">The login.</param>
         /// <param name="issues">The issues.</param>
-        private void AssignIssueToLogin(List<User> users, string login, List<Issue> issues)
+        private async Task AssignIssueToLogin(List<User> users, string login, List<Issue> issues)
         {
             try
             {
@@ -364,18 +358,23 @@ namespace VSSonarExtensionUi.Model.Menu
                     var loginSq = user.Login.ToLower().Trim();
                     if (loginSq.Equals(login))
                     {
-                        this.rest.AssignIssuesToUser(AuthtenticationHelper.AuthToken, issues, user, "VSSonarQube Extension Self Assign");
-                        this.manager.ReportMessage(new Message { Id = "SourceControlMenu : ", Data = "assign issue to: " + user.Name + " ok" });
+                        await this.rest.AssignIssuesToUser(
+							AuthtenticationHelper.AuthToken,
+							issues,
+							user,
+							"VSSonarQube Extension Self Assign",
+							this.logger, new CancellationTokenSource().Token);
+                        this.logger.ReportMessage(new Message { Id = "SourceControlMenu : ", Data = "assign issue to: " + user.Name + " ok" });
                         return;
                     }
                 }
 
-                this.manager.ReportMessage(new Message { Id = "SourceControlMenu : ", Data = "assign issue to: " + login + " failed, unable to find user by this email" });
+                this.logger.ReportMessage(new Message { Id = "SourceControlMenu : ", Data = "assign issue to: " + login + " failed, unable to find user by this email" });
             }
             catch (Exception ex)
             {
-                this.manager.ReportMessage(new Message { Id = "SourceControlMenu", Data = "Failed to assign issue" + login });
-                this.manager.ReportException(ex);
+                this.logger.ReportMessage(new Message { Id = "SourceControlMenu", Data = "Failed to assign issue" + login });
+                this.logger.ReportException(ex);
                 throw;
             }
         }

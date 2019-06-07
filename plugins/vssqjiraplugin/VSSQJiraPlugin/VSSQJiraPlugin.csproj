@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\VSSonarPlugins\VSSonarPlugins.csproj" />
+    <ProjectReference Include="..\JiraConnector\JiraConnector.csproj" />
   </ItemGroup>
 
   <ItemGroup>

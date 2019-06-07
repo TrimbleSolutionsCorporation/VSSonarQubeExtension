@@ -6,7 +6,7 @@
         xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:local="clr-namespace:VSSonarExtensionUi.View.Helpers"
             WindowStartupLocation="CenterScreen" 
-            Width="900"
+            Width="1024"
             Height="430"
             WindowStyle="None">
 
@@ -20,6 +20,13 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <DataTemplate x:Key="UserSelectionComboBoxDataTemplateMultiSelection">
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox IsChecked="{Binding Selected}" />
+                    <TextBlock Text="{Binding Name}" />
+                </StackPanel>
+            </DataTemplate>
 
             <DataTemplate x:Key="ProjectSelectionComboBoxDataTemplate">
                 <StackPanel>
@@ -121,16 +128,26 @@
                 </Grid.ColumnDefinitions>
                 
                 <WrapPanel DockPanel.Dock="Left" Grid.Column="0">
-                    <DatePicker x:Name="DatePick" Grid.Row="0" Grid.Column="1" />
-                    <TextBox x:Name="VersionName" Width="100"></TextBox>
-                    <Button DockPanel.Dock="Right" x:Name="CreateVersion" Width="100"  Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="_Create Version" Click="CreateVersionClick"  Margin="0,0,10,0" />
-                    <Button DockPanel.Dock="Right" x:Name="GetNewCoverageOnLeak" Width="150"  Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="_Generate Cov Leak Report" Click="GetCoverageOnLeakClick"  Margin="0,0,10,0" />
-                    <Button DockPanel.Dock="Right" x:Name="GetCoverageReport" Width="150"  Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="_Generate Cov Report" Click="GetCoverageReportDetailed"  Margin="0,0,10,0" />
+                    <DatePicker Margin="0,0,5,0" x:Name="DatePick" Grid.Row="0" Grid.Column="1" />
+                    <ComboBox Grid.Row="2" x:Name="Teams" Grid.Column="1"  Margin="0,0,5,0"
+                              ToolTip="Selecting Teams affects the cov leak report, if no teams are show close window and press refresh team and user data and make sure you are connect to server"
+                                          Style="{DynamicResource VirtualisedMetroComboBox}"
+                                          TextSearch.TextPath="Name"
+                                          controls:TextBoxHelper.Watermark="Search Team"
+                                          IsEditable="True"                                          
+                                          MaxDropDownHeight="125"
+                                          ItemTemplate="{DynamicResource UserSelectionComboBoxDataTemplateMultiSelection}">
 
+                    </ComboBox>
+                    <TextBox x:Name="VersionName" Width="100" Margin="0,0,5,0"></TextBox>
+                    <Button DockPanel.Dock="Right" x:Name="CreateVersion" Width="100"  Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="_Create Version" Click="CreateVersionClick"  Margin="0,0,5,0" />
+                    <Button DockPanel.Dock="Right" x:Name="GetNewCoverageOnLeak" Width="100"  Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="Cov Leak Report" Click="GetDetailedHtmlReportButtonClick"  Margin="0,0,10,0" />
+                    <Button DockPanel.Dock="Right" x:Name="GetCoverageReport" Width="100"  Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="Cov Report" Click="GetCoverageReportDetailed"  Margin="0,0,10,0" />
+                    <Button DockPanel.Dock="Right"  Width="100" Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="Cancel Request" Click="BtnCancelRequestClick" />
                 </WrapPanel>                
                 <WrapPanel DockPanel.Dock="Right" Grid.Column="1">
-                    <Button DockPanel.Dock="Right" x:Name="OkButton" Width="60"  Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="_Ok" Click="BtnOkClick"  Margin="0,0,10,0" />
-                    <Button DockPanel.Dock="Right"  Width="60" Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="_Cancel" Click="BtnCancelClick"  Margin="0,0,10,0"/>
+                    <Button DockPanel.Dock="Right" x:Name="OkButton" Width="60"  Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="_Ok" Click="BtnOkClick"  Margin="0,0,5,0" />
+                    <Button DockPanel.Dock="Right"  Width="60" Style="{DynamicResource SquareButtonStyle}" Grid.Row="1"  Content="_Cancel" Click="BtnCancelClick" />
                 </WrapPanel>
             </Grid>
             <controls:MetroProgressBar Grid.Row="7" x:Name="ProgressBar"

@@ -92,14 +92,7 @@
                                     IsEnabled="{Binding CanRunLocalAnalysis}">
 
                                 </Button>
-                                <Button 
-                                    Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                    Margin="0, 0, 0, 0"
-                                    Content="Run Preview Analysis"
-                                    Style="{DynamicResource SquareButtonStyle}" Command="{Binding PreviewAnalysisCommand}"
-                                    IsEnabled="{Binding CanRunLocalAnalysis}">
 
-                                </Button>
                                 <Button 
                             Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
                             Margin="0, 0, 0, 0"

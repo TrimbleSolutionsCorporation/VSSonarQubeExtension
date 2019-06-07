@@ -95,20 +95,46 @@
         /// </summary>
         private void GenerateVersionData(ISonarConfiguration configuration)
         {
-            var version = new VersionData();
-            version.DownloadPath = "/static/csharp/SonarLint.zip";
-            version.InstallPath = Path.Combine(this.roslynHomeDiagPath, "csharp", "lint");
-            this.InternalVersionsCsharp.Add(version);
-            version = new VersionData();
-            version.InstallPath = Path.Combine(this.roslynHomeDiagPath, "csharp", "analyser");
-            version.DownloadPath = "/static/csharp/SonarAnalyzer.zip";
-            this.InternalVersionsCsharp.Add(version);
+			var installedPlugins = this.rest.GetInstalledPlugins(configuration);
+			if (!installedPlugins.ContainsKey("SonarC#"))
+			{
+				return;
+			}
+
+			var versionData = installedPlugins["SonarC#"];
+			var version = new VersionData();
+
+			try
+			{
+				var zipVersion = this.GetVersionFromName(versionData);		
+				version.DownloadPath = "/static/csharp/SonarAnalyzer-" + zipVersion + ".zip";
+				version.InstallPath = Path.Combine(this.roslynHomeDiagPath, "csharp", "lint");
+				this.InternalVersionsCsharp.Add(version);
+			}
+			catch (Exception)
+			{
+			}
+
+			version = new VersionData
+			{
+				DownloadPath = "/static/csharp/SonarLint.zip",
+				InstallPath = Path.Combine(this.roslynHomeDiagPath, "csharp", "lint")
+			};
+			this.InternalVersionsCsharp.Add(version);
+			version = new VersionData
+			{
+				InstallPath = Path.Combine(this.roslynHomeDiagPath, "csharp", "analyser"),
+				DownloadPath = "/static/csharp/SonarAnalyzer.zip"
+			};
+			this.InternalVersionsCsharp.Add(version);
 
             var settings = this.rest.GetSettings(configuration);
-            version = new VersionData();
-            version.InstallPath = Path.Combine(this.roslynHomeDiagPath, "csharp", "analyser");
+			version = new VersionData
+			{
+				InstallPath = Path.Combine(this.roslynHomeDiagPath, "csharp", "analyser")
+			};
 
-            var result = settings.FirstOrDefault(x => x.key == "sonaranalyzer-cs.staticResourceName");
+			var result = settings.FirstOrDefault(x => x.Key == "sonaranalyzer-cs.staticResourceName");
 
             if (result != null)
             {
@@ -117,11 +143,18 @@
             }
         }
 
-        /// <summary>
-        /// Initializeds the server diagnostics.
-        /// </summary>
-        /// <param name="configuration">The configuration.</param>
-        internal void InitializedServerDiagnostics(ISonarConfiguration configuration)
+		private object GetVersionFromName(string v)
+		{
+			// 7.7 (build 7192)
+			var elements = v.TrimEnd(')').Split(' ');
+			return elements[0] + ".0." + elements[2];
+		}
+
+		/// <summary>
+		/// Initializeds the server diagnostics.
+		/// </summary>
+		/// <param name="configuration">The configuration.</param>
+		internal void InitializedServerDiagnostics(ISonarConfiguration configuration)
         {
 
             try

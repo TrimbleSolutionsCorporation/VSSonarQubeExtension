@@ -39,6 +39,8 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
     using VSSonarExtensionUi.ViewModel.Analysis;
     using SonarRestService.Types;
     using SonarRestService;
+    using System.Threading.Tasks;
+    using System.IO;
 
     /// <summary>
     /// The issue grid view viewModel.
@@ -46,10 +48,6 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
     [AddINotifyPropertyChangedInterface]
     public class IssueGridViewModel : IViewModelBase, IDataModel, IFilterCommand, IFilterOption, IModelBase
     {
-        #region Fields
-
-        private readonly object dataRefreshLock = new object();
-
         /// <summary>
         ///     The data grid options key.
         /// </summary>
@@ -106,10 +104,6 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         private string sourceWorkDir;
         private readonly ILocalAnalyserViewModel localanalyser;
 
-        #endregion
-
-        #region Constructors and Destructors
-
         /// <summary>
         /// Initializes a new instance of the <see cref="IssueGridViewModel" /> class.
         /// </summary>
@@ -145,7 +139,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
 
             this.CloseFlyoutCommand = new RelayCommand(() => this.IsCommentEnabled = false);
 
-            this.SelectionChangedCommand = new RelayCommand<IList>(
+            this.SelectionChangedCommand = new RelayCommand<IList<Issue>>(
                 items =>
                     {
                         this.SelectedItems = items;
@@ -174,10 +168,6 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             SonarQubeViewModel.RegisterNewViewModelInPool(this);
         }
 
-        #endregion
-
-        #region Public Properties
-
         /// <summary>
         ///     The analysis mode has change.
         /// </summary>
@@ -191,13 +181,18 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// <summary>Gets or sets the go to prev issue command.</summary>
         public ICommand GoToPrevIssueCommand { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether [comments flyout enabled].
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if [comments flyout enabled]; otherwise, <c>false</c>.
-        /// </value>
-        public bool CommentsFlyoutEnabled { get; set; }
+		/// <summary>
+		/// teams report html
+		/// </summary>
+		public ICommand GenerateTeamsHtmlReportFromView { get; set; } 
+
+		/// <summary>
+		/// Gets or sets a value indicating whether [comments flyout enabled].
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if [comments flyout enabled]; otherwise, <c>false</c>.
+		/// </value>
+		public bool CommentsFlyoutEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether [explanation flyout enabled].
@@ -215,26 +210,36 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// </summary>
         public int AssigneeIndex { get; set; }
 
-        /// <summary>
-        /// Gets or sets the index of the author.
-        /// </summary>
-        /// <value>
-        /// The index of the author.
-        /// </value>
-        public int AuthorIndex { get; set; }
+		/// <summary>
+		/// team index
+		/// </summary>
+		public int TeamIndex { get; set; }
+
+		/// <summary>
+		/// Gets or sets the index of the author.
+		/// </summary>
+		/// <value>
+		/// The index of the author.
+		/// </value>
+		public int AuthorIndex { get; set; }
 
         /// <summary>
         ///     Gets or sets a value indicating whether assignee visible.
         /// </summary>
         public bool AssigneeVisible { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether [author visible].
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if [author visible]; otherwise, <c>false</c>.
-        /// </value>
-        public bool AuthorVisible { get; set; }
+		/// <summary>
+		/// is team coloumn visible
+		/// </summary>
+		public bool TeamVisible { get; set; }
+
+		/// <summary>
+		/// Gets or sets a value indicating whether [author visible].
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if [author visible]; otherwise, <c>false</c>.
+		/// </value>
+		public bool AuthorVisible { get; set; }
 
         /// <summary>
         /// Gets or sets the selected issue.
@@ -285,13 +290,18 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// </summary>
         public ICommand ClearFilterTermAssigneeCommand { get; set; }
 
-        /// <summary>
-        /// Gets or sets the clear filter term author command.
-        /// </summary>
-        /// <value>
-        /// The clear filter term author command.
-        /// </value>
-        public ICommand ClearFilterTermAuthorCommand { get; set; }
+		/// <summary>
+		/// clears team command
+		/// </summary>
+		public ICommand ClearFilterTermTeamCommand { get; set; }
+
+		/// <summary>
+		/// Gets or sets the clear filter term author command.
+		/// </summary>
+		/// <value>
+		/// The clear filter term author command.
+		/// </value>
+		public ICommand ClearFilterTermAuthorCommand { get; set; }
 
         /// <summary>
         ///     Gets or sets the clear filter term component command.
@@ -411,13 +421,18 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// </summary>
         public string FilterTermAssignee { get; set; }
 
-        /// <summary>
-        /// Gets or sets the filter term author.
-        /// </summary>
-        /// <value>
-        /// The filter term author.
-        /// </value>
-        public string FilterTermAuthor { get; set; }
+		/// <summary>
+		/// filter term team
+		/// </summary>
+		public string FilterTermTeam { get; set; }
+
+		/// <summary>
+		/// Gets or sets the filter term author.
+		/// </summary>
+		/// <value>
+		/// The filter term author.
+		/// </value>
+		public string FilterTermAuthor { get; set; }
 
         /// <summary>
         ///     Gets or sets the filter term component.
@@ -599,7 +614,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// <summary>
         ///     Gets or sets the selected items.
         /// </summary>
-        public IList SelectedItems { get; set; }
+        public IList<Issue> SelectedItems { get; set; }
 
         /// <summary>
         ///     Gets or sets the selection changed command.
@@ -807,8 +822,6 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         ///   <c>true</c> if this instance is explanation enabled; otherwise, <c>false</c>.
         /// </value>
         public bool IsExplanationEnabled { get; set; }
-
-        #endregion
 
         #region Public Methods and Operators
 
@@ -1091,51 +1104,50 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// <param name="listOfIssues">
         /// The list of issues.
         /// </param>
-        public void UpdateIssues(IEnumerable<Issue> listOfIssues)
+        public async Task UpdateIssues(IEnumerable<Issue> listOfIssues, IEnumerable<Team> teams)
         {
-            Application.Current.Dispatcher.Invoke(
-                delegate
-                    {
-                        try
-                        {
-                            this.Issues.Clear();
-                            this.AllIssues.Clear();
-                            foreach (Issue listOfIssue in listOfIssues)
-                            {
-                                this.AllIssues.Add(listOfIssue);
-                                this.Issues.Add(listOfIssue);
-                            }
-
-                            this.notificationManager.OnNewIssuesUpdated();
-                        }
-                        catch (Exception ex)
-                        {
-                            Debug.WriteLine("Message: " + ex.Message);
-                        }
-                    });
-
-
-            // reload menu data
-            using (var bw = new BackgroundWorker { WorkerReportsProgress = false })
+            try
             {
-                bw.RunWorkerCompleted += delegate { Application.Current.Dispatcher.Invoke(delegate { }); };
-
-                bw.DoWork += delegate
+                this.Issues.Clear();
+                this.AllIssues.Clear();
+                foreach (Issue issue in listOfIssues)
                 {
-                    this.ReloadMenuData();
-                };
+					if (teams != null)
+					{
+						foreach (var team in teams)
+						{
+							foreach (var user in team.Users)
+							{
+								var authorEmailLower = issue.Author.ToLower();
+								if (user.Email.ToLower().Equals(authorEmailLower) || user.AddionalEmails.FirstOrDefault(x => x.ToLower().Equals(authorEmailLower)) != null)
+								{
+									issue.Team = team.Name;
+								}
+							}
+						}
+					}
 
-                bw.RunWorkerAsync();
+					this.AllIssues.Add(issue);
+                    this.Issues.Add(issue);
+                }
+
+                this.notificationManager.OnNewIssuesUpdated();
             }
-
-            this.RefreshStatistics();
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Message: " + ex.Message);
+            }
+            
+			await this.ReloadMenuData();
+			await this.RefreshStatistics();
         }
 
         /// <summary>
         /// Refreshes the statistics.
         /// </summary>
-        public void RefreshStatistics()
+        public async Task RefreshStatistics()
         {
+			await Task.Delay(1);
             if (this.Issues == null || !this.Issues.Any())
             {
                 return;
@@ -1216,19 +1228,12 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// <summary>
         /// Reloads the menu data.
         /// </summary>
-        public void ReloadMenuData()
+        public async Task ReloadMenuData()
         {
             foreach (var item in this.ContextMenuItems)
             {
-                item.CancelRefreshData();
-            }
-
-            lock (this.dataRefreshLock)
-            {
-                foreach (var item in this.ContextMenuItems)
-                {
-                    item.RefreshMenuData();
-                }
+				await item.CancelRefreshData();
+				await item.RefreshMenuData();
             }
         }
 
@@ -1318,7 +1323,8 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.FilterTermProject = string.Empty;
             this.FilterTermRule = string.Empty;
             this.FilterTermAssignee = string.Empty;
-            this.FilterTermAuthor = string.Empty;
+			this.FilterTermTeam = string.Empty;
+			this.FilterTermAuthor = string.Empty;
             this.FilterTermIssueTrackerId = null;
             this.FilterTermStatus = null;
             this.FilterTermSeverity = null;
@@ -1327,7 +1333,8 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
 
             this.ClearClearFilterTermRuleCommand = new RelayCommand<object>(this.OnClearClearFilterTermRuleCommand);
             this.ClearFilterTermAssigneeCommand = new RelayCommand<object>(this.OnClearFilterTermAssigneeCommand);
-            this.ClearFilterTermAuthorCommand = new RelayCommand<object>(this.OnClearFilterTermAuthorCommand);
+			this.ClearFilterTermTeamCommand = new RelayCommand<object>(this.OnClearFilterTermTeamCommand);
+			this.ClearFilterTermAuthorCommand = new RelayCommand<object>(this.OnClearFilterTermAuthorCommand);
             this.ClearFilterTermComponentCommand = new RelayCommand<object>(this.OnClearFilterTermComponentCommand);
             this.ClearFilterTermIssueTrackerCommand = new RelayCommand<object>(this.OnClearFilterTermIssueTrackerCommand);            
             this.ClearFilterTermIsNewCommand = new RelayCommand<object>(this.OnClearFilterTermIsNewCommand);
@@ -1341,7 +1348,8 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
 
             this.GoToPrevIssueCommand = new RelayCommand(this.OnGoToPrevIssueCommand);
             this.GoToNextIssueCommand = new RelayCommand(this.OnGoToNextIssueCommand);
-        }
+			this.GenerateTeamsHtmlReportFromView = new RelayCommand(this.OnGenerateTeamsHtmlReportFromView);
+		}
 
         /// <summary>
         /// The on clear clear filter term rule command.
@@ -1367,11 +1375,17 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.ClearFilter();
         }
 
-        /// <summary>
-        /// The on clear filter term assignee command.
-        /// </summary>
-        /// <param name="obj">The obj.</param>
-        private void OnClearFilterTermAuthorCommand(object obj)
+		private void OnClearFilterTermTeamCommand(object obj)
+		{
+			this.FilterTermTeam = string.Empty;
+			this.ClearFilter();
+		}
+
+		/// <summary>
+		/// The on clear filter term assignee command.
+		/// </summary>
+		/// <param name="obj">The obj.</param>
+		private void OnClearFilterTermAuthorCommand(object obj)
         {
             this.FilterTermAuthor = string.Empty;
             this.ClearFilter();
@@ -1565,7 +1579,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// <param name="obj">
         /// The obj.
         /// </param>
-        private void OnFilterClearAllCommand(object obj)
+        private async void OnFilterClearAllCommand(object obj)
         {
             this.FilterTermStatus = null;
             this.FilterTermSeverity = null;
@@ -1576,7 +1590,8 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.FilterTermMessage = string.Empty;
             this.FilterTermComponent = string.Empty;
             this.FilterTermAssignee = string.Empty;
-            this.FilterTermAuthor = string.Empty;
+			this.FilterTermTeam = string.Empty;
+			this.FilterTermAuthor = string.Empty;
             this.FilterTermRule = string.Empty;
 
             if (this.AllIssues == null || this.AllIssues.Count == 0)
@@ -1593,7 +1608,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 this.notificationManager.ReportException(ex);
             }
 
-            this.RefreshStatistics();
+            await this.RefreshStatistics();
         }
 
         /// <summary>
@@ -1621,15 +1636,16 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 this.IssueTrackerIdIndex = int.Parse(GetValueForOption(options, "IssueTrackerIdIndex", "7", owner), CultureInfo.InvariantCulture);
                 this.IsNewIndex = int.Parse(GetValueForOption(options, "IsNewIndex", "8", owner), CultureInfo.InvariantCulture);
                 this.RuleIndex = int.Parse(GetValueForOption(options, "RuleIndex", "9", owner), CultureInfo.InvariantCulture);
-                this.AssigneeIndex = int.Parse(GetValueForOption(options, "AssigneeIndex", "10", owner), CultureInfo.InvariantCulture);
-                this.AuthorIndex = int.Parse(GetValueForOption(options, "AuthorIndex", "11", owner), CultureInfo.InvariantCulture);
-                this.CreationDateIndex = int.Parse(GetValueForOption(options, "CreationDateIndex", "12", owner), CultureInfo.InvariantCulture);
-                this.ProjectIndex = int.Parse(GetValueForOption(options, "ProjectIndex", "13", owner), CultureInfo.InvariantCulture);
-                this.ResolutionIndex = int.Parse(GetValueForOption(options, "ResolutionIndex", "14", owner), CultureInfo.InvariantCulture);
-                this.UpdateDateIndex = int.Parse(GetValueForOption(options, "UpdateDateIndex", "15", owner), CultureInfo.InvariantCulture);
-                this.CloseDateIndex = int.Parse(GetValueForOption(options, "CloseDateIndex", "16", owner), CultureInfo.InvariantCulture);
-                this.KeyIndex = int.Parse(GetValueForOption(options, "KeyIndex", "17", owner), CultureInfo.InvariantCulture);
-                this.IdIndex = int.Parse(GetValueForOption(options, "IdIndex", "18", owner), CultureInfo.InvariantCulture);
+				this.TeamIndex = int.Parse(GetValueForOption(options, "TeamIndex", "10", owner), CultureInfo.InvariantCulture);
+				this.AssigneeIndex = int.Parse(GetValueForOption(options, "AssigneeIndex", "11", owner), CultureInfo.InvariantCulture);				
+				this.AuthorIndex = int.Parse(GetValueForOption(options, "AuthorIndex", "12", owner), CultureInfo.InvariantCulture);
+                this.CreationDateIndex = int.Parse(GetValueForOption(options, "CreationDateIndex", "13", owner), CultureInfo.InvariantCulture);
+                this.ProjectIndex = int.Parse(GetValueForOption(options, "ProjectIndex", "14", owner), CultureInfo.InvariantCulture);
+                this.ResolutionIndex = int.Parse(GetValueForOption(options, "ResolutionIndex", "15", owner), CultureInfo.InvariantCulture);
+                this.UpdateDateIndex = int.Parse(GetValueForOption(options, "UpdateDateIndex", "16", owner), CultureInfo.InvariantCulture);
+                this.CloseDateIndex = int.Parse(GetValueForOption(options, "CloseDateIndex", "17", owner), CultureInfo.InvariantCulture);
+                this.KeyIndex = int.Parse(GetValueForOption(options, "KeyIndex", "18", owner), CultureInfo.InvariantCulture);
+                this.IdIndex = int.Parse(GetValueForOption(options, "IdIndex", "19", owner), CultureInfo.InvariantCulture);
 
                 this.ComponentVisible = bool.Parse(GetValueForOption(options, "ComponentVisible", "true", owner));
                 this.LineVisible = bool.Parse(GetValueForOption(options, "LineVisible", "true", owner));
@@ -1639,7 +1655,8 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 this.EffortVisible = bool.Parse(GetValueForOption(options, "EffortVisible", "true", owner));
                 this.IssueTrackerIdVisible = bool.Parse(GetValueForOption(options, "IssueTrackerIdVisible", "true", owner));
                 this.AssigneeVisible = bool.Parse(GetValueForOption(options, "AssigneeVisible", "true", owner));
-                this.AuthorVisible = bool.Parse(GetValueForOption(options, "AuthorVisible", "true", owner));
+				this.TeamVisible = bool.Parse(GetValueForOption(options, "TeamVisible", "true", owner));
+				this.AuthorVisible = bool.Parse(GetValueForOption(options, "AuthorVisible", "true", owner));
                 this.RuleVisible = bool.Parse(GetValueForOption(options, "RuleVisible", "true", owner));
                 this.CreationDateVisible = bool.Parse(GetValueForOption(options, "CreationDateVisible", "false", owner));
                 this.ProjectVisible = bool.Parse(GetValueForOption(options, "ProjectVisible", "false", owner));
@@ -1670,7 +1687,8 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.SeverityIndex = this.GetIndex(ref index);
             this.StatusIndex = this.GetIndex(ref index);
             this.EffortIndex = this.GetIndex(ref index);
-            this.AssigneeIndex = this.GetIndex(ref index);
+			this.TeamIndex = this.GetIndex(ref index);
+			this.AssigneeIndex = this.GetIndex(ref index);
             this.AuthorIndex = this.GetIndex(ref index);
             this.IssueTrackerIdIndex = this.GetIndex(ref index);
             this.IsNewIndex = this.GetIndex(ref index);
@@ -1693,7 +1711,8 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.SeverityVisible = true;
             this.StatusVisible = true;
             this.EffortVisible = true;
-            this.AssigneeVisible = true;
+			this.TeamVisible = true;
+			this.AssigneeVisible = true;
             this.AuthorVisible = true;
             this.IssueTrackerIdVisible = true;
             this.IsNewVisible = true;
@@ -1728,7 +1747,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// </summary>
         private void SaveWindowOptions()
         {
-            if (this.ComponentIndex < 0 || this.LineIndex < 0 || this.AuthorIndex < 0  || this.AssigneeIndex < 0 || this.MessageIndex < 0 || this.StatusIndex < 0
+            if (this.ComponentIndex < 0 || this.LineIndex < 0 || this.AuthorIndex < 0 || this.TeamIndex < 0 || this.AssigneeIndex < 0 || this.MessageIndex < 0 || this.StatusIndex < 0
                 || this.RuleIndex < 0 || this.CreationDateIndex < 0 || this.ProjectIndex < 0 || this.ResolutionIndex < 0 || this.EffortIndex < 0
                 || this.UpdateDateIndex < 0 || this.CloseDateIndex < 0 || this.KeyIndex < 0 || this.IsNewIndex < 0 || this.ViolationIdIndex < 0)
             {
@@ -1745,7 +1764,12 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
                 this.dataGridOptionsKey, 
                 "LineIndex", 
                 this.LineIndex.ToString(CultureInfo.InvariantCulture));
-            this.configurationHelper.WriteSetting(
+			this.configurationHelper.WriteSetting(
+				Context.UIProperties,
+				this.dataGridOptionsKey,
+				"TeamIndex",
+				this.TeamIndex.ToString(CultureInfo.InvariantCulture));
+			this.configurationHelper.WriteSetting(
                 Context.UIProperties, 
                 this.dataGridOptionsKey, 
                 "AssigneeIndex", 
@@ -1840,7 +1864,8 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "SeverityVisible", this.SeverityVisible.ToString());
             this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "RuleVisible", this.RuleVisible.ToString());
             this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "ResolutionVisible", this.ResolutionVisible.ToString());
-            this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "AssigneeVisible", this.AssigneeVisible.ToString());
+			this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "TeamVisible", this.TeamVisible.ToString());
+			this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "AssigneeVisible", this.AssigneeVisible.ToString());
             this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "AuthorVisible", this.AuthorVisible.ToString());
             this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "IsNewVisible", this.IsNewVisible.ToString());
             this.configurationHelper.WriteSetting(Context.UIProperties, this.dataGridOptionsKey, "KeyVisible", this.KeyVisible.ToString());
@@ -1862,8 +1887,30 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             }
         }
 
-        /// <summary>The on go to next issue command.</summary>
-        private void OnGoToNextIssueCommand()
+		/// <summary>
+		/// generate teams html report
+		/// </summary>
+		private async void OnGenerateTeamsHtmlReportFromView()
+		{
+			await Task.Delay(0);
+			var reportHtml = HtmlHelpers.GenerateIssuesReportPerTeam(this.AllIssues);
+			System.Windows.Forms.SaveFileDialog savefile = new System.Windows.Forms.SaveFileDialog();
+			// set a default file name
+			savefile.FileName = "teamsissues.html";
+			// set filters - this can be done in properties as well
+			savefile.Filter = "Create Html (*.html)|*.html|All files (*.*)|*.*";
+
+			if (savefile.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+			{
+				using (StreamWriter sw = new StreamWriter(savefile.FileName))
+					sw.WriteLine(reportHtml);
+			}
+
+			Process.Start(reportHtml);
+		}
+
+		/// <summary>The on go to next issue command.</summary>
+		private void OnGoToNextIssueCommand()
         {
             this.GoToNextIssue();
         }
