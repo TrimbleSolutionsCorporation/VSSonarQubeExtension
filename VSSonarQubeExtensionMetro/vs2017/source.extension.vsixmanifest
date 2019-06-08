@@ -18,10 +18,9 @@
         <Asset Type="Microsoft.VisualStudio.VsPackage" Path="VSSonarExtensionMetroVs2015.pkgdef" />
         <Asset Type="Microsoft.VisualStudio.MefComponent" Path="VSSonarExtensionMetroVs2017.dll" />
         <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="AnalysisPlugin" d:VsixSubPath="plugins" Path="|AnalysisPlugin|" AssemblyName="|AnalysisPlugin;AssemblyName|" />
-        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="VSSQJiraPlugin" d:VsixSubPath="plugins" Path="|VSSQJiraPlugin|" AssemblyName="|VSSQJiraPlugin;AssemblyName|" />
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="JiraPlugin" d:VsixSubPath="plugins" Path="|JiraPlugin|" AssemblyName="|JiraPlugin;AssemblyName|" />
         <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="FSharpLintRunner" d:VsixSubPath="plugins" Path="|FSharpLintRunner|" AssemblyName="|FSharpLintRunner;AssemblyName|" />
         <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="CxxPlugin" d:VsixSubPath="plugins" Path="|CxxPlugin|" AssemblyName="|CxxPlugin;AssemblyName|" />
-        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="JiraConnector" d:VsixSubPath="plugins" Path="|JiraConnector|" AssemblyName="|JiraConnector;AssemblyName|" />
         <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="NSonarQubeRunner" d:VsixSubPath="plugins" Path="|NSonarQubeRunner|" AssemblyName="|NSonarQubeRunner;AssemblyName|" />
         <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="PluginsOptionsController" d:VsixSubPath="plugins" Path="|PluginsOptionsController|" AssemblyName="|PluginsOptionsController;AssemblyName|" />
 

@@ -1906,7 +1906,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
 					sw.WriteLine(reportHtml);
 			}
 
-			Process.Start(reportHtml);
+			Process.Start(savefile.FileName);
 		}
 
 		/// <summary>The on go to next issue command.</summary>

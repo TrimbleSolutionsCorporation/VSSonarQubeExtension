@@ -437,9 +437,9 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// <param name="filterSSCM">if set to <c>true</c> [filter SSCM].</param>
         /// <param name="componentsSet">if set to <c>true</c> [components set].</param>
         /// <returns>
-        /// all issues for requested filter
+        /// all issues for requested filter and if query was canceled by user
         /// </returns>
-        public async Task<IEnumerable<Issue>> GetIssuesUsingFilter(string filter, bool filterSSCM, bool componentsSet)
+        public async Task<Tuple<IEnumerable<Issue>, bool>> GetIssuesUsingFilter(string filter, bool filterSSCM, bool componentsSet)
         {
             this.notificationmanager.ResetFailure();
             string request = "?" + filter;
@@ -454,10 +454,10 @@ namespace VSSonarExtensionUi.Model.Analysis
             var issues = await this.restService.GetIssues(AuthtenticationHelper.AuthToken, request, key, this.ct.Token, this.restLogger);
             if (!filterSSCM)
             {
-                return issues;
+                return new Tuple<IEnumerable<Issue>, bool>(issues, this.ct.IsCancellationRequested);
             }
 
-			return await this.FilterIssuesBySSCM(issues);
+			return new Tuple<IEnumerable<Issue>, bool>(await this.FilterIssuesBySSCM(issues), this.ct.IsCancellationRequested);
         }
 
         /// <summary>
@@ -510,7 +510,7 @@ namespace VSSonarExtensionUi.Model.Analysis
         private async Task<Issue> FilterIssuesBySSCM(Issue issue)
         {
             // file level issues are returned regardless
-            if (issue.Line == 0)
+            if (issue.Line == 0 || issue.Line == -1)
             {
                 return issue;
             }
@@ -582,7 +582,7 @@ namespace VSSonarExtensionUi.Model.Analysis
                     new Message
                     {
                         Id = "IssuesSearchModel",
-                        Data = "Blame throw exception, please report: " + ex.Message
+                        Data = "Blame throw exception, please report: " + ex.Message + " : " + issue.Component
                     });
 
                 this.notificationmanager.ReportException(ex);

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28922.388
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.539
 MinimumVisualStudioVersion = 15.0.23107.0
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSSonarExtensionUi", "VSSonarExtensionUi\VSSonarExtensionUi.csproj", "{BC583A5D-931B-4ED9-AC2C-5667A37B3043}"
 EndProject
@@ -25,10 +25,6 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "NSonarQubeRunner", "plugins
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginsOptionsController", "plugins\DotNetAndFSharpPlugin\src\PluginsOptionsController\PluginsOptionsController.csproj", "{7972423C-6BBD-4C1C-B970-5F9AFCB44824}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JiraConnector", "plugins\vssqjiraplugin\JiraConnector\JiraConnector.csproj", "{E352D05E-8149-4DA2-A7F2-C6DBA08350D3}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSSQJiraPlugin", "plugins\vssqjiraplugin\VSSQJiraPlugin\VSSQJiraPlugin.csproj", "{1576C435-186D-4502-B8E2-070E8EB94F60}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libs", "libs", "{D3A004A0-6784-4D1A-BC94-F070C2846400}"
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "SonarLocalAnalyser", "SonarLocalAnalyser\SonarLocalAnalyser.fsproj", "{C807B235-45C7-45C5-9DE0-39FB7C58DF07}"
@@ -36,6 +32,10 @@ EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "SonarAnalyser.Test", "Test\SonarAnalyser.Test\SonarAnalyser.Test.fsproj", "{CD4B5869-59D7-491A-A99A-CA33AA6D45A4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSSonarPlugins", "VSSonarPlugins\VSSonarPlugins.csproj", "{176B1CD3-58A0-4E39-845B-CFE9742CB8BD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JiraPlugin", "plugins\JiraPlugin\JiraPlugin.csproj", "{F30BE17F-D0F7-402F-8509-62F1BD44CF47}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JiraPlugin.Test", "plugins\JiraPlugin.Test\JiraPlugin.Test.csproj", "{1DC802FE-864E-406A-9820-7A9999867DA5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -78,14 +78,6 @@ Global
 		{7972423C-6BBD-4C1C-B970-5F9AFCB44824}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7972423C-6BBD-4C1C-B970-5F9AFCB44824}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7972423C-6BBD-4C1C-B970-5F9AFCB44824}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E352D05E-8149-4DA2-A7F2-C6DBA08350D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E352D05E-8149-4DA2-A7F2-C6DBA08350D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E352D05E-8149-4DA2-A7F2-C6DBA08350D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E352D05E-8149-4DA2-A7F2-C6DBA08350D3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1576C435-186D-4502-B8E2-070E8EB94F60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1576C435-186D-4502-B8E2-070E8EB94F60}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1576C435-186D-4502-B8E2-070E8EB94F60}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1576C435-186D-4502-B8E2-070E8EB94F60}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C807B235-45C7-45C5-9DE0-39FB7C58DF07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C807B235-45C7-45C5-9DE0-39FB7C58DF07}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C807B235-45C7-45C5-9DE0-39FB7C58DF07}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -98,6 +90,14 @@ Global
 		{176B1CD3-58A0-4E39-845B-CFE9742CB8BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{176B1CD3-58A0-4E39-845B-CFE9742CB8BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{176B1CD3-58A0-4E39-845B-CFE9742CB8BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F30BE17F-D0F7-402F-8509-62F1BD44CF47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F30BE17F-D0F7-402F-8509-62F1BD44CF47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F30BE17F-D0F7-402F-8509-62F1BD44CF47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F30BE17F-D0F7-402F-8509-62F1BD44CF47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DC802FE-864E-406A-9820-7A9999867DA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DC802FE-864E-406A-9820-7A9999867DA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DC802FE-864E-406A-9820-7A9999867DA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DC802FE-864E-406A-9820-7A9999867DA5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -110,10 +110,10 @@ Global
 		{855E39DF-F247-4D3E-A20C-50075656E70B} = {D3A004A0-6784-4D1A-BC94-F070C2846400}
 		{AB78A0F2-0C05-4822-B0B8-0F9486498774} = {D3A004A0-6784-4D1A-BC94-F070C2846400}
 		{7972423C-6BBD-4C1C-B970-5F9AFCB44824} = {D3A004A0-6784-4D1A-BC94-F070C2846400}
-		{E352D05E-8149-4DA2-A7F2-C6DBA08350D3} = {D3A004A0-6784-4D1A-BC94-F070C2846400}
-		{1576C435-186D-4502-B8E2-070E8EB94F60} = {468F14C9-25EE-4E61-91F0-CB4415E48A6C}
 		{D3A004A0-6784-4D1A-BC94-F070C2846400} = {468F14C9-25EE-4E61-91F0-CB4415E48A6C}
 		{CD4B5869-59D7-491A-A99A-CA33AA6D45A4} = {472161E9-B67F-444A-A33F-3095A928FA48}
+		{F30BE17F-D0F7-402F-8509-62F1BD44CF47} = {D3A004A0-6784-4D1A-BC94-F070C2846400}
+		{1DC802FE-864E-406A-9820-7A9999867DA5} = {472161E9-B67F-444A-A33F-3095A928FA48}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {896DE7C7-4ACA-4B9C-B875-25E21213CDA8}

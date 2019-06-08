@@ -70,6 +70,9 @@
     <CodeAnalysisIgnoreGeneratedCode>false</CodeAnalysisIgnoreGeneratedCode>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Atlassian.Jira, Version=10.6.0.0, Culture=neutral, PublicKeyToken=98d0864bcd001a7f, processorArchitecture=MSIL">
+      <HintPath>..\Packages\Atlassian.SDK.10.6.1\lib\net452\Atlassian.Jira.dll</HintPath>
+    </Reference>
     <Reference Include="envdte, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
@@ -205,6 +208,9 @@
     <Reference Include="Microsoft.VisualStudio.Threading, Version=16.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="MsbuildAutomationHelper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\Packages\MsbuildAutomationHelper.2.0.5\lib\net472\MsbuildAutomationHelper.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\Packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -469,16 +475,9 @@
       <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
       <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
     </ProjectReference>
-    <ProjectReference Include="..\plugins\vssqjiraplugin\JiraConnector\JiraConnector.csproj">
-      <Project>{e352d05e-8149-4da2-a7f2-c6dba08350d3}</Project>
-      <Name>JiraConnector</Name>
-      <VSIXSubPath>plugins</VSIXSubPath>
-      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
-    </ProjectReference>
-    <ProjectReference Include="..\plugins\vssqjiraplugin\VSSQJiraPlugin\VSSQJiraPlugin.csproj">
+    <ProjectReference Include="..\plugins\JiraPlugin\JiraPlugin.csproj">
       <Project>{1576C435-186D-4502-B8E2-070E8EB94F60}</Project>
-      <Name>VSSQJiraPlugin</Name>
+      <Name>JiraPlugin</Name>
       <VSIXSubPath>plugins</VSIXSubPath>
       <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
       <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>

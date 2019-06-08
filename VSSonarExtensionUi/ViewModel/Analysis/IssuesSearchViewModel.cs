@@ -541,14 +541,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// Filters the components keys.
         /// </summary>
         /// <returns>filterd keys</returns>
-        private string FilterComponentsKeys()
+        private string FilterComponentsKeys(string component)
         {
             if (!this.IsComponenetChecked)
             {
                 return string.Empty;
             }
 
-            return "&componentKeys=" + this.componentList.Select(i => i.Key).Aggregate((i, j) => i + ',' + j);
+            return "&componentKeys=" + component;
         }
 
         /// <summary>
@@ -884,12 +884,30 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             request += this.FilterSeverities();
             request += this.FilterStatus();
             request += this.FilterResolutions();
-            request += this.FilterComponentsKeys();
 
-			var issues = await
-				this.searchModel.GetIssuesUsingFilter(request, this.IsFilterBySSCMChecked, this.componentList.Count > 0 && this.IsComponenetChecked);
+            var issues = new List<Issue>();
+            if (!this.IsComponenetChecked)
+            {
+                var results = await this.searchModel.GetIssuesUsingFilter(request, this.IsFilterBySSCMChecked, this.componentList.Count > 0 && this.IsComponenetChecked);
+                issues.AddRange(results.Item1);
+            }
+            else
+            {
+                foreach (var componentKey in this.componentList)
+                {
+                    this.notificationManager.ReportMessage("Search Issues in: " + componentKey.Key);
+                    var finalRequest = request + this.FilterComponentsKeys(componentKey.Key);
+                    var results = await this.searchModel.GetIssuesUsingFilter(finalRequest, this.IsFilterBySSCMChecked, this.componentList.Count > 0 && this.IsComponenetChecked);
+                    issues.AddRange(results.Item1);
 
-			await this.IssuesGridView.UpdateIssues(issues, this.Teams);
+                    if (results.Item2)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            await this.IssuesGridView.UpdateIssues(issues, this.Teams);
         }
 
         /// <summary>

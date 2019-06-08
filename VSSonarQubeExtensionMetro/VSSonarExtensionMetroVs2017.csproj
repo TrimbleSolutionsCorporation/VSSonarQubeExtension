@@ -441,16 +441,9 @@
       <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
       <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
     </ProjectReference>
-    <ProjectReference Include="..\plugins\vssqjiraplugin\JiraConnector\JiraConnector.csproj">
-      <Project>{e352d05e-8149-4da2-a7f2-c6dba08350d3}</Project>
-      <Name>JiraConnector</Name>
-      <VSIXSubPath>plugins</VSIXSubPath>
-      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
-    </ProjectReference>
-    <ProjectReference Include="..\plugins\vssqjiraplugin\VSSQJiraPlugin\VSSQJiraPlugin.csproj">
-      <Project>{1576C435-186D-4502-B8E2-070E8EB94F60}</Project>
-      <Name>VSSQJiraPlugin</Name>
+    <ProjectReference Include="..\plugins\JiraPlugin\JiraPlugin.csproj">
+      <Project>{F30BE17F-D0F7-402F-8509-62F1BD44CF47}</Project>
+      <Name>JiraPlugin</Name>
       <VSIXSubPath>plugins</VSIXSubPath>
       <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
       <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>

@@ -1,0 +1,12 @@
+﻿UserName;user
+Password;pass
+JiraURL;jiraurl
+UserNameToUseForIssueCreation;user
+JiraProject;ProjectAlias
+IssueType;Technical Debt
+Components;PD internal - Code Analysis
+
+Custom;Type;Technical debt
+Custom;Origin;SonarQube
+Custom;Defective since;TS 2020
+Custom;Version Found;2020_Dev

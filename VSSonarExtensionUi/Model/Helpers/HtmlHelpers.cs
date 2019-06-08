@@ -146,9 +146,17 @@
 			foreach (var item in dicTeam)
 			{
 				var enumerableElements = item.Value.MetricsPerLanguage.AsEnumerable();
-				reportdata.Append("<tr>");
+                var totalIssues =
+                    enumerableElements.Sum(x => x.Value.BlockerIssue) +
+                    enumerableElements.Sum(x => x.Value.CriticalIssue) +
+                    enumerableElements.Sum(x => x.Value.MajorIssue) +
+                    enumerableElements.Sum(x => x.Value.MinorIssue) +
+                    enumerableElements.Sum(x => x.Value.InfoIssue);
+
+                reportdata.Append("<tr>");
 				reportdata.Append("<td>" + item.Key + "</td>");
-				reportdata.Append("<td>" + enumerableElements.Sum(x => x.Value.BlockerIssue) + "</td>");
+                reportdata.Append("<td>" + totalIssues + "</td>");
+                reportdata.Append("<td>" + enumerableElements.Sum(x => x.Value.BlockerIssue) + "</td>");
 				reportdata.Append("<td>" + enumerableElements.Sum(x => x.Value.CriticalIssue) + "</td>");
 				reportdata.Append("<td>" + enumerableElements.Sum(x => x.Value.MajorIssue) + "</td>");
 				reportdata.Append("<td>" + enumerableElements.Sum(x => x.Value.MinorIssue) + "</td>");
