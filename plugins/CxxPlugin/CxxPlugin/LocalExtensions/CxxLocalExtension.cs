@@ -30,6 +30,7 @@ namespace CxxPlugin.LocalExtensions
     using SonarRestService;
     using SonarRestService.Types;
     using SonarLocalAnalyser;
+    using System.Threading.Tasks;
 
     /// <summary>
     ///     The cxx server extension.
@@ -221,7 +222,7 @@ namespace CxxPlugin.LocalExtensions
         /// <param name="project">The project.</param>
         /// <param name="configuration">The configuration.</param>
         /// <param name="profileIn">The profile in.</param>
-        public void UpdateProfile(
+        public async Task<bool> UpdateProfile(
             Resource project,
             ISonarConfiguration configuration,
             Dictionary<string, Profile> profileIn,
@@ -238,7 +239,7 @@ namespace CxxPlugin.LocalExtensions
                         sensor.Value.UpdateProfile(project, configuration, profileIn, vsVersion);
                     }
 
-                    this.clangSensor.UpdateProfile(project, configuration, profileIn, vsVersion);
+                    await this.clangSensor.UpdateProfile(project, configuration, profileIn, vsVersion);
 
                 }
                 catch(Exception ex)
@@ -249,6 +250,8 @@ namespace CxxPlugin.LocalExtensions
 
                 this.isLoading = false;
             }
+
+            return true;
         }
 
         /// <summary>

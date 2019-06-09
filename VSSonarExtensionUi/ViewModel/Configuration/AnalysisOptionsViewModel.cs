@@ -226,9 +226,10 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="configuration">sonar configuration</param>
         /// <param name="availableProjects">The available projects.</param>
         /// <param name="issuePlugin">The issue plugin.</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IList<IIssueTrackerPlugin> issuePlugin)
+        public async Task OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IList<IIssueTrackerPlugin> issuePlugin)
         {
             // does nothing
+            await Task.Delay(0);
         }
 
         /// <summary>
@@ -237,12 +238,13 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="vsenvironmenthelperIn">The vs environment helper in.</param>
         /// <param name="statusBar">The status bar.</param>
         /// <param name="provider">The provider.</param>
-        public void UpdateServices(
+        public async Task UpdateServices(
             IVsEnvironmentHelper vsenvironmenthelperIn,
             IVSSStatusBar statusBar,
             IServiceProvider provider)
         {
             this.vsenvironmenthelper = vsenvironmenthelperIn;
+            await Task.Delay(0);
         }
 
         /// <summary>
@@ -305,9 +307,10 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 		/// <summary>
 		/// Called when [disconnect].
 		/// </summary>
-		public void OnDisconnect()
+		public async Task OnDisconnect()
         {
             // does nothing
+            await Task.Delay(0);
         }
 
         /// <summary>
@@ -385,7 +388,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="workDir">The work dir.</param>
         /// <param name="provider">The provider.</param>
         /// <param name="profile">The profile.</param>
-        public void AssociateWithNewProject(
+        public async Task AssociateWithNewProject(
             Resource project,
             string workDir,
             ISourceControlProvider provider,
@@ -394,15 +397,17 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         {
             this.SourceDir = workDir;
             this.associatedProject = project;
+            await Task.Delay(0);
         }
 
         /// <summary>
         /// The end data association.
         /// </summary>
-        public void OnSolutionClosed()
+        public async Task OnSolutionClosed()
         {
             this.SourceDir = string.Empty;
             this.associatedProject = null;
+            await Task.Delay(0);
         }
 
         /// <summary>

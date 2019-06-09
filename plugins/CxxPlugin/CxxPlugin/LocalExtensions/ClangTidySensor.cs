@@ -11,6 +11,7 @@
 
     using SonarRestService;
     using SonarRestService.Types;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// sensor clang tidy
@@ -142,12 +143,13 @@
         /// <param name="configuration">The configuration.</param>
         /// <param name="profileIn">The profile in.</param>
         /// <param name="vsVersion">The vs version.</param>
-        public void UpdateProfile(
+        public async Task UpdateProfile(
             Resource project,
             ISonarConfiguration configuration,
             Dictionary<string, Profile> profileIn,
             string vsVersion)
         {
+            await Task.Delay(0);
             if(!profileIn.ContainsKey("c++"))
             {
                 return;

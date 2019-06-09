@@ -34,7 +34,9 @@ type public AnalysisPlugin(notificationManager : INotificationManager, configura
 
     interface IPlugin with
         member this.OnConnectToSonar(path : ISonarConfiguration) =
-            ()
+            async {
+                return true
+            } |> Async.StartAsTask
 
         member this.SetDllLocation(path : string) =
             let elem = dllLocations |> List.tryFind (fun c -> c.Equals(path))
@@ -52,14 +54,16 @@ type public AnalysisPlugin(notificationManager : INotificationManager, configura
             desc
 
         member this.AssociateProject(resource : Resource, configuration : ISonarConfiguration, profile : System.Collections.Generic.Dictionary<string, Profile>, vsversion:string) =
-            if not(isAssociating) then
-                isAssociating <- true
-                try
-                    pluginData.AssociatePropject(resource, configuration, profile, vsversion)
-                with
-                | ex -> ()
-                isAssociating <- false
-
+            async {
+                if not(isAssociating) then
+                    isAssociating <- true
+                    try
+                        pluginData.AssociatePropject(resource, configuration, profile, vsversion)
+                    with
+                    | ex -> ()
+                    isAssociating <- false
+                return true
+            } |> Async.StartAsTask
                 
         member this.ResetDefaults() =
             ()

@@ -42,53 +42,15 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     [AddINotifyPropertyChangedInterface]
     public class PluginManagerModel : IOptionsViewModelBase, IOptionsModelBase, IPluginManager
     {
-        #region Fields
-
-        /// <summary>
-        ///     The controller.
-        /// </summary>
         private readonly IPluginController controller;
-
-        /// <summary>
-        ///     The plugin list.
-        /// </summary>
         private readonly ObservableCollection<PluginDescription> pluginList = new ObservableCollection<PluginDescription>();
-
-        /// <summary>
-        /// The notification manager
-        /// </summary>
         private readonly INotificationManager notificationManager;
-
-        /// <summary>
-        /// The vshelper
-        /// </summary>
         private readonly IVsEnvironmentHelper vshelper;
-
-        /// <summary>
-        /// The configuration helper
-        /// </summary>
         private readonly IConfigurationHelper configurationHelper;
-
-        /// <summary>
-        /// The plugins
-        /// </summary>
         private readonly IList<IPlugin> plugins = new List<IPlugin>();
-
-        /// <summary>
-        /// The associated project
-        /// </summary>
         private Resource associatedProject;
-
-        /// <summary>
-        /// The source dir
-        /// </summary>
         private string sourceDir;
-
         private readonly string userPluginInstallPath;
-
-        #endregion
-
-        #region Constructors and Destructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PluginManagerModel" /> class.
@@ -129,10 +91,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
             SonarQubeViewModel.RegisterNewViewModelInPool(this);
         }
-
-        #endregion
-
-        #region Public Properties
 
         /// <summary>
         ///     Gets the assembly directory.
@@ -256,21 +214,17 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// </value>
         private Resource Project { get; set; }
 
-        #endregion
-
-        #region Public Methods and Operators
-
         /// <summary>
         /// Called when [connect to sonar].
         /// </summary>
         /// <param name="configuration">sonar configuration</param>
         /// <param name="availableProjects">The available projects.</param>
         /// <param name="issuePlugin">The issue plugin.</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IList<IIssueTrackerPlugin> issuePlugin)
+        public async Task OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IList<IIssueTrackerPlugin> issuePlugin)
         {
             foreach (var plugin in this.plugins)
             {
-				Task.Run(() => plugin.OnConnectToSonar(configuration));
+				await plugin.OnConnectToSonar(configuration);
             }
         }
 
@@ -282,7 +236,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="sourceModel">The source model.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
         /// <param name="profile">The profile.</param>
-        public void AssociateWithNewProject(
+        public async Task AssociateWithNewProject(
             Resource project,
             string workingDir,
             ISourceControlProvider sourceModel,
@@ -290,6 +244,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
             Dictionary<string, Profile> profile)
         {
             // not necessary
+            await Task.Delay(0);
         }
 
         /// <summary>
@@ -402,9 +357,10 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         /// Called when [disconnect].
         /// </summary>
-        public void OnDisconnect()
+        public async Task OnDisconnect()
         {
             // on disconnect
+            await Task.Delay(0);
         }
 
         /// <summary>
@@ -413,11 +369,12 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="vsenvironmenthelperIn">The vsenvironmenthelper in.</param>
         /// <param name="statusBar">The status bar.</param>
         /// <param name="provider">The provider.</param>
-        public void UpdateServices(
+        public async Task UpdateServices(
             IVsEnvironmentHelper vsenvironmenthelperIn, 
             IVSSStatusBar statusBar, 
             IServiceProvider provider)
         {
+            await Task.Delay(0);
             // does not access vs services
         }
 
@@ -480,7 +437,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="workDir">The work dir.</param>
         /// <param name="provider">The provider.</param>
         /// <param name="profile">The profile.</param>
-        public void AssociateWithNewProject(
+        public async Task AssociateWithNewProject(
             Resource project,
             string workDir,
             ISourceControlProvider provider,
@@ -515,7 +472,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                         System.Windows.Application.Current.Dispatcher.Invoke(delegate { menuPlugin.UpdateConfiguration(AuthtenticationHelper.AuthToken, project, this.vshelper); });
                     }
 
-                    plugin.AssociateProject(project, AuthtenticationHelper.AuthToken, profile, visualStudioVersion);
+                    await plugin.AssociateProject(project, AuthtenticationHelper.AuthToken, profile, visualStudioVersion);
                 }
                 catch (Exception ex)
                 {
@@ -527,15 +484,12 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         /// The end data association.
         /// </summary>
-        public void OnSolutionClosed()
+        public async Task OnSolutionClosed()
         {
+            await Task.Delay(0);
             this.associatedProject = null;
             this.sourceDir = string.Empty;
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     The init commanding.
@@ -544,7 +498,6 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         {
             this.InstallNewPlugin = new RelayCommand(this.OnInstallNewPlugin);
             this.RemovePlugin = new RelayCommand(this.OnRemovePlugin);
-
             this.SelectionChangedCommand = new RelayCommand(this.OnSelectionChangeCommand);
         }
 
@@ -641,7 +594,5 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 }
             }
         }
-
-        #endregion
     }
 }

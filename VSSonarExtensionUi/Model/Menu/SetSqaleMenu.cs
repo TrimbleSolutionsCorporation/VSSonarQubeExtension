@@ -138,7 +138,7 @@
         /// <param name="workingDir">The working dir.</param>
         /// <param name="sourceModel">The source model.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
-        public void AssociateWithNewProject(
+        public async Task AssociateWithNewProject(
             Resource project,
             string workingDir,
             ISourceControlProvider sourceModel,
@@ -147,6 +147,7 @@
         {
             this.sourceControl = sourceModel;
             this.assignProject = project;
+            await Task.Delay(0);
         }
 
         /// <summary>
@@ -173,25 +174,28 @@
         /// </summary>
         /// <param name="configuration">sonar configuration</param>
         /// <param name="availableProjectsIn">The available projects in.</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjectsIn, IList<IIssueTrackerPlugin> sourcePlugin)
+        public async Task OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjectsIn, IList<IIssueTrackerPlugin> sourcePlugin)
         {
             this.availableProjects = availableProjectsIn.ToList();
+            await Task.Delay(0);
         }
 
         /// <summary>
         /// The end data association.
         /// </summary>
-        public void OnSolutionClosed()
+        public async Task OnSolutionClosed()
         {
             // not needed
+            await Task.Delay(0);
         }
 
         /// <summary>
         /// Called when [disconnect].
         /// </summary>
-        public void OnDisconnect()
+        public async Task OnDisconnect()
         {
             this.availableProjects = null;
+            await Task.Delay(0);
         }
 
         /// <summary>
@@ -211,9 +215,10 @@
         /// <param name="vsenvironmenthelperIn">The vsenvironmenthelper in.</param>
         /// <param name="statusBar">The status bar.</param>
         /// <param name="provider">The provider.</param>
-        public void UpdateServices(IVsEnvironmentHelper vsenvironmenthelperIn, IVSSStatusBar statusBar, IServiceProvider provider)
+        public async Task UpdateServices(IVsEnvironmentHelper vsenvironmenthelperIn, IVSSStatusBar statusBar, IServiceProvider provider)
         {
             this.vshelper = vsenvironmenthelperIn;
+            await Task.Delay(0);
         }
 
         /// <summary>

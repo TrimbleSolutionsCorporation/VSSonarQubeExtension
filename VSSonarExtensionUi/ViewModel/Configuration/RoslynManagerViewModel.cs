@@ -27,6 +27,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
     using SonarRestService.Types;
     using SonarRestService;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// roslyn manager view model
@@ -120,18 +121,15 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         /// Synchronizes the diag in view.
         /// </summary>
-        public void SyncDiagInView()
+        public async Task SyncDiagInView()
         {
-            System.Windows.Application.Current.Dispatcher.Invoke(
-                delegate
-                {
-                    this.AvailableDllDiagnostics.Clear();
+            await Task.Delay(0);
+            this.AvailableDllDiagnostics.Clear();
 
-                    foreach (var item in this.model.ExtensionDiagnostics)
-                    {
-                        this.AvailableDllDiagnostics.Add(item.Value);
-                    }
-                });
+            foreach (var item in this.model.ExtensionDiagnostics)
+            {
+                this.AvailableDllDiagnostics.Add(item.Value);
+            }
         }
 
         /// <summary>
@@ -159,7 +157,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         /// Called when [install new DLL command].
         /// </summary>
-        private void OnInstallNewDllCommand()
+        private async void OnInstallNewDllCommand()
         {
             using (var filedialog = new OpenFileDialog { InitialDirectory = this.model.SourceDir, Filter = @"dlls|*.dll", Title = "Select dll available in project folder." })
             {
@@ -182,9 +180,9 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                         return;
                     }
 
-                    if (this.model.AddNewRoslynPack(filedialog.FileName, true))
+                    if (await this.model.AddNewRoslynPack(filedialog.FileName, true))
                     {
-                        this.SyncDiagInView();
+                        await this.SyncDiagInView();
                         MessageDisplayBox.DisplayMessage(
                             "Rules have been created in SonarQube. Please use tools > sqale editor to enabled them or use the Roslyn Plugin to automatically sync those against your project. ",
                             helpurl: "https://visualstudiogallery.msdn.microsoft.com/7fc312c3-f1ab-49f8-b286-dbf7fff37305");
@@ -196,7 +194,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         /// Called when [automatic import local diagnostics command].
         /// </summary>
-        private void OnAutoImportLocalDiagnosticsCommand()
+        private async void OnAutoImportLocalDiagnosticsCommand()
         {
             if (!this.model.VerifyExistenceOfRoslynPlugin())
             {
@@ -214,7 +212,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                 return;
             }
 
-            var result = this.model.AutoDetectInstalledAnalysers();
+            var result = await this.model.AutoDetectInstalledAnalysers();
             if (string.IsNullOrEmpty(result))
             {
                 MessageDisplayBox.DisplayMessage(
@@ -230,12 +228,12 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         /// Called when [remove DLL command].
         /// </summary>
-        private void OnRemoveDllCommand()
+        private async void OnRemoveDllCommand()
         {
             if (this.SelectedDllDiagnostic != null)
             {
                 this.model.RemoveDllFromList(this.SelectedDllDiagnostic);
-                this.SyncDiagInView();
+                await this.SyncDiagInView();
             }
         }
     }

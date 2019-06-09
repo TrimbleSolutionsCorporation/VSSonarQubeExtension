@@ -30,6 +30,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
     using SonarRestService;
     using SonarRestService.Types;
+    using System.Threading.Tasks;
 
     /// <summary>
     ///     The plugins options model.
@@ -201,12 +202,13 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="vsenvironmenthelperIn">The vs environment helper in.</param>
         /// <param name="statusBar">The status bar.</param>
         /// <param name="provider">The provider.</param>
-        public void UpdateServices(
+        public async Task UpdateServices(
             IVsEnvironmentHelper vsenvironmenthelperIn, 
             IVSSStatusBar statusBar, 
             IServiceProvider provider)
         {
             this.vsenvironmenthelper = vsenvironmenthelperIn;
+            await Task.Delay(0);
         }
 
         /// <summary>
@@ -244,9 +246,10 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         ///     The end data association.
         /// </summary>
-        public void OnSolutionClosed()
+        public async Task OnSolutionClosed()
         {
             this.project = null;
+            await Task.Delay(0);
         }
 
         /// <summary>The update colors.</summary>
@@ -288,8 +291,9 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         /// Called when [disconnect].
         /// </summary>
-        public void OnDisconnect()
+        public async Task OnDisconnect()
         {
+            await Task.Delay(0);
         }
 
         /// <summary>
@@ -310,7 +314,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="workingDir">The working dir.</param>
         /// <param name="provider">The provider.</param>
         /// <param name="profile">The profile.</param>
-        public void AssociateWithNewProject(
+        public async Task AssociateWithNewProject(
             Resource projectIn,
             string workingDir,
             ISourceControlProvider provider,
@@ -321,7 +325,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
             foreach (var availableOption in this.AvailableOptionsModels)
             {
-                availableOption.ReloadDataFromDisk(projectIn);
+                await availableOption.ReloadDataFromDisk(projectIn);
             }
         }
 
@@ -331,11 +335,11 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="configuration">The configuration.</param>
         /// <param name="availableProjects">The available projects.</param>
         /// <param name="sourcePlugin">The source control plugin.</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IList<IIssueTrackerPlugin> sourcePlugin)
+        public async Task OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IList<IIssueTrackerPlugin> sourcePlugin)
         {
             if (this.PluginManager != null)
             {
-                this.PluginManager.OnConnectToSonar(configuration, availableProjects, sourcePlugin);
+                await this.PluginManager.OnConnectToSonar(configuration, availableProjects, sourcePlugin);
             }
                         
             this.RefreshDiagnostics();
@@ -344,14 +348,14 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <summary>
         /// Refreshes the diagnostics.
         /// </summary>
-        public void RefreshDiagnostics()
+        public async void RefreshDiagnostics()
         {
             if (this.RoslynViewModel == null)
             {
                 return;
             }
 
-            this.RoslynViewModel.SyncDiagInView();
+            await this.RoslynViewModel.SyncDiagInView();
         }
 
         /// <summary>

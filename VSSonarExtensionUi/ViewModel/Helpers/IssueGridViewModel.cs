@@ -829,9 +829,10 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// Called when [connect to sonar].
         /// </summary>
         /// <param name="configuration">sonar configuration</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IList<IIssueTrackerPlugin> issuePlugin)
+        public async Task OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IList<IIssueTrackerPlugin> issuePlugin)
         {
             // does nothing
+            await Task.Delay(0);
         }
 
         /// <summary>
@@ -1168,11 +1169,12 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// <param name="vsenvironmenthelperIn">The vsenvironmenthelper in.</param>
         /// <param name="statusBar">The status bar.</param>
         /// <param name="providerIn">The provider in.</param>
-        public void UpdateServices(IVsEnvironmentHelper vsenvironmenthelperIn, IVSSStatusBar statusBar, IServiceProvider providerIn)
+        public async Task UpdateServices(IVsEnvironmentHelper vsenvironmenthelperIn, IVSSStatusBar statusBar, IServiceProvider providerIn)
         {
             this.vsenvironmenthelper = vsenvironmenthelperIn;
             this.statusbar = statusBar;
             this.provider = providerIn;
+            await Task.Delay(0);
         }
 
         /// <summary>
@@ -1205,7 +1207,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// <param name="workingDir">The working dir.</param>
         /// <param name="providerIn">The provider in.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
-        public void AssociateWithNewProject(
+        public async Task AssociateWithNewProject(
             Resource project,
             string workingDir,
             ISourceControlProvider providerIn,
@@ -1214,15 +1216,17 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         {
             this.sourceWorkDir = workingDir;
             this.associatedProject = project;
+            await Task.Delay(0);
         }
 
         /// <summary>
         /// The end data association.
         /// </summary>
-        public void OnSolutionClosed()
+        public async Task OnSolutionClosed()
         {
             this.sourceWorkDir = string.Empty;
             this.associatedProject = null;
+            await Task.Delay(0);
         }
 
         /// <summary>
@@ -1240,8 +1244,9 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
         /// <summary>
         /// Called when [disconnect].
         /// </summary>
-        public void OnDisconnect()
+        public async Task OnDisconnect()
         {
+            await Task.Delay(0);
         }
 
         #endregion
@@ -1276,18 +1281,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
             this.Issues.Clear();
             foreach (Issue issue in this.AllIssues)
             {
-                try
-                {
-                    if (this.filter.FilterFunction(issue))
-                    {
-                        this.Issues.Add(issue);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    this.notificationManager.ReportMessage(new Message { Data = "Filter Failed: " + ex.Message });
-                    this.Issues.Add(issue);
-                }
+                this.Issues.Add(issue);
             }
 
             this.notificationManager.OnIssuesUpdated();

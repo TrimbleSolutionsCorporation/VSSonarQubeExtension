@@ -14,7 +14,7 @@ namespace CxxPlugin
     using System.Globalization;
     using System.IO;
     using System.Reflection;
-
+    using System.Threading.Tasks;
     using global::CxxPlugin.LocalExtensions;
     using global::CxxPlugin.Options;
 
@@ -29,45 +29,16 @@ namespace CxxPlugin
     [Export(typeof(IPlugin))]
     public class CxxPlugin : IAnalysisPlugin
     {
-        /// <summary>
-        ///     The key.
-        /// </summary>
         public static readonly string Key = "CxxPlugin";
-
-        /// <summary>
-        ///     The lock that log.
-        /// </summary>
         private static readonly object LockThatLog = new object();
-
-        /// <summary>
-        ///     The path.
-        /// </summary>
         private static readonly string LogPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
                                                  + "\\VSSonarExtension\\CxxPlugin.log";
-
-        /// <summary>
-        ///     The plugin options.
-        /// </summary>
         private readonly IPluginControlOption pluginOptions;
-
-        /// <summary>The notification manager.</summary>
         private readonly INotificationManager notificationManager;
-
-        /// <summary>The configuration helper.</summary>
         private readonly IConfigurationHelper configurationHelper;
-
-        /// <summary>The file analysis extension.</summary>
         private readonly IFileAnalyser fileAnalysisExtension;
-
-        /// <summary>The rest service.</summary>
         private readonly ISonarRestService restService;
-
-        /// <summary>
-        /// The vshelper
-        /// </summary>
         private readonly IVsEnvironmentHelper vshelper;
-
-        /// <summary>The desc.</summary>
         private readonly PluginDescription desc;
 
         /// <summary>
@@ -140,9 +111,9 @@ namespace CxxPlugin
         /// Called when [connect to sonar].
         /// </summary>
         /// <param name="configuration">The configuration.</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration)
+        public async Task<bool> OnConnectToSonar(ISonarConfiguration configuration)
         {
-            ((CxxOptionsController)this.pluginOptions).OnConnectToSonar(configuration);
+            return await ((CxxOptionsController)this.pluginOptions).OnConnectToSonar(configuration);
         }
 
         /// <summary>
@@ -341,13 +312,13 @@ namespace CxxPlugin
         /// <param name="project">The project.</param>
         /// <param name="configuration">The configuration.</param>
         /// <param name="profile">The profile.</param>
-        public void AssociateProject(
+        public async Task<bool> AssociateProject(
             Resource project,
             ISonarConfiguration configuration,
             Dictionary<string, Profile> profile,
             string vsVersion)
         {
-            ((CxxLocalExtension)this.fileAnalysisExtension).UpdateProfile(project, configuration, profile, vsVersion);
+            return await ((CxxLocalExtension)this.fileAnalysisExtension).UpdateProfile(project, configuration, profile, vsVersion);
         }
 
         /// <summary>

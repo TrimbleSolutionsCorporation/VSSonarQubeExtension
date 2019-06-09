@@ -155,13 +155,13 @@
         /// <summary>
         /// Called when [connect to sonar].
         /// </summary>
-        public void OnConnectToSonar()
+        public async Task OnConnectToSonar()
         {
             foreach (IModelBase model in modelPool)
             {
                 try
                 {
-                    model.OnConnectToSonar(AuthtenticationHelper.AuthToken, this.model.AvailableProjects, this.pluginManager.IssueTrackerPlugins);
+                    await model.OnConnectToSonar(AuthtenticationHelper.AuthToken, this.model.AvailableProjects, this.pluginManager.IssueTrackerPlugins);
                 }
                 catch (Exception ex)
                 {
@@ -334,7 +334,7 @@
         /// <summary>
         /// The end data association.
         /// </summary>
-        public void OnSolutionClosed()
+        public async Task OnSolutionClosed()
         {
             this.OpenSolutionName = null;
             this.OpenSolutionPath = null;
@@ -343,7 +343,7 @@
 
             foreach (var item in modelPool)
             {
-                item.OnSolutionClosed();
+                await item.OnSolutionClosed();
             }
         }
 

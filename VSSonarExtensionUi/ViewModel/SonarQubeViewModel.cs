@@ -805,7 +805,7 @@ namespace VSSonarExtensionUi.ViewModel
         /// <summary>
         /// Called when [solution closed].
         /// </summary>
-        public void OnSolutionClosed()
+        public async Task OnSolutionClosed()
         {
             this.IsSolutionOpen = false;
 
@@ -820,7 +820,7 @@ namespace VSSonarExtensionUi.ViewModel
             this.SelectedProjectVersion = string.Empty;
             this.NumberNewIssues = "0";
 
-            this.AssociationModule.OnSolutionClosed();
+            await this.AssociationModule.OnSolutionClosed();
         }
 
         /// <summary>The execute plugin.</summary>
@@ -896,7 +896,7 @@ namespace VSSonarExtensionUi.ViewModel
             this.ExtensionFolder = extensionFolder;
 
             // register notification manager, since all messages will be show also for initialization
-            (this.notificationManager as IModelBase).UpdateServices(this.VsHelper, this.StatusBar, this.ServiceProvider);
+            await (this.notificationManager as IModelBase).UpdateServices(this.VsHelper, this.StatusBar, this.ServiceProvider);
             this.VSonarQubeOptionsViewData.InitPuginSystem(vsenvironmenthelperIn, this.pluginController, this.notificationManager);
             this.pluginManager = this.VSonarQubeOptionsViewData.PluginManager;
             this.InitMenus();
@@ -1055,8 +1055,8 @@ namespace VSSonarExtensionUi.ViewModel
             try
             {
                 this.RefreshProjectList(useDispatcher);
-                this.AssociationModule.OnConnectToSonar();
-                this.VSonarQubeOptionsViewData.OnConnectToSonar(AuthtenticationHelper.AuthToken, this.AvailableProjects, this.pluginManager.IssueTrackerPlugins);
+                await this.AssociationModule.OnConnectToSonar();
+                await this.VSonarQubeOptionsViewData.OnConnectToSonar(AuthtenticationHelper.AuthToken, this.AvailableProjects, this.pluginManager.IssueTrackerPlugins);
                 this.ConnectionTooltip = "Authenticated, but not associated";
                 this.StatusMessage = string.Empty;
                 this.IsConnected = true;

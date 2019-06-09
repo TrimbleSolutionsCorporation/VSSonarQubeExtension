@@ -21,6 +21,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 
     using SonarRestService.Types;
     using SonarRestService;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// the plugin manager
@@ -66,7 +67,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         /// <param name="associatedProject">The associated project.</param>
         /// <param name="openSolutionPath">The open solution path.</param>
         /// <param name="sourceControl">The source control.</param>
-        void AssociateWithNewProject(
+        Task AssociateWithNewProject(
             Resource associatedProject,
             string openSolutionPath,
             ISourceControlProvider sourceControl,

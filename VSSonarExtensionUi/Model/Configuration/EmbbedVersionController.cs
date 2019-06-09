@@ -10,6 +10,7 @@
     using VSSonarPlugins;
     using SonarRestService;
     using SonarRestService.Types;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// controls the available versions in server
@@ -154,9 +155,8 @@
 		/// Initializeds the server diagnostics.
 		/// </summary>
 		/// <param name="configuration">The configuration.</param>
-		internal void InitializedServerDiagnostics(ISonarConfiguration configuration)
+		internal async Task InitializedServerDiagnostics(ISonarConfiguration configuration)
         {
-
             try
             {
                 this.SelectCSharpZipFileToUse(configuration);
@@ -165,7 +165,7 @@
                     List<VersionData> elementsToRemove = new List<VersionData>();
                     foreach (var item in this.InUsePluginsWithDiagnostics)
                     {
-                        if (!this.SyncAnalysersFromServer(configuration, item))
+                        if (!await this.SyncAnalysersFromServer(configuration, item))
                         {
                             elementsToRemove.Add(item);
                         }
@@ -189,7 +189,7 @@
         /// </summary>
         /// <param name="authentication">The authentication.</param>
         /// <param name="versionToUse">The version to use.</param>
-        private bool SyncAnalysersFromServer(ISonarConfiguration authentication, VersionData versionToUse)
+        private async Task<bool> SyncAnalysersFromServer(ISonarConfiguration authentication, VersionData versionToUse)
         {
             var tmpFile = Path.GetTempFileName();
             var tmpDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
@@ -202,7 +202,7 @@
 
             try
             {
-                isOk = DownloadFileFromServer(authentication, versionToUse, tmpFile, tmpDir);
+                isOk = await DownloadFileFromServer(authentication, versionToUse, tmpFile, tmpDir);
             }
             catch (Exception ex)
             {
@@ -222,14 +222,14 @@
             return isOk;
         }
 
-        private static bool DownloadFileFromServer(ISonarConfiguration authentication, VersionData versionToUse, string tmpFile, string tmpDir)
+        private static async Task<bool> DownloadFileFromServer(ISonarConfiguration authentication, VersionData versionToUse, string tmpFile, string tmpDir)
         {
             try
             {
                 var urldownload = authentication.Hostname + versionToUse.DownloadPath;
                 using (var client = new WebClient())
                 {
-                    client.DownloadFile(urldownload, tmpFile);
+                    await client.DownloadFileTaskAsync(urldownload, tmpFile);
 
                     ZipFile.ExtractToDirectory(tmpFile, tmpDir);
 

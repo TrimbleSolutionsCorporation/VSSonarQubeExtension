@@ -28,6 +28,7 @@ namespace CxxPlugin.Options
 
     using SonarRestService;
     using SonarRestService.Types;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// The dummy options controller.
@@ -223,16 +224,18 @@ namespace CxxPlugin.Options
         /// Called when [connect to sonar].
         /// </summary>
         /// <param name="configurationUser">The configuration user.</param>
-        public void OnConnectToSonar(ISonarConfiguration configurationUser)
+        public async Task<bool> OnConnectToSonar(ISonarConfiguration configurationUser)
         {
             if (string.IsNullOrEmpty(this.CxxLint) || !File.Exists(this.CxxLint))
             {
                 this.userConf = configurationUser;
-                if (!this.DownloadLintFromServer(false))
+                if (!await this.DownloadLintFromServer(false))
                 {
                     this.UseEmbeddedVersion();
                 }
             }
+
+            return true;
         }
 
         /// <summary>
@@ -371,7 +374,7 @@ namespace CxxPlugin.Options
         /// <summary>
         /// Called when [download CXX lint from server command].
         /// </summary>
-        private void OnDownloadCxxLintFromServerCommand()
+        private async void OnDownloadCxxLintFromServerCommand()
         {
             if (this.userConf == null)
             {
@@ -379,7 +382,7 @@ namespace CxxPlugin.Options
                 return;
             }
 
-            if (!this.DownloadLintFromServer(true))
+            if (!await this.DownloadLintFromServer(true))
             {
                 MessageBox.Show("Will use embedded version, since linter was not found in installed version in server.");
                 this.UseEmbeddedVersion();
@@ -391,7 +394,7 @@ namespace CxxPlugin.Options
         /// </summary>
         /// <param name="force">if set to <c>true</c> [force].</param>
         /// <returns>true if ok</returns>
-        private bool DownloadLintFromServer(bool force)
+        private async Task<bool> DownloadLintFromServer(bool force)
         {
             try
             {
@@ -410,7 +413,7 @@ namespace CxxPlugin.Options
                 {
                     using (var client = new WebClient())
                     {
-                        client.DownloadFile(urldownload, this.CxxLint);
+                        await client.DownloadFileTaskAsync(new Uri(urldownload), this.CxxLint);
                     }
                 }
 

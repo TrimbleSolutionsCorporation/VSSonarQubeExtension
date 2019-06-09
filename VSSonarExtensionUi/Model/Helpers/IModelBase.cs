@@ -7,6 +7,8 @@
     using VSSonarPlugins.Types;
     using SonarRestService.Types;
     using SonarRestService;
+    using System.Threading.Tasks;
+
     /// <summary>
     /// Model base, register model in SonarQubeViewModel for automatic update of association
     /// </summary>
@@ -18,7 +20,7 @@
         /// <param name="vsenvironmenthelperIn">The vs environment helper in.</param>
         /// <param name="statusBar">The status bar.</param>
         /// <param name="provider">The provider.</param>
-        void UpdateServices(
+        Task UpdateServices(
             IVsEnvironmentHelper vsenvironmenthelperIn,
             IVSSStatusBar statusBar,
             IServiceProvider provider);
@@ -30,7 +32,7 @@
         /// <param name="workingDir">The working dir.</param>
         /// <param name="sourceModel">The source model.</param>
         /// <param name="profile">The quality profile.</param>
-        void AssociateWithNewProject(
+        Task AssociateWithNewProject(
             Resource project,
             string workingDir,
             ISourceControlProvider sourceModel,
@@ -40,19 +42,22 @@
         /// <summary>
         /// The end data association.
         /// </summary>
-        void OnSolutionClosed();
+        Task OnSolutionClosed();
 
         /// <summary>
         /// Called when [disconnect].
         /// </summary>
-        void OnDisconnect();
+        Task OnDisconnect();
 
         /// <summary>
         /// Called when [connect to sonar].
         /// </summary>
         /// <param name="configuration">The configuration.</param>
         /// <param name="availableProjects">The available projects.</param>
-        void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IList<IIssueTrackerPlugin> sourcePlugin);
+        Task OnConnectToSonar(
+            ISonarConfiguration configuration, 
+            IEnumerable<Resource> availableProjects, 
+            IList<IIssueTrackerPlugin> sourcePlugin);
 
         /// <summary>
         /// Gets the view model.

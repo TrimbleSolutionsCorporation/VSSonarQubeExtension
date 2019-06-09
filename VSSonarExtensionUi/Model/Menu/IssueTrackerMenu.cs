@@ -191,7 +191,7 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <param name="workingDir">The working dir.</param>
         /// <param name="sourceModelIn">The source model in.</param>
         /// <param name="sourcePluginIn">The source plugin in.</param>
-        public void AssociateWithNewProject(
+        public async Task AssociateWithNewProject(
             Resource project,
             string workingDir,
             ISourceControlProvider sourceModelIn,
@@ -202,17 +202,19 @@ namespace VSSonarExtensionUi.Model.Menu
             this.associatedProject = project;
             this.sourceModel = sourceModelIn;
             this.config = AuthtenticationHelper.AuthToken;
+            await Task.Delay(0);
         }
 
 
         /// <summary>
         /// The end data association.
         /// </summary>
-        public void OnSolutionClosed()
+        public async Task OnSolutionClosed()
         {
             this.associatedProject = null;
             this.sourceDir = string.Empty;
             this.config = null;
+            await Task.Delay(0);
         }
 
         /// <summary>
@@ -229,17 +231,19 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <summary>
         /// Called when [disconnect].
         /// </summary>
-        public void OnDisconnect()
+        public async Task OnDisconnect()
         {
+            await Task.Delay(0);
         }
 
         /// <summary>
         /// Called when [connect to sonar].
         /// </summary>
         /// <param name="configuration">sonar configuration</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IList<IIssueTrackerPlugin> issuePlugins)
+        public async Task OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IList<IIssueTrackerPlugin> issuePlugins)
         {
             this.config = AuthtenticationHelper.AuthToken;
+            await Task.Delay(0);
         }
 
         /// <summary>
@@ -267,9 +271,10 @@ namespace VSSonarExtensionUi.Model.Menu
         /// <param name="vsenvironmenthelperIn">The vsenvironmenthelper in.</param>
         /// <param name="statusBar">The status bar.</param>
         /// <param name="provider">The provider.</param>
-        public void UpdateServices(IVsEnvironmentHelper vsenvironmenthelperIn, IVSSStatusBar statusBar, IServiceProvider provider)
+        public async Task UpdateServices(IVsEnvironmentHelper vsenvironmenthelperIn, IVSSStatusBar statusBar, IServiceProvider provider)
         {
             this.vshelper = vsenvironmenthelperIn;
+            await Task.Delay(0);
         }
 
         /// <summary>

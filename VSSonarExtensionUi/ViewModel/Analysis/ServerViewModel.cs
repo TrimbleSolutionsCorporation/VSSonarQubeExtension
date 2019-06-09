@@ -230,7 +230,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// Called when [connect to sonar].
         /// </summary>
         /// <param name="configuration">sonar configuration</param>
-        public async void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IList<IIssueTrackerPlugin> issuePlugin)
+        public async Task OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IList<IIssueTrackerPlugin> issuePlugin)
         {
             this.availableProjects = availableProjects;
 			// does nothing
@@ -337,8 +337,9 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <summary>
         ///     The end data association.
         /// </summary>
-        public void OnSolutionClosed()
+        public async Task OnSolutionClosed()
         {
+            await Task.Delay(0);
             this.ClearIssues();
             this.IsRunningInVisualStudio = false;
             this.associatedProject = null;
@@ -347,8 +348,9 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <summary>
         /// Called when [disconnect].
         /// </summary>
-        public void OnDisconnect()
+        public async Task OnDisconnect()
         {
+            await Task.Delay(0);
         }
 
         /// <summary>
@@ -408,13 +410,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <param name="workingDir">The working dir.</param>
         /// <param name="provider">The provider.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
-        public void AssociateWithNewProject(
+        public async Task AssociateWithNewProject(
             Resource associatedProjectIn,
             string workingDir,
             ISourceControlProvider provider,
             Dictionary<string, Profile> profile,
             string visualStudioVersion)
         {
+            await Task.Delay(0);
             if (associatedProjectIn == null || string.IsNullOrEmpty(associatedProjectIn.SolutionRoot))
             {
                 return;
@@ -518,11 +521,12 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <param name="vsenvironmenthelperIn">The vsenvironmenthelper in.</param>
         /// <param name="statusBarIn">The status bar in.</param>
         /// <param name="provider">The provider.</param>
-        public void UpdateServices(
+        public async Task UpdateServices(
             IVsEnvironmentHelper vsenvironmenthelperIn,
             IVSSStatusBar statusBarIn,
             IServiceProvider provider)
         {
+            await Task.Delay(0);
             this.vsenvironmenthelper = vsenvironmenthelperIn;
             this.statusBar = statusBarIn;
             this.serviceProvier = provider;

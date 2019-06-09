@@ -97,19 +97,23 @@ namespace VSSQTestTrackPlugin
         /// <param name="configuration">The configuration.</param>
         /// <param name="profiles">The profiles.</param>
         /// <param name="vsVersion">The vs version.</param>
-        public void AssociateProject(Resource project, ISonarConfiguration configuration, Dictionary<string, Profile> profiles, string vsVersion)
+        public async Task<bool> AssociateProject(Resource project, ISonarConfiguration configuration, Dictionary<string, Profile> profiles, string vsVersion)
         {
+            await Task.Delay(0);
             this.associatedProject = project;
             this.userConf = configuration;
+            return true;
         }
 
         /// <summary>
         /// Called when [connect to sonar].
         /// </summary>
         /// <param name="configuration">The configuration.</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration)
+        public async Task<bool> OnConnectToSonar(ISonarConfiguration configuration)
         {
+            await Task.Delay(0);
             this.userConf = configuration;
+            return true;
         }
 
         /// <summary>
@@ -472,7 +476,13 @@ namespace VSSQTestTrackPlugin
 
 		private string GetLineForIssue(SonarRestService.Types.Issue issue, string[] compElelms)
 		{
-			var url = "    [" + issue.Assignee + "] " + issue.Message + " : " + compElelms[compElelms.Length - 1] + " : " + issue.Line + " : ";
+            var assignee = issue.Assignee;
+            if (string.IsNullOrEmpty(issue.Author))
+            {
+                assignee = issue.Author;
+            }
+
+            var url = "    [" + issue.Assignee + "] " + issue.Message + " : " + compElelms[compElelms.Length - 1] + " : " + issue.Line + " : ";
 			var openIssueString = string.Format("[Open Issue|{0}/issues?issues={1}&open={1}]", this.userConf.Hostname.TrimEnd('/'), issue.Key);
 			return url + openIssueString; 
 		}

@@ -138,11 +138,12 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// <param name="vsenvironmenthelperIn">The vsenvironmenthelper in.</param>
         /// <param name="statusBarIn">The status bar in.</param>
         /// <param name="provider">The provider.</param>
-        public void UpdateServices(
+        public async Task UpdateServices(
             IVsEnvironmentHelper vsenvironmenthelperIn,
             IVSSStatusBar statusBarIn,
             IServiceProvider provider)
         {
+            await Task.Delay(0);
             this.visualStudioHelper = vsenvironmenthelperIn;
             this.statusBar = statusBarIn;
             this.serviceProvier = provider;
@@ -154,14 +155,13 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// </summary>
         /// <param name="configuration">sonar configuration</param>
         /// <param name="availableProjectsIn">The available projects in.</param>
-        public async void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjectsIn, IList<IIssueTrackerPlugin> sourcePlugin)
+        public async Task OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjectsIn, IList<IIssueTrackerPlugin> sourcePlugin)
         {
             // does nothing
             this.availableProjects = availableProjectsIn;
             this.issuesSearchViewModel.AvailableProjects = availableProjectsIn;
             this.issuesSearchViewModel.CanQUeryIssues = true;
             this.logger.EndedWorking();
-
 			await this.RefreshUsersData();
         }
 
@@ -201,7 +201,7 @@ namespace VSSonarExtensionUi.Model.Analysis
 		/// <param name="sourceModelIn">The source model in.</param>
 		/// <param name="sourcePlugin">The source plugin.</param>
 		/// <param name="profile">The profile.</param>
-		public async void AssociateWithNewProject(
+		public async Task AssociateWithNewProject(
             Resource project,
             string workingDir,
             ISourceControlProvider sourceModelIn,
@@ -255,11 +255,12 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// <summary>
         ///     The end data association.
         /// </summary>
-        public void OnSolutionClosed()
+        public async Task OnSolutionClosed()
         {
             this.ClearIssues();
             this.associatedProject = null;
             this.issuesSearchViewModel.CanQUeryIssues = false;
+            await Task.Delay(0);
         }
 
         /// <summary>
@@ -417,9 +418,10 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// <summary>
         /// Called when [disconnect].
         /// </summary>
-        public void OnDisconnect()
+        public async Task OnDisconnect()
         {
             // not used
+            await Task.Delay(0);
         }
 
         /// <summary>

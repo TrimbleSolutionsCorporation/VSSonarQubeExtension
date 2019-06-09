@@ -78,13 +78,13 @@ namespace VSSonarExtensionUi.Model.Helpers
                 bool isIssueTrackerId = this.FilterByIssueTracker(parameter);
 
 
-                bool include = (parameter.Message == null || parameter.Message.IndexOf(this.filterOption.FilterTermMessage, StringComparison.InvariantCultureIgnoreCase) >= 0)                               
-                               && (parameter.Component == null || parameter.Component.IndexOf(this.filterOption.FilterTermComponent, StringComparison.InvariantCultureIgnoreCase) >= 0)
-                               && (parameter.Project == null || parameter.Project.IndexOf(this.filterOption.FilterTermProject, StringComparison.InvariantCultureIgnoreCase) >= 0)
-                               && (parameter.Rule == null || parameter.Rule.IndexOf(this.filterOption.FilterTermRule, StringComparison.InvariantCultureIgnoreCase) >= 0)
-                               && (parameter.Assignee == null || parameter.Assignee.IndexOf(this.filterOption.FilterTermAssignee, StringComparison.InvariantCultureIgnoreCase) >= 0)
-							   && (parameter.Team == null || parameter.Team.ToLower().Equals(this.filterOption.FilterTermTeam.ToLower()))
-							   && (parameter.Author == null || parameter.Author.IndexOf(this.filterOption.FilterTermAuthor, StringComparison.InvariantCultureIgnoreCase) >= 0);
+                bool include = (!string.IsNullOrEmpty(parameter.Message) && parameter.Message.IndexOf(this.filterOption.FilterTermMessage, StringComparison.InvariantCultureIgnoreCase) >= 0)                               
+                               && (!string.IsNullOrEmpty(parameter.Component) && parameter.Component.IndexOf(this.filterOption.FilterTermComponent, StringComparison.InvariantCultureIgnoreCase) >= 0)
+                               && (!string.IsNullOrEmpty(parameter.Project) && parameter.Project.IndexOf(this.filterOption.FilterTermProject, StringComparison.InvariantCultureIgnoreCase) >= 0)
+                               && (!string.IsNullOrEmpty(parameter.Rule) && parameter.Rule.IndexOf(this.filterOption.FilterTermRule, StringComparison.InvariantCultureIgnoreCase) >= 0)
+                               && (!string.IsNullOrEmpty(parameter.Assignee) && parameter.Assignee.IndexOf(this.filterOption.FilterTermAssignee, StringComparison.InvariantCultureIgnoreCase) >= 0)
+							   && (!string.IsNullOrEmpty(parameter.Team) && parameter.Team.ToLower().Equals(this.filterOption.FilterTermTeam.ToLower()))
+							   && (!string.IsNullOrEmpty(parameter.Author) && parameter.Author.IndexOf(this.filterOption.FilterTermAuthor, StringComparison.InvariantCultureIgnoreCase) >= 0);
 
                 return include && issuesStatus && issuesSeverity && issuesResolution && issuesIsNew && isIssueTrackerId;
             }

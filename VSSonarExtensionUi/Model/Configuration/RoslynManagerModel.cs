@@ -120,17 +120,17 @@
         /// Called when [connect to sonar].
         /// </summary>
         /// <param name="configuration">sonar configuration</param>
-        public void OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IList<IIssueTrackerPlugin> issuePlugin)
+        public async Task OnConnectToSonar(ISonarConfiguration configuration, IEnumerable<Resource> availableProjects, IList<IIssueTrackerPlugin> issuePlugin)
         {
             this.ExtensionDiagnostics.Clear();
-            this.embedVersionController.InitializedServerDiagnostics(configuration);
-            this.InitializedServerDiagnostics(configuration);
+            await this.embedVersionController.InitializedServerDiagnostics(configuration);
+            await this.InitializedServerDiagnostics(configuration);
         }
 
         /// <summary>
         /// Automatics the detect installed analyzers.
         /// </summary>
-        public string AutoDetectInstalledAnalysers()
+        public async Task<string> AutoDetectInstalledAnalysers()
         {
             var paths = new Dictionary<string, string>();
             using (var workspace = MSBuildWorkspace.Create())
@@ -153,7 +153,7 @@
             var isOk = true;
             foreach (var item in paths)
             {
-                if (!this.AddNewRoslynPack(item.Value, false))
+                if (!await this.AddNewRoslynPack(item.Value, false))
                 {
                     this.notificationManager.WriteMessageToLog("Failed to add roslyn dll: " + item.Value);
                     isOk = false;
@@ -229,16 +229,18 @@
         /// <param name="vsenvironmenthelperIn">The vs environment helper in.</param>
         /// <param name="statusBar">The status bar.</param>
         /// <param name="provider">The provider.</param>
-        public void UpdateServices(IVsEnvironmentHelper vsenvironmenthelperIn, IVSSStatusBar statusBar, IServiceProvider provider)
+        public async Task UpdateServices(IVsEnvironmentHelper vsenvironmenthelperIn, IVSSStatusBar statusBar, IServiceProvider provider)
         {
             // does not access visual studio services
+            await Task.Delay(0);
         }
 
         /// <summary>
         /// Called when [disconnect].
         /// </summary>
-        public void OnDisconnect()
+        public async Task OnDisconnect()
         {
+            await Task.Delay(0);
         }
 
         /// <summary>
@@ -255,10 +257,11 @@
         /// <summary>
         /// The end data association.
         /// </summary>
-        public void OnSolutionClosed()
+        public async Task OnSolutionClosed()
         {
             this.associatedProject = null;
             this.SourceDir = string.Empty;
+            await Task.Delay(0);
         }
 
         /// <summary>
@@ -277,7 +280,7 @@
         /// <param name="workDir">The work directory.</param>
         /// <param name="sourceModelIn">The source model in.</param>
         /// <param name="sourcePlugin">The source plugin.</param>
-        public void AssociateWithNewProject(
+        public async Task AssociateWithNewProject(
             Resource project,
             string workDir,
             ISourceControlProvider sourceModelIn,
@@ -287,6 +290,7 @@
             this.Profile = profile;
             this.SourceDir = workDir;
             this.associatedProject = project;
+            await Task.Delay(0);
         }
 
         /// <summary>
@@ -294,7 +298,7 @@
         /// </summary>
         /// <param name="dllPath">The DLL path.</param>
         /// <returns>true if ok</returns>
-        public bool AddNewRoslynPack(string dllPath, bool updateProps)
+        public async Task<bool> AddNewRoslynPack(string dllPath, bool updateProps)
         {
             var name = Path.GetFileName(dllPath);
 
@@ -315,7 +319,7 @@
 
                 if (diagnostic.AvailableChecks.Count != 0)
                 {
-                    this.SyncDiagnosticInServer(diagnostic);
+                    await this.SyncDiagnosticInServer(diagnostic);
                     this.ExtensionDiagnostics.Add(name, diagnostic);
                 }
                 else
@@ -338,7 +342,7 @@
         /// Synchronizes the diagnostic in server.
         /// </summary>
         /// <param name="diagnostic">The diagnostic.</param>
-        private void SyncDiagnosticInServer(VSSonarExtensionDiagnostic diagnostic)
+        private async Task SyncDiagnosticInServer(VSSonarExtensionDiagnostic diagnostic)
         {
             if (diagnostic.AvailableChecks.Count == 0)
             {
@@ -352,7 +356,7 @@
                     foreach (var lang in check.Languages)
                     {
                         var language = GetLanguage(lang);
-                        this.CreateRule(language, diag);
+                        await Task.Run(() => this.CreateRule(language, diag));
                     }
                 }
             }
@@ -470,7 +474,7 @@
         /// <summary>
         /// Initializes the installed diagnostics.
         /// </summary>
-        public void InitializedServerDiagnostics(ISonarConfiguration authentication)
+        public async Task InitializedServerDiagnostics(ISonarConfiguration authentication)
         {
             if (!this.ExtensionDiagnostics.Any())
             {
@@ -487,18 +491,18 @@
                     {
                         if (Directory.Exists(folder) && !this.roslynExternalUserDiagPath.ToLower().Equals(folder.ToLower()))
                         {
-                            this.LoadDiagnosticsFromPath(folder, hasRoslynPlugin);
+                            await this.LoadDiagnosticsFromPath(folder, hasRoslynPlugin);
                         }
                     }
                 }
 
-                this.LoadDiagnosticsFromPath(this.roslynExternalUserDiagPath, hasRoslynPlugin);
+                await this.LoadDiagnosticsFromPath(this.roslynExternalUserDiagPath, hasRoslynPlugin);
                 
                 foreach (var item in this.embedVersionController.GetInstalledPaths())
                 {
                     try
                     {
-                        this.LoadDiagnosticsFromPath(item, false);
+                        await this.LoadDiagnosticsFromPath(item, false);
                     }
                     catch (Exception ex)
                     {
@@ -510,7 +514,7 @@
             this.SyncSettings();
         }
 
-        private void LoadDiagnosticsFromPath(string folderPath, bool syncInServer)
+        private async Task LoadDiagnosticsFromPath(string folderPath, bool syncInServer)
         {
             var diagnostics = Directory.GetFiles(folderPath);
 
@@ -533,7 +537,7 @@
 
                         if (syncInServer)
                         {
-                            this.SyncDiagnosticInServer(newdata);
+                            await this.SyncDiagnosticInServer(newdata);
                         }
                     }
                 }
