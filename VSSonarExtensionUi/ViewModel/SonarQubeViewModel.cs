@@ -1632,7 +1632,6 @@ namespace VSSonarExtensionUi.ViewModel
                 this.sonarRestConnector,
                 this.configurationHelper,
                 this.notificationManager,
-                this.notificationManager as IRestLogger,
                 this.sonarKeyTranslator,
                 this.LocaAnalyser,
                 this.newAddedIssues);
@@ -1641,7 +1640,6 @@ namespace VSSonarExtensionUi.ViewModel
                 this.configurationHelper,
                 this.sonarRestConnector, 
                 this.notificationManager,
-                this.notificationManager as IRestLogger,
                 this.sonarKeyTranslator,
                 this.LocaAnalyser,
                 this.pluginManager.IssueTrackerPlugins);

@@ -81,10 +81,9 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         private readonly string HideFalsePositivesKey = "HideFalsePositives";
         private readonly IList<IAnalysisPlugin> plugins = new List<IAnalysisPlugin>();
         private readonly ISonarRestService restService;
-        private readonly IRestLogger restLogger;
         private readonly IConfigurationHelper configurationHelper;
         private readonly ISonarLocalAnalyser localAnalyserModule;
-        private readonly INotificationManager notificationManager;
+        private readonly INotificationManager logger;
         private readonly ISQKeyTranslator keyTranslator;
         private readonly Dictionary<string, DateTime> projectBuildCache = new Dictionary<string, DateTime>();
         private readonly Dictionary<string, string> sourceInServerCache = new Dictionary<string, string>();
@@ -118,16 +117,14 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             ISonarRestService service, 
             IConfigurationHelper configurationHelper,
             INotificationManager notificationManager,
-            IRestLogger restLogger,
             ISQKeyTranslator translator,
             ISonarLocalAnalyser analyser,
             Dictionary<string, List<Issue>> newIssuesList)
         {
             this.newAddedIssues = newIssuesList;
             this.keyTranslator = translator;
-            this.notificationManager = notificationManager;
+            this.logger = notificationManager;
             this.restService = service;
-            this.restLogger = restLogger;
             this.configurationHelper = configurationHelper;
 
             this.plugins = pluginsIn;
@@ -170,7 +167,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 {
                     foreach(var command in commands)
                     {
-                        var commandNew = new PluginCommandWrapper(this, this.notificationManager);
+                        var commandNew = new PluginCommandWrapper(this, this.logger);
                         commandNew.PluginOperation = command;
                         commandNew.Name = command.Name;
                         this.PluginsCommands.Add(commandNew);
@@ -553,7 +550,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public void OnAnalysisCommand()
         {
             this.FileAnalysisIsEnabled = false;
-            this.notificationManager.StartedWorking("Running Full Analysis");
+            this.logger.StartedWorking("Running Full Analysis");
             this.CanRunAnalysis = false;
             this.RunLocalAnalysis(AnalysisTypes.ANALYSIS, false, null);
         }
@@ -566,7 +563,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public void RunAnalysis(AnalysisTypes mode, bool fromSave)
         {
             this.FileAnalysisIsEnabled = false;
-            this.notificationManager.StartedWorking(mode.ToString());
+            this.logger.StartedWorking(mode.ToString());
             this.CanRunAnalysis = false;
             this.RunLocalAnalysis(mode, fromSave, this.VsFileItemInView);
         }
@@ -607,7 +604,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public void ShowNewAddedIssuesAndLock()
         {
             this.FileAnalysisIsEnabled = true;
-            this.notificationManager.StartedWorking("Display current new issues");
+            this.logger.StartedWorking("Display current new issues");
             this.CanRunAnalysis = true;
             this.AllLog.Clear();
             this.OutputLog = string.Empty;
@@ -638,7 +635,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
 
             if (this.FileAnalysisIsEnabled)
             {
-                this.notificationManager.StartedWorking("Running File Analysis");
+                this.logger.StartedWorking("Running File Analysis");
                 this.RunLocalAnalysis(AnalysisTypes.FILE, fromSave, resourceInView);
             }
             else
@@ -730,7 +727,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 }
                 else
                 {
-                    this.notificationManager.ReportMessage(new VSSonarPlugins.Message { Id = "LocalViewModel", Data = "Project Analysis Is Disabled, Enable in Options" });
+                    this.logger.ReportMessage(new VSSonarPlugins.Message { Id = "LocalViewModel", Data = "Project Analysis Is Disabled, Enable in Options" });
                 }                
             }
         }
@@ -799,7 +796,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.localAnalyserModule.StopAllExecution();
             this.FileAnalysisIsEnabled = false;
             this.CanRunAnalysis = true;
-            this.notificationManager.EndedWorking();
+            this.logger.EndedWorking();
         }
 
         /// <summary>
@@ -825,7 +822,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             {
                 this.associatedProject.ActiveConfiguration = this.vsenvironmenthelper.ActiveConfiguration();
                 this.associatedProject.ActivePlatform = this.vsenvironmenthelper.ActivePlatform();
-                this.notificationManager.ResetFailure();
+                this.logger.ResetFailure();
                 switch (analysis)
                 {
                     case AnalysisTypes.FILE:
@@ -841,7 +838,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                             this.localAnalyserModule.AnalyseFile(
                                 itemInView,
                                 this.associatedProject,
-                                this.notificationManager.AnalysisChangeLines,
+                                this.logger.AnalysisChangeLines,
                                 AuthtenticationHelper.AuthToken.SonarVersion,
                                 AuthtenticationHelper.AuthToken,
                                 this.keyTranslator,
@@ -886,10 +883,10 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             }
             catch (Exception ex)
             {
-                this.notificationManager.ReportMessage(new VSSonarPlugins.Message { Id = "LocalViewModel", Data = "Analysis Failed: " + ex.Message });
-                this.notificationManager.ReportException(ex);
-                this.notificationManager.EndedWorking();
-                this.notificationManager.FlagFailure(ex.Message);
+                this.logger.ReportMessage(new VSSonarPlugins.Message { Id = "LocalViewModel", Data = "Analysis Failed: " + ex.Message });
+                this.logger.ReportException(ex);
+                this.logger.EndedWorking();
+                this.logger.FlagFailure(ex.Message);
             }
         }
 
@@ -929,7 +926,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                         filter,
                         this.associatedProject.Key,
                         this.ct.Token,
-                        this.restLogger);
+                        this.logger);
                 }).ConfigureAwait(false);
 
                 this.falseandwontfixissues.Add(itemInView.SonarResource.Key, issues);
@@ -955,7 +952,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             this.CanRunAnalysis = true;
             this.AnalysisIsRunning = false;
-            this.notificationManager.EndedWorking();
+            this.logger.EndedWorking();
             var issues = new List<Issue>();
             foreach (var item in this.newAddedIssues)
             {
@@ -976,7 +973,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             this.CanRunAnalysis = true;
             this.AnalysisIsRunning = false;
-            this.notificationManager.EndedWorking();
+            this.logger.EndedWorking();
 
             var exceptionMsg = e as LocalAnalysisExceptionEventArgs;
             if(exceptionMsg != null)
@@ -991,7 +988,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             var issuesFullMessage = e as LocalAnalysisEventFullAnalsysisComplete;
             if(issuesFullMessage != null)
             {
-                this.notificationManager.ReportMessage("Local Analysis Reported: " + issuesFullMessage.issues.Count);
+                this.logger.ReportMessage("Local Analysis Reported: " + issuesFullMessage.issues.Count);
                 await this.IssuesGridView.UpdateIssues(issuesFullMessage.issues, null);
                 this.RefreshIssuesEditor(EventArgs.Empty);
                 return;
@@ -1021,7 +1018,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             var issuesMessage = e as LocalAnalysisEventFileAnalsysisComplete;
             if(issuesMessage == null)
             {
-                this.notificationManager.ReportMessage("Local Analysis on File With Some problem Reported: " + e);
+                this.logger.ReportMessage("Local Analysis on File With Some problem Reported: " + e);
                 return;
             }
 
@@ -1166,7 +1163,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                             listOfIssues.AddRange(issuesMessage.issues);
                         }
 
-                        this.notificationManager.ReportMessage(
+                        this.logger.ReportMessage(
                             new VSSonarPlugins.Message
                             {
                                 Id = "LocalAnalyserModel",
@@ -1307,7 +1304,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.vsenvironmenthelper.OpenResourceInVisualStudio(
                 this.configurationHelper.UserLogForAnalysisFile(),
                 0,
-                this.notificationManager.UserDefinedEditor);
+                this.logger.UserDefinedEditor);
         }
 
         /// <summary>
@@ -1336,7 +1333,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 return true;
             }
 
-            this.notificationManager.ReportMessage(new VSSonarPlugins.Message { Id = "LocalViewModel", Data = "Project output is Updated" });
+            this.logger.ReportMessage(new VSSonarPlugins.Message { Id = "LocalViewModel", Data = "Project output is Updated" });
             return false;
         }
 
@@ -1385,9 +1382,9 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         {
             var menu = new ObservableCollection<IMenuItem>
                            {
-                               SetExclusionsMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager, translator, analyser, projects),
-                               SetSqaleMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager, translator, analyser),
-                               MoreInfoMenu.MakeMenu(service, this.IssuesGridView, this.notificationManager, translator, analyser)
+                               SetExclusionsMenu.MakeMenu(service, this.IssuesGridView, this.logger, translator, analyser, projects),
+                               SetSqaleMenu.MakeMenu(service, this.IssuesGridView, this.logger, translator, analyser),
+                               MoreInfoMenu.MakeMenu(service, this.IssuesGridView, this.logger, translator, analyser)
                            };
 
             return menu;

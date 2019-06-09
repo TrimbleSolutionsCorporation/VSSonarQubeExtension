@@ -634,6 +634,7 @@
 			var date = this.DatePick.SelectedDate.Value;
 			var version = this.VersionName.Text;
 
+            this.CreateNewTokenOrUseOldOne();
 			foreach (var item in this.selectedItems)
 			{
 				if (this.ct.IsCancellationRequested)
@@ -645,7 +646,7 @@
 
 				if (item.Qualifier == "TRK")
 				{
-					this.StatusLabel.Content = await this.rest.CreateVersion(this.conf, item, version, date, CreateNewTokenOrUseOldOne(), this.logger);
+					this.StatusLabel.Content = await this.rest.CreateVersion(this.conf, item, version, date, this.ct.Token, this.logger);
 				}
 			}
 
@@ -655,7 +656,10 @@
 
 		private void BtnCancelRequestClick(object sender, RoutedEventArgs e)
 		{
-			this.ct.Cancel();
+            if (this.ct != null)
+            {
+                this.ct.Cancel();
+            }		
 		}
-	}
+    }
 }

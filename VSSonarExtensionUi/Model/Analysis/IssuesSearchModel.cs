@@ -60,8 +60,7 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// <summary>
         /// The notificationmanager
         /// </summary>
-        private readonly INotificationManager notificationmanager;
-        private readonly IRestLogger restLogger;
+        private readonly INotificationManager logger;
 
         /// <summary>
         /// The key translator
@@ -115,14 +114,12 @@ namespace VSSonarExtensionUi.Model.Analysis
             IConfigurationHelper configurationHelper,
             ISonarRestService restService,
             INotificationManager manager,
-            IRestLogger restLogger,
             ISQKeyTranslator translator,
             ISonarLocalAnalyser analyser,
             IList<IIssueTrackerPlugin> issuetrackerplugins)
         {
             this.keyTranslator = translator;
-            this.notificationmanager = manager;
-            this.restLogger = restLogger;
+            this.logger = manager;
             this.configurationHelper = configurationHelper;
             this.restService = restService;
             this.issuesSearchViewModel = new IssuesSearchViewModel(this, manager, this.configurationHelper, restService, translator, analyser, issuetrackerplugins);
@@ -163,7 +160,7 @@ namespace VSSonarExtensionUi.Model.Analysis
             this.availableProjects = availableProjectsIn;
             this.issuesSearchViewModel.AvailableProjects = availableProjectsIn;
             this.issuesSearchViewModel.CanQUeryIssues = true;
-            this.notificationmanager.EndedWorking();
+            this.logger.EndedWorking();
 
 			await this.RefreshUsersData();
         }
@@ -176,7 +173,7 @@ namespace VSSonarExtensionUi.Model.Analysis
 				GlobalIds.TeamsFile);
 			if (userTeamsFile == null)
 			{
-				this.restLogger.ReportMessage("username not configured in settings");
+				this.logger.ReportMessage("username not configured in settings");
                 return;
 			}
 
@@ -192,7 +189,7 @@ namespace VSSonarExtensionUi.Model.Analysis
             }
             catch (Exception ex)
             {
-                this.restLogger.ReportMessage("Failed to update teams: " + ex.Message);
+                this.logger.ReportMessage("Failed to update teams: " + ex.Message);
             }
 		}
 
@@ -214,7 +211,7 @@ namespace VSSonarExtensionUi.Model.Analysis
             this.sourceModel = sourceModelIn;
             this.associatedProject = project;
             this.issuesSearchViewModel.CanQUeryIssues = true;
-            this.notificationmanager.EndedWorking();
+            this.logger.EndedWorking();
 
             List<User> usortedList = await this.restService.GetUserList(AuthtenticationHelper.AuthToken);
             if (usortedList != null && usortedList.Count > 0)
@@ -314,12 +311,16 @@ namespace VSSonarExtensionUi.Model.Analysis
         {
             if (this.associatedProject == null)
             {
-                this.notificationmanager.FlagFailure("Feature available only when solution is open.");
+                this.logger.FlagFailure("Feature available only when solution is open.");
                 return new List<Issue>();
             }
 
             this.CreateNewTokenOrUseOldOne();
-		    return await this.restService.GetIssuesForProjects(AuthtenticationHelper.AuthToken, this.associatedProject.Key, this.ct.Token, this.restLogger);
+		    return await this.restService.GetIssuesForProjects(
+                AuthtenticationHelper.AuthToken,
+                this.associatedProject.Key,
+                this.ct.Token,
+                this.logger);
         }
 
         /// <summary>
@@ -333,12 +334,17 @@ namespace VSSonarExtensionUi.Model.Analysis
         {
             if (this.associatedProject == null)
             {
-                this.notificationmanager.FlagFailure("Feature available only when solution is open.");
+                this.logger.FlagFailure("Feature available only when solution is open.");
                 return new List<Issue>();
             }
 
             this.CreateNewTokenOrUseOldOne();
-			return await this.restService.GetIssuesByAssigneeInProject(AuthtenticationHelper.AuthToken, this.associatedProject.Key, userName, this.ct.Token, this.restLogger);
+			return await this.restService.GetIssuesByAssigneeInProject(
+                AuthtenticationHelper.AuthToken,
+                this.associatedProject.Key,
+                userName,
+                this.ct.Token,
+                this.logger);
         }
 
         /// <summary>
@@ -351,12 +357,17 @@ namespace VSSonarExtensionUi.Model.Analysis
         {
             if (this.associatedProject == null)
             {
-                this.notificationmanager.FlagFailure("Feature available only when solution is open.");
+                this.logger.FlagFailure("Feature available only when solution is open.");
                 return new List<Issue>();
             }
 
             this.CreateNewTokenOrUseOldOne();
-			return await this.restService.GetIssuesByAssigneeInProject(AuthtenticationHelper.AuthToken, this.associatedProject.Key, AuthtenticationHelper.AuthToken.Username, this.ct.Token, this.restLogger);
+			return await this.restService.GetIssuesByAssigneeInProject(
+                AuthtenticationHelper.AuthToken,
+                this.associatedProject.Key,
+                AuthtenticationHelper.AuthToken.Username,
+                this.ct.Token,
+                this.logger);
         }
 
         /// <summary>
@@ -369,7 +380,11 @@ namespace VSSonarExtensionUi.Model.Analysis
         public async Task<IEnumerable<Issue>> GetUserIssues(string userName)
         {
             this.CreateNewTokenOrUseOldOne();
-			return await this.restService.GetAllIssuesByAssignee(AuthtenticationHelper.AuthToken, userName, this.ct.Token, this.restLogger);
+			return await this.restService.GetAllIssuesByAssignee(
+                AuthtenticationHelper.AuthToken,
+                userName,
+                this.ct.Token,
+                this.logger);
         }
 
         /// <summary>
@@ -381,7 +396,7 @@ namespace VSSonarExtensionUi.Model.Analysis
 			var userLoginValue = this.configurationHelper.ReadSetting(Context.GlobalPropsId, OwnersId.ApplicationOwnerId, GlobalIds.UserLogin);
 			if (userLoginValue == null)
 			{
-				this.restLogger.ReportMessage("username not configured in settings");
+				this.logger.ReportMessage("username not configured in settings");
 				return new List<Issue>();
 			}
 
@@ -417,7 +432,12 @@ namespace VSSonarExtensionUi.Model.Analysis
         public async Task<IEnumerable<Issue>> GetIssuesSinceSinceDate(DateTime date)
         {
             this.CreateNewTokenOrUseOldOne();
-			return await this.restService.GetIssuesForProjectsCreatedAfterDate(AuthtenticationHelper.AuthToken, this.associatedProject.Key, date, this.ct.Token, this.restLogger);
+			return await this.restService.GetIssuesForProjectsCreatedAfterDate(
+                AuthtenticationHelper.AuthToken,
+                this.associatedProject.Key,
+                date,
+                this.ct.Token,
+                this.logger);
         }
 
         /// <summary>
@@ -427,7 +447,12 @@ namespace VSSonarExtensionUi.Model.Analysis
         public async Task<IEnumerable<Issue>> GetIssuesSinceLastProjectDate()
         {
             this.CreateNewTokenOrUseOldOne();
-			return await this.restService.GetIssuesForProjectsCreatedAfterDate(AuthtenticationHelper.AuthToken, this.associatedProject.Key, this.associatedProject.Date, this.ct.Token, this.restLogger);
+			return await this.restService.GetIssuesForProjectsCreatedAfterDate(
+                AuthtenticationHelper.AuthToken, 
+                this.associatedProject.Key, 
+                this.associatedProject.Date, 
+                this.ct.Token,
+                this.logger);
         }
 
         /// <summary>
@@ -441,7 +466,7 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// </returns>
         public async Task<Tuple<IEnumerable<Issue>, bool>> GetIssuesUsingFilter(string filter, bool filterSSCM, bool componentsSet)
         {
-            this.notificationmanager.ResetFailure();
+            this.logger.ResetFailure();
             string request = "?" + filter;
             string key = string.Empty;
             if (this.associatedProject != null && !componentsSet)
@@ -451,7 +476,12 @@ namespace VSSonarExtensionUi.Model.Analysis
             }
 
             this.CreateNewTokenOrUseOldOne();
-            var issues = await this.restService.GetIssues(AuthtenticationHelper.AuthToken, request, key, this.ct.Token, this.restLogger);
+            var issues = await this.restService.GetIssues(
+                AuthtenticationHelper.AuthToken,
+                request,
+                key,
+                this.ct.Token,
+                this.logger);
             if (!filterSSCM)
             {
                 return new Tuple<IEnumerable<Issue>, bool>(issues, this.ct.IsCancellationRequested);
@@ -529,7 +559,7 @@ namespace VSSonarExtensionUi.Model.Analysis
                 {
                     if (this.associatedProject == null)
                     {
-                        this.notificationmanager.ReportMessage(
+                        this.logger.ReportMessage(
                             new Message
                             {
                                 Id = "IssuesSearchModel",
@@ -549,13 +579,13 @@ namespace VSSonarExtensionUi.Model.Analysis
                         {
                             var message = "Search Model Failed : Translator Failed:  Key : " +
                                 issue.Component + " - Path : " + translatedPath + " - KeyType : " + this.keyTranslator.GetLookupType().ToString();
-                            this.notificationmanager.ReportMessage(new Message { Id = "IssuesSearchModel", Data = message });
+                            this.logger.ReportMessage(new Message { Id = "IssuesSearchModel", Data = message });
                             return issue;
                         }
                     }
                     catch (Exception ex)
                     {
-                        IssueGridViewModel.ReportTranslationException(issue, translatedPath, this.notificationmanager, this.restService, this.associatedProject, ex);
+                        IssueGridViewModel.ReportTranslationException(issue, translatedPath, this.logger, this.restService, this.associatedProject, ex);
                         return issue;
                     }
 
@@ -568,7 +598,7 @@ namespace VSSonarExtensionUi.Model.Analysis
                         }
                     }
 
-                    this.notificationmanager.ReportMessage(
+                    this.logger.ReportMessage(
                         new Message
                         {
                             Id = "IssuesSearchModel",
@@ -578,14 +608,14 @@ namespace VSSonarExtensionUi.Model.Analysis
             }
             catch (Exception ex)
             {
-                this.notificationmanager.ReportMessage(
+                this.logger.ReportMessage(
                     new Message
                     {
                         Id = "IssuesSearchModel",
                         Data = "Blame throw exception, please report: " + ex.Message + " : " + issue.Component
                     });
 
-                this.notificationmanager.ReportException(ex);
+                this.logger.ReportException(ex);
             }
             
             return issue;
@@ -605,7 +635,7 @@ namespace VSSonarExtensionUi.Model.Analysis
 		{
 			if (!File.Exists(fileName))
 			{
-				this.notificationmanager.ReportMessage("Teams File Not Found: " + fileName);
+				this.logger.ReportMessage("Teams File Not Found: " + fileName);
 				return false;
 			}
 
