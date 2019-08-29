@@ -421,6 +421,8 @@
     </Content>
     <Content Include="Resources\vsiximage.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>Resources</VSIXSubPath>
     </Content>
     <None Include="VSSonarQubeExtensionMetro.licenseheader" />
   </ItemGroup>
@@ -434,9 +436,13 @@
     <Resource Include="Resources\sonarreviews.bmp" />
     <Content Include="Resources\Package.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>Resources</VSIXSubPath>
     </Content>
     <Content Include="Resources\sonarviolations.bmp">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>Resources</VSIXSubPath>
     </Content>
   </ItemGroup>
   <ItemGroup>
