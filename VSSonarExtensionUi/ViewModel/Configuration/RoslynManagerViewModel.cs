@@ -180,7 +180,7 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
                         return;
                     }
 
-                    if (await this.model.AddNewRoslynPack(filedialog.FileName, true))
+                    if (await this.model.AddNewRoslynPack(filedialog.FileName))
                     {
                         await this.SyncDiagInView();
                         MessageDisplayBox.DisplayMessage(

@@ -8,6 +8,7 @@
     using System.Collections.ObjectModel;
     using System.IO;
     using System.Reflection;
+    using System.Threading.Tasks;
     using VSSonarPlugins.Types;
 
     /// <summary>
@@ -20,14 +21,12 @@
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="path">The path.</param>
-        public VSSonarExtensionDiagnostic(string name, string path)
+        public VSSonarExtensionDiagnostic(string name)
         {
             this.Name = name;
-            this.Path = path;
             this.Enabled = true;
             this.AvailableChecks = new List<DiagnosticAnalyzerType>();
             this.ChecksInterpretation = new ObservableCollection<DiagnosticDescriptor>();
-            this.LoadDiagnostics(path);
         }
 
         /// <summary>
@@ -45,14 +44,6 @@
         /// The name.
         /// </value>
         public string Name { get; private set; }
-
-        /// <summary>
-        /// Gets the path.
-        /// </summary>
-        /// <value>
-        /// The path.
-        /// </value>
-        public string Path { get; private set; }
 
         /// <summary>
         /// Gets the available checks.
@@ -82,14 +73,15 @@
         /// Loads the diagnostics.
         /// </summary>
         /// <param name="path">The path.</param>
-        private void LoadDiagnostics(string path)
+        public async Task LoadDiagnostics(string path)
         {
             try
             {
-                this.LoadDependencies(System.IO.Path.Combine(Directory.GetParent(path).ToString(), "deps"));
-                this.LoadDependencies(Directory.GetParent(path).ToString());
+                await this.LoadDependencies(Path.Combine(Directory.GetParent(path).ToString(), "deps"));
+                await this.LoadDependencies(Directory.GetParent(path).ToString());
 
-                var assembly = Assembly.LoadFrom(path);
+                var assembly = await Task.Run(() => Assembly.LoadFrom(path));
+
                 var types2 = assembly.GetTypes();
                 foreach (var typedata in types2)
                 {
@@ -127,7 +119,7 @@
         /// Loads the dependencies.
         /// </summary>
         /// <param name="path">The path.</param>
-        private void LoadDependencies(string path)
+        private async Task LoadDependencies(string path)
         {
             if (!Directory.Exists(path))
             {
@@ -137,7 +129,7 @@
             var dlls = Directory.GetFiles(path, "*.dll");
             foreach (var dll in dlls)
             {
-                Assembly.LoadFrom(dll);
+                await Task.Run(() => Assembly.LoadFrom(dll));
             }
         }
     }

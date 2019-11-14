@@ -66,7 +66,7 @@
     <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <Prefer32Bit>false</Prefer32Bit>
-    <DeployExtension>False</DeployExtension>
+    <DeployExtension>True</DeployExtension>
     <CodeAnalysisIgnoreGeneratedCode>false</CodeAnalysisIgnoreGeneratedCode>
   </PropertyGroup>
   <ItemGroup>
@@ -205,7 +205,7 @@
     <Reference Include="Microsoft.VisualStudio.TextManager.Interop.12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
-    <Reference Include="Microsoft.VisualStudio.Threading, Version=16.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.Threading" />
     <Reference Include="MsbuildAutomationHelper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\Packages\MsbuildAutomationHelper.2.0.5\lib\net472\MsbuildAutomationHelper.dll</HintPath>
     </Reference>
@@ -219,11 +219,10 @@
       <HintPath>..\Packages\RestSharp.106.6.9\lib\net452\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="SonarRestApi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=a72e257822fd31b6, processorArchitecture=MSIL">
-      <HintPath>..\Packages\SonarRestApi.1.1.0\lib\net472\SonarRestApi.dll</HintPath>
+      <HintPath>..\Packages\SonarRestApi.1.1.1\lib\net472\SonarRestApi.dll</HintPath>
     </Reference>
-    <Reference Include="SonarRestApiImpl, Version=1.0.1.0, Culture=neutral, PublicKeyToken=a72e257822fd31b6, processorArchitecture=MSIL">
-      <HintPath>..\Packages\SonarRestApiImpl.1.1.2\lib\net472\SonarRestApiImpl.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="SonarRestApiImpl, Version=1.0.0.0, Culture=neutral, PublicKeyToken=a72e257822fd31b6, processorArchitecture=MSIL">
+      <HintPath>..\Packages\SonarRestApiImpl.1.1.3\lib\net472\SonarRestApiImpl.dll</HintPath>
     </Reference>
     <Reference Include="SQLitePCLRaw.batteries_green, Version=1.0.0.0, Culture=neutral, PublicKeyToken=a84b7dcfb1391f7f, processorArchitecture=MSIL">
       <HintPath>..\packages\SQLitePCLRaw.bundle_green.1.1.2\lib\net45\SQLitePCLRaw.batteries_green.dll</HintPath>

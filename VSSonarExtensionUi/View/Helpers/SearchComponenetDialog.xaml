@@ -116,6 +116,7 @@
                     <DataGridTextColumn Binding="{Binding Qualifier}" MinWidth="100" x:Name="SelectedQualifier" Header="Type" CanUserSort="True" SortMemberPath="Qualifier" IsReadOnly="True" />
                     <DataGridTextColumn Binding="{Binding Name}" MinWidth="100" x:Name="SelectedNameTemplateCol" Header="Name" CanUserSort="True" SortMemberPath="Name" IsReadOnly="True" />
                     <DataGridTextColumn Binding="{Binding Key}" MinWidth="100" x:Name="SelectedTitleTemplateCol" Header="Key" CanUserSort="True" SortMemberPath="Key" IsReadOnly="True" />
+                    <DataGridTextColumn Binding="{Binding Valid}" MinWidth="100" x:Name="SelectedIsInvalidTemplateCol" Header="Valid" CanUserSort="True" SortMemberPath="Key" IsReadOnly="True" />
                 </DataGrid.Columns>
             </DataGrid>
 

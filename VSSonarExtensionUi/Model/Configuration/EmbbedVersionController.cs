@@ -48,6 +48,11 @@
         private readonly string roslynHomeDiagPath;
 
         /// <summary>
+        /// prevents double download
+        /// </summary>
+        private bool isDownloaded;
+
+        /// <summary>
         /// internal version data
         /// </summary>
         private class VersionData
@@ -191,6 +196,13 @@
         /// <param name="versionToUse">The version to use.</param>
         private async Task<bool> SyncAnalysersFromServer(ISonarConfiguration authentication, VersionData versionToUse)
         {
+            if (this.isDownloaded)
+            {
+                return true;
+            }
+
+            this.isDownloaded = true;
+
             var tmpFile = Path.GetTempFileName();
             var tmpDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             bool isOk = false;

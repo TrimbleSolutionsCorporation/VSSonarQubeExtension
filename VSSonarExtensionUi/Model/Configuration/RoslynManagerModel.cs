@@ -153,7 +153,7 @@
             var isOk = true;
             foreach (var item in paths)
             {
-                if (!await this.AddNewRoslynPack(item.Value, false))
+                if (!await this.AddNewRoslynPack(item.Value))
                 {
                     this.notificationManager.WriteMessageToLog("Failed to add roslyn dll: " + item.Value);
                     isOk = false;
@@ -298,7 +298,7 @@
         /// </summary>
         /// <param name="dllPath">The DLL path.</param>
         /// <returns>true if ok</returns>
-        public async Task<bool> AddNewRoslynPack(string dllPath, bool updateProps)
+        public async Task<bool> AddNewRoslynPack(string dllPath)
         {
             var name = Path.GetFileName(dllPath);
 
@@ -309,7 +309,8 @@
 
             try
             {
-                var diagnostic = new VSSonarExtensionDiagnostic(name, dllPath);
+                var diagnostic = new VSSonarExtensionDiagnostic(name);
+                await diagnostic.LoadDiagnostics(dllPath);
 
                 if (this.ExtensionDiagnostics.ContainsKey(name))
                 {
@@ -529,8 +530,8 @@
                         continue;
                     }
 
-                    var newdata = new VSSonarExtensionDiagnostic(fileName, diagnostic);
-
+                    var newdata = new VSSonarExtensionDiagnostic(fileName);
+                    await newdata.LoadDiagnostics(diagnostic);
                     if (newdata.AvailableChecks.Count > 0)
                     {
                         this.ExtensionDiagnostics.Add(fileName, newdata);

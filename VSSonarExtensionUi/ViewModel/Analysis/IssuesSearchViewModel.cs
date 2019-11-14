@@ -86,18 +86,18 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// The vshelper
         /// </summary>
         private IVsEnvironmentHelper vshelper;
-		private bool isComponentWindowLaunched;
+        private bool isComponentWindowLaunched;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="IssuesSearchViewModel" /> class.
-		/// </summary>
-		/// <param name="searchModel">The search model.</param>
-		/// <param name="notificationManager">The notification manager.</param>
-		/// <param name="configurationHelper">The configuration helper.</param>
-		/// <param name="restService">The rest service.</param>
-		/// <param name="translator">The translator.</param>
-		/// <param name="analyser">The analyser.</param>
-		public IssuesSearchViewModel(
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IssuesSearchViewModel" /> class.
+        /// </summary>
+        /// <param name="searchModel">The search model.</param>
+        /// <param name="notificationManager">The notification manager.</param>
+        /// <param name="configurationHelper">The configuration helper.</param>
+        /// <param name="restService">The rest service.</param>
+        /// <param name="translator">The translator.</param>
+        /// <param name="analyser">The analyser.</param>
+        public IssuesSearchViewModel(
             IssuesSearchModel searchModel,
             INotificationManager notificationManager,
             IConfigurationHelper configurationHelper,
@@ -113,9 +113,9 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.Header = "Issues Search";
             this.AvailableProjects = new List<Resource>();
             this.AssigneeList = new ObservableCollection<User>();
-			this.Teams = new ObservableCollection<Team>();
+            this.Teams = new ObservableCollection<Team>();
 
-			this.AvailableSearches = new ObservableCollection<string>();
+            this.AvailableSearches = new ObservableCollection<string>();
             this.IssuesGridView = new IssueGridViewModel("SearchView", false, configurationHelper, restService, notificationManager, translator);
             this.savedSearchModel = new SearchModel(this.AvailableSearches);
             this.IssuesGridView.ContextMenuItems = this.CreateRowContextMenu(restService, translator, analyser, plugins);
@@ -176,18 +176,18 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </value>
         public ICommand CancelQueryCommand { get; private set; }
 
-		/// <summary>
-		/// commad 
-		/// </summary>
-		public ICommand LoadTeamsFileCommand { get; private set; }
+        /// <summary>
+        /// commad 
+        /// </summary>
+        public ICommand LoadTeamsFileCommand { get; private set; }
 
-		/// <summary>
-		/// Gets the launch compo search dialog command.
-		/// </summary>
-		/// <value>
-		/// The launch compo search dialog command.
-		/// </value>
-		public ICommand LaunchCompoSearchDialogCommand { get; private set; }
+        /// <summary>
+        /// Gets the launch compo search dialog command.
+        /// </summary>
+        /// <value>
+        /// The launch compo search dialog command.
+        /// </value>
+        public ICommand LaunchCompoSearchDialogCommand { get; private set; }
 
         /// <summary>
         /// Gets the load saved search command.
@@ -261,15 +261,15 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         public ICommand GetIssuesByFilterCommand { get; set; }
 
-		/// <summary>
-		/// refersh users data
-		/// </summary>
-		public ICommand RefreshUsersDataCommand { get; set; }
+        /// <summary>
+        /// refersh users data
+        /// </summary>
+        public ICommand RefreshUsersDataCommand { get; set; }
 
-		/// <summary>
-		///     Gets or sets the get my issues in project command.
-		/// </summary>
-		public ICommand GetMyIssuesInProjectCommand { get; set; }
+        /// <summary>
+        ///     Gets or sets the get my issues in project command.
+        /// </summary>
+        public ICommand GetMyIssuesInProjectCommand { get; set; }
 
         /// <summary>
         ///     Gets or sets the header.
@@ -289,18 +289,18 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </value>
         public bool IsAuthorEnabled { get; set; }
 
-		/// <summary>
-		/// is teams search enabled
-		/// </summary>
-		public bool IsTeamsSearchEnabled { get; set; }
+        /// <summary>
+        /// is teams search enabled
+        /// </summary>
+        public bool IsTeamsSearchEnabled { get; set; }
 
-		/// <summary>
-		/// Gets or sets the author search query.
-		/// </summary>
-		/// <value>
-		/// The author search query.
-		/// </value>
-		public string AuthorSearchQuery { get; set; }
+        /// <summary>
+        /// Gets or sets the author search query.
+        /// </summary>
+        /// <value>
+        /// The author search query.
+        /// </value>
+        public string AuthorSearchQuery { get; set; }
 
         /// <summary>
         /// Gets or sets the tag search query.
@@ -434,18 +434,18 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         public ObservableCollection<User> AssigneeList { get; set; }
 
-		/// <summary>
-		/// Teams
-		/// </summary>
-		public ObservableCollection<Team> Teams { get; set; }
+        /// <summary>
+        /// Teams
+        /// </summary>
+        public ObservableCollection<Team> Teams { get; set; }
 
-		/// <summary>
-		/// Gets the available projects.
-		/// </summary>
-		/// <value>
-		/// The available projects.
-		/// </value>
-		public IEnumerable<Resource> AvailableProjects { get; internal set; }
+        /// <summary>
+        /// Gets the available projects.
+        /// </summary>
+        /// <value>
+        /// The available projects.
+        /// </value>
+        public IEnumerable<Resource> AvailableProjects { get; internal set; }
 
         /// <summary>
         /// Called when [show flyouts changed].
@@ -643,8 +643,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         private void InitCommanding()
         {
             this.CanQUeryIssues = false;
-			this.RefreshUsersDataCommand = new RelayCommand(this.OnRefreshUsersDataCommand);
-			this.GetIssuesByFilterCommand = new RelayCommand(this.OnGetIssuesByFilterCommand);
+            this.RefreshUsersDataCommand = new RelayCommand(this.OnRefreshUsersDataCommand);
+            this.GetIssuesByFilterCommand = new RelayCommand(this.OnGetIssuesByFilterCommand);
             this.GetAllIssuesFromProjectCommand = new RelayCommand(this.OnGetAllIssuesInProject);
             this.GetAllIssuesSinceLastAnalysisCommand = new RelayCommand(this.OnGetAllIssuesSinceLastAnalysisCommand);
             this.GetMyIssuesInProjectCommand = new RelayCommand(this.OnGetMyIssuesInProjectCommand);
@@ -657,39 +657,39 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.SaveSearchCommand = new RelayCommand(this.OnSaveSearchCommand);
             this.SaveAsSearchCommand = new RelayCommand(this.OnSaveAsSearchCommand);
             this.DeleteSavedSearchCommand = new RelayCommand(this.OnDeleteSavedSearchCommand);
-			this.LoadTeamsFileCommand = new RelayCommand(this.OnLoadTeamsFileCommand);
-		}
+            this.LoadTeamsFileCommand = new RelayCommand(this.OnLoadTeamsFileCommand);
+        }
 
-		private async void OnRefreshUsersDataCommand()
-		{
-			await this.searchModel.RefreshUsersData();
-		}
+        private async void OnRefreshUsersDataCommand()
+        {
+            await this.searchModel.RefreshUsersData();
+        }
 
-		/// <summary>
-		/// loads a user teams file
-		/// </summary>
-		private void OnLoadTeamsFileCommand()
-		{
-			var openFileDialog1 = new OpenFileDialog()
-			{
-				FileName = "Select a teams file",
-				Filter = "json team file (*.json)|*.json",
-				Title = "Open Teams File"
-			};
+        /// <summary>
+        /// loads a user teams file
+        /// </summary>
+        private async void OnLoadTeamsFileCommand()
+        {
+            var openFileDialog1 = new OpenFileDialog()
+            {
+                FileName = "Select a teams file",
+                Filter = "json team file (*.json)|*.json",
+                Title = "Open Teams File"
+            };
 
-			if (openFileDialog1.ShowDialog() == DialogResult.OK)
-			{
-				if (this.searchModel.LoadAndSaveTeams(openFileDialog1.FileName))
-				{
-					System.Windows.MessageBox.Show("You can now search with Teams information");
-				}				
-			}
-		}
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if (await this.searchModel.LoadAndSaveTeams(openFileDialog1.FileName))
+                {
+                    System.Windows.MessageBox.Show("You can now search with Teams information");
+                }				
+            }
+        }
 
-		/// <summary>
-		/// Called when [save as search command].
-		/// </summary>
-		private void OnDeleteSavedSearchCommand()
+        /// <summary>
+        /// Called when [save as search command].
+        /// </summary>
+        private void OnDeleteSavedSearchCommand()
         {
             if (this.SelectedSearch == null)
             {
@@ -765,34 +765,34 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         private void OnLaunchCompoSearchDialogCommand()
         {
-			if (this.isComponentWindowLaunched)
-			{
-				return;
-			}
+            if (this.isComponentWindowLaunched)
+            {
+                return;
+            }
 
-			this.isComponentWindowLaunched = true;
+            this.isComponentWindowLaunched = true;
 
-			try
+            try
             {
                 var compoenentsList = SearchComponenetDialog.SearchComponents(
                     AuthtenticationHelper.AuthToken,
                     this.restService,
                     this.AvailableProjects.ToList(),
                     this.componentList,
-					this.Teams.ToList(),
+                    this.Teams.ToList(),
                     this.vshelper,
                     this.notificationManager as IRestLogger);
                 this.componentList.Clear();
                 this.componentList.AddRange(compoenentsList);
-				
-			}
+                
+            }
             catch(Exception ex)
             {
                 Debug.WriteLine("Dialog has Crashed: " + ex.Message);
             }
 
-			this.isComponentWindowLaunched = false;
-		}
+            this.isComponentWindowLaunched = false;
+        }
 
         /// <summary>
         ///     The on close flyout issue search command.
