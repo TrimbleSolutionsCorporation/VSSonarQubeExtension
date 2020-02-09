@@ -213,12 +213,22 @@
 				}
 
 				var enumerableElements = item.Value.MetricsPerLanguage.AsEnumerable();
+				var totalLines = enumerableElements.Sum(x => x.Value.TotalLines);
+				var totalConditions = enumerableElements.Sum(x => x.Value.TotalConditions);
+				var lineHits = enumerableElements.Sum(x => x.Value.LinesHits);
+				var coveredConditions = enumerableElements.Sum(x => x.Value.CoveredConditions);
+
+				var lineCoveragePercentage = (int)(lineHits / totalLines) * 100;
+				var conditionCoveragePercentage = (int)(coveredConditions / totalConditions) * 100;
+
 				reportdata.Append("<tr>");
 				reportdata.Append("<td>" + item.Key + "</td>");
-				reportdata.Append("<td>" + enumerableElements.Sum(x => x.Value.TotalLines) + "</td>");
-				reportdata.Append("<td>" + enumerableElements.Sum(x => x.Value.TotalConditions) + "</td>");
-				reportdata.Append("<td>" + enumerableElements.Sum(x => x.Value.LinesHits) + "</td>");
-				reportdata.Append("<td>" + enumerableElements.Sum(x => x.Value.CoveredConditions) + "</td>");
+				reportdata.Append("<td>" + totalLines + "</td>");
+				reportdata.Append("<td>" + totalConditions + "</td>");
+				reportdata.Append("<td>" + lineHits + "</td>");
+				reportdata.Append("<td>" + coveredConditions + "</td>");
+				reportdata.Append("<td>" + lineCoveragePercentage + "</td>");
+				reportdata.Append("<td>" + conditionCoveragePercentage + "</td>");
 				reportdata.Append("<td>" + string.Join("\r\n", item.Value.MetricsPerLanguage.Select(kvp => string.Format("{0} => {1}", kvp.Key, kvp.Value.TotalLines))) + "</td>");
 				reportdata.Append("<td>" + string.Join("\r\n", item.Value.MetricsPerLanguage.Select(kvp => string.Format("{0} => {1}", kvp.Key, kvp.Value.TotalConditions))) + "</td>");
 				reportdata.Append("<td>" + string.Join("\r\n", item.Value.MetricsPerLanguage.Select(kvp => string.Format("{0} => {1}", kvp.Key, kvp.Value.LinesHits))) + "</td>");
@@ -501,6 +511,8 @@
     <th>Total Conditions</th>
     <th>Total Lines Covered</th>
     <th>Total Conditions Covered</th>
+    <th>Percentage Lines Covered</th>
+    <th>Percentage Conditions Covered</th>
     <th>Lines Per Language</th>
     <th>Total Conditions Per Language</th>
     <th>Total Lines Covered Per Language</th>
