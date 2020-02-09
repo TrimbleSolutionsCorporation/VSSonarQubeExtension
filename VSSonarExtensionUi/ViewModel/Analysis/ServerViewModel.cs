@@ -511,7 +511,10 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             }
             catch (Exception ex)
             {
-                this.notificationMan.WriteMessageToLog("Failed to refresh data for resource: " + ex.Message);
+                if (this.notificationMan != null)
+                {
+                    this.notificationMan.WriteMessageToLog("Failed to refresh data for resource: " + ex.Message);
+                }                
             }
         }
 

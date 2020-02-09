@@ -1202,15 +1202,15 @@ namespace VSSonarExtensionUi.ViewModel
             this.ResetIssuesInViews();
 
             this.ResourceInEditor = await this.AssociationModule.CreateAValidResourceFromServer(fullName, this.AssociationModule.AssociatedProject);
-
-            if(!this.ResourceInEditor.Path.ToLower().Contains(this.ResourceInEditor.SolutionRoot.ToLower()))
-            {
-                return;
-            }
-
+           
             if (this.ResourceInEditor == null)
             {
                 this.StatusMessage = "Could not check key type for resource, see VSonarOutput Window for more details and report";
+                return;
+            }
+
+            if (!this.ResourceInEditor.Path.ToLower().Contains(this.ResourceInEditor.SolutionRoot.ToLower()))
+            {
                 return;
             }
 

@@ -83,7 +83,7 @@ namespace VSSonarExtensionUi.Model.Helpers
                                && (!string.IsNullOrEmpty(parameter.Project) && parameter.Project.IndexOf(this.filterOption.FilterTermProject, StringComparison.InvariantCultureIgnoreCase) >= 0)
                                && (!string.IsNullOrEmpty(parameter.Rule) && parameter.Rule.IndexOf(this.filterOption.FilterTermRule, StringComparison.InvariantCultureIgnoreCase) >= 0)
                                && (!string.IsNullOrEmpty(parameter.Assignee) && parameter.Assignee.IndexOf(this.filterOption.FilterTermAssignee, StringComparison.InvariantCultureIgnoreCase) >= 0)
-							   && (!string.IsNullOrEmpty(parameter.Team) && parameter.Team.ToLower().Equals(this.filterOption.FilterTermTeam.ToLower()))
+							   && (!string.IsNullOrEmpty(parameter.Team) && parameter.Team.IndexOf(this.filterOption.FilterTermTeam, StringComparison.InvariantCultureIgnoreCase) >= 0)
 							   && (!string.IsNullOrEmpty(parameter.Author) && parameter.Author.IndexOf(this.filterOption.FilterTermAuthor, StringComparison.InvariantCultureIgnoreCase) >= 0);
 
                 return include && issuesStatus && issuesSeverity && issuesResolution && issuesIsNew && isIssueTrackerId;
