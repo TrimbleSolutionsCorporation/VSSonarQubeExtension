@@ -500,9 +500,16 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <see><cref>List</cref></see>
         /// .
         /// </returns>
-        public async Task<Tuple<List<Issue>, bool>> GetIssuesForResource(Resource file, string fileContent)
+        public async Task<Tuple<List<Issue>, bool>> GetIssuesForResource(Resource file, string fileContent, bool fromEditor)
         {
 			await Task.Delay(0);
+            if (fromEditor)
+            {
+                return new Tuple<List<Issue>, bool>(
+                    this.IssuesGridView.Issues.Where(issue => file.Key.Equals(issue.Component))
+                        .ToList(), this.ShowFalsePositivesAndResolvedIssues);
+            }
+
             return new Tuple<List<Issue>, bool>(
                 this.IssuesGridView.Issues.Where(
                     issue =>

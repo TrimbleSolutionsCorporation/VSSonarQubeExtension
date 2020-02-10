@@ -388,7 +388,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <see><cref>List</cref></see>
         /// .
         /// </returns>
-        public async Task<Tuple<List<Issue>, bool>> GetIssuesForResource(Resource file, string fileContent)
+        public async Task<Tuple<List<Issue>, bool>> GetIssuesForResource(Resource file, string fileContent, bool fromEditor)
         {
             if (this.DocumentInView == null || this.ResourceInEditor == null)
             {

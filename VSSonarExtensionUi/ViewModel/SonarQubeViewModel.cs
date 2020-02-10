@@ -949,7 +949,7 @@ namespace VSSonarExtensionUi.ViewModel
                 return null;
             }
 
-			var issuesData = await view.GetIssuesForResource(fileResource, fileContent);
+			var issuesData = await view.GetIssuesForResource(fileResource, fileContent, true);
 			return new Tuple<List<Issue>, bool>(issuesData.Item1, issuesData.Item2);
         }
 

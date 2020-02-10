@@ -38,7 +38,7 @@ namespace VSSonarExtensionUi.Model.Analysis
         /// The <see><cref>List</cref></see>
         /// issues and if show false and resolve are set
         /// </returns>
-        Task<Tuple<List<Issue>,bool>> GetIssuesForResource(Resource file, string fileContent);
+        Task<Tuple<List<Issue>,bool>> GetIssuesForResource(Resource file, string fileContent, bool fromEditor);
         
         /// <summary>The on analysis mode has change.</summary>
         /// <param name="e">The e.</param>
