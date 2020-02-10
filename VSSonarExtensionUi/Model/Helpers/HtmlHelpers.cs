@@ -269,9 +269,7 @@
 
 					reportdata.Append("<tr>");
 					reportdata.Append("<td>" + path + "</td>");
-					reportdata.Append("<td>" + rep.UncoveredLines + "</td>");
-					reportdata.Append("<td>" + rep.UncoveredConditons + "</td>");
-					reportdata.Append("<td>" + line.Key + "</td>");
+					reportdata.Append("<td>" + line.Key + "</td>");					
 					reportdata.Append("<td>" + line.Value.LineHits + "</td>");
 					reportdata.Append("<td>" + line.Value.Conditions + "</td>");
 					reportdata.Append("<td>" + line.Value.CoveredConditions + "</td>");
@@ -408,20 +406,20 @@
 		{
 			return GenerateBasicHeader() + @"
 <body>
-<input type='text' id='myInput2' onkeyup='myFunction2()' placeholder='Line Hit Threshold..'>
-<input type='text' id='myInput' onkeyup='myFunction()' placeholder='Search for names..'>
+<input class='userInput' type='text' id='myInput2' onkeyup='myFunction2()' placeholder='Line Hit Threshold..'>
+<input class='userInput' type='text' id='myInput' onkeyup=""myFunction('myInput', 0)"" placeholder='Search for filename..'>
+<input class='userInput' type='text' id='myInput3' onkeyup=""myFunction('myInput3', 5)"" placeholder='Search for team..'>
+<input class='userInput' type='text' id='myInput4' onkeyup=""myFunction('myInput4', 6)"" placeholder='Search for user..'>
 <table id='myTable' class='table'>
 <thead>
   <tr>
     <th>Path</th>
-    <th>Uncovered Lines</th>
-    <th>Uncovered Conditions</th>
-    <th>Line</th>
-    <th>Line Hits</th>
+	<th>Line</th>    
+	<th>Line Hits</th>   
     <th>Conditions</th>
     <th>Covered Conditions</th>
-    <th onclick='sortTable(7)'>Team</th>
-	<th onclick='sortTable(7)'>Author</th>
+    <th onclick='sortTable(5)'>Team</th>
+	<th onclick='sortTable(6)'>Author</th>
     <th>Date</th>
     <th>Revision</th>
     <th>Code</th>
@@ -438,8 +436,10 @@
 		{
 			return GenerateBasicHeader() + @"
 <body>
-<input type='text' id='myInput2' onkeyup='myFunction2()' placeholder='Line Hit Threshold..'>
-<input type='text' id='myInput' onkeyup='myFunction()' placeholder='Search for names..'>
+<input class='userInput' type='text' id='myInput2' onkeyup='myFunction2()' placeholder='Line Hit Threshold..'>
+<input class='userInput' type='text' id='myInput' onkeyup=""myFunction('myInput', 0)"" placeholder='Search for filename..'>
+<input class='userInput' type='text' id='myInput3' onkeyup=""myFunction('myInput3', 5)"" placeholder='Search for team..'>
+<input class='userInput' type='text' id='myInput4' onkeyup=""myFunction('myInput4', 6)"" placeholder='Search for user..'>
 <table id='myTable' class='table'>
 <thead>
   <tr>
@@ -463,7 +463,7 @@
 		{
 			return GenerateBasicHeader() + @"
 <body>
-<input type='text' id='myInput' onkeyup='myFunction()' placeholder='Search for names..'>
+<input class='userInput' type='text' id='myInput' onkeyup='myFunction()' placeholder='Search for project..'>
 <table id='myTable' class='table'>
 <thead>
   <tr>
@@ -482,7 +482,7 @@
 		{
 			return GenerateBasicHeader() + @"
 <body>
-<input type='text' id='myInput' onkeyup='myFunction()' placeholder='Search for names..'>
+<input class='userInput' type='text' id='myInput' onkeyup='myFunction()' placeholder='Search for team..'>
 <table id='myTable' class='table'>
 <thead>
   <tr>
@@ -502,7 +502,7 @@
 		{
 			return GenerateBasicHeader() + @"
 <body>
-<input type='text' id='myInput' onkeyup='myFunction()' placeholder='Search for names..'>
+<input class='userInput' type='text' id='myInput' onkeyup='myFunction()' placeholder='Search for team..'>
 <table id='myTable' class='table'>
 <thead>
   <tr>
@@ -534,8 +534,6 @@
 
 		}
 
-
-
 		private static string SortingScript()
 		{
 			return @"<script>
@@ -545,17 +543,17 @@ $(document).ready(function()
     } 
 );
 
-function myFunction() {
+function myFunction(id, index) {
   // Declare variables 
   var input, filter, table, tr, td, i;
-  input = document.getElementById('myInput');
+  input = document.getElementById(id);
   filter = input.value.toUpperCase();
   table = document.getElementById('myTable');
   tr = table.getElementsByTagName('tr');
 
   // Loop through all table rows, and hide those who don't match the search query
   for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName('td')[0];
+    td = tr[i].getElementsByTagName('td')[index];
     if (td) {
       if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
         tr[i].style.display = '';
@@ -597,16 +595,7 @@ function myFunction2() {
 			return @"
 <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css' integrity='sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ' crossorigin='anonymous'>
 <style media='screen' type='text/css'>
-#myInput {
-    background-position: 10px 12px; /* Position the search icon */
-    background-repeat: no-repeat; /* Do not repeat the icon image */
-    width: 100%; /* Full-width */
-    font-size: 16px; /* Increase font-size */
-    padding: 12px 20px 12px 40px; /* Add some padding */
-    border: 1px solid #ddd; /* Add a grey border */
-    margin-bottom: 12px; /* Add some space below the input */
-}
-#myInput2 {
+.userInput {
     background-position: 10px 12px; /* Position the search icon */
     background-repeat: no-repeat; /* Do not repeat the icon image */
     width: 100%; /* Full-width */
