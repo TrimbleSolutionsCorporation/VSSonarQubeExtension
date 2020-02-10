@@ -593,6 +593,12 @@
 
         private async void GetDetailedHtmlReportButtonClick(object sender, RoutedEventArgs e)
         {
+            if (!this.DatePick.SelectedDate.HasValue)
+            {
+                this.StatusLabel.Content = "Please pick date.";
+                return;
+            }
+
             this.SearchData.IsEnabled = false;
             this.ProgressBar.IsIndeterminate = true;
 
@@ -616,7 +622,7 @@
             }
 
             var teamsSelected = this.teamsCollection.Where(x => x.Selected).ToList();
-            var teamsReportHtml = HtmlHelpers.GenerateTeamsCoverageReport(completeData, this.teamsCollection, teamsSelected);
+            var teamsReportHtml = HtmlHelpers.GenerateTeamsCoverageReport(completeData, this.teamsCollection, teamsSelected, this.DatePick.SelectedDate.Value);
             System.Windows.Forms.SaveFileDialog savefileTeams = new System.Windows.Forms.SaveFileDialog();
             // set a default file name
             savefileTeams.FileName = "teamsreport.html";
@@ -631,7 +637,7 @@
 
             this.vshelper.NavigateToResource(savefileTeams.FileName);
 
-            var reportHtml = HtmlHelpers.GenerateDetailedHtmlReport(completeData, this.teamsCollection, this.teamsCollection.Where(x => x.Selected).ToList());
+            var reportHtml = HtmlHelpers.GenerateDetailedHtmlReport(completeData, this.teamsCollection, this.teamsCollection.Where(x => x.Selected).ToList(), this.DatePick.SelectedDate.Value);
             System.Windows.Forms.SaveFileDialog savefile = new System.Windows.Forms.SaveFileDialog();
             // set a default file name
             savefile.FileName = "report.html";
@@ -647,7 +653,7 @@
             this.vshelper.NavigateToResource(savefile.FileName);
 
 
-            var reportHtmlCompact = HtmlHelpers.GenerateCompactHtmlReport(completeData, this.teamsCollection, this.teamsCollection.Where(x => x.Selected).ToList());
+            var reportHtmlCompact = HtmlHelpers.GenerateCompactHtmlReport(completeData, this.teamsCollection, this.teamsCollection.Where(x => x.Selected).ToList(), this.DatePick.SelectedDate.Value);
             savefile = new System.Windows.Forms.SaveFileDialog();
             // set a default file name
             savefile.FileName = "report-compact.html";

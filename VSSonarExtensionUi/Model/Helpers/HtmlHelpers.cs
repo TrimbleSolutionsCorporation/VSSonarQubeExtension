@@ -171,7 +171,8 @@
 		public static string GenerateTeamsCoverageReport(
 			Dictionary<string, CoverageDifferencial> completeData,
 			ObservableCollection<Team> teamsCollection,
-			IEnumerable<Team> selectedTeams)
+			IEnumerable<Team> selectedTeams,
+			DateTime cutOff)
 		{
 			var dicTeam = new Dictionary<string, TeamData>();
 
@@ -181,6 +182,11 @@
 
 				foreach (var line in item.Value.resource.Lines)
 				{
+					if (line.Value.ScmDate < cutOff)
+					{
+						continue;
+					}
+
 					var teamForAuthor = GetTeamForAuthor(line.Value.ScmAuthor, teamsCollection);
 
 					if (!dicTeam.ContainsKey(teamForAuthor))
@@ -218,8 +224,17 @@
 				var lineHits = enumerableElements.Sum(x => x.Value.LinesHits);
 				var coveredConditions = enumerableElements.Sum(x => x.Value.CoveredConditions);
 
-				var lineCoveragePercentage = (int)(lineHits / totalLines) * 100;
-				var conditionCoveragePercentage = (int)(coveredConditions / totalConditions) * 100;
+				var lineCoveragePercentage = 0;
+				if (totalLines > 0)
+				{
+					lineCoveragePercentage = (int)(lineHits / totalLines) * 100;
+				}
+
+				var conditionCoveragePercentage = 0;
+				if (totalConditions > 0)
+				{
+					conditionCoveragePercentage = (int)(coveredConditions / totalConditions) * 100;
+				}
 
 				reportdata.Append("<tr>");
 				reportdata.Append("<td>" + item.Key + "</td>");
@@ -244,7 +259,8 @@
 		public static string GenerateDetailedHtmlReport(
 			Dictionary<string, CoverageDifferencial> report,
 			IEnumerable<Team> teams,
-			IEnumerable<Team> selectedTeams)
+			IEnumerable<Team> selectedTeams,
+			DateTime cutOffDate)
 		{
 			StringBuilder reportdata = new StringBuilder();
 			reportdata.Append(GenerateHeaderString());
@@ -263,6 +279,11 @@
 				{
 					var teamForAuthor = GetTeamForAuthor(line.Value.ScmAuthor, teams);
 					if (selectedTeams.Count() > 0 && selectedTeams.FirstOrDefault(x => x.Name.Equals(teamForAuthor)) == null)
+					{
+						continue;
+					}
+
+					if (line.Value.ScmDate < cutOffDate)
 					{
 						continue;
 					}
@@ -306,7 +327,8 @@
 		public static string GenerateCompactHtmlReport(
 			Dictionary<string, CoverageDifferencial> report,
 			IEnumerable<Team> teams,
-			IEnumerable<Team> selectedTeams)
+			IEnumerable<Team> selectedTeams,
+			DateTime cutOffTime)
 		{
 			StringBuilder reportdata = new StringBuilder();
 			reportdata.Append(GenerateHeaderCompactString());
@@ -325,6 +347,11 @@
 				foreach (var line in rep.resource.Lines)
 				{
 					if (authors.Contains(line.Value.ScmAuthor))
+					{
+						continue;
+					}
+
+					if (line.Value.ScmDate < cutOffTime)
 					{
 						continue;
 					}
