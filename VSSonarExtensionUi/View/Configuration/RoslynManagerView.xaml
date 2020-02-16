@@ -62,7 +62,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition Height="111*"/>
-            <RowDefinition Height="166*"/>
+            <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Orientation="Horizontal" Grid.ColumnSpan="2">
                     <Button Width="30"
@@ -111,8 +111,9 @@
                                          Visual="{StaticResource appbar_cogs}" />
                             </Rectangle.OpacityMask>
                         </Rectangle>
-                    </Button>                    
-                </StackPanel>
+                    </Button>
+                    <Label  x:Name="DiagnosticPath" Content="{Binding DiagnosticPath}" />
+        </StackPanel>
         
         <DataGrid x:Name="Diagnostics" BorderBrush="Black"
                   ItemsSource="{Binding AvailableChecksInDll}" Grid.Row="1" Grid.Column="0"

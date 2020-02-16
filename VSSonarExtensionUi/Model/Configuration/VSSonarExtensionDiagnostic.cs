@@ -70,11 +70,18 @@
         public ObservableCollection<DiagnosticDescriptor> ChecksInterpretation { get; private set; }
 
         /// <summary>
+        /// path
+        /// </summary>
+        public string PathForDiagnostic { get; private set; }
+
+        /// <summary>
         /// Loads the diagnostics.
         /// </summary>
         /// <param name="path">The path.</param>
         public async Task LoadDiagnostics(string path)
         {
+            this.PathForDiagnostic = path;
+
             try
             {
                 await this.LoadDependencies(Path.Combine(Directory.GetParent(path).ToString(), "deps"));

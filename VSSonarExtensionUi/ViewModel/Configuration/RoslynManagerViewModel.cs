@@ -119,6 +119,11 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public ICommand AutoImportLocalDiagnosticsCommand { get; private set; }
 
         /// <summary>
+        /// Diagnostic Path
+        /// </summary>
+        public string DiagnosticPath { get; private set; }
+
+        /// <summary>
         /// Synchronizes the diag in view.
         /// </summary>
         public async Task SyncDiagInView()
@@ -152,6 +157,11 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
         public object GetAvailableModel()
         {
             return null;
+        }
+
+        private void OnSelectedDllDiagnosticChanged()
+        {
+            this.DiagnosticPath = this.SelectedDllDiagnostic.PathForDiagnostic;
         }
 
         /// <summary>
