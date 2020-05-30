@@ -703,7 +703,15 @@
 
                 if (item.Qualifier == "TRK")
                 {
-                    this.StatusLabel.Content = await this.rest.CreateVersion(this.conf, ToResource(item), version, date, this.ct.Token, this.logger);
+                    try
+                    {
+                        this.StatusLabel.Content = await this.rest.CreateVersion(this.conf, ToResource(item), version, date, this.ct.Token, this.logger);
+                    }
+                    catch (Exception ex)
+                    {
+                        this.logger.ReportMessage($"Failed to create version: {item.Name} => {ex.Message}");
+                        this.StatusLabel.Content = $"Failed to create version: {item.Name}  => {ex.Message}";
+                    }
                 }
             }
 

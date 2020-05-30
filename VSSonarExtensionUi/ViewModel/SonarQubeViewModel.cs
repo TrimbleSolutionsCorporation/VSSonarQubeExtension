@@ -737,7 +737,14 @@ namespace VSSonarExtensionUi.ViewModel
 
             if (!string.IsNullOrEmpty(fileInView) && File.Exists(fileInView))
             {
-                await this.RefreshDataForResource(fileInView, File.ReadAllText(fileInView), false);
+                try
+                {
+                    var slnCnt = File.ReadAllText(fileInView);
+                    await this.RefreshDataForResource(fileInView, slnCnt, false);
+                }
+                catch (OutOfMemoryException)
+                {
+                }                
             }
 
             this.SetupAssociationMessages();

@@ -178,7 +178,7 @@
 
             if(File.Exists(clangTidyFile))
             {
-                File.Delete(clangTidyFile);
+                return;
             }
 
             using(StreamWriter outputFile = new StreamWriter(clangTidyFile))
@@ -239,7 +239,7 @@
                 return new List<Issue>();
             }
 
-            executor.ExecuteCommand(tidy, resource.FilePath + " -debug " + additionalArgs, this.environment, resource.SonarResource.SolutionRoot);
+            executor.ExecuteCommand(tidy, resource.FilePath + " " + additionalArgs, this.environment, resource.SonarResource.SolutionRoot);
             var output = executor.GetStdOut().ToArray();
             foreach(var errorData in executor.GetStdError())
             {
