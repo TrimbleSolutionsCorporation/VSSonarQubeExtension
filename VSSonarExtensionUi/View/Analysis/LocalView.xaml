@@ -61,52 +61,21 @@
                     <StackPanel>
                         <GroupBox Header="Analysis">
                             <StackPanel Orientation="Vertical">
-                                <StackPanel Orientation="Horizontal">
 
-                                    <CheckBox 
-                                      Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                      Margin="10, 0, 0, 0"
-                                      IsChecked="{Binding ShowIssuesOnModifiedSectionsOfFileOnly}" ToolTip="Shows issues only on modified sections of the file." >
-                                    </CheckBox>
-
-                                    <CheckBox 
-                                      Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                      Margin="10, 0, 0, 0"
-                                      IsChecked="{Binding ShowFalsePositivesAndResolvedIssues}" ToolTip="Hide false positives and issues marked as resolved is server." >
-                                    </CheckBox>
-
-                                    <ToggleButton Width="125"
-                                        Margin="20, 0, 0, 1"
-                                    	Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                    	Content="File Analysis"
-                                    	IsChecked="{Binding FileAnalysisIsEnabled}" IsEnabled="{Binding CanRunLocalAnalysis}"/>
-                                </StackPanel>
-
-
-
-                                <Button 
+                                <CheckBox 
                                     Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                                    Margin="0, 0, 0, 0"
-                                    Content="Run Full Analysis"
-                                    Style="{DynamicResource SquareButtonStyle}" Command="{Binding AnalysisCommand}"
-                                    IsEnabled="{Binding CanRunLocalAnalysis}">
+                                    Margin="10, 0, 0, 0"
+                                    IsChecked="{Binding ShowIssuesOnModifiedSectionsOfFileOnly}" ToolTip="Shows issues only on modified sections of the file." >
+                                    Show only issues on modified lines
+                                </CheckBox>
 
-                                </Button>
+                                <CheckBox 
+                                      Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
+                                      Margin="10, 5, 0, 0"
+                                      IsChecked="{Binding ShowFalsePositivesAndResolvedIssues}" ToolTip="Hide false positives and issues marked as resolved is server." >
+                                    Hide false positives.
+                                </CheckBox>
 
-                                <Button 
-                            Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                            Margin="0, 0, 0, 0"
-                            Content="Cancel Analysis"
-                            Style="{DynamicResource SquareButtonStyle}" Command="{Binding StopLocalAnalysisCommand}"
-                            IsEnabled="{Binding CanCancelAnalysis}">
-                                </Button>
-                                <Button 
-                            Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}"
-                            Margin="0, 0, 0, 0"
-                            Content="Open Analysis Log"
-                            Style="{DynamicResource SquareButtonStyle}" Command="{Binding OpenLogCommand}"
-                            IsEnabled="{Binding CanRunLocalAnalysis}">
-                                </Button>
 
                                 <controls:MetroProgressBar Grid.Row="1" IsIndeterminate="{Binding LoadingSonarData}"
                                                Value="{Binding ElementName=horizSlider, Path=Value}"

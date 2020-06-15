@@ -95,10 +95,12 @@ type LocalExtension(helper : IConfigurationHelper,
 
         let rec update() =
             try
-                nsqanalyser.UpdateWorkspace(project, externlProfile, notificationManager, conf, vsversion)
+                if tries > 0 then
+                    nsqanalyser.UpdateWorkspace(project, externlProfile, notificationManager, conf, vsversion)
             with
             | ex -> exOu <- ex
                     tries <- tries - 1
+                    Thread.Sleep(500)
                     update()
         update()
 
@@ -119,7 +121,7 @@ type LocalExtension(helper : IConfigurationHelper,
 
     interface IFileAnalyser with
 
-        member x.ExecuteAnalysisOnFile(itemInView : VsFileItem, project : Resource, conf : ISonarConfiguration, fromSave : bool) =
+        member x.ExecuteAnalysisOnFile(itemInView : VsFileItem, project : Resource, conf : ISonarConfiguration, fromSave : bool, profile : Profile) =
 
             nmbofAnalisedFiles <- nmbofAnalisedFiles + 1
 

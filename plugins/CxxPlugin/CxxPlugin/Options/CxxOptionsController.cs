@@ -8,27 +8,24 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace CxxPlugin.Options
 {
-    using System;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Media;
-
-    using global::CxxPlugin.Commands;
-
     using GalaSoft.MvvmLight.Command;
+    using global::CxxPlugin.Commands;
     using LocalExtensions;
     using PropertyChanged;
-    using VSSonarPlugins;
-    using VSSonarPlugins.Types;
-    using System.Net;
-    using System.IO;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using System.Windows.Input;
-
     using SonarRestService;
     using SonarRestService.Types;
+    using System;
+    using System.IO;
+    using System.IO.Compression;
+    using System.Net;
+    using System.Reflection;
     using System.Threading.Tasks;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Input;
+    using System.Windows.Media;
+    using VSSonarPlugins;
+    using VSSonarPlugins.Types;
 
     /// <summary>
     /// The dummy options controller.
@@ -40,17 +37,12 @@ namespace CxxPlugin.Options
         /// <summary>
         ///     The configuration.
         /// </summary>
-        private readonly IConfigurationHelper configuration;
+        private static IConfigurationHelper configuration;
 
         /// <summary>
         /// The service
         /// </summary>
         private readonly ISonarRestService service;
-
-        /// <summary>
-        /// The CXX lint install path
-        /// </summary>
-        private readonly string cxxLintInstallPath;
 
         /// <summary>
         ///     The dummy control.
@@ -63,15 +55,19 @@ namespace CxxPlugin.Options
         private ISonarConfiguration userConf;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="CxxOptionsController" /> class.
+        /// tools path
         /// </summary>
+        private readonly string toolsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".vssonarextension");
+
         public CxxOptionsController()
         {
-            this.cxxControl = null;
             this.OpenCommand = new CxxOpenFileCommand(this, new CxxService());
-            this.DownloadCxxLintFromServerCommand = new RelayCommand(this.OnDownloadCxxLintFromServerCommand);
+            this.ConfigureToolsCommand = new RelayCommand(this.OnConfigureToolsCommand);
             this.ForeGroundColor = Colors.Black;
             this.BackGroundColor = Colors.White;
+            this.CxxVersion = "3.2.2";
+            this.SetOptions();
+            Task.Run(() => OnConfigureToolsCommand());
         }
 
         /// <summary>
@@ -81,16 +77,120 @@ namespace CxxPlugin.Options
         /// <param name="service">The service.</param>
         public CxxOptionsController(IConfigurationHelper configurationHelper, ISonarRestService service)
         {
-            this.cxxLintInstallPath = Path.Combine(configurationHelper.ApplicationPath, "CxxLint");
-            Directory.CreateDirectory(this.cxxLintInstallPath);
             this.service = service;
-            this.configuration = configurationHelper;
+            configuration = configurationHelper;
             this.cxxControl = null;
             this.OpenCommand = new CxxOpenFileCommand(this, new CxxService());
-            this.DownloadCxxLintFromServerCommand = new RelayCommand(this.OnDownloadCxxLintFromServerCommand);
+            this.ConfigureToolsCommand = new RelayCommand(this.OnConfigureToolsCommand);
             this.ForeGroundColor = Colors.Black;
             this.BackGroundColor = Colors.White;
+            this.CxxVersion = "3.2.2";
+            this.SetOptions();
+            Task.Run(() => OnConfigureToolsCommand());
         }
+
+        /// <summary>The get option control user interface.</summary>
+        /// <returns>The <see cref="UserControl" />.</returns>
+        public UserControl GetOptionControlUserInterface()
+        {
+            return this.cxxControl ?? (this.cxxControl = new CxxUserControl(this));
+        }
+
+        private async void OnConfigureToolsCommand()
+        {
+            if (this.IsDownloading || File.Exists(Path.Combine(this.toolsPath, "downloadlock")))
+            {
+                this.IsDownloading = File.Exists(Path.Combine(this.toolsPath, "downloadlock"));
+                MessageBox.Show("Please Wait For Tools to Donwload");
+                return;
+            }
+            var installPath = Path.Combine(this.toolsPath, "Wrapper", this.CxxVersion);
+
+            if (!File.Exists(Path.Combine(installPath, "CxxSonarQubeRunnerWin.bat")))
+            {
+                Directory.CreateDirectory(this.toolsPath);
+                File.Create(Path.Combine(this.toolsPath, "downloadlock"));
+                this.IsDownloading = true;
+                var urldownload = $"https://github.com/jmecsoftware/CxxSonarQubeRunner/releases/download/{this.CxxVersion}/CxxSonarQubeRunner.zip";
+                var tmpFile = Path.Combine(Path.GetTempPath(), "CxxSonarQubeRunner.zip");
+                try
+                {
+                    using (var client = new WebClient())
+                    {
+                        if (File.Exists(tmpFile))
+                        {
+                            File.Delete(tmpFile);
+                        }
+
+                        await client.DownloadFileTaskAsync(urldownload, tmpFile);
+
+                        ZipFile.ExtractToDirectory(tmpFile, installPath);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        "Wrapper installation failed : " + ex.Message + " please be sure you have access to url." +
+                        "If not download manually and change the wrapper path: https://github.com/jmecsoftware/CxxSonarQubeRunner/releases");
+                }
+
+                if (!File.Exists(Path.Combine(installPath, "CxxSonarQubeRunnerWin.bat")))
+                {
+                    MessageBox.Show(
+                        "Wrapper installation failed, expected in  " + Path.Combine(installPath, "CxxSonarQubeRunnerWin.bat") +
+                        " : download manually and unzip to that folder: https://github.com/jmecsoftware/CxxSonarQubeRunner/releases");
+                    return;
+                }
+
+                File.Delete(Path.Combine(this.toolsPath, "downloadlock"));
+                File.Delete(tmpFile);
+            }
+
+            // setup tools
+            var toolsPath = Path.Combine(installPath, "Tools");
+            if (File.Exists(Path.Combine(toolsPath, "Cppcheck", "Cppcheck.exe")))
+            {
+                if (!File.Exists(this.CppCheckExecutable))
+                {
+                    this.CppCheckExecutable = Path.Combine(toolsPath, "Cppcheck", "Cppcheck.exe");
+                }
+            }
+
+            if (File.Exists(Path.Combine(toolsPath, "CppLint", "cpplint_mod.py")))
+            {
+                if (!File.Exists(this.CustomExecutable))
+                {
+                    this.CustomArguments = Path.Combine(toolsPath, "CppLint", "cpplint_mod.py") + " --output=vs7";
+                    this.CustomExecutable = Path.Combine(toolsPath, "Python27", "python.exe");
+                }
+            }
+
+            if (File.Exists(Path.Combine(toolsPath, "rats", "rats.exe")))
+            {
+                if (!File.Exists(this.RatsExecutable))
+                {
+                    this.RatsExecutable = Path.Combine(toolsPath, "rats", "rats.exe");
+                }
+            }
+
+            if (File.Exists(Path.Combine(toolsPath, "vera", "bin", "vera++.exe")))
+            {
+                if (!File.Exists(this.VeraExecutable))
+                {
+                    this.VeraExecutable = Path.Combine(toolsPath, "vera", "bin", "vera++.exe");
+                }
+            }
+
+            if (!File.Exists(this.ClangTidyExecutable))
+            {
+                this.ClangTidyExecutable = @"C:\Program Files\LLVM\bin\clang-tidy.exe";
+            }
+
+            this.UseEmbeddedVersion();
+            this.IsDownloading = false;
+            SaveDataInUi(null, configuration);
+        }
+
 
         /// <summary>Initializes a new instance of the <see cref="CxxOptionsController"/> class.</summary>
         /// <param name="service">The service.</param>
@@ -101,9 +201,10 @@ namespace CxxPlugin.Options
                                    ? new CxxOpenFileCommand(this, service)
                                    : new CxxOpenFileCommand(this, new CxxService());
 
-            this.DownloadCxxLintFromServerCommand = new RelayCommand(this.OnDownloadCxxLintFromServerCommand);
+            this.ConfigureToolsCommand = new RelayCommand(this.OnConfigureToolsCommand);
             this.ForeGroundColor = Colors.Black;
             this.BackGroundColor = Colors.White;
+            this.CxxVersion = "3.2.2";
         }
 
         /// <summary>
@@ -148,13 +249,7 @@ namespace CxxPlugin.Options
         /// <summary>Gets or sets the open command.</summary>
         public CxxOpenFileCommand OpenCommand { get; set; }
 
-        /// <summary>
-        /// Gets or sets the download CXX lint from server command.
-        /// </summary>
-        /// <value>
-        /// The download CXX lint from server command.
-        /// </value>
-        public ICommand DownloadCxxLintFromServerCommand { get; set; }
+        public ICommand ConfigureToolsCommand { get; set; }
 
         /// <summary>Gets or sets the project.</summary>
         public Resource Project { get; set; }
@@ -210,6 +305,8 @@ namespace CxxPlugin.Options
         /// The error message.
         /// </value>
         public string ErrorMessage { get; private set; }
+        public bool IsDownloading { get; private set; }
+        public string CxxVersion { get; set; }
 
         /// <summary>The get user control options.</summary>
         /// <param name="projectIn">The project.</param>
@@ -224,15 +321,12 @@ namespace CxxPlugin.Options
         /// Called when [connect to sonar].
         /// </summary>
         /// <param name="configurationUser">The configuration user.</param>
-        public async Task<bool> OnConnectToSonar(ISonarConfiguration configurationUser)
+        public bool OnConnectToSonar(ISonarConfiguration configurationUser)
         {
             if (string.IsNullOrEmpty(this.CxxLint) || !File.Exists(this.CxxLint))
             {
                 this.userConf = configurationUser;
-                if (!await this.DownloadLintFromServer(false))
-                {
-                    this.UseEmbeddedVersion();
-                }
+                this.UseEmbeddedVersion();
             }
 
             return true;
@@ -269,12 +363,7 @@ namespace CxxPlugin.Options
             this.ClangTidyExecutable = this.GetOptionIfExists("ClangExecutable");
         }
 
-        /// <summary>The get option control user interface.</summary>
-        /// <returns>The <see cref="UserControl" />.</returns>
-        public UserControl GetOptionControlUserInterface()
-        {
-            return this.cxxControl ?? (this.cxxControl = new CxxUserControl(this));
-        }
+
 
         /// <summary>The refresh data in ui.</summary>
         /// <param name="project">The project.</param>
@@ -349,7 +438,7 @@ namespace CxxPlugin.Options
             try
             {
                 return
-                    this.configuration.ReadSetting(Context.FileAnalysisProperties, "CxxPlugin", key)
+                    configuration.ReadSetting(Context.FileAnalysisProperties, "CxxPlugin", key)
                         .Value;
             }
             catch (Exception)
@@ -363,68 +452,11 @@ namespace CxxPlugin.Options
         /// <param name="value">The value.</param>
         private void SaveOption(string key, string value)
         {
-            this.configuration.WriteSetting(
-                Context.FileAnalysisProperties, 
-                "CxxPlugin", 
-                key, 
+            configuration.WriteSetting(
+                Context.FileAnalysisProperties,
+                "CxxPlugin",
+                key,
                 value);
-        }
-
-
-        /// <summary>
-        /// Called when [download CXX lint from server command].
-        /// </summary>
-        private async void OnDownloadCxxLintFromServerCommand()
-        {
-            if (this.userConf == null)
-            {
-                MessageBox.Show("Unable to download unless extension is connected to Server");
-                return;
-            }
-
-            if (!await this.DownloadLintFromServer(true))
-            {
-                MessageBox.Show("Will use embedded version, since linter was not found in installed version in server.");
-                this.UseEmbeddedVersion();
-            }
-        }
-
-        /// <summary>
-        /// Downloads the lint from server.
-        /// </summary>
-        /// <param name="force">if set to <c>true</c> [force].</param>
-        /// <returns>true if ok</returns>
-        private async Task<bool> DownloadLintFromServer(bool force)
-        {
-            try
-            {
-                var plugins = this.service.GetInstalledPlugins(this.userConf);
-                if (!plugins.ContainsKey("C++ (Community)"))
-                {
-                    this.ErrorMessage = "C++ (Community) not installed in server. Please install version 0.9.5 or above.";
-                    return false;
-                }
-
-                var cxxPluginVersion = plugins["C++ (Community)"].Replace("\"", string.Empty);
-                var urldownload = this.userConf.Hostname + "/static/cxx/cxx-lint-" + cxxPluginVersion + ".jar";
-                this.CxxLint = Path.Combine(this.cxxLintInstallPath, "cxx-lint-" + cxxPluginVersion + ".jar");
-
-                if (!File.Exists(this.CxxLint) || force)
-                {
-                    using (var client = new WebClient())
-                    {
-                        await client.DownloadFileTaskAsync(new Uri(urldownload), this.CxxLint);
-                    }
-                }
-
-                this.SaveOption(CxxLintSensor.LinterProp, this.CxxLint);
-                return true;
-            }
-            catch (Exception)
-            {
-                this.ErrorMessage = "C++ (Community) is installed but older than 0.9.5. Please install version 0.9.5 or above.";
-                return false;
-            }
         }
 
         /// <summary>
@@ -433,7 +465,7 @@ namespace CxxPlugin.Options
         private void UseEmbeddedVersion()
         {
             // use embedded version
-            this.CxxLint = Path.Combine(this.cxxLintInstallPath, "cxx-lint-0.9.5-SNAPSHOT.jar");
+            this.CxxLint = Path.Combine(this.toolsPath, "cxx-lint-0.9.5-SNAPSHOT.jar");
             this.WriteResourceToFile("CxxPlugin.Resources.cxx-lint-0.9.5-SNAPSHOT.jar", this.CxxLint);
         }
 

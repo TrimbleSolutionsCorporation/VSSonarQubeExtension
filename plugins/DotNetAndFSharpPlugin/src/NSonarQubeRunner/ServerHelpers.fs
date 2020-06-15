@@ -28,7 +28,8 @@ let GetSonarLintDiagnostics(externlProfileIn : System.Collections.Generic.Dictio
                     let id = "csharpsquid:" + diagnostic.Id
                     checksAvailalbe <- checksAvailalbe + " - " + id
                     try
-                        let rule = externlProfileIn.["cs"].GetRule(id)
+                        let profile = externlProfileIn.["cs"]
+                        let rule = profile.GetRule(id)
                         if rule <> null then
                             builder <- builder @ [check]
                             ids <- ids @ [new KeyValuePair<string, ReportDiagnostic>(diagnostic.Id, ReportDiagnostic.Warn)]

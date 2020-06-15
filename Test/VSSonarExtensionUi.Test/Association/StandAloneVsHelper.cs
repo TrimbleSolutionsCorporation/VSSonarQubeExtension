@@ -1,9 +1,9 @@
 namespace VSSonarExtensionUi.Test.Association
 {
-    using System;
-    using System.Diagnostics;
     using Microsoft.CodeAnalysis;
     using SonarRestService.Types;
+    using System;
+    using System.Diagnostics;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
 
@@ -125,7 +125,7 @@ namespace VSSonarExtensionUi.Test.Association
         /// <summary>The active solution path.</summary>
         /// <returns>The <see cref="string"/>.</returns>
         /// <exception cref="NotImplementedException"></exception>
-        public string ActiveSolutionPath()
+        public string ActiveSolutioRootPath()
         {
             throw new NotImplementedException();
         }
@@ -273,6 +273,16 @@ namespace VSSonarExtensionUi.Test.Association
         }
 
         public string VsVersion()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string ActiveSolutionFullName()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string ActiveSolutionFileNameWithExtension()
         {
             throw new NotImplementedException();
         }

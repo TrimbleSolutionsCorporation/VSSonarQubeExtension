@@ -13,10 +13,10 @@ namespace VSSonarPlugins.Types
     public class VsSolutionItem
     {
         /// <summary>Gets or sets the solution path. Full path includes file name</summary>
-        public string SolutionPath { get; set; }
+        public string SolutionRoot { get; set; }
 
         /// <summary>Gets or sets the solution name.</summary>
-        public string SolutionName { get; set; }
+        public string SolutionFileNameWithExtension { get; set; }
 
         public Resource SonarProject { get; set; }
     }

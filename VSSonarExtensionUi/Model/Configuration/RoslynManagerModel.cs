@@ -1,23 +1,19 @@
 ﻿namespace VSSonarExtensionUi.Model.Configuration
 {
+    using Association;
+    using Helpers;
+    using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.MSBuild;
+    using SonarRestService;
+    using SonarRestService.Types;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
-    using System.Reflection;
-
-    using Helpers;
+    using System.Threading.Tasks;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-    using Association;
-    using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.MSBuild;
-    using System.Net;
-    using System.IO.Compression;
-    using SonarRestService;
-    using SonarRestService.Types;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// Roslyn manager model
@@ -210,8 +206,8 @@
         /// <param name="associatedProjectIn">The associated project in.</param>
         public async Task ReloadDataFromDisk(Resource associatedProjectIn)
         {
-			// does not save data to disk
-			await Task.Delay(1);
+            // does not save data to disk
+            await Task.Delay(1);
         }
 
         /// <summary>
@@ -492,30 +488,30 @@
                     {
                         if (Directory.Exists(folder) && !this.roslynExternalUserDiagPath.ToLower().Equals(folder.ToLower()))
                         {
-                            await this.LoadDiagnosticsFromPath(folder, hasRoslynPlugin);
+                            await this.LoadDiagnosticsFromPath(folder);
                         }
                     }
                 }
 
-                await this.LoadDiagnosticsFromPath(this.roslynExternalUserDiagPath, hasRoslynPlugin);
-                
+                await this.LoadDiagnosticsFromPath(this.roslynExternalUserDiagPath);
+
                 foreach (var item in this.embedVersionController.GetInstalledPaths())
                 {
                     try
                     {
-                        await this.LoadDiagnosticsFromPath(item, false);
+                        await this.LoadDiagnosticsFromPath(item);
                     }
                     catch (Exception ex)
                     {
                         this.notificationManager.WriteMessageToLog("Failed to load diagnostics from: " + item + " : " + ex.Message);
                     }
-                }                    
+                }
             }
 
             this.SyncSettings();
         }
 
-        private async Task LoadDiagnosticsFromPath(string folderPath, bool syncInServer)
+        private async Task LoadDiagnosticsFromPath(string folderPath)
         {
             var diagnostics = Directory.GetFiles(folderPath);
 
@@ -535,11 +531,6 @@
                     if (newdata.AvailableChecks.Count > 0)
                     {
                         this.ExtensionDiagnostics.Add(fileName, newdata);
-
-                        if (syncInServer)
-                        {
-                            await this.SyncDiagnosticInServer(newdata);
-                        }
                     }
                 }
                 catch (Exception ex)

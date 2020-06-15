@@ -8,16 +8,14 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace CxxPlugin.LocalExtensions
 {
+    using SonarRestService;
+    using SonarRestService.Types;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-
-    using SonarRestService;
-    using SonarRestService.Types;
 
     /// <summary>
     ///     The Sensor interface.
@@ -68,10 +66,10 @@ namespace CxxPlugin.LocalExtensions
         /// <param name="configurationHelper">The configuration helper.</param>
         /// <param name="sonarRestService">The sonar rest service.</param>
         protected ASensor(
-            string repositoryKey, 
-            bool useStdout, 
-            INotificationManager notificationManager, 
-            IConfigurationHelper configurationHelper, 
+            string repositoryKey,
+            bool useStdout,
+            INotificationManager notificationManager,
+            IConfigurationHelper configurationHelper,
             ISonarRestService sonarRestService)
         {
             this.NotificationManager = notificationManager;
@@ -92,18 +90,23 @@ namespace CxxPlugin.LocalExtensions
         /// The <see cref="Process" />.
         /// </returns>
         public virtual List<string> LaunchSensor(
-            object caller, 
-            EventHandler logger, 
-            string filePath, 
+            object caller,
+            EventHandler logger,
+            string filePath,
             IVSSonarQubeCmdExecutor executor)
         {
+            if (string.IsNullOrEmpty(this.GetCommand()))
+            {
+                return new List<string>();
+            }
+
             var commandline = "[" + Directory.GetParent(filePath) + "] : " + this.GetCommand() + " "
                               + this.GetArguments(filePath);
             CxxPlugin.WriteLogMessage(this.NotificationManager, caller.GetType().ToString(), commandline);
             executor.ExecuteCommand(
-                this.GetCommand(), 
-                this.GetArguments(filePath), 
-                this.GetEnvironment(), 
+                this.GetCommand(),
+                this.GetArguments(filePath),
+                this.GetEnvironment(),
                 string.Empty);
 
             return this.UseStdout ? executor.GetStdOut() : executor.GetStdError();
@@ -188,7 +191,7 @@ namespace CxxPlugin.LocalExtensions
                 return
                     this.ConfigurationHelper.ReadSetting(
                         Context.FileAnalysisProperties,
-                        "CxxPlugin", 
+                        "CxxPlugin",
                         key).Value;
             }
             catch (Exception)
@@ -216,10 +219,10 @@ namespace CxxPlugin.LocalExtensions
         {
             this.ConfigurationHelper.WriteSetting(
                 Context.FileAnalysisProperties,
-                "CxxPlugin", 
-                key, 
-                value, 
-                sync, 
+                "CxxPlugin",
+                key,
+                value,
+                sync,
                 skipIfFound);
         }
 

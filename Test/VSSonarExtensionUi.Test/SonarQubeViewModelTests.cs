@@ -1,20 +1,18 @@
 ﻿namespace VSSonarExtensionUi.Test.Association
 {
-    using NUnit.Framework;
-    using System.IO;
-    using VSSonarPlugins.Types;
-    using Moq;
-    using SonarLocalAnalyser;
-    using VSSonarPlugins;
-    using ViewModel.Helpers;
-    using ViewModel;
     using Model.Helpers;
-    using ViewModel.Configuration;
-    using System.Collections.Generic;
-    using VSSonarExtensionUi.Association;
-    using System.Reflection;
+    using Moq;
+    using NUnit.Framework;
+    using SonarLocalAnalyser;
     using SonarRestService;
     using SonarRestService.Types;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Reflection;
+    using ViewModel;
+    using ViewModel.Configuration;
+    using VSSonarPlugins;
+    using VSSonarPlugins.Types;
 
     [TestFixture]
     class SonarQubeViewModelTests
@@ -83,7 +81,7 @@
 
             AuthtenticationHelper.EstablishAConnection(mockRest.Object, "as", "asda", "asd");
 
-            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, locaAnalyser: mockAnalyser.Object, pluginManager:mockPluginManager.Object);
+            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, locaAnalyser: mockAnalyser.Object, pluginManager: mockPluginManager.Object);
             associationModel.VsHelper = mockVsHelper.Object;
 
             associationModel.OnConnectToSonar(false).GetAwaiter().GetResult();
@@ -105,14 +103,14 @@
             mockConfiguration.Setup(x => x.ReadSetting(It.IsAny<Context>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new SonarQubeProperties { Value = "project_Main" });
             mockRest.Setup(x => x.GetProjectsList(It.IsAny<ISonarConfiguration>())).Returns(this.CreatProjects());
             mockRest.Setup(x => x.AuthenticateUser(It.IsAny<ISonarConfiguration>()).Result).Returns(true);
-            mockVsHelper.Setup(x => x.ActiveSolutionName()).Returns("solutionaname");
-            mockVsHelper.Setup(x => x.ActiveSolutionPath()).Returns("solutionapath");
+            mockVsHelper.Setup(x => x.ActiveSolutionFileNameWithExtension()).Returns("solutionaname");
+            mockVsHelper.Setup(x => x.ActiveSolutioRootPath()).Returns("solutionapath");
 
             AuthtenticationHelper.EstablishAConnection(mockRest.Object, "as", "asda", "asd");
 
             var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, mockSourceProvider.Object, mockPlugin.Object, mockAnalyser.Object);
             associationModel.VsHelper = mockVsHelper.Object;
-            associationModel.IsSolutionOpen = true;            
+            associationModel.IsSolutionOpen = true;
             associationModel.OnConnectToSonar(false).GetAwaiter().GetResult();
             WaitForCompletionOrTimeout(associationModel);
 
@@ -128,8 +126,8 @@
             mockConfiguration.Setup(x => x.ReadSetting(It.IsAny<Context>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new SonarQubeProperties { Value = "project_Main" });
             mockRest.Setup(x => x.GetProjectsList(It.IsAny<ISonarConfiguration>())).Returns(this.CreatProjects());
             mockRest.Setup(x => x.AuthenticateUser(It.IsAny<ISonarConfiguration>()).Result).Returns(true);
-            mockVsHelper.Setup(x => x.ActiveSolutionName()).Returns("solutionaname");
-            mockVsHelper.Setup(x => x.ActiveSolutionPath()).Returns("solutionapath");
+            mockVsHelper.Setup(x => x.ActiveSolutionFileNameWithExtension()).Returns("solutionaname");
+            mockVsHelper.Setup(x => x.ActiveSolutioRootPath()).Returns("solutionapath");
             mockSourceProvider.Setup(x => x.GetBranch()).Returns("feature/1234-asdas");
 
             AuthtenticationHelper.EstablishAConnection(mockRest.Object, "as", "asda", "asd");
@@ -152,8 +150,8 @@
             mockConfiguration.Setup(x => x.ReadSetting(It.IsAny<Context>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new SonarQubeProperties { Value = "project_Main" });
             mockRest.Setup(x => x.GetProjectsList(It.IsAny<ISonarConfiguration>())).Returns(this.CreatProjects());
             mockRest.Setup(x => x.AuthenticateUser(It.IsAny<ISonarConfiguration>()).Result).Returns(true);
-            mockVsHelper.Setup(x => x.ActiveSolutionName()).Returns("solutionaname");
-            mockVsHelper.Setup(x => x.ActiveSolutionPath()).Returns("solutionapath");
+            mockVsHelper.Setup(x => x.ActiveSolutionFileNameWithExtension()).Returns("solutionaname");
+            mockVsHelper.Setup(x => x.ActiveSolutioRootPath()).Returns("solutionapath");
             mockSourceProvider.Setup(x => x.GetBranch()).Returns("feature_A");
 
             AuthtenticationHelper.EstablishAConnection(mockRest.Object, "as", "asda", "asd");
@@ -176,8 +174,8 @@
             mockConfiguration.Setup(x => x.ReadSetting(It.IsAny<Context>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new SonarQubeProperties { Value = "tekla.utilities:project" });
             mockRest.Setup(x => x.GetProjectsList(It.IsAny<ISonarConfiguration>())).Returns(this.CreatProjects());
             mockRest.Setup(x => x.AuthenticateUser(It.IsAny<ISonarConfiguration>()).Result).Returns(true);
-            mockVsHelper.Setup(x => x.ActiveSolutionName()).Returns("solutionaname");
-            mockVsHelper.Setup(x => x.ActiveSolutionPath()).Returns("solutionapath");
+            mockVsHelper.Setup(x => x.ActiveSolutionFileNameWithExtension()).Returns("solutionaname");
+            mockVsHelper.Setup(x => x.ActiveSolutioRootPath()).Returns("solutionapath");
 
             AuthtenticationHelper.EstablishAConnection(mockRest.Object, "as", "asda", "asd");
 
@@ -201,8 +199,8 @@
         {
             mockRest.Setup(x => x.GetProjectsList(It.IsAny<ISonarConfiguration>())).Returns(this.CreatProjects());
             mockRest.Setup(x => x.AuthenticateUser(It.IsAny<ISonarConfiguration>()).Result).Returns(true);
-            mockVsHelper.Setup(x => x.ActiveSolutionName()).Returns("solutionaname");
-            mockVsHelper.Setup(x => x.ActiveSolutionPath()).Returns("solutionapath");
+            mockVsHelper.Setup(x => x.ActiveSolutionFileNameWithExtension()).Returns("solutionaname");
+            mockVsHelper.Setup(x => x.ActiveSolutioRootPath()).Returns("solutionapath");
             mockPlugin.Setup(x => x.SourceCodePlugins).Returns(new List<ISourceVersionPlugin>());
 
             AuthtenticationHelper.EstablishAConnection(mockRest.Object, "as", "asda", "asd");
@@ -236,8 +234,8 @@
         {
             mockRest.Setup(x => x.GetProjectsList(It.IsAny<ISonarConfiguration>())).Returns(this.CreatProjects());
             mockRest.Setup(x => x.AuthenticateUser(It.IsAny<ISonarConfiguration>()).Result).Returns(true);
-            mockVsHelper.Setup(x => x.ActiveSolutionName()).Returns("solutionaname");
-            mockVsHelper.Setup(x => x.ActiveSolutionPath()).Returns("solutionapath");
+            mockVsHelper.Setup(x => x.ActiveSolutionFileNameWithExtension()).Returns("solutionaname");
+            mockVsHelper.Setup(x => x.ActiveSolutioRootPath()).Returns("solutionapath");
             mockPlugin.Setup(x => x.SourceCodePlugins).Returns(new List<ISourceVersionPlugin>());
 
             AuthtenticationHelper.EstablishAConnection(mockRest.Object, "as", "asda", "asd");
@@ -269,8 +267,8 @@
         {
             mockRest.Setup(x => x.GetProjectsList(It.IsAny<ISonarConfiguration>())).Returns(this.CreatProjects());
             mockRest.Setup(x => x.AuthenticateUser(It.IsAny<ISonarConfiguration>()).Result).Returns(true);
-            mockVsHelper.Setup(x => x.ActiveSolutionName()).Returns("solutionaname");
-            mockVsHelper.Setup(x => x.ActiveSolutionPath()).Returns("solutionapath");
+            mockVsHelper.Setup(x => x.ActiveSolutionFileNameWithExtension()).Returns("solutionaname");
+            mockVsHelper.Setup(x => x.ActiveSolutioRootPath()).Returns("solutionapath");
 
             AuthtenticationHelper.EstablishAConnection(mockRest.Object, "as", "asda", "asd");
 
@@ -411,7 +409,7 @@
 
             mockRest.Setup(x => x.GetProjectsList(It.IsAny<ISonarConfiguration>())).Returns(brancheData);
             mockSourceProvider.Setup(x => x.GetBranch()).Returns("feature_A");
-            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, mockSourceProvider.Object, locaAnalyser: mockAnalyser.Object); 
+            var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, mockSourceProvider.Object, locaAnalyser: mockAnalyser.Object);
             associationModel.RefreshProjectList(false);
             Assert.That(associationModel.AvailableProjects.Count, Is.EqualTo(4));
 

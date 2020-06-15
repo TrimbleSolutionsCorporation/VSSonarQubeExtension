@@ -3,14 +3,12 @@
 namespace VSSonarExtensionUi.ViewModel.Analysis
 {
     using GalaSoft.MvvmLight.Command;
-    using System.Windows.Input;
-    using VSSonarPlugins.Types;
     using System;
-    using VSSonarPlugins;
-    using System.Threading.Tasks;
-    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Windows;
+    using System.Windows.Input;
+    using VSSonarPlugins;
+    using VSSonarPlugins.Types;
 
     public class PluginCommandWrapper
     {
@@ -27,13 +25,12 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
 
         private void RunCommand(VsFileItem itemInView)
         {
-            if(this.isRunning)
+            if (this.isRunning)
             {
                 return;
             }
 
             this.isRunning = true;
-            this.model.CanRunAnalysis = false;
             this.model.AnalysisIsRunning = true;
             try
             {
@@ -42,12 +39,12 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 bw.RunWorkerCompleted += delegate
                 {
                     this.isRunning = false;
-                    this.model.CanRunAnalysis = true;
                     this.model.AnalysisIsRunning = false;
                 };
 
                 bw.DoWork +=
-                    delegate {
+                    delegate
+                    {
                         var commandIssues = PluginOperation.ExecuteCommand(itemInView);
                         Application.Current.Dispatcher.Invoke(
                             delegate
@@ -58,7 +55,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
 
                 bw.RunWorkerAsync();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 this.notification.ReportMessage(new Message() { Id = "PluginWrapper", Data = "Failed to Run Command : " + this.Name });
                 this.notification.ReportException(ex);

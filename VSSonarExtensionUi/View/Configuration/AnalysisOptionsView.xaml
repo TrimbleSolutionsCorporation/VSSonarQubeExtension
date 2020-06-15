@@ -2,8 +2,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:fa="http://schemas.fontawesome.io/icons/"
     x:Class="VSSonarExtensionUi.View.Configuration.AnalysisOptionsView" 
              mc:Ignorable="d" Height="530" Width="800" >
     <UserControl.Resources>
@@ -42,11 +41,13 @@
                         <ColumnDefinition Width="130*"/>
                         <ColumnDefinition Width="299*"/>
                         <ColumnDefinition Width="94"/>
+                        <ColumnDefinition Width="20"/>
                     </Grid.ColumnDefinitions>
 
                     <Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"   Grid.Row="0" Grid.Column="0" Content="Analysis Wrapper Version:" />
                     <TextBox Grid.Row="0" Grid.Column="1"   Text="{Binding CxxWrapperVersion}" ToolTip="Find wrapper in : https://github.com/jmecsoftware/sonar-cxx-msbuild-tasks/releases - indicate release to use : default 1.2.1" />
                     <Button Content="Download" Grid.Column="2" Command="{Binding DownloadWrapperCommand}"></Button>
+                    <fa:ImageAwesome Icon="Spinner" Spin="{Binding IsDownloading}"  SpinDuration="1" Grid.Column="3"/>
                     
                     <Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"   Grid.Row="1" Grid.Column="0" Content="MSBuild.SonarQube.Runner:" />
                     <TextBox Grid.Row="1" Grid.Column="1"   Text="{Binding SQMSBuildRunnerVersion}" ToolTip="MSBuild.SonarQube.Runner version" />
@@ -57,11 +58,6 @@
 
                     <Label Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=White}"   Grid.Row="3" Grid.Column="0" Content="Excluded Plugins:" />
                     <TextBox Grid.Row="3" Grid.Column="1"   Text="{Binding ExcludedPlugins}"/>
-
-                    <Label Grid.Row="5" Grid.Column="0" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}" Content="Enable Project Analysis:" ToolTip="If checked, after each build the extension will run analysis on dll"/>
-                    <CheckBox IsChecked="{Binding IsProjectAnalysisChecked}" Grid.Row="5" Grid.Column="1" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"    />
-                    <Label Grid.Row="6" Grid.Column="0" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}" Content="Enable Solution Analysis:" ToolTip="If checked, after each solution is build the extension will run solution wide analysis"/>
-                    <CheckBox IsChecked="{Binding IsSolutionAnalysisChecked}" Grid.Row="6" Grid.Column="1" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}, FallbackValue=Black}"    />
 
                 </Grid>
             </StackPanel>

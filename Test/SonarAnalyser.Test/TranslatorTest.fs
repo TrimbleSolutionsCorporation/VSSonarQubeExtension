@@ -59,7 +59,7 @@ type TraTests() =
         item.FilePath <- Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\MultiModuleTest\\A\\1\\a\\dup.cpp")
         item.Project <- new VsProjectItem()
         item.Project.Solution <- new VsSolutionItem()
-        item.Project.Solution.SolutionPath <- Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject")
+        item.Project.Solution.SolutionRoot <- Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject")
 
         let listOfResources = new System.Collections.Generic.List<Resource>()
         let resource = new Resource()
@@ -99,7 +99,7 @@ type TraTests() =
         item.Project <- new VsProjectItem()
         item.Project.ProjectFilePath <- Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject\\A\\1\\a\\dup.cpp")
         item.Project.Solution <- new VsSolutionItem()
-        item.Project.Solution.SolutionPath <- Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject")
+        item.Project.Solution.SolutionRoot <- Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\FlatProject")
 
         let listOfResources = new System.Collections.Generic.List<Resource>()
         let resource = new Resource()
@@ -141,7 +141,7 @@ type TraTests() =
         item.Project.ProjectFilePath <- Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\VisualBootStrapper\\A\\1\\a\\a1a.vcxproj")
         item.Project.ProjectName <- "a1a"
         item.Project.Solution <- new VsSolutionItem()
-        item.Project.Solution.SolutionPath <- Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\VisualBootStrapper")
+        item.Project.Solution.SolutionRoot <- Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\VisualBootStrapper")
 
         let listOfResources = new System.Collections.Generic.List<Resource>()
         let resource = new Resource()
@@ -213,7 +213,7 @@ type TraTests() =
                 .Setup(fun x -> <@ x.GetResourcesData(any(), "cpp-multimodule-project:lib:dup.cpp") @>).Returns(listOfResources)
                 .Create()
         item.Project.Solution <- new VsSolutionItem()
-        item.Project.Solution.SolutionPath <- Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\ModulesDefinedAllInOnePropertiesFile")
+        item.Project.Solution.SolutionRoot <- Path.Combine(assemblyRunningPath, "TestData\\SampleProjects\\ModulesDefinedAllInOnePropertiesFile")
 
         Assert.That((translator :> ISQKeyTranslator).TranslatePath(item, mockAVsinterface, rest, mockConfigurtion).Key, Is.EqualTo("cpp-multimodule-project:lib:dup.cpp"))
 
@@ -281,7 +281,7 @@ type TraTests() =
         item.Project.ProjectFilePath <- Path.Combine(assemblyRunningPath, "ProjectX\\ProjectX.csproj")
         item.Project.ProjectName <- "ProjectX"
         item.Project.Solution <- new VsSolutionItem()
-        item.Project.Solution.SolutionPath <- assemblyRunningPath
+        item.Project.Solution.SolutionRoot <- assemblyRunningPath
 
         let key = translator.TranslatePath(item, mockAVsinterface, mockRest, mockConfigurtion)
         Assert.That(key.Key, Is.EqualTo("Company:Group:Company:Group:{GUID}:Folder/file.cs"))
@@ -305,7 +305,7 @@ type TraTests() =
         item.Project.ProjectFilePath <- Path.Combine(assemblyRunningPath, "ProjectX\\ProjectX.csproj")
         item.Project.ProjectName <- "ProjectX"
         item.Project.Solution <- new VsSolutionItem()
-        item.Project.Solution.SolutionPath <- assemblyRunningPath
+        item.Project.Solution.SolutionRoot <- assemblyRunningPath
 
         let key = translator.TranslatePath(item, mockAVsinterface, mockRest, mockConfigurtion)
         Assert.That(key.Key, Is.EqualTo("Company:Group:Company:Group:{GUID}:master:Folder/file.cs"))

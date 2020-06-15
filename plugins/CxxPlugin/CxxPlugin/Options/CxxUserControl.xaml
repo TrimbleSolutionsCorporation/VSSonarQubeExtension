@@ -4,7 +4,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:options="clr-namespace:CxxPlugin.Options"
-    xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+    xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" xmlns:fa="http://schemas.fontawesome.io/icons/"
     x:Class="CxxPlugin.Options.CxxUserControl"
     mc:Ignorable="d" Height="425" Width="600">
     <UserControl.Resources>
@@ -34,16 +34,28 @@
     </UserControl.Foreground>
 
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="349*" />
-        </Grid.ColumnDefinitions>
         <ScrollViewer PanningMode="VerticalOnly">
             <StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="319*"/>
+                        <ColumnDefinition Width="50"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Row="0" Grid.Column="0"
+                                 TextWrapping="Wrap" Text="{Binding CxxVersion}" VerticalContentAlignment="Center" />
+                    <Button x:Name="AutoConfigureTools" Content="Auto configure tools"
+                                Grid.Column="1" Command="{Binding ConfigureToolsCommand}"
+                                Style="{DynamicResource SquareButtonStyle}" />
+                    <fa:ImageAwesome Height="20" Icon="Spinner" Spin="{Binding IsDownloading}"  SpinDuration="1" Grid.Column="2"/>
+                </Grid>
+
                 <Expander Header="Cxx Lint (ensure java is available)">
                     <Grid Height="85">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="100" />
-                            <ColumnDefinition Width="349*" />
+                            <ColumnDefinition Width="25*" />
+                            <ColumnDefinition Width="349*"/>
                             <ColumnDefinition Width="100" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
@@ -52,20 +64,20 @@
                             <RowDefinition Height="25" />
                         </Grid.RowDefinitions>
                         <Label Content="Cxx Lint Jar"
-                               VerticalContentAlignment="Center" />
+                               VerticalContentAlignment="Center" Margin="0,0,0,30" Grid.RowSpan="2" />
                         <TextBox Grid.Row="0" Grid.Column="1"
-                                 TextWrapping="Wrap" Text="{Binding CxxLint}" VerticalContentAlignment="Center" />
+                                 TextWrapping="Wrap" Text="{Binding CxxLint}" VerticalContentAlignment="Center" Grid.ColumnSpan="2" Margin="0,0,0,30" Grid.RowSpan="2" />
                         <Button x:Name="CxxLintBrowse" Content="..."
-                                Grid.Row="0" Grid.Column="2" Command="{Binding OpenCommand}" CommandParameter="CxxLint"
-                                Style="{DynamicResource SquareButtonStyle}" />
-                        
+                                Grid.Row="0" Grid.Column="3" Command="{Binding OpenCommand}" CommandParameter="CxxLint"
+                                Style="{DynamicResource SquareButtonStyle}" Margin="0,0,0,30" Grid.RowSpan="2" />
+
                         <Button x:Name="DownloadLintFromSonarQube" Content="Download linter from SonarQube server"
                                 Grid.Row="1" Grid.Column="1" Command="{Binding DownloadCxxLintFromServerCommand}"
-                                Style="{DynamicResource SquareButtonStyle}" />
-                        <Label Content="{Binding ErrorMessage, FallbackValue=asdasdassdfsddfsdfs}" Grid.Row="2" Grid.ColumnSpan="3"
-                               VerticalContentAlignment="Center" />                      
+                                Style="{DynamicResource SquareButtonStyle}" Grid.ColumnSpan="2" Margin="0,0.5,0,0" />
+                        <Label Content="{Binding ErrorMessage, FallbackValue=asdasdassdfsddfsdfs}" Grid.Row="2" Grid.ColumnSpan="4"
+                               VerticalContentAlignment="Center" Margin="0,0,0,-0.5" />
                     </Grid>
-                </Expander>                
+                </Expander>
                 <Expander Header="Vera++">
                     <Grid Height="80">
                         <Grid.ColumnDefinitions>

@@ -22,22 +22,22 @@ namespace VSSonarPlugins
         /// <summary>
         /// The file.
         /// </summary>
-        File, 
+        File,
 
         /// <summary>
         /// The incremental.
         /// </summary>
-        Incremental, 
+        Incremental,
 
         /// <summary>
         /// The preview.
         /// </summary>
-        Preview, 
+        Preview,
 
         /// <summary>
         /// The full.
         /// </summary>
-        Full, 
+        Full,
     }
 
     /// <summary>
@@ -55,7 +55,7 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="List" />.
         /// </returns>
-        List<Issue> ExecuteAnalysisOnFile(VsFileItem itemInView, Resource project, ISonarConfiguration conf, bool fromSave);
+        List<Issue> ExecuteAnalysisOnFile(VsFileItem itemInView, Resource project, ISonarConfiguration conf, bool fromSave, Profile profile);
 
         /// <summary>The get issues.</summary>
         /// <param name="issue">The issue.</param>

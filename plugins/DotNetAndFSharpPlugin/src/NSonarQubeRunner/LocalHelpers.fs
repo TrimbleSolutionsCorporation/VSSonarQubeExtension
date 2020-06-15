@@ -43,7 +43,8 @@ let GetRoslynDiagnostics(externlProfileIn : System.Collections.Generic.Dictionar
                             
                         let id = repo + ":" + diagnostic.Id
                         try
-                            let rule = externlProfileIn.[language].GetRule(id)
+                            let profile = externlProfileIn.[language]
+                            let rule = profile.GetRule(id)
                             if rule <> null then
                                 checkadded <- true
                                 builder <- builder @ [check]

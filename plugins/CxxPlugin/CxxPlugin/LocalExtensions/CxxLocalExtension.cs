@@ -14,7 +14,9 @@
 
 namespace CxxPlugin.LocalExtensions
 {
-    using GalaSoft.MvvmLight.Command;
+    using SonarLocalAnalyser;
+    using SonarRestService;
+    using SonarRestService.Types;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -23,14 +25,9 @@ namespace CxxPlugin.LocalExtensions
     using System.Runtime.InteropServices;
     using System.Security.Permissions;
     using System.Threading;
-
+    using System.Threading.Tasks;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-
-    using SonarRestService;
-    using SonarRestService.Types;
-    using SonarLocalAnalyser;
-    using System.Threading.Tasks;
 
     /// <summary>
     ///     The cxx server extension.
@@ -70,11 +67,6 @@ namespace CxxPlugin.LocalExtensions
         private readonly ISonarRestService sonarRestService;
 
         /// <summary>
-        /// The profile
-        /// </summary>
-        private Dictionary<string, Profile> profile;
-
-        /// <summary>
         /// The is loading
         /// </summary>
         private bool isLoading;
@@ -105,15 +97,15 @@ namespace CxxPlugin.LocalExtensions
             this.sensors = new Dictionary<string, ASensor>
                                {
                                    {
-                                       CppCheckSensor.SKey, 
+                                       CppCheckSensor.SKey,
                                        new CppCheckSensor(notificationManager, configurationHelper, sonarRestService)
-                                   }, 
-                                   { RatsSensor.SKey, new RatsSensor(notificationManager, configurationHelper, sonarRestService) }, 
+                                   },
+                                   { RatsSensor.SKey, new RatsSensor(notificationManager, configurationHelper, sonarRestService) },
                                    { VeraSensor.SKey, new VeraSensor(notificationManager, configurationHelper, sonarRestService) },
                                    { CxxLintSensor.SKey, new CxxLintSensor(notificationManager, configurationHelper, sonarRestService, this.vshelper) },
-                                   { PcLintSensor.SKey, new PcLintSensor(notificationManager, configurationHelper, sonarRestService) }, 
+                                   { PcLintSensor.SKey, new PcLintSensor(notificationManager, configurationHelper, sonarRestService) },
                                    {
-                                       CxxExternalSensor.SKey, 
+                                       CxxExternalSensor.SKey,
                                        new CxxExternalSensor(notificationManager, configurationHelper, sonarRestService)
                                    }
                                };
@@ -134,24 +126,19 @@ namespace CxxPlugin.LocalExtensions
         /// The <see><cref>List</cref></see>
         /// .
         /// </returns>
-        public List<Issue> ExecuteAnalysisOnFile(VsFileItem itemInView, Resource project, ISonarConfiguration conf, bool fromSave)
+        public List<Issue> ExecuteAnalysisOnFile(VsFileItem itemInView, Resource project, ISonarConfiguration conf, bool fromSave, Profile profile)
         {
             var threads = new List<Thread>();
             var allIssues = new List<Issue>();
 
             foreach (var sensor in this.sensors)
             {
-                CxxPlugin.WriteLogMessage(
-                    this.notificationManager,
-                    this.GetType().ToString(), 
-                    "Launching  Analysis on: " + sensor.Key + " " + itemInView.FilePath);
-
                 threads.Add(
                     this.RunSensorThread(
-                        this.StdOutEvent, 
-                        itemInView, 
+                        this.StdOutEvent,
+                        itemInView,
                         sensor,
-                        this.profile["c++"], 
+                        profile,
                         allIssues,
                         new VSSonarQubeCmdExecutor(60000)));
             }
@@ -177,10 +164,10 @@ namespace CxxPlugin.LocalExtensions
         /// The <see cref="Thread" />.
         /// </returns>
         public Thread RunSensorThread(
-            EventHandler output, 
-            VsFileItem file, 
-            KeyValuePair<string, ASensor> sensor, 
-            Profile profileIn, 
+            EventHandler output,
+            VsFileItem file,
+            KeyValuePair<string, ASensor> sensor,
+            Profile profileIn,
             List<Issue> issuesToReturn,
             IVSSonarQubeCmdExecutor exec)
         {
@@ -233,8 +220,7 @@ namespace CxxPlugin.LocalExtensions
                 this.isLoading = true;
                 try
                 {
-                    this.profile = profileIn;
-                    foreach(var sensor in this.sensors)
+                    foreach (var sensor in this.sensors)
                     {
                         sensor.Value.UpdateProfile(project, configuration, profileIn, vsVersion);
                     }
@@ -242,7 +228,7 @@ namespace CxxPlugin.LocalExtensions
                     await this.clangSensor.UpdateProfile(project, configuration, profileIn, vsVersion);
 
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     this.isLoading = false;
                     throw ex;
@@ -263,10 +249,10 @@ namespace CxxPlugin.LocalExtensions
         /// <param name="profileIn">The profile in.</param>
         /// <param name="issuesToReturn">The issues to return.</param>
         private void ProcessSensorsIssues(
-            string key, 
-            List<string> sensorReportedLines, 
-            VsFileItem itemInView, 
-            Profile profileIn, 
+            string key,
+            List<string> sensorReportedLines,
+            VsFileItem itemInView,
+            Profile profileIn,
             List<Issue> issuesToReturn)
         {
             var issuesPerTool = new List<Issue>();
@@ -285,7 +271,7 @@ namespace CxxPlugin.LocalExtensions
             {
                 Debug.WriteLine(ex.Message);
             }
-            
+
             try
             {
                 List<Issue> issuesInTool = this.sensors[key].GetViolations(sensorReportedLines);
@@ -357,12 +343,22 @@ namespace CxxPlugin.LocalExtensions
 
         internal List<IPluginCommand> GetAdditionalCommands(Dictionary<string, Profile> profile)
         {
-            if(!profile.ContainsKey("c++"))
+            if (!profile.ContainsKey("c++") && !profile.ContainsKey("cxx"))
             {
                 return new List<IPluginCommand>();
             }
 
-            var rules = profile["c++"].GetAllRules();
+            List<Rule> rules = new List<Rule>();
+
+            if (profile.ContainsKey("c++"))
+            {
+                rules = profile["c++"].GetAllRules();
+            }
+
+            if (profile.ContainsKey("cxx"))
+            {
+                rules = profile["cxx"].GetAllRules();
+            }
 
             var listofCmds = new List<IPluginCommand>();
             // create commands for clang-tidy
@@ -374,7 +370,7 @@ namespace CxxPlugin.LocalExtensions
             commandExecute.Name = "clang-tidy --fix llvm-*";
 
             var enabled = rules.Any(rule => rule.Key.Contains("llvm-"));
-            if(enabled)
+            if (enabled)
             {
                 listofCmds.Add(commandExecute);
             }
@@ -382,7 +378,7 @@ namespace CxxPlugin.LocalExtensions
             commandExecute = new PluginCommand(this.notificationManager, this.clangSensor, "--fix --checks=google-*");
             commandExecute.Name = "clang-tidy --fix google";
             enabled = rules.Any(rule => rule.Key.Contains("google-"));
-            if(enabled)
+            if (enabled)
             {
                 listofCmds.Add(commandExecute);
             }
@@ -390,7 +386,7 @@ namespace CxxPlugin.LocalExtensions
             commandExecute = new PluginCommand(this.notificationManager, this.clangSensor, "--fix --checks=modernize-*,-modernize-use-using");
             commandExecute.Name = "clang-tidy --fix modernize";
             enabled = rules.Any(rule => rule.Key.Contains("modernize-"));
-            if(enabled)
+            if (enabled)
             {
                 listofCmds.Add(commandExecute);
             }
@@ -398,7 +394,7 @@ namespace CxxPlugin.LocalExtensions
             commandExecute = new PluginCommand(this.notificationManager, this.clangSensor, "--fix --checks=misc-*");
             commandExecute.Name = "clang-tidy --fix misc";
             enabled = rules.Any(rule => rule.Key.Contains("misc-"));
-            if(enabled)
+            if (enabled)
             {
                 listofCmds.Add(commandExecute);
             }
@@ -430,17 +426,17 @@ namespace CxxPlugin.LocalExtensions
         /// <value>
         /// The name.
         /// </value>
-        public string Name { get ; set; }
+        public string Name { get; set; }
 
         public List<Issue> ExecuteCommand(VsFileItem resource)
         {
-            if(resource == null)
+            if (resource == null)
             {
                 this.notificationManager.WriteMessageToLog("no resource in view, skip clang-tidy");
                 return new List<Issue>();
             }
 
-            if(this.isRunning)
+            if (this.isRunning)
             {
                 this.notificationManager.WriteMessageToLog("clang-tidy already running");
                 return new List<Issue>();

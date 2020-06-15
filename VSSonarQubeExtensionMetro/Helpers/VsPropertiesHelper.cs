@@ -8,8 +8,18 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarQubeExtension.Helpers
 {
+    using EnvDTE;
+    using EnvDTE80;
+    using Microsoft.VisualStudio;
+    using Microsoft.VisualStudio.Editor;
+    using Microsoft.VisualStudio.Shell;
+    using Microsoft.VisualStudio.Shell.Interop;
+    using Microsoft.VisualStudio.Text.Editor;
+    using Microsoft.VisualStudio.TextManager.Interop;
+    using SonarRestService.Types;
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
@@ -17,24 +27,10 @@ namespace VSSonarQubeExtension.Helpers
     using System.Security.Principal;
     using System.Text;
     using System.Windows;
-
-    using EnvDTE;
-    using EnvDTE80;
-
-    using Microsoft.VisualStudio;
-    using Microsoft.VisualStudio.Editor;
-    using Microsoft.VisualStudio.Shell;
-    using Microsoft.VisualStudio.Shell.Interop;
-    using Microsoft.VisualStudio.Text.Editor;
-    using Microsoft.VisualStudio.TextManager.Interop;
-
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-
     using Process = System.Diagnostics.Process;
     using Thread = System.Threading.Thread;
-    using System.ComponentModel;
-    using SonarRestService.Types;
 
     /// <summary>
     ///     The vs properties helper.
@@ -76,7 +72,7 @@ namespace VSSonarQubeExtension.Helpers
             this.provider = service;
             this.environment = environment;
         }
-       
+
         /// <summary>
         ///     Gets or sets the custom pane.
         /// </summary>
@@ -120,7 +116,7 @@ namespace VSSonarQubeExtension.Helpers
 
                 return this.textViewHost;
             }
-        }        
+        }
 
         /// <summary>
         /// The get document language.
@@ -216,27 +212,6 @@ namespace VSSonarQubeExtension.Helpers
         /// <returns>
         ///     The <see cref="string" />.
         /// </returns>
-        public string ActiveSolutionName()
-        {
-            if (this.environment == null)
-            {
-                return string.Empty;
-            }
-
-            if (string.IsNullOrEmpty(this.environment.Solution.FullName))
-            {
-                return string.Empty;
-            }
-
-            return (this.environment.Solution != null) ? Path.GetFileNameWithoutExtension(this.environment.Solution.FullName) : string.Empty;
-        }
-
-        /// <summary>
-        ///     The get solution path.
-        /// </summary>
-        /// <returns>
-        ///     The <see cref="string" />.
-        /// </returns>
         public string ActiveSolutionFullName()
         {
             if (this.environment == null)
@@ -247,13 +222,23 @@ namespace VSSonarQubeExtension.Helpers
             return this.environment.Solution.FullName;
         }
 
+        public string ActiveSolutionFileNameWithExtension()
+        {
+            if (this.environment == null)
+            {
+                return string.Empty;
+            }
+
+            return Path.GetFileName(this.environment.Solution.FullName);
+        }
+
         /// <summary>
         ///     The get solution path.
         /// </summary>
         /// <returns>
         ///     The <see cref="string" />.
         /// </returns>
-        public string ActiveSolutionPath()
+        public string ActiveSolutioRootPath()
         {
             if (this.environment == null)
             {
@@ -354,7 +339,7 @@ namespace VSSonarQubeExtension.Helpers
         /// </returns>
         public string GetFileRealPathForSolution(string fileInView)
         {
-            string solutionPath = this.ActiveSolutionPath();
+            string solutionPath = this.ActiveSolutioRootPath();
             string driveLetter = solutionPath.Substring(0, 1);
             return driveLetter + fileInView.Substring(1);
         }
@@ -668,9 +653,9 @@ namespace VSSonarQubeExtension.Helpers
             string driveLetter = filename.Substring(0, 1);
             string projectName = Path.GetFileNameWithoutExtension(filename);
             string projectPath = driveLetter + this.GetProperFilePathCapitalization(filename).Substring(1);
-            string solutionName = this.ActiveSolutionName();
-            string solutionPath = driveLetter + this.ActiveSolutionPath().Substring(1);
-            var itemToReturn = 
+            string solutionName = this.ActiveSolutionFileNameWithExtension();
+            string solutionPath = driveLetter + this.ActiveSolutioRootPath().Substring(1);
+            var itemToReturn =
                 new VsProjectItem
                 {
                     ProjectName = projectName,
@@ -678,8 +663,8 @@ namespace VSSonarQubeExtension.Helpers
                     Solution =
                         new VsSolutionItem
                         {
-                            SolutionName = solutionName,
-                            SolutionPath = solutionPath,
+                            SolutionFileNameWithExtension = solutionName,
+                            SolutionRoot = solutionPath,
                             SonarProject = associatedProject
                         }
                 };
@@ -713,8 +698,7 @@ namespace VSSonarQubeExtension.Helpers
                 string documentPath = driveLetter + this.GetProperFilePathCapitalization(filename).Substring(1);
                 string projectName = item.ContainingProject.Name;
                 string projectPath = driveLetter + this.GetProperFilePathCapitalization(item.ContainingProject.FullName).Substring(1);
-                string solutionName = this.ActiveSolutionName();
-                string solutionPath = driveLetter + this.ActiveSolutionPath().Substring(1);
+                string solutionPath = driveLetter + this.ActiveSolutioRootPath().Substring(1);
                 var itemToReturn = new VsFileItem
                 {
                     FileName = documentName,
@@ -728,8 +712,8 @@ namespace VSSonarQubeExtension.Helpers
                             Solution =
                                 new VsSolutionItem
                                 {
-                                    SolutionName = solutionName,
-                                    SolutionPath = solutionPath,
+                                    SolutionFileNameWithExtension = this.ActiveSolutionFileNameWithExtension(),
+                                    SolutionRoot = solutionPath,
                                     SonarProject = associatedProject
                                 }
                         }
@@ -762,8 +746,7 @@ namespace VSSonarQubeExtension.Helpers
             string documentPath = driveLetter + this.GetProperFilePathCapitalization(fullPath).Substring(1);
             string projectName = Path.GetFileNameWithoutExtension(projectFullPath);
             string projectPath = driveLetter + this.GetProperFilePathCapitalization(projectFullPath).Substring(1);
-            string solutionName = this.ActiveSolutionName();
-            string solutionPath = driveLetter + this.ActiveSolutionPath().Substring(1);
+            string solutionPath = driveLetter + this.ActiveSolutioRootPath().Substring(1);
             var itemToReturn = new VsFileItem
             {
                 FileName = documentName,
@@ -777,8 +760,8 @@ namespace VSSonarQubeExtension.Helpers
                         Solution =
                             new VsSolutionItem
                             {
-                                SolutionName = solutionName,
-                                SolutionPath = solutionPath,
+                                SolutionFileNameWithExtension = this.ActiveSolutionFileNameWithExtension(),
+                                SolutionRoot = solutionPath,
                                 SonarProject = associatedProject
                             }
                     }

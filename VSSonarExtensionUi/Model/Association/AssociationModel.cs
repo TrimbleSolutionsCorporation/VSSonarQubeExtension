@@ -1,24 +1,23 @@
 ﻿namespace VSSonarExtensionUi.Association
 {
+    using PropertyChanged;
+    using SonarLocalAnalyser;
+    using SonarRestService;
+    using SonarRestService.Types;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-
-    using PropertyChanged;
-    using SonarLocalAnalyser;
+    using System.Linq;
+    using System.Threading.Tasks;
     using View.Helpers;
     using ViewModel;
+    using VSSonarExtensionUi.Model.Helpers;
+    using VSSonarExtensionUi.Model.Menu;
+    using VSSonarExtensionUi.ViewModel.Configuration;
     using VSSonarPlugins;
     using VSSonarPlugins.Helpers;
     using VSSonarPlugins.Types;
-    using VSSonarExtensionUi.Model.Helpers;
-    using VSSonarExtensionUi.ViewModel.Configuration;
-    using Model.Menu;
-    using System.Threading.Tasks;
-    using SonarRestService.Types;
-    using SonarRestService;
-    using System.Linq;
 
     /// <summary>
     /// Generates associations with sonar projects
@@ -179,11 +178,11 @@
         /// <returns>
         /// Ok if assign.
         /// </returns>
-        public async Task<bool> AssignASonarProjectToSolution(Resource project, Resource branchProject, ISourceControlProvider sourceControl, bool skipRegisterModels = false)
+        public async Task<bool> AssignASonarProjectToSolution(Resource project, Resource branchProject, ISourceControlProvider sourceControl)
         {
-             if (project == null ||
-                (this.OpenSolutionName == null || this.OpenSolutionPath == null) ||
-                (project.IsBranch && branchProject == null))
+            if (project == null ||
+               (this.OpenSolutionName == null || this.OpenSolutionPath == null) ||
+               (project.IsBranch && branchProject == null))
             {
                 return false;
             }
@@ -197,18 +196,69 @@
                 this.AssociatedProject = project;
             }
 
-            this.IsAssociated = true;
             this.SaveAssociationToDisk(this.AssociatedProject);
             this.AssociatedProject.SolutionRoot = this.OpenSolutionPath;
             this.AssociatedProject.SolutionName = this.OpenSolutionName;
             this.keyTranslator.SetProjectKeyAndBaseDir(this.AssociatedProject.Key, this.OpenSolutionPath, this.AssociatedProject.BranchName, Path.Combine(this.OpenSolutionPath, this.OpenSolutionName));
             this.configurationHelper.SyncSettings();
-            if (!skipRegisterModels)
+            await Task.Run(() =>
             {
-                await this.InitiateAssociationToSonarProject(sourceControl);
-            }
-            
+                // start local analysis association, and sync profile
+                this.localAnalyserModule.AssociateWithProject(this.AssociatedProject, AuthtenticationHelper.AuthToken);
+            });
+
+            this.IsAssociated = true;
             return true;
+        }
+
+        /// <summary>
+        /// The associate project to solution.
+        /// </summary>
+        /// <param name="solutionName">The solution Name.</param>
+        /// <param name="solutionPath">The solution Path.</param>
+        /// <param name="availableProjects">The available projects.</param>
+        public async Task AssociateProjectToSolution(
+            string solutionName,
+            string solutionPath,
+            ICollection<Resource> availableProjects,
+            ISourceControlProvider sourceControl)
+        {
+            try
+            {
+                this.OpenSolutionName = solutionName;
+                this.OpenSolutionPath = solutionPath;
+
+                Resource solResource = this.GetResourceForSolution(solutionName, solutionPath, availableProjects, sourceControl);
+
+                if (solResource == null)
+                {
+                    throw new Exception("Solution not found in server, please be sure its analysed before");
+                }
+
+                var resource = SearchSolutionResourceInSonarProjects(solResource, CurrentBranch(sourceControl).Replace("/", "_"));
+
+                if (resource == null)
+                {
+                    throw new Exception("Solution not found in server, please be sure its analysed before");
+                }
+
+                await this.AssignASonarProjectToSolution(resource, resource, sourceControl);
+                this.CreateConfiguration(Path.Combine(solutionPath, "sonar-project.properties"));
+                await Task.Run(() =>
+                {
+                    // start local analysis association, and sync profile
+                    this.localAnalyserModule.AssociateWithProject(this.AssociatedProject, AuthtenticationHelper.AuthToken);
+                });
+                var mainProject = SetExclusionsMenu.GetMainProject(this.AssociatedProject, this.model.AvailableProjects);
+                var exclusions = this.sonarService.GetExclusions(AuthtenticationHelper.AuthToken, mainProject);
+                this.model.LocaAnalyser.UpdateExclusions(exclusions);
+            }
+            catch (Exception ex)
+            {
+                this.AssociatedProject = null;
+                this.IsAssociated = false;
+                this.model.StatusMessageAssociation = "Could not associate to project when solution was open: " + ex.Message;
+            }
         }
 
         private void SaveAssociationToDisk(Resource project)
@@ -347,38 +397,6 @@
             }
         }
 
-        /// <summary>
-        /// Starts the automatic association.
-        /// </summary>
-        /// <param name="solutionName">Name of the solution.</param>
-        /// <param name="solutionPath">The solution path.</param>
-        /// <param name="availableProjects">The available projects.</param>
-        /// <param name="sourceControl">The source control.</param>
-        /// <exception cref="System.Exception">Solution not found in server, please be sure its analysed before</exception>
-        public async Task StartAutoAssociation(
-            string solutionName,
-            string solutionPath,
-            ICollection<Resource> availableProjects,
-            ISourceControlProvider sourceControl)
-        {
-            this.OpenSolutionName = solutionName;
-            this.OpenSolutionPath = solutionPath;
-
-            Resource solResource = this.GetResourceForSolution(solutionName, solutionPath, availableProjects, sourceControl);
-
-            if (solResource == null)
-            {
-                throw new Exception("Solution not found in server, please be sure its analysed before");
-            }
-
-            var resource = SearchSolutionResourceInSonarProjects(solResource, CurrentBranch(sourceControl).Replace("/", "_"));
-
-            if (resource != null)
-            {
-                await this.AssignASonarProjectToSolution(resource, resource, sourceControl, true);
-            }
-        }
-
         private Resource SearchSolutionResourceInSonarProjects(Resource solResource, string branchName)
         {
             Resource associatedProjectInSonar = null;
@@ -406,7 +424,7 @@
         }
 
         private Resource GetProjectInBranchResources(Resource projectInSonar, Resource solutionProject, string branchName)
-        {            
+        {
             Resource masterBranch = null;
             bool isMatch = false;
 
@@ -434,51 +452,6 @@
             }
 
             return null;
-        }
-
-        /// <summary>
-        /// The associate project to solution.
-        /// </summary>
-        /// <param name="solutionName">The solution Name.</param>
-        /// <param name="solutionPath">The solution Path.</param>
-        /// <param name="availableProjects">The available projects.</param>
-        public async Task AssociateProjectToSolution(
-            string solutionName,
-            string solutionPath,
-            ICollection<Resource> availableProjects,
-            ISourceControlProvider sourceControl)
-        {
-            var solution = solutionName;
-
-            if (string.IsNullOrEmpty(solution))
-            {
-                return;
-            }
-
-            if (!solution.ToLower().EndsWith(".sln"))
-            {
-                solution += ".sln";
-            }
-
-            try
-            {
-                await this.StartAutoAssociation(solution, solutionPath, availableProjects, sourceControl);
-
-                if (this.IsAssociated)
-                {
-                    this.CreateConfiguration(Path.Combine(solutionPath, "sonar-project.properties"));
-                    await this.InitiateAssociationToSonarProject(sourceControl);
-                    var mainProject = SetExclusionsMenu.GetMainProject(this.AssociatedProject, this.model.AvailableProjects);
-                    var exclusions = this.sonarService.GetExclusions(AuthtenticationHelper.AuthToken, mainProject);
-                    this.model.LocaAnalyser.UpdateExclusions(exclusions);
-                }
-            }
-            catch (Exception ex)
-            {
-                this.AssociatedProject = null;
-                this.IsAssociated = false;
-                this.model.StatusMessageAssociation = "Could not associate to project when solution was open: " + ex.Message;
-            }
         }
 
         /// <summary>
@@ -569,19 +542,6 @@
         private void CreateConfiguration(string pathForPropertiesFile)
         {
             this.keyTranslator.CreateConfiguration(pathForPropertiesFile);
-        }
-
-        /// <summary>
-        /// Updates the services.
-        /// </summary>
-        private async Task InitiateAssociationToSonarProject(ISourceControlProvider sourceControl)
-        {
-            this.sourcecontrol = sourceControl;
-
-            await Task.Run(() => {
-                // start local analysis association, and sync profile
-                this.localAnalyserModule.AssociateWithProject(this.AssociatedProject, AuthtenticationHelper.AuthToken);
-            });
         }
 
         /// <summary>The update associate command.</summary>

@@ -8,6 +8,10 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace CxxPlugin
 {
+    using global::CxxPlugin.LocalExtensions;
+    using global::CxxPlugin.Options;
+    using SonarRestService;
+    using SonarRestService.Types;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
@@ -15,11 +19,6 @@ namespace CxxPlugin
     using System.IO;
     using System.Reflection;
     using System.Threading.Tasks;
-    using global::CxxPlugin.LocalExtensions;
-    using global::CxxPlugin.Options;
-
-    using SonarRestService;
-    using SonarRestService.Types;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
 
@@ -54,13 +53,13 @@ namespace CxxPlugin
             }
 
             this.desc = new PluginDescription
-                            {
-                                Description = "Cxx OpenSource Plugin", 
-                                Name = "CxxPlugin", 
-                                SupportedExtensions = "cpp,cc,hpp,h,h,c", 
-                                Version = this.GetVersion(), 
-                                AssemblyPath = this.GetAssemblyPath()
-                            };
+            {
+                Description = "Cxx OpenSource Plugin",
+                Name = "CxxPlugin",
+                SupportedExtensions = "cpp,cc,hpp,h,h,c",
+                Version = this.GetVersion(),
+                AssemblyPath = this.GetAssemblyPath()
+            };
         }
 
         /// <summary>
@@ -71,8 +70,8 @@ namespace CxxPlugin
         /// <param name="service">The service.</param>
         /// <param name="vshelper">The vshelper.</param>
         public CxxPlugin(
-            INotificationManager notificationManager, 
-            IConfigurationHelper configurationHelper, 
+            INotificationManager notificationManager,
+            IConfigurationHelper configurationHelper,
             ISonarRestService service,
             IVsEnvironmentHelper vshelper)
         {
@@ -86,13 +85,13 @@ namespace CxxPlugin
             }
 
             this.desc = new PluginDescription
-                            {
-                                Description = "Cxx OpenSource Plugin", 
-                                Name = "CxxPlugin", 
-                                SupportedExtensions = "cpp,cc,hpp,h,h,c", 
-                                Version = this.GetVersion(), 
-                                AssemblyPath = this.GetAssemblyPath()
-                            };
+            {
+                Description = "Cxx OpenSource Plugin",
+                Name = "CxxPlugin",
+                SupportedExtensions = "cpp,cc,hpp,h,h,c",
+                Version = this.GetVersion(),
+                AssemblyPath = this.GetAssemblyPath()
+            };
 
             this.notificationManager = notificationManager;
             this.configurationHelper = configurationHelper;
@@ -100,9 +99,9 @@ namespace CxxPlugin
             this.vshelper = vshelper;
 
             this.fileAnalysisExtension = new CxxLocalExtension(
-                this, 
-                this.notificationManager, 
-                this.configurationHelper, 
+                this,
+                this.notificationManager,
+                this.configurationHelper,
                 this.restService,
                 this.vshelper);
         }
@@ -113,7 +112,7 @@ namespace CxxPlugin
         /// <param name="configuration">The configuration.</param>
         public async Task<bool> OnConnectToSonar(ISonarConfiguration configuration)
         {
-            return await ((CxxOptionsController)this.pluginOptions).OnConnectToSonar(configuration);
+            return ((CxxOptionsController)this.pluginOptions).OnConnectToSonar(configuration);
         }
 
         /// <summary>
@@ -154,7 +153,7 @@ namespace CxxPlugin
         /// <returns>The <see cref="bool"/>.</returns>
         public static bool IsSupported(Resource resource)
         {
-            return resource != null && resource.Lang.Equals("c++");
+            return resource != null && (resource.Lang.Equals("c++") || resource.Lang.Equals("cxx"));
         }
 
         /// <summary>
@@ -165,7 +164,7 @@ namespace CxxPlugin
         /// <param name="data">The data.</param>
         public static void WriteLogMessage(INotificationManager notificationManager, string id, string data)
         {
-            notificationManager.ReportMessage(new Message { Id = id, Data = data }); 
+            notificationManager.ReportMessage(new Message { Id = id, Data = data });
         }
 
         /// <summary>The generate token id.</summary>
@@ -274,7 +273,7 @@ namespace CxxPlugin
             }
 
             var filerelativePath =
-                projectItem.FilePath.Replace(projectItem.Project.Solution.SolutionPath + "\\", string.Empty).Replace("\\", "/");
+                projectItem.FilePath.Replace(projectItem.Project.Solution.SolutionRoot + "\\", string.Empty).Replace("\\", "/");
             return projectItem.Project.Solution.SonarProject.Key + ":" + filerelativePath.Trim();
         }
 
@@ -295,7 +294,7 @@ namespace CxxPlugin
         /// <returns>The <see cref="bool"/>.</returns>
         public bool IsProjectSupported(ISonarConfiguration configuration, Resource resource)
         {
-            return resource != null && resource.Lang.Equals("c++");
+            return resource != null && (resource.Lang.Equals("c++") || resource.Lang.Equals("cxx"));
         }
 
         /// <summary>The is supported.</summary>

@@ -13,7 +13,7 @@ type AnalysisPluginVars =
 type PluginHelper =
     static member GetKeyWihtBootStrapper(fileItem : VsFileItem, projectKey : string) =
         let filePath = fileItem.FilePath.Replace("\\", "/")
-        let solutionPath = fileItem.Project.Solution.SolutionPath.Replace("\\", "/")
+        let solutionPath = fileItem.Project.Solution.SolutionRoot.Replace("\\", "/")
         let filerelativePath = filePath.Replace(solutionPath + "/", "")
         let keySplit = projectKey.Split(':').[0]
 
@@ -30,6 +30,6 @@ type PluginHelper =
     static member GetKeyWithoutBootStrapper(fileItem : VsFileItem, projectKey : string, vshelper : IVsEnvironmentHelper) =
             let tounix = vshelper.GetProperFilePathCapitalization(fileItem.FilePath).Replace("\\", "/")
             let driveLetter = tounix.Substring(0, 1)
-            let solutionCan = driveLetter + fileItem.Project.Solution.SolutionPath.Replace("\\", "/").Substring(1);
+            let solutionCan = driveLetter + fileItem.Project.Solution.SolutionRoot.Replace("\\", "/").Substring(1);
             let fromBaseDir = tounix.Replace(solutionCan + "/", "");
             fileItem.Project.Solution.SonarProject.Key + ":" + fromBaseDir;

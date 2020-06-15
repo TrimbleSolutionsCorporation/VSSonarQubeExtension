@@ -1,18 +1,15 @@
 ﻿namespace VSSonarExtensionUi.Model.Helpers
 {
+    using Association;
+    using SonarRestService;
+    using SonarRestService.Types;
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-    using SonarLocalAnalyser;
+    using System.Threading.Tasks;
     using ViewModel;
     using VSSonarPlugins;
-    using VSSonarPlugins.Types;
-    using Association;
-    using System.Windows.Media;
-    using System.Collections.Generic;
-    using SonarRestService.Types;
-    using SonarRestService;
-    using System.Threading.Tasks;
 
 
     /// <summary>The notify cation manager.</summary>
@@ -140,7 +137,7 @@
         /// <param name="message">The messages.</param>
         public void ReportMessage(string message)
         {
-            if(this.helper == null)
+            if (this.helper == null)
             {
                 return;
             }
@@ -244,16 +241,6 @@
         public void ClearCache()
         {
             this.model.ServerViewModel.ClearCache();
-        }
-
-        /// <summary>
-        /// Associates the project to solution. TODO, to be removed
-        /// </summary>
-        /// <param name="v1">The v1.</param>
-        /// <param name="v2">The v2.</param>
-        public async void AssociateProjectToSolution(string v1, string v2)
-        {
-            await this.model.AssociationModule.AssociateProjectToSolution(v1, v2, this.model.AvailableProjects, this.model.SourceControl);
         }
 
         /// <summary>

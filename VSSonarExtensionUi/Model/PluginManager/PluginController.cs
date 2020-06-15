@@ -13,6 +13,10 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarExtensionUi.Model.PluginManager
 {
+    using Helpers;
+    using SonarRestService;
+    using SonarRestService.Types;
+    using SonarRestServiceImpl;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -21,13 +25,8 @@ namespace VSSonarExtensionUi.Model.PluginManager
     using System.IO.Compression;
     using System.Linq;
     using System.Reflection;
-    using SonarRestService.Types;
-    using SonarRestService;
-
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-    using Helpers;
-    using SonarRestServiceImpl;
 
     /// <summary>
     ///     The local analyser.
@@ -85,9 +84,9 @@ namespace VSSonarExtensionUi.Model.PluginManager
 #endif
         }
 
-#endregion
+        #endregion
 
-#region Public Properties
+        #region Public Properties
 
         /// <summary>
         ///     Gets or sets the error message.
@@ -109,9 +108,9 @@ namespace VSSonarExtensionUi.Model.PluginManager
         /// </summary>
         public string TempInstallPathFolder { get; set; }
 
-#endregion
+        #endregion
 
-#region Public Methods and Operators
+        #region Public Methods and Operators
 
         /// <summary>
         /// The current domain_ assembly resolve.
@@ -148,7 +147,7 @@ namespace VSSonarExtensionUi.Model.PluginManager
             try
             {
                 var files = Directory.GetFiles(this.ExtensionFolder);
-                foreach (var file in files) 
+                foreach (var file in files)
                 {
                     if (file.ToLower().EndsWith(".dll") || file.ToLower().EndsWith(".exe"))
                     {
@@ -203,9 +202,11 @@ namespace VSSonarExtensionUi.Model.PluginManager
                     try
                     {
                         assemblies.Add(file, AppDomain.CurrentDomain.Load(File.ReadAllBytes(file)));
-                    } catch (Exception ex) {
-                        System.Diagnostics.Debug.WriteLine("CannotLoad: " + file + " : " +  ex.Message);
-                    }                        
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine("CannotLoad: " + file + " : " + ex.Message);
+                    }
                 }
             }
 
@@ -213,6 +214,11 @@ namespace VSSonarExtensionUi.Model.PluginManager
             {
                 try
                 {
+                    if (assembly.Value.Location.EndsWith("FSharp.Core.dll"))
+                    {
+                        continue;
+                    }
+
                     var plugin = this.LoadPlugin(assembly.Value, manager, helper, vshelper, AuthtenticationHelper.AuthToken);
 
                     if (plugin != null)
@@ -243,12 +249,12 @@ namespace VSSonarExtensionUi.Model.PluginManager
                         foreach (var loadingException in loaderExceptions)
                         {
                             Debug.WriteLine(loadingException.Message);
-                            Debug.WriteLine(loadingException.InnerException);                            
+                            Debug.WriteLine(loadingException.InnerException);
                         }
 
                     }
 
-                    
+
                     File.Delete(assembly.Key);
                 }
             }
@@ -262,7 +268,7 @@ namespace VSSonarExtensionUi.Model.PluginManager
         }
 
 
-        public IPlugin IstallNewPlugin(string fileName, 
+        public IPlugin IstallNewPlugin(string fileName,
             ISonarConfiguration conf,
             IConfigurationHelper helper,
             INotificationManager manager,
@@ -311,7 +317,7 @@ namespace VSSonarExtensionUi.Model.PluginManager
         /// </returns>
         public IPlugin LoadPlugin(
             string[] assemblies,
-            string basePath, 
+            string basePath,
             ISonarConfiguration conf,
             IConfigurationHelper helper,
             INotificationManager manager,
@@ -384,7 +390,7 @@ namespace VSSonarExtensionUi.Model.PluginManager
                         else
                         {
                             return (IPlugin)Activator.CreateInstance(type);
-                        }                        
+                        }
                     }
 
                     if (typeof(IMenuCommandPlugin).IsAssignableFrom(type))
@@ -504,9 +510,9 @@ namespace VSSonarExtensionUi.Model.PluginManager
             return true;
         }
 
-#endregion
+        #endregion
 
-#region Methods
+        #region Methods
 
         /// <summary>
         ///     The get assemblies in temp folder.
@@ -564,6 +570,6 @@ namespace VSSonarExtensionUi.Model.PluginManager
             return files;
         }
 
-#endregion
+        #endregion
     }
 }

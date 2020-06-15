@@ -1,17 +1,15 @@
 ﻿namespace CxxPlugin.LocalExtensions
 {
+    using SonarRestService.Types;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Reflection;
     using System.Text.RegularExpressions;
+    using System.Threading.Tasks;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-
-    using SonarRestService;
-    using SonarRestService.Types;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// sensor clang tidy
@@ -67,9 +65,9 @@
             // catpure environment to use
             var buildEnvironmentBatFile = @"C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\vcvarsall.bat";
 
-            if(helper.VsVersion().Contains("14.0"))
+            if (helper.VsVersion().Contains("14.0"))
             {
-                if(File.Exists("C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\vcvarsall.bat"))
+                if (File.Exists("C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\vcvarsall.bat"))
                 {
                     buildEnvironmentBatFile = "C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\vcvarsall.bat";
                 }
@@ -79,9 +77,9 @@
                 }
             }
 
-            if(helper.VsVersion().Contains("12.0"))
+            if (helper.VsVersion().Contains("12.0"))
             {
-                if(File.Exists("C:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\VC\\vcvarsall.bat"))
+                if (File.Exists("C:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\VC\\vcvarsall.bat"))
                 {
                     buildEnvironmentBatFile = "C:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\VC\\vcvarsall.bat";
                 }
@@ -91,9 +89,9 @@
                 }
             }
 
-            if(helper.VsVersion().Contains("11.0"))
+            if (helper.VsVersion().Contains("11.0"))
             {
-                if(File.Exists("C:\\Program Files (x86)\\Microsoft Visual Studio 11.0\\VC\\vcvarsall.bat"))
+                if (File.Exists("C:\\Program Files (x86)\\Microsoft Visual Studio 11.0\\VC\\vcvarsall.bat"))
                 {
                     buildEnvironmentBatFile = "C:\\Program Files (x86)\\Microsoft Visual Studio 11.0\\VC\\vcvarsall.bat";
                 }
@@ -103,7 +101,7 @@
                 }
             }
 
-            if(File.Exists(buildEnvironmentBatFile))
+            if (File.Exists(buildEnvironmentBatFile))
             {
                 var startInfo = new ProcessStartInfo()
                 {
@@ -120,15 +118,15 @@
                 var proc = new Process() { StartInfo = startInfo };
                 proc.Start();
                 var output = proc.StandardOutput.ReadToEnd();
-                foreach(var line in Regex.Split(output, "\r\n"))
+                foreach (var line in Regex.Split(output, "\r\n"))
                 {
-                    if(string.IsNullOrEmpty(line))
+                    if (string.IsNullOrEmpty(line))
                     {
                         continue;
                     }
 
                     var data = line.Split('=');
-                    if(data.Length.Equals(2))
+                    if (data.Length.Equals(2))
                     {
                         this.environment.Add(data[0], data[1]);
                     }
@@ -150,48 +148,59 @@
             string vsVersion)
         {
             await Task.Delay(0);
-            if(!profileIn.ContainsKey("c++"))
+            if (!profileIn.ContainsKey("c++") && !profileIn.ContainsKey("cxx"))
             {
                 return;
             }
 
-            var profile = profileIn["c++"];
+            Profile profile = null;
+            if (profileIn.ContainsKey("c++"))
+            {
+                profile = profileIn["c++"];
+            }
+
+            if (profileIn.ContainsKey("cxx"))
+            {
+                profile = profileIn["cxx"];
+            }
+
+
             var rules = profile.GetAllRules();
 
             string baseString = "";
-            using(var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("CxxPlugin.Resources.clang-tidy"))
+            using (var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("CxxPlugin.Resources.clang-tidy"))
             {
-                using(StreamReader reader = new StreamReader(resource))
+                using (StreamReader reader = new StreamReader(resource))
                 {
                     baseString = reader.ReadToEnd();
                 }
             }
 
             var clangTidyFile = Path.Combine(project.SolutionRoot, ".clang-tidy");
-            var lineEnding = new String[] { "\n" };            
-            if(string.IsNullOrEmpty(baseString))
+            var lineEnding = new String[] { "\n" };
+            if (string.IsNullOrEmpty(baseString))
             {
                 return;
             }
 
             var baseConfig = baseString.Split(lineEnding, StringSplitOptions.RemoveEmptyEntries);
 
-            if(File.Exists(clangTidyFile))
+            if (File.Exists(clangTidyFile))
             {
                 return;
             }
 
-            using(StreamWriter outputFile = new StreamWriter(clangTidyFile))
+            using (StreamWriter outputFile = new StreamWriter(clangTidyFile))
             {
-                foreach(var line in baseConfig)
+                foreach (var line in baseConfig)
                 {
                     var lineToFile = line;
-                    if(line.StartsWith("Checks:          '-clang-diagnostic-*,-clang-analyzer-*'"))
+                    if (line.StartsWith("Checks:          '-clang-diagnostic-*,-clang-analyzer-*'"))
                     {
                         lineToFile = lineToFile.TrimEnd().TrimEnd('\'');
-                        foreach(var rule in rules)
+                        foreach (var rule in rules)
                         {
-                            if(rule.Repo.Equals("ClangTidy"))
+                            if (rule.Repo.Equals("ClangTidy"))
                             {
                                 lineToFile += "," + rule.Key;
                             }
@@ -225,14 +234,14 @@
                         "CxxPlugin",
                         "ClangExecutable").Value;
 
-                if(!File.Exists(tidy))
+                if (!File.Exists(tidy))
                 {
                     this.logger.ReportMessage(new Message() { Id = "ClangTidy", Data = "clang-tidy not found in location provided: " + tidy });
                     this.logger.ReportMessage(new Message() { Id = "ClangTidy", Data = "Install LLVM package" });
                     return new List<Issue>();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 this.logger.ReportMessage(new Message() { Id = "ClangTidy", Data = "Failed to read clang tidy location : prop : ClangExecutable" });
                 this.logger.ReportException(ex);
@@ -241,7 +250,7 @@
 
             executor.ExecuteCommand(tidy, resource.FilePath + " " + additionalArgs, this.environment, resource.SonarResource.SolutionRoot);
             var output = executor.GetStdOut().ToArray();
-            foreach(var errorData in executor.GetStdError())
+            foreach (var errorData in executor.GetStdError())
             {
                 this.logger.ReportMessage(new Message() { Id = "ClangTidy", Data = errorData });
             }
@@ -262,15 +271,15 @@
 
             Issue issue = null;
             int finalLine = -1;
-            for(int i = 0; i < output.Length; i++)
+            for (int i = 0; i < output.Length; i++)
             {
                 var line = output[i];
                 Match m = Regex.Match(line, this.regx);
-                if(m.Success)
+                if (m.Success)
                 {
-                    if(issue != null)
+                    if (issue != null)
                     {
-                        if(!issue.LocalPath.ToLower().Contains(fileName))
+                        if (!issue.LocalPath.ToLower().Contains(fileName))
                         {
                             issue.LocalPath = resource.FilePath;
                             issue.Component = resource.SonarResource.Key;
@@ -284,7 +293,7 @@
                     var type = m.Groups[4];
                     var snippet = output[i + 1].Trim();
                     var localPath = m.Groups[1].Value;
-                    if(!Path.IsPathRooted(localPath))
+                    if (!Path.IsPathRooted(localPath))
                     {
                         localPath = Path.Combine(folderPath, localPath);
                     }
@@ -303,20 +312,20 @@
                 }
 
                 m = Regex.Match(line, this.regxNote);
-                if(m.Success)
+                if (m.Success)
                 {
-                    if(issue != null)
+                    if (issue != null)
                     {
                         var snippet = output[i + 1].Trim();
 
                         var path = m.Groups[1].Value;
-                        if(Path.IsPathRooted(path))
+                        if (Path.IsPathRooted(path))
                         {
                             path = Path.GetFullPath(path);
                         }
                         else
                         {
-                            if(issue.Component.EndsWith(Path.GetFileName(path)))
+                            if (issue.Component.EndsWith(Path.GetFileName(path)))
                             {
                                 path = Path.GetFullPath(Path.Combine(folderPath, path));
                             }
@@ -331,12 +340,12 @@
 
                         issue.Explanation.Add(explanation);
 
-                        if(finalLine != -1)
+                        if (finalLine != -1)
                         {
                             continue;
                         }
 
-                        if(explanation.Path.ToLower().Contains(fileName.ToLower()))
+                        if (explanation.Path.ToLower().Contains(fileName.ToLower()))
                         {
                             finalLine = explanation.Line;
                         }
@@ -344,9 +353,9 @@
                 }
             }
 
-            if(issue != null)
+            if (issue != null)
             {
-                if(!issue.LocalPath.ToLower().Contains(fileName))
+                if (!issue.LocalPath.ToLower().Contains(fileName))
                 {
                     issue.LocalPath = resource.FilePath;
                     issue.Component = resource.SonarResource.Key;

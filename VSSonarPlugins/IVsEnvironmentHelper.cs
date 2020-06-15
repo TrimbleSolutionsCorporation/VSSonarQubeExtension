@@ -8,8 +8,8 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarPlugins
 {
-    using SonarRestService.Types;
     using Microsoft.CodeAnalysis;
+    using SonarRestService.Types;
     using Types;
 
     /// <summary>
@@ -47,9 +47,9 @@ namespace VSSonarPlugins
         /// <param name="line">The line.</param>
         /// <param name="editorCommandExec">The editor command execute.</param>
         void OpenResourceInVisualStudio(
-            string workfolder, 
-            string filename, 
-            int line, 
+            string workfolder,
+            string filename,
+            int line,
             string editorCommandExec = "notepad");
 
         /// <summary>The open resource in visual studio.</summary>
@@ -96,12 +96,24 @@ namespace VSSonarPlugins
         string CurrentSelectedDocumentLanguage();
 
         /// <summary>
-        ///     The solution path.
+        ///     The solution root path.
         /// </summary>
         /// <returns>
         ///     The <see cref="string" />.
         /// </returns>
-        string ActiveSolutionPath();
+        string ActiveSolutioRootPath();
+
+        /// <summary>
+        /// Active full solution path
+        /// </summary>
+        /// <returns></returns>
+        string ActiveSolutionFullName();
+
+        /// <summary>
+        /// active solution
+        /// </summary>
+        /// <returns></returns>
+        string ActiveSolutionFileNameWithExtension();
 
         /// <summary>The active configuration.</summary>
         /// <returns>The <see cref="string"/>.</returns>
@@ -110,14 +122,6 @@ namespace VSSonarPlugins
         /// <summary>The active platform.</summary>
         /// <returns>The <see cref="string"/>.</returns>
         string ActivePlatform();
-
-        /// <summary>
-        ///     The solution name.
-        /// </summary>
-        /// <returns>
-        ///     The <see cref="string" />.
-        /// </returns>
-        string ActiveSolutionName();
 
         /// <summary>The restart visual studio.</summary>
         void RestartVisualStudio();

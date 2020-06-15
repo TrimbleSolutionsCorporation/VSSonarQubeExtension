@@ -194,7 +194,7 @@ type SQKeyTranslator(notificationManager : INotificationManager) =
     let GetFlatKey(vshelper : IVsEnvironmentHelper, fileItem : VsFileItem) =
         let tounix = vshelper.GetProperFilePathCapitalization(fileItem.FilePath).Replace("\\", "/")
         let driveLetter = tounix.Substring(0, 1)
-        let solutionCan = driveLetter + fileItem.Project.Solution.SolutionPath.Replace("\\", "/").Substring(1)
+        let solutionCan = driveLetter + fileItem.Project.Solution.SolutionRoot.Replace("\\", "/").Substring(1)
         let fromBaseDir = tounix.Replace(solutionCan + "/", "")
 
         if fileItem.Project.Solution.SonarProject <> null then
@@ -243,7 +243,7 @@ type SQKeyTranslator(notificationManager : INotificationManager) =
 
     let GetVSBootStrapperKey(vshelper : IVsEnvironmentHelper, fileItem : VsFileItem) =
         let filePath = fileItem.FilePath.Replace("\\", "/")
-        let solutionPath = fileItem.Project.Solution.SolutionPath.Replace("\\", "/")
+        let solutionPath = fileItem.Project.Solution.SolutionRoot.Replace("\\", "/")
         let filerelativePath = filePath.Replace(solutionPath + "/", "")
         let keySplit = projectKey.Split(':').[0]
 
@@ -289,7 +289,6 @@ type SQKeyTranslator(notificationManager : INotificationManager) =
             let guid = vshelper.GetGuidForProject(fileItem.Project.ProjectFilePath, solutionPath)
             let tounix = vshelper.GetProperFilePathCapitalization(fileItem.FilePath).Replace("\\", "/")
             let driveLetter = tounix.Substring(0, 1)
-            let solutionCan = driveLetter + fileItem.Project.Solution.SolutionPath.Replace("\\", "/").Substring(1)
             let fromBaseDir =  vshelper.EvaluatedValueForIncludeFile(fileItem.Project.ProjectFilePath, fileItem.FilePath)
 
             if branch <> "" then
@@ -366,8 +365,8 @@ type SQKeyTranslator(notificationManager : INotificationManager) =
 
         resource.Lname <- Path.GetFileName(fileItem.FileName)
         resource.Name <- Path.GetFileName(fileItem.FileName)
-        resource.SolutionName <- fileItem.Project.Solution.SolutionName
-        resource.SolutionRoot <- fileItem.Project.Solution.SolutionPath
+        resource.SolutionName <- fileItem.Project.Solution.SolutionFileNameWithExtension
+        resource.SolutionRoot <- fileItem.Project.Solution.SolutionRoot
         resource.Path <- fileItem.FilePath
 
         resource

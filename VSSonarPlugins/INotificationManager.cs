@@ -64,13 +64,6 @@ namespace VSSonarPlugins
         void ClearCache();
 
         /// <summary>
-        /// Associates the project to solution. TODO to be removed
-        /// </summary>
-        /// <param name="v1">The v1.</param>
-        /// <param name="v2">The v2.</param>
-        void AssociateProjectToSolution(string v1, string v2);
-
-        /// <summary>
         /// Refreshes the data for resource.
         /// </summary>
         void RefreshDataForResource();

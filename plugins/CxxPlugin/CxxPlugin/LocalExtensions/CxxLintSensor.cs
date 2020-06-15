@@ -8,21 +8,16 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace CxxPlugin.LocalExtensions
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Text;
-
     using Microsoft.Win32;
-
-    using VSSonarPlugins;
-    using VSSonarPlugins.Types;
-    using System.Diagnostics;
-    using System.Runtime.InteropServices;
-    using System.Linq;
-
     using SonarRestService;
     using SonarRestService.Types;
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+    using VSSonarPlugins;
 
     /// <summary>
     ///     The CxxLintSensor sensor.
@@ -57,8 +52,8 @@ namespace CxxPlugin.LocalExtensions
         /// <param name="configurationHelper">The configuration Helper.</param>
         /// <param name="sonarRestService">The sonar Rest Service.</param>
         public CxxLintSensor(
-            INotificationManager notificationManager, 
-            IConfigurationHelper configurationHelper, 
+            INotificationManager notificationManager,
+            IConfigurationHelper configurationHelper,
             ISonarRestService sonarRestService,
             IVsEnvironmentHelper vsHelper)
             : base(SKey, true, notificationManager, configurationHelper, sonarRestService)
@@ -104,12 +99,12 @@ namespace CxxPlugin.LocalExtensions
                     var id = elemsts[elemsts.Length - 1].TrimEnd(']').TrimStart('[');
 
                     var entry = new Issue
-                                    {
-                                        Line = linenumber, 
-                                        Message = msg.Replace(id, string.Empty).TrimEnd(']').TrimEnd('[').Trim(), 
-                                        Rule = this.RepositoryKey + ":" + id, 
-                                        Component = file
-                                    };
+                    {
+                        Line = linenumber,
+                        Message = msg.Replace(id, string.Empty).TrimEnd(']').TrimEnd('[').Trim(),
+                        Rule = this.RepositoryKey + ":" + id,
+                        Component = file
+                    };
 
                     violations.Add(entry);
                 }
@@ -158,7 +153,7 @@ namespace CxxPlugin.LocalExtensions
             compileDb.AppendLine("[");
             foreach (var projectd in this.SolutionData.Projects)
             {
-                foreach(var unit in projectd.Value.CompileUnits)
+                foreach (var unit in projectd.Value.CompileUnits)
                 {
 
                     compileDb.AppendLine("  {");
@@ -186,13 +181,19 @@ namespace CxxPlugin.LocalExtensions
             {
                 Directory.Delete(this.pathForSettings, true);
             }
-            
+
             Directory.CreateDirectory(this.pathForSettings);
 
             var rules = string.Empty;
             if (profileIn.ContainsKey("c++"))
             {
                 var profile = profileIn["c++"];
+                rules = this.GetRules(profile);
+            }
+
+            if (profileIn.ContainsKey("cxx"))
+            {
+                var profile = profileIn["cxx"];
                 rules = this.GetRules(profile);
             }
 
@@ -493,7 +494,7 @@ namespace CxxPlugin.LocalExtensions
                         System.Diagnostics.Debug.WriteLine("Failed to get Casing: " + ex.Message + " : " + fullPath);
                     }
                 }
-                
+
             }
 
             if (projectdata.Value.AdditionalIncludeDirectories.Count > 0)

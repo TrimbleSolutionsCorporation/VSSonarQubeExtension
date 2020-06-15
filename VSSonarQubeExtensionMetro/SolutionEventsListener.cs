@@ -8,13 +8,13 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarQubeExtension
 {
-    using System;
-
+    using EnvDTE80;
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
-
+    using System;
     using VSSonarPlugins;
+    using VSSonarQubeExtension.Helpers;
 
     /// <summary>The solution events listener.</summary>
     public class SolutionEventsListener : IVsSolutionEvents, IDisposable
@@ -29,10 +29,24 @@ namespace VSSonarQubeExtension
 
         /// <summary>The solution events cookie.</summary>
         private uint solutionEventsCookie;
+        private readonly IVsEnvironmentHelper visualStudioInterface;
+        private readonly DTE2 dte2;
+        private readonly VsSonarExtensionPackage vsSonarExtensionPackage;
+
+        public VsEvents VsEvents { get; private set; }
 
         /// <summary>Initializes a new instance of the <see cref="SolutionEventsListener"/> class.</summary>
         public SolutionEventsListener(IVsEnvironmentHelper helper)
         {
+
+        }
+
+        public SolutionEventsListener(IVsEnvironmentHelper helper, IVsEnvironmentHelper visualStudioInterface, DTE2 dte2, VsSonarExtensionPackage vsSonarExtensionPackage) : this(helper)
+        {
+            this.visualStudioInterface = visualStudioInterface;
+            this.dte2 = dte2;
+            this.vsSonarExtensionPackage = vsSonarExtensionPackage;
+
             this.environment = helper;
             this.InitNullEvents();
 
@@ -41,6 +55,11 @@ namespace VSSonarQubeExtension
             if (this.solution != null)
             {
                 this.solution.AdviseSolutionEvents(this, out this.solutionEventsCookie);
+            }
+
+            if (this.VsEvents == null)
+            {
+                this.VsEvents = new VsEvents(this.visualStudioInterface, this.dte2, this.vsSonarExtensionPackage);
             }
         }
 
@@ -111,11 +130,11 @@ namespace VSSonarQubeExtension
         /// <returns>The <see cref="int"/>.</returns>
         int IVsSolutionEvents.OnAfterOpenSolution(object pUnkReserved, int fNewSolution)
         {
-            string solutionName = this.environment.ActiveSolutionName();
-            string solutionPath = this.environment.ActiveSolutionPath();
+            string solutionName = this.environment.ActiveSolutionFileNameWithExtension();
+            string solutionPath = this.environment.ActiveSolutioRootPath();
             string fileName = this.environment.ActiveFileFullPath();
             SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessageToLog("Solution Opened: " + solutionName + " : " + solutionPath);
-            SonarQubeViewModelFactory.SQViewModel.OnSolutionOpen(solutionName, solutionPath, fileName);
+            System.Threading.Tasks.Task.Run(async () => await SonarQubeViewModelFactory.SQViewModel.OnSolutionOpen(solutionName, solutionPath, fileName));
             return VSConstants.S_OK;
         }
 
@@ -134,7 +153,7 @@ namespace VSSonarQubeExtension
         int IVsSolutionEvents.OnBeforeCloseSolution(object pUnkReserved)
         {
             SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessageToLog("Solution Closed");
-            SonarQubeViewModelFactory.SQViewModel.OnSolutionClosed();
+            System.Threading.Tasks.Task.Run(async () => await SonarQubeViewModelFactory.SQViewModel.OnSolutionClosed());
             return VSConstants.S_OK;
         }
 
@@ -178,6 +197,5 @@ namespace VSSonarQubeExtension
         }
 
         #endregion
-
     }
 }
