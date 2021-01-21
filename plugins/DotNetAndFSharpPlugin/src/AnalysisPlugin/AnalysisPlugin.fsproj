@@ -1,39 +1,37 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
-    <OutputPath>..\BuildDrop</OutputPath>
-    <AssemblyVersion>8.0.0.0</AssemblyVersion>
-    <FileVersion>8.0.0.0</FileVersion>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net472</TargetFramework>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Include="AnalysisPluginVars.fs" />
-    <Compile Include="AnalysisPluginExtension.fs" />
-    <Compile Include="AnalysisPlugin.fs" />
-  </ItemGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <WarningsAsErrors>3239</WarningsAsErrors>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="2.9.0" />
-    <PackageReference Include="MsbuildAutomationHelper" Version="2.0.5" />
-  </ItemGroup>
+	<ItemGroup>
+		<Content Remove="C:\Users\jocs\.nuget\packages\msbuildautomationhelper\2.0.5\contentFiles\any\net472\App.config" />
+		<Content Remove="C:\Users\jocs\.nuget\packages\msbuildautomationhelper\2.0.6\contentFiles\any\net472\App.config" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\..\SonarLocalAnalyser\SonarLocalAnalyser.fsproj" />
-    <ProjectReference Include="..\..\..\..\VSSonarPlugins\VSSonarPlugins.csproj" />
-    <ProjectReference Include="..\FSharpLintRunner\FSharpLintRunner.fsproj" />
-    <ProjectReference Include="..\NSonarQubeRunner\NSonarQubeRunner.fsproj" />
-    <ProjectReference Include="..\PluginsOptionsController\PluginsOptionsController.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Include="AnalysisPluginVars.fs" />
+		<Compile Include="AnalysisPluginExtension.fs" />
+		<Compile Include="AnalysisPlugin.fs" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="System.Windows" />
-    <Reference Include="System.Windows.Forms" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\..\SonarLocalAnalyser\SonarLocalAnalyser.fsproj" />
+		<ProjectReference Include="..\..\..\..\VSSonarPlugins\VSSonarPlugins.csproj" />
+		<ProjectReference Include="..\FSharpLintRunner\FSharpLintRunner.fsproj" />
+		<ProjectReference Include="..\NSonarQubeRunner\NSonarQubeRunner.fsproj" />
+		<ProjectReference Include="..\PluginsOptionsController\PluginsOptionsController.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Update="FSharp.Core" Version="4.5.2" />
-    <PackageReference Update="System.ValueTuple" Version="4.4.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<Reference Include="System.Windows" />
+		<Reference Include="System.Windows.Forms" />
+		<PackageReference Include="Microsoft.Build.Framework" Version="16.8.0" />
+		<PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.8.0" />
+	</ItemGroup>
 
 </Project>

@@ -13,13 +13,9 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarQubeExtension
 {
-    using EnvDTE80;
-    using Microsoft.VisualStudio.Shell;
-    using SonarRestService;
     using System;
     using System.Threading.Tasks;
     using VSSonarExtensionUi.ViewModel;
-    using VSSonarPlugins;
     using VSSonarQubeExtension.Helpers;
 
     /// <summary>
@@ -63,7 +59,7 @@ namespace VSSonarQubeExtension
         /// </summary>
         /// <param name="version">The version.</param>
         /// <returns>returns model</returns>
-        public static async Task<SonarQubeViewModel> AsyncStartupModelWithVsVersion(string version, IServiceProvider provider)
+        public static async Task<SonarQubeViewModel> StartupModelWithVsVersionAsync(string version, IServiceProvider provider)
         {
             if (model == null)
             {

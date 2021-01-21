@@ -14,19 +14,13 @@
 namespace VSSonarQubeExtension.StatusBar
 {
     using System;
-    using System.Diagnostics;
     using System.Drawing;
-    using System.Linq;
     using System.Runtime.InteropServices;
-
-    using EnvDTE;
-
-    using Constants = Microsoft.VisualStudio.Shell.Interop.Constants;
     using Thread = System.Threading.Thread;
 
     public class IVSStatusBar
     {
-        private VSSStatusBar vssStatusBar;
+        private readonly VSSStatusBar vssStatusBar;
 
         public IVSStatusBar(VSSStatusBar vssStatusBar)
         {
@@ -53,7 +47,8 @@ namespace VSSonarQubeExtension.StatusBar
         /// </param>
         public void DisplayAndShowIcon(string message)
         {
-            var b =
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            Bitmap b =
                 new Bitmap(
                     @"E:\Development\SonarQube\VssonarExtension\VSSonarQubeExtension\VSSonarExtension\PackageImplementation\Resources\sonariconsource.bmp");
             IntPtr hdc = IntPtr.Zero;
@@ -77,7 +72,8 @@ namespace VSSonarQubeExtension.StatusBar
         /// </param>
         public void DisplayAndShowProgress(string message)
         {
-            var messages = new[] { "Demo Long running task...Step 1...", "Step 2...", "Step 3...", "Step 4...", "Completing long running task." };
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            string[] messages = new[] { "Demo Long running task...Step 1...", "Step 2...", "Step 3...", "Step 4...", "Completing long running task." };
             uint cookie = 0;
 
             // Initialize the progress bar.
@@ -107,39 +103,14 @@ namespace VSSonarQubeExtension.StatusBar
         /// </param>
         public void DisplayMessage(string message)
         {
-            int frozen;
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
-            vssStatusBar.Bar.IsFrozen(out frozen);
+            vssStatusBar.Bar.IsFrozen(out int frozen);
 
             if (frozen == 0)
             {
                 vssStatusBar.Bar.SetText(message);
             }
-        }
-
-        /// <summary>
-        /// The show icons.
-        /// </summary>
-        public void ShowIcons()
-        {
-            Properties properties = vssStatusBar.dte.Properties["Environment", "General"];
-
-            Property propertyAutoAdjust = properties.Cast<Property>().FirstOrDefault(p => p.Name == "AutoAdjustExperience");
-
-            propertyAutoAdjust.Value = "False";
-            Property propertyAnimations = properties.Cast<Property>().FirstOrDefault(p => p.Name == "Animations");
-
-            propertyAnimations.Value = "False";
-
-            var b =
-                new Bitmap(
-                    @"E:\Development\SonarQube\VssonarExtension\VSSonarQubeExtension\VSSonarExtension\PackageImplementation\Resources\sonariconsource.bmp");
-            IntPtr hdc = IntPtr.Zero;
-            hdc = b.GetHbitmap();
-
-            object hdcObject = hdc;
-
-            vssStatusBar.Bar.Animation(1, ref hdcObject);
         }
     }
 }

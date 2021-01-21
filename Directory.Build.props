@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" >  
+    <PropertyGroup>
+        <!-- Main Versions Numbers For Tekla Structures -->
+        <MajorVersionNumber                    Condition="'$(MajorVersionNumber)'==''">9</MajorVersionNumber>
+        <MinorVersionNumber                    Condition="'$(MinorVersionNumber)'==''">0</MinorVersionNumber>
+        <BuildNumber                           Condition="'$(BuildNumber)'==''">0</BuildNumber>
+        <PatchNumber                           Condition="'$(PatchNumber)'==''">0</PatchNumber>
+        <RevisionNumber                        Condition="'$(RevisionNumber)'==''">0</RevisionNumber>
+
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <PackageOutputPath>$(UserBINDir)\ApiNugetPackageOutput</PackageOutputPath>
+        <IntegrationBaseTestPath>$(BINDir)\Test</IntegrationBaseTestPath>
+        <Version>$(MajorVersionNumber).$(MinorVersionNumber).$(PatchNumber)$(AlphaPrefix)</Version>
+        <AssemblyVersion>$(MajorVersionNumber).$(MinorVersionNumber).0.0</AssemblyVersion>
+        <FileVersion>$(MajorVersionNumber).$(MinorVersionNumber).$(BuildNumber).0</FileVersion>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <NoWarn>NU1608;NU1603;CS1762</NoWarn>
+    </PropertyGroup>
+  
+  <PropertyGroup>
+       <OutputPath>$(MSBuildThisFileDirectory)BuildDrop\$(MSBuildProjectName)</OutputPath>
+       <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)ObjDrop\$(MSBuildProjectName)</BaseIntermediateOutputPath>
+       <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+       <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+   </PropertyGroup>
+  
+  
+  <PropertyGroup>
+        <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)MSBuild\AssemblyKey.snk</AssemblyOriginatorKeyFile>
+        <Authors>Trimble</Authors>
+        <PackageProjectUrl>http://tekla.com</PackageProjectUrl>
+        <Copyright>Copyright © 1992-$([System.DateTime]::Now.ToString("yyyy")) Trimble Inc. and its licensors. All rights reserved.</Copyright>
+    </PropertyGroup>
+    
+</Project>

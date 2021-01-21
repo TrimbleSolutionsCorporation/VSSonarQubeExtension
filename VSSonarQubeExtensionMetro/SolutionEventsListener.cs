@@ -43,28 +43,31 @@ namespace VSSonarQubeExtension
 
         public SolutionEventsListener(IVsEnvironmentHelper helper, IVsEnvironmentHelper visualStudioInterface, DTE2 dte2, VsSonarExtensionPackage vsSonarExtensionPackage) : this(helper)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             this.visualStudioInterface = visualStudioInterface;
             this.dte2 = dte2;
             this.vsSonarExtensionPackage = vsSonarExtensionPackage;
 
-            this.environment = helper;
-            this.InitNullEvents();
+            environment = helper;
+            InitNullEvents();
 
-            this.solution = Package.GetGlobalService(typeof(SVsSolution)) as IVsSolution;
+            solution = Package.GetGlobalService(typeof(SVsSolution)) as IVsSolution;
 
-            if (this.solution != null)
+            if (solution != null)
             {
-                this.solution.AdviseSolutionEvents(this, out this.solutionEventsCookie);
+                solution.AdviseSolutionEvents(this, out solutionEventsCookie);
             }
 
-            if (this.VsEvents == null)
+            if (VsEvents == null)
             {
-                this.VsEvents = new VsEvents(this.visualStudioInterface, this.dte2, this.vsSonarExtensionPackage);
+                VsEvents = new VsEvents(this.visualStudioInterface, this.dte2, this.vsSonarExtensionPackage);
             }
         }
 
+#pragma warning disable CS0414 // not assigned
         /// <summary>The on after open project.</summary>
         public event Action OnAfterOpenProject;
+#pragma warning restore CS0414 // not assigned
 
         /// <summary>The on query unload project.</summary>
         public event Action OnQueryUnloadProject;
@@ -75,14 +78,15 @@ namespace VSSonarQubeExtension
         /// <summary>The dispose.</summary>
         public void Dispose()
         {
-            if (this.solution != null && this.solutionEventsCookie != 0)
+            ThreadHelper.ThrowIfNotOnUIThread();
+            if (solution != null && solutionEventsCookie != 0)
             {
                 GC.SuppressFinalize(this);
-                this.solution.UnadviseSolutionEvents(this.solutionEventsCookie);
-                this.OnQueryUnloadProject = null;
-                this.OnAfterOpenProject = null;
-                this.solutionEventsCookie = 0;
-                this.solution = null;
+                solution.UnadviseSolutionEvents(solutionEventsCookie);
+                OnQueryUnloadProject = null;
+                OnAfterOpenProject = null;
+                solutionEventsCookie = 0;
+                solution = null;
             }
         }
 
@@ -91,8 +95,8 @@ namespace VSSonarQubeExtension
         /// <summary>The init null events.</summary>
         private void InitNullEvents()
         {
-            this.OnAfterOpenProject += () => { };
-            this.OnQueryUnloadProject += () => { };
+            OnAfterOpenProject += () => { };
+            OnQueryUnloadProject += () => { };
         }
 
         #region IVsSolutionEvents Members
@@ -130,11 +134,13 @@ namespace VSSonarQubeExtension
         /// <returns>The <see cref="int"/>.</returns>
         int IVsSolutionEvents.OnAfterOpenSolution(object pUnkReserved, int fNewSolution)
         {
-            string solutionName = this.environment.ActiveSolutionFileNameWithExtension();
-            string solutionPath = this.environment.ActiveSolutioRootPath();
-            string fileName = this.environment.ActiveFileFullPath();
+            string solutionName = environment.ActiveSolutionFileNameWithExtension();
+            string solutionPath = environment.ActiveSolutioRootPath();
+            string fileName = environment.ActiveFileFullPath();
             SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessageToLog("Solution Opened: " + solutionName + " : " + solutionPath);
+#pragma warning disable VSTHRD110 // Observe result of async calls
             System.Threading.Tasks.Task.Run(async () => await SonarQubeViewModelFactory.SQViewModel.OnSolutionOpen(solutionName, solutionPath, fileName));
+#pragma warning restore VSTHRD110 // Observe result of async calls
             return VSConstants.S_OK;
         }
 
@@ -153,7 +159,9 @@ namespace VSSonarQubeExtension
         int IVsSolutionEvents.OnBeforeCloseSolution(object pUnkReserved)
         {
             SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessageToLog("Solution Closed");
+#pragma warning disable VSTHRD110 // Observe result of async calls
             System.Threading.Tasks.Task.Run(async () => await SonarQubeViewModelFactory.SQViewModel.OnSolutionClosed());
+#pragma warning restore VSTHRD110 // Observe result of async calls
             return VSConstants.S_OK;
         }
 
@@ -192,7 +200,7 @@ namespace VSSonarQubeExtension
         /// <returns>The <see cref="int"/>.</returns>
         int IVsSolutionEvents.OnQueryUnloadProject(IVsHierarchy pRealHierarchy, ref int pfCancel)
         {
-            this.OnQueryUnloadProject();
+            OnQueryUnloadProject();
             return VSConstants.S_OK;
         }
 

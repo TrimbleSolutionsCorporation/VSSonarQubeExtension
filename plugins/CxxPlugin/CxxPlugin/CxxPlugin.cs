@@ -14,7 +14,7 @@ namespace CxxPlugin
     using SonarRestService.Types;
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.Composition;
+    using System.Composition;
     using System.Globalization;
     using System.IO;
     using System.Reflection;
@@ -45,20 +45,20 @@ namespace CxxPlugin
         /// </summary>
         public CxxPlugin()
         {
-            this.Assemblies = new List<string>();
+            Assemblies = new List<string>();
 
             if (File.Exists(LogPath))
             {
                 File.Delete(LogPath);
             }
 
-            this.desc = new PluginDescription
+            desc = new PluginDescription
             {
                 Description = "Cxx OpenSource Plugin",
                 Name = "CxxPlugin",
                 SupportedExtensions = "cpp,cc,hpp,h,h,c",
-                Version = this.GetVersion(),
-                AssemblyPath = this.GetAssemblyPath()
+                Version = GetVersion(),
+                AssemblyPath = GetAssemblyPath()
             };
         }
 
@@ -75,34 +75,34 @@ namespace CxxPlugin
             ISonarRestService service,
             IVsEnvironmentHelper vshelper)
         {
-            this.Assemblies = new List<string>();
+            Assemblies = new List<string>();
 
-            this.pluginOptions = new CxxOptionsController(configurationHelper, service);
+            pluginOptions = new CxxOptionsController(configurationHelper, service);
 
             if (File.Exists(LogPath))
             {
                 File.Delete(LogPath);
             }
 
-            this.desc = new PluginDescription
+            desc = new PluginDescription
             {
                 Description = "Cxx OpenSource Plugin",
                 Name = "CxxPlugin",
                 SupportedExtensions = "cpp,cc,hpp,h,h,c",
-                Version = this.GetVersion(),
-                AssemblyPath = this.GetAssemblyPath()
+                Version = GetVersion(),
+                AssemblyPath = GetAssemblyPath()
             };
 
             this.notificationManager = notificationManager;
             this.configurationHelper = configurationHelper;
-            this.restService = service;
+            restService = service;
             this.vshelper = vshelper;
 
-            this.fileAnalysisExtension = new CxxLocalExtension(
+            fileAnalysisExtension = new CxxLocalExtension(
                 this,
                 this.notificationManager,
                 this.configurationHelper,
-                this.restService,
+                restService,
                 this.vshelper);
         }
 
@@ -112,7 +112,7 @@ namespace CxxPlugin
         /// <param name="configuration">The configuration.</param>
         public async Task<bool> OnConnectToSonar(ISonarConfiguration configuration)
         {
-            return ((CxxOptionsController)this.pluginOptions).OnConnectToSonar(configuration);
+            return await Task.Run(() => ((CxxOptionsController)pluginOptions).OnConnectToSonar(configuration));
         }
 
         /// <summary>
@@ -211,7 +211,7 @@ namespace CxxPlugin
         /// <returns>The <see cref="ILocalAnalyserExtension"/>.</returns>
         public IFileAnalyser GetLocalAnalysisExtension(ISonarConfiguration configuration)
         {
-            return this.fileAnalysisExtension;
+            return fileAnalysisExtension;
         }
 
         /// <summary>
@@ -240,7 +240,7 @@ namespace CxxPlugin
         /// <returns>The <see cref="IPluginsOptions"/>.</returns>
         public IPluginControlOption GetPluginControlOptions(Resource project, ISonarConfiguration configuration)
         {
-            return this.pluginOptions;
+            return pluginOptions;
         }
 
         /// <summary>
@@ -251,7 +251,7 @@ namespace CxxPlugin
         /// </returns>
         public PluginDescription GetPluginDescription()
         {
-            return this.desc;
+            return desc;
         }
 
         /// <summary>
@@ -266,13 +266,13 @@ namespace CxxPlugin
         {
             if (safeGeneration && projectItem.Project.ProjectName != null)
             {
-                var filePath = projectItem.FilePath.Replace("\\", "/");
-                var path = Directory.GetParent(projectItem.Project.ProjectFilePath).ToString().Replace("\\", "/");
-                var file = filePath.Replace(path + "/", string.Empty);
+                string filePath = projectItem.FilePath.Replace("\\", "/");
+                string path = Directory.GetParent(projectItem.Project.ProjectFilePath).ToString().Replace("\\", "/");
+                string file = filePath.Replace(path + "/", string.Empty);
                 return projectItem.Project.Solution.SonarProject.Key + ":" + projectItem.Project.ProjectName + ":" + file;
             }
 
-            var filerelativePath =
+            string filerelativePath =
                 projectItem.FilePath.Replace(projectItem.Project.Solution.SolutionRoot + "\\", string.Empty).Replace("\\", "/");
             return projectItem.Project.Solution.SonarProject.Key + ":" + filerelativePath.Trim();
         }
@@ -317,7 +317,7 @@ namespace CxxPlugin
             Dictionary<string, Profile> profile,
             string vsVersion)
         {
-            return await ((CxxLocalExtension)this.fileAnalysisExtension).UpdateProfile(project, configuration, profile, vsVersion);
+            return await ((CxxLocalExtension)fileAnalysisExtension).UpdateProfile(project, configuration, profile, vsVersion);
         }
 
         /// <summary>
@@ -334,7 +334,7 @@ namespace CxxPlugin
         /// <returns>returns assemblies</returns>
         public IList<string> DllLocations()
         {
-            return this.Assemblies;
+            return Assemblies;
         }
 
         /// <summary>
@@ -343,7 +343,7 @@ namespace CxxPlugin
         /// <param name="path">The path.</param>
         public void SetDllLocation(string path)
         {
-            this.Assemblies.Add(path);
+            Assemblies.Add(path);
         }
 
         /// <summary>
@@ -360,7 +360,7 @@ namespace CxxPlugin
         /// <returns></returns>
         List<IPluginCommand> IAnalysisPlugin.AdditionalCommands(Dictionary<string, Profile> profile)
         {
-            return ((CxxLocalExtension)this.fileAnalysisExtension).GetAdditionalCommands(profile);
+            return ((CxxLocalExtension)fileAnalysisExtension).GetAdditionalCommands(profile);
         }
     }
 }

@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
-    <OutputPath>..\BuildDrop</OutputPath>
-    <AssemblyVersion>8.0.0.0</AssemblyVersion>
-    <FileVersion>8.0.0.0</FileVersion>
-    <AssemblyOriginatorKeyFile>..\AssemblyKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="C:\Users\jocs\.nuget\packages\msbuildautomationhelper\2.0.6\contentFiles\any\net472\App.config" />
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Include="Types.fs" />
@@ -18,8 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="2.9.0" />
-    <PackageReference Include="MsbuildAutomationHelper" Version="2.0.5" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="3.8.0" />
+    <PackageReference Include="MsbuildAutomationHelper" Version="2.0.6" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,8 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Microsoft.Build" />
-    <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>

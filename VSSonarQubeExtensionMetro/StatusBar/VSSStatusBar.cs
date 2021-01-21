@@ -13,19 +13,11 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarQubeExtension.StatusBar
 {
-    using System;
-    using System.Diagnostics;
-    using System.Drawing;
-    using System.Linq;
-    using System.Runtime.InteropServices;
-
-    using EnvDTE;
-
     using EnvDTE80;
-
     using Microsoft.VisualStudio.Shell.Interop;
-
-    using Constants = Microsoft.VisualStudio.Shell.Interop.Constants;
+    using System;
+    using System.Drawing;
+    using System.Runtime.InteropServices;
     using IVSSStatusBar = VSSonarPlugins.IVSSStatusBar;
     using Thread = System.Threading.Thread;
 
@@ -74,13 +66,7 @@ namespace VSSonarQubeExtension.StatusBar
         ///     Gets the status bar.
         /// </summary>
         /// <value>The status bar.</value>
-        public IVsStatusbar Bar
-        {
-            get
-            {
-                return this.bar;
-            }
-        }
+        public IVsStatusbar Bar => bar;
 
         #endregion
 
@@ -106,7 +92,8 @@ namespace VSSonarQubeExtension.StatusBar
         /// </param>
         public void DisplayAndShowIcon(string message)
         {
-            var b =
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            Bitmap b =
                 new Bitmap(
                     @"E:\Development\SonarQube\VssonarExtension\VSSonarQubeExtension\VSSonarExtension\PackageImplementation\Resources\sonariconsource.bmp");
             IntPtr hdc = IntPtr.Zero;
@@ -114,11 +101,11 @@ namespace VSSonarQubeExtension.StatusBar
 
             object hdcObject = hdc;
 
-            this.Bar.Animation(1, ref hdcObject);
+            Bar.Animation(1, ref hdcObject);
 
             Thread.Sleep(10000);
 
-            this.Bar.Animation(0, ref hdcObject);
+            Bar.Animation(0, ref hdcObject);
             DeleteObject(hdc);
         }
 
@@ -130,26 +117,27 @@ namespace VSSonarQubeExtension.StatusBar
         /// </param>
         public void DisplayAndShowProgress(string message)
         {
-            var messages = new[] { "Demo Long running task...Step 1...", "Step 2...", "Step 3...", "Step 4...", "Completing long running task." };
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            string[] messages = new[] { "Demo Long running task...Step 1...", "Step 2...", "Step 3...", "Step 4...", "Completing long running task." };
             uint cookie = 0;
 
             // Initialize the progress bar.
-            this.Bar.Progress(ref cookie, 1, string.Empty, 0, 0);
+            Bar.Progress(ref cookie, 1, string.Empty, 0, 0);
 
             for (uint j = 0; j < 5; j++)
             {
                 uint count = j + 1;
-                this.Bar.Progress(ref cookie, 1, string.Empty, count, 5);
-                this.Bar.SetText(messages[j]);
+                Bar.Progress(ref cookie, 1, string.Empty, count, 5);
+                Bar.SetText(messages[j]);
 
                 // Display incremental progress.
                 Thread.Sleep(1500);
             }
 
             // Clear the progress bar.
-            this.Bar.Progress(ref cookie, 0, string.Empty, 0, 0);
-            this.Bar.FreezeOutput(0);
-            this.Bar.Clear();
+            Bar.Progress(ref cookie, 0, string.Empty, 0, 0);
+            Bar.FreezeOutput(0);
+            Bar.Clear();
         }
 
         /// <summary>
@@ -160,39 +148,14 @@ namespace VSSonarQubeExtension.StatusBar
         /// </param>
         public void DisplayMessage(string message)
         {
-            int frozen;
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
 
-            this.Bar.IsFrozen(out frozen);
+            Bar.IsFrozen(out int frozen);
 
             if (frozen == 0)
             {
-                this.Bar.SetText(message);
+                Bar.SetText(message);
             }
-        }
-
-        /// <summary>
-        /// The show icons.
-        /// </summary>
-        public void ShowIcons()
-        {
-            Properties properties = this.dte.Properties["Environment", "General"];
-
-            Property propertyAutoAdjust = properties.Cast<Property>().FirstOrDefault(p => p.Name == "AutoAdjustExperience");
-
-            propertyAutoAdjust.Value = "False";
-            Property propertyAnimations = properties.Cast<Property>().FirstOrDefault(p => p.Name == "Animations");
-
-            propertyAnimations.Value = "False";
-
-            var b =
-                new Bitmap(
-                    @"E:\Development\SonarQube\VssonarExtension\VSSonarQubeExtension\VSSonarExtension\PackageImplementation\Resources\sonariconsource.bmp");
-            IntPtr hdc = IntPtr.Zero;
-            hdc = b.GetHbitmap();
-
-            object hdcObject = hdc;
-
-            this.Bar.Animation(1, ref hdcObject);
         }
 
         #endregion

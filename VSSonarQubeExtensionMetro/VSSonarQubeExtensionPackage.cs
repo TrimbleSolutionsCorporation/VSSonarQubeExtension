@@ -101,49 +101,50 @@ namespace VSSonarQubeExtension
 
         protected override async System.Threading.Tasks.Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
+            await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             try
             {
                 await base.InitializeAsync(new CancellationToken(), null);
-                this.dte2 = (DTE2)GetGlobalService(typeof(DTE));
-                var extensionRunningPath = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty).ToString();
+                dte2 = (DTE2)GetGlobalService(typeof(DTE));
+                string extensionRunningPath = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty).ToString();
 
-                if (this.dte2 == null)
+                if (dte2 == null)
                 {
                     return;
                 }
-                this.visualStudioInterface = new VsPropertiesHelper(this.dte2, this);
-                this.visualStudioInterface.WriteToVisualStudioOutput(DateTime.Now + " : VsSonarExtensionPackage Initialize");
-                await this.SetupMenuCommands(this);
+                visualStudioInterface = new VsPropertiesHelper(dte2, this);
+                visualStudioInterface.WriteToVisualStudioOutput(DateTime.Now + " : VsSonarExtensionPackage Initialize");
+                await SetupMenuCommandsAsync(this);
 
                 try
                 {
-                    var uniqueId = this.dte2.Version;
+                    string uniqueId = dte2.Version;
 
-                    if (extensionRunningPath.ToLower().Contains(this.dte2.Version + "exp"))
+                    if (extensionRunningPath.ToLower().Contains(dte2.Version + "exp"))
                     {
                         uniqueId += "Exp";
                     }
 
-                    var model = await SonarQubeViewModelFactory.AsyncStartupModelWithVsVersion(uniqueId, this);
+                    VSSonarExtensionUi.ViewModel.SonarQubeViewModel model = await SonarQubeViewModelFactory.StartupModelWithVsVersionAsync(uniqueId, this);
                     await model.InitModelFromPackageInitialization(
-                        this.visualStudioInterface,
-                        this.StatusBar,
+                        visualStudioInterface,
+                        StatusBar,
                         this,
-                        this.AssemblyDirectory);
-                    this.CloseToolsWindows();
-                    this.OutputGuid = "CDA8E85D-C469-4855-878B-0E778CD0DD" + int.Parse(uniqueId.Split('.')[0]).ToString(CultureInfo.InvariantCulture);
-                    this.StartOutputWindow(this.OutputGuid);
+                        AssemblyDirectory);
+                    CloseToolsWindows();
+                    OutputGuid = "CDA8E85D-C469-4855-878B-0E778CD0DD" + int.Parse(uniqueId.Split('.')[0]).ToString(CultureInfo.InvariantCulture);
+                    StartOutputWindow(OutputGuid);
 
                     // start listening
-                    SonarQubeViewModelFactory.SQViewModel.PluginRequest += this.LoadPluginIntoNewToolWindow;
-                    this.StartSolutionListeners(this.visualStudioInterface);
+                    SonarQubeViewModelFactory.SQViewModel.PluginRequest += LoadPluginIntoNewToolWindow;
+                    await StartSolutionListenersAsync(visualStudioInterface);
 
                     // configure colours
                     DColor defaultBackground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBackgroundColorKey);
                     DColor defaultForeground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowTextColorKey);
                     SonarQubeViewModelFactory.SQViewModel.UpdateTheme(ToMediaColor(defaultBackground), ToMediaColor(defaultForeground));
-                    var bar = await this.GetServiceAsync(typeof(SVsStatusbar)) as IVsStatusbar;
-                    this.StatusBar = new VSSStatusBar(bar, this.dte2);
+                    IVsStatusbar bar = await GetServiceAsync(typeof(SVsStatusbar)) as IVsStatusbar;
+                    StatusBar = new VSSStatusBar(bar, dte2);
                 }
                 catch (Exception ex)
                 {
@@ -173,18 +174,19 @@ namespace VSSonarQubeExtension
         /// </summary>
         public void CloseToolsWindows()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             for (int i = 0; i < 100; i++)
             {
                 try
                 {
                     // Find existing windows. 
-                    ToolWindowPane currentWindow = this.FindToolWindow(typeof(PluginToolWindow), i, false);
+                    ToolWindowPane currentWindow = FindToolWindow(typeof(PluginToolWindow), i, false);
                     if (currentWindow == null)
                     {
                         continue;
                     }
 
-                    var windowFrame = (IVsWindowFrame)currentWindow.Frame;
+                    IVsWindowFrame windowFrame = (IVsWindowFrame)currentWindow.Frame;
                     ErrorHandler.ThrowOnFailure(windowFrame.CloseFrame((uint)__FRAMECLOSE.FRAMECLOSE_NoSave));
                 }
                 catch (Exception ex)
@@ -211,8 +213,9 @@ namespace VSSonarQubeExtension
         /// </exception>
         public void ShowToolWindow(UserControl control, int id, string name)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             // Find existing windows. 
-            ToolWindowPane currentWindow = this.FindToolWindow(typeof(PluginToolWindow), id, false);
+            ToolWindowPane currentWindow = FindToolWindow(typeof(PluginToolWindow), id, false);
             if (currentWindow != null)
             {
                 return;
@@ -221,21 +224,26 @@ namespace VSSonarQubeExtension
             // Create the window with the first free ID.
             PluginToolWindow.CurrentPluginControl = control;
             PluginToolWindow.CurrentPluginName = name;
-            var window = (ToolWindowPane)this.CreateToolWindow(typeof(PluginToolWindow), id);
+            ToolWindowPane window = (ToolWindowPane)CreateToolWindow(typeof(PluginToolWindow), id);
 
             if ((null == window) || (null == window.Frame))
             {
                 throw new NotSupportedException("CAnnot Create Tool");
             }
 
-            var windowFrame = (IVsWindowFrame)window.Frame;
+            IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
             ErrorHandler.ThrowOnFailure(windowFrame.Show());
         }
 
         private async Task<bool> IsSolutionLoadedAsync()
         {
             await JoinableTaskFactory.SwitchToMainThreadAsync();
-            var solService = await GetServiceAsync(typeof(SVsSolution)) as IVsSolution;
+            IVsSolution solService = await GetServiceAsync(typeof(SVsSolution)) as IVsSolution;
+
+            if ((null == solService))
+            {
+                throw new NotSupportedException("IVsSolution");
+            }
 
             ErrorHandler.ThrowOnFailure(solService.GetProperty((int)__VSPROPID.VSPROPID_IsSolutionOpen, out object value));
 
@@ -248,17 +256,17 @@ namespace VSSonarQubeExtension
         /// <param name="guid">The unique identifier.</param>
         private void StartOutputWindow(string guid)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             try
             {
-                var outWindow = GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
-                var customGuid = new Guid(guid);
+                IVsOutputWindow outWindow = GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
+                Guid customGuid = new Guid(guid);
                 if (outWindow != null)
                 {
                     outWindow.CreatePane(ref customGuid, "VSSonarQube Output", 1, 1);
-                    IVsOutputWindowPane customPane;
-                    outWindow.GetPane(ref customGuid, out customPane);
-                    ((VsPropertiesHelper)this.visualStudioInterface).CustomPane = customPane;
-                    ((VsPropertiesHelper)this.visualStudioInterface).CustomPane.Activate();
+                    outWindow.GetPane(ref customGuid, out IVsOutputWindowPane customPane);
+                    ((VsPropertiesHelper)visualStudioInterface).CustomPane = customPane;
+                    ((VsPropertiesHelper)visualStudioInterface).CustomPane.Activate();
                 }
             }
             catch (Exception ex)
@@ -271,14 +279,14 @@ namespace VSSonarQubeExtension
         /// Starts the solution listeners.
         /// </summary>
         /// <param name="helper">The helper.</param>
-        private void StartSolutionListeners(IVsEnvironmentHelper helper)
+        private async System.Threading.Tasks.Task StartSolutionListenersAsync(IVsEnvironmentHelper helper)
         {
-            this.listener = new SolutionEventsListener(helper, this.visualStudioInterface, this.dte2, this);
+            listener = new SolutionEventsListener(helper, visualStudioInterface, dte2, this);
             string solutionName = helper.ActiveSolutionFileNameWithExtension();
             string solutionPath = helper.ActiveSolutioRootPath();
             string fileName = helper.ActiveFileFullPath();
             SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessageToLog("Solution Opened: " + solutionName + " : " + solutionPath);
-            System.Threading.Tasks.Task.Run(async () => await SonarQubeViewModelFactory.SQViewModel.OnSolutionOpen(solutionName, solutionPath, fileName));
+            await SonarQubeViewModelFactory.SQViewModel.OnSolutionOpen(solutionName, solutionPath, fileName);
         }
 
         /// <summary>
@@ -297,9 +305,9 @@ namespace VSSonarQubeExtension
         /// <summary>
         ///     The setup menu commands.
         /// </summary>
-        private async System.Threading.Tasks.Task SetupMenuCommands(AsyncPackage package)
+        private async System.Threading.Tasks.Task SetupMenuCommandsAsync(AsyncPackage package)
         {
-            var mcs = (IMenuCommandService)await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
+            OleMenuCommandService mcs = (IMenuCommandService)await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
 
             if (null == mcs)
             {
@@ -307,22 +315,22 @@ namespace VSSonarQubeExtension
             }
 
             // menu commands
-            var menuCommandId = new CommandID(GuidList.GuidVSSonarExtensionCmdSet, (int)PkgCmdIdList.CmdidReviewsCommand);
-            this.sonarReviewsCommand = new OleMenuCommand(this.ShowIssuesToolWindow, menuCommandId);
-            mcs.AddCommand(this.sonarReviewsCommand);
+            CommandID menuCommandId = new CommandID(GuidList.GuidVSSonarExtensionCmdSet, (int)PkgCmdIdList.CmdidReviewsCommand);
+            sonarReviewsCommand = new OleMenuCommand(ShowIssuesToolWindow, menuCommandId);
+            mcs.AddCommand(sonarReviewsCommand);
 
             menuCommandId = new CommandID(GuidList.GuidVSSonarExtensionCmdSet, (int)PkgCmdIdList.CmdidShowOutputCommand);
-            this.sonarShowOutputCommand = new OleMenuCommand(this.ShowOutputWindow, menuCommandId);
-            mcs.AddCommand(this.sonarShowOutputCommand);
+            sonarShowOutputCommand = new OleMenuCommand(ShowOutputWindow, menuCommandId);
+            mcs.AddCommand(sonarShowOutputCommand);
 
             menuCommandId = new CommandID(GuidList.GuidVSSonarExtensionCmdSet, (int)PkgCmdIdList.CmdidShowOptionsCommand);
-            this.sonarShowOptionsCommand = new OleMenuCommand(this.ShowOptionsWindow, menuCommandId);
-            mcs.AddCommand(this.sonarShowOptionsCommand);
+            sonarShowOptionsCommand = new OleMenuCommand(ShowOptionsWindow, menuCommandId);
+            mcs.AddCommand(sonarShowOptionsCommand);
 
             // solution context menus
             menuCommandId = new CommandID(GuidList.GuidStartAnalysisSolutionCTXCmdSet, PkgCmdIdList.CmdidRunAnalysisInSolution);
-            this.runAnalysisCmd = new OleMenuCommand(this.AnalyseSolutionCmd, menuCommandId);
-            mcs.AddCommand(this.runAnalysisCmd);
+            runAnalysisCmd = new OleMenuCommand(AnalyseSolutionCmd, menuCommandId);
+            mcs.AddCommand(runAnalysisCmd);
         }
 
         /// <summary>
@@ -342,7 +350,8 @@ namespace VSSonarQubeExtension
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void ShowOutputWindow(object sender, EventArgs e)
         {
-            this.StartOutputWindow(this.OutputGuid);
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            StartOutputWindow(OutputGuid);
         }
 
         /// <summary>
@@ -356,8 +365,9 @@ namespace VSSonarQubeExtension
         /// </param>
         private void LoadPluginIntoNewToolWindow(object sender, EventArgs eventArgs)
         {
-            var plugin = SonarQubeViewModelFactory.SQViewModel.InUsePlugin;
-            this.ShowToolWindow(
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            System.Collections.Generic.KeyValuePair<int, IMenuCommandPlugin> plugin = SonarQubeViewModelFactory.SQViewModel.InUsePlugin;
+            ShowToolWindow(
                 plugin.Value.GetUserControl(
                 VSSonarExtensionUi.Model.Helpers.AuthtenticationHelper.AuthToken,
                 SonarQubeViewModelFactory.SQViewModel.AssociationModule.AssociatedProject,
@@ -385,9 +395,10 @@ namespace VSSonarQubeExtension
         /// </exception>
         private void ShowIssuesToolWindow(object sender, EventArgs e)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
             IVsWindowFrame windowFrame;
 
-            using (ToolWindowPane window = this.FindToolWindow(typeof(IssuesToolWindow), 0, true))
+            using (ToolWindowPane window = FindToolWindow(typeof(IssuesToolWindow), 0, true))
             {
                 if ((null == window) || (null == window.Frame))
                 {

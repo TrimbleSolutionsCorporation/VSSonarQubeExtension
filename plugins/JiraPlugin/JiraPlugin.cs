@@ -16,17 +16,17 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("JiraPlugin.Test")]
 namespace VSSQTestTrackPlugin
 {
+    using Atlassian.Jira;
+    using Newtonsoft.Json;
+    using SonarRestService.Types;
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.Composition;
+    using System.Composition;
     using System.Diagnostics;
     using System.IO;
     using System.Reflection;
     using System.Text;
     using System.Threading.Tasks;
-    using Atlassian.Jira;
-    using Newtonsoft.Json;
-    using SonarRestService.Types;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
 
@@ -57,18 +57,20 @@ namespace VSSQTestTrackPlugin
         /// <param name="configuration">The configuration.</param>
         public JiraPlugin(INotificationManager notificationManager, ISonarConfiguration configuration)
         {
-            this.userConf = configuration;
+            userConf = configuration;
             this.notificationManager = notificationManager;
-            this.descrition = new PluginDescription();
-            this.descrition.Enabled = true;
-            this.descrition.Description = "Jira Plugin";
-            this.descrition.Name = "Jira Plugin";
-            this.descrition.Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            this.descrition.AssemblyPath = Assembly.GetExecutingAssembly().Location;
-            this.jiraEnabled = false;
-            this.CustomFields = new Dictionary<string, string>();
-            this.MandatoryFields = new Dictionary<string, string>();
-            LoadConfigurationFile(this.configFile, notificationManager);
+            descrition = new PluginDescription
+            {
+                Enabled = true,
+                Description = "Jira Plugin",
+                Name = "Jira Plugin",
+                Version = Assembly.GetExecutingAssembly().GetName().Version.ToString(),
+                AssemblyPath = Assembly.GetExecutingAssembly().Location
+            };
+            jiraEnabled = false;
+            CustomFields = new Dictionary<string, string>();
+            MandatoryFields = new Dictionary<string, string>();
+            LoadConfigurationFile(configFile, notificationManager);
         }
 
         /// <summary>
@@ -78,16 +80,18 @@ namespace VSSQTestTrackPlugin
         public JiraPlugin(INotificationManager notificationManager)
         {
             this.notificationManager = notificationManager;
-            this.descrition = new PluginDescription();
-            this.descrition.Enabled = true;
-            this.descrition.Description = "Jira Plugin";
-            this.descrition.Name = "Jira Plugin";
-            this.descrition.Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            this.descrition.AssemblyPath = Assembly.GetExecutingAssembly().Location;
-            this.jiraEnabled = false;
-            this.CustomFields = new Dictionary<string, string>();
-            this.MandatoryFields = new Dictionary<string, string>();
-            LoadConfigurationFile(this.configFile, notificationManager);
+            descrition = new PluginDescription
+            {
+                Enabled = true,
+                Description = "Jira Plugin",
+                Name = "Jira Plugin",
+                Version = Assembly.GetExecutingAssembly().GetName().Version.ToString(),
+                AssemblyPath = Assembly.GetExecutingAssembly().Location
+            };
+            jiraEnabled = false;
+            CustomFields = new Dictionary<string, string>();
+            MandatoryFields = new Dictionary<string, string>();
+            LoadConfigurationFile(configFile, notificationManager);
         }
 
         /// <summary>
@@ -100,8 +104,8 @@ namespace VSSQTestTrackPlugin
         public async Task<bool> AssociateProject(Resource project, ISonarConfiguration configuration, Dictionary<string, Profile> profiles, string vsVersion)
         {
             await Task.Delay(0);
-            this.associatedProject = project;
-            this.userConf = configuration;
+            associatedProject = project;
+            userConf = configuration;
             return true;
         }
 
@@ -112,7 +116,7 @@ namespace VSSQTestTrackPlugin
         public async Task<bool> OnConnectToSonar(ISonarConfiguration configuration)
         {
             await Task.Delay(0);
-            this.userConf = configuration;
+            userConf = configuration;
             return true;
         }
 
@@ -124,8 +128,8 @@ namespace VSSQTestTrackPlugin
         /// <param name="vsVersion">The vs version.</param>
         public void AssociateProject(Resource project, ISonarConfiguration configuration, string vsVersion)
         {
-            this.associatedProject = project;
-            this.userConf = configuration;
+            associatedProject = project;
+            userConf = configuration;
         }
 
         /// <summary>
@@ -146,9 +150,9 @@ namespace VSSQTestTrackPlugin
         /// </returns>
         public async Task<string> AttachToExistentDefect(IList<SonarRestService.Types.Issue> issues, string defectId)
         {
-            if (!this.jiraEnabled)
+            if (!jiraEnabled)
             {
-                this.notificationManager.ReportMessage("Jira plugin not enabled because of invalid configuration");
+                notificationManager.ReportMessage("Jira plugin not enabled because of invalid configuration");
                 return string.Empty;
             }
 
@@ -157,23 +161,23 @@ namespace VSSQTestTrackPlugin
                 return string.Empty;
             }
 
-            var notes = this.GatherNotes(issues, this.associatedProject);
-            var jira = Jira.CreateRestClient(
-                this.MandatoryFields["JiraURL"],
-                this.MandatoryFields["UserName"],
-                this.MandatoryFields["Password"]);
+            List<string> notes = GatherNotes(issues, associatedProject);
+            Jira jira = Jira.CreateRestClient(
+                MandatoryFields["JiraURL"],
+                MandatoryFields["UserName"],
+                MandatoryFields["Password"]);
 
-            var issue = await jira.Issues.GetIssueAsync(defectId);
-            var comment = await issue.AddCommentAsync(notes[0]);
+            Atlassian.Jira.Issue issue = await jira.Issues.GetIssueAsync(defectId);
+            Atlassian.Jira.Comment comment = await issue.AddCommentAsync(notes[0]);
 
             if (notes.Count > 1)
             {
                 for (int i = 1; i < notes.Count; i++)
                 {
-                    var commentNew = await issue.AddCommentAsync(notes[i].ToString());
+                    Atlassian.Jira.Comment commentNew = await issue.AddCommentAsync(notes[i].ToString());
                     if (commentNew == null)
                     {
-                        this.notificationManager.ReportMessage("Failed to add additional elements to ticket");
+                        notificationManager.ReportMessage("Failed to add additional elements to ticket");
                     }
                 }
             }
@@ -183,7 +187,7 @@ namespace VSSQTestTrackPlugin
                 return defectId;
             }
 
-            this.notificationManager.ReportMessage("Failed to attach to jira ticket");            
+            notificationManager.ReportMessage("Failed to attach to jira ticket");            
             return string.Empty;
         }
 
@@ -216,9 +220,9 @@ namespace VSSQTestTrackPlugin
         /// <returns>defect number</returns>
         public async Task<string> AttachToNewDefect(IList<SonarRestService.Types.Issue> issues)
         {
-            if (!this.jiraEnabled)
+            if (!jiraEnabled)
             {
-                this.notificationManager.ReportMessage("Jira plugin not enabled because of invalid configuration");
+                notificationManager.ReportMessage("Jira plugin not enabled because of invalid configuration");
                 return string.Empty;
             }
 
@@ -227,31 +231,31 @@ namespace VSSQTestTrackPlugin
                 return string.Empty;
             }
 
-            var notes = this.GatherNotes(issues, this.associatedProject);
+            List<string> notes = GatherNotes(issues, associatedProject);
 
-            var summary = "Issues: " + issues.Count
-                + " => Blockers: " + this.NumberOfBlockers
-                + " Critical: " + this.NumberOfCriticals
-                + " Majors: " + this.NumberOfMajors
-                + " Debt: " + this.TechnicalDebt + " mn"
+            string summary = "Issues: " + issues.Count
+                + " => Blockers: " + NumberOfBlockers
+                + " Critical: " + NumberOfCriticals
+                + " Majors: " + NumberOfMajors
+                + " Debt: " + TechnicalDebt + " mn"
                 + " Team: " + issues[0].Team;
 
             try
             {
                 // create defect
                 // "SonarQube: Issues Pending Resolution [from VSSonarExtension] " + summary, notes.ToString()
-                var jira = Jira.CreateRestClient(
-                    this.MandatoryFields["JiraURL"],
-                    this.MandatoryFields["UserName"],
-                    this.MandatoryFields["Password"]);
+                Jira jira = Jira.CreateRestClient(
+                    MandatoryFields["JiraURL"],
+                    MandatoryFields["UserName"],
+                    MandatoryFields["Password"]);
 
-                var issue = jira.CreateIssue(this.MandatoryFields["JiraProject"]);
-                issue.Type = this.MandatoryFields["IssueType"];
+                Atlassian.Jira.Issue issue = jira.CreateIssue(MandatoryFields["JiraProject"]);
+                issue.Type = MandatoryFields["IssueType"];
                 issue.Summary = "SonarQube: Issues Pending Resolution [from VSSonarExtension] " + summary;
                 issue.Description = notes[0];
-                issue.Components.Add(this.MandatoryFields["Components"]);
+                issue.Components.Add(MandatoryFields["Components"]);
 
-                foreach (var customField in this.CustomFields)
+                foreach (KeyValuePair<string, string> customField in CustomFields)
                 {
                     try
                     {
@@ -259,39 +263,39 @@ namespace VSSQTestTrackPlugin
                     }
                     catch (Exception ex)
                     {
-                        this.notificationManager.ReportMessage(new Message { Id = "JiraPlugin", Data = "Custom Field Incorrectly Configured: " +  ex.Message});
-                        this.notificationManager.ReportException(ex);
+                        notificationManager.ReportMessage(new Message { Id = "JiraPlugin", Data = "Custom Field Incorrectly Configured: " +  ex.Message});
+                        notificationManager.ReportException(ex);
                     }
                 }
-                
-                var defect = await issue.SaveChangesAsync();
+
+                Atlassian.Jira.Issue defect = await issue.SaveChangesAsync();
 
 
                 if (notes.Count > 1)
                 {
                     for (int i = 1; i < notes.Count; i++)
                     {
-                        var comment = await issue.AddCommentAsync(notes[i].ToString());
+                        Atlassian.Jira.Comment comment = await issue.AddCommentAsync(notes[i].ToString());
                         if (comment == null)
                         {
-                            this.notificationManager.ReportMessage("Failed to add additional elements to ticket");
+                            notificationManager.ReportMessage("Failed to add additional elements to ticket");
                         }
                     }
                 }
 
                 if (defect != null)
                 {
-                    this.notificationManager.ReportMessage("Ticket Created: " + defect.Key.Value);
+                    notificationManager.ReportMessage("Ticket Created: " + defect.Key.Value);
                     return defect.Key.Value;
                 }
             }
             catch (Exception ex)
             {
-                this.notificationManager.ReportMessage(new Message { Id = "JiraPlugin", Data = "Failed to Create Jira Issue" });
-                this.notificationManager.ReportException(ex);
+                notificationManager.ReportMessage(new Message { Id = "JiraPlugin", Data = "Failed to Create Jira Issue" });
+                notificationManager.ReportException(ex);
             }
 
-            this.notificationManager.ReportMessage(new Message { Id = "JiraPlugin", Data = "Failed to Create Jira Issue for unknown reason" });
+            notificationManager.ReportMessage(new Message { Id = "JiraPlugin", Data = "Failed to Create Jira Issue for unknown reason" });
             return string.Empty;
         }
 
@@ -301,7 +305,7 @@ namespace VSSQTestTrackPlugin
         /// <returns> locations of dlls</returns>
         public IList<string> DllLocations()
         {
-            return this.dllLocations;
+            return dllLocations;
         }
 
         /// <summary>
@@ -311,13 +315,15 @@ namespace VSSQTestTrackPlugin
         /// <returns>defect</returns>
         public async Task<Defect> GetDefect(string id)
         {
-            var defect = new Defect();
-            defect.Id = id;
-            var jira = Jira.CreateRestClient(
-                this.MandatoryFields["JiraURL"],
-                this.MandatoryFields["UserName"],
-                this.MandatoryFields["Password"]);
-            var issue = await jira.Issues.GetIssueAsync(id);
+            Defect defect = new Defect
+            {
+                Id = id
+            };
+            Jira jira = Jira.CreateRestClient(
+                MandatoryFields["JiraURL"],
+                MandatoryFields["UserName"],
+                MandatoryFields["Password"]);
+            Atlassian.Jira.Issue issue = await jira.Issues.GetIssueAsync(id);
 
             if (issue != null)
             {
@@ -326,7 +332,7 @@ namespace VSSQTestTrackPlugin
             }
             else
             {
-                this.notificationManager.ReportMessage("Failed to retrieve issue from jira: " + id);
+                notificationManager.ReportMessage("Failed to retrieve issue from jira: " + id);
             }
 
             return defect;
@@ -359,7 +365,7 @@ namespace VSSQTestTrackPlugin
         /// <returns>plugin description</returns>
         public PluginDescription GetPluginDescription()
         {
-            return this.descrition;
+            return descrition;
         }
 
         /// <summary>
@@ -376,7 +382,7 @@ namespace VSSQTestTrackPlugin
         /// <param name="path">The path.</param>
         public void SetDllLocation(string path)
         {
-            this.dllLocations.Add(path);
+            dllLocations.Add(path);
         }
 
         /// <summary>
@@ -388,13 +394,13 @@ namespace VSSQTestTrackPlugin
             switch (issue.Severity)
             {
                 case Severity.BLOCKER:
-                    this.NumberOfBlockers++;
+                    NumberOfBlockers++;
                     break;
                 case Severity.CRITICAL:
-                    this.NumberOfCriticals++;
+                    NumberOfCriticals++;
                     break;
                 case Severity.MAJOR:
-                    this.NumberOfMajors++;
+                    NumberOfMajors++;
                     break;
                 default:
                     break;
@@ -404,14 +410,14 @@ namespace VSSQTestTrackPlugin
             {
                 try
                 {
-                    var debt = issue.Effort
+                    string debt = issue.Effort
                         .Replace("min", string.Empty)
                         .Replace("sec", string.Empty)
                         .Replace("hour", string.Empty)
                         .Replace("day", string.Empty)
                         .Replace("d", string.Empty)
                         .Replace("h", string.Empty);
-                    this.TechnicalDebt += int.Parse(debt);
+                    TechnicalDebt += int.Parse(debt);
                 }
                 catch (Exception ex)
                 {
@@ -431,11 +437,11 @@ namespace VSSQTestTrackPlugin
         /// </returns>
         private List<string> GatherNotes(IList<SonarRestService.Types.Issue> issues, Resource project)
         {
-            var notesList = new List<string>();
-            this.NumberOfBlockers = 0;
-            this.NumberOfCriticals = 0;
-            this.NumberOfMajors = 0;
-            this.TechnicalDebt = 0;
+            List<string> notesList = new List<string>();
+            NumberOfBlockers = 0;
+            NumberOfCriticals = 0;
+            NumberOfMajors = 0;
+            TechnicalDebt = 0;
 
             StringBuilder header = new StringBuilder();
             header.AppendLine("h2. {color:#205081}Issues are pending resolution{color}");
@@ -448,12 +454,12 @@ namespace VSSQTestTrackPlugin
                 header.AppendLine("Project : Multiple Projects");
             }
 
-            var notesIssues = new StringBuilder();
-            foreach (var issue in issues)
+            StringBuilder notesIssues = new StringBuilder();
+            foreach (SonarRestService.Types.Issue issue in issues)
             {
-                var compElelms = issue.Component.Split(':');
-                notesIssues.AppendLine(this.GetLineForIssue(issue, compElelms));               
-                this.PopulateStatistics(issue);
+                string[] compElelms = issue.Component.Split(':');
+                notesIssues.AppendLine(GetLineForIssue(issue, compElelms));               
+                PopulateStatistics(issue);
 
                 if (notesIssues.ToString().Length > 32000)
                 {
@@ -465,8 +471,8 @@ namespace VSSQTestTrackPlugin
 
             notesList.Add(notesIssues.ToString());
 
-            var finalNotes = new List<string>();
-            foreach (var item in notesList)
+            List<string> finalNotes = new List<string>();
+            foreach (string item in notesList)
             {
                 finalNotes.Add(header.ToString() + item);
             }
@@ -476,14 +482,14 @@ namespace VSSQTestTrackPlugin
 
 		private string GetLineForIssue(SonarRestService.Types.Issue issue, string[] compElelms)
 		{
-            var assignee = issue.Assignee;
+            string assignee = issue.Assignee;
             if (string.IsNullOrEmpty(issue.Author))
             {
                 assignee = issue.Author;
             }
 
-            var url = "    [" + issue.Assignee + "] " + issue.Message + " : " + compElelms[compElelms.Length - 1] + " : " + issue.Line + " : ";
-			var openIssueString = string.Format("[Open Issue|{0}/issues?issues={1}&open={1}]", this.userConf.Hostname.TrimEnd('/'), issue.Key);
+            string url = "    [" + issue.Assignee + "] " + issue.Message + " : " + compElelms[compElelms.Length - 1] + " : " + issue.Line + " : ";
+            string openIssueString = string.Format("[Open Issue|{0}/issues?issues={1}&open={1}]", userConf.Hostname.TrimEnd('/'), issue.Key);
 			return url + openIssueString; 
 		}
 
@@ -494,47 +500,47 @@ namespace VSSQTestTrackPlugin
         /// <param name="manager"></param>
         public void LoadConfigurationFile(string configFile, INotificationManager manager)
         {
-            this.CustomFields.Clear();
-            this.MandatoryFields.Clear();
+            CustomFields.Clear();
+            MandatoryFields.Clear();
             if (File.Exists(configFile))
             {
                 try
                 {
-                    var lines = File.ReadAllLines(configFile);
-                    foreach (var line in lines)
+                    string[] lines = File.ReadAllLines(configFile);
+                    foreach (string line in lines)
                     {
                         if (line.Contains(";"))
                         {
-                            var elements = line.Split(';');
+                            string[] elements = line.Split(';');
 
                             if (line.StartsWith("Custom;"))
                             {
-                                if (!this.CustomFields.ContainsKey(elements[0]))
+                                if (!CustomFields.ContainsKey(elements[0]))
                                 {
-                                    this.CustomFields.Add(elements[1], elements[2]);
+                                    CustomFields.Add(elements[1], elements[2]);
                                 }
 
                                 continue;
                             }
 
-                            if (!this.MandatoryFields.ContainsKey(elements[0]))
+                            if (!MandatoryFields.ContainsKey(elements[0]))
                             {
-                                this.MandatoryFields.Add(elements[0], elements[1]);
+                                MandatoryFields.Add(elements[0], elements[1]);
                             }
                         }
                     }
 
-                    this.jiraEnabled = true;
+                    jiraEnabled = true;
                 }
                 catch (Exception ex)
                 {
                     manager.ReportMessage("Jira integration disable, configuration file broken: " + ex.Message);
-                    this.jiraEnabled = false;
+                    jiraEnabled = false;
                 }
             }
             else
             {
-                this.jiraEnabled = false;
+                jiraEnabled = false;
             }
         }
     }

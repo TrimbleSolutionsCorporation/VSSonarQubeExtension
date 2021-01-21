@@ -17,6 +17,7 @@ namespace VSSonarQubeExtension.Helpers
     using EnvDTE;
     using EnvDTE80;
     using Microsoft.VisualStudio.PlatformUI;
+    using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Text;
     using System;
     using System.Diagnostics;
@@ -24,7 +25,6 @@ namespace VSSonarQubeExtension.Helpers
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using System.Threading.Tasks;
     using VSSonarPlugins;
 
     /// <summary>
@@ -45,18 +45,18 @@ namespace VSSonarQubeExtension.Helpers
         /// <summary>
         ///     The environment.
         /// </summary>
-        private IVsEnvironmentHelper environment;
+        private readonly IVsEnvironmentHelper environment;
 
         /// <summary>The package.</summary>
-        private VsSonarExtensionPackage package;
+        private readonly VsSonarExtensionPackage package;
 
         /// <summary>The build events.</summary>
-        private BuildEvents buildEvents;
+        private readonly BuildEvents buildEvents;
 
         /// <summary>
         /// dte service
         /// </summary>
-        private DTE2 dte2;
+        private readonly DTE2 dte2;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VsEvents"/> class.
@@ -70,45 +70,47 @@ namespace VSSonarQubeExtension.Helpers
         /// <param name="vsSonarExtensionPackage"></param>
         public VsEvents(IVsEnvironmentHelper environment, DTE2 dte2, VsSonarExtensionPackage vsSonarExtensionPackage)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
             this.dte2 = dte2;
-            this.package = vsSonarExtensionPackage;
+            package = vsSonarExtensionPackage;
             this.environment = environment;
-            this.SolutionEvents = dte2.Events; ;
-            this.visualStudioEvents = dte2.Events.DTEEvents;
-            this.buildEvents = dte2.Events.BuildEvents;
-            this.DocumentsEvents = this.SolutionEvents.DocumentEvents;
+            SolutionEvents = dte2.Events; ;
+            visualStudioEvents = dte2.Events.DTEEvents;
+            buildEvents = dte2.Events.BuildEvents;
+            DocumentsEvents = SolutionEvents.DocumentEvents;
 
-            this.SolutionEvents.SolutionEvents.AfterClosing += this.SolutionClosed;
-            this.SolutionEvents.WindowEvents.WindowActivated += this.WindowActivated;
-            this.SolutionEvents.WindowEvents.WindowClosing += this.WindowClosed;
-            this.DocumentsEvents.DocumentSaved += this.DoumentSaved;
-            this.visualStudioEvents.OnStartupComplete += this.CloseToolWindows;
-            this.buildEvents.OnBuildProjConfigDone += this.ProjectHasBuild;
+            SolutionEvents.SolutionEvents.AfterClosing += SolutionClosed;
+            SolutionEvents.WindowEvents.WindowActivated += WindowActivated;
+            SolutionEvents.WindowEvents.WindowClosing += WindowClosed;
+            DocumentsEvents.DocumentSaved += DoumentSaved;
+            visualStudioEvents.OnStartupComplete += CloseToolWindows;
+            buildEvents.OnBuildProjConfigDone += ProjectHasBuild;
 
-            VSColorTheme.ThemeChanged += this.VSColorTheme_ThemeChanged;
+            VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
 
-            var extensionRunningPath = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", "").ToString();
+            string extensionRunningPath = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", "").ToString();
 
-            var uniqueId = this.dte2.Version;
+            string uniqueId = this.dte2.Version;
 
             if (extensionRunningPath.ToLower().Contains(this.dte2.Version + "exp"))
             {
                 uniqueId += "Exp";
             }
 
-            SonarQubeViewModelFactory.StartupModelWithVsVersion(uniqueId, this.package).AnalysisModeHasChange += this.AnalysisModeHasChange;
+            SonarQubeViewModelFactory.StartupModelWithVsVersion(uniqueId, package).AnalysisModeHasChange += AnalysisModeHasChange;
             SonarQubeViewModelFactory.SQViewModel.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.ConfigurationHasChanged +=
-                        this.AnalysisModeHasChange;
+                        AnalysisModeHasChange;
         }
 
         private void ProjectHasBuild(string project, string projectconfig, string platform, string solutionconfig, bool success)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
             if (!success || SonarQubeViewModelFactory.SQViewModel.AssociationModule.AssociatedProject == null)
             {
                 return;
             }
 
-            var projectDte = this.dte2.Solution.Item(project);
+            Project projectDte = dte2.Solution.Item(project);
 
             if (projectDte != null)
             {
@@ -117,7 +119,7 @@ namespace VSSonarQubeExtension.Helpers
                     string outputPath = projectDte.ConfigurationManager.ActiveConfiguration.Properties.Item("OutputPath").Value.ToString();
                     string assemblyName = projectDte.Properties.Item("AssemblyName").Value.ToString();
 
-                    var projectItem = this.environment.VsProjectItem(projectDte.FullName, SonarQubeViewModelFactory.SQViewModel.AssociationModule.AssociatedProject);
+                    VSSonarPlugins.Types.VsProjectItem projectItem = environment.VsProjectItem(projectDte.FullName, SonarQubeViewModelFactory.SQViewModel.AssociationModule.AssociatedProject);
 
                     if (Path.IsPathRooted(outputPath))
                     {
@@ -160,7 +162,8 @@ namespace VSSonarQubeExtension.Helpers
 
         private void CloseToolWindows()
         {
-            this.package.CloseToolsWindows();
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            package.CloseToolsWindows();
         }
 
         private DTEEvents visualStudioEvents { get; set; }
@@ -189,7 +192,7 @@ namespace VSSonarQubeExtension.Helpers
         {
             try
             {
-                foreach (var item in buffer.Properties.PropertyList.Where(item => item.Value is T))
+                foreach (System.Collections.Generic.KeyValuePair<object, object> item in buffer.Properties.PropertyList.Where(item => item.Value is T))
                 {
                     return (T)item.Value;
                 }
@@ -211,12 +214,15 @@ namespace VSSonarQubeExtension.Helpers
         /// <param name="e">
         /// The e.
         /// </param>
-        private void AnalysisModeHasChange(object sender, EventArgs e)
+#pragma warning disable VSTHRD100 // Avoid async void methods
+        private async void AnalysisModeHasChange(object sender, EventArgs e)
+#pragma warning restore VSTHRD100 // Avoid async void methods
         {
-            if (this.LastDocumentWindowWithFocus != null)
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+            if (LastDocumentWindowWithFocus != null)
             {
-                Task.Run(async () => await SonarQubeViewModelFactory.SQViewModel.RefreshDataForResource(
-                    this.LastDocumentWindowWithFocus.Document.FullName, File.ReadAllText(this.LastDocumentWindowWithFocus.Document.FullName), false));
+                string fullName = LastDocumentWindowWithFocus.Document.FullName;
+                await SonarQubeViewModelFactory.SQViewModel.RefreshDataForResource(fullName, File.ReadAllText(fullName), false);
             }
         }
 
@@ -226,8 +232,11 @@ namespace VSSonarQubeExtension.Helpers
         /// <param name="document">
         /// The document.
         /// </param>
-        private void DoumentSaved(Document document)
+#pragma warning disable VSTHRD100 // Avoid async void methods
+        private async void DoumentSaved(Document document)
+#pragma warning restore VSTHRD100 // Avoid async void methods
         {
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
             SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessageToLog("DoumentSaved : " + document);
             if (document == null)
             {
@@ -236,7 +245,8 @@ namespace VSSonarQubeExtension.Helpers
 
             try
             {
-                Task.Run(async () => await SonarQubeViewModelFactory.SQViewModel.RefreshDataForResource(document.FullName, File.ReadAllText(document.FullName), true));
+                string fullName = document.FullName;
+                await SonarQubeViewModelFactory.SQViewModel.RefreshDataForResource(fullName, File.ReadAllText(fullName), true);
             }
             catch (Exception ex)
             {
@@ -247,10 +257,13 @@ namespace VSSonarQubeExtension.Helpers
         /// <summary>
         ///     The solution closed.
         /// </summary>
-        private void SolutionClosed()
+#pragma warning disable VSTHRD100 // Avoid async void methods
+        private async void SolutionClosed()
+#pragma warning restore VSTHRD100 // Avoid async void methods
         {
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
             SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessageToLog("Solution Closed");
-            Task.Run(async () => await SonarQubeViewModelFactory.SQViewModel.OnSolutionClosed());
+            await SonarQubeViewModelFactory.SQViewModel.OnSolutionClosed();
         }
 
         /// <summary>
@@ -271,6 +284,7 @@ namespace VSSonarQubeExtension.Helpers
 
         private void WindowClosed(Window window)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
             if (window.Kind != "Document")
             {
                 return;
@@ -298,8 +312,11 @@ namespace VSSonarQubeExtension.Helpers
         /// <param name="lostFocus">
         /// The lost focus.
         /// </param>
-        private void WindowActivated(Window gotFocus, Window lostFocus)
+#pragma warning disable VSTHRD100 // Avoid async void methods
+        private async void WindowActivated(Window gotFocus, Window lostFocus)
+#pragma warning restore VSTHRD100 // Avoid async void methods
         {
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
             SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessageToLog("Window Activated: Kind: " + gotFocus.Kind);
 
             if (gotFocus.Kind != "Document")
@@ -307,10 +324,9 @@ namespace VSSonarQubeExtension.Helpers
                 return;
             }
 
-
             try
             {
-                if (this.LastDocumentWindowWithFocus == gotFocus)
+                if (LastDocumentWindowWithFocus == gotFocus)
                 {
                     SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessageToLog("Last and Current Window are the same");
                     return;
@@ -318,9 +334,10 @@ namespace VSSonarQubeExtension.Helpers
 
                 SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessageToLog("New Document Open: " + gotFocus.Document.FullName);
 
-                this.LastDocumentWindowWithFocus = gotFocus;
-                this.environment.SetCurrentDocumentInView(gotFocus.Document.FullName);
-                Task.Run(async () => await SonarQubeViewModelFactory.SQViewModel.RefreshDataForResource(gotFocus.Document.FullName, File.ReadAllText(gotFocus.Document.FullName), false));
+                LastDocumentWindowWithFocus = gotFocus;
+                environment.SetCurrentDocumentInView(gotFocus.Document.FullName);
+                string fullName = gotFocus.Document.FullName;
+                await SonarQubeViewModelFactory.SQViewModel.RefreshDataForResource(fullName, File.ReadAllText(fullName), false);
             }
             catch (Exception ex)
             {

@@ -15,8 +15,6 @@ namespace VSSonarPlugins
 {
     public interface IVSSStatusBar
     {
-        void ShowIcons();
-
         void DisplayMessage(string message);
 
         void DisplayAndShowProgress(string message);

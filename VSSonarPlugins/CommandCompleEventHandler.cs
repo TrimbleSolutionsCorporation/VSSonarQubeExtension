@@ -2,7 +2,6 @@
 using SonarRestService.Types;
 using System;
 using System.Collections.Generic;
-using VSSonarPlugins.Types;
 
 namespace VSSonarPlugins
 {

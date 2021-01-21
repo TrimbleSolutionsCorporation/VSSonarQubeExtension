@@ -13,22 +13,16 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarQubeExtension.Squiggle
 {
+    using Microsoft.VisualStudio.Shell;
+    using Microsoft.VisualStudio.Text;
+    using Microsoft.VisualStudio.Text.Tagging;
+    using SonarRestService.Types;
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Diagnostics;
     using System.Linq;
     using System.Threading;
     using System.Windows.Threading;
-
-    
-
-    using Microsoft.VisualStudio.Text;
-    using Microsoft.VisualStudio.Text.Tagging;
-
-    using VSSonarQubeExtension.Helpers;
-    using VSSonarPlugins.Types;
-    using SonarRestService.Types;
 
     /// <summary>
     ///     The sonar tagger.
@@ -50,7 +44,7 @@ namespace VSSonarQubeExtension.Squiggle
         /// <summary>
         ///     The sonar tags.
         /// </summary>
-        private volatile List<SonarTag> sonarTags = new List<SonarTag>();
+        private readonly List<SonarTag> sonarTags = new List<SonarTag>();
 
         /// <summary>
         ///     The timer.
@@ -82,12 +76,12 @@ namespace VSSonarQubeExtension.Squiggle
                 throw new ArgumentNullException("sourceBuffer");
             }
 
-            this.SourceBuffer = sourceBuffer;
-            this.dispatcher = Dispatcher.CurrentDispatcher;
+            SourceBuffer = sourceBuffer;
+            dispatcher = Dispatcher.CurrentDispatcher;
 
             try
             {
-                this.ScheduleUpdate();
+                ScheduleUpdate();
             }
             catch (Exception ex)
             {
@@ -96,17 +90,17 @@ namespace VSSonarQubeExtension.Squiggle
 
 			if (SonarQubeViewModelFactory.SQViewModel.ServerViewModel != null)
 			{
-				SonarQubeViewModelFactory.SQViewModel.ServerViewModel.IssuesReadyForCollecting += this.IssuesListChanged;
+				SonarQubeViewModelFactory.SQViewModel.ServerViewModel.IssuesReadyForCollecting += IssuesListChanged;
 			}
 
 			if (SonarQubeViewModelFactory.SQViewModel.LocalViewModel != null)
 			{
-				SonarQubeViewModelFactory.SQViewModel.LocalViewModel.IssuesReadyForCollecting += this.IssuesListChanged;
+				SonarQubeViewModelFactory.SQViewModel.LocalViewModel.IssuesReadyForCollecting += IssuesListChanged;
 			}
 
 			if (SonarQubeViewModelFactory.SQViewModel.IssuesSearchModel != null)
 			{
-				SonarQubeViewModelFactory.SQViewModel.IssuesSearchModel.IssuesReadyForCollecting += this.IssuesListChanged;
+				SonarQubeViewModelFactory.SQViewModel.IssuesSearchModel.IssuesReadyForCollecting += IssuesListChanged;
 			}
         }
 
@@ -179,7 +173,7 @@ namespace VSSonarQubeExtension.Squiggle
         /// </summary>
         public void Dispose()
         {
-            this.Dispose(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
@@ -208,14 +202,14 @@ namespace VSSonarQubeExtension.Squiggle
                 yield break;
             }
 
-            if (this.sonarTags.Count == 0)
+            if (sonarTags.Count == 0)
             {
                 yield break;
             }
 
             ITextSnapshot snapshot = spans[0].Snapshot;
 
-            foreach (SonarTag tag in this.sonarTags)
+            foreach (SonarTag tag in sonarTags)
             {
                 ITagSpan<SonarTag> tagSpan = tag.ToTagSpan(snapshot);
                 if (tagSpan.Span.Length == 0)
@@ -239,18 +233,18 @@ namespace VSSonarQubeExtension.Squiggle
         /// </param>
         private void Dispose(bool disposing)
         {
-            if (!this.isDisposed)
+            if (!isDisposed)
             {
                 if (disposing)
                 {
-                    SonarQubeViewModelFactory.SQViewModel.ServerViewModel.IssuesReadyForCollecting -= this.IssuesListChanged;
-                    SonarQubeViewModelFactory.SQViewModel.LocalViewModel.IssuesReadyForCollecting -= this.IssuesListChanged;
-                    SonarQubeViewModelFactory.SQViewModel.IssuesSearchModel.IssuesReadyForCollecting -= this.IssuesListChanged;
+                    SonarQubeViewModelFactory.SQViewModel.ServerViewModel.IssuesReadyForCollecting -= IssuesListChanged;
+                    SonarQubeViewModelFactory.SQViewModel.LocalViewModel.IssuesReadyForCollecting -= IssuesListChanged;
+                    SonarQubeViewModelFactory.SQViewModel.IssuesSearchModel.IssuesReadyForCollecting -= IssuesListChanged;
 
-                    this.SourceBuffer = null;
+                    SourceBuffer = null;
                 }
 
-                this.isDisposed = true;
+                isDisposed = true;
             }
         }
 
@@ -289,7 +283,7 @@ namespace VSSonarQubeExtension.Squiggle
 
             try
             {
-                textsnapshot = this.SourceBuffer.CurrentSnapshot.GetLineFromLineNumber(lineToUseinVs);
+                textsnapshot = SourceBuffer.CurrentSnapshot.GetLineFromLineNumber(lineToUseinVs);
             }
             catch (Exception)
             {
@@ -298,7 +292,7 @@ namespace VSSonarQubeExtension.Squiggle
 
             int lineStart = GetLeadingWhitespaceLength(textsnapshot.GetText());
 
-            var mappedSpan = new SnapshotSpan(this.SourceBuffer.CurrentSnapshot, textsnapshot.Start + lineStart, textsnapshot.Length - lineStart);
+            SnapshotSpan mappedSpan = new SnapshotSpan(SourceBuffer.CurrentSnapshot, textsnapshot.Start + lineStart, textsnapshot.Length - lineStart);
             yield return new SonarTag(currentIssuesPerLine, mappedSpan);
         }
 
@@ -307,7 +301,9 @@ namespace VSSonarQubeExtension.Squiggle
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The e.</param>
+#pragma warning disable VSTHRD100 // Avoid async void methods
         private async void IssuesListChanged(object sender, EventArgs e)
+#pragma warning restore VSTHRD100 // Avoid async void methods
         {
             try
             {                
@@ -335,20 +331,20 @@ namespace VSSonarQubeExtension.Squiggle
                     return;
                 }
 
-                this.sonarTags.Clear();                
-                var data = await SonarQubeViewModelFactory.SQViewModel.GetIssuesInEditor(
+                sonarTags.Clear();
+                Tuple<List<Issue>, bool> data = await SonarQubeViewModelFactory.SQViewModel.GetIssuesInEditor(
                     resource, 
-                    this.SourceBuffer.CurrentSnapshot.GetText());
+                    SourceBuffer.CurrentSnapshot.GetText());
 
 				List<Issue> issuesInEditor = data.Item1;
 				bool showFalseAndResolved = data.Item2;
 				if (issuesInEditor == null || issuesInEditor.Count == 0)
                 {
-                    this.RefreshTags();
+                    await RefreshTagsAsync();
                     return;
                 }
 
-                var alreadyAddLine = new Dictionary<int, string>();
+                Dictionary<int, string> alreadyAddLine = new Dictionary<int, string>();
                 foreach (Issue issue in issuesInEditor)
                 {
                     if (!showFalseAndResolved)
@@ -365,10 +361,10 @@ namespace VSSonarQubeExtension.Squiggle
                     }
 
                     alreadyAddLine.Add(issue.Line, string.Empty);
-                    this.sonarTags.AddRange(this.GetSonarTagsInSpanForLine(issuesInEditor, issue.Line));
+                    sonarTags.AddRange(GetSonarTagsInSpanForLine(issuesInEditor, issue.Line));
                 }
 
-                this.RefreshTags();
+                await RefreshTagsAsync();
             }
             catch (Exception ex)
             {
@@ -379,20 +375,20 @@ namespace VSSonarQubeExtension.Squiggle
         /// <summary>
         ///     The refresh tags.
         /// </summary>
-        private void RefreshTags()
+        private async System.Threading.Tasks.Task RefreshTagsAsync()
         {
-            this.dispatcher.Invoke(
-                () =>
-                    {
-                        EventHandler<SnapshotSpanEventArgs> tempEvent = this.TagsChanged;
-                        if (tempEvent != null)
-                        {
-                            tempEvent(
-                                this, 
-                                new SnapshotSpanEventArgs(
-                                    new SnapshotSpan(this.SourceBuffer.CurrentSnapshot, 0, this.SourceBuffer.CurrentSnapshot.Length)));
-                        }
-                    });
+            // At this point, we’re on whatever thread the caller was on (UI thread or background).
+            // The first thing we do is call a VS service, so ensure we’re on the UI thread.
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+            EventHandler<SnapshotSpanEventArgs> tempEvent = TagsChanged;
+            if (tempEvent != null)
+            {
+                tempEvent(
+                    this, 
+                    new SnapshotSpanEventArgs(
+                        new SnapshotSpan(SourceBuffer.CurrentSnapshot, 0, SourceBuffer.CurrentSnapshot.Length)));
+            }
         }
 
         /// <summary>
@@ -400,32 +396,32 @@ namespace VSSonarQubeExtension.Squiggle
         /// </summary>
         private void ScheduleUpdate()
         {
-            if (this.timer == null)
+            if (timer == null)
             {
-                this.timer = new DispatcherTimer(DispatcherPriority.ApplicationIdle, this.dispatcher) { Interval = TimeSpan.FromMilliseconds(500) };
+                timer = new DispatcherTimer(DispatcherPriority.ApplicationIdle, dispatcher) { Interval = TimeSpan.FromMilliseconds(500) };
 
-                this.timer.Tick += (sender, args) =>
+                timer.Tick += (sender, args) =>
                     {
-                        if (this.updateThread != null && this.updateThread.IsAlive)
+                        if (updateThread != null && updateThread.IsAlive)
                         {
                             return;
                         }
 
-                        this.timer.Stop();
+                        timer.Stop();
 
-                        this.updateThread = new Thread(this.UpdateDataAfterConstructor) { Name = "Spell Check", Priority = ThreadPriority.Normal };
+                        updateThread = new Thread(UpdateDataAfterConstructor) { Name = "Spell Check", Priority = ThreadPriority.Normal };
 
-                        if (!this.updateThread.TrySetApartmentState(ApartmentState.STA))
+                        if (!updateThread.TrySetApartmentState(ApartmentState.STA))
                         {
                             Debug.Fail("Unable to set thread apartment state to STA, things *will* break.");
                         }
 
-                        this.updateThread.Start();
+                        updateThread.Start();
                     };
             }
 
-            this.timer.Stop();
-            this.timer.Start();
+            timer.Stop();
+            timer.Start();
         }
 
         /// <summary>
@@ -436,7 +432,7 @@ namespace VSSonarQubeExtension.Squiggle
         /// </param>
         private void UpdateDataAfterConstructor(object obj)
         {
-            this.IssuesListChanged(obj, EventArgs.Empty);
+            IssuesListChanged(obj, EventArgs.Empty);
         }
 
         #endregion

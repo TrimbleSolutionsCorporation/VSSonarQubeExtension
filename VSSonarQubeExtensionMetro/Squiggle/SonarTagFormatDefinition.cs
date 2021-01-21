@@ -13,12 +13,11 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarQubeExtension.Squiggle
 {
-    using System.ComponentModel.Composition;
-    using System.Windows.Media;
-
     using Microsoft.VisualStudio.Text.Adornments;
     using Microsoft.VisualStudio.Text.Classification;
     using Microsoft.VisualStudio.Utilities;
+    using System.ComponentModel.Composition;
+    using System.Windows.Media;
 
     /// <summary>
     /// The sonar tag.
@@ -30,15 +29,9 @@ namespace VSSonarQubeExtension.Squiggle
         /// </summary>
         [Order(Before = "End")]
         [Name(Identifier)]
-        [DisplayName(Identifier)]
+        [LocalizedName(typeof(ErrorTypeDefinition), Identifier)]
         [Export(typeof(ErrorTypeDefinition))]
-        public static ErrorTypeDefinition ErrorTypeDefinition
-        {
-            get
-            {
-                return null;
-            }
-        }
+        public static ErrorTypeDefinition ErrorTypeDefinition => null;
 
         /// <summary>
         /// The format definition.
@@ -53,8 +46,8 @@ namespace VSSonarQubeExtension.Squiggle
             /// </summary>
             public SonarTagFormatDefinition()
             {
-                this.ForegroundColor = Colors.Blue;
-                this.BackgroundCustomizable = false;
+                ForegroundColor = Colors.Blue;
+                BackgroundCustomizable = false;
             }
         }
     }

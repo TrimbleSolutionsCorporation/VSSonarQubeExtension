@@ -6,7 +6,6 @@ open System.Threading
 open System.Diagnostics
 open System.Management
 open Microsoft.FSharp.Collections
-open Microsoft.Build.Utilities
 open System.Runtime.InteropServices
 open VSSonarPlugins
 
