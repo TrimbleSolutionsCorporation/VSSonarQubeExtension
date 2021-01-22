@@ -7,11 +7,17 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\Newtonsoft.Json.dll" />
+	  <None Remove="Resources\StyleCop.Analyzers.CodeFixes.dll" />
+	  <None Remove="Resources\StyleCop.Analyzers.dll" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
 		<PackageReference Include="MahApps.Metro" Version="1.5.0" />
 		<PackageReference Include="MvvmLightLibs" Version="5.3.0" />
 		<PackageReference Include="SonarRestApi" Version="1.2.1" />
-		<PackageReference Include="SonarRestApiImpl" Version="1.2.1" />
+		<PackageReference Include="SonarRestApiImpl" Version="1.2.2" />
 		<PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="2.9.0" />		
 		<PackageReference Include="CredentialManagement" Version="1.0.2" />
 		<PackageReference Include="PropertyChanged.Fody" Version="2.6.1" />
@@ -21,6 +27,12 @@
 		<ProjectReference Include="..\SonarLocalAnalyser\SonarLocalAnalyser.fsproj" />
 		<ProjectReference Include="..\VSSonarPlugins\VSSonarPlugins.csproj" />
 		<Reference Include="PresentationFramework.Aero" />
+	</ItemGroup>
+
+	<ItemGroup>
+    <EmbeddedResource Include="Resources\Newtonsoft.Json.dll" />
+    <EmbeddedResource Include="Resources\StyleCop.Analyzers.CodeFixes.dll" />
+    <EmbeddedResource Include="Resources\StyleCop.Analyzers.dll" />
 	</ItemGroup>
 
 </Project>

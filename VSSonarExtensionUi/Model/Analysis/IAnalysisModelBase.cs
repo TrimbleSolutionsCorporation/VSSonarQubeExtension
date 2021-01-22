@@ -10,24 +10,15 @@ namespace VSSonarExtensionUi.Model.Analysis
 {
     using System;
     using System.Collections.Generic;
-
-    using ViewModel.Helpers;
-    using VSSonarPlugins;
-    using VSSonarPlugins.Types;
+    using System.Threading.Tasks;
 
     using SonarRestService.Types;
-    using SonarRestService;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// The AnalysisViewModelBase interface.
     /// </summary>
     public interface IAnalysisModelBase
     {
-        /// <summary>The trigger a project analysis.</summary>
-        /// <param name="project">The project.</param>
-        void TriggerAProjectAnalysis(VsProjectItem project);
-
         /// <summary>
         /// The get issues for resource.
         /// </summary>

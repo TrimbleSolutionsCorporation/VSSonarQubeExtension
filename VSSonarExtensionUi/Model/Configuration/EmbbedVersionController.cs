@@ -7,10 +7,12 @@
     using System.IO.Compression;
     using System.Linq;
     using System.Net;
-    using VSSonarPlugins;
+    using System.Threading.Tasks;
+
     using SonarRestService;
     using SonarRestService.Types;
-    using System.Threading.Tasks;
+
+    using VSSonarPlugins;
 
     /// <summary>
     /// controls the available versions in server
@@ -102,19 +104,18 @@
         private void GenerateVersionData(ISonarConfiguration configuration)
         {
 			var installedPlugins = this.rest.GetInstalledPlugins(configuration);
-			if (!installedPlugins.ContainsKey("SonarC#"))
-			{
-				return;
-			}
+            var versionData = this.GetPluginsVersionData(installedPlugins);
+            if (string.IsNullOrEmpty(versionData))
+            {
+                return;
+            }
 
-			var versionData = installedPlugins["SonarC#"];
 			var version = new VersionData();
-
 			try
 			{
 				var zipVersion = this.GetVersionFromName(versionData);		
 				version.DownloadPath = "/static/csharp/SonarAnalyzer-" + zipVersion + ".zip";
-				version.InstallPath = Path.Combine(this.roslynHomeDiagPath, "csharp", "lint");
+				version.InstallPath = Path.Combine(this.roslynHomeDiagPath, "csharp", zipVersion);
 				this.InternalVersionsCsharp.Add(version);
 			}
 			catch (Exception)
@@ -124,12 +125,12 @@
 			version = new VersionData
 			{
 				DownloadPath = "/static/csharp/SonarLint.zip",
-				InstallPath = Path.Combine(this.roslynHomeDiagPath, "csharp", "lint")
+				InstallPath = Path.Combine(this.roslynHomeDiagPath, "csharp", "SonarLint")
 			};
 			this.InternalVersionsCsharp.Add(version);
 			version = new VersionData
 			{
-				InstallPath = Path.Combine(this.roslynHomeDiagPath, "csharp", "analyser"),
+				InstallPath = Path.Combine(this.roslynHomeDiagPath, "csharp", "SonarLint"),
 				DownloadPath = "/static/csharp/SonarAnalyzer.zip"
 			};
 			this.InternalVersionsCsharp.Add(version);
@@ -137,7 +138,7 @@
             var settings = this.rest.GetSettings(configuration);
 			version = new VersionData
 			{
-				InstallPath = Path.Combine(this.roslynHomeDiagPath, "csharp", "analyser")
+				InstallPath = Path.Combine(this.roslynHomeDiagPath, "csharp", "SonarLint")
 			};
 
 			var result = settings.FirstOrDefault(x => x.Key == "sonaranalyzer-cs.staticResourceName");
@@ -149,11 +150,36 @@
             }
         }
 
-		private object GetVersionFromName(string v)
+        private string GetPluginsVersionData(Dictionary<string, string> installedPlugins)
+        {
+            if (installedPlugins.ContainsKey("SonarC#"))
+            {
+                return installedPlugins["SonarC#"];
+            }
+
+            if (installedPlugins.ContainsKey("C# Code Quality and Security"))
+            {
+                return installedPlugins["C# Code Quality and Security"];
+            }
+
+            return string.Empty;
+        }
+
+        private string GetVersionFromName(string v)
 		{
-			// 7.7 (build 7192)
-			var elements = v.TrimEnd(')').Split(' ');
-			return elements[0] + ".0." + elements[2];
+            // 7.7 (build 7192)
+            // 8.13.1 (build 21947)
+            var countP = v.Count(f => f == '.');
+            if (countP == 2)
+            {
+                var elements = v.TrimEnd(')').Split(' ');
+                return elements[0] + "." +  elements[2];
+            }
+            else
+            {
+                var elements = v.TrimEnd(')').Split(' ');
+                return elements[0] + ".0." + elements[2];
+            }
 		}
 
 		/// <summary>
@@ -167,7 +193,7 @@
                 this.SelectCSharpZipFileToUse(configuration);
                 if (this.InUsePluginsWithDiagnostics.Count > 0)
                 {
-                    List<VersionData> elementsToRemove = new List<VersionData>();
+                    var elementsToRemove = new List<VersionData>();
                     foreach (var item in this.InUsePluginsWithDiagnostics)
                     {
                         if (!await this.SyncAnalysersFromServer(configuration, item))
@@ -205,7 +231,7 @@
 
             var tmpFile = Path.GetTempFileName();
             var tmpDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            bool isOk = false;
+            var isOk = false;
 
             if (File.Exists(tmpFile))
             {
@@ -246,23 +272,14 @@
                     ZipFile.ExtractToDirectory(tmpFile, tmpDir);
 
                     var files = Directory.GetFiles(tmpDir);
-                    var versionDir = "";
+
+                    if (!Directory.Exists(versionToUse.InstallPath))
+                    {
+                        Directory.CreateDirectory(versionToUse.InstallPath);
+                    }
 
                     foreach (var file in files)
                     {
-                        if (string.IsNullOrEmpty(versionDir))
-                        {
-                            FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(file);
-                            string ver = fvi.FileVersion;
-                            versionDir = Path.Combine(versionToUse.InstallPath, ver);
-                            versionToUse.InstallPath = Path.Combine(versionToUse.InstallPath, ver);
-
-                            if (!Directory.Exists(versionToUse.InstallPath))
-                            {
-                                Directory.CreateDirectory(versionToUse.InstallPath);
-                            }
-                        }
-
                         var endPath = Path.Combine(versionToUse.InstallPath, Path.GetFileName(file));
                         if (!File.Exists(endPath))
                         {

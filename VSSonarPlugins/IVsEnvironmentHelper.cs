@@ -8,8 +8,12 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarPlugins
 {
+    using System.Threading.Tasks;
+
     using Microsoft.CodeAnalysis;
+
     using SonarRestService.Types;
+
     using Types;
 
     /// <summary>
@@ -117,11 +121,11 @@ namespace VSSonarPlugins
 
         /// <summary>The active configuration.</summary>
         /// <returns>The <see cref="string"/>.</returns>
-        string ActiveConfiguration();
+        Task<string> ActiveConfiguration();
 
         /// <summary>The active platform.</summary>
         /// <returns>The <see cref="string"/>.</returns>
-        string ActivePlatform();
+        Task<string> ActivePlatform();
 
         /// <summary>The restart visual studio.</summary>
         void RestartVisualStudio();
@@ -135,7 +139,7 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="Types.VsProjectItem" />.
         /// </returns>
-        VsFileItem VsFileItem(string filename, Resource associatedProject, Resource fileResource);
+        Task<VsFileItem> VsFileItem(string filename, Resource associatedProject, Resource fileResource);
 
         /// <summary>
         /// Vses the file item.
@@ -147,13 +151,13 @@ namespace VSSonarPlugins
         /// <returns>
         /// The <see cref="Types.VsProjectItem" />.
         /// </returns>
-        VsFileItem VsFileItem(string fullPath, string projectFullPath, Resource associatedProject, Resource fileResource);
+        Task<VsFileItem> VsFileItem(string fullPath, string projectFullPath, Resource associatedProject, Resource fileResource);
 
         /// <summary>The vs project item.</summary>
         /// <param name="projectFileName">The project file name.</param>
         /// <param name="associatedProject">The associated project.</param>
         /// <returns>The <see cref="VsProjectItem"/>.</returns>
-        VsProjectItem VsProjectItem(string projectFileName, Resource associatedProject);
+        Task<VsProjectItem> VsProjectItem(string projectFileName, Resource associatedProject);
 
         /// <summary>
         /// Gets the project by name in solution.

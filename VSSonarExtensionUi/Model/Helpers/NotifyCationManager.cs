@@ -1,14 +1,18 @@
 ﻿namespace VSSonarExtensionUi.Model.Helpers
 {
-    using Association;
-    using SonarRestService;
-    using SonarRestService.Types;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Threading.Tasks;
+
+    using Association;
+
+    using SonarRestService;
+    using SonarRestService.Types;
+
     using ViewModel;
+
     using VSSonarPlugins;
 
 
@@ -59,13 +63,7 @@
         /// <value>
         ///   <c>true</c> if [analysis change lines]; otherwise, <c>false</c>.
         /// </value>
-        public bool AnalysisChangeLines
-        {
-            get
-            {
-                return this.model.AnalysisChangeLines;
-            }
-        }
+        public bool AnalysisChangeLines => this.model.AnalysisChangeLines;
 
         /// <summary>
         /// Gets the user defined editor. TODO to be removed from here
@@ -73,13 +71,7 @@
         /// <value>
         /// The user defined editor.
         /// </value>
-        public string UserDefinedEditor
-        {
-            get
-            {
-                return this.model.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserDefinedEditor;
-            }
-        }
+        public string UserDefinedEditor => this.model.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.UserDefinedEditor;
 
         /// <summary>
         /// Called when [issues updated].

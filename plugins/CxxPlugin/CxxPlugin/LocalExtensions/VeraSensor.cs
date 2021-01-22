@@ -17,12 +17,11 @@ namespace CxxPlugin.LocalExtensions
     using System;
     using System.Collections.Generic;
 
-    using VSSonarPlugins;
-    using VSSonarPlugins.Helpers;
-    using VSSonarPlugins.Types;
-
     using SonarRestService;
     using SonarRestService.Types;
+
+    using VSSonarPlugins;
+    using VSSonarPlugins.Helpers;
 
     /// <summary>
     /// The vera sensor.
@@ -43,9 +42,6 @@ namespace CxxPlugin.LocalExtensions
         public VeraSensor(INotificationManager notificationManager, IConfigurationHelper configurationHelper, ISonarRestService sonarRestService)
             : base(SKey, false, notificationManager, configurationHelper, sonarRestService)
         {
-            this.WriteProperty("VeraEnvironment", string.Empty, true, true);
-            this.WriteProperty("VeraExecutable", @"C:\ProgramData\MSBuidSonarQube\VERA\bin\vera++.exe", true, true);
-            this.WriteProperty("VeraArguments", "-nodup -showrules", true, true);
         }
 
         /// <summary>
@@ -102,6 +98,7 @@ namespace CxxPlugin.LocalExtensions
         /// <param name="project">The project.</param>
         /// <param name="configuration">The configuration.</param>
         /// <param name="profileIn">The profile in.</param>
+        /// <param name="vsVersion">version</param>
         public override void UpdateProfile(
             Resource project,
             ISonarConfiguration configuration,
@@ -122,7 +119,7 @@ namespace CxxPlugin.LocalExtensions
         /// </returns>
         public override Dictionary<string, string> GetEnvironment()
         {
-            return VsSonarUtils.GetEnvironmentFromString(this.ReadGetProperty("VeraEnvironment"));
+            return VsSonarUtils.GetEnvironmentFromString(CxxConfiguration.CxxSettings.VeraEnvironment);
         }
 
         /// <summary>
@@ -133,7 +130,7 @@ namespace CxxPlugin.LocalExtensions
         /// </returns>
         public override string GetCommand()
         {
-            return this.ReadGetProperty("VeraExecutable");
+            return CxxConfiguration.CxxSettings.VeraExecutable;
         }
 
         /// <summary>
@@ -145,7 +142,7 @@ namespace CxxPlugin.LocalExtensions
         /// </returns>
         public override string GetArguments(string filePath)
         {
-            return this.ReadGetProperty("VeraArguments") + " " + filePath;
+            return CxxConfiguration.CxxSettings.VeraArguments + " " + filePath;
         }
     }
 }

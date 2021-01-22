@@ -14,17 +14,20 @@
 
 namespace VSSonarQubeExtension.Helpers
 {
-    using EnvDTE;
-    using EnvDTE80;
-    using Microsoft.VisualStudio.PlatformUI;
-    using Microsoft.VisualStudio.Shell;
-    using Microsoft.VisualStudio.Text;
     using System;
     using System.Diagnostics;
-    using System.Drawing;
     using System.IO;
     using System.Linq;
     using System.Reflection;
+
+    using EnvDTE;
+
+    using EnvDTE80;
+
+    using Microsoft.VisualStudio.PlatformUI;
+    using Microsoft.VisualStudio.Shell;
+    using Microsoft.VisualStudio.Text;
+
     using VSSonarPlugins;
 
     /// <summary>
@@ -72,98 +75,39 @@ namespace VSSonarQubeExtension.Helpers
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
             this.dte2 = dte2;
-            package = vsSonarExtensionPackage;
+            this.package = vsSonarExtensionPackage;
             this.environment = environment;
-            SolutionEvents = dte2.Events; ;
-            visualStudioEvents = dte2.Events.DTEEvents;
-            buildEvents = dte2.Events.BuildEvents;
-            DocumentsEvents = SolutionEvents.DocumentEvents;
+            this.SolutionEvents = dte2.Events;
+            this.visualStudioEvents = dte2.Events.DTEEvents;
+            this.buildEvents = dte2.Events.BuildEvents;
+            this.DocumentsEvents = this.SolutionEvents.DocumentEvents;
 
-            SolutionEvents.SolutionEvents.AfterClosing += SolutionClosed;
-            SolutionEvents.WindowEvents.WindowActivated += WindowActivated;
-            SolutionEvents.WindowEvents.WindowClosing += WindowClosed;
-            DocumentsEvents.DocumentSaved += DoumentSaved;
-            visualStudioEvents.OnStartupComplete += CloseToolWindows;
-            buildEvents.OnBuildProjConfigDone += ProjectHasBuild;
+            this.SolutionEvents.SolutionEvents.AfterClosing += this.SolutionClosed;
+            this.SolutionEvents.WindowEvents.WindowActivated += this.WindowActivated;
+            this.SolutionEvents.WindowEvents.WindowClosing += this.WindowClosed;
+            this.DocumentsEvents.DocumentSaved += this.DoumentSaved;
+            this.visualStudioEvents.OnStartupComplete += this.CloseToolWindows;
 
-            VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
+            VSColorTheme.ThemeChanged += this.VSColorTheme_ThemeChanged;
 
-            string extensionRunningPath = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", "").ToString();
+            var extensionRunningPath = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", "").ToString();
 
-            string uniqueId = this.dte2.Version;
+            var uniqueId = this.dte2.Version;
 
             if (extensionRunningPath.ToLower().Contains(this.dte2.Version + "exp"))
             {
                 uniqueId += "Exp";
             }
 
-            SonarQubeViewModelFactory.StartupModelWithVsVersion(uniqueId, package).AnalysisModeHasChange += AnalysisModeHasChange;
+            SonarQubeViewModelFactory.StartupModelWithVsVersion(uniqueId, this.package).AnalysisModeHasChange += this.AnalysisModeHasChange;
             SonarQubeViewModelFactory.SQViewModel.VSonarQubeOptionsViewData.GeneralConfigurationViewModel.ConfigurationHasChanged +=
-                        AnalysisModeHasChange;
-        }
-
-        private void ProjectHasBuild(string project, string projectconfig, string platform, string solutionconfig, bool success)
-        {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
-            if (!success || SonarQubeViewModelFactory.SQViewModel.AssociationModule.AssociatedProject == null)
-            {
-                return;
-            }
-
-            Project projectDte = dte2.Solution.Item(project);
-
-            if (projectDte != null)
-            {
-                try
-                {
-                    string outputPath = projectDte.ConfigurationManager.ActiveConfiguration.Properties.Item("OutputPath").Value.ToString();
-                    string assemblyName = projectDte.Properties.Item("AssemblyName").Value.ToString();
-
-                    VSSonarPlugins.Types.VsProjectItem projectItem = environment.VsProjectItem(projectDte.FullName, SonarQubeViewModelFactory.SQViewModel.AssociationModule.AssociatedProject);
-
-                    if (Path.IsPathRooted(outputPath))
-                    {
-                        projectItem.OutputPath = Path.Combine(outputPath, assemblyName + ".dll");
-                        if (!File.Exists(projectItem.OutputPath))
-                        {
-                            projectItem.OutputPath = Path.Combine(outputPath, assemblyName + ".exe");
-                        }
-
-                        if (!File.Exists(projectItem.OutputPath))
-                        {
-                            return;
-                        }
-                    }
-                    else
-                    {
-                        outputPath = Path.GetFullPath(
-                            Path.Combine(Directory.GetParent(projectDte.FullName).ToString(), outputPath));
-
-                        projectItem.OutputPath = Path.Combine(outputPath, assemblyName + ".dll");
-                        if (!File.Exists(projectItem.OutputPath))
-                        {
-                            projectItem.OutputPath = Path.Combine(outputPath, assemblyName + ".exe");
-                        }
-
-                        if (!File.Exists(projectItem.OutputPath))
-                        {
-                            return;
-                        }
-                    }
-
-                    SonarQubeViewModelFactory.SQViewModel.ProjectHasBuild(projectItem);
-                }
-                catch (Exception ex)
-                {
-                    SonarQubeViewModelFactory.SQViewModel.Logger.ReportException(ex);
-                }
-            }
+                        this.AnalysisModeHasChange;
         }
 
         private void CloseToolWindows()
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
-            package.CloseToolsWindows();
+            this.package.CloseToolsWindows();
         }
 
         private DTEEvents visualStudioEvents { get; set; }
@@ -192,7 +136,7 @@ namespace VSSonarQubeExtension.Helpers
         {
             try
             {
-                foreach (System.Collections.Generic.KeyValuePair<object, object> item in buffer.Properties.PropertyList.Where(item => item.Value is T))
+                foreach (var item in buffer.Properties.PropertyList.Where(item => item.Value is T))
                 {
                     return (T)item.Value;
                 }
@@ -219,9 +163,9 @@ namespace VSSonarQubeExtension.Helpers
 #pragma warning restore VSTHRD100 // Avoid async void methods
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-            if (LastDocumentWindowWithFocus != null)
+            if (this.LastDocumentWindowWithFocus != null)
             {
-                string fullName = LastDocumentWindowWithFocus.Document.FullName;
+                var fullName = this.LastDocumentWindowWithFocus.Document.FullName;
                 await SonarQubeViewModelFactory.SQViewModel.RefreshDataForResource(fullName, File.ReadAllText(fullName), false);
             }
         }
@@ -245,7 +189,7 @@ namespace VSSonarQubeExtension.Helpers
 
             try
             {
-                string fullName = document.FullName;
+                var fullName = document.FullName;
                 await SonarQubeViewModelFactory.SQViewModel.RefreshDataForResource(fullName, File.ReadAllText(fullName), true);
             }
             catch (Exception ex)
@@ -274,8 +218,8 @@ namespace VSSonarQubeExtension.Helpers
         /// </param>
         private void VSColorTheme_ThemeChanged(ThemeChangedEventArgs e)
         {
-            Color defaultBackground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBackgroundColorKey);
-            Color defaultForeground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowTextColorKey);
+            var defaultBackground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBackgroundColorKey);
+            var defaultForeground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowTextColorKey);
 
             SonarQubeViewModelFactory.SQViewModel.UpdateTheme(
                 VsSonarExtensionPackage.ToMediaColor(defaultBackground),
@@ -326,7 +270,7 @@ namespace VSSonarQubeExtension.Helpers
 
             try
             {
-                if (LastDocumentWindowWithFocus == gotFocus)
+                if (this.LastDocumentWindowWithFocus == gotFocus)
                 {
                     SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessageToLog("Last and Current Window are the same");
                     return;
@@ -334,9 +278,9 @@ namespace VSSonarQubeExtension.Helpers
 
                 SonarQubeViewModelFactory.SQViewModel.Logger.WriteMessageToLog("New Document Open: " + gotFocus.Document.FullName);
 
-                LastDocumentWindowWithFocus = gotFocus;
-                environment.SetCurrentDocumentInView(gotFocus.Document.FullName);
-                string fullName = gotFocus.Document.FullName;
+                this.LastDocumentWindowWithFocus = gotFocus;
+                this.environment.SetCurrentDocumentInView(gotFocus.Document.FullName);
+                var fullName = gotFocus.Document.FullName;
                 await SonarQubeViewModelFactory.SQViewModel.RefreshDataForResource(fullName, File.ReadAllText(fullName), false);
             }
             catch (Exception ex)

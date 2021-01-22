@@ -16,15 +16,15 @@ namespace CxxPlugin.LocalExtensions
 {
     using System;
     using System.Collections.Generic;
+
     using RestSharp;
     using RestSharp.Deserializers;
 
-    using VSSonarPlugins;
-    using VSSonarPlugins.Helpers;
-    using VSSonarPlugins.Types;
-
     using SonarRestService;
     using SonarRestService.Types;
+
+    using VSSonarPlugins;
+    using VSSonarPlugins.Helpers;
 
     /// <summary>
     /// The rats sensor.
@@ -45,9 +45,6 @@ namespace CxxPlugin.LocalExtensions
         public RatsSensor(INotificationManager notificationManager, IConfigurationHelper configurationHelper, ISonarRestService sonarRestService)
             : base(SKey, true, notificationManager, configurationHelper, sonarRestService)
         {
-            this.WriteProperty("RatsEnvironment", string.Empty, true, true);
-            this.WriteProperty("RatsExecutable", @"C:\ProgramData\MSBuidSonarQube\RATS\rats.exe", true, true);
-            this.WriteProperty("RatsArguments", "--xml", true, true);
         }
 
         /// <summary>
@@ -56,6 +53,7 @@ namespace CxxPlugin.LocalExtensions
         /// <param name="project">The project.</param>
         /// <param name="configuration">The configuration.</param>
         /// <param name="profileIn">The profile in.</param>
+        /// <param name="vsVersion">version</param>
         public override void UpdateProfile(
             Resource project,
             ISonarConfiguration configuration,
@@ -108,7 +106,7 @@ namespace CxxPlugin.LocalExtensions
                             }
                             catch (Exception)
                             {
-                                entry.Severity  = Severity.UNDEFINED;
+                                entry.Severity = Severity.UNDEFINED;
                             }
 
                             violations.Add(entry);
@@ -131,7 +129,7 @@ namespace CxxPlugin.LocalExtensions
         /// </returns>
         public override Dictionary<string, string> GetEnvironment()
         {
-            return VsSonarUtils.GetEnvironmentFromString(this.ReadGetProperty("RatsEnvironment"));
+            return VsSonarUtils.GetEnvironmentFromString(CxxConfiguration.CxxSettings.RatsEnvironment);
         }
 
         /// <summary>
@@ -142,7 +140,7 @@ namespace CxxPlugin.LocalExtensions
         /// </returns>
         public override string GetCommand()
         {
-            return this.ReadGetProperty("RatsExecutable");
+            return CxxConfiguration.CxxSettings.RatsExecutable;
         }
 
         /// <summary>
@@ -154,7 +152,7 @@ namespace CxxPlugin.LocalExtensions
         /// </returns>
         public override string GetArguments(string filePath)
         {
-            return this.ReadGetProperty("RatsArguments") + " " + filePath;
+            return CxxConfiguration.CxxSettings.RatsArguments + " " + filePath;
         }
 
         /// <summary>

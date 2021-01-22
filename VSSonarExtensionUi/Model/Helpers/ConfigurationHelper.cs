@@ -15,11 +15,10 @@ namespace VSSonarExtensionUi.Model.Helpers
     using System.Linq;
     using System.Runtime.Serialization.Formatters.Binary;
 
+    using SonarRestService.Types;
+
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
-
-    using SonarRestService;
-    using SonarRestService.Types;
 
     /// <summary>
     /// The configuration helper.
@@ -55,7 +54,7 @@ namespace VSSonarExtensionUi.Model.Helpers
             this.LogForAnalysis = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
                                   + "\\VSSonarExtension\\temp\\analysisLog.txt." + vsversion;
 
-            this.ApplicationPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "VSSonarExtension");
+            this.ApplicationPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".vssonarextension");
 
             if (!Directory.Exists(this.ApplicationPath))
             {

@@ -1,6 +1,5 @@
 ﻿namespace CxxPlugin.LocalExtensions
 {
-    using SonarRestService.Types;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -8,6 +7,9 @@
     using System.Reflection;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
+
+    using SonarRestService.Types;
+
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
 
@@ -39,13 +41,14 @@
         /// <summary>
         /// The logger
         /// </summary>
-        private INotificationManager logger;
+        private readonly INotificationManager logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ClangTidySensor"/> class.
         /// </summary>
         /// <param name="helper">The helper.</param>
         /// <param name="configHelper">The configuration helper.</param>
+        /// <param name="notificationManager">notification manager</param>
         public ClangTidySensor(IVsEnvironmentHelper helper, IConfigurationHelper configHelper, INotificationManager notificationManager)
         {
             this.logger = notificationManager;
@@ -167,17 +170,17 @@
 
             var rules = profile.GetAllRules();
 
-            string baseString = "";
+            var baseString = "";
             using (var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("CxxPlugin.Resources.clang-tidy"))
             {
-                using (StreamReader reader = new StreamReader(resource))
+                using (var reader = new StreamReader(resource))
                 {
                     baseString = reader.ReadToEnd();
                 }
             }
 
             var clangTidyFile = Path.Combine(project.SolutionRoot, ".clang-tidy");
-            var lineEnding = new String[] { "\n" };
+            var lineEnding = new string[] { "\n" };
             if (string.IsNullOrEmpty(baseString))
             {
                 return;
@@ -190,7 +193,7 @@
                 return;
             }
 
-            using (StreamWriter outputFile = new StreamWriter(clangTidyFile))
+            using (var outputFile = new StreamWriter(clangTidyFile))
             {
                 foreach (var line in baseConfig)
                 {
@@ -219,6 +222,7 @@
         /// </summary>
         /// <param name="resource">The resource.</param>
         /// <param name="executor">The executor.</param>
+        /// <param name="additionalArgs">additional args</param>
         /// <returns>issues</returns>
         public List<Issue> ExecuteClangTidy(
             VsFileItem resource,
@@ -254,14 +258,14 @@
             {
                 this.logger.ReportMessage(new Message() { Id = "ClangTidy", Data = errorData });
             }
-            return ParseClangLog(output, resource);
+            return this.ParseClangLog(output, resource);
         }
 
         /// <summary>
         /// Parses the clang log.
         /// </summary>
         /// <param name="output">The output.</param>
-        /// <returns></returns>
+        /// <returns>list of issues</returns>
         private List<Issue> ParseClangLog(string[] output, VsFileItem resource)
         {
             var fileName = Path.GetFileName(resource.FilePath);
@@ -270,11 +274,11 @@
             var issues = new List<Issue>();
 
             Issue issue = null;
-            int finalLine = -1;
-            for (int i = 0; i < output.Length; i++)
+            var finalLine = -1;
+            for (var i = 0; i < output.Length; i++)
             {
                 var line = output[i];
-                Match m = Regex.Match(line, this.regx);
+                var m = Regex.Match(line, this.regx);
                 if (m.Success)
                 {
                     if (issue != null)

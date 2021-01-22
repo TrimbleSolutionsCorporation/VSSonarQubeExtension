@@ -8,15 +8,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarQubeExtension.Helpers
 {
-    using EnvDTE;
-    using EnvDTE80;
-    using Microsoft.VisualStudio;
-    using Microsoft.VisualStudio.Editor;
-    using Microsoft.VisualStudio.Shell;
-    using Microsoft.VisualStudio.Shell.Interop;
-    using Microsoft.VisualStudio.Text.Editor;
-    using Microsoft.VisualStudio.TextManager.Interop;
-    using SonarRestService.Types;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -26,9 +17,25 @@ namespace VSSonarQubeExtension.Helpers
     using System.Runtime.InteropServices;
     using System.Security.Principal;
     using System.Text;
+    using System.Threading.Tasks;
     using System.Windows;
+
+    using EnvDTE;
+
+    using EnvDTE80;
+
+    using Microsoft.VisualStudio;
+    using Microsoft.VisualStudio.Editor;
+    using Microsoft.VisualStudio.Shell;
+    using Microsoft.VisualStudio.Shell.Interop;
+    using Microsoft.VisualStudio.Text.Editor;
+    using Microsoft.VisualStudio.TextManager.Interop;
+
+    using SonarRestService.Types;
+
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
+
     using Process = System.Diagnostics.Process;
     using Thread = System.Threading.Thread;
 
@@ -68,8 +75,8 @@ namespace VSSonarQubeExtension.Helpers
         /// </param>
         public VsPropertiesHelper(DTE2 environment, IServiceProvider service)
         {
-            TempDataFolder = Path.GetTempPath();
-            provider = service;
+            this.TempDataFolder = Path.GetTempPath();
+            this.provider = service;
             this.environment = environment;
         }
 
@@ -95,24 +102,24 @@ namespace VSSonarQubeExtension.Helpers
         {
             get
             {
-                if (textViewHost == null)
+                if (this.textViewHost == null)
                 {
-                    IVsTextManager textManager = (IVsTextManager)Package.GetGlobalService(typeof(SVsTextManager));
-                    textManager.GetActiveView(1, null, out IVsTextView textView);
+                    var textManager = (IVsTextManager)Package.GetGlobalService(typeof(SVsTextManager));
+                    textManager.GetActiveView(1, null, out var textView);
 
-                    IVsUserData data = textView as IVsUserData;
+                    var data = textView as IVsUserData;
                     if (data != null)
                     {
-                        Guid guid = DefGuidList.guidIWpfTextViewHost;
-                        int hr = data.GetData(ref guid, out object obj);
+                        var guid = DefGuidList.guidIWpfTextViewHost;
+                        var hr = data.GetData(ref guid, out var obj);
                         if ((hr == VSConstants.S_OK) && obj != null && obj is IWpfTextViewHost)
                         {
-                            textViewHost = obj as IWpfTextViewHost;
+                            this.textViewHost = obj as IWpfTextViewHost;
                         }
                     }
                 }
 
-                return textViewHost;
+                return this.textViewHost;
             }
         }
 
@@ -128,7 +135,7 @@ namespace VSSonarQubeExtension.Helpers
         public static string GetDocumentLanguage(Document doc)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
-            TextDocument textDoc = doc.Object("TextDocument") as TextDocument;
+            var textDoc = doc.Object("TextDocument") as TextDocument;
 
             if (textDoc == null)
             {
@@ -164,8 +171,8 @@ namespace VSSonarQubeExtension.Helpers
             ThreadHelper.ThrowIfNotOnUIThread();
             try
             {
-                Document doc = environment.ActiveDocument;
-                return doc != null ? GetProperFilePathCapitalization(doc.FullName) : string.Empty;
+                var doc = this.environment.ActiveDocument;
+                return doc != null ? this.GetProperFilePathCapitalization(doc.FullName) : string.Empty;
             }
             catch (Exception)
             {
@@ -182,13 +189,13 @@ namespace VSSonarQubeExtension.Helpers
         public string ActiveProjectFileFullPath()
         {
             ThreadHelper.ThrowIfNotOnUIThread();
-            if (environment == null)
+            if (this.environment == null)
             {
                 return string.Empty;
             }
 
-            Array projects = (Array)environment.ActiveSolutionProjects;
-            return GetProperFilePathCapitalization(((Project)projects.GetValue(0)).FullName);
+            var projects = (Array)this.environment.ActiveSolutionProjects;
+            return this.GetProperFilePathCapitalization(((Project)projects.GetValue(0)).FullName);
         }
 
         /// <summary>
@@ -200,12 +207,12 @@ namespace VSSonarQubeExtension.Helpers
         public string ActiveProjectName()
         {
             ThreadHelper.ThrowIfNotOnUIThread();
-            if (environment == null)
+            if (this.environment == null)
             {
                 return string.Empty;
             }
 
-            Array projects = (Array)environment.ActiveSolutionProjects;
+            var projects = (Array)this.environment.ActiveSolutionProjects;
             return ((Project)projects.GetValue(0)).Name;
         }
 
@@ -218,23 +225,23 @@ namespace VSSonarQubeExtension.Helpers
         public string ActiveSolutionFullName()
         {
             ThreadHelper.ThrowIfNotOnUIThread();
-            if (environment == null)
+            if (this.environment == null)
             {
                 return string.Empty;
             }
 
-            return environment.Solution.FullName;
+            return this.environment.Solution.FullName;
         }
 
         public string ActiveSolutionFileNameWithExtension()
         {
             ThreadHelper.ThrowIfNotOnUIThread();
-            if (environment == null)
+            if (this.environment == null)
             {
                 return string.Empty;
             }
 
-            return Path.GetFileName(environment.Solution.FullName);
+            return Path.GetFileName(this.environment.Solution.FullName);
         }
 
         /// <summary>
@@ -246,17 +253,17 @@ namespace VSSonarQubeExtension.Helpers
         public string ActiveSolutioRootPath()
         {
             ThreadHelper.ThrowIfNotOnUIThread();
-            if (environment == null)
+            if (this.environment == null)
             {
                 return string.Empty;
             }
 
-            if (string.IsNullOrEmpty(environment.Solution.FullName))
+            if (string.IsNullOrEmpty(this.environment.Solution.FullName))
             {
                 return string.Empty;
             }
 
-            return Path.GetDirectoryName(GetProperFilePathCapitalization(environment.Solution.FullName));
+            return Path.GetDirectoryName(this.GetProperFilePathCapitalization(this.environment.Solution.FullName));
         }
 
         /// <summary>
@@ -267,7 +274,7 @@ namespace VSSonarQubeExtension.Helpers
         /// </returns>
         public bool AreWeRunningInVisualStudio()
         {
-            return environment != null;
+            return this.environment != null;
         }
 
         /// <summary>
@@ -279,19 +286,19 @@ namespace VSSonarQubeExtension.Helpers
         public string CurrentSelectedDocumentLanguage()
         {
             ThreadHelper.ThrowIfNotOnUIThread();
-            if (environment == null)
+            if (this.environment == null)
             {
                 return string.Empty;
             }
 
-            Document doc = environment.ActiveDocument;
+            var doc = this.environment.ActiveDocument;
 
             if (doc == null)
             {
                 return string.Empty;
             }
 
-            TextDocument textDoc = doc.Object("TextDocument") as TextDocument;
+            var textDoc = doc.Object("TextDocument") as TextDocument;
             return textDoc == null ? string.Empty : textDoc.Language.ToLower();
         }
 
@@ -303,7 +310,7 @@ namespace VSSonarQubeExtension.Helpers
         /// </returns>
         public DTE2 Environment()
         {
-            return environment;
+            return this.environment;
         }
 
         /// <summary>
@@ -314,7 +321,7 @@ namespace VSSonarQubeExtension.Helpers
         /// </returns>
         public string GetCurrentTextInView()
         {
-            IWpfTextView view = GetCurrentView();
+            var view = this.GetCurrentView();
             return view == null ? string.Empty : view.TextBuffer.CurrentSnapshot.GetText();
         }
 
@@ -326,10 +333,10 @@ namespace VSSonarQubeExtension.Helpers
         /// </returns>
         public IWpfTextView GetCurrentView()
         {
-            IWpfTextViewHost viewHost = TextViewHost;
+            var viewHost = this.TextViewHost;
             if (viewHost != null)
             {
-                return TextViewHost.TextView;
+                return this.TextViewHost.TextView;
             }
 
             return null;
@@ -347,8 +354,8 @@ namespace VSSonarQubeExtension.Helpers
         public string GetFileRealPathForSolution(string fileInView)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
-            string solutionPath = ActiveSolutioRootPath();
-            string driveLetter = solutionPath.Substring(0, 1);
+            var solutionPath = this.ActiveSolutioRootPath();
+            var driveLetter = solutionPath.Substring(0, 1);
             return driveLetter + fileInView.Substring(1);
         }
 
@@ -363,8 +370,8 @@ namespace VSSonarQubeExtension.Helpers
         /// </returns>
         public string GetProperFilePathCapitalization(string filename)
         {
-            FileInfo fileInfo = new FileInfo(filename);
-            DirectoryInfo dirInfo = fileInfo.Directory;
+            var fileInfo = new FileInfo(filename);
+            var dirInfo = fileInfo.Directory;
             return dirInfo != null ? Path.Combine(GetProperDirectoryCapitalization(dirInfo), dirInfo.GetFiles(fileInfo.Name)[0].Name) : string.Empty;
         }
 
@@ -404,18 +411,18 @@ namespace VSSonarQubeExtension.Helpers
         public void OpenResourceInVisualStudio(string workfolder, string filename, int line, string editorCommandExec = "notepad")
         {
             ThreadHelper.ThrowIfNotOnUIThread();
-            if (environment == null)
+            if (this.environment == null)
             {
                 if (!string.IsNullOrEmpty(workfolder) && !Path.IsPathRooted(filename))
                 {
                     if (!File.Exists(Path.Combine(workfolder, filename)))
                     {
-                        List<string> filesData = new List<string>();
-                        RecursePath(filename, workfolder, filesData);
+                        var filesData = new List<string>();
+                        this.RecursePath(filename, workfolder, filesData);
 
-                        foreach (string file in filesData)
+                        foreach (var file in filesData)
                         {
-                            string file1 = file;
+                            var file1 = file;
                             (new Thread(() => Process.Start(editorCommandExec, file1))).Start();
                         }
                     }
@@ -432,20 +439,20 @@ namespace VSSonarQubeExtension.Helpers
             {
                 try
                 {
-                    environment.ItemOperations.OpenFile(filename);
-                    TextSelection textSelection = (TextSelection)environment.ActiveDocument.Selection;
+                    this.environment.ItemOperations.OpenFile(filename);
+                    var textSelection = (TextSelection)this.environment.ActiveDocument.Selection;
                     textSelection.GotoLine(line < 1 ? 1 : line);
                     textSelection.SelectLine();
                 }
                 catch (Exception ex)
                 {
-                    ErroMessage = "Exception Occured: " + filename + " : " + Convert.ToString(line) + " ex: " + ex.Message;
+                    this.ErroMessage = "Exception Occured: " + filename + " : " + Convert.ToString(line) + " ex: " + ex.Message;
                 }
 
                 return;
             }
 
-            ProjectItem files = environment.Solution.FindProjectItem(filename);
+            var files = this.environment.Solution.FindProjectItem(filename);
             if (files != null)
             {
                 (new Thread(
@@ -454,9 +461,9 @@ namespace VSSonarQubeExtension.Helpers
                             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
                             try
                             {
-                                object masterPath = files.Properties.Item("FullPath").Value;
-                                environment.ItemOperations.OpenFile(masterPath.ToString());
-                                TextSelection textSelection = (TextSelection)environment.ActiveDocument.Selection;
+                                var masterPath = files.Properties.Item("FullPath").Value;
+                                this.environment.ItemOperations.OpenFile(masterPath.ToString());
+                                var textSelection = (TextSelection)this.environment.ActiveDocument.Selection;
                                 textSelection.GotoLine(line < 1 ? 1 : line);
                                 textSelection.SelectLine();
                             }
@@ -466,19 +473,19 @@ namespace VSSonarQubeExtension.Helpers
                                 {
                                     if (File.Exists(filename))
                                     {
-                                        environment.ItemOperations.OpenFile(filename);
-                                        TextSelection textSelection = (TextSelection)environment.ActiveDocument.Selection;
+                                        this.environment.ItemOperations.OpenFile(filename);
+                                        var textSelection = (TextSelection)this.environment.ActiveDocument.Selection;
                                         textSelection.GotoLine(line < 1 ? 1 : line);
                                         textSelection.SelectLine();
                                     }
                                     else
                                     {
-                                        ErroMessage = "Cannot Open File: " + filename;
+                                        this.ErroMessage = "Cannot Open File: " + filename;
                                     }
                                 }
                                 catch (Exception ex1)
                                 {
-                                    ErroMessage = "Exception Occured: " + filename + " : " + Convert.ToString(line) + " ex: " + ex1.Message;
+                                    this.ErroMessage = "Exception Occured: " + filename + " : " + Convert.ToString(line) + " ex: " + ex1.Message;
                                 }
                             }
                         })).Start();
@@ -487,11 +494,11 @@ namespace VSSonarQubeExtension.Helpers
             {
                 try
                 {
-                    environment.ItemOperations.OpenFile(filename);
+                    this.environment.ItemOperations.OpenFile(filename);
                 }
                 catch (Exception ex)
                 {
-                    ErroMessage = "Exception Occured: " + filename + " : " + Convert.ToString(line) + " ex: " + ex.Message;
+                    this.ErroMessage = "Exception Occured: " + filename + " : " + Convert.ToString(line) + " ex: " + ex.Message;
                 }
             }
         }
@@ -505,13 +512,13 @@ namespace VSSonarQubeExtension.Helpers
         public void OpenResourceInVisualStudio(string filename, int line, string editorCommandExec = "notepad")
         {
             ThreadHelper.ThrowIfNotOnUIThread();
-            if (environment == null)
+            if (this.environment == null)
             {
                 (new Thread(() => Process.Start(editorCommandExec, filename))).Start();
                 return;
             }
 
-            ProjectItem files = environment.Solution.FindProjectItem(filename);
+            var files = this.environment.Solution.FindProjectItem(filename);
             if (files != null)
             {
                 (new Thread(
@@ -520,9 +527,9 @@ namespace VSSonarQubeExtension.Helpers
                         Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
                         try
                         {
-                            object masterPath = files.Properties.Item("FullPath").Value;
-                            environment.ItemOperations.OpenFile(masterPath.ToString());
-                            TextSelection textSelection = (TextSelection)environment.ActiveDocument.Selection;
+                            var masterPath = files.Properties.Item("FullPath").Value;
+                            this.environment.ItemOperations.OpenFile(masterPath.ToString());
+                            var textSelection = (TextSelection)this.environment.ActiveDocument.Selection;
                             textSelection.GotoLine(line < 1 ? 1 : line);
                             textSelection.SelectLine();
                         }
@@ -532,8 +539,8 @@ namespace VSSonarQubeExtension.Helpers
                             {
                                 if (File.Exists(filename))
                                 {
-                                    environment.ItemOperations.OpenFile(filename);
-                                    TextSelection textSelection = (TextSelection)environment.ActiveDocument.Selection;
+                                    this.environment.ItemOperations.OpenFile(filename);
+                                    var textSelection = (TextSelection)this.environment.ActiveDocument.Selection;
                                     textSelection.GotoLine(line < 1 ? 1 : line);
                                     textSelection.SelectLine();
                                 }
@@ -553,7 +560,7 @@ namespace VSSonarQubeExtension.Helpers
             {
                 try
                 {
-                    environment.ItemOperations.OpenFile(filename);
+                    this.environment.ItemOperations.OpenFile(filename);
                 }
                 catch (Exception ex)
                 {
@@ -580,15 +587,15 @@ namespace VSSonarQubeExtension.Helpers
         public string ReadSavedOption(string category, string page, string item)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
-            if (environment == null)
+            if (this.environment == null)
             {
                 return string.Empty;
             }
 
-            Properties props = environment.Properties[category, page];
+            var props = this.environment.Properties[category, page];
             try
             {
-                string data = props.Item(item).Value as string;
+                var data = props.Item(item).Value as string;
                 return data;
             }
             catch
@@ -603,7 +610,7 @@ namespace VSSonarQubeExtension.Helpers
         public void RestartVisualStudio()
         {
             ThreadHelper.ThrowIfNotOnUIThread();
-            IVsShell4 obj = (IVsShell4)provider.GetService(typeof(SVsShell));
+            var obj = (IVsShell4)this.provider.GetService(typeof(SVsShell));
             if (obj == null)
             {
                 throw new NullReferenceException($"couldnt get IVsShell4");
@@ -624,19 +631,19 @@ namespace VSSonarQubeExtension.Helpers
         public void ShowSourceDiff(string resourceInEditor, string documentInViewPath)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
-            IVsDifferenceService diff = (IVsDifferenceService)provider.GetService(typeof(SVsDifferenceService));
+            var diff = (IVsDifferenceService)this.provider.GetService(typeof(SVsDifferenceService));
             if (diff == null)
             {
                 throw new NullReferenceException($"couldnt get IVsDifferenceService");
             }
 
-            if (!Directory.Exists(TempDataFolder))
+            if (!Directory.Exists(this.TempDataFolder))
             {
-                Directory.CreateDirectory(TempDataFolder);
+                Directory.CreateDirectory(this.TempDataFolder);
             }
 
-            string tempfile = Path.Combine(TempDataFolder, "server." + Path.GetFileName(documentInViewPath));
-            string tempfile2 = Path.Combine(TempDataFolder, "local." + Path.GetFileName(documentInViewPath));
+            var tempfile = Path.Combine(this.TempDataFolder, "server." + Path.GetFileName(documentInViewPath));
+            var tempfile2 = Path.Combine(this.TempDataFolder, "local." + Path.GetFileName(documentInViewPath));
 
             File.WriteAllText(tempfile, resourceInEditor);
             File.WriteAllText(tempfile2, File.ReadAllText(documentInViewPath));
@@ -651,13 +658,13 @@ namespace VSSonarQubeExtension.Helpers
         /// <param name="serverFileName">The server file name.</param>
         public void ClearDiffFile(string localFileName, string serverFileName)
         {
-            string tempfile = Path.Combine(TempDataFolder, localFileName);
+            var tempfile = Path.Combine(this.TempDataFolder, localFileName);
             if (File.Exists(tempfile))
             {
                 File.Delete(tempfile);
             }
 
-            string tempfile2 = Path.Combine(TempDataFolder, serverFileName);
+            var tempfile2 = Path.Combine(this.TempDataFolder, serverFileName);
             if (File.Exists(tempfile2))
             {
                 File.Delete(tempfile2);
@@ -668,20 +675,20 @@ namespace VSSonarQubeExtension.Helpers
         /// <param name="filename">The filename.</param>
         /// <param name="associatedProject">The associated project.</param>
         /// <returns>The <see cref="VsProjectItem"/>.</returns>
-        public VsProjectItem VsProjectItem(string filename, Resource associatedProject)
+        public async Task<VsProjectItem> VsProjectItem(string filename, Resource associatedProject)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
             if (string.IsNullOrEmpty(filename))
             {
                 return null;
             }
 
-            string driveLetter = filename.Substring(0, 1);
-            string projectName = Path.GetFileNameWithoutExtension(filename);
-            string projectPath = driveLetter + GetProperFilePathCapitalization(filename).Substring(1);
-            string solutionName = ActiveSolutionFileNameWithExtension();
-            string solutionPath = driveLetter + ActiveSolutioRootPath().Substring(1);
-            VsProjectItem itemToReturn =
+            var driveLetter = filename.Substring(0, 1);
+            var projectName = Path.GetFileNameWithoutExtension(filename);
+            var projectPath = driveLetter + this.GetProperFilePathCapitalization(filename).Substring(1);
+            var solutionName = this.ActiveSolutionFileNameWithExtension();
+            var solutionPath = driveLetter + this.ActiveSolutioRootPath().Substring(1);
+            var itemToReturn =
                 new VsProjectItem
                 {
                     ProjectName = projectName,
@@ -703,9 +710,9 @@ namespace VSSonarQubeExtension.Helpers
         /// <param name="associatedProject">The associated project.</param>
         /// <param name="fileResource">The file resource.</param>
         /// <returns>The <see cref="VsFileItem"/>.</returns>
-        public VsFileItem VsFileItem(string filename, Resource associatedProject, Resource fileResource)
+        public async Task<VsFileItem> VsFileItem(string filename, Resource associatedProject, Resource fileResource)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
             try
             {
                 if (string.IsNullOrEmpty(filename))
@@ -713,20 +720,20 @@ namespace VSSonarQubeExtension.Helpers
                     return null;
                 }
 
-                string driveLetter = filename.Substring(0, 1);
-                ProjectItem item = environment.Solution.FindProjectItem(filename);
+                var driveLetter = filename.Substring(0, 1);
+                var item = this.environment.Solution.FindProjectItem(filename);
 
                 if (item == null)
                 {
                     return null;
                 }
 
-                string documentName = Path.GetFileName(filename);
-                string documentPath = driveLetter + GetProperFilePathCapitalization(filename).Substring(1);
-                string projectName = item.ContainingProject.Name;
-                string projectPath = driveLetter + GetProperFilePathCapitalization(item.ContainingProject.FullName).Substring(1);
-                string solutionPath = driveLetter + ActiveSolutioRootPath().Substring(1);
-                VsFileItem itemToReturn = new VsFileItem
+                var documentName = Path.GetFileName(filename);
+                var documentPath = driveLetter + this.GetProperFilePathCapitalization(filename).Substring(1);
+                var projectName = item.ContainingProject.Name;
+                var projectPath = driveLetter + this.GetProperFilePathCapitalization(item.ContainingProject.FullName).Substring(1);
+                var solutionPath = driveLetter + this.ActiveSolutioRootPath().Substring(1);
+                var itemToReturn = new VsFileItem
                 {
                     FileName = documentName,
                     FilePath = documentPath,
@@ -739,7 +746,7 @@ namespace VSSonarQubeExtension.Helpers
                             Solution =
                                 new VsSolutionItem
                                 {
-                                    SolutionFileNameWithExtension = ActiveSolutionFileNameWithExtension(),
+                                    SolutionFileNameWithExtension = this.ActiveSolutionFileNameWithExtension(),
                                     SolutionRoot = solutionPath,
                                     SonarProject = associatedProject
                                 }
@@ -761,21 +768,21 @@ namespace VSSonarQubeExtension.Helpers
         /// <param name="associatedProject">The associated project.</param>
         /// <param name="fileResource">The file resource.</param>
         /// <returns>The <see cref="VsFileItem"/>.</returns>
-        public VsFileItem VsFileItem(string fullPath, string projectFullPath, Resource associatedProject, Resource fileResource)
+        public async Task<VsFileItem> VsFileItem(string fullPath, string projectFullPath, Resource associatedProject, Resource fileResource)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
             if (string.IsNullOrEmpty(fullPath))
             {
                 return null;
             }
 
-            string driveLetter = fullPath.Substring(0, 1);
-            string documentName = Path.GetFileNameWithoutExtension(fullPath);
-            string documentPath = driveLetter + GetProperFilePathCapitalization(fullPath).Substring(1);
-            string projectName = Path.GetFileNameWithoutExtension(projectFullPath);
-            string projectPath = driveLetter + GetProperFilePathCapitalization(projectFullPath).Substring(1);
-            string solutionPath = driveLetter + ActiveSolutioRootPath().Substring(1);
-            VsFileItem itemToReturn = new VsFileItem
+            var driveLetter = fullPath.Substring(0, 1);
+            var documentName = Path.GetFileNameWithoutExtension(fullPath);
+            var documentPath = driveLetter + this.GetProperFilePathCapitalization(fullPath).Substring(1);
+            var projectName = Path.GetFileNameWithoutExtension(projectFullPath);
+            var projectPath = driveLetter + this.GetProperFilePathCapitalization(projectFullPath).Substring(1);
+            var solutionPath = driveLetter + this.ActiveSolutioRootPath().Substring(1);
+            var itemToReturn = new VsFileItem
             {
                 FileName = documentName,
                 FilePath = documentPath,
@@ -788,7 +795,7 @@ namespace VSSonarQubeExtension.Helpers
                         Solution =
                             new VsSolutionItem
                             {
-                                SolutionFileNameWithExtension = ActiveSolutionFileNameWithExtension(),
+                                SolutionFileNameWithExtension = this.ActiveSolutionFileNameWithExtension(),
                                 SolutionRoot = solutionPath,
                                 SonarProject = associatedProject
                             }
@@ -816,27 +823,27 @@ namespace VSSonarQubeExtension.Helpers
         public void WriteDefaultOption(string category, string page, string item, string value)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
-            if (environment == null)
+            if (this.environment == null)
             {
                 return;
             }
 
-            Properties props = environment.Properties[category, page];
+            var props = this.environment.Properties[category, page];
             if (props.Item(item) == null)
             {
-                WriteOption(category, page, item, value);
+                this.WriteOption(category, page, item, value);
             }
             else
             {
-                string data = ReadSavedOption(category, page, item);
+                var data = this.ReadSavedOption(category, page, item);
                 if (string.IsNullOrEmpty(data))
                 {
-                    WriteOption(category, page, item, value);
+                    this.WriteOption(category, page, item, value);
                 }
 
-                if (ReadSavedOption(category, page, item).Contains("vera++\\vera++"))
+                if (this.ReadSavedOption(category, page, item).Contains("vera++\\vera++"))
                 {
-                    WriteOption(category, page, item, value);
+                    this.WriteOption(category, page, item, value);
                 }
             }
         }
@@ -859,12 +866,12 @@ namespace VSSonarQubeExtension.Helpers
         public void WriteOption(string category, string page, string item, string value)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
-            if (environment == null)
+            if (this.environment == null)
             {
                 return;
             }
 
-            Properties props = environment.Properties[category, page];
+            var props = this.environment.Properties[category, page];
             props.Item(item).Value = value;
         }
 
@@ -874,13 +881,15 @@ namespace VSSonarQubeExtension.Helpers
         /// <param name="errorMessage">
         /// The error message.
         /// </param>
-        public void WriteToVisualStudioOutput(string errorMessage)
+#pragma warning disable VSTHRD100 // Avoid async void methods
+        public async void WriteToVisualStudioOutput(string errorMessage)
+#pragma warning restore VSTHRD100 // Avoid async void methods
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
-            if (CustomPane != null)
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+            if (this.CustomPane != null)
             {
-                CustomPane.OutputString(errorMessage + "\r\n");
-                CustomPane.FlushToTaskList();
+                this.CustomPane.OutputString(errorMessage + "\r\n");
+                this.CustomPane.FlushToTaskList();
             }
         }
 
@@ -890,17 +899,17 @@ namespace VSSonarQubeExtension.Helpers
         /// <returns>
         /// The <see cref="T:System.String" />.
         /// </returns>
-        public string ActiveConfiguration()
+        public async Task<string> ActiveConfiguration()
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
-            if (environment == null)
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+            if (this.environment == null)
             {
                 return string.Empty;
             }
 
             try
             {
-                SolutionConfiguration2 solutionConfiguration2 = (EnvDTE80.SolutionConfiguration2)environment.Solution.SolutionBuild.ActiveConfiguration;
+                var solutionConfiguration2 = (EnvDTE80.SolutionConfiguration2)this.environment.Solution.SolutionBuild.ActiveConfiguration;
                 return solutionConfiguration2.Name;
             }
             catch (Exception ex)
@@ -916,17 +925,17 @@ namespace VSSonarQubeExtension.Helpers
         /// <returns>
         /// The <see cref="T:System.String" />.
         /// </returns>
-        public string ActivePlatform()
+        public async Task<string> ActivePlatform()
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
-            if (environment == null)
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+            if (this.environment == null)
             {
                 return string.Empty;
             }
 
             try
             {
-                SolutionConfiguration2 solutionConfiguration2 = (EnvDTE80.SolutionConfiguration2)environment.Solution.SolutionBuild.ActiveConfiguration;
+                var solutionConfiguration2 = (EnvDTE80.SolutionConfiguration2)this.environment.Solution.SolutionBuild.ActiveConfiguration;
                 return solutionConfiguration2.PlatformName;
             }
             catch (Exception ex)
@@ -944,8 +953,8 @@ namespace VSSonarQubeExtension.Helpers
         /// <returns>visual studio project item</returns>
         public VsProjectItem GetProjectByNameInSolution(string name, string solutionPath)
         {
-            ProjectTypes.Solution solutiondata = MSBuildHelper.CreateSolutionData(solutionPath);
-            foreach (KeyValuePair<Guid, ProjectTypes.Project> project in solutiondata.Projects)
+            var solutiondata = MSBuildHelper.CreateSolutionData(solutionPath);
+            foreach (var project in solutiondata.Projects)
             {
                 if (project.Value.Name.ToLower().Equals(name.ToLower()))
                 {
@@ -964,8 +973,8 @@ namespace VSSonarQubeExtension.Helpers
         /// <returns>returns guid for project</returns>
         public VsProjectItem GetProjectByGuidInSolution(string guid, string solutionPath)
         {
-            ProjectTypes.Solution solutiondata = MSBuildHelper.CreateSolutionData(solutionPath);
-            foreach (KeyValuePair<Guid, ProjectTypes.Project> project in solutiondata.Projects)
+            var solutiondata = MSBuildHelper.CreateSolutionData(solutionPath);
+            foreach (var project in solutiondata.Projects)
             {
                 if (project.Value.Guid.ToString().ToLower().Equals(guid.ToLower()))
                 {
@@ -986,11 +995,11 @@ namespace VSSonarQubeExtension.Helpers
         /// </returns>
         public string GetGuidForProject(string projectPath, string solutionPath)
         {
-            ProjectTypes.Solution solutiondata = MSBuildHelper.CreateSolutionData(solutionPath);
-            foreach (KeyValuePair<Guid, ProjectTypes.Project> project in solutiondata.Projects)
+            var solutiondata = MSBuildHelper.CreateSolutionData(solutionPath);
+            foreach (var project in solutiondata.Projects)
             {
-                string fullPathOne = Path.GetFullPath(project.Value.Path).ToLower();
-                string fullPathTwo = Path.GetFullPath(projectPath).ToLower();
+                var fullPathOne = Path.GetFullPath(project.Value.Path).ToLower();
+                var fullPathTwo = Path.GetFullPath(projectPath).ToLower();
                 if (fullPathOne.Equals(fullPathTwo))
                 {
                     return project.Value.Guid.ToString();
@@ -1019,7 +1028,7 @@ namespace VSSonarQubeExtension.Helpers
         /// <param name="fullName">The full name.</param>
         public void SetCurrentDocumentInView(string fullName)
         {
-            resourceinview = fullName;
+            this.resourceinview = fullName;
         }
 
         /// <summary>
@@ -1028,7 +1037,7 @@ namespace VSSonarQubeExtension.Helpers
         /// <returns>returns current document in view</returns>
         public string GetCurrentDocumentInView()
         {
-            return resourceinview;
+            return this.resourceinview;
         }
 
         /// <summary>
@@ -1039,8 +1048,8 @@ namespace VSSonarQubeExtension.Helpers
         /// </returns>
         public bool DoIHaveAdminRights()
         {
-            System.Security.Claims.ClaimsPrincipal principal = WindowsPrincipal.Current;
-            bool isadmin = principal.Claims.Any((c) => c.Value == "S-1-5-32-544");
+            var principal = WindowsPrincipal.Current;
+            var isadmin = principal.Claims.Any((c) => c.Value == "S-1-5-32-544");
             return isadmin;
         }
 
@@ -1062,7 +1071,7 @@ namespace VSSonarQubeExtension.Helpers
         /// <returns>return vs project it</returns>
         private static VsProjectItem CreateVsProjectItem(ProjectTypes.Project project)
         {
-            VsProjectItem proToRet = new VsProjectItem
+            var proToRet = new VsProjectItem
             {
                 ProjectName = project.Name,
                 ProjectFilePath = project.Path
@@ -1099,7 +1108,7 @@ namespace VSSonarQubeExtension.Helpers
         /// </returns>
         private static string GetProperDirectoryCapitalization(DirectoryInfo dirInfo)
         {
-            DirectoryInfo parentDirInfo = dirInfo.Parent;
+            var parentDirInfo = dirInfo.Parent;
             return null == parentDirInfo
                        ? dirInfo.Name
                        : Path.Combine(GetProperDirectoryCapitalization(parentDirInfo), parentDirInfo.GetDirectories(dirInfo.Name)[0].Name);
@@ -1121,12 +1130,12 @@ namespace VSSonarQubeExtension.Helpers
         {
             try
             {
-                DirectoryInfo dir = new DirectoryInfo(path);
+                var dir = new DirectoryInfo(path);
                 paths.AddRange(from info in dir.GetFiles() where info.FullName.EndsWith(fileName) select info.FullName);
 
-                foreach (DirectoryInfo info in dir.GetDirectories().Where(info => !info.Name.StartsWith(".")))
+                foreach (var info in dir.GetDirectories().Where(info => !info.Name.StartsWith(".")))
                 {
-                    RecursePath(fileName, info.FullName, paths);
+                    this.RecursePath(fileName, info.FullName, paths);
                 }
             }
             catch (Exception ex)
@@ -1141,7 +1150,7 @@ namespace VSSonarQubeExtension.Helpers
         /// <returns></returns>
         public string VsVersion()
         {
-            return environment.Version;
+            return this.environment.Version;
         }
     }
 }

@@ -18,12 +18,11 @@ namespace CxxPlugin.LocalExtensions
     using System.Collections.Generic;
     using System.IO;
 
-    using VSSonarPlugins;
-    using VSSonarPlugins.Helpers;
-    using VSSonarPlugins.Types;
-
     using SonarRestService;
     using SonarRestService.Types;
+
+    using VSSonarPlugins;
+    using VSSonarPlugins.Helpers;
 
     /// <summary>
     /// The vera sensor.
@@ -44,9 +43,6 @@ namespace CxxPlugin.LocalExtensions
         public PcLintSensor(INotificationManager notificationManager, IConfigurationHelper configurationHelper, ISonarRestService sonarRestService)
             : base(SKey, false, notificationManager, configurationHelper, sonarRestService)
         {
-            this.WriteProperty("PcLintEnvironment", string.Empty, true, true);
-            this.WriteProperty("PcLintExecutable", string.Empty, true, true);
-            this.WriteProperty("PcLintArguments", string.Empty, true, true);
         }
 
         /// <summary>
@@ -55,6 +51,7 @@ namespace CxxPlugin.LocalExtensions
         /// <param name="project">The project.</param>
         /// <param name="configuration">The configuration.</param>
         /// <param name="profileIn">The profile in.</param>
+        /// <param name="vsVersion">version</param>
         public override void UpdateProfile(
             Resource project,
             ISonarConfiguration configuration,
@@ -86,7 +83,7 @@ namespace CxxPlugin.LocalExtensions
             {
                 try
                 {
-                    int start = 0;
+                    var start = 0;
                     var file = GetStringUntilFirstChar(ref start, line, '(');
 
                     start++;
@@ -128,7 +125,7 @@ namespace CxxPlugin.LocalExtensions
         /// </returns>
         public override Dictionary<string, string> GetEnvironment()
         {
-            return VsSonarUtils.GetEnvironmentFromString(this.ReadGetProperty("PcLintEnvironment"));
+            return VsSonarUtils.GetEnvironmentFromString(CxxConfiguration.CxxSettings.PcLintEnvironment);
         }
 
         /// <summary>
@@ -151,7 +148,7 @@ namespace CxxPlugin.LocalExtensions
         /// </returns>
         public override string GetArguments(string filePath)
         {
-            var executable = ReadGetProperty("PcLintExecutable");
+            var executable = this.ReadGetProperty("PcLintExecutable");
             var parent = Directory.GetParent(executable);
             return "-\"format=%(%F(%l):%) error : (%t -- %m) : [%n]\"" + "-i\"" + parent + "\" +ffn std.lnt env-vc10.lnt " + this.ReadGetProperty("PcLintArguments") + " " + filePath;
         }
@@ -175,7 +172,7 @@ namespace CxxPlugin.LocalExtensions
         {
             var data = string.Empty;
 
-            for (int i = start; i < line.Length; i++)
+            for (var i = start; i < line.Length; i++)
             {
                 start = i;
                 if (line[i].Equals(charCheck))

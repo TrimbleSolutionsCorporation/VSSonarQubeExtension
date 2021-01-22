@@ -14,23 +14,28 @@
 namespace VSSonarExtensionUi.Model.Menu
 {
     using System;
-    using System.Collections.ObjectModel;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Linq;
+    using System.Threading.Tasks;
     using System.Windows.Input;
+
+    using Association;
+
+    using GalaSoft.MvvmLight.Command;
 
     using Helpers;
 
-    using ViewModel.Helpers;
-    using VSSonarPlugins;
-    using VSSonarPlugins.Types;
-    using GalaSoft.MvvmLight.Command;
-    using Association;
     using SonarLocalAnalyser;
-    using View.Helpers;
-    using System.Linq;
+
     using SonarRestService;
     using SonarRestService.Types;
-    using System.Threading.Tasks;
+
+    using View.Helpers;
+
+    using ViewModel.Helpers;
+
+    using VSSonarPlugins;
 
     /// <summary>
     /// Source Control Related Actions

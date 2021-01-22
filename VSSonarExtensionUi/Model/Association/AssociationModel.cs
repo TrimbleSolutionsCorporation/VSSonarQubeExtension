@@ -1,20 +1,27 @@
 ﻿namespace VSSonarExtensionUi.Association
 {
-    using PropertyChanged;
-    using SonarLocalAnalyser;
-    using SonarRestService;
-    using SonarRestService.Types;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
+
+    using PropertyChanged;
+
+    using SonarLocalAnalyser;
+
+    using SonarRestService;
+    using SonarRestService.Types;
+
     using View.Helpers;
+
     using ViewModel;
+
     using VSSonarExtensionUi.Model.Helpers;
     using VSSonarExtensionUi.Model.Menu;
     using VSSonarExtensionUi.ViewModel.Configuration;
+
     using VSSonarPlugins;
     using VSSonarPlugins.Helpers;
     using VSSonarPlugins.Types;
@@ -95,15 +102,13 @@
             string vsVersion)
         {
             this.vsVersion = vsVersion;
-            keyTranslator = translator;
+            this.keyTranslator = translator;
             this.pluginManager = pluginManager;
             this.model = model;
             this.configurationHelper = configurationHelper;
             this.logger = logger;
-            sonarService = service;
-            localAnalyserModule = localAnalyeser;
-
-            localAnalyserModule.AssociateCommandCompeted += LocalAssociationCompleted;
+            this.sonarService = service;
+            this.localAnalyserModule = localAnalyeser;
         }
 
         /// <summary>
@@ -151,16 +156,16 @@
         /// </summary>
         public async Task OnConnectToSonar()
         {
-            foreach (IModelBase model in modelPool)
+            foreach (var model in modelPool)
             {
                 try
                 {
-                    await model.OnConnectToSonar(AuthtenticationHelper.AuthToken, this.model.AvailableProjects, pluginManager.IssueTrackerPlugins);
+                    await model.OnConnectToSonar(AuthtenticationHelper.AuthToken, this.model.AvailableProjects, this.pluginManager.IssueTrackerPlugins);
                 }
                 catch (Exception ex)
                 {
-                    logger.ReportMessage(new Message { Id = "Association Model", Data = "Exception for model while connecting : " + model.ToString() });
-                    logger.ReportException(ex);
+                    this.logger.ReportMessage(new Message { Id = "Association Model", Data = "Exception for model while connecting : " + model.ToString() });
+                    this.logger.ReportException(ex);
                 }
             }
         }
@@ -176,7 +181,7 @@
         public async Task<bool> AssignASonarProjectToSolution(Resource project, Resource branchProject, ISourceControlProvider sourceControl)
         {
             if (project == null ||
-               (OpenSolutionName == null || OpenSolutionPath == null) ||
+               (this.OpenSolutionName == null || this.OpenSolutionPath == null) ||
                (project.IsBranch && branchProject == null))
             {
                 return false;
@@ -184,25 +189,22 @@
 
             if (project.IsBranch)
             {
-                AssociatedProject = branchProject;
+                this.AssociatedProject = branchProject;
             }
             else
             {
-                AssociatedProject = project;
+                this.AssociatedProject = project;
             }
 
-            SaveAssociationToDisk(AssociatedProject);
-            AssociatedProject.SolutionRoot = OpenSolutionPath;
-            AssociatedProject.SolutionName = OpenSolutionName;
-            keyTranslator.SetProjectKeyAndBaseDir(AssociatedProject.Key, OpenSolutionPath, AssociatedProject.BranchName, Path.Combine(OpenSolutionPath, OpenSolutionName));
-            configurationHelper.SyncSettings();
-            await Task.Run(() =>
-            {
-                // start local analysis association, and sync profile
-                localAnalyserModule.AssociateWithProject(AssociatedProject, AuthtenticationHelper.AuthToken);
-            });
-
-            IsAssociated = true;
+            this.SaveAssociationToDisk(this.AssociatedProject);
+            this.AssociatedProject.SolutionRoot = this.OpenSolutionPath;
+            this.AssociatedProject.SolutionName = this.OpenSolutionName;
+            this.keyTranslator.SetProjectKeyAndBaseDir(this.AssociatedProject.Key, this.OpenSolutionPath, this.AssociatedProject.BranchName, Path.Combine(this.OpenSolutionPath, this.OpenSolutionName));
+            this.configurationHelper.SyncSettings();
+            // start local analysis association, and sync profile
+            await this.localAnalyserModule.AssociateWithProject(this.AssociatedProject, AuthtenticationHelper.AuthToken);
+            this.LocalAssociationCompleted();
+            this.IsAssociated = true;
             return true;
         }
 
@@ -220,39 +222,39 @@
         {
             try
             {
-                OpenSolutionName = solutionName;
-                OpenSolutionPath = solutionPath;
+                this.OpenSolutionName = solutionName;
+                this.OpenSolutionPath = solutionPath;
 
-                Resource solResource = GetResourceForSolution(solutionName, solutionPath, availableProjects, sourceControl);
+                var solResource = this.GetResourceForSolution(solutionName, solutionPath, availableProjects, sourceControl);
 
                 if (solResource == null)
                 {
                     throw new Exception("Solution not found in server, please be sure its analysed before");
                 }
 
-                Resource resource = SearchSolutionResourceInSonarProjects(solResource, CurrentBranch(sourceControl).Replace("/", "_"));
+                var resource = this.SearchSolutionResourceInSonarProjects(solResource, this.CurrentBranch(sourceControl).Replace("/", "_"));
 
                 if (resource == null)
                 {
                     throw new Exception("Solution not found in server, please be sure its analysed before");
                 }
 
-                await AssignASonarProjectToSolution(resource, resource, sourceControl);
-                CreateConfiguration(Path.Combine(solutionPath, "sonar-project.properties"));
-                await Task.Run(() =>
-                {
-                    // start local analysis association, and sync profile
-                    localAnalyserModule.AssociateWithProject(AssociatedProject, AuthtenticationHelper.AuthToken);
-                });
-                Resource mainProject = SetExclusionsMenu.GetMainProject(AssociatedProject, model.AvailableProjects);
-                IList<Exclusion> exclusions = sonarService.GetExclusions(AuthtenticationHelper.AuthToken, mainProject);
-                model.LocaAnalyser.UpdateExclusions(exclusions);
+                resource.SolutionName = solutionName;
+                resource.SolutionRoot = solutionPath;
+                await this.AssignASonarProjectToSolution(resource, resource, sourceControl);
+                this.CreateConfiguration(Path.Combine(solutionPath, "sonar-project.properties"));
+                // start local analysis association, and sync profile
+                await this.localAnalyserModule.AssociateWithProject(this.AssociatedProject, AuthtenticationHelper.AuthToken);
+                this.LocalAssociationCompleted();
+                var mainProject = SetExclusionsMenu.GetMainProject(this.AssociatedProject, this.model.AvailableProjects);
+                var exclusions = this.sonarService.GetExclusions(AuthtenticationHelper.AuthToken, mainProject);
+                this.model.LocaAnalyser.UpdateExclusions(exclusions);
             }
             catch (Exception ex)
             {
-                AssociatedProject = null;
-                IsAssociated = false;
-                model.StatusMessageAssociation = "Could not associate to project when solution was open: " + ex.Message;
+                this.AssociatedProject = null;
+                this.IsAssociated = false;
+                this.model.StatusMessageAssociation = "Could not associate to project when solution was open: " + ex.Message;
             }
         }
 
@@ -260,28 +262,28 @@
         {
             try
             {
-                configurationHelper.WriteSetting(
+                this.configurationHelper.WriteSetting(
                     new SonarQubeProperties
                     {
-                        Owner = Path.Combine(OpenSolutionPath, OpenSolutionName),
+                        Owner = Path.Combine(this.OpenSolutionPath, this.OpenSolutionName),
                         Key = "PROJECTKEY",
                         Value = project.Key,
                         Context = Context.GlobalPropsId.ToString()
                     });
 
-                configurationHelper.WriteSetting(
+                this.configurationHelper.WriteSetting(
                     new SonarQubeProperties
                     {
-                        Owner = Path.Combine(OpenSolutionPath, OpenSolutionName),
+                        Owner = Path.Combine(this.OpenSolutionPath, this.OpenSolutionName),
                         Key = "PROJECTNAME",
                         Value = OpenSolutionName,
                         Context = Context.GlobalPropsId.ToString()
                     });
 
-                configurationHelper.WriteSetting(
+                this.configurationHelper.WriteSetting(
                     new SonarQubeProperties
                     {
-                        Owner = Path.Combine(OpenSolutionPath, OpenSolutionName),
+                        Owner = Path.Combine(this.OpenSolutionPath, this.OpenSolutionName),
                         Key = "PROJECTLOCATION",
                         Value = OpenSolutionPath,
                         Context = Context.GlobalPropsId.ToString()
@@ -289,7 +291,6 @@
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
         }
@@ -300,7 +301,7 @@
         /// <returns>return current branch</returns>
         public string CurrentBranch(ISourceControlProvider sourceControlProvider)
         {
-            string branch = sourceControlProvider.GetBranch();
+            var branch = sourceControlProvider.GetBranch();
             if (string.IsNullOrEmpty(branch))
             {
                 return "master";
@@ -317,18 +318,18 @@
         /// <returns>retruns resource for given path</returns>
         private Resource CreateResourcePathFile(string fullName, Resource project)
         {
-            if (vshelper == null)
+            if (this.vshelper == null)
             {
                 return null;
             }
 
             // key empty because translator failed, new file
-            Resource localRes = new Resource
+            var localRes = new Resource
             {
                 Key = "",
                 Scope = "FIL"
             };
-            string fileName = Path.GetFileName(fullName);
+            var fileName = Path.GetFileName(fullName);
             localRes.Name = fileName;
             localRes.Lname = fileName;
             return localRes;
@@ -344,21 +345,19 @@
         /// </returns>
         public async Task<Resource> CreateAValidResourceFromServer(string fullName, Resource project)
         {
-            if (vshelper == null)
+            if (this.vshelper == null)
             {
                 return null;
             }
 
             try
             {
-                return await Task.Run(() =>
-                {
-                    return keyTranslator.TranslatePath(vshelper.VsFileItem(fullName, project, null), vshelper, sonarService, AuthtenticationHelper.AuthToken);
-                });
+                var data = await this.vshelper.VsFileItem(fullName, project, null);
+                return this.keyTranslator.TranslatePath(data, this.vshelper, this.sonarService, AuthtenticationHelper.AuthToken);
             }
             catch (Exception ex)
             {
-                logger.WriteMessageToLog("Please report this error: Resource should be always created. " + ex.Message);
+                this.logger.WriteMessageToLog("Please report this error: Resource should be always created. " + ex.Message);
                 return null;
             }
         }
@@ -371,8 +370,8 @@
         /// <param name="provider">The provider.</param>
         public void UpdateServicesInModels(IVsEnvironmentHelper vsenvironmenthelperIn, IVSSStatusBar statusBar, IServiceProvider provider)
         {
-            vshelper = vsenvironmenthelperIn;
-            foreach (IModelBase model in modelPool)
+            this.vshelper = vsenvironmenthelperIn;
+            foreach (var model in modelPool)
             {
                 model.UpdateServices(vsenvironmenthelperIn, statusBar, provider);
             }
@@ -383,12 +382,12 @@
         /// </summary>
         public async Task OnSolutionClosed()
         {
-            OpenSolutionName = null;
-            OpenSolutionPath = null;
-            AssociatedProject = null;
-            IsAssociated = false;
+            this.OpenSolutionName = null;
+            this.OpenSolutionPath = null;
+            this.AssociatedProject = null;
+            this.IsAssociated = false;
 
-            foreach (IModelBase item in modelPool)
+            foreach (var item in modelPool)
             {
                 await item.OnSolutionClosed();
             }
@@ -397,11 +396,11 @@
         private Resource SearchSolutionResourceInSonarProjects(Resource solResource, string branchName)
         {
             Resource associatedProjectInSonar = null;
-            foreach (Resource availableProject in model.AvailableProjects)
+            foreach (var availableProject in this.model.AvailableProjects)
             {
                 if (availableProject.IsBranch && solResource.IsBranch)
                 {
-                    associatedProjectInSonar = GetProjectInBranchResources(availableProject, solResource, branchName);
+                    associatedProjectInSonar = this.GetProjectInBranchResources(availableProject, solResource, branchName);
                 }
                 else
                 {
@@ -423,9 +422,9 @@
         private Resource GetProjectInBranchResources(Resource projectInSonar, Resource solutionProject, string branchName)
         {
             Resource masterBranch = null;
-            bool isMatch = false;
+            var isMatch = false;
 
-            foreach (Resource branch in projectInSonar.BranchResources)
+            foreach (var branch in projectInSonar.BranchResources)
             {
                 if (branch.BranchName.ToLower().Equals("master"))
                 {
@@ -456,10 +455,10 @@
         /// </summary>
         public void Disconnect()
         {
-            AssociatedProject = null;
-            IsAssociated = false;
-            keyTranslator.SetLookupType(KeyLookupType.Invalid);
-            foreach (IModelBase item in modelPool)
+            this.AssociatedProject = null;
+            this.IsAssociated = false;
+            this.keyTranslator.SetLookupType(KeyLookupType.Invalid);
+            foreach (var item in modelPool)
             {
                 item.OnDisconnect();
             }
@@ -487,14 +486,14 @@
                 return null;
             }
 
-            SonarQubeProperties prop = configurationHelper.ReadSetting(
+            var prop = this.configurationHelper.ReadSetting(
                 Context.GlobalPropsId,
                 Path.Combine(solutionPath, solutionName),
                 "PROJECTKEY");
 
             if (prop != null)
             {
-                Resource project = availableProjects.FirstOrDefault(x => x.Key.Equals(prop.Value));
+                var project = availableProjects.FirstOrDefault(x => x.Key.Equals(prop.Value));
                 if (project != null)
                 {
                     return project;
@@ -502,19 +501,19 @@
 
                 try
                 {
-                    return sonarService.GetResourcesData(AuthtenticationHelper.AuthToken, prop.Value)[0];
+                    return this.sonarService.GetResourcesData(AuthtenticationHelper.AuthToken, prop.Value)[0];
                 }
                 catch (Exception ex)
                 {
-                    model.StatusMessageAssociation = "Associated Project does not exist in server, please configure association: " + ex.Message;
+                    this.model.StatusMessageAssociation = "Associated Project does not exist in server, please configure association: " + ex.Message;
                     return null;
                 }
             }
 
-            string sourceKey = VsSonarUtils.GetProjectKey(solutionPath);
+            var sourceKey = VsSonarUtils.GetProjectKey(solutionPath);
             try
             {
-                return string.IsNullOrEmpty(sourceKey) ? null : sonarService.GetResourcesData(AuthtenticationHelper.AuthToken, sourceKey)[0];
+                return string.IsNullOrEmpty(sourceKey) ? null : this.sonarService.GetResourcesData(AuthtenticationHelper.AuthToken, sourceKey)[0];
             }
             catch (Exception ex)
             {
@@ -522,7 +521,7 @@
                 sourceKey = sourceKey + ":" + sourceControl.GetBranch().Replace("/", "_");
                 try
                 {
-                    return string.IsNullOrEmpty(sourceKey) ? null : sonarService.GetResourcesData(AuthtenticationHelper.AuthToken, sourceKey)[0];
+                    return string.IsNullOrEmpty(sourceKey) ? null : this.sonarService.GetResourcesData(AuthtenticationHelper.AuthToken, sourceKey)[0];
                 }
                 catch (Exception exceptionBranch)
                 {
@@ -538,34 +537,34 @@
         /// <param name="pathForPropertiesFile">The path for properties file.</param>
         private void CreateConfiguration(string pathForPropertiesFile)
         {
-            keyTranslator.CreateConfiguration(pathForPropertiesFile);
+            this.keyTranslator.CreateConfiguration(pathForPropertiesFile);
         }
 
         /// <summary>The update associate command.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The e.</param>
-        private void LocalAssociationCompleted(object sender, EventArgs e)
+        private void LocalAssociationCompleted()
         {
-            if (!model.IsConnected)
+            if (!this.model.IsConnected)
             {
                 return;
             }
 
-            List<IModelBase> listToRemo = new List<IModelBase>();
+            var listToRemo = new List<IModelBase>();
 
-            keyTranslator.SetLookupType(KeyLookupType.Invalid);
-            if (string.IsNullOrEmpty(OpenSolutionPath))
+            this.keyTranslator.SetLookupType(KeyLookupType.Invalid);
+            if (string.IsNullOrEmpty(this.OpenSolutionPath))
             {
-                keyTranslator.SetProjectKeyAndBaseDir(AssociatedProject.Key, OpenSolutionPath, AssociatedProject.BranchName, "");
+                this.keyTranslator.SetProjectKeyAndBaseDir(this.AssociatedProject.Key, this.OpenSolutionPath, this.AssociatedProject.BranchName, "");
             }
             else
             {
-                keyTranslator.SetProjectKeyAndBaseDir(AssociatedProject.Key, OpenSolutionPath, AssociatedProject.BranchName, Path.Combine(OpenSolutionPath, OpenSolutionName));
+                this.keyTranslator.SetProjectKeyAndBaseDir(this.AssociatedProject.Key, this.OpenSolutionPath, this.AssociatedProject.BranchName, Path.Combine(this.OpenSolutionPath, this.OpenSolutionName));
             }
 
             try
             {
-                Profile = localAnalyserModule.GetProfile(AssociatedProject);
+                this.Profile = this.localAnalyserModule.GetProfile(this.AssociatedProject);
             }
             catch (Exception ex)
             {
@@ -574,23 +573,23 @@
             }
 
             // sync data in plugins
-            pluginManager.AssociateWithNewProject(
-                AssociatedProject,
-                OpenSolutionPath,
+            this.pluginManager.AssociateWithNewProject(
+                this.AssociatedProject,
+                this.OpenSolutionPath,
                 null,
-                Profile,
-                vsVersion);
+                this.Profile,
+                this.vsVersion);
 
-            foreach (IModelBase model in modelPool)
+            foreach (var model in modelPool)
             {
                 try
                 {
                     model.AssociateWithNewProject(
-                        AssociatedProject,
-                        OpenSolutionPath,
+                        this.AssociatedProject,
+                        this.OpenSolutionPath,
                         null,
-                        Profile,
-                        vsVersion);
+                        this.Profile,
+                        this.vsVersion);
                 }
                 catch (Exception ex)
                 {
@@ -599,7 +598,7 @@
                 }
             }
 
-            foreach (IModelBase item in listToRemo)
+            foreach (var item in listToRemo)
             {
                 modelPool.Remove(item);
             }

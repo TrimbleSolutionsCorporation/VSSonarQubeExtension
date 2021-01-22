@@ -25,17 +25,6 @@ open SonarRestService.Types
 type RunAnalysisTests() =
 
     [<Test>]
-    member test.``If Thread is Null then analysis is not running`` () =
-
-        let mockConfReq =
-            Mock<IConfigurationHelper>()
-                .Setup(fun x -> <@ x.ReadSetting(any(), any(), any()) @>).Returns(new SonarQubeProperties(Value = "something"))
-                .Create()
-
-        let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), mockConfReq, Mock<INotificationManager>().Create(), Mock<IVsEnvironmentHelper>().Create(), "14.0")
-        Assert.That(((analyser :> ISonarLocalAnalyser).IsExecuting()), Is.False)
-
-    [<Test>]
     member test.``Should throw exception when no plugin is found`` () =
         let analyser = new SonarLocalAnalyser(null, Mock<ISonarRestService>().Create(), Mock<IConfigurationHelper>().Create(), Mock<INotificationManager>().Create(), Mock<IVsEnvironmentHelper>().Create(), "14.0")
         Assert.Throws<ResourceNotSupportedException>(fun c -> (analyser :> ISonarLocalAnalyser).GetResourceKey(new VsFileItem(), true) |> ignore) |> ignore

@@ -14,18 +14,7 @@
 
 namespace VSSonarExtensionUi.ViewModel.Analysis
 {
-    using DifferenceEngine;
-    using GalaSoft.MvvmLight.Command;
-    using Helpers;
-    using Model.Analysis;
-    using Model.Helpers;
-    using Model.Menu;
-    using PropertyChanged;
-    using SonarLocalAnalyser;
-    using SonarRestService;
-    using SonarRestService.Types;
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
@@ -36,8 +25,28 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using System.Windows.Forms;
     using System.Windows.Input;
     using System.Windows.Media;
+
+    using DifferenceEngine;
+
+    using GalaSoft.MvvmLight.Command;
+
+    using Helpers;
+
+    using Model.Analysis;
+    using Model.Helpers;
+    using Model.Menu;
+
+    using PropertyChanged;
+
+    using SonarLocalAnalyser;
+
+    using SonarRestService;
+    using SonarRestService.Types;
+
     using View.Helpers;
+
     using VSSonarExtensionUi.Association;
+
     using VSSonarPlugins;
     using VSSonarPlugins.Helpers;
     using VSSonarPlugins.Types;
@@ -122,18 +131,17 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
 
             this.plugins = pluginsIn;
             this.Header = "Local Analysis";
-            this.IssuesGridView = new IssueGridViewModel("LocalView", false, this.configurationHelper, service, notificationManager, translator, this);
-            this.IssuesGridView.ContextMenuItems = this.CreateRowContextMenu(service, translator, analyser, this.availableProjects);
-            this.IssuesGridView.ShowContextMenu = true;
+            this.IssuesGridView = new IssueGridViewModel("LocalView", false, this.configurationHelper, service, notificationManager, translator, this)
+            {
+                ContextMenuItems = this.CreateRowContextMenu(service, translator, analyser, this.availableProjects),
+                ShowContextMenu = true
+            };
             this.IssuesGridView.ShowLeftFlyoutEvent += this.ShowHideLeftFlyout;
             this.AllLog = new List<string>();
 
             this.InitCommanding();
 
             this.localAnalyserModule = analyser;
-            this.localAnalyserModule.StdOutEvent += this.UpdateOutputMessagesFromPlugin;
-            this.localAnalyserModule.LocalAnalysisCompleted += this.UpdateLocalIssues;
-
             this.ShowLeftFlyOut = false;
             this.SizeOfFlyout = 0;
             this.ShowFalsePositivesAndResolvedIssues = true;
@@ -160,9 +168,11 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 {
                     foreach (var command in commands)
                     {
-                        var commandNew = new PluginCommandWrapper(this, this.logger);
-                        commandNew.PluginOperation = command;
-                        commandNew.Name = command.Name;
+                        var commandNew = new PluginCommandWrapper(this, this.logger)
+                        {
+                            PluginOperation = command,
+                            Name = command.Name
+                        };
                         this.PluginsCommands.Add(commandNew);
                     }
                 }
@@ -267,10 +277,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         public bool ShowLeftFlyOut
         {
-            get
-            {
-                return this.showFlyouts;
-            }
+            get => this.showFlyouts;
 
             set
             {
@@ -529,9 +536,9 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// <param name="resourceName">Name of the resource.</param>
         /// <param name="content">The content.</param>
         /// <param name="fromSave">if set to <c>true</c> [from save].</param>
-        public void RefreshDataForResource(Resource resourceFile, string resourceName, string content, bool fromSave)
+        public async void RefreshDataForResource(Resource resourceFile, string resourceName, string content, bool fromSave)
         {
-            var resourceInView = this.vsenvironmenthelper.VsFileItem(resourceName, this.associatedProject, resourceFile);
+            var resourceInView = await this.vsenvironmenthelper.VsFileItem(resourceName, this.associatedProject, resourceFile);
             this.VsFileItemInView = resourceInView;
             this.resourceNameInView = resourceName;
             this.contentInView = content;
@@ -598,35 +605,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         public object GetViewModel()
         {
             return this;
-        }
-
-        /// <summary>The trigger a project analysis.</summary>
-        /// <param name="project">The project.</param>
-        public void TriggerAProjectAnalysis(VsProjectItem project)
-        {
-            if (this.WasAssemblyUpdated(project))
-            {
-                var isProjectAnalysisOn = true;
-
-                try
-                {
-                    isProjectAnalysisOn = bool.Parse(
-                        this.configurationHelper.ReadSetting(Context.AnalysisGeneral, OwnersId.AnalysisOwnerId, GlobalAnalysisIds.LocalAnalysisProjectAnalysisEnabledKey).Value);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.Message);
-                }
-
-                if (isProjectAnalysisOn)
-                {
-                    this.localAnalyserModule.RunProjectAnalysis(project, AuthtenticationHelper.AuthToken);
-                }
-                else
-                {
-                    this.logger.ReportMessage(new VSSonarPlugins.Message { Id = "LocalViewModel", Data = "Project Analysis Is Disabled, Enable in Options" });
-                }
-            }
         }
 
         /// <summary>
@@ -698,8 +676,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.PermissionsAreNotAvailable = false;
             try
             {
-                this.associatedProject.ActiveConfiguration = this.vsenvironmenthelper.ActiveConfiguration();
-                this.associatedProject.ActivePlatform = this.vsenvironmenthelper.ActivePlatform();
+                this.associatedProject.ActiveConfiguration = await this.vsenvironmenthelper.ActiveConfiguration();
+                this.associatedProject.ActivePlatform = await this.vsenvironmenthelper.ActivePlatform();
                 this.logger.ResetFailure();
                 switch (analysis)
                 {
@@ -709,42 +687,41 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                             return;
                         }
 
+                        await this.IssuesGridView.UpdateIssues(new List<Issue>(), null);
+
                         if (fromSave || !this.cachedLocalIssues.ContainsKey(itemInView.SonarResource.Key))
                         {
                             this.cachedLocalIssues.Remove(itemInView.SonarResource.Key);
                             this.PopulateFalsePositivesAndResolvedItems(itemInView);
-                            this.localAnalyserModule.AnalyseFile(
+                            var issues = await this.localAnalyserModule.AnalyseFile(
                                 itemInView,
                                 this.associatedProject,
-                                this.logger.AnalysisChangeLines,
-                                AuthtenticationHelper.AuthToken.SonarVersion,
                                 AuthtenticationHelper.AuthToken,
                                 this.keyTranslator,
                                 this.vsenvironmenthelper,
                                 fromSave);
+                            if (this.cachedCommandIssues.ContainsKey(itemInView.SonarResource.Key))
+                            {
+                                this.cachedCommandIssues[itemInView.SonarResource.Key].Clear();
+                                this.cachedCommandIssues[itemInView.SonarResource.Key].AddRange(issues);
+                            }
+
+                            await this.IssuesGridView.UpdateIssues(issues, null);
+                            this.RefreshIssuesEditor(EventArgs.Empty);
                         }
                         else
                         {
                             // load issues from cache
                             var issues = new List<Issue>();
                             issues.AddRange(this.cachedLocalIssues[itemInView.SonarResource.Key]);
-                            if (cachedCommandIssues.ContainsKey(itemInView.SonarResource.Key))
+                            if (this.cachedCommandIssues.ContainsKey(itemInView.SonarResource.Key))
                             {
-                                issues.AddRange(cachedCommandIssues[itemInView.SonarResource.Key]);
+                                issues.AddRange(this.cachedCommandIssues[itemInView.SonarResource.Key]);
                             }
 
                             await this.IssuesGridView.UpdateIssues(issues, null);
                             this.RefreshIssuesEditor(EventArgs.Empty);
                         }
-                        break;
-                    case AnalysisTypes.ISSUES:
-                        this.ValidateAdminRights();
-                        this.AllLog.Clear();
-                        this.OutputLog = string.Empty;
-                        this.localAnalyserModule.RunFullAnalysis(
-                            this.associatedProject,
-                            AuthtenticationHelper.AuthToken.SonarVersion,
-                            AuthtenticationHelper.AuthToken, true);
                         break;
                     default:
                         throw new NotImplementedException();
@@ -756,20 +733,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 this.logger.ReportException(ex);
                 this.logger.EndedWorking();
                 this.logger.FlagFailure(ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// Validates the admin rights.
-        /// </summary>
-        private void ValidateAdminRights()
-        {
-            if (!this.vsenvironmenthelper.DoIHaveAdminRights() && !File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "cxx-user-options.xml")))
-            {
-                MessageDisplayBox.DisplayMessage(
-                    "Admin rights not found.",
-                    "Installing third party analyzers during analysis requires administration rights. Its recommended to create a cxx-user-options.xml in your home folder with location of the tools.",
-                    "https://github.com/jmecsoftware/sonar-cxx-msbuild-tasks#using-the-wrapper-behind-proxy-or-were-admin-rights-are-not-available");
             }
         }
 
@@ -864,17 +827,17 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             var commandIssues = e as LocalAnalysisEventCommandAnalsysisComplete;
             if (commandIssues != null)
             {
-                if (cachedCommandIssues.ContainsKey(commandIssues.itemInView.SonarResource.Key))
+                if (this.cachedCommandIssues.ContainsKey(commandIssues.itemInView.SonarResource.Key))
                 {
-                    cachedCommandIssues.Remove(commandIssues.itemInView.SonarResource.Key);
+                    this.cachedCommandIssues.Remove(commandIssues.itemInView.SonarResource.Key);
                 }
 
-                cachedCommandIssues.Add(commandIssues.itemInView.SonarResource.Key, commandIssues.issues);
+                this.cachedCommandIssues.Add(commandIssues.itemInView.SonarResource.Key, commandIssues.issues);
                 var issuesToGrid = commandIssues.issues;
 
-                if (cachedLocalIssues.ContainsKey(commandIssues.itemInView.SonarResource.Key))
+                if (this.cachedLocalIssues.ContainsKey(commandIssues.itemInView.SonarResource.Key))
                 {
-                    issuesToGrid.AddRange(cachedLocalIssues[commandIssues.itemInView.SonarResource.Key]);
+                    issuesToGrid.AddRange(this.cachedLocalIssues[commandIssues.itemInView.SonarResource.Key]);
                 }
 
                 await this.IssuesGridView.UpdateIssues(issuesToGrid, null);
@@ -928,16 +891,16 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
 
                     if (this.sourceInServerCache.ContainsKey(issuesMessage.resource.SonarResource.Key))
                     {
-                        source = sourceInServerCache[issuesMessage.resource.SonarResource.Key];
+                        source = this.sourceInServerCache[issuesMessage.resource.SonarResource.Key];
                     }
                     else
                     {
-                        var data = restService.GetSourceForFileResource(AuthtenticationHelper.AuthToken, issuesMessage.resource.SonarResource.Key).Lines;
+                        var data = this.restService.GetSourceForFileResource(AuthtenticationHelper.AuthToken, issuesMessage.resource.SonarResource.Key).Lines;
                         source = string.Join("\n", data);
-                        sourceInServerCache.Add(issuesMessage.resource.SonarResource.Key, source);
+                        this.sourceInServerCache.Add(issuesMessage.resource.SonarResource.Key, source);
                     }
 
-                    ArrayList diffReport = VsSonarUtils.GetSourceDiffFromStrings(source, this.contentInView, DiffEngineLevel.FastImperfect);
+                    var diffReport = VsSonarUtils.GetSourceDiffFromStrings(source, this.contentInView, DiffEngineLevel.FastImperfect);
 
                     var issuesWithoutFalsePositives = issuesMessage.issues;
 
@@ -962,9 +925,9 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
 
                     if (this.ShowIssuesOnModifiedSectionsOfFileOnly)
                     {
-                        if (cachedCommandIssues.ContainsKey(issuesMessage.resource.SonarResource.Key))
+                        if (this.cachedCommandIssues.ContainsKey(issuesMessage.resource.SonarResource.Key))
                         {
-                            issuesinChangedLines.AddRange(cachedCommandIssues[issuesMessage.resource.SonarResource.Key]);
+                            issuesinChangedLines.AddRange(this.cachedCommandIssues[issuesMessage.resource.SonarResource.Key]);
                         }
 
                         if (this.cachedLocalIssues.ContainsKey(issuesMessage.resource.SonarResource.Key))
@@ -986,7 +949,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                     {
                         if (this.cachedCommandIssues.ContainsKey(issuesMessage.resource.SonarResource.Key))
                         {
-                            issuesinChangedLines.AddRange(cachedCommandIssues[issuesMessage.resource.SonarResource.Key]);
+                            issuesinChangedLines.AddRange(this.cachedCommandIssues[issuesMessage.resource.SonarResource.Key]);
                         }
 
                         if (this.cachedLocalIssues.ContainsKey(issuesMessage.resource.SonarResource.Key))
@@ -1037,9 +1000,9 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                         }
 
                         var issues = issuesMessage.issues;
-                        if (cachedCommandIssues.ContainsKey(issuesMessage.resource.SonarResource.Key))
+                        if (this.cachedCommandIssues.ContainsKey(issuesMessage.resource.SonarResource.Key))
                         {
-                            issues.AddRange(cachedCommandIssues[issuesMessage.resource.SonarResource.Key]);
+                            issues.AddRange(this.cachedCommandIssues[issuesMessage.resource.SonarResource.Key]);
                         }
 
                         await this.IssuesGridView.UpdateIssues(issues, null);
@@ -1066,7 +1029,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
 
                 foreach (var issue in issues)
                 {
-                    bool isfalse = false;
+                    var isfalse = false;
                     foreach (var falseissue in falseissues)
                     {
                         if (issue.Rule.Equals(falseissue.Rule) && issue.Line.Equals(falseissue.Line))
@@ -1089,55 +1052,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             catch (Exception)
             {
                 return issues;
-            }
-        }
-
-        /// <summary>
-        /// The update output messages from plugin.
-        /// </summary>
-        /// <param name="sender">
-        /// The sender.
-        /// </param>
-        /// <param name="e">
-        /// The e.
-        /// </param>
-        private void UpdateOutputMessagesFromPlugin(object sender, EventArgs e)
-        {
-            var message = e as LocalAnalysisStdoutMessage;
-            if (e == null)
-            {
-                return;
-            }
-
-            this.AllLog.Add(message.message);
-            this.vsenvironmenthelper.WriteToVisualStudioOutput(message.message);
-
-            if (!this.AnalysisIsRunning)
-            {
-                this.AnalysisIsRunning = true;
-            }
-
-            if (message.message.Contains(
-                "You're not authorized to execute a dry run analysis. Please contact your SonarQube administrator."))
-            {
-                this.PermissionsAreNotAvailable = true;
-            }
-
-            if (message.message.Contains("INFO  - HTML Issues Report generated:"))
-            {
-                string[] split = { "INFO  - HTML Issues Report generated:" };
-                var reportPath = message.message.Split(split, StringSplitOptions.RemoveEmptyEntries)[1].Trim();
-
-                if (File.Exists(reportPath))
-                {
-                    this.vsenvironmenthelper.NavigateToResource(reportPath);
-                }
-            }
-
-            if (message.message.Contains("ANALYSIS SUCCESSFUL, you can browse"))
-            {
-                string[] separatingChars = { "ANALYSIS SUCCESSFUL, you can browse" };
-                this.ProjectLink = message.message.Split(separatingChars, StringSplitOptions.RemoveEmptyEntries)[1];
             }
         }
 

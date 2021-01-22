@@ -1,9 +1,13 @@
 namespace VSSonarExtensionUi.Test.Association
 {
-    using Microsoft.CodeAnalysis;
-    using SonarRestService.Types;
     using System;
     using System.Diagnostics;
+    using System.Threading.Tasks;
+
+    using Microsoft.CodeAnalysis;
+
+    using SonarRestService.Types;
+
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
 
@@ -34,8 +38,9 @@ namespace VSSonarExtensionUi.Test.Association
 
         /// <summary>The write to visual studio output.</summary>
         /// <param name="errorMessage">The error message.</param>
-        public void WriteToVisualStudioOutput(string errorMessage)
+        public async Task WriteToVisualStudioOutput(string errorMessage)
         {
+            await Task.Delay(0);
         }
 
         /// <summary>The navigate to resource.</summary>

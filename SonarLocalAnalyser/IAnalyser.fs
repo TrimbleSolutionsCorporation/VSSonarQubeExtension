@@ -16,27 +16,14 @@ namespace SonarLocalAnalyser
 open VSSonarPlugins
 open VSSonarPlugins.Types
 open SonarRestService.Types
+open System.Threading
 
 type ISonarLocalAnalyser = 
-  abstract member StopAllExecution : unit -> unit
-  abstract member IsExecuting : unit -> bool
   abstract member GetResourceKey : VsFileItem * safeIsOn:bool -> string
-  abstract member AnalyseFile : VsFileItem * Resource * onModifiedLinesOnly:bool *  version:double * ISonarConfiguration * ISQKeyTranslator * vsInter : IVsEnvironmentHelper * fromSave : bool -> unit
-  abstract member RunProjectAnalysis : project : VsProjectItem * conf : ISonarConfiguration -> unit
-  abstract member RunFullAnalysis : Resource * version:double * ISonarConfiguration * IsPreview:bool -> unit
-  abstract member AssociateWithProject : project:Resource * conf:ISonarConfiguration -> unit
+  abstract member AnalyseFile : VsFileItem * Resource * ISonarConfiguration * ISQKeyTranslator * vsInter : IVsEnvironmentHelper * fromSave : bool -> Tasks.Task<System.Collections.Generic.List<Issue>>
+  abstract member AssociateWithProject : project:Resource * conf:ISonarConfiguration -> Tasks.Task<bool>
   abstract member OnDisconect : unit -> unit 
-  abstract member ResetInitialization : unit -> unit
   abstract member UpdateExclusions : exclusions : System.Collections.Generic.IList<Exclusion> -> unit
   abstract member GetRuleForKey : key : string * project : Resource -> Rule
   abstract member GetProfile : project:Resource -> System.Collections.Generic.Dictionary<string, Profile>
-  
-  [<CLIEvent>]
-  abstract member AssociateCommandCompeted : IDelegateEvent<System.EventHandler>
-
-  [<CLIEvent>]
-  abstract member LocalAnalysisCompleted : IDelegateEvent<System.EventHandler>
-
-  [<CLIEvent>]
-  abstract member StdOutEvent : IDelegateEvent<System.EventHandler>
                           

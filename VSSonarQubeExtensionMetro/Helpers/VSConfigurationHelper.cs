@@ -13,11 +13,14 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace VSSonarQubeExtension.Helpers
 {
-    using Microsoft.Win32;
-    using SonarRestService.Types;
     using System;
     using System.IO;
     using System.Runtime.Serialization.Formatters.Binary;
+
+    using Microsoft.Win32;
+
+    using SonarRestService.Types;
+
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
 
@@ -49,7 +52,7 @@ namespace VSSonarQubeExtension.Helpers
         public VsConfigurationHelper(string vsVersion)
         {
             this.vsversion = vsVersion;
-            this.ApplicationPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "VSSonarExtension");
+            this.ApplicationPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".vssonarextension");
 
             this.baseKeyRegistry = "SOFTWARE\\VSSonarExtension";
             this.baseKeyRegistryVersion = this.baseKeyRegistry + "\\" + this.vsversion;
@@ -69,8 +72,8 @@ namespace VSSonarQubeExtension.Helpers
         /// </summary>
         public void ResetAllSettings()
         {
-            RegistryKey rk = Registry.CurrentUser;
-            RegistryKey sk1 = rk.OpenSubKey(this.baseKeyRegistry, true);
+            var rk = Registry.CurrentUser;
+            var sk1 = rk.OpenSubKey(this.baseKeyRegistry, true);
             if (sk1 != null)
             {
                 sk1.DeleteSubKeyTree(this.vsversion);
@@ -180,7 +183,7 @@ namespace VSSonarQubeExtension.Helpers
         public void WriteSetting(SonarQubeProperties prop, bool sync = false, bool skipIfExist = false)
         {
             var bformatter = new BinaryFormatter();
-            MemoryStream ms = new MemoryStream();
+            var ms = new MemoryStream();
             bformatter.Serialize(ms, prop);
             var baseRk = this.GetBaseRegistry(true);
             baseRk.SetValue(this.GetRegistryKey(prop), ms.GetBuffer());
@@ -203,11 +206,11 @@ namespace VSSonarQubeExtension.Helpers
         /// <returns></returns>
         private RegistryKey GetBaseRegistry(bool enableWrite)
         {
-            RegistryKey rk = Registry.CurrentUser;
-            RegistryKey sk1 = rk.OpenSubKey(this.baseKeyRegistryVersion, enableWrite);
+            var rk = Registry.CurrentUser;
+            var sk1 = rk.OpenSubKey(this.baseKeyRegistryVersion, enableWrite);
             if (sk1 == null)
             {
-                RegistryKey sk2 = rk.CreateSubKey(this.baseKeyRegistryVersion);
+                var sk2 = rk.CreateSubKey(this.baseKeyRegistryVersion);
                 sk2.SetValue("CreationDate", DateTime.Now.ToLongDateString());
             }
 

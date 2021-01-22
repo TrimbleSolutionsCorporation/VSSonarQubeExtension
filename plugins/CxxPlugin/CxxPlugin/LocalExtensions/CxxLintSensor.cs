@@ -8,15 +8,18 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace CxxPlugin.LocalExtensions
 {
-    using Microsoft.Win32;
-    using SonarRestService;
-    using SonarRestService.Types;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Text;
+
+    using Microsoft.Win32;
+
+    using SonarRestService;
+    using SonarRestService.Types;
+
     using VSSonarPlugins;
 
     /// <summary>
@@ -25,23 +28,15 @@ namespace CxxPlugin.LocalExtensions
     public class CxxLintSensor : ASensor
     {
         /// <summary>
-        ///     The s key.
+        /// prop
         /// </summary>
         public const string SKey = "cxx";
 
         /// <summary>
-        /// The linter property
+        /// Key
         /// </summary>
         public const string LinterProp = "CxxLinter";
-
-        /// <summary>
-        /// The Java bin
-        /// </summary>
         private readonly string javaBin = Path.Combine(CxxLintSensor.GetJavaInstallationPath(), "bin", "java.exe");
-
-        /// <summary>
-        /// The path for settings
-        /// </summary>
         private string pathForSettings;
         private readonly IVsEnvironmentHelper vshelper;
 
@@ -51,6 +46,7 @@ namespace CxxPlugin.LocalExtensions
         /// <param name="notificationManager">The notification Manager.</param>
         /// <param name="configurationHelper">The configuration Helper.</param>
         /// <param name="sonarRestService">The sonar Rest Service.</param>
+        /// <param name="vsHelper">vs helper</param>
         public CxxLintSensor(
             INotificationManager notificationManager,
             IConfigurationHelper configurationHelper,
@@ -59,7 +55,6 @@ namespace CxxPlugin.LocalExtensions
             : base(SKey, true, notificationManager, configurationHelper, sonarRestService)
         {
             this.vshelper = vsHelper;
-            this.WriteProperty(LinterProp, @"C:\tools\CxxLint\cxx-lint-0.9.5-SNAPSHOT.jar", true, true);
         }
 
         /// <summary>
@@ -69,6 +64,37 @@ namespace CxxPlugin.LocalExtensions
         /// The solution data.
         /// </value>
         public ProjectTypes.Solution SolutionData { get; private set; }
+
+        /// <summary>
+        /// file casing
+        /// </summary>
+        /// <param name="filePath">filepath</param>
+        /// <returns>fix path</returns>
+        public static string FixFilePathCasing(string filePath)
+        {
+            var fullFilePath = Path.GetFullPath(filePath);
+
+            var fixedPath = string.Empty;
+            foreach (var token in fullFilePath.Split('\\'))
+            {
+                // first token should be drive token
+                if (fixedPath == string.Empty)
+                {
+                    // fix drive casing
+                    var drive = string.Concat(token, "\\");
+                    drive = DriveInfo.GetDrives()
+                        .First(driveInfo => driveInfo.Name.Equals(drive, StringComparison.OrdinalIgnoreCase)).Name;
+
+                    fixedPath = drive;
+                }
+                else
+                {
+                    fixedPath = Directory.GetFileSystemEntries(fixedPath, token).First();
+                }
+            }
+
+            return fixedPath;
+        }
 
         /// <summary>The get violations.</summary>
         /// <param name="lines">The lines.</param>
@@ -138,6 +164,7 @@ namespace CxxPlugin.LocalExtensions
         /// <param name="project">The project.</param>
         /// <param name="configuration">The configuration.</param>
         /// <param name="profileIn">The profile in.</param>
+        /// <param name="vsVersion">vs version</param>
         public override void UpdateProfile(
             Resource project,
             ISonarConfiguration configuration,
@@ -146,16 +173,14 @@ namespace CxxPlugin.LocalExtensions
         {
             var dataPath = Path.Combine(project.SolutionRoot, project.SolutionName);
             var packagesPath = Path.Combine(project.SolutionRoot, "Packages");
-            this.SolutionData = MSBuildHelper.PreProcessSolution(
-                "", packagesPath, dataPath, true, false, vsVersion);
+            this.SolutionData = MSBuildHelper.PreProcessSolution(string.Empty, packagesPath, dataPath, true, false, vsVersion);
 
-            StringBuilder compileDb = new StringBuilder();
+            var compileDb = new StringBuilder();
             compileDb.AppendLine("[");
             foreach (var projectd in this.SolutionData.Projects)
             {
                 foreach (var unit in projectd.Value.CompileUnits)
                 {
-
                     compileDb.AppendLine("  {");
                     var message = string.Format("    \"directory\": \"{0}\",", unit.Directory.Replace("\\", "/"));
                     compileDb.AppendLine(message);
@@ -173,7 +198,7 @@ namespace CxxPlugin.LocalExtensions
             }
 
             // dump clang compilation db
-            String fileContent = compileDb.ToString().Trim().TrimEnd(',') + "\r\n]\r\n";
+            var fileContent = compileDb.ToString().Trim().TrimEnd(',') + "\r\n]\r\n";
             File.WriteAllText(Path.Combine(project.SolutionRoot, "compile_commands.json"), fileContent);
 
             this.pathForSettings = Path.Combine(project.SolutionRoot, ".sonarqube", "cxx-lint");
@@ -258,14 +283,9 @@ namespace CxxPlugin.LocalExtensions
         public override string GetArguments(string filePath)
         {
             var jsonFileData = this.GetJsonFilePropArgument(filePath);
-            return "-jar " + this.ReadGetProperty(LinterProp) + " " + jsonFileData + " -f " + filePath;
+            return "-jar " + CxxConfiguration.CxxSettings.LinterProp + " " + jsonFileData + " -f " + filePath;
         }
 
-        /// <summary>The get string until first char.</summary>
-        /// <param name="start">The start.</param>
-        /// <param name="line">The line.</param>
-        /// <param name="charCheck">The char check.</param>
-        /// <returns>The System.String.</returns>
         private static string GetStringUntilFirstChar(ref int start, string line, char charCheck)
         {
             var data = string.Empty;
@@ -284,10 +304,6 @@ namespace CxxPlugin.LocalExtensions
             return data;
         }
 
-        /// <summary>
-        /// Gets the Java installation path.
-        /// </summary>
-        /// <returns>Java install path</returns>
         private static string GetJavaInstallationPath()
         {
             var environmentPath = Environment.GetEnvironmentVariable("JAVA_HOME");
@@ -331,12 +347,14 @@ namespace CxxPlugin.LocalExtensions
             return string.Empty;
         }
 
+        private static string GetProperDirectoryCapitalization(DirectoryInfo dirInfo)
+        {
+            var parentDirInfo = dirInfo.Parent;
+            return null == parentDirInfo
+                       ? dirInfo.Name
+                       : Path.Combine(GetProperDirectoryCapitalization(parentDirInfo), parentDirInfo.GetDirectories(dirInfo.Name)[0].Name);
+        }
 
-        /// <summary>
-        /// Gets the rules.
-        /// </summary>
-        /// <param name="profileIn">The profile in.</param>
-        /// <returns>returns rules with parameters</returns>
         private string GetRules(Profile profileIn)
         {
             var rulesjson = new StringBuilder();
@@ -354,7 +372,7 @@ namespace CxxPlugin.LocalExtensions
                     {
                         rulesjson.AppendLine("      \"status\": \"Enabled\",");
                         rulesjson.AppendLine("      \"properties\": {");
-                        for (int i = 0; i < rule.Params.Count; i++)
+                        for (var i = 0; i < rule.Params.Count; i++)
                         {
                             if (i != rule.Params.Count - 1)
                             {
@@ -391,19 +409,12 @@ namespace CxxPlugin.LocalExtensions
                 }
             }
 
-            string data = rulesjson.ToString().TrimEnd();
+            var data = rulesjson.ToString().TrimEnd();
             finalbuilder.Append(data.TrimEnd(',') + "\r\n");
             finalbuilder.AppendLine("  ]");
             return finalbuilder.ToString();
         }
 
-        /// <summary>
-        /// Creates the settings file.
-        /// </summary>
-        /// <param name="projectdata">The project data.</param>
-        /// <returns>
-        /// include directors
-        /// </returns>
         private string GetAdditionalOptions(KeyValuePair<Guid, ProjectTypes.Project> projectdata)
         {
             var builder = new StringBuilder();
@@ -416,7 +427,7 @@ namespace CxxPlugin.LocalExtensions
 
             if (projectdata.Value.AdditionalOptions.Count > 0)
             {
-                string data = builder.ToString().TrimEnd();
+                var data = builder.ToString().TrimEnd();
                 finalbuilder.Append(data.TrimEnd(',') + "\r\n");
             }
             else
@@ -428,21 +439,6 @@ namespace CxxPlugin.LocalExtensions
             return finalbuilder.ToString();
         }
 
-        private static string GetProperDirectoryCapitalization(DirectoryInfo dirInfo)
-        {
-            DirectoryInfo parentDirInfo = dirInfo.Parent;
-            return null == parentDirInfo
-                       ? dirInfo.Name
-                       : Path.Combine(GetProperDirectoryCapitalization(parentDirInfo), parentDirInfo.GetDirectories(dirInfo.Name)[0].Name);
-        }
-
-        /// <summary>
-        /// Creates the settings file.
-        /// </summary>
-        /// <param name="projectdata">The project data.</param>
-        /// <returns>
-        /// include directors
-        /// </returns>
         private string GetIncludeSettings(KeyValuePair<Guid, ProjectTypes.Project> projectdata)
         {
             var builder = new StringBuilder();
@@ -494,12 +490,11 @@ namespace CxxPlugin.LocalExtensions
                         System.Diagnostics.Debug.WriteLine("Failed to get Casing: " + ex.Message + " : " + fullPath);
                     }
                 }
-
             }
 
             if (projectdata.Value.AdditionalIncludeDirectories.Count > 0)
             {
-                string data = builder.ToString().TrimEnd();
+                var data = builder.ToString().TrimEnd();
                 finalbuilder.Append(data.TrimEnd(',') + "\r\n");
             }
             else
@@ -512,39 +507,6 @@ namespace CxxPlugin.LocalExtensions
             return finalbuilder.ToString();
         }
 
-
-        public static string FixFilePathCasing(string filePath)
-        {
-            string fullFilePath = Path.GetFullPath(filePath);
-
-            string fixedPath = "";
-            foreach (string token in fullFilePath.Split('\\'))
-            {
-                //first token should be drive token
-                if (fixedPath == "")
-                {
-                    //fix drive casing
-                    string drive = string.Concat(token, "\\");
-                    drive = DriveInfo.GetDrives()
-                        .First(driveInfo => driveInfo.Name.Equals(drive, StringComparison.OrdinalIgnoreCase)).Name;
-
-                    fixedPath = drive;
-                }
-                else
-                {
-                    fixedPath = Directory.GetFileSystemEntries(fixedPath, token).First();
-                }
-            }
-
-            return fixedPath;
-        }
-
-        /// Gets the defines settings.
-        /// </summary>
-        /// <param name="projectdata">The project data.</param>
-        /// <returns>
-        /// defines json
-        /// </returns>
         private string GetDefinesSettings(KeyValuePair<Guid, ProjectTypes.Project> projectdata)
         {
             var builder = new StringBuilder();
@@ -557,7 +519,7 @@ namespace CxxPlugin.LocalExtensions
 
             if (projectdata.Value.Defines.Count > 0)
             {
-                string data = builder.ToString().TrimEnd();
+                var data = builder.ToString().TrimEnd();
                 finalbuilder.Append(data.TrimEnd(',') + "\r\n");
             }
             else
@@ -569,11 +531,6 @@ namespace CxxPlugin.LocalExtensions
             return finalbuilder.ToString();
         }
 
-        /// <summary>
-        /// Gets the json file property argument.
-        /// </summary>
-        /// <param name="filePath">The file path.</param>
-        /// <returns>returns json settings argument</returns>
         private string GetJsonFilePropArgument(string filePath)
         {
             if (this.SolutionData == null)

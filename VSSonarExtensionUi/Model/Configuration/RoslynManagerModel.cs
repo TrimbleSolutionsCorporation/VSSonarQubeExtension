@@ -1,17 +1,23 @@
 ﻿namespace VSSonarExtensionUi.Model.Configuration
 {
-    using Association;
-    using Helpers;
-    using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.MSBuild;
-    using SonarRestService;
-    using SonarRestService.Types;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.Threading.Tasks;
+
+    using Association;
+
+    using Helpers;
+
+    using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.MSBuild;
+
+    using SonarRestService;
+    using SonarRestService.Types;
+
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
 
@@ -352,7 +358,7 @@
                 {
                     foreach (var lang in check.Languages)
                     {
-                        var language = GetLanguage(lang);
+                        var language = this.GetLanguage(lang);
                         await Task.Run(() => this.CreateRule(language, diag));
                     }
                 }
@@ -363,20 +369,24 @@
         {
             var repoid = "roslyn-" + language;
 
-            var templaterule = new Rule();
-            templaterule.Name = "Template Rule";
-            templaterule.Key = "roslyn-cs:TemplateRule";
+            var templaterule = new Rule
+            {
+                Name = "Template Rule",
+                Key = "roslyn-cs:TemplateRule"
+            };
 
             var desc = string.Format("<p>{0}<a href=\"{1}\">Help Url</a></p>", (diag.Description.ToString()), diag.HelpLinkUri);
             var markdown = string.Format("*{0}* [Help Url]({1})", diag.Description.ToString(), diag.HelpLinkUri);
 
-            var rule = new Rule();
-            rule.HtmlDescription = desc;
-            rule.MarkDownDescription = markdown;
-            rule.Key = repoid + ":" + diag.Id;
-            rule.Name = diag.Title.ToString();
-            rule.Repo = repoid;
-            rule.Severity = Severity.MAJOR;
+            var rule = new Rule
+            {
+                HtmlDescription = desc,
+                MarkDownDescription = markdown,
+                Key = repoid + ":" + diag.Id,
+                Name = diag.Title.ToString(),
+                Repo = repoid,
+                Severity = Severity.MAJOR
+            };
             foreach (var error in this.rest.CreateRule(AuthtenticationHelper.AuthToken, rule, templaterule))
             {
                 this.notificationManager.ReportMessage("Failed to create rule: " + error);
@@ -475,7 +485,15 @@
         {
             if (!this.ExtensionDiagnostics.Any())
             {
-                bool hasRoslynPlugin = VerifyExistenceOfRoslynPlugin();
+                var styleCopDiag = Path.Combine(this.roslynEmbbedDiagPath, "StyleCop");
+                Directory.CreateDirectory(styleCopDiag); 
+                this.WriteResourceToFile("VSSonarExtensionUi.Resources.StyleCop.Analyzers.dll", Path.Combine(styleCopDiag, "StyleCop.Analyzers.dll"));
+                this.WriteResourceToFile("VSSonarExtensionUi.Resources.Newtonsoft.Json.dll", Path.Combine(styleCopDiag, "Newtonsoft.Json.dll"));
+                this.WriteResourceToFile("VSSonarExtensionUi.Resources.StyleCop.Analyzers.CodeFixes.dll", Path.Combine(styleCopDiag, "StyleCop.Analyzers.CodeFixes.dll"));
+
+                await this.LoadDiagnosticsFromPath(styleCopDiag);
+
+                var hasRoslynPlugin = this.VerifyExistenceOfRoslynPlugin();
 
                 // load defined props in server and load up
                 var props = this.rest.GetSettings(authentication);
@@ -509,6 +527,22 @@
             }
 
             this.SyncSettings();
+        }
+
+        /// <summary>
+        /// Writes the resource to file.
+        /// </summary>
+        /// <param name="resourceName">Name of the resource.</param>
+        /// <param name="fileName">Name of the file.</param>
+        private void WriteResourceToFile(string resourceName, string fileName)
+        {
+            using (var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+            {
+                using (var file = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+                {
+                    resource.CopyTo(file);
+                }
+            }
         }
 
         private async Task LoadDiagnosticsFromPath(string folderPath)

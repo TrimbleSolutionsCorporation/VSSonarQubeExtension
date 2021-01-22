@@ -3,19 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28922.388
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSSonarExtensionUi", "VSSonarExtensionUi\VSSonarExtensionUi.csproj", "{BC583A5D-931B-4ED9-AC2C-5667A37B3043}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSSonarExtensionUi", "VSSonarExtensionUi\VSSonarExtensionUi.csproj", "{BC583A5D-931B-4ED9-AC2C-5667A37B3043}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSSonarExtensionMetroVs2019", "VSSonarQubeExtensionMetro\VSSonarExtensionMetroVs2019.csproj", "{00245123-FEBB-4AF3-99E5-223142A598C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSSonarExtensionUi.Test", "Test\VSSonarExtensionUi.Test\VSSonarExtensionUi.Test.csproj", "{000DE400-B843-4C58-8A20-8ED95FE91FD3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSSonarExtensionUi.Test", "Test\VSSonarExtensionUi.Test\VSSonarExtensionUi.Test.csproj", "{000DE400-B843-4C58-8A20-8ED95FE91FD3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "plugins", "plugins", "{468F14C9-25EE-4E61-91F0-CB4415E48A6C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{472161E9-B67F-444A-A33F-3095A928FA48}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CxxPlugin", "plugins\CxxPlugin\CxxPlugin\CxxPlugin.csproj", "{3755A099-7EE1-4593-9BB0-50DA67039C99}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CxxPlugin", "plugins\CxxPlugin\CxxPlugin\CxxPlugin.csproj", "{3755A099-7EE1-4593-9BB0-50DA67039C99}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CxxPlugin.Test", "plugins\CxxPlugin\CxxPlugin.Test\CxxPlugin.Test.csproj", "{04CDA1BF-6FC4-4813-B299-4BDF8B8AE696}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CxxPlugin.Test", "plugins\CxxPlugin\CxxPlugin.Test\CxxPlugin.Test.csproj", "{04CDA1BF-6FC4-4813-B299-4BDF8B8AE696}"
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "AnalysisPlugin", "plugins\DotNetAndFSharpPlugin\src\AnalysisPlugin\AnalysisPlugin.fsproj", "{964F11D4-DB1A-4032-B532-F2351DA730BE}"
 EndProject
@@ -23,7 +23,7 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "FSharpLintRunner", "plugins
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "NSonarQubeRunner", "plugins\DotNetAndFSharpPlugin\src\NSonarQubeRunner\NSonarQubeRunner.fsproj", "{AB78A0F2-0C05-4822-B0B8-0F9486498774}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginsOptionsController", "plugins\DotNetAndFSharpPlugin\src\PluginsOptionsController\PluginsOptionsController.csproj", "{7972423C-6BBD-4C1C-B970-5F9AFCB44824}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PluginsOptionsController", "plugins\DotNetAndFSharpPlugin\src\PluginsOptionsController\PluginsOptionsController.csproj", "{7972423C-6BBD-4C1C-B970-5F9AFCB44824}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JiraPlugin", "plugins\JiraPlugin\JiraPlugin.csproj", "{1576C435-186D-4502-B8E2-070E8EB94F60}"
 EndProject
@@ -36,6 +36,11 @@ EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "SonarAnalyser.Test", "Test\SonarAnalyser.Test\SonarAnalyser.Test.fsproj", "{CD4B5869-59D7-491A-A99A-CA33AA6D45A4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSSonarPlugins", "VSSonarPlugins\VSSonarPlugins.csproj", "{176B1CD3-58A0-4E39-845B-CFE9742CB8BD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{421F3867-D87E-49CB-BFF3-CF1CA6E2E4F6}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
