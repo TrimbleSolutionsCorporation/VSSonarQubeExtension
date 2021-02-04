@@ -103,6 +103,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         private Resource associatedProject;
         private string contentInView;
         private IEnumerable<Resource> availableProjects;
+        private bool fileAnalysisRunning;
+        private string currentFile;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalViewModel" /> class.
@@ -673,6 +675,12 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 return;
             }
 
+            if (fromSave && this.fileAnalysisRunning && this.currentFile == itemInView.FileName)
+            {
+                this.logger.ReportMessage("Running already... Multiple saves detected");
+                return;
+            }
+
             this.PermissionsAreNotAvailable = false;
             try
             {
@@ -682,6 +690,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 switch (analysis)
                 {
                     case AnalysisTypes.FILE:
+                        this.fileAnalysisRunning = true;
+                        this.currentFile = itemInView.FileName;
                         if (itemInView == null)
                         {
                             return;
@@ -734,6 +744,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                 this.logger.EndedWorking();
                 this.logger.FlagFailure(ex.Message);
             }
+
+            this.fileAnalysisRunning = false;
         }
 
         /// <summary>
