@@ -100,7 +100,7 @@
                     </StatusBarItem>
 
                     <StatusBarItem HorizontalAlignment="Right">
-                        
+
                         <StackPanel Orientation="Horizontal">
                             <Border ToolTip="New issues have been added during session. Press button and go to local analysis mode.">
                                 <StackPanel Orientation="Horizontal">
@@ -143,7 +143,7 @@
                                                 </Style>
                                             </ContentControl.Style>
                                         </ContentControl>
-                                        
+
                                     </Button>
                                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding NumberNewIssues, FallbackValue=100}" Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" />
                                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="   " Foreground="{Binding ForeGroundColor, Converter={StaticResource ColorToBrushConverter}}" Background="{Binding BackGroundColor, Converter={StaticResource ColorToBrushConverter}}" />
@@ -231,11 +231,6 @@
                         </StackPanel>
                     </StatusBarItem>
                 </StatusBar>
-
-                <controls:MetroProgressBar DockPanel.Dock="Bottom"  Grid.Row="2" IsIndeterminate="{Binding IsExtensionBusy}"
-                                       Value="{Binding ElementName=horizSlider, Path=Value}"
-                                       ToolTip="{Binding BusyToolTip}"
-                                       Foreground="{DynamicResource AccentColorBrush}" Background="{Binding BackGroundColor}"/>
             </StackPanel>
         </DockPanel>
 

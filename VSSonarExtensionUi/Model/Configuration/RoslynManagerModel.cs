@@ -486,10 +486,21 @@
             if (!this.ExtensionDiagnostics.Any())
             {
                 var styleCopDiag = Path.Combine(this.roslynEmbbedDiagPath, "StyleCop");
-                Directory.CreateDirectory(styleCopDiag); 
-                this.WriteResourceToFile("VSSonarExtensionUi.Resources.StyleCop.Analyzers.dll", Path.Combine(styleCopDiag, "StyleCop.Analyzers.dll"));
-                this.WriteResourceToFile("VSSonarExtensionUi.Resources.Newtonsoft.Json.dll", Path.Combine(styleCopDiag, "Newtonsoft.Json.dll"));
-                this.WriteResourceToFile("VSSonarExtensionUi.Resources.StyleCop.Analyzers.CodeFixes.dll", Path.Combine(styleCopDiag, "StyleCop.Analyzers.CodeFixes.dll"));
+                Directory.CreateDirectory(styleCopDiag);
+                if (!File.Exists(Path.Combine(styleCopDiag, "StyleCop.Analyzers.dll")))
+                {
+                    this.WriteResourceToFile("VSSonarExtensionUi.Resources.StyleCop.Analyzers.dll", Path.Combine(styleCopDiag, "StyleCop.Analyzers.dll"));
+                }
+
+                if (!File.Exists(Path.Combine(styleCopDiag, "Newtonsoft.Json.dll")))
+                {
+                    this.WriteResourceToFile("VSSonarExtensionUi.Resources.Newtonsoft.Json.dll", Path.Combine(styleCopDiag, "Newtonsoft.Json.dll"));
+                }
+
+                if (!File.Exists(Path.Combine(styleCopDiag, "StyleCop.Analyzers.CodeFixes.dll")))
+                {
+                    this.WriteResourceToFile("VSSonarExtensionUi.Resources.StyleCop.Analyzers.CodeFixes.dll", Path.Combine(styleCopDiag, "StyleCop.Analyzers.CodeFixes.dll"));
+                }
 
                 await this.LoadDiagnosticsFromPath(styleCopDiag);
 
