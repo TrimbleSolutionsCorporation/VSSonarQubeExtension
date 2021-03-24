@@ -1,7 +1,7 @@
 image: Visual Studio 2019
 version: '{build}'
 build_script:
-  - msbuild /p:Configuration=Release
+  - msbuild /t:Restore;Build /p:Configuration=Release
 test:
   # assemblies to test - optional
   assemblies:
