@@ -291,5 +291,35 @@ namespace VSSonarExtensionUi.Test.Association
         {
             throw new NotImplementedException();
         }
+
+        void IVsEnvironmentHelper.WriteToVisualStudioOutput(string errorMessage)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<string> IVsEnvironmentHelper.ActiveConfiguration()
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<string> IVsEnvironmentHelper.ActivePlatform()
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<VsFileItem> IVsEnvironmentHelper.VsFileItem(string filename, Resource associatedProject, Resource fileResource)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<VsFileItem> IVsEnvironmentHelper.VsFileItem(string fullPath, string projectFullPath, Resource associatedProject, Resource fileResource)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<VsProjectItem> IVsEnvironmentHelper.VsProjectItem(string projectFileName, Resource associatedProject)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

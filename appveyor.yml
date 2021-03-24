@@ -1,20 +1,16 @@
+image: Visual Studio 2019
 version: '{build}'
-os: Visual Studio 2015
 build_script:
-  - build.bat
+  - msbuild /p:Configuration=Release
 test:
   # assemblies to test - optional
   assemblies:
-    - BuildDrop\Test\vs15\SonarLocalAnalyser.Test.dll
-    - BuildDrop\Test\vs15\SonarRestService.Test.dll
-    - BuildDrop\Test\vs15\VSSonarExtensionUi.Test.dll
-after_test:
-  - cmd: nuget pack VSSonarExtensionPlugin3Api.nuspec
-  - cmd: nuget pack VSSonarExtensionPlugin4Api.nuspec
+    - BuildDrop\Test\LocalAnalyserTests\SonarAnalyser.Test.dll
+    - BuildDrop\Test\JiraPlugin\JiraPlugin.Test.dll
+    - BuildDrop\CxxPlugin.Test\CxxPlugin.Test.dll
+    - BuildDrop\VSSonarExtensionUi.Test\VSSonarExtensionUi.Test.dll
 artifacts:
-  - path: 'BuildDrop\vs13\VSSonarExtensionMetroVs2013.vsix'
-    name: VSSonarExtensionMetroVs2013
-  - path: 'BuildDrop\vs15\VSSonarExtensionMetroVs2015.vsix'
-    name: VSSonarExtensionMetroVs2015
+  - path: 'BuildDrop\vsix\VSSonarExtensionMetroVs2019.vsix'
+    name: VSSonarExtensionMetroVs2019
   - path: '*.nupkg'
     name: nugets
