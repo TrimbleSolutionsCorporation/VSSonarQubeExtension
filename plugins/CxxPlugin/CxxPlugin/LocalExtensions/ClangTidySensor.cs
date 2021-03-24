@@ -167,52 +167,54 @@
                 profile = profileIn["cxx"];
             }
 
-
-            var rules = profile.GetAllRules();
-
-            var baseString = "";
-            using (var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("CxxPlugin.Resources.clang-tidy"))
+            if (!CheckClangTidyConfigExists(project.SolutionRoot))
             {
-                using (var reader = new StreamReader(resource))
+                var rules = profile.GetAllRules();
+
+                var baseString = "";
+                using (var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("CxxPlugin.Resources.clang-tidy"))
                 {
-                    baseString = reader.ReadToEnd();
-                }
-            }
-
-            var clangTidyFile = Path.Combine(project.SolutionRoot, ".clang-tidy");
-            var lineEnding = new string[] { "\n" };
-            if (string.IsNullOrEmpty(baseString))
-            {
-                return;
-            }
-
-            var baseConfig = baseString.Split(lineEnding, StringSplitOptions.RemoveEmptyEntries);
-
-            if (File.Exists(clangTidyFile))
-            {
-                return;
-            }
-
-            using (var outputFile = new StreamWriter(clangTidyFile))
-            {
-                foreach (var line in baseConfig)
-                {
-                    var lineToFile = line;
-                    if (line.StartsWith("Checks:          '-clang-diagnostic-*,-clang-analyzer-*'"))
+                    using (var reader = new StreamReader(resource))
                     {
-                        lineToFile = lineToFile.TrimEnd().TrimEnd('\'');
-                        foreach (var rule in rules)
+                        baseString = reader.ReadToEnd();
+                    }
+                }
+
+                var clangTidyFile = Path.Combine(project.SolutionRoot, ".clang-tidy");
+                var lineEnding = new string[] { "\n" };
+                if (string.IsNullOrEmpty(baseString))
+                {
+                    return;
+                }
+
+                var baseConfig = baseString.Split(lineEnding, StringSplitOptions.RemoveEmptyEntries);
+
+                if (File.Exists(clangTidyFile))
+                {
+                    return;
+                }
+
+                using (var outputFile = new StreamWriter(clangTidyFile))
+                {
+                    foreach (var line in baseConfig)
+                    {
+                        var lineToFile = line;
+                        if (line.StartsWith("Checks:          '-clang-diagnostic-*,-clang-analyzer-*'"))
                         {
-                            if (rule.Repo.Equals("ClangTidy"))
+                            lineToFile = lineToFile.TrimEnd().TrimEnd('\'');
+                            foreach (var rule in rules)
                             {
-                                lineToFile += "," + rule.Key;
+                                if (rule.Repo.Equals("ClangTidy"))
+                                {
+                                    lineToFile += "," + rule.Key;
+                                }
                             }
+
+                            lineToFile += "\'";
                         }
 
-                        lineToFile += "\'";
+                        outputFile.WriteLine(lineToFile);
                     }
-
-                    outputFile.WriteLine(lineToFile);
                 }
             }
         }
@@ -370,6 +372,21 @@
             }
 
             return issues;
+        }
+
+        private static bool CheckClangTidyConfigExists(string slnRoot)
+        {
+            var clangTidyFile = ".clang-tidy";
+            var found = false;
+            var currentDir = slnRoot;
+
+            while ((currentDir != null) && File.Exists(currentDir) && !found)
+            {
+                found = File.Exists(Path.Combine(currentDir, clangTidyFile));
+                currentDir = Directory.GetParent(currentDir).ToString();
+            }
+
+            return found;
         }
     }
 }
