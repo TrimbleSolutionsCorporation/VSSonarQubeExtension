@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+    <Metadata>
+        <Identity Id="VSSonarExtension2022.3abe7dac-900d-4091-b2e4-46158654c502" Version="1.0.0" Language="en-US" Publisher="Jorge Manuel Esteves da Costa" />
+        <DisplayName>VSSonarExtension2022</DisplayName>
+        <Description xml:space="preserve">Visual Studio 2022 Extension For SonarQube(TM)</Description>
+        <License>LICENSE.txt</License>
+        <Icon>Resources\Package.ico</Icon>
+        <PreviewImage>Resources\vsiximage.png</PreviewImage>
+    </Metadata>
+    <Installation>
+      <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0,18.0)">
+        <ProductArchitecture>amd64</ProductArchitecture>
+      </InstallationTarget>
+    </Installation>
+    <Dependencies>
+        <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.7.2,)" />
+    </Dependencies>
+    <Assets>
+        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+        <Asset Type="Microsoft.VisualStudio.MefComponent" Path="VSSonarExtensionMetroVs2019.dll" />
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="AnalysisPlugin" d:VsixSubPath="plugins" Path="|AnalysisPlugin|" AssemblyName="|AnalysisPlugin;AssemblyName|" />
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="JiraPlugin" d:VsixSubPath="plugins" Path="|JiraPlugin|" AssemblyName="|JiraPlugin;AssemblyName|" />
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="FSharpLintRunner" d:VsixSubPath="plugins" Path="|FSharpLintRunner|" AssemblyName="|FSharpLintRunner;AssemblyName|" />
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="CxxPlugin" d:VsixSubPath="plugins" Path="|CxxPlugin|" AssemblyName="|CxxPlugin;AssemblyName|" />
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="NSonarQubeRunner" d:VsixSubPath="plugins" Path="|NSonarQubeRunner|" AssemblyName="|NSonarQubeRunner;AssemblyName|" />
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="PluginsOptionsController" d:VsixSubPath="plugins" Path="|PluginsOptionsController|" AssemblyName="|PluginsOptionsController;AssemblyName|" />
+    </Assets>
+    <Prerequisites>
+        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[16.0,18.0)" DisplayName="Visual Studio core editor" />
+    </Prerequisites>
+</PackageManifest>
