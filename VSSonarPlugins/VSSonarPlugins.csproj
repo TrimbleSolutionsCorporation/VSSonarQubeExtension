@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SonarRestApi" Version="1.5.0" />
+    <PackageReference Include="SonarRestApi" Version="1.5.1" />
     <PackageReference Include="Microsoft.CodeAnalysis" Version="4.3.0-3.final" />
   </ItemGroup>
 

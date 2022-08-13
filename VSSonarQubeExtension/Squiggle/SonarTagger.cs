@@ -237,9 +237,20 @@ namespace VSSonarQubeExtension.Squiggle
             {
                 if (disposing)
                 {
-                    SonarQubeViewModelFactory.SQViewModel.ServerViewModel.IssuesReadyForCollecting -= IssuesListChanged;
-                    SonarQubeViewModelFactory.SQViewModel.LocalViewModel.IssuesReadyForCollecting -= IssuesListChanged;
-                    SonarQubeViewModelFactory.SQViewModel.IssuesSearchModel.IssuesReadyForCollecting -= IssuesListChanged;
+                    if (SonarQubeViewModelFactory.SQViewModel.ServerViewModel != null)
+                    {
+                        SonarQubeViewModelFactory.SQViewModel.ServerViewModel.IssuesReadyForCollecting -= IssuesListChanged;
+                    }
+
+                    if (SonarQubeViewModelFactory.SQViewModel.LocalViewModel != null)
+                    {
+                        SonarQubeViewModelFactory.SQViewModel.LocalViewModel.IssuesReadyForCollecting -= IssuesListChanged;
+                    }
+
+                    if (SonarQubeViewModelFactory.SQViewModel.IssuesSearchModel != null)
+                    {
+                        SonarQubeViewModelFactory.SQViewModel.IssuesSearchModel.IssuesReadyForCollecting -= IssuesListChanged;
+                    }                    
 
                     SourceBuffer = null;
                 }
