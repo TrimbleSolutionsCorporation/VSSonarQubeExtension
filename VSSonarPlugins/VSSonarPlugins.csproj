@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SonarRestApi" Version="1.2.1" />
-    <PackageReference Include="Microsoft.CodeAnalysis" Version="3.8.0" />
+    <PackageReference Include="SonarRestApi" Version="1.5.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.3.0-3.final" />
   </ItemGroup>
 
 </Project>

@@ -520,7 +520,7 @@
             this.SearchData.IsEnabled = false;
             this.ProgressBar.IsIndeterminate = true;
 
-            var completeData = new Dictionary<string, CoverageReport>();
+            var completeData = new Dictionary<string, ProjectSummaryReport>();
             foreach (var item in this.selectedItems)
             {
                 if (item.Qualifier == "TRK")
@@ -534,7 +534,7 @@
                         Qualifier = item.Qualifier
                     };
 
-                    foreach (var rep in await this.rest.GetCoverageReport(this.conf, ToResource(item), CreateNewTokenOrUseOldOne(), this.logger))
+                    foreach (var rep in await this.rest.GetSummaryProjectReport(this.conf, ToResource(item), CreateNewTokenOrUseOldOne(), this.logger))
                     {
                         if (this.ct.IsCancellationRequested)
                         {

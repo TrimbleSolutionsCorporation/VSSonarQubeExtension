@@ -11,11 +11,12 @@
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <PackageOutputPath>$(UserBINDir)\ApiNugetPackageOutput</PackageOutputPath>
         <IntegrationBaseTestPath>$(BINDir)\Test</IntegrationBaseTestPath>
-        <Version>$(MajorVersionNumber).$(MinorVersionNumber).$(PatchNumber)$(AlphaPrefix)</Version>
+        <Version>$(MajorVersionNumber).$(MinorVersionNumber).$(PatchNumber)-3.final</Version>
         <AssemblyVersion>$(MajorVersionNumber).$(MinorVersionNumber).0.0</AssemblyVersion>
         <FileVersion>$(MajorVersionNumber).$(MinorVersionNumber).$(BuildNumber).0</FileVersion>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <NoWarn>NU1608;NU1603;CS1762</NoWarn>
+        <NoWarn>NU1608;NU1603;CS1762;NU1803</NoWarn>
+        <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     </PropertyGroup>
   
   <PropertyGroup>

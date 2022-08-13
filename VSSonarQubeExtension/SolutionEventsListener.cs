@@ -16,7 +16,7 @@ namespace VSSonarQubeExtension
     using VSSonarPlugins;
     using VSSonarQubeExtension.Helpers;
 
-    /// <summary>The solution events listener.</summary>
+    /// <summary>The solution events listener.</summary> 
     public class SolutionEventsListener : IVsSolutionEvents, IDisposable
     {
         /// <summary>

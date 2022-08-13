@@ -30,8 +30,8 @@
 	<ItemGroup>
 		<Reference Include="System.Windows" />
 		<Reference Include="System.Windows.Forms" />
-		<PackageReference Include="Microsoft.Build.Framework" Version="16.8.0" />
-		<PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.8.0" />
+		<PackageReference Include="Microsoft.Build.Framework" Version="16.10.0" />
+		<PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.10.0" />
 	</ItemGroup>
 
 </Project>

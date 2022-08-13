@@ -391,7 +391,7 @@
 			return reportdata.ToString();
 		}
 
-		public static string GenerateOverallCoverageHtmlReport(Dictionary<string, CoverageReport> report)
+		public static string GenerateOverallCoverageHtmlReport(Dictionary<string, ProjectSummaryReport> report)
 		{
 			StringBuilder reportdata = new StringBuilder();
 			reportdata.Append(HtmlHelpers.GenerateOverallCoverageReportHeaderString());
@@ -402,7 +402,7 @@
 				var rep = item.Value;
 
 				reportdata.Append("<tr>");
-				reportdata.Append("<td>" + rep.resource.Key + "</td>");
+				reportdata.Append("<td>" + rep.Resource.Key + "</td>");
 				if (rep.NewCoverage < 60 && rep.NewLines > 5)
 				{
 					reportdata.Append("<td>Failed</td>");
