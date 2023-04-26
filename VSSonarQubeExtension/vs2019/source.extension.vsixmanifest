@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="VSSonarExtension2022.3abe7dac-900d-4091-b2e4-46158654c502" Version="1.0.0" Language="en-US" Publisher="Jorge Manuel Esteves da Costa" />
+        <Identity Id="VSSonarExtension2022.3abe7dac-900d-4091-b2e4-46158654c502" Version="1.0.3" Language="en-US" Publisher="Jorge Manuel Esteves da Costa" />
         <DisplayName>VSSonarExtension2022</DisplayName>
         <Description xml:space="preserve">Visual Studio 2022 Extension For SonarQube(TM)</Description>
         <License>LICENSE.txt</License>
