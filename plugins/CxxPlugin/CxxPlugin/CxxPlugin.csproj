@@ -7,16 +7,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Content Remove="C:\Users\jocs\.nuget\packages\msbuildautomationhelper\2.0.5\contentFiles\any\net472\App.config" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
 		<PackageReference Include="MahApps.Metro" Version="1.5.0" />
 		<PackageReference Include="MvvmLightLibs" Version="5.3.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="PropertyChanged.Fody" Version="2.6.1" />
-		<PackageReference Include="MsbuildAutomationHelper" Version="2.0.5" />		
+		<PackageReference Include="MsbuildAutomationHelper" Version="3.1.0" />		
 	</ItemGroup>
 	
 	<ItemGroup>

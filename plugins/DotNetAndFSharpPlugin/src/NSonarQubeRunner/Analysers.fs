@@ -45,8 +45,10 @@ let issuesFromDiagnostics(result : ImmutableArray<Diagnostic>, itemInView : VsFi
             issueNew.Line <- issue.Location.GetLineSpan().StartLinePosition.Line + 1
             issueNew.Message <- issue.GetMessage()
             issueNew.LocalPath <- issue.Location.SourceTree.FilePath
-            let rule = externlProfileIn.GetRule(issueNew.Rule)
-            if rule <> null then
+            let ruleOption = externlProfileIn.GetAllRules() |> Seq.tryFind (fun elem -> elem.ConfigKey = issueNew.Rule)
+            match ruleOption with
+            | None -> ()
+            | Some rule ->
                 issueNew.Severity <- rule.Severity
                 issueNew.Effort <- rule.DebtRemFnCoeff
                 let key = issueNew.Message + issueNew.Line.ToString()
@@ -211,7 +213,8 @@ let runAnalyserWithMSBuild(itemInView : VsFileItem,
                             if found.IsNone then
                                 bd <- bd @ [datam.Diagnostic]
 
-                            idsbd <- idsbd @ [ids.[count]]
+                            if count < ids.Length then
+                                idsbd <- idsbd @ [ids.[count]]
                     | _ -> ()
 
                     count <- count + 1

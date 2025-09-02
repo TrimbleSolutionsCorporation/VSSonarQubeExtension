@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="C:\Users\jocs\.nuget\packages\msbuildautomationhelper\2.0.6\contentFiles\any\net472\App.config" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Include="Types.fs" />
     <Compile Include="ProxyDomain.fs" />
     <Compile Include="ServerHelpers.fs" />

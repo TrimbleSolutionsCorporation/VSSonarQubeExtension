@@ -77,14 +77,18 @@ let GetSonarLintDiagnostics(externlProfileIn : System.Collections.Generic.Dictio
                                 let id = "csharpsquid:" + diagnostic.Id
                                 try
                                     let profile = externlProfileIn.["cs"]
-                                    let rule = profile.GetRule(id)
-                                    if rule <> null then
+                                    let ruleoption = profile.GetAllRules() |> Seq.tryFind (fun elem -> elem.ConfigKey = id)
+
+                                    match ruleoption with
+                                    | Some rule -> 
                                         builder <- builder @ [check]
                                         ids <- ids @ [new KeyValuePair<string, ReportDiagnostic>(diagnostic.Id, ReportDiagnostic.Warn)]
                                         if rule.Params.Count <> 0 then
                                             checkadded <- true
                                             let asyncFieldSetters = ApplyRuleParameters diagnostic rule check notificationManager
                                             do! asyncFieldSetters |> Async.Parallel |> Async.Ignore
+                                    | None -> ()
+
                                 with
                                 | ex -> System.Diagnostics.Debug.WriteLine("Cannot Add Check Failed: " + check.ToString() + " : " +  ex.Message)
                                         notificationManager.ReportMessage(new Message(Id = "NSonarQubeRunner", Data = "Check Rule Could Not Be Used " + id + " : " + ex.Message))

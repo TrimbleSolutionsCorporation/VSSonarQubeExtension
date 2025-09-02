@@ -140,7 +140,12 @@ type NSonarQubeRunner(helper : IConfigurationHelper, notificationManager : INoti
         issues
 
         
-    member this.UpdateWorkspace(resource : Resource, externlProfileIn : System.Collections.Generic.Dictionary<string, Profile>, notificationManager : INotificationManager, configuration : ISonarConfiguration, vsversion:string) =
+    member this.UpdateWorkspace(
+        resource : Resource,
+        externlProfileIn : System.Collections.Generic.Dictionary<string, Profile>,
+        notificationManager : INotificationManager,
+        configuration : ISonarConfiguration, vsversion:string) =
+
         profile <- externlProfileIn
 
         // read roslyn plugin properties server

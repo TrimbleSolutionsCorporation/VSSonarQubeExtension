@@ -11,6 +11,7 @@
 	  <None Remove="Resources\Newtonsoft.Json.dll" />
 	  <None Remove="Resources\StyleCop.Analyzers.CodeFixes.dll" />
 	  <None Remove="Resources\StyleCop.Analyzers.dll" />
+    <None Remove="Resources\SonarAnalyzer.CSharp.dll" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -33,6 +34,7 @@
     <EmbeddedResource Include="Resources\Newtonsoft.Json.dll" />
     <EmbeddedResource Include="Resources\StyleCop.Analyzers.CodeFixes.dll" />
     <EmbeddedResource Include="Resources\StyleCop.Analyzers.dll" />
+    <EmbeddedResource Include="Resources\SonarAnalyzer.CSharp.dll" />
 	</ItemGroup>
 
 </Project>

@@ -7,11 +7,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Content Remove="C:\Users\jocs\.nuget\packages\msbuildautomationhelper\2.0.5\contentFiles\any\net472\App.config" />
-		<Content Remove="C:\Users\jocs\.nuget\packages\msbuildautomationhelper\2.0.6\contentFiles\any\net472\App.config" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<Compile Include="AnalysisPluginVars.fs" />
 		<Compile Include="AnalysisPluginExtension.fs" />
 		<Compile Include="AnalysisPlugin.fs" />

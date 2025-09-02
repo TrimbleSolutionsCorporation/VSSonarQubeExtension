@@ -84,6 +84,7 @@
         /// <param name="pluginsIn">The plugins in.</param>
         /// <param name="notificationManagerIn">The notification manager in.</param>
         /// <param name="configHelper">The configuration helper.</param>
+        /// <param name="rest">The rest service.</param>
         public RoslynManagerModel(
             IEnumerable<IAnalysisPlugin> pluginsIn,
             INotificationManager notificationManagerIn,
@@ -494,6 +495,11 @@
                     this.WriteResourceToFile("VSSonarExtensionUi.Resources.StyleCop.Analyzers.dll", Path.Combine(styleCopDiag, "StyleCop.Analyzers.dll"));
                 }
 
+                if (!File.Exists(Path.Combine(styleCopDiag, "SonarAnalyzer.CSharp.dll")))
+                {
+                    this.WriteResourceToFile("VSSonarExtensionUi.Resources.SonarAnalyzer.CSharp.dll", Path.Combine(styleCopDiag, "SonarAnalyzer.CSharp.dll"));
+                }
+
                 if (!File.Exists(Path.Combine(styleCopDiag, "Newtonsoft.Json.dll")))
                 {
                     this.WriteResourceToFile("VSSonarExtensionUi.Resources.Newtonsoft.Json.dll", Path.Combine(styleCopDiag, "Newtonsoft.Json.dll"));
@@ -561,28 +567,38 @@
         private async Task LoadDiagnosticsFromPath(string folderPath)
         {
             var diagnostics = Directory.GetFiles(folderPath);
+            var tasks = new List<Task<(string fileName, VSSonarExtensionDiagnostic diagnostic)>>();
 
-            foreach (var diagnostic in diagnostics)
+            foreach (var diagnosticPath in diagnostics)
             {
-                try
+                var fileName = Path.GetFileName(diagnosticPath);
+                if (this.ExtensionDiagnostics.ContainsKey(fileName))
                 {
-                    var fileName = Path.GetFileName(diagnostic);
-
-                    if (this.ExtensionDiagnostics.ContainsKey(fileName))
-                    {
-                        continue;
-                    }
-
-                    var newdata = new VSSonarExtensionDiagnostic(fileName);
-                    await newdata.LoadDiagnostics(diagnostic);
-                    if (newdata.AvailableChecks.Count > 0)
-                    {
-                        this.ExtensionDiagnostics.Add(fileName, newdata);
-                    }
+                    continue;
                 }
-                catch (Exception ex)
+                tasks.Add(Task.Run(async () =>
                 {
-                    this.notificationManager.WriteMessageToLog("Failed to load user diagnostics from: " + diagnostic + " : " + ex.Message);
+                    try
+                    {
+                        var newdata = new VSSonarExtensionDiagnostic(fileName);
+                        this.notificationManager.WriteMessageToLog($"Load Diagnotic Dll: {fileName}");
+                        await newdata.LoadDiagnostics(diagnosticPath);
+                        return (fileName, newdata);
+                    }
+                    catch (Exception ex)
+                    {
+                        this.notificationManager.WriteMessageToLog($"Failed to load user diagnostics from: {diagnosticPath} : {ex.Message}");
+                        return (fileName, null);
+                    }
+                }));
+            }
+
+            var results = await Task.WhenAll(tasks);
+            foreach (var result in results)
+            {
+                if (result.diagnostic != null && result.diagnostic.AvailableChecks.Count > 0)
+                {
+                    this.ExtensionDiagnostics[result.fileName] = result.diagnostic;
                 }
             }
         }

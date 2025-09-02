@@ -44,8 +44,9 @@ let GetRoslynDiagnostics(externlProfileIn : System.Collections.Generic.Dictionar
                     let id = repo + ":" + diagnostic.Id
                     try
                         let profile = externlProfileIn.[language]
-                        let rule = profile.GetRule(id)
-                        if rule <> null then
+                        let ruleOption = profile.GetAllRules() |> Seq.tryFind (fun elem -> elem.ConfigKey = id)
+                        match ruleOption with
+                        | Some rule ->
                             checkadded <- true
                             builder <- builder @ [check]
                             ids <- ids @ [new System.Collections.Generic.KeyValuePair<string, ReportDiagnostic>(diagnostic.Id, ReportDiagnostic.Warn)]
@@ -81,6 +82,7 @@ let GetRoslynDiagnostics(externlProfileIn : System.Collections.Generic.Dictionar
                                 async {
                                     do! asyncFieldSetters |> Async.Parallel |> Async.Ignore
                                 } |> Async.RunSynchronously
+                        | _ -> ()
                     with
                     | ex -> System.Diagnostics.Debug.WriteLine("Cannot Add Check Failed: " + id + " : " +  ex.Message)
                             notificationManager.ReportMessage(new Message(Id = "NSonarQubeRunner", Data = "Check Rule Could Not Be Used " + id + " : " + ex.Message))
