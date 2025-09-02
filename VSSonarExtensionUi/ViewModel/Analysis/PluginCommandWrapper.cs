@@ -10,6 +10,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
 
+    using VSSonarPluginsUi;
+
     public class PluginCommandWrapper
     {
         private readonly LocalViewModel model;

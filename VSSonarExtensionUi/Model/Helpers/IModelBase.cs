@@ -8,6 +8,7 @@
     using SonarRestService.Types;
     using SonarRestService;
     using System.Threading.Tasks;
+    using VSSonarPluginsUi;
 
     /// <summary>
     /// Model base, register model in SonarQubeViewModel for automatic update of association

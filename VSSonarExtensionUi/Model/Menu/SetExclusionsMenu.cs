@@ -17,6 +17,7 @@
     using SonarRestService;
     using SonarRestService.Types;
     using System.Threading.Tasks;
+    using VSSonarPluginsUi;
 
     /// <summary>
     /// Source Control Related Actions

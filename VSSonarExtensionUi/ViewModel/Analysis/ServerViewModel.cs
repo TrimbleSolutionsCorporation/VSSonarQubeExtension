@@ -39,6 +39,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
 
     using SonarRestService.Types;
     using SonarRestService;
+    using VSSonarPluginsUi;
 
     /// <summary>
     ///     The server view model.

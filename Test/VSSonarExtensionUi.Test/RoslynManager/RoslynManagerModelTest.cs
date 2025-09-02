@@ -13,6 +13,7 @@ namespace VSSonarExtensionUi.Test.RoslynManager
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
     using SonarRestService;
+    using VSSonarPluginsUi;
 
 
     /// <summary>

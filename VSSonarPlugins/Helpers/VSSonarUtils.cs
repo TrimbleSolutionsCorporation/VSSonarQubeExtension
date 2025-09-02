@@ -14,7 +14,7 @@ namespace VSSonarPlugins.Helpers
     using System.Xml.Linq;
     using SonarRestService.Types;
     using RestSharp;
-    using RestSharp.Deserializers;
+    using System.Xml.Serialization;
 
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
@@ -24,8 +24,6 @@ namespace VSSonarPlugins.Helpers
     /// </summary>
     public static partial class VsSonarUtils
     {
-        #region Public Methods and Operators
-
         /// <summary>
         /// The get environment from string.
         /// </summary>
@@ -129,10 +127,14 @@ namespace VSSonarPlugins.Helpers
             if (File.Exists(solutionPath + "\\pom.xml"))
             {
                 string xmlpath = solutionPath + "\\pom.xml";
-                XDocument doc = XDocument.Load(xmlpath);
-                var xml = new XmlDeserializer();
-                var output = xml.Deserialize<PomFile>(new RestResponse { Content = doc.ToString() });
-                return output.GroupId + ":" + output.ArtifactId;
+                PomFile output = null;
+                using (var stream = File.OpenRead(xmlpath))
+                {
+                    var serializer = new System.Xml.Serialization.XmlSerializer(typeof(PomFile));
+                    output = serializer.Deserialize(stream) as PomFile;
+                }
+
+                return output != null ? output.GroupId + ":" + output.ArtifactId : string.Empty;
             }
 
             return string.Empty;
@@ -232,15 +234,11 @@ namespace VSSonarPlugins.Helpers
             }
         }
 
-        #endregion
-
         /// <summary>
         ///     The pom file.
         /// </summary>
         internal class PomFile
         {
-            #region Public Properties
-
             /// <summary>
             ///     Gets or sets the artifact id.
             /// </summary>
@@ -250,8 +248,6 @@ namespace VSSonarPlugins.Helpers
             ///     Gets or sets the group id.
             /// </summary>
             public string GroupId { get; set; }
-
-            #endregion
         }
     }
 }

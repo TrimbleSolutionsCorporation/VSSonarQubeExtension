@@ -11,6 +11,7 @@ using Moq;
 using System.IO;
 using SonarRestService.Types;
 using SonarRestService;
+using VSSonarPluginsUi;
 
 namespace CxxPlugin.LocalExtensions.Tests
 {
@@ -20,7 +21,7 @@ namespace CxxPlugin.LocalExtensions.Tests
         string executionFolder = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", ""));
 
         [Test()]
-        public void DumpBasicProfile()
+        public async Task DumpBasicProfile()
         {
             var logPath = Path.Combine(executionFolder, "TestData", "clanglog.log");
             var serviceStub = new Mock<IVsEnvironmentHelper>();
@@ -39,7 +40,7 @@ namespace CxxPlugin.LocalExtensions.Tests
             resource.SolutionRoot = executionFolder;
             var profiles = new Dictionary<string, Profile>();
             profiles.Add("c++", new Profile(restCon.Object, sonarConfig.Object));
-            linterClang.UpdateProfile(resource, sonarConfig.Object, profiles, "vs15");
+            await linterClang.UpdateProfile(resource, sonarConfig.Object, profiles, "vs15");
             Assert.That(File.Exists(Path.Combine(executionFolder, ".clang-tidy")), Is.True);
         }
 

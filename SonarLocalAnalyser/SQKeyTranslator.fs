@@ -6,6 +6,7 @@ open System.IO
 open System.Text
 open SonarRestService.Types
 open SonarRestService
+open VSSonarPluginsUi
 
 
 [<AllowNullLiteral>]

@@ -20,6 +20,7 @@ open VSSonarPlugins
 open VSSonarPlugins.Types
 open SonarRestService
 open SonarRestService.Types
+open VSSonarPluginsUi
 
 type KeyTests() =
 

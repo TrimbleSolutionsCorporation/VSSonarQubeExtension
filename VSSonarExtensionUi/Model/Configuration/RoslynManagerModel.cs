@@ -21,6 +21,8 @@
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
 
+    using VSSonarPluginsUi;
+
     /// <summary>
     /// Roslyn manager model
     /// </summary>

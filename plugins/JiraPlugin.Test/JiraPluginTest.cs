@@ -22,6 +22,7 @@ namespace JiraPlugin.Test
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Moq;
+    using VSSonarPluginsUi;
 
     /// <summary>
     /// Tests the Git Plugin.

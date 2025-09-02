@@ -15,16 +15,19 @@
 namespace CxxPlugin.LocalExtensions
 {
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
+    using System.Xml.Serialization;
 
     using RestSharp;
-    using RestSharp.Deserializers;
 
     using SonarRestService;
     using SonarRestService.Types;
 
     using VSSonarPlugins;
     using VSSonarPlugins.Helpers;
+
+    using VSSonarPluginsUi;
 
     /// <summary>
     /// The cpp check sensor.
@@ -65,14 +68,23 @@ namespace CxxPlugin.LocalExtensions
                 return violations;
             }
 
-            var xml = new XmlDeserializer();
-            var output = xml.Deserialize<Results>(new RestResponse { Content = string.Join("\r\n", lines) });
+            var xmlContent = string.Join("\r\n", lines);
 
-            violations.AddRange(
-                from error in output.Errors
-                let ruleKey = this.RepositoryKey + ":" + error.Id
-                where !ruleKey.Equals("cppcheck:unusedFunction")
-                select new Issue { Line = error.Line, Message = error.Msg, Rule = this.RepositoryKey + ":" + error.Id, Component = error.File });
+            Results output = null;
+            var serializer = new XmlSerializer(typeof(Results), new XmlRootAttribute("results"));
+            using (var reader = new StringReader(xmlContent))
+            {
+                output = (Results)serializer.Deserialize(reader);
+            }
+
+            if (output?.Errors != null)
+            {
+                violations.AddRange(
+                    from error in output.Errors
+                    let ruleKey = this.RepositoryKey + ":" + error.Id
+                    where !ruleKey.Equals("cppcheck:unusedFunction")
+                    select new Issue { Line = error.Line, Message = error.Msg, Rule = ruleKey, Component = error.File });
+            }
 
             return violations;
         }

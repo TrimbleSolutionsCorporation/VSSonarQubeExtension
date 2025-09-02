@@ -31,6 +31,7 @@ namespace VSSonarExtensionUi.Model.Analysis
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
     using System.Windows;
+    using VSSonarPluginsUi;
 
     /// <summary>
     /// Search model for issues, viewmodel IssuesSearchViewModel

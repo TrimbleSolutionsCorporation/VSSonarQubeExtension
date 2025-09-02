@@ -22,6 +22,8 @@ namespace CxxPlugin.LocalExtensions
 
     using VSSonarPlugins;
 
+    using VSSonarPluginsUi;
+
     /// <summary>
     ///     The CxxLintSensor sensor.
     /// </summary>

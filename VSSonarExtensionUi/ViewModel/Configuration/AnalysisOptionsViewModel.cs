@@ -35,6 +35,8 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
 
+    using VSSonarPluginsUi;
+
     /// <summary>
     ///     The dummy options controller.
     /// </summary>

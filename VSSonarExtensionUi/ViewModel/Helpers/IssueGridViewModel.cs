@@ -41,6 +41,7 @@ namespace VSSonarExtensionUi.ViewModel.Helpers
     using SonarRestService;
     using System.Threading.Tasks;
     using System.IO;
+    using VSSonarPluginsUi;
 
     /// <summary>
     /// The issue grid view viewModel.

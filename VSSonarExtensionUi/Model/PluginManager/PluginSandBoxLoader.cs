@@ -26,6 +26,7 @@ namespace VSSonarExtensionUi.Model.PluginManager
     using SonarRestService;
     using SonarRestServiceImpl;
     using SonarLocalAnalyser;
+    using VSSonarPluginsUi;
 
     /// <summary>
     ///     The assembly sand box loader.

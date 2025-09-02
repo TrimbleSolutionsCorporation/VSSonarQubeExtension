@@ -17,6 +17,7 @@ open FSharpLint.Framework
 open FSharpLint.Framework.Ast
 open FSharpLint.Framework.Configuration
 open FSharpLint.Application
+open VSSonarPluginsUi
 
 [<AllowNullLiteralAttribute>]
 type FsLintRule(name : string, value : string) =
@@ -69,8 +70,6 @@ type FsLintRunner(notificationManager : INotificationManager, configuration : FS
     let mutable notsupportedlines = List.Empty
     let mutable issues = List.empty
     let mutable filePath = ""
-
-
             
     let outputLintResult = function
         | LintResult.Success(_) -> notificationManager.ReportMessage(Message ( Id = "FsLintRunner", Data= "FSharp Link Ok"))

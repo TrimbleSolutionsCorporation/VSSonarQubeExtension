@@ -40,6 +40,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using SonarRestService.Types;
     using SonarRestService;
     using System.Windows.Forms;
+    using VSSonarPluginsUi;
 
     /// <summary>
     /// The issues search view model.

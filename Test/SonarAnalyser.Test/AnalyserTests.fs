@@ -19,6 +19,7 @@ open Foq
 open VSSonarPlugins
 open SonarRestService
 open SonarRestService.Types
+open VSSonarPluginsUi
 
 type AnalyserTests() =
 

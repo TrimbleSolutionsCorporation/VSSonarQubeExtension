@@ -22,7 +22,6 @@ open Microsoft.Build.Execution
 open Microsoft.Build.Evaluation
 open MSBuildHelper
 open FSharp.Data
-open MSBuildHelper
 
 open Types
 open LocalHelpers
@@ -30,6 +29,7 @@ open ServerHelpers
 open Analysers
 open SonarRestService
 open SonarRestService.Types
+open VSSonarPluginsUi
 
 type NSonarQubeRunner(helper : IConfigurationHelper, notificationManager : INotificationManager, service : ISonarRestService, vshelper : IVsEnvironmentHelper) =
     let CurrentRunDir = Environment.CurrentDirectory

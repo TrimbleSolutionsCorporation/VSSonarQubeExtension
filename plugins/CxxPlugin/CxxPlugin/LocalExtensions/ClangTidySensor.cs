@@ -13,6 +13,8 @@
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
 
+    using VSSonarPluginsUi;
+
     /// <summary>
     /// sensor clang tidy
     /// </summary>

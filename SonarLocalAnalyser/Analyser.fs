@@ -31,6 +31,7 @@ open Microsoft.Build.Utilities
 open System.Management
 open SonarRestService.Types
 open SonarRestService
+open VSSonarPluginsUi
 
 type LanguageType =
    | SingleLang = 0
@@ -227,23 +228,34 @@ type SonarLocalAnalyser(plugins : System.Collections.Generic.IList<IAnalysisPlug
             profileUpdated <- true
         else
             let profiles = restService.GetQualityProfilesForProject(conf, project)
-            for profile in profiles do
-                notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "updating profile: " + profile.Name + " : " + profile.Language))
-                lock syncLockProfiles (
-                    fun () -> 
-                        try
-                            System.Diagnostics.Debug.WriteLine("Get Profile: " + profile.Name + " : " + profile.Language)
-                            restService.GetRulesForProfile(conf, profile, false)
-                            if cachedProfiles.ContainsKey(project.Name) then
-                                cachedProfiles.[project.Name].Add(profile.Language, profile)
-                            else
-                                let entry = new System.Collections.Generic.Dictionary<string, Profile>()
-                                cachedProfiles.Add(project.Name, entry)
-                                cachedProfiles.[project.Name].Add(profile.Language, profile)
-                        with
-                        | ex -> System.Diagnostics.Debug.WriteLine("cannot add profile: " + ex.Message + " : " + ex.StackTrace)
-                    )
+            let profileTasks =
+                profiles
+                |> Seq.map (fun profile ->                    
+                    async {
+                        if profile.Language = "cxx" || profile.Language = "cs" || profile.Language = "fs" then
+                            notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "updating profile: " + profile.Name + " : " + profile.Language))
+                            lock syncLockProfiles (
+                                fun () -> 
+                                    try
+                                        restService.GetRulesForProfile(conf, profile, false)
+                                        if cachedProfiles.ContainsKey(project.Name) then
+                                            cachedProfiles.[project.Name].Add(profile.Language, profile)
+                                        else
+                                            let entry = new System.Collections.Generic.Dictionary<string, Profile>()
+                                            cachedProfiles.Add(project.Name, entry)
+                                            cachedProfiles.[project.Name].Add(profile.Language, profile)
+                                    with
+                                    | ex -> notificationManager.ReportException(ex)
+                            )
+                        else
+                            notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Profile sync skipped: " + profile.Name + " : " + profile.Language + " - not supported local analysis"))
+                    }
+                )
+                |> Seq.toArray
 
+            Async.Parallel profileTasks |> Async.RunSynchronously |> ignore
+
+        notificationManager.ReportMessage(new Message(Id = "Analyser", Data = "Profiles synched locally"))
         true
 
     member val Exclusions : System.Collections.Generic.IList<Exclusion> = null with get, set

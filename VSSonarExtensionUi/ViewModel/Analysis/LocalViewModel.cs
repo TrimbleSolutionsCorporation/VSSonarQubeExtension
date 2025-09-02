@@ -51,6 +51,8 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
     using VSSonarPlugins.Helpers;
     using VSSonarPlugins.Types;
 
+    using VSSonarPluginsUi;
+
     /// <summary>
     /// The analysis types.
     /// </summary>
@@ -90,8 +92,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         private readonly Dictionary<string, DateTime> projectBuildCache = new Dictionary<string, DateTime>();
         private readonly Dictionary<string, string> sourceInServerCache = new Dictionary<string, string>();
         private readonly Dictionary<string, List<Issue>> falseandwontfixissues = new Dictionary<string, List<Issue>>();
-        private readonly Dictionary<string, List<Issue>> cachedLocalIssues = new Dictionary<string, List<Issue>>();
-        private readonly Dictionary<string, List<Issue>> cachedCommandIssues = new Dictionary<string, List<Issue>>();
         private readonly Dictionary<string, List<Issue>> newAddedIssues;
 
         private CancellationTokenSource ct;
@@ -351,7 +351,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         public void OnShowIssuesOnModifiedSectionsOfFileOnlyChanged()
         {
-            this.cachedLocalIssues.Clear();
             this.configurationHelper.WriteSetting(Context.FileAnalysisProperties, this.LocalViewModelIdentifier, this.ShowIssuesInModifiedLinesKey, this.ShowIssuesOnModifiedSectionsOfFileOnly.ToString().ToLowerInvariant());
             this.RunLocalAnalysis(AnalysisTypes.FILE, true, this.VsFileItemInView);
         }
@@ -361,7 +360,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
         /// </summary>
         public void OnShowFalsePositivesAndResolvedIssuesChanged()
         {
-            this.cachedLocalIssues.Clear();
             this.configurationHelper.WriteSetting(Context.FileAnalysisProperties, this.LocalViewModelIdentifier, this.HideFalsePositivesKey, this.ShowFalsePositivesAndResolvedIssues.ToString().ToLowerInvariant());
             if (this.VsFileItemInView != null)
             {
@@ -393,7 +391,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.sourceInServerCache.Clear();
             this.falseandwontfixissues.Clear();
             this.newAddedIssues.Clear();
-            this.cachedLocalIssues.Clear();
             this.ClearIssues();
             this.associatedProject = null;
             this.IsAssociatedWithProject = false;
@@ -409,7 +406,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             this.newAddedIssues.Clear();
             this.sourceInServerCache.Clear();
             this.falseandwontfixissues.Clear();
-            this.cachedLocalIssues.Clear();
             this.localAnalyserModule.OnDisconect();
             await Task.Delay(0);
         }
@@ -699,9 +695,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
 
                         await this.IssuesGridView.UpdateIssues(new List<Issue>(), null);
 
-                        if (fromSave || !this.cachedLocalIssues.ContainsKey(itemInView.SonarResource.Key))
-                        {
-                            this.cachedLocalIssues.Remove(itemInView.SonarResource.Key);
                             this.PopulateFalsePositivesAndResolvedItems(itemInView);
                             var issues = await this.localAnalyserModule.AnalyseFile(
                                 itemInView,
@@ -710,28 +703,9 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                                 this.keyTranslator,
                                 this.vsenvironmenthelper,
                                 fromSave);
-                            if (this.cachedCommandIssues.ContainsKey(itemInView.SonarResource.Key))
-                            {
-                                this.cachedCommandIssues[itemInView.SonarResource.Key].Clear();
-                                this.cachedCommandIssues[itemInView.SonarResource.Key].AddRange(issues);
-                            }
 
                             await this.IssuesGridView.UpdateIssues(issues, null);
                             this.RefreshIssuesEditor(EventArgs.Empty);
-                        }
-                        else
-                        {
-                            // load issues from cache
-                            var issues = new List<Issue>();
-                            issues.AddRange(this.cachedLocalIssues[itemInView.SonarResource.Key]);
-                            if (this.cachedCommandIssues.ContainsKey(itemInView.SonarResource.Key))
-                            {
-                                issues.AddRange(this.cachedCommandIssues[itemInView.SonarResource.Key]);
-                            }
-
-                            await this.IssuesGridView.UpdateIssues(issues, null);
-                            this.RefreshIssuesEditor(EventArgs.Empty);
-                        }
                         break;
                     default:
                         throw new NotImplementedException();
@@ -760,7 +734,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
 
             try
             {
-                var filter = "?componentRoots=" + itemInView.SonarResource.Key + "&resolutions=FALSE-POSITIVE,WONTFIX";
+                var filter = "files=" + itemInView.SonarResource.Key + "&resolutions=FALSE-POSITIVE,WONTFIX";
 
                 this.CreateNewTokenOrUseOldOne();
                 var issues = await Task.Run(() =>
@@ -839,19 +813,7 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
             var commandIssues = e as LocalAnalysisEventCommandAnalsysisComplete;
             if (commandIssues != null)
             {
-                if (this.cachedCommandIssues.ContainsKey(commandIssues.itemInView.SonarResource.Key))
-                {
-                    this.cachedCommandIssues.Remove(commandIssues.itemInView.SonarResource.Key);
-                }
-
-                this.cachedCommandIssues.Add(commandIssues.itemInView.SonarResource.Key, commandIssues.issues);
                 var issuesToGrid = commandIssues.issues;
-
-                if (this.cachedLocalIssues.ContainsKey(commandIssues.itemInView.SonarResource.Key))
-                {
-                    issuesToGrid.AddRange(this.cachedLocalIssues[commandIssues.itemInView.SonarResource.Key]);
-                }
-
                 await this.IssuesGridView.UpdateIssues(issuesToGrid, null);
                 this.RefreshIssuesEditor(EventArgs.Empty);
                 return;
@@ -937,18 +899,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
 
                     if (this.ShowIssuesOnModifiedSectionsOfFileOnly)
                     {
-                        if (this.cachedCommandIssues.ContainsKey(issuesMessage.resource.SonarResource.Key))
-                        {
-                            issuesinChangedLines.AddRange(this.cachedCommandIssues[issuesMessage.resource.SonarResource.Key]);
-                        }
-
-                        if (this.cachedLocalIssues.ContainsKey(issuesMessage.resource.SonarResource.Key))
-                        {
-                            this.cachedLocalIssues.Remove(issuesMessage.resource.SonarResource.Key);
-                        }
-
-                        this.cachedLocalIssues.Add(issuesMessage.resource.SonarResource.Key, issuesinChangedLines);
-
                         if (!issuesMessage.resource.SonarResource.Key.Equals(this.VsFileItemInView.SonarResource.Key))
                         {
                             return;
@@ -959,17 +909,6 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                     }
                     else
                     {
-                        if (this.cachedCommandIssues.ContainsKey(issuesMessage.resource.SonarResource.Key))
-                        {
-                            issuesinChangedLines.AddRange(this.cachedCommandIssues[issuesMessage.resource.SonarResource.Key]);
-                        }
-
-                        if (this.cachedLocalIssues.ContainsKey(issuesMessage.resource.SonarResource.Key))
-                        {
-                            this.cachedLocalIssues.Remove(issuesMessage.resource.SonarResource.Key);
-                        }
-                        this.cachedLocalIssues.Add(issuesMessage.resource.SonarResource.Key, issuesWithoutFalsePositives);
-
                         if (!issuesMessage.resource.SonarResource.Key.Equals(this.VsFileItemInView.SonarResource.Key))
                         {
                             return;
@@ -1005,18 +944,12 @@ namespace VSSonarExtensionUi.ViewModel.Analysis
                                 Data = "Failed to check false positives and new issues : Likely new file : " + ex.Message
                             });
 
-                        this.cachedLocalIssues.Add(issuesMessage.resource.SonarResource.Key, issuesMessage.issues);
                         if (!issuesMessage.resource.SonarResource.Key.Equals(this.VsFileItemInView.SonarResource.Key))
                         {
                             return;
                         }
 
                         var issues = issuesMessage.issues;
-                        if (this.cachedCommandIssues.ContainsKey(issuesMessage.resource.SonarResource.Key))
-                        {
-                            issues.AddRange(this.cachedCommandIssues[issuesMessage.resource.SonarResource.Key]);
-                        }
-
                         await this.IssuesGridView.UpdateIssues(issues, null);
                         this.RefreshIssuesEditor(EventArgs.Empty);
                     }

@@ -20,6 +20,7 @@ open System.IO
 open VSSonarPlugins
 open SonarRestService
 open SonarRestService.Types
+open VSSonarPluginsUi
 
 type SupportTests() =
 

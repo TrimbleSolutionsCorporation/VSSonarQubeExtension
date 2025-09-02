@@ -17,6 +17,7 @@ open SonarRestService
 open SonarRestService.Types
 
 open Types
+open VSSonarPluginsUi
 
 let mutable MSbuildOpenSolution : Solution = null
 let CurrentWorkspace = MSBuildWorkspace.Create()
@@ -114,7 +115,7 @@ let runRoslynOnCompilationUnit(compilation : Compilation, ids, builder : Diagnos
         ).WithSpecificDiagnosticOptions(ids)
         
     let compilationWithOptions = compilation.WithOptions(options)    
-    let analyserMain = compilationWithOptions.WithAnalyzers(builder.ToImmutableArray(), optionsWithAdditionalFiles, token.Token)
+    let analyserMain = compilationWithOptions.WithAnalyzers(builder.ToImmutableArray(), optionsWithAdditionalFiles)
     analyserMain.GetAnalyzerDiagnosticsAsync().Result
 
 let runRoslynOnCompilationUnitTree(compilation : Compilation, ids, builder : DiagnosticAnalyzer list, sonarAdditionalDocument : string [], token : CancellationTokenSource, itemInView : VsFileItem) =
@@ -133,7 +134,7 @@ let runRoslynOnCompilationUnitTree(compilation : Compilation, ids, builder : Dia
         ).WithSpecificDiagnosticOptions(ids)
         
     let compilationWithOptions = compilation.WithOptions(options)    
-    let analyserMain = compilationWithOptions.WithAnalyzers(builder.ToImmutableArray(), optionsWithAdditionalFiles, token.Token)
+    let analyserMain = compilationWithOptions.WithAnalyzers(builder.ToImmutableArray(), optionsWithAdditionalFiles)
     let tree = compilationWithOptions.SyntaxTrees |> Seq.find (fun c -> c.FilePath.ToLower().Equals(itemInView.FilePath.ToLower()))
     let sematincModel = compilation.GetSemanticModel(tree)
     let lenght = tree.Length

@@ -11,6 +11,7 @@ using Moq;
 using VSSonarPlugins.Types;
 using SonarRestService.Types;
 using SonarRestService;
+using VSSonarPluginsUi;
 
 namespace CxxPlugin.LocalExtensions.Tests
 {

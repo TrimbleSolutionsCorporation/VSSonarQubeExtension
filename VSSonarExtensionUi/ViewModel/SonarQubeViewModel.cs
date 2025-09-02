@@ -55,6 +55,8 @@ namespace VSSonarExtensionUi.ViewModel
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
 
+    using VSSonarPluginsUi;
+
     /// <summary>
     ///     The changed event handler.
     /// </summary>

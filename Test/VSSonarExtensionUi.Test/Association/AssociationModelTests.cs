@@ -14,6 +14,7 @@
     using VSSonarExtensionUi.Association;
     using SonarRestService;
     using SonarRestService.Types;
+    using VSSonarPluginsUi;
 
     [TestFixture]
     class AssociationModelTests

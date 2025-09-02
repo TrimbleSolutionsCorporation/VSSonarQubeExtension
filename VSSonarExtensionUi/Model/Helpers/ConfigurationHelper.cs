@@ -20,6 +20,8 @@ namespace VSSonarExtensionUi.Model.Helpers
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
 
+    using VSSonarPluginsUi;
+
     /// <summary>
     /// The configuration helper.
     /// </summary>

@@ -15,6 +15,8 @@
 
     using VSSonarPlugins;
 
+    using VSSonarPluginsUi;
+
 
     /// <summary>The notify cation manager.</summary>
     public class NotifyCationManager : INotificationManager, IModelBase, IRestLogger

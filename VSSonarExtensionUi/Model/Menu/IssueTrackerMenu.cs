@@ -35,6 +35,7 @@ namespace VSSonarExtensionUi.Model.Menu
     using SonarRestService;
     using System.Threading;
     using System.Threading.Tasks;
+    using VSSonarPluginsUi;
 
     /// <summary>
     /// Issue tracker menus.

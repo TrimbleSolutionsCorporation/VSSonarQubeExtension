@@ -13,6 +13,7 @@ open NSonarQubeRunner
 open FSharpLintRunner
 open SonarRestService
 open SonarRestService.Types
+open VSSonarPluginsUi
 
 type AnalysisMode =
    | File = 0

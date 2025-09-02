@@ -9,10 +9,14 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Reflection;
+    using System.Threading.Tasks;
+
     using ViewModel;
     using ViewModel.Configuration;
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
+
+    using VSSonarPluginsUi;
 
     [TestFixture]
     class SonarQubeViewModelTests
@@ -73,13 +77,13 @@
         }
 
         [Test]
-        public void OnConnectWithoutSolutionOpenShouldNotAssociate()
+        public async Task OnConnectWithoutSolutionOpenShouldNotAssociate()
         {
             mockConfiguration.Setup(x => x.ReadSetting(It.IsAny<Context>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new SonarQubeProperties { Value = "dummy" });
             mockRest.Setup(x => x.GetProjectsList(It.IsAny<ISonarConfiguration>())).Returns(this.CreatProjects());
             mockRest.Setup(x => x.AuthenticateUser(It.IsAny<ISonarConfiguration>()).Result).Returns(true);
 
-            AuthtenticationHelper.EstablishAConnection(mockRest.Object, "as", "asda", "asd");
+            await AuthtenticationHelper.EstablishAConnection(mockRest.Object, "as", "asda", "asd");
 
             var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, locaAnalyser: mockAnalyser.Object, pluginManager: mockPluginManager.Object);
             associationModel.VsHelper = mockVsHelper.Object;
@@ -98,7 +102,7 @@
         }
 
         [Test]
-        public void OnConnectWithSolutionOpenShouldAssociateToMasterWhenBranchIsMaster()
+        public async Task OnConnectWithSolutionOpenShouldAssociateToMasterWhenBranchIsMaster()
         {
             mockConfiguration.Setup(x => x.ReadSetting(It.IsAny<Context>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new SonarQubeProperties { Value = "project_Main" });
             mockRest.Setup(x => x.GetProjectsList(It.IsAny<ISonarConfiguration>())).Returns(this.CreatProjects());
@@ -106,7 +110,7 @@
             mockVsHelper.Setup(x => x.ActiveSolutionFileNameWithExtension()).Returns("solutionaname");
             mockVsHelper.Setup(x => x.ActiveSolutioRootPath()).Returns("solutionapath");
 
-            AuthtenticationHelper.EstablishAConnection(mockRest.Object, "as", "asda", "asd");
+            await AuthtenticationHelper.EstablishAConnection(mockRest.Object, "as", "asda", "asd");
 
             var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, mockSourceProvider.Object, mockPlugin.Object, mockAnalyser.Object);
             associationModel.VsHelper = mockVsHelper.Object;
@@ -121,7 +125,7 @@
         }
 
         [Test]
-        public void OnConnectWithSolutionOpenShouldAssociateToMasterWhenBranchIsNotAvailableInServer()
+        public async Task OnConnectWithSolutionOpenShouldAssociateToMasterWhenBranchIsNotAvailableInServer()
         {
             mockConfiguration.Setup(x => x.ReadSetting(It.IsAny<Context>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new SonarQubeProperties { Value = "project_Main" });
             mockRest.Setup(x => x.GetProjectsList(It.IsAny<ISonarConfiguration>())).Returns(this.CreatProjects());
@@ -130,7 +134,7 @@
             mockVsHelper.Setup(x => x.ActiveSolutioRootPath()).Returns("solutionapath");
             mockSourceProvider.Setup(x => x.GetBranch()).Returns("feature/1234-asdas");
 
-            AuthtenticationHelper.EstablishAConnection(mockRest.Object, "as", "asda", "asd");
+            await AuthtenticationHelper.EstablishAConnection(mockRest.Object, "as", "asda", "asd");
 
             var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, mockSourceProvider.Object, mockPlugin.Object, mockAnalyser.Object);
             associationModel.VsHelper = mockVsHelper.Object;
@@ -145,7 +149,7 @@
         }
 
         [Test]
-        public void OnConnectWithSolutionOpenShouldAssociateToBranchWhenBranchIsAvailableInServer()
+        public async Task OnConnectWithSolutionOpenShouldAssociateToBranchWhenBranchIsAvailableInServer()
         {
             mockConfiguration.Setup(x => x.ReadSetting(It.IsAny<Context>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new SonarQubeProperties { Value = "project_Main" });
             mockRest.Setup(x => x.GetProjectsList(It.IsAny<ISonarConfiguration>())).Returns(this.CreatProjects());
@@ -154,7 +158,7 @@
             mockVsHelper.Setup(x => x.ActiveSolutioRootPath()).Returns("solutionapath");
             mockSourceProvider.Setup(x => x.GetBranch()).Returns("feature_A");
 
-            AuthtenticationHelper.EstablishAConnection(mockRest.Object, "as", "asda", "asd");
+            await AuthtenticationHelper.EstablishAConnection(mockRest.Object, "as", "asda", "asd");
 
             var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, mockSourceProvider.Object, mockPlugin.Object, mockAnalyser.Object);
             associationModel.VsHelper = mockVsHelper.Object;
@@ -169,7 +173,7 @@
         }
 
         [Test]
-        public void OnConnectWithSolutionOpenShouldAssociateToANormalProject()
+        public async Task OnConnectWithSolutionOpenShouldAssociateToANormalProject()
         {
             mockConfiguration.Setup(x => x.ReadSetting(It.IsAny<Context>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new SonarQubeProperties { Value = "tekla.utilities:project" });
             mockRest.Setup(x => x.GetProjectsList(It.IsAny<ISonarConfiguration>())).Returns(this.CreatProjects());
@@ -177,7 +181,7 @@
             mockVsHelper.Setup(x => x.ActiveSolutionFileNameWithExtension()).Returns("solutionaname");
             mockVsHelper.Setup(x => x.ActiveSolutioRootPath()).Returns("solutionapath");
 
-            AuthtenticationHelper.EstablishAConnection(mockRest.Object, "as", "asda", "asd");
+            await AuthtenticationHelper.EstablishAConnection(mockRest.Object, "as", "asda", "asd");
 
             var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, mockSourceProvider.Object, mockPlugin.Object, mockAnalyser.Object);
             associationModel.VsHelper = mockVsHelper.Object;
@@ -195,7 +199,7 @@
         }
 
         [Test]
-        public void OnConnectWithSolutionOpenButNoFormerAssociationItShouldNotAssociate()
+        public async Task OnConnectWithSolutionOpenButNoFormerAssociationItShouldNotAssociate()
         {
             mockRest.Setup(x => x.GetProjectsList(It.IsAny<ISonarConfiguration>())).Returns(this.CreatProjects());
             mockRest.Setup(x => x.AuthenticateUser(It.IsAny<ISonarConfiguration>()).Result).Returns(true);
@@ -203,7 +207,7 @@
             mockVsHelper.Setup(x => x.ActiveSolutioRootPath()).Returns("solutionapath");
             mockPlugin.Setup(x => x.SourceCodePlugins).Returns(new List<ISourceVersionPlugin>());
 
-            AuthtenticationHelper.EstablishAConnection(mockRest.Object, "as", "asda", "asd");
+            await AuthtenticationHelper.EstablishAConnection(mockRest.Object, "as", "asda", "asd");
 
             var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, mockSourceProvider.Object, mockPlugin.Object, locaAnalyser: mockAnalyser.Object);
             associationModel.AssociationModule.AssociatedProject = new Resource();
@@ -230,7 +234,7 @@
         }
 
         [Test]
-        public void OnSolutionOpenButProjectNotFoundItShouldNotAssociate()
+        public async Task OnSolutionOpenButProjectNotFoundItShouldNotAssociate()
         {
             mockRest.Setup(x => x.GetProjectsList(It.IsAny<ISonarConfiguration>())).Returns(this.CreatProjects());
             mockRest.Setup(x => x.AuthenticateUser(It.IsAny<ISonarConfiguration>()).Result).Returns(true);
@@ -238,7 +242,7 @@
             mockVsHelper.Setup(x => x.ActiveSolutioRootPath()).Returns("solutionapath");
             mockPlugin.Setup(x => x.SourceCodePlugins).Returns(new List<ISourceVersionPlugin>());
 
-            AuthtenticationHelper.EstablishAConnection(mockRest.Object, "as", "asda", "asd");
+            await AuthtenticationHelper.EstablishAConnection(mockRest.Object, "as", "asda", "asd");
             var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, mockSourceProvider.Object, mockPlugin.Object, locaAnalyser: mockAnalyser.Object);
             associationModel.AssociationModule.AssociatedProject = new Resource();
             associationModel.SelectedProjectKey = "jasd";
@@ -263,14 +267,14 @@
         }
 
         [Test]
-        public void OnConnectToSonarIfAssociationIsMadeItShouldResetItIfProjectNotFound()
+        public async Task OnConnectToSonarIfAssociationIsMadeItShouldResetItIfProjectNotFound()
         {
             mockRest.Setup(x => x.GetProjectsList(It.IsAny<ISonarConfiguration>())).Returns(this.CreatProjects());
             mockRest.Setup(x => x.AuthenticateUser(It.IsAny<ISonarConfiguration>()).Result).Returns(true);
             mockVsHelper.Setup(x => x.ActiveSolutionFileNameWithExtension()).Returns("solutionaname");
             mockVsHelper.Setup(x => x.ActiveSolutioRootPath()).Returns("solutionapath");
 
-            AuthtenticationHelper.EstablishAConnection(mockRest.Object, "as", "asda", "asd");
+            await AuthtenticationHelper.EstablishAConnection(mockRest.Object, "as", "asda", "asd");
 
             var associationModel = new SonarQubeViewModel("test", mockConfiguration.Object, mockLogger.Object, mockTranslator.Object, mockRest.Object, mockSourceProvider.Object, mockPlugin.Object, locaAnalyser: mockAnalyser.Object);
             associationModel.VsHelper = mockVsHelper.Object;

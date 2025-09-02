@@ -31,6 +31,8 @@ namespace CxxPlugin.Options
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
 
+    using VSSonarPluginsUi;
+
     /// <summary>
     /// The dummy options controller.
     /// </summary>

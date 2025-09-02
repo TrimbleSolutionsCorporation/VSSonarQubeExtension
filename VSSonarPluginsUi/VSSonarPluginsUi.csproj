@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <TargetFrameworks>net48</TargetFrameworks>
+	  <UseWpf>true</UseWpf>
+	  <UsewindowsForms>true</UsewindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Trimble.SonarRestApi" Version="2.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VSSonarPlugins\VSSonarPlugins.csproj" />
+  </ItemGroup>
+
+</Project>

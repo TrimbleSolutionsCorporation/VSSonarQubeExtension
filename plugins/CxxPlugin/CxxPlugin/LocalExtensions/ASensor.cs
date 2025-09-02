@@ -17,6 +17,8 @@ namespace CxxPlugin.LocalExtensions
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
 
+    using VSSonarPluginsUi;
+
     /// <summary>
     ///     The Sensor interface.
     /// </summary>

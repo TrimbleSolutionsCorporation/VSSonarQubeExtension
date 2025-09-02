@@ -29,6 +29,8 @@ namespace CxxPlugin.LocalExtensions
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
 
+    using VSSonarPluginsUi;
+
     /// <summary>
     ///     The cxx server extension.
     /// </summary>

@@ -26,6 +26,8 @@
     using VSSonarPlugins.Helpers;
     using VSSonarPlugins.Types;
 
+    using VSSonarPluginsUi;
+
     /// <summary>
     /// Generates associations with sonar projects
     /// </summary>

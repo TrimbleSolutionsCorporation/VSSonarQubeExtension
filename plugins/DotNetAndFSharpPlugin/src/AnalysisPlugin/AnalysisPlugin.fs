@@ -11,6 +11,7 @@ open VSSonarPlugins.Types
 open SonarRestService
 open SonarLocalAnalyser
 open SonarRestService.Types
+open VSSonarPluginsUi
 
 [<Export(typeof<IPlugin>)>]
 type public AnalysisPlugin(notificationManager : INotificationManager, configurationHelper : IConfigurationHelper, service : ISonarRestService, vshelper : IVsEnvironmentHelper) = 

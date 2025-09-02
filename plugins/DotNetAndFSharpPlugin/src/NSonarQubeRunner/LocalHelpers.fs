@@ -26,58 +26,64 @@ open FSharp.Data
 open SonarRestService
 open SonarRestService.Types
 open Types
+open VSSonarPluginsUi
 
 let GetRoslynDiagnostics(externlProfileIn : System.Collections.Generic.Dictionary<string, Profile>, notificationManager : INotificationManager, checksRoslyn : DiagnosticAnalyzerType list) =
     let mutable builder = List.empty
     let mutable ids = List.empty
     for check in checksRoslyn do
-            let mutable checkadded = false
-            for diagnostic in check.Diagnostic.SupportedDiagnostics do
-                if not(checkadded) then                      
-                    for lang in check.Languages do
-                        let language, repo = 
-                            if lang.Equals("C#") then
-                                "cs", "roslyn-cs"
-                            else
-                                "vbnet", "roslyn-vbnet"
-                            
-                        let id = repo + ":" + diagnostic.Id
-                        try
-                            let profile = externlProfileIn.[language]
-                            let rule = profile.GetRule(id)
-                            if rule <> null then
-                                checkadded <- true
-                                builder <- builder @ [check]
-                                ids <- ids @ [new System.Collections.Generic.KeyValuePair<string, ReportDiagnostic>(diagnostic.Id, ReportDiagnostic.Warn)]
+        let mutable checkadded = false
+        for diagnostic in check.Diagnostic.SupportedDiagnostics do
+            if not(checkadded) then                      
+                for lang in check.Languages do
+                    let language, repo = 
+                        if lang.Equals("C#") then
+                            "cs", "roslyn-cs"
+                        else
+                            "vbnet", "roslyn-vbnet"
+                    let id = repo + ":" + diagnostic.Id
+                    try
+                        let profile = externlProfileIn.[language]
+                        let rule = profile.GetRule(id)
+                        if rule <> null then
+                            checkadded <- true
+                            builder <- builder @ [check]
+                            ids <- ids @ [new System.Collections.Generic.KeyValuePair<string, ReportDiagnostic>(diagnostic.Id, ReportDiagnostic.Warn)]
 
-                                if rule.Params.Count <> 0 then
-                                    let fields = check.Diagnostic.GetType().GetProperties()
-                                    for field in fields do
+                            if rule.Params.Count <> 0 then
+                                let fields = check.Diagnostic.GetType().GetProperties()
+                                let asyncFieldSetters =
+                                    fields
+                                    |> Array.choose (fun field ->
                                         let attributes = field.GetCustomAttributes().ToImmutableArray()
                                         if attributes.Length = 1 &&
                                             attributes.[0].TypeId.ToString().EndsWith("Common.RuleParameterAttribute") then
-                                            try
-                                                let typeOfField = field.PropertyType
-                                                let typeOfFiledName = field.PropertyType.Name
-                                                if typeOfFiledName.Equals("IImmutableSet`1") then
-                                                    let elems = rule.Params.[0].Value.Replace("\"", "").Split(',').ToImmutableHashSet()
-                                                    field.SetValue(check.Diagnostic, elems)
-                                                else
-                                                    let changedValue = Convert.ChangeType(rule.Params.[0].Value.Replace("\"", ""), typeOfField)
-                                                    field.SetValue(check.Diagnostic, changedValue)
+                                            Some (async {
+                                                try
+                                                    let typeOfField = field.PropertyType
+                                                    let typeOfFiledName = field.PropertyType.Name
+                                                    if typeOfFiledName.Equals("IImmutableSet`1") then
+                                                        let elems = rule.Params.[0].Value.Replace("\"", "").Split(',').ToImmutableHashSet()
+                                                        field.SetValue(check.Diagnostic, elems)
+                                                    else
+                                                        let changedValue = Convert.ChangeType(rule.Params.[0].Value.Replace("\"", ""), typeOfField)
+                                                        field.SetValue(check.Diagnostic, changedValue)
 
-                                                let value = field.GetValue(check.Diagnostic)
-                                                notificationManager.ReportMessage(new Message(Id = "NSonarQubeRunner", Data = "Applied Rule Parameter csharpsquid:" + diagnostic.Id + " = " + rule.Params.[0].Value))
-                                                System.Diagnostics.Debug.WriteLine("Applied Rule Parameter csharpsquid:" + diagnostic.Id + " = " + rule.Params.[0].Value)
-                                            with
-                                            | ex -> 
-                                                System.Diagnostics.Debug.WriteLine("Applied Rule Parameter csharpsquid:" + diagnostic.Id + " = " + rule.Params.[0].Value)
-                                                notificationManager.ReportMessage(new Message(Id = "NSonarQubeRunner", Data = "Failed Applied Rule Parameter csharpsquid:" + diagnostic.Id + " = " + rule.Params.[0].Value))
-                                    ()
-                        with
-                        | ex -> System.Diagnostics.Debug.WriteLine("Cannot Add Check Failed: " + id + " : " +  ex.Message)
-                                notificationManager.ReportMessage(new Message(Id = "NSonarQubeRunner", Data = "Check Rule Could Not Be Used " + id + " : " + ex.Message))
-
+                                                    let value = field.GetValue(check.Diagnostic)
+                                                    notificationManager.ReportMessage(new Message(Id = "NSonarQubeRunner", Data = "Applied Rule Parameter csharpsquid:" + diagnostic.Id + " = " + rule.Params.[0].Value))
+                                                    System.Diagnostics.Debug.WriteLine("Applied Rule Parameter csharpsquid:" + diagnostic.Id + " = " + rule.Params.[0].Value)
+                                                with
+                                                | ex -> 
+                                                    System.Diagnostics.Debug.WriteLine("Applied Rule Parameter csharpsquid:" + diagnostic.Id + " = " + rule.Params.[0].Value)
+                                                    notificationManager.ReportMessage(new Message(Id = "NSonarQubeRunner", Data = "Failed Applied Rule Parameter csharpsquid:" + diagnostic.Id + " = " + rule.Params.[0].Value))
+                                            })
+                                        else None)
+                                async {
+                                    do! asyncFieldSetters |> Async.Parallel |> Async.Ignore
+                                } |> Async.RunSynchronously
+                    with
+                    | ex -> System.Diagnostics.Debug.WriteLine("Cannot Add Check Failed: " + id + " : " +  ex.Message)
+                            notificationManager.ReportMessage(new Message(Id = "NSonarQubeRunner", Data = "Check Rule Could Not Be Used " + id + " : " + ex.Message))
     builder, ids
 
 let CombineIds(idsSetIn : Set<string>, builderdata : DiagnosticAnalyzerType list, idsdata : KeyValuePair<string, ReportDiagnostic> list, builder : DiagnosticAnalyzerType list, ids : KeyValuePair<string, ReportDiagnostic> list) =

@@ -28,6 +28,8 @@ namespace VSSonarExtensionUi.Model.PluginManager
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
 
+    using VSSonarPluginsUi;
+
     /// <summary>
     ///     The local analyser.
     /// </summary>    

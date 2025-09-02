@@ -16,15 +16,18 @@ namespace CxxPlugin.LocalExtensions
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
+    using System.Xml.Serialization;
 
     using RestSharp;
-    using RestSharp.Deserializers;
 
     using SonarRestService;
     using SonarRestService.Types;
 
     using VSSonarPlugins;
     using VSSonarPlugins.Helpers;
+
+    using VSSonarPluginsUi;
 
     /// <summary>
     /// The rats sensor.
@@ -81,8 +84,15 @@ namespace CxxPlugin.LocalExtensions
                 return violations;
             }
 
-            var xml = new XmlDeserializer();
-            var output = xml.Deserialize<List<Vulnerability>>(new RestResponse { Content = string.Join("\r\n", lines) });
+            // Join lines to form the XML string
+            var xmlContent = string.Join("\r\n", lines);
+
+            List<Vulnerability> output;
+            var serializer = new XmlSerializer(typeof(List<Vulnerability>), new XmlRootAttribute("ArrayOfVulnerability"));
+            using (var reader = new StringReader(xmlContent))
+            {
+                output = (List<Vulnerability>)serializer.Deserialize(reader);
+            }
 
             foreach (var result in output)
             {
@@ -93,12 +103,12 @@ namespace CxxPlugin.LocalExtensions
                         foreach (var line in file.LineId)
                         {
                             var entry = new Issue
-                                            {
-                                                Rule = this.RepositoryKey + ":" + result.Type,
-                                                Line = line.Value,
-                                                Message = result.Message,
-                                                Component = file.Name
-                                            };
+                            {
+                                Rule = this.RepositoryKey + ":" + result.Type,
+                                Line = line.Value,
+                                Message = result.Message,
+                                Component = file.Name
+                            };
 
                             try
                             {

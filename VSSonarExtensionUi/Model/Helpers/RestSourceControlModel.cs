@@ -6,6 +6,7 @@
     using SonarRestService;
     using System.Threading;
     using System.Threading.Tasks;
+    using VSSonarPluginsUi;
 
     /// <summary>
     /// source control model

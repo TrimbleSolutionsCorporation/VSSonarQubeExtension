@@ -28,11 +28,12 @@ namespace VSSonarExtensionUi.ViewModel.Configuration
 	using SonarRestService.Types;
 	using SonarRestService;
 	using System.Threading.Tasks;
+    using VSSonarPluginsUi;
 
-	/// <summary>
-	/// The sonar configuration view viewModel.
-	/// </summary>
-	[AddINotifyPropertyChangedInterface]
+    /// <summary>
+    /// The sonar configuration view viewModel.
+    /// </summary>
+    [AddINotifyPropertyChangedInterface]
 	public class GeneralConfigurationViewModel : IOptionsViewModelBase, IOptionsModelBase
 	{
 		/// <summary>

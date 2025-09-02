@@ -14,6 +14,8 @@
 
     using VSSonarPlugins;
 
+    using VSSonarPluginsUi;
+
     /// <summary>
     /// controls the available versions in server
     /// </summary>

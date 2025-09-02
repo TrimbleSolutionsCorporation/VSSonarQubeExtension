@@ -23,6 +23,8 @@ namespace CxxPlugin.LocalExtensions
     using VSSonarPlugins;
     using VSSonarPlugins.Helpers;
 
+    using VSSonarPluginsUi;
+
     /// <summary>
     /// The vera sensor.
     /// </summary>

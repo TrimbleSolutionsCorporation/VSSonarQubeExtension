@@ -1,15 +1,15 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <TargetFrameworks>net472</TargetFrameworks>
-	<UseWpf>true</UseWpf>
-	<UsewindowsForms>true</UsewindowsForms>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+	  <UseWpf>true</UseWpf>
+	  <UsewindowsForms>true</UsewindowsForms>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SonarRestApi" Version="1.5.1" />
-    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.3.0-3.final" />
+    <PackageReference Include="Trimble.SonarRestApiImpl" Version="2.0.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.14.0" />
   </ItemGroup>
 
 </Project>

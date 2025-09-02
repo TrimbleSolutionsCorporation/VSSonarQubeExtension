@@ -22,6 +22,7 @@ namespace VSSonarExtensionUi.Model.Menu
     using SonarRestService.Types;
     using SonarRestService;
     using System.Threading.Tasks;
+    using VSSonarPluginsUi;
 
     /// <summary>
     ///     The show hide issue column.

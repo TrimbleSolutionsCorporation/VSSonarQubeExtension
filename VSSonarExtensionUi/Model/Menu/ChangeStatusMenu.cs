@@ -32,6 +32,7 @@ namespace VSSonarExtensionUi.Model.Menu
     using System.Threading.Tasks;
     using System.Threading;
     using System.Linq;
+    using VSSonarPluginsUi;
 
     /// <summary>
     /// The issue handler menu.

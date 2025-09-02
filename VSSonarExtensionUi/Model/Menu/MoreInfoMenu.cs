@@ -37,6 +37,8 @@ namespace VSSonarExtensionUi.Model.Menu
 
     using VSSonarPlugins;
 
+    using VSSonarPluginsUi;
+
     /// <summary>
     /// Source Control Related Actions
     /// </summary>

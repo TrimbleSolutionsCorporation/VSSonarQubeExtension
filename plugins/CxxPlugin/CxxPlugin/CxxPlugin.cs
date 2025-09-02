@@ -22,6 +22,8 @@ namespace CxxPlugin
     using VSSonarPlugins;
     using VSSonarPlugins.Types;
 
+    using VSSonarPluginsUi;
+
     /// <summary>
     ///     The cpp plugin.
     /// </summary>

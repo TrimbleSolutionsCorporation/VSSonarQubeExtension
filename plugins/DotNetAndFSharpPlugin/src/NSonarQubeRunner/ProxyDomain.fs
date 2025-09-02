@@ -17,6 +17,7 @@ open System.Diagnostics
 
 open SonarRestService
 open SonarRestService.Types
+open VSSonarPluginsUi
 
 type ProxyDomain() =
     let mutable checksRoslyn = List.Empty
@@ -111,8 +112,7 @@ type ProxyDomain() =
             let mutable options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
             options <- options.WithSpecificDiagnosticOptions(ids)
             let analysisUnitWithOptions = analysisUnit.WithOptions(options)
-            let analyserMain = analysisUnitWithOptions.WithAnalyzers(builder.ToImmutable(), null, (new CancellationTokenSource()).Token)
-
+            let analyserMain = analysisUnitWithOptions.WithAnalyzers(builder.ToImmutable())
             let result = analyserMain.GetAnalyzerDiagnosticsAsync().Result
 
             for issue in result do

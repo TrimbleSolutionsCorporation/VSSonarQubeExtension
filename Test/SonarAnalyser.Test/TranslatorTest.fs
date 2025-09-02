@@ -22,6 +22,7 @@ open VSSonarPlugins.Types
 open SonarRestService
 open SonarRestService.Types
 open System.Reflection
+open VSSonarPluginsUi
 
 type TraTests() =
     
