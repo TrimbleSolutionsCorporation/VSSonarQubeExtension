@@ -5,7 +5,7 @@ VSSonarQubeExtension
 [![DepShield Badge](https://depshield.sonatype.org/badges/TrimbleSolutionsCorporation/SonarRestService/depshield.svg)](https://depshield.github.io)
 [![Build status](https://ci.appveyor.com/api/projects/status/w03onktfvppbimow/branch/master?svg=true)](https://ci.appveyor.com/project/TrimbleSolutionsCorporation/vssonarqubeextension/branch/master)
 
-This is a Extension for Visual Studio to interact wiht SonarQube (TM).
+This is an Extension for Visual Studio to interact with SonarQube (TM).
 
 # Installation
 Use the Visual Studio Extension Manager and search for VSSonarExtension, Visual Studio 2012, 2013, 2015 and 2017 are supported.
@@ -14,7 +14,7 @@ Use the Visual Studio Extension Manager and search for VSSonarExtension, Visual 
 In case you cant see anything in the options dialog, first disable Resharper and open the options dialog. After this you can enable Resharper again (go figure)!. 
 
 # Alternatives
-SonarLint is the official extension provided by SonarSource. It support C# and VB.Net. 
+SonarLint is the official extension provided by SonarSource. It support C# and VB.Net.
 
 # Why this extension
 There are several reasons why we use this extension, first this extension existed before SonarLint and it has been maintained since its inception. Currently it provides some features that SonarLint does not provide so we will continue its support until we find there is use for it. And in the good spirit of open source, as long as, someone is willing to maintain a piece of software that others use its worth keeping.
@@ -34,9 +34,9 @@ All information on configuration and usage will be found in the wiki pages. [Hom
 
 # Getting Involved
 
-Versions of Visual Studio 2012, 2013 and 2015 can be used. There is one solution for each version. VS Extensibility part is kept in separe project for each version. 
+Versions of Visual Studio 2012, 2013 and 2015 can be used. There is one solution for each version. VS Extensibility part is kept in separate project for each version.
 
-Submit pull request if you have bug fixes or improvements.
+Submit a pull request if you have bug fixes or improvements.
 
 # License
 
